@@ -209,7 +209,9 @@ class EditAnnouncement extends Component {
       openUploadDialog: null,
       openDeleteDialog: null,
       errors: {},
-      target_role: ""
+      target_role: "",
+      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
     };
   }
 
@@ -254,6 +256,27 @@ class EditAnnouncement extends Component {
         // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
         // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
       });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.classOptions === null) {
+      const selectedAnnouncementProps = this.props.announcements.selectedAnnouncements;
+
+      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
+      selectedAnnouncementProps && selectedAnnouncementProps.constructor === Object && (Object.keys(selectedAnnouncementProps).length !== 0)) {
+        
+        let all_classes_obj = {};
+        this.props.classesCollection.all_classes.forEach((classInfo) => {
+          all_classes_obj[classInfo._id] = classInfo.name; 
+        });
+        
+        let newClassOptions = this.props.auth.user.class_teached.map((classId) => {
+          return { _id: classId, name: all_classes_obj[classId] };
+        })
+        
+        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+      }
     }
   }
 
@@ -604,36 +627,28 @@ class EditAnnouncement extends Component {
                           renderValue={(selected) => {
                             return (
                               <div className={classes.chips}>
-                                {selected.map((id) => {
-                                  let name;
-                                  if (all_classes.length === 0) return null;
-                                  else {
-                                    for (var i in all_classes) {
-                                      if (all_classes[i]._id === id) {
-                                        name = all_classes[i].name;
-                                        break;
-                                      }
-                                    }
-                                    return (
-                                      <Chip
-                                        key={id}
-                                        label={name}
-                                        className={classes.chip}
-                                      />
-                                    );
-                                  }
+                                {selected.map((classId) => {
+                                  return (
+                                    <Chip
+                                      key={classId}
+                                      label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
+                                      className={classes.chip}
+                                    />
+                                  );
                                 })}
                               </div>
                             );
                           }}
                         >
-                          {all_classes.map((kelas) => {
-                            return (
-                              <MenuItem value={kelas._id}>
-                                {kelas.name}
+                          {(this.state.classOptions !== null) ? (
+                            this.state.classOptions.map((classInfo) => (
+                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
+                                {classInfo.name}
                               </MenuItem>
-                            );
-                          })}
+                            ))
+                          ) : (
+                            null
+                          )}
                         </Select>
                         <FormHelperText>
                           {Boolean(errors.class_assigned)

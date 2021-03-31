@@ -202,7 +202,9 @@ class CreateAnnouncement extends Component {
       errors: {},
       openUploadDialog: null,
       openDeleteDialog: null,
-      target_role: ""
+      target_role: "",
+      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
     };
   }
 
@@ -211,6 +213,22 @@ class CreateAnnouncement extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (!this.props.errors && this.props.errors !== prevProps.errors) {
       this.handleOpenUploadDialog();
+    }
+
+    if (prevState.classOptions === null) {
+      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
+
+        let all_classes_obj = {};
+        this.props.classesCollection.all_classes.forEach((classInfo) => {
+          all_classes_obj[classInfo._id] = classInfo.name;
+        });
+
+        let newClassOptions = this.props.auth.user.class_teached.map((classId) => {
+          return { _id: classId, name: all_classes_obj[classId] };
+        })
+
+        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
     }
   }
 
@@ -545,13 +563,11 @@ class CreateAnnouncement extends Component {
                           }}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
-                              {selected.map((kelas) => {
-                                console.log(selected);
-                                console.log(kelas, class_assigned);
+                              {selected.map((classId) => {
                                 return (
                                   <Chip
-                                    key={kelas}
-                                    label={kelas.name}
+                                    key={classId}
+                                    label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
                                     className={classes.chip}
                                   />
                                 );
@@ -559,18 +575,15 @@ class CreateAnnouncement extends Component {
                             </div>
                           )}
                         >
-                          {all_classes.map((kelas) => {
-                            console.log(kelas, class_assigned);
-                            return (
-                              <MenuItem
-                                key={kelas}
-                                selected={true}
-                                value={kelas}
-                              >
-                                {kelas.name}
+                          {(this.state.classOptions !== null) ? (
+                            this.state.classOptions.map((classInfo) => (
+                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
+                                {classInfo.name}
                               </MenuItem>
-                            );
-                          })}
+                            ))
+                          ) : (
+                            null
+                          )}
                         </Select>
                         <FormHelperText>
                           {Boolean(errors.class_assigned) &&

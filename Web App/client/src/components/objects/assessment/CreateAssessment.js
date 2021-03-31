@@ -263,6 +263,10 @@ class CreateAssessment extends Component {
       // backtickErrors[1] = true -> berarti terdapat jawaban kosong (``) atau jumlah backtick ganjil pada pertanyaan nomor 2  
       // backtickErrors[2] = -1 -> berarti pertanyaan nomor 2 adalah soal non isian. Nilai "-1" dapat diabaikan, ini dapat diganti dengan nilai lain selain true false
       renderbtErrors: false, // abaikan nilainya, ini hanya dipakai agar QuestionItem dirender ulang saat submit dan ada soal yang dihapus
+      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
+      subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      allSubjectObject: null // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
     };
   }
 
@@ -469,6 +473,46 @@ class CreateAssessment extends Component {
     if (otherfield) {
       if (otherfield === "end_date" || otherfield === "start_date") {
         this.setState({ [otherfield]: e });
+      } else if (otherfield === "subject") { // jika guru memilih mata pelajaran
+        // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
+        let newClassOptions = [];
+        for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+          if (subjectIdArray.includes(e.target.value)) {
+            newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+          }
+        }
+
+        this.setState({ subject: e.target.value, classOptions: newClassOptions });
+
+      } else if (otherfield === "class_assigned") { // jika guru memilih kelas
+        let selectedClasses = e.target.value;
+
+        if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
+          this.setState((prevState, props) => {
+            return {
+              class_assigned: selectedClasses,
+              // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
+              subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
+            }
+          });
+        } else { // jika guru menambahkan atau mengurangi pilihan kelas
+          // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
+          let subjectMatrix = [];
+          for (let classId of selectedClasses) {
+            subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+          }
+          let subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+            return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
+          });
+
+          // menambahkan matpel tersebut ke opsi matpel
+          let newSubjectOptions = [];
+          subjects.forEach((subjectId) => {
+            newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
+          })
+
+          this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
+        }
       } else {
         this.setState({ [otherfield]: e.target.value });
       }
@@ -836,6 +880,38 @@ class CreateAssessment extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (!this.props.errors && this.props.errors !== prevProps.errors) {
       this.handleOpenUploadDialog();
+    }
+
+    if (prevState.classOptions === null) {
+      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
+
+        let all_classes_obj = {};
+        this.props.classesCollection.all_classes.forEach((classInfo) => {
+          all_classes_obj[classInfo._id] = classInfo.name;
+        });
+
+        let newClassOptions = this.props.auth.user.class_teached.map((classId) => {
+          return { _id: classId, name: all_classes_obj[classId] };
+        })
+
+        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
+    }
+
+    if (prevState.subjectOptions === null) {
+      if (this.props.subjectsCollection.all_subjects && (this.props.subjectsCollection.all_subjects.length !== 0)) {
+
+        let all_subjects_obj = {};
+        this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
+          all_subjects_obj[subjectInfo._id] = subjectInfo.name;
+        });
+
+        let newSubjectOptions = this.props.auth.user.subject_teached.map((subjectId) => {
+          return { _id: subjectId, name: all_subjects_obj[subjectId] };
+        })
+
+        this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
+      } // jika memang belum ada matpel yang tercatat di sistem, opsi matpel akan tetap null
     }
   }
 
@@ -1472,11 +1548,15 @@ class CreateAssessment extends Component {
                               this.onChange(event, "subject");
                             }}
                           >
-                            {all_subjects.map((subject) => (
-                              <MenuItem value={subject._id}>
-                                {subject.name}
-                              </MenuItem>
-                            ))}
+                            {(this.state.subjectOptions !== null) ? (
+                              this.state.subjectOptions.map((subject) => (
+                                <MenuItem key={subject._id} value={subject._id}>
+                                  {subject.name}
+                                </MenuItem>
+                              ))
+                            ) : (
+                              null
+                            )}
                           </Select>
                           <FormHelperText>
                             {Boolean(errors.subject) && !this.state.subject
@@ -1513,18 +1593,11 @@ class CreateAssessment extends Component {
                             }
                             renderValue={(selected) => (
                               <div className={classes.chips}>
-                                {selected.map((id) => {
-                                  let name;
-                                  for (let i in all_classes) {
-                                    if (all_classes[i]._id === id) {
-                                      name = all_classes[i].name;
-                                      break;
-                                    }
-                                  }
+                                {selected.map((classId) => {
                                   return (
                                     <Chip
-                                      key={id}
-                                      label={name}
+                                      key={classId}
+                                      label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
                                       className={classes.chip}
                                     />
                                   );
@@ -1532,11 +1605,15 @@ class CreateAssessment extends Component {
                               </div>
                             )}
                           >
-                            {all_classes.map((kelas) => (
-                              <MenuItem value={kelas._id}>
-                                {kelas.name}
-                              </MenuItem>
-                            ))}
+                            {(this.state.classOptions !== null) ? (
+                              this.state.classOptions.map((classInfo) => (
+                                <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
+                                  {classInfo.name}
+                                </MenuItem>
+                              ))
+                            ) : (
+                              null
+                            )}
                           </Select>
                           <FormHelperText>
                             {Boolean(errors.class_assigned) &&

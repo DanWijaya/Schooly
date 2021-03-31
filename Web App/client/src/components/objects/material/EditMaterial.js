@@ -210,6 +210,11 @@ class EditMaterial extends Component {
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
       openDeleteDialog: null,
+      // FIXME state
+      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
+      subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      allSubjectObject: null // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
     };
   }
 
@@ -252,6 +257,62 @@ class EditMaterial extends Component {
         // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
         // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
       });
+    }
+  }
+
+  // FIXME didupdate
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.classOptions === null) {
+      const selectedMaterialProps = this.props.materialsCollection.selectedMaterials;
+
+      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
+      selectedMaterialProps && selectedMaterialProps.constructor === Object && (Object.keys(selectedMaterialProps).length !== 0)) {
+        
+        let all_classes_obj = {};
+        this.props.classesCollection.all_classes.forEach((classInfo) => {
+          all_classes_obj[classInfo._id] = classInfo.name; 
+        });
+
+        // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
+        let newClassOptions = [];
+        for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+          if (subjectIdArray.includes(selectedMaterialProps.subject)) {
+            newClassOptions.push({ _id: classId, name: all_classes_obj[classId] });
+          }
+        }
+
+        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+      }
+    }
+
+    if (prevState.subjectOptions === null) {
+      const selectedMaterialProps = this.props.materialsCollection.selectedMaterials;
+
+      if ( this.props.subjectsCollection.all_subjects && ( this.props.subjectsCollection.all_subjects.length !== 0) &&
+      selectedMaterialProps && selectedMaterialProps.constructor === Object && (Object.keys(selectedMaterialProps).length !== 0)) {
+        
+        let all_subjects_obj = {};
+         this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
+          all_subjects_obj[subjectInfo._id] = subjectInfo.name; 
+        });
+  
+        // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
+        let subjectMatrix = [];
+        for (let classId of selectedMaterialProps.class_assigned) {
+          subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+        }
+        let subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+          return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
+        });
+
+        // menambahkan matpel tersebut ke opsi matpel
+        let newSubjectOptions = [];
+        subjects.forEach((subjectId) => {
+          newSubjectOptions.push({ _id: subjectId, name: all_subjects_obj[subjectId] });
+        })
+
+        this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
+      }
     }
   }
 
@@ -363,13 +424,59 @@ class EditMaterial extends Component {
     this.setState({ openDeleteDialog: false });
   };
 
+  // FIXME onchange
   onChange = (e, otherfield) => {
     console.log(this.state.fileLampiran);
     if (otherfield) {
-      if (otherfield === "deadline") this.setState({ [otherfield]: e });
-      // e is the date value itself for KeyboardDatePicker
-      else this.setState({ [otherfield]: e.target.value });
-    } else this.setState({ [e.target.id]: e.target.value });
+      if (otherfield === "deadline") {
+        this.setState({ [otherfield]: e });
+        // e is the date value itself for KeyboardDatePicker
+      } else if (otherfield === "subject") { // jika guru memilih mata pelajaran
+        // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
+        let newClassOptions = [];
+        for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+          if (subjectIdArray.includes(e.target.value)) {
+            newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+          }
+        }
+
+        this.setState({ subject: e.target.value, classOptions: newClassOptions });
+
+      } else if (otherfield === "class_assigned") { // jika guru memilih kelas
+        let selectedClasses = e.target.value;
+
+        if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
+          this.setState((prevState, props) => {
+            return {
+              class_assigned: selectedClasses,
+              // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
+              subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
+            }
+          });
+        } else { // jika guru menambahkan atau mengurangi pilihan kelas
+          // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
+          let subjectMatrix = [];
+          for (let classId of selectedClasses) {
+            subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+          }
+          let subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+            return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
+          });
+
+          // menambahkan matpel tersebut ke opsi matpel
+          let newSubjectOptions = [];
+          subjects.forEach((subjectId) => {
+            newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
+          })
+
+          this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
+        }
+      } else {
+        this.setState({ [otherfield]: e.target.value });
+      }
+    } else {
+      this.setState({ [e.target.id]: e.target.value });
+    }
   };
 
   onDateChange = (date) => {
@@ -575,11 +682,16 @@ class EditMaterial extends Component {
                             this.onChange(event, "subject");
                           }}
                         >
-                          {all_subjects.map((subject) => (
-                            <MenuItem value={subject._id}>
-                              {subject.name}
-                            </MenuItem>
-                          ))}
+                          {/* FIXME textfield matpel */}
+                          {(this.state.subjectOptions !== null) ? (
+                            this.state.subjectOptions.map((subject) => (
+                              <MenuItem key={subject._id} value={subject._id}>
+                                {subject.name}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            null
+                          )}
                         </Select>
                         <FormHelperText>
                           {Boolean(errors.subject) && !this.state.subject
@@ -612,36 +724,29 @@ class EditMaterial extends Component {
                           renderValue={(selected) => {
                             return (
                               <div className={classes.chips}>
-                                {selected.map((id) => {
-                                  let name;
-                                  if (all_classes.length === 0) return null;
-                                  else {
-                                    for (var i in all_classes) {
-                                      if (all_classes[i]._id === id) {
-                                        name = all_classes[i].name;
-                                        break;
-                                      }
-                                    }
-                                    return (
-                                      <Chip
-                                        key={id}
-                                        label={name}
-                                        className={classes.chip}
-                                      />
-                                    );
-                                  }
+                                {selected.map((classId) => {
+                                  return (
+                                    <Chip
+                                      key={classId}
+                                      label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
+                                      className={classes.chip}
+                                    />
+                                  );
                                 })}
                               </div>
                             );
                           }}
                         >
-                          {all_classes.map((kelas) => {
-                            return (
-                              <MenuItem value={kelas._id}>
-                                {kelas.name}
+                          {/* FIXME chip kelas */}
+                          {(this.state.classOptions !== null) ? (
+                            this.state.classOptions.map((classInfo) => (
+                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
+                                {classInfo.name}
                               </MenuItem>
-                            );
-                          })}
+                            ))
+                          ) : (
+                            null
+                          )}
                         </Select>
                         <FormHelperText>
                           {Boolean(errors.class_assigned)
