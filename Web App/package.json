@@ -14,7 +14,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@material-ui/lab": "^4.0.0-alpha.47",
     "async": "^3.2.0",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
