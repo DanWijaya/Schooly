@@ -1156,7 +1156,7 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   listItem: {
-    padding: "6px 24px"
+    padding: "6px 16px"
   },
   titleIcon: {
     fontSize: "28px",

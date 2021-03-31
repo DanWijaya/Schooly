@@ -502,7 +502,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
-    padding: "6px 24px"
+    padding: "6px 16px"
   }
 }));
 

@@ -20,7 +20,7 @@ router.post("/create", (req, res) => {
   let class_assigned_ids = [];
 
   if (class_assigned.length > 0) {
-    class_assigned.map((kelas) => class_assigned_ids.push(kelas._id));
+    class_assigned.forEach((kelas) => class_assigned_ids.push(kelas));
   }
 
   console.log("author id : ", req.body.author_id);

@@ -556,7 +556,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
-    padding: "6px 24px"
+    padding: "6px 16px"
   }
 }));
 
@@ -788,7 +788,6 @@ function AssessmentList(props) {
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
-        {/* REVIEW stablesort element*/}
         {rows.length === 0 ? (
           <Typography variant="subtitle1" align="center" color="textSecondary">
             Kosong

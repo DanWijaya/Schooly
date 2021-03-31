@@ -491,7 +491,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   listItem: {
-    padding: "6px 24px"
+    padding: "6px 16px"
   },
   listAvatar: {
     backgroundColor: theme.palette.primary.main,
