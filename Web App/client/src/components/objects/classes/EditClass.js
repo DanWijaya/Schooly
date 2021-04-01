@@ -5,6 +5,7 @@ import classnames from "classnames";
 import { getTeachers, getStudentsByClass } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import {
   getAllClass,
   setCurrentClass,
@@ -25,6 +26,26 @@ import {
 } from "@material-ui/core";
 import { Autocomplete }from '@material-ui/lab';
 import { withStyles } from "@material-ui/core/styles";
+
+const theme = createMuiTheme({
+  overrides: {
+    MuiOutlinedInput: {
+      input: {
+        "&&&:before": {
+          borderBottom: "none"
+        },
+        "&&:after": {
+          borderBottom: "none"
+        }
+      }
+    },
+    MuiInputBase: {
+      root: {
+        borderBottom: "none"
+      }
+    }
+  }
+});
 
 const styles = (theme) => ({
   root: {
@@ -61,7 +82,7 @@ const styles = (theme) => ({
     "&&:after": {
       borderBottom: "none"
     }
-  }
+  },
 });
 
 class EditClass extends Component {
@@ -292,6 +313,7 @@ class EditClass extends Component {
                       </FormControl>
                     </Grid>
                     <Grid item>
+                      <ThemeProvider theme={theme}>
                       <Typography
                         component="label"
                         for="matapelajaran"
@@ -312,11 +334,11 @@ class EditClass extends Component {
                           filterSelectedOptions
                           renderInput={(params) => (
                             <TextField
-                              {...params}
                               variant="outlined"
                               size="small"
                               fullWidth
-                              style={{border: "none"}}
+                              InputProps={{className: classes.underline}}
+                              {...params}
                             />
                           )}   
                         />
@@ -324,6 +346,7 @@ class EditClass extends Component {
 
                         </FormHelperText>
                       </FormControl>
+                      </ThemeProvider>
                     </Grid>
                   </Grid>
                 </Grid>
