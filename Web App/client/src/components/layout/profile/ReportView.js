@@ -293,9 +293,9 @@ function ReportView(props) {
 
   const [kelas, setKelas] = React.useState("");
 
-  console.log(props.classesCollection)
+  console.log(all_subjects)
 
-  console.log(selectedUser)
+  console.log(kelas)
 
   React.useEffect(() => {
     console.log(selectedUser.kelas)
@@ -353,18 +353,44 @@ function ReportView(props) {
   const [examGraphCurrentSubject, setExamGraphCurrentSubject] = React.useState(
     null
   );
+  const [allowedSubjectIndex, setAllowedSubjectIndex] = React.useState(
+    null
+  );
 
-  if (taskGraphCurrentSubject === null && all_subjects.length !== 0) {
-    let randomNumber = Math.floor(Math.random() * all_subjects.length);
-    setTaskGraphCurrentSubject(randomNumber);
-  }
-  if (quizGraphCurrentSubject === null && all_subjects.length !== 0) {
-    let randomNumber = Math.floor(Math.random() * all_subjects.length);
-    setQuizGraphCurrentSubject(randomNumber);
-  }
-  if (examGraphCurrentSubject === null && all_subjects.length !== 0) {
-    let randomNumber = Math.floor(Math.random() * all_subjects.length);
-    setExamGraphCurrentSubject(randomNumber);
+  if (
+    allowedSubjectIndex === null &&
+    all_subjects.length !== 0 &&
+    Object.keys(kelas).length !== 0
+  ) {
+    let allowedIndexes = [];
+    console.log(kelas)
+    for(let i=0;i<all_subjects.length;i++) {
+      if(kelas.subject_assigned.includes(all_subjects[i]._id)) {
+        allowedIndexes.push(i);
+      }
+    }
+    setAllowedSubjectIndex(allowedIndexes)
+    if (
+      taskGraphCurrentSubject === null &&
+      all_subjects.length !== 0
+    ) {
+      let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+      setTaskGraphCurrentSubject(randomNumber)
+    }
+    if (
+      quizGraphCurrentSubject === null &&
+      all_subjects.length !== 0
+    ) {
+      let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+      setQuizGraphCurrentSubject(randomNumber)
+    }
+    if (
+      examGraphCurrentSubject === null &&
+      all_subjects.length !== 0
+    ) {
+      let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+      setExamGraphCurrentSubject(randomNumber)
+    }
   }
 
   function graphTask(subjectIndex) {
@@ -457,31 +483,67 @@ function ReportView(props) {
 
   const changeGraphSubject = (workType, direction, subjectsLength) => {
     if (workType === "Tugas") {
-      if (direction === "Left" && taskGraphCurrentSubject > 0) {
-        setTaskGraphCurrentSubject(taskGraphCurrentSubject - 1);
-      } else if (
-        direction === "Right" &&
-        taskGraphCurrentSubject < subjectsLength - 1
-      ) {
-        setTaskGraphCurrentSubject(taskGraphCurrentSubject + 1);
+      let currentIndex = allowedSubjectIndex.indexOf(taskGraphCurrentSubject);
+      if (direction === "Left") {
+        let newIndex;
+        if(currentIndex + 1 >= allowedSubjectIndex.length) {
+          newIndex = 0;
+        }
+        else {
+          newIndex = currentIndex + 1;
+        }
+        setTaskGraphCurrentSubject(allowedSubjectIndex[newIndex])
+      } else if (direction === "Right") {
+        let newIndex;
+        if(currentIndex - 1 < 0) {
+          newIndex = allowedSubjectIndex.length - 1;
+        }
+        else {
+          newIndex = currentIndex - 1;
+        }
+        setTaskGraphCurrentSubject(allowedSubjectIndex[newIndex])
       }
     } else if (workType === "Kuis") {
-      if (direction === "Left" && quizGraphCurrentSubject > 0) {
-        setQuizGraphCurrentSubject(quizGraphCurrentSubject - 1);
-      } else if (
-        direction === "Right" &&
-        quizGraphCurrentSubject < subjectsLength - 1
-      ) {
-        setQuizGraphCurrentSubject(quizGraphCurrentSubject + 1);
+      let currentIndex = allowedSubjectIndex.indexOf(quizGraphCurrentSubject);
+      if (direction === "Left") {
+        let newIndex;
+        if(currentIndex + 1 >= allowedSubjectIndex.length) {
+          newIndex = 0;
+        }
+        else {
+          newIndex = currentIndex + 1;
+        }
+        setQuizGraphCurrentSubject(allowedSubjectIndex[newIndex])
+      } else if (direction === "Right") {
+        let newIndex;
+        if(currentIndex - 1 < 0) {
+          newIndex = allowedSubjectIndex.length - 1;
+        }
+        else {
+          newIndex = currentIndex - 1;
+        }
+        setQuizGraphCurrentSubject(allowedSubjectIndex[newIndex])
       }
     } else if (workType === "Ujian") {
-      if (direction === "Left" && examGraphCurrentSubject > 0) {
-        setExamGraphCurrentSubject(examGraphCurrentSubject - 1);
-      } else if (
-        direction === "Right" &&
-        examGraphCurrentSubject < subjectsLength - 1
-      ) {
-        setExamGraphCurrentSubject(examGraphCurrentSubject + 1);
+      let currentIndex = allowedSubjectIndex.indexOf(examGraphCurrentSubject);
+      if (direction === "Left") {
+        let newIndex;
+        if(currentIndex + 1 >= allowedSubjectIndex.length) {
+          newIndex = 0;
+        }
+        else {
+          newIndex = currentIndex + 1;
+        }
+        setExamGraphCurrentSubject(allowedSubjectIndex[newIndex])
+      } else if (direction === "Right") {
+        let newIndex;
+        if(currentIndex - 1 < 0) {
+          newIndex = allowedSubjectIndex.length - 1;
+        }
+        else {
+          newIndex = currentIndex - 1;
+        }
+        setExamGraphCurrentSubject(allowedSubjectIndex[newIndex])
       }
     }
   };
@@ -570,34 +632,46 @@ function ReportView(props) {
   // ini digunakan untuk membuat tabel halaman lihat-rapor yang dibuka dari profile view murid atau profile
   // tipe argumen = Object (bisa pakai Object karena urutan nama kolom dan jumlah kolomnya fix)
   function generateRowCellFormat2(row) {
+    let trueSubject = false;
+    for(let i=0;i<all_subjects.length;i++) {
+      if(kelas.subject_assigned) {
+        if(kelas.subject_assigned.includes(all_subjects[i]._id) && row.subject === all_subjects[i].name) {
+          trueSubject = true;
+          break;
+        }
+      }
+    }
+    console.log(row)
     let emptyCellSymbol = "-"; // jika sel isi kosong, masukkan "-"
-    return (
-      <TableRow key={row.subject}>
-        {" "}
-        {/* nama subjek sudah dipastikan unik*/}
-        <TableCell style={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
-          {row.subject}
-        </TableCell>
-        <TableCell
-          align="center"
-          style={{ border: "1px solid rgba(224, 224, 224, 1)" }}
-        >
-          {row.taskAvg !== null ? row.taskAvg : emptyCellSymbol}
-        </TableCell>
-        <TableCell
-          align="center"
-          style={{ border: "1px solid rgba(224, 224, 224, 1)" }}
-        >
-          {row.quizAvg !== null ? row.quizAvg : emptyCellSymbol}
-        </TableCell>
-        <TableCell
-          align="center"
-          style={{ border: "1px solid rgba(224, 224, 224, 1)" }}
-        >
-          {row.assessmentAvg !== null ? row.assessmentAvg : emptyCellSymbol}
-        </TableCell>
-      </TableRow>
-    );
+    if(trueSubject) {
+      return (
+        <TableRow key={row.subject}>
+          {" "}
+          {/* nama subjek sudah dipastikan unik*/}
+          <TableCell style={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+            {row.subject}
+          </TableCell>
+          <TableCell
+            align="center"
+            style={{ border: "1px solid rgba(224, 224, 224, 1)" }}
+          >
+            {row.taskAvg !== null ? row.taskAvg : emptyCellSymbol}
+          </TableCell>
+          <TableCell
+            align="center"
+            style={{ border: "1px solid rgba(224, 224, 224, 1)" }}
+          >
+            {row.quizAvg !== null ? row.quizAvg : emptyCellSymbol}
+          </TableCell>
+          <TableCell
+            align="center"
+            style={{ border: "1px solid rgba(224, 224, 224, 1)" }}
+          >
+            {row.assessmentAvg !== null ? row.assessmentAvg : emptyCellSymbol}
+          </TableCell>
+        </TableRow>
+      );
+    }
   }
 
   function generateHeaderCellMatpel(nama) {

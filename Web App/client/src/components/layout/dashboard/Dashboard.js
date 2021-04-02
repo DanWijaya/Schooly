@@ -823,7 +823,6 @@ class Dashboard extends Component {
         all_subjects.length !== 0
       ) {
         let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
-        console.log(randomNumber)
         this.setState({ taskGraphCurrentSubject: randomNumber });
       }
       if (
@@ -831,7 +830,6 @@ class Dashboard extends Component {
         all_subjects.length !== 0
       ) {
         let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
-        console.log(randomNumber)
         this.setState({ quizGraphCurrentSubject: randomNumber });
       }
       if (
@@ -839,14 +837,9 @@ class Dashboard extends Component {
         all_subjects.length !== 0
       ) {
         let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
-        console.log(randomNumber)
         this.setState({ examGraphCurrentSubject: randomNumber });
       }
     }
-
-    console.log(this.state.allowedSubjectIndex)
-
-
 
     function graphTask(subjectIndex) {
       if (all_subjects[subjectIndex]) {
