@@ -630,11 +630,57 @@ function ClassListToolbar(props) {
             </Hidden>
           </div>
         ) : null}
+        {user.role === "Admin" ? (
+          <div>
+            <form
+              onChange={(event) => {
+                handleImportCSV(event);
+              }}
+              style={{ display: "none" }}
+            >
+              <input type="file" ref={fileInput} accept=".csv" />
+            </form>
+
+            <LightTooltip title="Atur Kelas Murid">
+              <IconButton
+                onClick={handleOpenCSVMenu}
+                className={classes.toolbarButtons}
+                style={{ marginRight: "3px" }}
+              >
+                <AccountTreeIcon />
+              </IconButton>
+            </LightTooltip>
+            <Menu
+              keepMounted
+              anchorEl={csvAnchor}
+              open={Boolean(csvAnchor)}
+              onClose={handleCloseCSVMenu}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+            >
+              <MenuItem onClick={handleClickExport}>Export Data Kelas</MenuItem>
+              <MenuItem onClick={handleClickImport}>Import Data Kelas</MenuItem>
+            </Menu>
+
+            <LightTooltip title="Atur Wali Kelas">
+              <Link to="/atur-walikelas">
+                <IconButton className={classes.toolbarButtons} style={{ marginRight: "3px" }}>
+                  <AiOutlineUserSwitch />
+                </IconButton>
+              </Link>
+            </LightTooltip>
+          </div>
+        ) : null}
         <LightTooltip title="Urutkan Kelas">
           <IconButton
             onClick={handleOpenSortMenu}
-            className={classes.sortButton}
-            style={{ marginRight: "3px" }}
+            className={classes.toolbarButtons}
           >
             <SortIcon />
           </IconButton>
@@ -675,54 +721,6 @@ function ClassListToolbar(props) {
             </MenuItem>
           ))}
         </Menu>
-
-        {user.role === "Admin" ? (
-          <div>
-            <form
-              onChange={(event) => {
-                handleImportCSV(event);
-              }}
-              style={{ display: "none" }}
-            >
-              <input type="file" ref={fileInput} accept=".csv" />
-            </form>
-
-            <LightTooltip title="Atur Kelas Murid">
-              <IconButton
-                onClick={handleOpenCSVMenu}
-                className={classes.sortButton}
-                style={{ marginRight: "3px" }}
-              >
-                <AccountTreeIcon />
-              </IconButton>
-            </LightTooltip>
-            <Menu
-              keepMounted
-              anchorEl={csvAnchor}
-              open={Boolean(csvAnchor)}
-              onClose={handleCloseCSVMenu}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              <MenuItem onClick={handleClickExport}>Export Data Kelas</MenuItem>
-              <MenuItem onClick={handleClickImport}>Import Data Kelas</MenuItem>
-            </Menu>
-
-            <LightTooltip title="Atur Wali Kelas">
-              <Link to="/atur-walikelas">
-                <IconButton className={classes.sortButton}>
-                  <AiOutlineUserSwitch />
-                </IconButton>
-              </Link>
-            </LightTooltip>
-          </div>
-        ) : null}
       </div>
 
       <Dialog
@@ -793,7 +791,7 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
   },
-  sortButton: {
+  toolbarButtons: {
     backgroundColor: theme.palette.action.selected,
     color: "black",
     "&:focus, &:hover": {
@@ -813,8 +811,11 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   classPaper: {
+    borderRadius: "3px",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
+    transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
     "&:focus, &:hover": {
-      border: "1px solid #2196F3",
+      boxShadow: "0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.15)",
       cursor: "pointer",
     },
   },
@@ -1045,8 +1046,6 @@ function ClassList(props) {
                     <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
                       <Paper
                         button
-                        square
-                        variant="outlined"
                         className={classes.classPaper}
                       >
                         <Avatar
@@ -1055,6 +1054,7 @@ function ClassList(props) {
                             backgroundColor: colorMap.get(row._id),
                             width: "100%",
                             height: "120px",
+                            borderRadius: "3px 3px 0px 0px",
                           }}
                         >
                           <FaChalkboardTeacher

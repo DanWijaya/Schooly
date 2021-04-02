@@ -753,7 +753,7 @@ function ViewTaskStudent(props) {
 
               <Grid item xs={12} md={7} style={{ paddingTop: "0" }}>
                 <Typography variant="body2" color="textSecondary">
-                  Penanggung Jawab:   &nbsp;                 
+                  Oleh:   &nbsp;                 
                   <b>
                     {selectedUser._id !== tasksCollection.person_in_charge_id
                       ? null

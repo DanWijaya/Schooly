@@ -144,12 +144,12 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     padding: "15px",
     backgroundColor: "#e3e5e5",
-    height:"270px", 
+    height:"270px",
     width:"250px",
     [theme.breakpoints.down("sm")]: {
-      height:"200px", 
+      height:"200px",
       width:"180px"
-    }    
+    }
   },
   customMargin: {
     [theme.breakpoints.down("sm")]: {
@@ -162,14 +162,14 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   graphParentContainer: {
-    position: "relative", 
-    height:"270px", 
+    position: "relative",
+    height:"270px",
     width:"250px",
     [theme.breakpoints.down("sm")]: {
-      height:"200px", 
+      height:"200px",
       width:"180px"
     },
-  } 
+  }
 }));
 
 function ScoreGraph(props) {
@@ -446,6 +446,7 @@ function ReportView(props) {
       if (subjectScores.length !== 0) {
         return (
           <ScoreGraph
+            classes={classes}
             scores={subjectScores}
             names={subjectNames}
             workType={type}
@@ -1249,7 +1250,7 @@ function ReportView(props) {
             justify="center"
             spacing={4}
             alignItems="center"
-          >           
+          >
             {createGraph()}
 
             {/* ----------------- ini dipake kalau ingin menampilkan 3 graph bersampingan ----------------- */}
@@ -1439,8 +1440,8 @@ function ReportView(props) {
           >
             <Grid item md={6} className={classes.customMargin}>
               <Typography>
-                Berikut Ini adalah Rapor Seluruh Siswa Sesuai Kelas dan Mata
-                Pelajaran yang Dipilih
+                Berikut adalah rapor seluruh murid sesuai kelas dan mata
+                pelajaran yang dipilih
               </Typography>
             </Grid>
             <Grid item container md={5} spacing={3}>

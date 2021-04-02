@@ -340,7 +340,7 @@ function ViewTaskTeacher(props) {
 
               <Grid item xs={12} md={7} style={{ paddingTop: "0" }}>
                 <Typography variant="body2" color="textSecondary">
-                  Penanggung Jawab: <b>{user.name}</b>
+                  Oleh: <b>{user.name}</b>
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   Waktu Dibuat:{" "}
