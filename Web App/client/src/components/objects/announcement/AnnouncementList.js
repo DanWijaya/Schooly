@@ -980,7 +980,7 @@ function AnnouncementSubList(props) {
 
       if (mine) {
         if (author_role === "Student") {
-          // untuk pengumuman yg dibuat oleh saya sebagai ketua kelas 
+          // untuk pengumuman yg dibuat oleh saya sebagai ketua kelas
           selectedAnnouncements
             .filter((item) =>
               (item.author_id === kelas.ketua_kelas) && item.title.toLowerCase().includes(searchFilter.toLowerCase())
@@ -989,7 +989,7 @@ function AnnouncementSubList(props) {
               announcementRowItem(newRows, data);
             });
         } else if (author_role === "Teacher") {
-          // untuk pengumuman yg dibuat oleh saya sebagai guru 
+          // untuk pengumuman yg dibuat oleh saya sebagai guru
           selectedAnnouncements
             .filter((item) =>
               (item.author_id !== kelas.ketua_kelas) && item.title.toLowerCase().includes(searchFilter.toLowerCase())
@@ -998,7 +998,7 @@ function AnnouncementSubList(props) {
               announcementRowItem(newRows, data);
             });
         } else if (author_role === "Admin") {
-          // untuk pengumuman yg dibuat oleh saya sebagai admin 
+          // untuk pengumuman yg dibuat oleh saya sebagai admin
           selectedAnnouncements
             .filter((item) =>
               item.title.toLowerCase().includes(searchFilter.toLowerCase())
@@ -1156,7 +1156,10 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   listItem: {
-    padding: "6px 24px"
+    padding: "6px 24px",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.fade,
+    },
   },
   titleIcon: {
     fontSize: "28px",
@@ -1167,7 +1170,7 @@ const useStyles = makeStyles((theme) => ({
   assignmentLate: {
     backgroundColor: theme.palette.primary.main,
   },
-  panelSummary: {
+  announcementPanelSummary: {
     "&:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
@@ -1265,7 +1268,7 @@ function AnnouncementList(props) {
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [])
-  
+
   React.useEffect(() => {
     if (selectedAnnouncements.length && retrieved_users.size) {
       let newRows = [];
@@ -1398,8 +1401,8 @@ function AnnouncementList(props) {
                   addBottomMargin={false}
                 />
               </>
-              : null
-      }
+            : null
+        }
     </div>
   );
 }
