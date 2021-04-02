@@ -7,6 +7,7 @@ import "moment/locale/id";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getTasksBySC, getAllTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { setCurrentClass } from "../../../actions/ClassActions";
 import {
   getKuisBySC,
   getUjianBySC,
@@ -664,6 +665,7 @@ class Dashboard extends Component {
       taskGraphCurrentSubject: null,
       quizGraphCurrentSubject: null,
       examGraphCurrentSubject: null,
+      allowedSubjectIndex: null
     };
   }
 
@@ -675,6 +677,7 @@ class Dashboard extends Component {
       getAllAssessments,
       getStudentsByClass,
       getStudents,
+      setCurrentClass
     } = this.props;
     // const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
@@ -682,6 +685,7 @@ class Dashboard extends Component {
     getAllTask(); // actions yang membuat GET request ke Database.
     getAllSubjects();
     getAllSubjects("map"); // untuk dapatin subject"nya gitu
+    setCurrentClass(user.kelas);
 
     // const { all_subjects_map } = this.props.subjectsCollection
     // let subjectArray = Object.keys(all_subjects_map)
@@ -711,42 +715,78 @@ class Dashboard extends Component {
 
   changeGraphSubject = (workType, direction, subjectsLength) => {
     if (workType === "Tugas") {
-      if (direction === "Left" && this.state.taskGraphCurrentSubject > 0) {
+      let currentIndex = this.state.allowedSubjectIndex.indexOf(this.state.taskGraphCurrentSubject);
+      if (direction === "Left") {
+        let newIndex;
+        if(currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
+          newIndex = 0;
+        }
+        else {
+          newIndex = currentIndex + 1;
+        }
         this.setState({
-          taskGraphCurrentSubject: this.state.taskGraphCurrentSubject - 1,
+          taskGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
         });
-      } else if (
-        direction === "Right" &&
-        this.state.taskGraphCurrentSubject < subjectsLength - 1
-      ) {
+      } else if (direction === "Right") {
+        let newIndex;
+        if(currentIndex - 1 < 0) {
+          newIndex = this.state.allowedSubjectIndex.length - 1;
+        }
+        else {
+          newIndex = currentIndex - 1;
+        }
         this.setState({
-          taskGraphCurrentSubject: this.state.taskGraphCurrentSubject + 1,
+          taskGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
         });
       }
     } else if (workType === "Kuis") {
-      if (direction === "Left" && this.state.quizGraphCurrentSubject > 0) {
+      let currentIndex = this.state.allowedSubjectIndex.indexOf(this.state.quizGraphCurrentSubject);
+      if (direction === "Left") {
+        let newIndex;
+        if(currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
+          newIndex = 0;
+        }
+        else {
+          newIndex = currentIndex + 1;
+        }
         this.setState({
-          quizGraphCurrentSubject: this.state.quizGraphCurrentSubject - 1,
+          taskGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
         });
-      } else if (
-        direction === "Right" &&
-        this.state.quizGraphCurrentSubject < subjectsLength - 1
-      ) {
+      } else if (direction === "Right") {
+        let newIndex;
+        if(currentIndex - 1 < 0) {
+          newIndex = this.state.allowedSubjectIndex.length - 1;
+        }
+        else {
+          newIndex = currentIndex - 1;
+        }
         this.setState({
-          quizGraphCurrentSubject: this.state.quizGraphCurrentSubject + 1,
+          quizGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
         });
       }
     } else if (workType === "Ujian") {
-      if (direction === "Left" && this.state.examGraphCurrentSubject > 0) {
+      let currentIndex = this.state.allowedSubjectIndex.indexOf(this.state.examGraphCurrentSubject);
+      if (direction === "Left") {
+        let newIndex;
+        if(currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
+          newIndex = 0;
+        }
+        else {
+          newIndex = currentIndex + 1;
+        }
         this.setState({
-          examGraphCurrentSubject: this.state.examGraphCurrentSubject - 1,
+          examGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
         });
-      } else if (
-        direction === "Right" &&
-        this.state.examGraphCurrentSubject < subjectsLength - 1
-      ) {
+      } else if (direction === "Right") {
+        let newIndex;
+        if(currentIndex - 1 < 0) {
+          newIndex = this.state.allowedSubjectIndex.length - 1;
+        }
+        else {
+          newIndex = currentIndex - 1;
+        }
         this.setState({
-          examGraphCurrentSubject: this.state.examGraphCurrentSubject + 1,
+          examGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
         });
       }
     }
@@ -759,30 +799,54 @@ class Dashboard extends Component {
     const { all_user_files } = this.props.filesCollection;
     const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { all_assessments } = this.props.assessmentsCollection;
+    const { kelas } = this.props.classesCollection
 
     const classId = user.kelas;
+    console.log(this.props.classesCollection)
+    console.log(all_subjects)
 
     if (
-      this.state.taskGraphCurrentSubject === null &&
-      all_subjects.length !== 0
+      this.state.allowedSubjectIndex === null &&
+      all_subjects.length !== 0 &&
+      Object.keys(kelas).length !== 0
     ) {
-      let randomNumber = Math.floor(Math.random() * all_subjects.length);
-      this.setState({ taskGraphCurrentSubject: randomNumber });
+      let allowedIndexes = [];
+      console.log(kelas)
+      for(let i=0;i<all_subjects.length;i++) {
+        if(kelas.subject_assigned.includes(all_subjects[i]._id)) {
+          allowedIndexes.push(i);
+        }
+      }
+      this.setState({ allowedSubjectIndex: allowedIndexes });
+      if (
+        this.state.taskGraphCurrentSubject === null &&
+        all_subjects.length !== 0
+      ) {
+        let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+        console.log(randomNumber)
+        this.setState({ taskGraphCurrentSubject: randomNumber });
+      }
+      if (
+        this.state.quizGraphCurrentSubject === null &&
+        all_subjects.length !== 0
+      ) {
+        let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+        console.log(randomNumber)
+        this.setState({ quizGraphCurrentSubject: randomNumber });
+      }
+      if (
+        this.state.examGraphCurrentSubject === null &&
+        all_subjects.length !== 0
+      ) {
+        let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+        console.log(randomNumber)
+        this.setState({ examGraphCurrentSubject: randomNumber });
+      }
     }
-    if (
-      this.state.quizGraphCurrentSubject === null &&
-      all_subjects.length !== 0
-    ) {
-      let randomNumber = Math.floor(Math.random() * all_subjects.length);
-      this.setState({ quizGraphCurrentSubject: randomNumber });
-    }
-    if (
-      this.state.examGraphCurrentSubject === null &&
-      all_subjects.length !== 0
-    ) {
-      let randomNumber = Math.floor(Math.random() * all_subjects.length);
-      this.setState({ examGraphCurrentSubject: randomNumber });
-    }
+
+    console.log(this.state.allowedSubjectIndex)
+
+
 
     function graphTask(subjectIndex) {
       if (all_subjects[subjectIndex]) {
@@ -1688,6 +1752,7 @@ Dashboard.propTypes = {
   getTasksBySC: PropTypes.func.isRequired,
   getKuisBySC: PropTypes.func.isRequired,
   getUjianBySC: PropTypes.func.isRequired,
+  setCurrentClass: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -1710,5 +1775,6 @@ export default withRouter(
     getTasksBySC,
     getKuisBySC,
     getUjianBySC,
+    setCurrentClass
   })(withStyles(styles)(Dashboard))
 );
