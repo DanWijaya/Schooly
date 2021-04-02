@@ -335,7 +335,7 @@ class Register extends Component {
                   })}
                 />
               </Grid>
-              {
+              {/* {
               // this.state.role === "Student" ? (
               //   <Grid item>
               //     <FormControl
@@ -393,7 +393,7 @@ class Register extends Component {
                     </FormHelperText>
                   </FormControl>
                 </Grid>
-              ) : null}
+              ) : null} */}
               <Grid item>
                 <TextField
                   fullWidth

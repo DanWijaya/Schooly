@@ -31,20 +31,25 @@ const theme = createMuiTheme({
   overrides: {
     MuiOutlinedInput: {
       input: {
-        "&&&:before": {
-          borderBottom: "none"
-        },
-        "&&:after": {
-          borderBottom: "none"
-        }
+        
       }
     },
     MuiInputBase: {
+      input: {
+        borderBottom: "none"
+      }
+    },
+    MuiAutocomplete: {
+      input: {
+        borderBottom: "none"
+      }
+    },
+    MuiTextField: {
       root: {
         borderBottom: "none"
       }
     }
-  }
+  },
 });
 
 const styles = (theme) => ({
@@ -76,12 +81,7 @@ const styles = (theme) => ({
     },
   },
   underline: {
-    "&&&:before": {
-      borderBottom: "none"
-    },
-    "&&:after": {
-      borderBottom: "none"
-    }
+    padding: 0
   },
 });
 
@@ -313,7 +313,6 @@ class EditClass extends Component {
                       </FormControl>
                     </Grid>
                     <Grid item>
-                      <ThemeProvider theme={theme}>
                       <Typography
                         component="label"
                         for="matapelajaran"
@@ -325,6 +324,7 @@ class EditClass extends Component {
                         id="matapelajaran"
                         color="primary"
                         fullWidth
+                        className={classes.underline}
                       >
                         <Autocomplete
                           multiple
@@ -332,11 +332,14 @@ class EditClass extends Component {
                           options={top100Films} // Dummy
                           getOptionLabel={(option) => option.title}
                           filterSelectedOptions
+                          classes={{input: classes.underline, inputRoot: classes.underline}}
                           renderInput={(params) => (
                             <TextField
                               variant="outlined"
                               size="small"
                               fullWidth
+                              className={classes.underline}
+                              classes={{root: classes.underline}}
                               InputProps={{className: classes.underline}}
                               {...params}
                             />
@@ -346,7 +349,6 @@ class EditClass extends Component {
 
                         </FormHelperText>
                       </FormControl>
-                      </ThemeProvider>
                     </Grid>
                   </Grid>
                 </Grid>
