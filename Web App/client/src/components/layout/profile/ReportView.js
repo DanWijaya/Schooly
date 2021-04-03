@@ -295,7 +295,7 @@ function ReportView(props) {
 
   console.log(all_subjects)
 
-  console.log(kelas)
+  console.log(kelas.walikelas)
 
   React.useEffect(() => {
     console.log(selectedUser.kelas)
@@ -633,17 +633,35 @@ function ReportView(props) {
   // tipe argumen = Object (bisa pakai Object karena urutan nama kolom dan jumlah kolomnya fix)
   function generateRowCellFormat2(row) {
     let trueSubject = false;
-    for(let i=0;i<all_subjects.length;i++) {
-      if(kelas.subject_assigned) {
-        if(kelas.subject_assigned.includes(all_subjects[i]._id) && row.subject === all_subjects[i].name) {
-          trueSubject = true;
-          break;
+    let nonWaliView = false;
+    if(!kelas.walikelas) {
+      console.log("belum ada")
+    }
+    if(kelas.walikelas === user._id) {
+      if(kelas.subject_assigned && all_subjects) {
+        for(let i=0;i<all_subjects.length;i++) {
+          if(kelas.subject_assigned.includes(all_subjects[i]._id) && row.subject === all_subjects[i].name) {
+            console.log(kelas)
+            trueSubject = true;
+            break;
+          }
         }
       }
     }
-    console.log(row)
+    else {
+      if(Object.keys(user.class_to_subject).includes(kelas._id)) {
+        for(let i=0;i<all_subjects.length;i++) {
+          if(kelas.subject_assigned) {
+            if(user.class_to_subject[kelas._id].includes(all_subjects[i]._id) && row.subject === all_subjects[i].name) {
+              nonWaliView = true;
+              break;
+            }
+          }
+        }
+      }
+    }
     let emptyCellSymbol = "-"; // jika sel isi kosong, masukkan "-"
-    if(trueSubject) {
+    if(trueSubject || nonWaliView) {
       return (
         <TableRow key={row.subject}>
           {" "}
