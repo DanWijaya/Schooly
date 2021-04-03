@@ -100,7 +100,6 @@ export const loginUser = (userData) => (dispatch) => {
     .then((res) => {
       console.log("Berhasil login");
       // Save to localStorage
-
       // Set token to localStorage
       const { token } = res.data;
       localStorage.setItem("jwtToken", token);

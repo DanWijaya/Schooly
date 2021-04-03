@@ -131,11 +131,9 @@ export const deleteMaterial = (materialId, history) => (dispatch) => {
   axios
     .delete(`/api/materials/delete/${materialId}`)
     .then((res) => {
-      console.log("Deleted: ", res.data);
-      let lampiran_to_delete = Array.from(res.data.lampiran);
-      return axios.delete(`/api/upload/att_material/lampiran/${"deleteall"}`, {
-        data: { lampiran_to_delete: lampiran_to_delete },
-      });
+      // let lampiran_to_delete = Array.from(res.data.lampiran)
+      // return axios.delete(`/api/upload/att_material/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete} })
+      return axios.delete(`/api/files/materials/${materialId}`);
     })
     .then((res) => {
       console.log(res);
@@ -159,11 +157,10 @@ export const updateMaterial = (
   history
 ) => (dispatch) => {
   // formData is the lampiran files
-  console.log("Update material is runned");
   axios
     .post(`/api/materials/update/${materialId}`, materialData)
     .then((res) => {
-      console.log("Task updated to be :", res.data);
+      console.log("Material updated to be :", res.data);
       console.log("Has lampiran? :", formData.has("lampiran_materi"));
       dispatch({
         type: GET_ERRORS,
@@ -171,11 +168,8 @@ export const updateMaterial = (
       });
       if (lampiran_to_delete.length > 0) {
         // axios.delete put the data is quite different..
-        return axios.delete(`/api/upload/att_material/lampiran/${materialId}`, {
-          data: {
-            lampiran_to_delete: lampiran_to_delete,
-            current_lampiran: current_lampiran,
-          },
+        return axios.delete(`/api/files/materials/${materialId}`, {
+          data: { file_to_delete: lampiran_to_delete },
         });
       } else return "No lampiran file is going to be deleted";
     })
@@ -188,11 +182,11 @@ export const updateMaterial = (
       if (formData.has("lampiran_materi")) {
         console.log("Lampiran material going to be uploaded");
         return axios.post(
-          `/api/upload/att_material/lampiran/${materialId}`,
+          `/api/files/materials/upload/${materialId}`,
           formData
         );
       } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
-      else return "Successfully updated task with no lampiran";
+      else return {_id:res.data._id ,message: "Successfully updated task with no lampiran"};
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");

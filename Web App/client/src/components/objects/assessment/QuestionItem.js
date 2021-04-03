@@ -104,7 +104,8 @@ function QuestionItem(props) {
     handleLongtextWeight,
     longtextWeight,
     backtickError,
-    renderbtErrors
+    renderbtErrors,
+    lampiranUrls
   } = props;
   const classes = useStyles();
 
@@ -116,7 +117,6 @@ function QuestionItem(props) {
   const [longtextAnswer, setLongtextAnswer] = React.useState("");
   const [localBtError, setLocalBtError] = React.useState(false);
   const [lampiranToPreview, setLampiranToPreview] = React.useState([]);
-
   // dipakai untuk edit assessment
   // const [currentLampiran, setCurrentLampiran] = React.useState([])
 
@@ -221,6 +221,8 @@ function QuestionItem(props) {
 
   // console.log("Current lampiran : ", currentLampiran);
   // console.log("Lampiran to preview: ", lampiranToPreview);
+  let lampiranToUrl = isEdit ? new Map(JSON.parse(lampiranUrls)) : null;
+  
   return (
     <Grid item>
       <Paper>
@@ -250,7 +252,8 @@ function QuestionItem(props) {
                         <GridListTile key={image} cols={1}>
                           <img
                             alt="current img"
-                            src={`/api/upload/att_assessment/${image}`}
+                            // src={`/api/upload/att_assessment/${image}`
+                            src={lampiranToUrl.get(image.toString())}
                           />
                           <GridListTileBar
                             titlePosition="top"
@@ -276,6 +279,7 @@ function QuestionItem(props) {
                         actionIcon={
                           <IconButton
                             style={{ color: "white" }}
+                            // onClick={(e) => handleQuestionImage(e, index, i + currentLampiran.length)
                             onClick={(e) => handleQuestionImage(e, index, i)}
                           >
                             <CloseIcon />
@@ -299,13 +303,15 @@ function QuestionItem(props) {
                         <GridListTile key={image} cols={1}>
                           <img
                             alt="current img"
-                            src={`/api/upload/att_assessment/${image}`}
+                            // src={`/api/upload/att_assessment/${image}`
+                            src={lampiranToUrl.get(image.toString())}
                           />
                           <GridListTileBar
                             titlePosition="top"
                             actionIcon={
                               <IconButton
                                 style={{ color: "white" }}
+                                // onClick={(e) => handleQuestionImage(e, index, i + currentLampiran.length)
                                 onClick={(e) => handleQuestionImage(e, index, i)}
                               >
                                 <CloseIcon />
@@ -348,7 +354,8 @@ function QuestionItem(props) {
                         <GridListTile key={image} cols={1}>
                           <img
                             alt="current img"
-                            src={`/api/upload/att_assessment/${image}`}
+                            // src={`/api/upload/att_assessment/${image}`
+                            src={lampiranToUrl.get(image.toString())}
                           />
                           <GridListTileBar
                             titlePosition="top"
@@ -736,7 +743,8 @@ export default React.memo(
       prevProps.answer === nextProps.answer &&
       prevProps.lampiran_length === nextProps.lampiran_length &&
       prevProps.longtextWeight === nextProps.longtextWeight && 
-      prevProps.renderbtErrors === nextProps.renderbtErrors
+      prevProps.renderbtErrors === nextProps.renderbtErrors &&
+      prevProps.lampiranUrls === nextProps.lampiranUrls
     );
   }
 );

@@ -5,9 +5,10 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import {
-  downloadLampiranMateri,
-  previewLampiranMateri,
-} from "../../../actions/UploadActions";
+  getFileMaterials,
+  downloadFileMaterial,
+  viewFileMaterial,
+} from "../../../actions/files/FileMaterialActions";
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { getOneUser } from "../../../actions/UserActions";
 import {
@@ -19,6 +20,7 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
+  CircularProgress,
   Fab,
   Grid,
   IconButton,
@@ -141,12 +143,12 @@ function LampiranFile(props) {
   const classes = useStyles();
 
   const { file_id, filename, filetype, onDownloadFile, onPreviewFile } = props;
-
+  const [progress, setProgress] = React.useState(null);
+  var req = null;
   let displayedName = "";
   filename.length >= 31
     ? (displayedName = `${filename.slice(0, 30)}..${path.extname(filename)}`)
     : (displayedName = filename);
-
   return (
     <Grid item xs={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
@@ -155,7 +157,7 @@ function LampiranFile(props) {
           disableRipple
           className={classes.listItem}
           onClick={() => {
-            onPreviewFile(file_id, "lampiran_materi");
+            onPreviewFile(file_id);
           }}
         >
           <ListItemAvatar>
@@ -197,16 +199,20 @@ function LampiranFile(props) {
             }
             secondary={filetype}
           />
-          <IconButton
+
+          {/* <IconButton
             className={classes.downloadIconButton}
             onClick={(e) => {
               e.stopPropagation();
-              onDownloadFile(file_id, "lampiran_materi");
+              onDownloadFile(file_id);
             }}
           >
             <CloudDownloadIcon className={classes.downloadIcon} />
-          </IconButton>
+          </IconButton> */}
         </ListItem>
+        {/* <div id="myProgress" style="display:none;">      
+            sds
+          </div>  */}
       </Paper>
     </Grid>
   );
@@ -220,24 +226,31 @@ function ViewMaterial(props) {
     deleteMaterial,
     getOneUser,
     getAllSubjects,
-    downloadLampiranMateri,
-    previewLampiranMateri,
+    viewFileMaterial,
+    downloadFileMaterial,
     getOneMaterial,
     getAllClass,
+    getFileMaterials,
   } = props;
-  const { selectedMaterials } = props.materialsCollection;
+  const { selectedMaterials, all_materials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
   const materi_id = props.match.params.id;
   const { all_subjects_map } = props.subjectsCollection;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [fileLampiran, setFileLampiran] = React.useState([]);
 
-  console.log(selectedMaterials);
+  console.log(props.materialsFiles);
   React.useEffect(() => {
     window.scrollTo(0, 0);
     getAllSubjects("map"); // this will get the selectedMaterials.
     getOneMaterial(materi_id);
     getAllClass("map");
     getOneUser(selectedMaterials.author_id);
+    // COba S3
+    getFileMaterials(materi_id).then((result) => {
+      setFileLampiran(result);
+    });
+    // bakal ngedapat collection of S3 files di
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMaterials.author_id]);
 
@@ -271,16 +284,6 @@ function ViewMaterial(props) {
     }
   };
 
-  const onDownloadFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran_materi") downloadLampiranMateri(id);
-    else console.log("File Category is not specified");
-  };
-
-  const onPreviewFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran_materi") previewLampiranMateri(id);
-    else console.log("File Category is not specified");
-  };
-
   const onDeleteTask = (id) => {
     deleteMaterial(id);
     // setFileMateri(null)
@@ -298,7 +301,6 @@ function ViewMaterial(props) {
   document.title = !selectedMaterials.name
     ? "Schooly | Lihat Materi"
     : `Schooly | ${selectedMaterials.name}`;
-
   return (
     <div className={classes.root}>
       <DeleteDialog
@@ -359,24 +361,15 @@ function ViewMaterial(props) {
                 </Typography>
                 <Typography>{selectedMaterials.description}</Typography>
               </Grid>
-              {!selectedMaterials.lampiran ? null : (
-                <Grid item xs={12}>
-                  <Typography color="textSecondary" gutterBottom>
-                    Lampiran Materi:
-                  </Typography>
-                  <Grid container spacing={1}>
-                    {selectedMaterials.lampiran.map((lampiran) => (
-                      <LampiranFile
-                        file_id={lampiran.id}
-                        onPreviewFile={onPreviewFile}
-                        onDownloadFile={onDownloadFile}
-                        filename={lampiran.filename}
-                        filetype={fileType(lampiran.filename)}
-                      />
-                    ))}
-                  </Grid>
-                </Grid>
-              )}
+              {fileLampiran.map((lampiran) => (
+                  <LampiranFile
+                    file_id={lampiran._id}
+                    onPreviewFile={viewFileMaterial}
+                    onDownloadFile={downloadFileMaterial}
+                    filename={lampiran.filename}
+                    filetype={fileType(lampiran.filename)}
+                  />
+                ))}
             </Grid>
           </Paper>
         </Grid>
@@ -413,15 +406,17 @@ ViewMaterial.propTypes = {
   materialsCollection: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
+  materialsFiles: PropTypes.object.isRequired,
 
-  downloadLampiranMateri: PropTypes.func.isRequired,
-  previewLampiranMateri: PropTypes.func.isRequired,
   deleteMaterial: PropTypes.func.isRequired,
   getOneUser: PropTypes.func.isRequired, // For the person in charge task
   getOneMaterial: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getSelectedClasses: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
+  getFileMaterials: PropTypes.func.isRequired,
+  viewFileMaterial: PropTypes.func.isRequired,
+  downloadFileMaterial: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -429,15 +424,17 @@ const mapStateToProps = (state) => ({
   materialsCollection: state.materialsCollection,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
+  materialsFiles: state.materialsFiles,
 });
 
 export default connect(mapStateToProps, {
-  downloadLampiranMateri,
   getAllSubjects,
-  previewLampiranMateri,
   getOneMaterial,
   deleteMaterial,
   getOneUser,
   getAllClass,
   getSelectedClasses,
+  getFileMaterials,
+  viewFileMaterial,
+  downloadFileMaterial,
 })(ViewMaterial);

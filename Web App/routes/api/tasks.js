@@ -131,4 +131,15 @@ router.get("/gettasksbysc/:subjectId&:classId", (req, res) => {
   });
 });
 
+router.get("/byclass/:classId", (req, res) => {
+  Task.find({
+    class_assigned: { $elemMatch: { $eq: req.params.classId } },
+  }).then((tasks) => {
+    if (!tasks) {
+      return res.status(200).json("Belum ada tugas");
+    } else {
+      return res.status(200).json(tasks);
+    }
+  });
+});
 module.exports = router;

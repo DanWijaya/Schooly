@@ -1,3 +1,4 @@
+require("dotenv").config({ path: `${__dirname}/.env` }); // set the path inside the parameter.
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -14,6 +15,15 @@ const att_material = require("./routes/api/upload/att_material");
 const att_task = require("./routes/api/upload/att_task");
 const file_tugas = require("./routes/api/upload/file_tugas");
 const avatar = require("./routes/api/upload/avatar");
+// const s3upload = require("./routes/s3_upload/s3_uploads");
+
+// untuk files punya
+const file_materials = require("./routes/api/files/file_materials");
+const file_announcements = require("./routes/api/files/file_announcements");
+const file_tasks = require("./routes/api/files/file_tasks");
+const file_submit_tasks = require("./routes/api/files/file_submit_tasks");
+const file_avatar = require("./routes/api/files/file_avatar");
+const file_assessments = require("./routes/api/files/file_assessments");
 
 // untuk objects punya
 const tasks = require("./routes/api/tasks");
@@ -77,6 +87,15 @@ app.use("/api/upload/att_task", att_task);
 app.use("/api/upload/file_tugas", file_tugas);
 app.use("/api/upload/avatar", avatar.router);
 
+//Handle files routing
+app.use("/api/files/materials", file_materials);
+app.use("/api/files/announcements", file_announcements);
+app.use("/api/files/tasks", file_tasks);
+app.use("/api/files/submit_tasks", file_submit_tasks);
+app.use("/api/files/avatar", file_avatar);
+app.use("/api/files/assessments", file_assessments);
+
+//Handle object routing
 app.use("/api/subjects", subjects);
 app.use("/api/authentication", authentication);
 app.use("/api/announcements", announcements);
@@ -85,4 +104,5 @@ app.use("/api/assessments", assessments);
 
 // Always put this in the end
 const port = process.env.PORT || 5000;
+
 app.listen(port, () => console.log(`Server up and running on port ${port} !`));

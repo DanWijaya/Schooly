@@ -37,8 +37,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 
-const useStyles =
-    makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "80%",
@@ -60,8 +59,8 @@ const useStyles =
     flexDirection: "column",
     justifyContent: "center",
     padding: "40px 0px 40px 30px",
-    backgroundColor: props => props.backgroundColor,
-    backgroundImage: props => `url(${props.backgroundImage})`,
+    backgroundColor: (props) => props.backgroundColor,
+    backgroundImage: (props) => `url(${props.backgroundImage})`,
     backgroundPosition: "right bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
@@ -452,7 +451,6 @@ function AssessmentListItem(props) {
 }
 
 function ViewSubject(props) {
-
   const { user } = props.auth;
   const id = props.match.params.id;
   const {
@@ -474,7 +472,6 @@ function ViewSubject(props) {
 
   let subjects_list = Array.from(all_subjects_map.keys());
   let background_idx = subjects_list.indexOf(id) % subjectBackground.length;
-
   let background_image, background_color
 
   if(background_idx !== -1){
@@ -882,7 +879,9 @@ function ViewSubject(props) {
     return result;
   }
 
-  document.title = all_subjects_map.get(id) ? `Schooly | ${all_subjects_map.get(id)}` : "Schooly";
+  document.title = all_subjects_map.get(id)
+    ? `Schooly | ${all_subjects_map.get(id)}`
+    : "Schooly";
 
   return (
     <div className={classes.root}>

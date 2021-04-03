@@ -90,7 +90,9 @@ function Footer(props) {
                     </Link>
                   </Typography>
                   <Typography gutterBottom className={classes.mobileFont}>
-                    <Link to="https://instagram.com/schoolysystem">Media Sosial</Link>
+                    <Link to="https://instagram.com/schoolysystem">
+                      Media Sosial
+                    </Link>
                   </Typography>
                 </div>
               </Grid>

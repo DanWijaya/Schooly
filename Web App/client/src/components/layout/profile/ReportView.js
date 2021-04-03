@@ -1305,11 +1305,7 @@ function ReportView(props) {
                   {showSubject(taskGraphCurrentSubject)}
                   <IconButton
                     onClick={() =>
-                      changeGraphSubject(
-                        "Tugas",
-                        "Right",
-                        all_subjects.length
-                      )
+                      changeGraphSubject("Tugas", "Right", all_subjects.length)
                     }
                   >
                     <ArrowForwardIosIcon />
@@ -1317,7 +1313,15 @@ function ReportView(props) {
                 </div>
               </Grid>
             </Grid>
-            <Grid item container direction="column" spacing={1} xs={12} sm={4} alignItems="center">
+            <Grid
+              item
+              container
+              direction="column"
+              spacing={1}
+              xs={12}
+              sm={4}
+              alignItems="center"
+            >
               <Grid item>
                 <Typography variant="h6" align="center">
                   Nilai Kuis Anda
@@ -1336,9 +1340,7 @@ function ReportView(props) {
                     </Typography>
                   </div>
                 ) : (
-                  <div>
-                    {graphAssessment(quizGraphCurrentSubject, "Kuis")}
-                  </div>
+                  <div>{graphAssessment(quizGraphCurrentSubject, "Kuis")}</div>
                 )}
               </Grid>
               <Grid item>
@@ -1361,7 +1363,15 @@ function ReportView(props) {
                 </div>
               </Grid>
             </Grid>
-            <Grid item container direction="column" spacing={1} xs={12} sm={4} alignItems="center">
+            <Grid
+              item
+              container
+              direction="column"
+              spacing={1}
+              xs={12}
+              sm={4}
+              alignItems="center"
+            >
               <Grid item>
                 <Typography variant="h6" align="center">
                   Nilai Ujian Anda
@@ -1380,9 +1390,7 @@ function ReportView(props) {
                     </Typography>
                   </div>
                 ) : (
-                  <div>
-                    {graphAssessment(examGraphCurrentSubject, "Ujian")}
-                  </div>
+                  <div>{graphAssessment(examGraphCurrentSubject, "Ujian")}</div>
                 )}
               </Grid>
               <Grid item>
@@ -1397,11 +1405,7 @@ function ReportView(props) {
                   {showSubject(examGraphCurrentSubject)}
                   <IconButton
                     onClick={() =>
-                      changeGraphSubject(
-                        "Ujian",
-                        "Right",
-                        all_subjects.length
-                      )
+                      changeGraphSubject("Ujian", "Right", all_subjects.length)
                     }
                   >
                     <ArrowForwardIosIcon />
@@ -1411,12 +1415,7 @@ function ReportView(props) {
             </Grid> */}
             {/* --------------------------------------------------- */}
           </Grid>
-          <Grid
-            item
-            container
-            direction="column"
-            style={{ margin: "auto" }}
-          >
+          <Grid item container direction="column" style={{ margin: "auto" }}>
             <Grid item>
               <TableContainer component={Paper}>
                 <Table

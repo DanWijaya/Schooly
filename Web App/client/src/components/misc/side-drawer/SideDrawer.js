@@ -104,8 +104,12 @@ function DrawerContent(props) {
   /* directedTo is for the page that is directed when clicking the classIcon in NavBarContents*/
   let directedTo;
   if (user !== undefined) {
-    if (user.role === "Student") directedTo = `/kelas/${user.kelas}`;
-    else directedTo = "/daftar-kelas";
+    if (user.role === "Student") {
+      directedTo = `/kelas/${user.kelas}`;
+      // directedTo = "/daftar-kelas";
+    } else {
+      directedTo = "/daftar-kelas";
+    }
   }
 
   let ListItemContents;

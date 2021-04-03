@@ -245,6 +245,7 @@ class CreateAssessment extends Component {
       anchorEl: null,
       checkboxSnackbarOpen: false,
       radioSnackbarOpen: false,
+      fileLimitSnackbar: false,
       weights: {
         radio: undefined,
         checkbox: undefined,
@@ -263,6 +264,7 @@ class CreateAssessment extends Component {
       // backtickErrors[1] = true -> berarti terdapat jawaban kosong (``) atau jumlah backtick ganjil pada pertanyaan nomor 2  
       // backtickErrors[2] = -1 -> berarti pertanyaan nomor 2 adalah soal non isian. Nilai "-1" dapat diabaikan, ini dapat diganti dengan nilai lain selain true false
       renderbtErrors: false, // abaikan nilainya, ini hanya dipakai agar QuestionItem dirender ulang saat submit dan ada soal yang dihapus
+      over_limit: []
     };
   }
 
@@ -280,6 +282,13 @@ class CreateAssessment extends Component {
       return;
     }
     this.setState({ snackbarOpen: false });
+  };
+
+  handleFileLimitSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ fileLimitSnackbar: false });
   };
 
   handleOpenErrorSnackbar = () => {
@@ -696,7 +705,7 @@ class CreateAssessment extends Component {
   };
 
   handleDuplicateQuestion = (i) => {
-    console.log(i);
+    console.log(i)
     let questions = this.state.questions;
     // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
@@ -761,15 +770,19 @@ class CreateAssessment extends Component {
   handleQuestionImage = (e, qnsIndex, indexToDelete = null) => {
     let questions = this.state.questions;
     if (Number.isInteger(indexToDelete)) {
+      // Untuk kasus pas mau nge delete foto
       questions[qnsIndex].lampiran.splice(indexToDelete, 1);
       console.log(questions);
       this.setState({ questions: questions });
     } else {
       if (e.target.files) {
+        // Untuk kasus pas mau upload foto
         const files = Array.from(e.target.files);
-        let temp = questions[qnsIndex].lampiran.concat(files);
+        let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 5);
+        let file_to_upload = files.filter((file) => file.size / Math.pow(10, 6) <= 5);
+        let temp = questions[qnsIndex].lampiran.concat(file_to_upload);
         questions[qnsIndex].lampiran = temp;
-        this.setState({ questions: questions });
+        this.setState({ questions: questions, fileLimitSnackbar: over_limit.length > 0 , over_limit: over_limit});
       }
     }
   };
@@ -1089,7 +1102,6 @@ class CreateAssessment extends Component {
             )}
           </Grid>
         );
-
         columnsDesktopView.push(
           <Grid
             container
@@ -1721,6 +1733,20 @@ class CreateAssessment extends Component {
           >
             Masih ada bagian yang belum diisi atau salah, silahkan diperiksa
             kembali!
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={this.state.fileLimitSnackbar}
+          autoHideDuration={4000}
+          onClose={this.handleFileLimitSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            severity="error"
+          >
+            {this.state.over_limit.length} file melebihi batas 5MB!
           </MuiAlert>
         </Snackbar>
       </div>

@@ -9,6 +9,7 @@ import {
 } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Fab,
@@ -22,6 +23,7 @@ import {
   Input,
   Snackbar,
   Divider,
+  useMediaQuery
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -32,6 +34,7 @@ import LinkIcon from "@material-ui/icons/Link";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import MuiAlert from "@material-ui/lab/Alert";
+import SwitchBase from "@material-ui/core/internal/SwitchBase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -102,12 +105,6 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  // startDateText: {
-  //   color: theme.palette.primary.main
-  // },
-  // endDateText: {
-  //   color: theme.palette.warning.main
-  // },
   answerText: {
     color: theme.palette.success.dark,
   },
@@ -147,12 +144,13 @@ function ViewAssessmentTeacher(props) {
 
   document.title = "Schooly | Buat Kuis";
   const assessment_id = props.match.params.id;
-
+  const isMobileView = useMediaQuery("(max-width:780px)");
   const {
     getOneAssessment,
     getAllClass,
     getAllSubjects,
     deleteAssessment,
+    getFileAssessment
   } = props;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
@@ -165,16 +163,20 @@ function ViewAssessmentTeacher(props) {
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(
     null
   );
+  const [lampiranUrls, setLampiranUrls] = React.useState(new Map());
 
-  console.log(selectedAssessmentName);
+  console.log(selectedAssessments);
   React.useEffect(() => {
     window.scrollTo(0, 0);
     getOneAssessment(assessment_id);
     getAllClass("map");
     getAllSubjects("map");
+    getFileAssessment(assessment_id).then((result) => setLampiranUrls(result))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  console.log(lampiranUrls);
+  
   const onDeleteAssessment = (id) => {
     deleteAssessment(id);
   };
@@ -238,7 +240,7 @@ function ViewAssessmentTeacher(props) {
     selectedAssessments.type === "Kuis"
       ? `http://${window.location.host}/kuis-murid/${assessment_id}`
       : `http://${window.location.host}/ujian-murid/${assessment_id}`;
-
+  console.log(questions);
   return (
     <div className={classes.root}>
       {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
@@ -389,19 +391,26 @@ function ViewAssessmentTeacher(props) {
                         cellHeight={300}
                         style={{ margin: "10px 0px 10px 0px" }}
                       >
-                        {question.lampiran.map((image, i) => (
-                          <GridListTile key={image} cols={1}>
-                            <img
-                              alt="current img"
-                              src={`/api/upload/att_assessment/${image}`}
-                            />
-                            <GridListTileBar
-                              title={`Gambar ${i + 1}`}
-                              titlePosition="top"
-                              actionPosition="right"
-                            />
-                          </GridListTile>
-                        ))}
+                        {question.lampiran.map((img, i) => {
+                        let image = img;
+                        if(lampiranUrls.has(image.toString())){
+                          return (
+                            <GridListTile key={image} cols={1}>
+                              <img
+                                alt="current img"
+                                // src={`/api/upload/att_assessment/${image}`}
+                                src={lampiranUrls.get(image.toString())}
+                              />
+                              <GridListTileBar
+                                title={`Gambar ${i + 1}`}
+                                titlePosition="top"
+                                actionPosition="right"
+                              />
+                            </GridListTile>
+                          )}
+                          return null
+                        }
+                        )}
                       </GridList>
                       {/* <Typography variant="h6"> */}
                         {question.type === "shorttext" ? (
@@ -573,4 +582,5 @@ export default connect(mapStateToProps, {
   deleteAssessment,
   getAllClass,
   getAllSubjects,
+  getFileAssessment
 })(ViewAssessmentTeacher);

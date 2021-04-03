@@ -10,6 +10,10 @@ import { getOneTask, updateTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions"
+import {
+  deleteFileTasks,
+  getFileTasks,
+} from "../../../actions/files/FileTaskActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -28,6 +32,7 @@ import {
   MenuItem,
   Paper,
   Select,
+  Snackbar,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -37,6 +42,7 @@ import {
 } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
+import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {
   FaFile,
@@ -216,6 +222,8 @@ class EditTask extends Component {
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
+      fileLimitSnackbar: false,
+      over_limit: [],
       anchorEl: null,
       openUploadDialog: null,
       openDeleteDialog: null,
@@ -227,14 +235,20 @@ class EditTask extends Component {
 
   componentDidMount() {
     window.scrollTo(0, 0);
-    this.props.getOneTask(this.props.match.params.id);
+    const { id } = this.props.match.params;
+    this.props.getOneTask(id);
     this.props.getAllClass();
     this.props.getAllSubjects();
+    this.props.getFileTasks(id).then((res) => {
+      this.setState({
+        fileLampiran: res,
+      });
+    });
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
-    this.props.clearSuccess()
+  componentWillUnmount() {
+    this.props.clearErrors();
+    this.props.clearSuccess();
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -254,9 +268,7 @@ class EditTask extends Component {
           ? tasksCollection.class_assigned
           : [],
         description: tasksCollection.description,
-        fileLampiran: Boolean(tasksCollection.lampiran)
-          ? tasksCollection.lampiran
-          : [],
+        // fileLampiran: Boolean(tasksCollection.lampiran) ? tasksCollection.lampiran : []
         // fileLampiran must made like above soalnya because maybe nextProps.tasksCollection is still a plain object.
         // so need to check if nextProps.tasksCollection is undefined or not because when calling fileLAmpiran.length, there will be an error.
       });
@@ -291,18 +303,17 @@ class EditTask extends Component {
       deadline: this.state.deadline,
       subject: this.state.subject,
       description: this.state.description,
+      class_assigned: this.state.class_assigned,
+      lampiran: Array.from(this.state.fileLampiran),
       errors: {},
     };
-
-    if (classChanged) taskObject.class_assigned = classesSelected;
-    // When the classes is changed
-    else taskObject.class_assigned = class_assigned; // When it has no change
 
     let formData = new FormData();
     for (var i = 0; i < fileLampiranToAdd.length; i++) {
       console.log(this.state.fileLampiran[i]);
       formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i]);
     }
+    console.log(taskObject);
     this.props.updateTask(
       formData,
       fileLampiranToDelete,
@@ -316,24 +327,43 @@ class EditTask extends Component {
   };
 
   handleLampiranUpload = (e) => {
-    const files = e.target.files;
-    let temp;
-    let tempToAdd;
-
-    if (this.state.fileLampiran.length === 0)
-      this.setState({fileLampiran: Array.from(files), fileLampiranToAdd: Array.from(files)})
-    else {
+    const files = Array.from(e.target.files);
+    if (this.state.fileLampiran.length === 0) {
+      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+      let allowed_file = files.filter(
+        (file) => file.size / Math.pow(10, 6) <= 10
+      );
+      this.setState({
+        fileLampiran: allowed_file,
+        fileLampiranToAdd: allowed_file,
+        over_limit: over_limit,
+        fileLimitSnackbar: over_limit.length > 0,
+      });
+    } else {
       if (files.length !== 0) {
-        temp = [...this.state.fileLampiran, ...Array.from(files)];
-        tempToAdd = [...this.state.fileLampiranToAdd, ...Array.from(files)]
-        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
+        let allowed_file = files.filter(
+          (file) => file.size / Math.pow(10, 6) <= 10
+        );
+        let over_limit = files.filter(
+          (file) => file.size / Math.pow(10, 6) > 10
+        );
+
+        let temp = [...this.state.fileLampiran, ...allowed_file];
+        let file_to_upload = [...this.state.fileLampiranToAdd, ...allowed_file];
+        allowed_file = temp;
+        this.setState({
+          fileLampiran: allowed_file,
+          fileLampiranToAdd: file_to_upload,
+          over_limit: over_limit,
+          fileLimitSnackbar: over_limit.length > 0,
+        });
       }
     }
     document.getElementById("file_control").value = null;
   };
 
   handleLampiranDelete = (e, i, name) => {
-    e.preventDefault()
+    e.preventDefault();
     // console.log("Index is: ", i)
     let temp = Array.from(this.state.fileLampiran);
     let tempToDelete = this.state.fileLampiranToDelete;
@@ -371,6 +401,13 @@ class EditTask extends Component {
     this.setState({ anchorEl: null });
   };
 
+  handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ fileLimitSnackbar: false });
+  };
+
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
   };
@@ -383,18 +420,19 @@ class EditTask extends Component {
     this.setState({ openDeleteDialog: false });
   };
 
-  onChange = (e, otherfield) => {
-    if(otherfield){
-      // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
-      this.setState({ [otherfield]: e.target.value });
+  onChange = (e, otherfield = null) => {
+    console.log(this.state.class_assigned);
+    if (otherfield) {
+      if (otherfield == "deadline") {
+        this.setState({ [otherfield]: e });
+      } else {
+        // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
+        this.setState({ [otherfield]: e.target.value });
+      }
     } else {
       this.setState({ [e.target.id]: e.target.value });
     }
   };
-
-  onDateChange = (date) => {
-    this.setState({ deadline: date})
-  }
 
   render() {
     const { fileLampiran, class_assigned } = this.state;
@@ -405,7 +443,7 @@ class EditTask extends Component {
 
     // const task_id = this.props.match.params.id;
 
-    let classIds = []
+    let classIds = [];
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {
@@ -745,6 +783,21 @@ class EditTask extends Component {
               </div>
             </form>
           </Paper>
+          <Snackbar
+            open={this.state.fileLimitSnackbar}
+            autoHideDuration={4000}
+            onClose={this.handleCloseErrorSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              onClose={this.handleCloseSnackbar}
+              severity="error"
+            >
+              {this.state.over_limit.length} file melebihi batas 10MB!
+            </MuiAlert>
+          </Snackbar>
         </div>
       );
     } else {
@@ -766,12 +819,6 @@ EditTask.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  getOneTask: PropTypes.func.isRequired,
-  updateTask: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  clearSuccess: PropTypes.func.isRequired,
-  getAllClass: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -783,6 +830,12 @@ const mapStateToProps = (state) => ({
   subjectsCollection: state.subjectsCollection,
 });
 
-export default connect(
-    mapStateToProps, { getOneTask, updateTask, getAllClass, getAllSubjects, clearErrors, clearSuccess }
-) (withStyles(styles)(EditTask))
+export default connect(mapStateToProps, {
+  getOneTask,
+  updateTask,
+  getAllClass,
+  getAllSubjects,
+  clearErrors,
+  clearSuccess,
+  getFileTasks,
+})(withStyles(styles)(EditTask));

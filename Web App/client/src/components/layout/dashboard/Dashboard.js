@@ -813,7 +813,7 @@ class Dashboard extends Component {
               workType="Tugas"
             />
           );
-        } else{
+        } else {
           return (
             <Grid item style={{ height: "270px", width: "250px" }}>
               <div className={classes.greyBackground}>
@@ -836,7 +836,7 @@ class Dashboard extends Component {
             // </Typography>
           );
         }
-      } else{
+      } else {
         return (
           <Grid item style={{ height: "270px", width: "250px" }}>
             <div className={classes.greyBackground}>
@@ -906,7 +906,7 @@ class Dashboard extends Component {
               workType={type}
             />
           );
-        } else{
+        } else {
           return (
             <Grid item style={{ height: "270px", width: "250px" }}>
               <div className={classes.greyBackground}>
@@ -929,7 +929,7 @@ class Dashboard extends Component {
             // </Typography>
           );
         }
-      } else{
+      } else {
         return (
           <Grid item style={{ height: "270px", width: "250px" }}>
             <div className={classes.greyBackground}>
@@ -1001,6 +1001,7 @@ class Dashboard extends Component {
 
     function listTasksTeacher() {
       let result = [];
+      console.log(user);
       for (let i = 0; i < tasksCollection.length; i++) {
         if (tasksCollection[i].person_in_charge_id === user._id) {
           let number_students_assigned = 0;

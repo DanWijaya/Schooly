@@ -4,11 +4,12 @@ import {
   GET_ERRORS,
   GET_ALL_LAMPIRAN_BY_TASK,
   GET_SUCCESS_RESPONSE,
+  GET_ALL_MATERIALS,
 } from "./Types";
 import axios from "axios";
 import { Dropbox } from "dropbox";
 
-export const uploadTugas = (tugas, userData, taskId, ontime) => dispatch => {
+export const uploadTugas = (tugas, userData, taskId, ontime) => (dispatch) => {
   if (userData.role === "Student") {
     axios
       .post(

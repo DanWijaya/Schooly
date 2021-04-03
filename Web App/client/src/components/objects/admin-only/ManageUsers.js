@@ -828,13 +828,13 @@ function ManageUsers(props) {
 
     if (Array.isArray(all_students)) {
       all_students.forEach((data) => {
-        userRowItem(data, "Student");
+        userRowItem(data);
         currentListBooleanStudent.push(false);
       });
     }
     if (Array.isArray(all_teachers)) {
       all_teachers.forEach((data) => {
-        userRowItem(data, "Teacher");
+        userRowItem(data);
         currentListBooleanTeacher.push(false);
       });
     }

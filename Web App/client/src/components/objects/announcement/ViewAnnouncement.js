@@ -5,6 +5,11 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import {
+  getFileAnnouncements,
+  downloadFileAnnouncements,
+  viewFileAnnouncement,
+} from "../../../actions/files/FileAnnouncementActions";
+import {
   getOneAnnouncement,
   deleteAnnouncement,
 } from "../../../actions/AnnouncementActions";
@@ -188,7 +193,7 @@ function LampiranFile(props) {
             }
             secondary={filetype}
           />
-          <IconButton
+          {/* <IconButton
             size="small"
             className={classes.downloadIconButton}
             onClick={(e) => {
@@ -197,7 +202,7 @@ function LampiranFile(props) {
             }}
           >
             <CloudDownloadIcon fontSize="small" />
-          </IconButton>
+          </IconButton> */}
         </ListItem>
       </Paper>
     </Grid>
@@ -217,11 +222,16 @@ function ViewAnnouncement(props) {
     previewLampiranAnnouncement,
     deleteAnnouncement,
     getSelectedClasses,
-    getAllClass
+    getAllClass,
+    getFileAnnouncements,
+    viewFileAnnouncement,
+    downloadFileAnnouncements,
   } = props;
   const { all_classes_map } = props.classesCollection;
   const { user, retrieved_users } = props.auth;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [fileLampiran, setFileLampiran] = React.useState([]);
+
   const announcement_id = props.match.params.id;
 
   React.useEffect(() => {
@@ -233,14 +243,14 @@ function ViewAnnouncement(props) {
     getAllClass("map");
     getSelectedClasses(selectedAnnouncements.class_assigned);
     if (selectedAnnouncements._id) {
-      console.log("getusers is runned");
       getUsers([selectedAnnouncements.author_id]);
     }
+    getFileAnnouncements(announcement_id).then((result) => {
+      setFileLampiran(result);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAnnouncements._id]); // beacause only receive one announcement.
 
-  console.log(new Date(), classesCollection);
-  console.log("selected announcement: ", selectedAnnouncements);
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
     switch (ext_file) {
@@ -286,18 +296,17 @@ function ViewAnnouncement(props) {
   };
 
   const onDownloadFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran_announcement")
-      downloadLampiranAnnouncement(id);
+    if (fileCategory === "lampiran_announcement") console.log(":Download");
+    // downloadLampiranAnnouncement(id)
     else console.log("File Category is not specified");
   };
 
   const onPreviewFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran_announcement")
-      previewLampiranAnnouncement(id);
+    if (fileCategory === "lampiran_announcement") console.log("Download");
+    // previewLampiranAnnouncement(id)
     else console.log("File Category is not specified");
   };
 
-  console.log(selectedAnnouncements.lampiran)
   return (
     <div className={classes.root}>
       <DeleteDialog
@@ -380,15 +389,15 @@ function ViewAnnouncement(props) {
                       Lampiran Berkas:
                     </Typography>
                     <Grid item container spacing={1}>
-                      {selectedAnnouncements.lampiran.map((lampiran) => (
-                        <LampiranFile
-                          file_id={lampiran.id}
-                          onPreviewFile={onPreviewFile}
-                          onDownloadFile={onDownloadFile}
-                          filename={lampiran.filename}
-                          filetype={fileType(lampiran.filename)}
-                        />
-                      ))}
+                    {fileLampiran.map((lampiran) => (
+                <LampiranFile
+                  file_id={lampiran._id}
+                  onPreviewFile={viewFileAnnouncement}
+                  onDownloadFile={downloadFileAnnouncements}
+                  filename={lampiran.filename}
+                  filetype={fileType(lampiran.filename)}
+                />
+              ))}
                     </Grid>
                   </Grid>
                 )}
@@ -452,4 +461,7 @@ export default connect(mapStateToProps, {
   downloadLampiranAnnouncement,
   getSelectedClasses,
   getAllClass,
+  getFileAnnouncements,
+  viewFileAnnouncement,
+  downloadFileAnnouncements,
 })(ViewAnnouncement);

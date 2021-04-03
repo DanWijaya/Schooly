@@ -3,13 +3,14 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import { getFileAnnouncements } from "../../../actions/files/FileAnnouncementActions";
 import {
   getOneAnnouncement,
   updateAnnouncement,
 } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import { clearSuccess } from "../../../actions/SuccessActions"
+import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -28,11 +29,13 @@ import {
   MenuItem,
   Paper,
   Select,
+  Snackbar,
   TextField,
   Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
+import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {
   FaFile,
@@ -204,6 +207,8 @@ class EditAnnouncement extends Component {
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
+      fileLimitSnackbar: false,
+      over_limit: [],
       class_assigned: [],
       anchorEl: null,
       openUploadDialog: null,
@@ -219,21 +224,32 @@ class EditAnnouncement extends Component {
   componentDidMount() {
     window.scrollTo(0, 0);
     const { user } = this.props.auth;
-    const { setCurrentClass, getOneAnnouncement, getAllClass } = this.props;
+    const {
+      setCurrentClass,
+      getOneAnnouncement,
+      getAllClass,
+      getFileAnnouncements,
+    } = this.props;
+    const { id } = this.props.match.params;
 
-    getOneAnnouncement(this.props.match.params.id);
+    getOneAnnouncement(id);
     getAllClass();
+    getFileAnnouncements(id).then((result) => {
+      this.setState({ fileLampiran: result });
+    });
     if (user.role === "Student") setCurrentClass(user.kelas);
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
-    this.props.clearSuccess()
+  componentWillUnmount() {
+    this.props.clearErrors();
+    this.props.clearSuccess();
   }
 
   // kurang tau gimana cara ubah.
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { selectedAnnouncements } = nextProps.announcements;
+
+    // console.log(nextProps.tasksCollection.deadline);
 
     if (!nextProps.errors) {
       this.handleOpenUploadDialog();
@@ -244,9 +260,7 @@ class EditAnnouncement extends Component {
       this.setState({
         title: selectedAnnouncements.title,
         description: selectedAnnouncements.description,
-        fileLampiran: Boolean(selectedAnnouncements.lampiran)
-          ? selectedAnnouncements.lampiran
-          : [],
+        // fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : [],
         class_assigned: Boolean(selectedAnnouncements.class_assigned)
           ? selectedAnnouncements.class_assigned
           : [],
@@ -258,24 +272,43 @@ class EditAnnouncement extends Component {
   }
 
   handleLampiranUpload = (e) => {
-    const files = e.target.files;
-    let temp;
-    let tempToAdd;
-    if (this.state.fileLampiran.length === 0){
-      this.setState({fileLampiran: Array.from(files), fileLampiranToAdd: Array.from(files)})
-    }
-    else {
+    const files = Array.from(e.target.files);
+    if (this.state.fileLampiran.length === 0) {
+      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+      let allowed_file = files.filter(
+        (file) => file.size / Math.pow(10, 6) <= 10
+      );
+      this.setState({
+        fileLampiran: allowed_file,
+        fileLampiranToAdd: allowed_file,
+        over_limit: over_limit,
+        fileLimitSnackbar: over_limit.length > 0,
+      });
+    } else {
       if (files.length !== 0) {
-        temp = [...this.state.fileLampiran, ...Array.from(files)];
-        tempToAdd = [...this.state.fileLampiranToAdd, ...Array.from(files)]
-        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
+        let allowed_file = files.filter(
+          (file) => file.size / Math.pow(10, 6) <= 10
+        );
+        let over_limit = files.filter(
+          (file) => file.size / Math.pow(10, 6) > 10
+        );
+
+        let temp = [...this.state.fileLampiran, ...allowed_file];
+        let file_to_upload = [...this.state.fileLampiranToAdd, ...allowed_file];
+        allowed_file = temp;
+        this.setState({
+          fileLampiran: allowed_file,
+          fileLampiranToAdd: file_to_upload,
+          over_limit: over_limit,
+          fileLimitSnackbar: over_limit.length > 0,
+        });
       }
     }
     document.getElementById("file_control").value = null;
   };
 
   handleLampiranDelete = (e, i, name) => {
-    e.preventDefault()
+    e.preventDefault();
     let temp = Array.from(this.state.fileLampiran);
     let tempToDelete = this.state.fileLampiranToDelete;
     let tempToAdd = this.state.fileLampiranToAdd;
@@ -321,6 +354,13 @@ class EditAnnouncement extends Component {
 
   handleCloseDeleteDialog = () => {
     this.setState({ openDeleteDialog: false });
+  }
+
+  handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ fileLimitSnackbar: false });
   };
 
   onChange = (e, otherfield = null) => {
@@ -352,9 +392,9 @@ class EditAnnouncement extends Component {
       to: user.role === "Admin" ? this.state.target_role : "Student"
     };
 
-    let formData = new FormData()
-    for (var i = 0; i< fileLampiranToAdd.length; i++) {
-      formData.append("lampiran_announcement", fileLampiranToAdd[i])
+    let formData = new FormData();
+    for (var i = 0; i < fileLampiranToAdd.length; i++) {
+      formData.append("lampiran_announcement", fileLampiranToAdd[i]);
     }
 
     this.props.updateAnnouncement(
@@ -416,37 +456,39 @@ class EditAnnouncement extends Component {
         default:
           return "File Lainnya";
       }
-    }
+    };
     const listFileChosen = () => {
-      let temp = []
+      let temp = [];
       // if (fileLampiran.length > 0) {
-        for (var i = 0; i < fileLampiran.length; i++) {
-          temp.push(
-            <LampiranFile //Yang di displaykan ada di DB (filename) sama yang baru diadd (name)
-              classes={classes}
-              name={
-                !fileLampiran[i].filename
-                  ? fileLampiran[i].name
-                  : fileLampiran[i].filename
-              }
-              filetype={
-                !fileLampiran[i].filename
-                  ? fileType(fileLampiran[i].name)
-                  : fileType(fileLampiran[i].filename)
-              }
-              handleLampiranDelete={this.handleLampiranDelete}
-              i={i}
-            />
-          );
-        }
+      for (var i = 0; i < fileLampiran.length; i++) {
+        temp.push(
+          <LampiranFile //Yang di displaykan ada di DB (filename) sama yang baru diadd (name)
+            classes={classes}
+            name={
+              !fileLampiran[i].filename
+                ? fileLampiran[i].name
+                : fileLampiran[i].filename
+            }
+            filetype={
+              !fileLampiran[i].filename
+                ? fileType(fileLampiran[i].name)
+                : fileType(fileLampiran[i].filename)
+            }
+            handleLampiranDelete={this.handleLampiranDelete}
+            i={i}
+          />
+        );
+      }
       // }
       return temp;
     };
 
-    if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user._id) {
-      return (
-        <Redirect to="/tidak-ditemukan"/>
-      )
+    if (
+      user.role === "Student" &&
+      Boolean(kelas.ketua_kelas) &&
+      kelas.ketua_kelas !== user._id
+    ) {
+      return <Redirect to="/tidak-ditemukan" />;
     }
 
     return (
@@ -703,6 +745,16 @@ class EditAnnouncement extends Component {
             </div>
           </form>
         </Paper>
+        <Snackbar
+          open={this.state.fileLimitSnackbar}
+          autoHideDuration={4000}
+          onClose={this.handleCloseErrorSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <MuiAlert elevation={6} variant="filled" severity="error">
+            {this.state.over_limit.length} file melebihi batas 10MB!
+          </MuiAlert>
+        </Snackbar>
       </div>
     );
   }
@@ -713,14 +765,6 @@ EditAnnouncement.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
   announcements: PropTypes.object.isRequired,
-  getAnnouncement: PropTypes.func.isRequired,
-  getAllAnnouncements: PropTypes.func.isRequired,
-  getOneAnnouncement: PropTypes.func.isRequired,
-  updateAnnouncement: PropTypes.func.isRequired,
-  setCurrentClass: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  clearSuccess: PropTypes.func.isRequired,
-  getAllClass: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -731,6 +775,12 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(
-  mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, getAllClass, clearErrors, clearSuccess }
-  )(withStyles(styles)(EditAnnouncement))
+export default connect(mapStateToProps, {
+  getOneAnnouncement,
+  updateAnnouncement,
+  setCurrentClass,
+  getAllClass,
+  clearErrors,
+  clearSuccess,
+  getFileAnnouncements,
+})(withStyles(styles)(EditAnnouncement));

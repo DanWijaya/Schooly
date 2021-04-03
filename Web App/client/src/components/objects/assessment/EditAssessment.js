@@ -10,6 +10,7 @@ import {
 } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -37,6 +38,7 @@ import {
   ListItemIcon,
   ListItemText,
   Menu,
+  
 } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
@@ -240,6 +242,7 @@ const styles = (theme) => ({
       margin: "18px 0",
     },
   },
+  
 });
 
 class EditAssessment extends Component {
@@ -279,6 +282,7 @@ class EditAssessment extends Component {
       checkboxSnackbarOpen: false,
       radioSnackbarOpen: false,
       copySnackbarOpen: false,
+      fileLimitSnackbar: false,
       weights: {
         radio: undefined,
         checkbox: undefined,
@@ -298,18 +302,30 @@ class EditAssessment extends Component {
       // backtickErrors[2] = -1 -> berarti pertanyaan nomor 2 adalah soal non isian. Nilai "-1" dapat diabaikan, ini dapat diganti dengan nilai lain selain true false
       renderbtErrors: false, // abaikan nilainya, ini hanya dipakai agar QuestionItem dirender ulang saat submit dan ada soal yang dihapus
       ready: false,
+      lampiranUrls: new Map(),
+      over_limit: []
     };
   }
 
-  imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
+  imageUploader = React.createRef(null); // untuk ngerefer html object yang lain
 
-  componentDidMount(){
+  componentDidMount() {
     window.scrollTo(0, 0);
-    const { getOneAssessment, getAllClass, getAllSubjects, handleSideDrawerExist} = this.props;
-    handleSideDrawerExist(false)
-    getAllClass()
-    getOneAssessment(this.props.match.params.id)
-    getAllSubjects()
+    const {
+      getOneAssessment,
+      getAllClass,
+      getAllSubjects,
+      handleSideDrawerExist,
+      getFileAssessment
+    } = this.props;
+    const assessment_id = this.props.match.params.id;
+    handleSideDrawerExist(false);
+    getAllClass();
+    getOneAssessment(assessment_id);
+    getAllSubjects();
+    getFileAssessment(assessment_id)
+      .then((result) => {this.setState({lampiranUrls: result})})
+      .catch((err) => this.setState({lampiranUrls: new Map()}))
   }
 
   componentWillUnmount() {
@@ -647,8 +663,7 @@ class EditAssessment extends Component {
       btErrors.push(option === "shorttext" ? false : -1);
       return { longtextWeight: value, backtickErrors: btErrors };
     });
-    this.setState({ questions: questions });
-    this.setState({ currentQuestionOption: null });
+    this.setState({ questions: questions, currentQuestionOption: null });
   };
 
   handleChangeQuestion = (
@@ -829,6 +844,7 @@ class EditAssessment extends Component {
   };
 
   handleDuplicateQuestion = (i) => {
+    console.log(i);
     let questions = this.state.questions;
     // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
@@ -919,9 +935,11 @@ class EditAssessment extends Component {
     } else {
       if (e.target.files) {
         const files = Array.from(e.target.files);
-        let temp = questions[qnsIndex].lampiran.concat(files);
+        let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 5);
+        let file_to_upload = files.filter((file) => file.size / Math.pow(10, 6) <= 5);
+        let temp = questions[qnsIndex].lampiran.concat(file_to_upload);
         questions[qnsIndex].lampiran = temp;
-        this.setState({ questions: questions });
+        this.setState({ questions: questions, fileLimitSnackbar: over_limit.length > 0 , over_limit: over_limit });
       }
     }
   };
@@ -941,6 +959,8 @@ class EditAssessment extends Component {
   };
 
   listQuestion = () => {
+    console.log(this.state.lampiranUrls)
+    console.log("List quesiton is runned")
     let { questions } = this.state;
     const { page, rowsPerPage } = this.state;
     let questionList = [];
@@ -997,10 +1017,11 @@ class EditAssessment extends Component {
             longtextWeight={this.state.longtextWeight[questionIdx]}
             backtickError={this.state.backtickErrors[questionIdx]}
             renderbtErrors={this.state.renderbtErrors}
+            lampiranUrls={JSON.stringify(Array.from(this.state.lampiranUrls.entries()))}
           />
         );
       });
-
+      
     return questionList;
   };
 
@@ -1411,7 +1432,6 @@ class EditAssessment extends Component {
               ? `/daftar-kuis`
               : `/daftar-ujian`
           }
-          // customConfirm="Ya"
           customDecline="Tidak"
           deleteItem=""
           isLink={true}
@@ -1424,15 +1444,10 @@ class EditAssessment extends Component {
           messageUploading={`${this.state.type} sedang disunting`}
           // messageSuccess="Kuis/Ujian telah disunting"
           messageSuccess={`${this.state.type} telah disunting`}
-          // redirectLink="/daftar-kuis"
-          // redirectLink={(this.state.type === "Kuis") ? `/daftar-kuis` : `/daftar-ujian`}
           redirectLink={
             this.state.type === "Kuis"
               ? `/kuis-guru/${this.props.match.params.id}`
               : `/ujian-guru/${this.props.match.params.id}`
-              // bisa juga:
-              // ? `/kuis-guru/${success}`
-              // : `/ujian-guru/${success}`
           }
         />
         <form onSubmit={(e) => this.onSubmit(e)}>
@@ -1911,6 +1926,20 @@ class EditAssessment extends Component {
             kembali!
           </MuiAlert>
         </Snackbar>
+        <Snackbar
+          open={this.state.fileLimitSnackbar}
+          autoHideDuration={4000}
+          onClose={this.handleFileLimitSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            severity="error"
+          >
+            {this.state.over_limit.length} file melebihi batas 5MB!
+          </MuiAlert>
+        </Snackbar>
       </div>
     );
   }
@@ -1942,4 +1971,6 @@ export default connect(mapStateToProps, {
   getAllSubjects,
   updateAssessment,
   clearErrors,
+  getFileAssessment,
+
 })(withStyles(styles)(React.memo(EditAssessment)));

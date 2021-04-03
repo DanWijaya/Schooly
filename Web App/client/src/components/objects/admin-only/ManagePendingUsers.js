@@ -599,7 +599,7 @@ function ManageUsers(props) {
     console.log(listCheckboxStudent.length);
     console.log(listCheckboxTeacher.length);
     autoReloader();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listCheckboxTeacher, listCheckboxStudent]);
 
   const handleActivateCheckboxMode = (type) => {

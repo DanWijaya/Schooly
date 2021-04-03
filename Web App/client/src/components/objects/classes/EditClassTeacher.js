@@ -90,7 +90,7 @@ function EditClassTeacher(props) {
   React.useEffect(() => {
     getTeachers();
     getAllClass();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* 
@@ -139,7 +139,7 @@ function EditClassTeacher(props) {
           name: teacher.name,
           email: teacher.email,
           avatar: teacher.avatar,
-          classId: null
+          classId: null,
         };
       }
 
@@ -211,7 +211,10 @@ function EditClassTeacher(props) {
 
       if (teacherIdArray.length > 1) {
         // jika masih ada kelas yang memiliki lebih dari 1 wali kelas, batal submit
-        handleOpenSnackbar("error", "Tidak boleh ada kelas yang memiliki lebih dari 1 wali kelas");
+        handleOpenSnackbar(
+          "error",
+          "Tidak boleh ada kelas yang memiliki lebih dari 1 wali kelas"
+        );
         return;
       } else {
         let waliSebelum = all_classes_wali.current[classId];
@@ -296,8 +299,20 @@ function EditClassTeacher(props) {
         redirectLink="/daftar-kelas"
         isWarning={false}
       />
-      <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
-        <MuiAlert variant="filled" severity={severity} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={(event, reason) => {
+          handleCloseSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity={severity}
+          onClose={(event, reason) => {
+            handleCloseSnackbar(event, reason);
+          }}
+        >
           {snackbarContent}
         </MuiAlert>
       </Snackbar>
@@ -324,11 +339,13 @@ function EditClassTeacher(props) {
                     <ListItem className={classes.listItem}>
                       <Hidden xsDown>
                         <ListItemAvatar>
-                        {!teacherInfo.avatar ? (
-                          <Avatar />
-                        ) : (
-                          <Avatar src={`/api/upload/avatar/${teacherInfo.avatar}`} />
-                        )}
+                          {!teacherInfo.avatar ? (
+                            <Avatar />
+                          ) : (
+                            <Avatar
+                              src={`/api/upload/avatar/${teacherInfo.avatar}`}
+                            />
+                          )}
                         </ListItemAvatar>
                       </Hidden>
                       <ListItemText
@@ -371,8 +388,13 @@ function EditClassTeacher(props) {
               })
             : null}
           <Divider />
-          <div style={{ display: "flex", justifyContent: "flex-end" }} className={classes.content}>
-            <div style={{ display: "flex", alignItems: "center", padding: "4px" }}>            
+          <div
+            style={{ display: "flex", justifyContent: "flex-end" }}
+            className={classes.content}
+          >
+            <div
+              style={{ display: "flex", alignItems: "center", padding: "4px" }}
+            >
               <Button
                 variant="contained"
                 onClick={handleOpenDeleteDialog}
@@ -381,7 +403,9 @@ function EditClassTeacher(props) {
                 Batal
               </Button>
             </div>
-            <div style={{ display: "flex", alignItems: "center", padding: "4px"}}>
+            <div
+              style={{ display: "flex", alignItems: "center", padding: "4px" }}
+            >
               <Button
                 variant="contained"
                 onClick={handleSubmit}

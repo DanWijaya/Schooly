@@ -6,6 +6,7 @@ import classnames from "classnames";
 import { createAnnouncement } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -24,11 +25,13 @@ import {
   MenuItem,
   Paper,
   Select,
+  Snackbar,
   TextField,
   Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
+import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {
   FaFile,
@@ -202,7 +205,9 @@ class CreateAnnouncement extends Component {
       errors: {},
       openUploadDialog: null,
       openDeleteDialog: null,
-      target_role: ""
+      target_role: "",
+      fileLimitSnackbar: false,
+      over_limit: [],
     };
   }
 
@@ -272,10 +277,25 @@ class CreateAnnouncement extends Component {
     this.setState({ fileLampiran: temp });
   };
 
+  handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ fileLimitSnackbar: false });
+  };
+
   handleLampiranUpload = (e) => {
     const files = e.target.files;
     let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-    this.setState({ fileLampiran: temp });
+    let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > 10);
+    let file_to_upload = temp.filter(
+      (file) => file.size / Math.pow(10, 6) <= 10
+    );
+    this.setState({
+      fileLampiran: file_to_upload,
+      over_limit: over_limit,
+      fileLimitSnackbar: over_limit.length > 0,
+    });
     document.getElementById("file_control").value = null;
   };
 
@@ -631,6 +651,20 @@ class CreateAnnouncement extends Component {
             </div>
           </form>
         </Paper>
+        <Snackbar
+          open={this.state.fileLimitSnackbar}
+          autoHideDuration={4000}
+          onClose={this.handleCloseErrorSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            severity="error"
+          >
+            {this.state.over_limit.length} file melebihi batas 10MB!
+          </MuiAlert>
+        </Snackbar>
       </div>
     );
   }
@@ -640,9 +674,6 @@ CreateAnnouncement.propTypes = {
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
-  createAnnouncement: PropTypes.func.isRequired,
-  setCurrentClass: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -658,4 +689,5 @@ export default connect(mapStateToProps, {
   getAllClass,
   setCurrentClass,
   clearErrors,
+  clearSuccess,
 })(withStyles(styles)(CreateAnnouncement));

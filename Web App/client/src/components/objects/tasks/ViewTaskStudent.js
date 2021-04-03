@@ -4,14 +4,19 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { clearSuccess } from "../../../actions/SuccessActions";
+import { uploadTugas, deleteTugas } from "../../../actions/UploadActions";
 import {
-  uploadTugas,
-  deleteTugas,
-  downloadTugas,
-  previewTugas,
-  downloadLampiran,
-  previewLampiran,
-} from "../../../actions/UploadActions";
+  deleteFileSubmitTasks,
+  uploadFileSubmitTasks,
+  getFileSubmitTasks,
+  viewFileSubmitTasks,
+  downloadFileSubmitTasks,
+} from "../../../actions/files/FileSubmitTaskActions";
+import {
+  downloadFileTasks,
+  getFileTasks,
+  viewFileTasks,
+} from "../../../actions/files/FileTaskActions";
 import { getOneTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
@@ -32,10 +37,12 @@ import {
   Paper,
   Typography,
   Badge,
+  Snackbar,
 } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
+import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PublishIcon from "@material-ui/icons/Publish";
 import {
@@ -153,7 +160,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "10px",
     marginRight: "10px",
   },
-  listItemPaperUnSubmitted: {
+  listItemPaperSubmitted: {
     backgroundColor: "#f2f2f2",
     marginTop: "5px",
     marginBottom: "5px",
@@ -184,7 +191,7 @@ function LampiranFile(props) {
           disableRipple
           className={classes.listItem}
           onClick={() => {
-            onPreviewFile(file_id, "lampiran");
+            onPreviewFile(file_id);
           }}
         >
           <ListItemAvatar>
@@ -226,16 +233,16 @@ function LampiranFile(props) {
             }
             secondary={filetype}
           />
-          <IconButton
+          {/* <IconButton
             size="small"
             className={classes.downloadIconButton}
             onClick={(e) => {
               e.stopPropagation();
-              onDownloadFile(file_id, "lampiran");
+              onDownloadFile(file_id);
             }}
           >
             <CloudDownloadIcon fontSize="small" />
-          </IconButton>
+          </IconButton> */}
         </ListItem>
       </Paper>
     </Grid>
@@ -261,14 +268,7 @@ function WorkFile(props) {
     <>
       {type === "chosen" ? (
         <Paper variant="outlined" className={classes.listItemPaper}>
-          <ListItem
-            button
-            disableRipple
-            className={classes.listItem}
-            onClick={() => {
-              onPreviewFile(file_id, "tugas");
-            }}
-          >
+          <ListItem disableRipple className={classes.listItem}>
             <ListItemAvatar>
               {file_type === "Word" ? (
                 <Avatar className={classes.wordFileTypeIcon}>
@@ -311,7 +311,7 @@ function WorkFile(props) {
           </ListItem>
         </Paper>
       ) : (
-        <Paper variant="outlined" className={classes.listItemPaperUnSubmitted}>
+        <Paper variant="outlined" className={classes.listItemPaperSubmitted}>
           <ListItem
             button
             disableRipple
@@ -464,7 +464,7 @@ function WorkFile(props) {
               }
               secondary={file_type}
             />
-            <IconButton
+            {/* <IconButton
               size="small"
               className={classes.downloadIconButton}
               onClick={(e) => {
@@ -473,7 +473,7 @@ function WorkFile(props) {
               }}
             >
               <CloudDownloadIcon fontSize="small" />
-            </IconButton>
+            </IconButton> */}
             <IconButton
               size="small"
               className={classes.deleteIconButton}
@@ -496,20 +496,22 @@ function ViewTaskStudent(props) {
 
   const { user, selectedUser } = props.auth;
   const {
-    uploadTugas,
+    uploadFileSubmitTasks,
+    viewFileSubmitTasks,
+    downloadFileSubmitTasks,
+    getFileSubmitTasks,
+    deleteFileSubmitTasks,
     deleteTugas,
     success,
-    getTaskFilesByUser,
     tasksCollection,
     filesCollection,
-    downloadTugas,
-    previewTugas,
     clearSuccess,
     getOneTask,
     getOneUser,
     getAllSubjects,
-    downloadLampiran,
-    previewLampiran,
+    getFileTasks,
+    viewFileTasks,
+    downloadFileTasks,
   } = props;
   const { all_subjects_map } = props.subjectsCollection;
 
@@ -518,10 +520,12 @@ function ViewTaskStudent(props) {
 
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
-  const [fileTugas, setFileTugas] = React.useState(null);
-  const [tasksContents, setTaskContents] = React.useState([]);
-
-  // React HOOKS React.use bla2
+  const [fileTugas, setFileTugas] = React.useState([]);
+  const [fileToSubmit, setFileToSubmit] = React.useState([]);
+  // const [tasksContents, setTaskContents] = React.useState([]);
+  const [fileLampiran, setFileLampiran] = React.useState([]);
+  const [over_limit, setOverLimit] = React.useState([]);
+  const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
 
   // setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -536,13 +540,18 @@ function ViewTaskStudent(props) {
   // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
   useEffect(() => {
     window.scrollTo(0, 0);
-    getTaskFilesByUser(user._id, tugasId);
+    // getTaskFilesByUser(user._id, tugasId)
+    getFileSubmitTasks(tugasId, user._id).then((results) =>
+      setFileTugas(results)
+    );
     getOneTask(tugasId);
     getAllSubjects("map");
     // Will run getOneUser again once the tasksCollection is retrieved
+    getFileTasks(tugasId).then((results) => setFileLampiran(results));
     if (tasksCollection.person_in_charge_id) {
       getOneUser(tasksCollection.person_in_charge_id);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [success, tasksCollection.person_in_charge_id]);
 
@@ -577,120 +586,86 @@ function ViewTaskStudent(props) {
   };
 
   const listWorkFile = () => {
-    let temp = [];
-    for (let i = 0; i < filesCollection.files.length; i++) {
-      console.log(filesCollection.files[i], i);
-      let displayedName = "";
-      // filesCollection.files[i].filename.length >= 10
-      //   ? (displayedName = `${filesCollection.files[i].filename.slice(0, 7)}..${path.extname(filesCollection.files[i].filename)}`)
-      //   : (displayedName = filesCollection.files[i].filename);
-      displayedName = filesCollection.files[i].filename;
-      temp.push(
-        <WorkFile
-          handleOpenDeleteDialog={handleOpenDeleteDialog}
-          onDownloadFile={onDownloadFile}
-          onPreviewFile={onPreviewFile}
-          file_name={displayedName}
-          file_id={filesCollection.files[i].id}
-          file_type={fileType(filesCollection.files[i].filename)}
-          type="work"
-        />
-      );
-    }
-    if (temp.length !== tasksContents.length) {
-      console.log("tasks added");
-      setTaskContents(temp);
-    }
-    return tasksContents;
+    // Yang udah diupload
+    return fileTugas.map((item) => (
+      <WorkFile
+        handleOpenDeleteDialog={handleOpenDeleteDialog}
+        onDownloadFile={downloadFileSubmitTasks}
+        onPreviewFile={viewFileSubmitTasks}
+        file_name={item.filename}
+        file_id={item._id}
+        file_type={fileType(item.filename)}
+        type="work"
+      />
+    ));
   };
 
-  // For upload, showing file names before submitting
+  
   const listFileChosen = () => {
-    if (fileTugas) {
+    // Yang belum diupload
+    if (fileTugas.length === 0 && fileToSubmit.length === 0) {
+      return (
+        <Paper className={classes.submittedButton}>
+          <Typography variant="button">KOSONG</Typography>
+        </Paper>
+      );
+    } else {
       let temp = [];
-      for (var i = 0; i < fileTugas.length; i++) {
-        let displayedName = "";
-        // fileTugas[i].name.length >= 10
-        //   ? (displayedName = `${fileTugas[i].name.slice(0, 7)}..${path.extname(fileTugas[i].name)}`)
-        //   : (displayedName = fileTugas[i].name);
-        displayedName = fileTugas[i].name;
+      for (var i = 0; i < fileToSubmit.length; i++) {
         temp.push(
-          // <Typography className={classes.workChosenFile}>
-          //   {fileTugas[i].name.length < 27 ? fileTugas[i].name : `${fileTugas[i].name.slice(0,21)}..${path.extname(fileTugas[i].name)}`}
-          // </Typography>
           <WorkFile
             handleOpenDeleteDialog={handleOpenDeleteDialog}
-            onDownloadFile={onDownloadFile}
-            onPreviewFile={onPreviewFile}
-            file_name={displayedName}
-            file_id={fileTugas[i].id}
-            file_type={fileType(fileTugas[i].name)}
+            file_name={fileToSubmit[i].name}
+            file_id={fileToSubmit[i].id}
+            file_type={fileType(fileToSubmit[i].name)}
             type="chosen"
           />
         );
         
       }
       return temp;
-    } else if (!fileTugas && filesCollection.files.length === 0) {
-      let temp = [];
-      temp.push(
-        <Paper className={classes.submittedButton}>
-          <Typography variant="button">KOSONG</Typography>
-        </Paper>
-      );
-      return temp;
     }
   };
 
   const handleTugasUpload = (e) => {
-    const files = e.target.files;
-    setFileTugas(files);
-    console.log(fileTugas);
+    const files = Array.from(e.target.files);
+
+    let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+    let allowed_file = files.filter(
+      (file) => file.size / Math.pow(10, 6) <= 10
+    );
+
+    let temp = [...fileToSubmit, ...allowed_file];
+    setFileToSubmit(temp);
+    setOverLimit(over_limit);
+    setFileLimitSnackbar(over_limit.length > 0);
   };
 
   const onSubmitTugas = (e) => {
-    console.log("Submit tugas");
-    console.log("File Tugas: ", fileTugas);
     e.preventDefault();
     let formData = new FormData();
-    for (var i = 0; i < fileTugas.length; i++) {
-      formData.append("tugas", fileTugas[i]);
+    // fileToSubmit ini bukan array biasa, itu FileList object.
+    for (var i = 0; i < fileToSubmit.length; i++) {
+      formData.append("tugas", fileToSubmit[i]);
     }
-    console.log(formData.get("tugas"), fileTugas);
-
     handleOpenUploadDialog();
-    uploadTugas(
-      formData,
-      user,
-      tugasId,
-      new Date() < new Date(tasksCollection.deadline)
-    );
-    setFileTugas(null);
+    // uploadTugas(formData, tugasId, user._id, new Date() < new Date(tasksCollection.deadline))
+    uploadFileSubmitTasks(formData, tugasId, user._id);
+    setFileToSubmit([]);
   };
 
-  const onDeleteTugas = (id) => {
-    console.log("On delete tugass");
-    deleteTugas(id, user);
-    setFileTugas(null);
+  const handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setFileLimitSnackbar(false);
   };
-
-  const onDownloadFile = (id, fileCategory = "none") => {
-    if (fileCategory === "tugas") downloadTugas(id);
-    else if (fileCategory === "lampiran") downloadLampiran(id);
-    else console.log("File Category is not specified");
-  };
-
-  const onPreviewFile = (id, fileCategory = "none") => {
-    if (fileCategory === "tugas") previewTugas(id);
-    else if (fileCategory === "lampiran") previewLampiran(id);
-    else console.log("File Category is not specified");
-  };
-
   // Delete Dialog
   const handleOpenDeleteDialog = (fileid, filename) => {
     setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
     setSelectedFileId(fileid);
     setSelectedFileName(filename);
+    // getFileSubmitTasks(tugasId, user._id).then((items) => setTaskContents(items))
   };
 
   const handleCloseDeleteDialog = () => {
@@ -712,7 +687,6 @@ function ViewTaskStudent(props) {
     : `Schooly | ${tasksCollection.name}`;
 
   console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline));
-
   console.log(success, filesCollection.files);
 
   return (
@@ -723,7 +697,7 @@ function ViewTaskStudent(props) {
         itemType="Berkas"
         itemName={selectedFileName}
         deleteItem={() => {
-          onDeleteTugas(selectedFileId);
+          deleteFileSubmitTasks(selectedFileId);
         }}
       />
       <UploadDialog
@@ -834,8 +808,8 @@ function ViewTaskStudent(props) {
                       {tasksCollection.lampiran.map((lampiran) => (
                         <LampiranFile
                           file_id={lampiran.id}
-                          onPreviewFile={onPreviewFile}
-                          onDownloadFile={onDownloadFile}
+                          // onPreviewFile={onPreviewFile}
+                          // onDownloadFile={onDownloadFile}
                           filename={lampiran.filename}
                           filetype={fileType(lampiran.filename)}
                         />
@@ -845,95 +819,8 @@ function ViewTaskStudent(props) {
                 )}
             </Grid>
           </Paper>
-          {/* <Paper className={classes.paperBox}>
-            <Grid container spacing={6}>
-              <Grid item xs={12} md={7}>
-                <Typography variant="h4">{tasksCollection.name}</Typography>
-                <Typography variant="caption" color="textSecondary">
-                  <h6>
-                    Mata Pelajaran:{" "}
-                    {all_subjects_map.get(tasksCollection.subject)}
-                  </h6>
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Oleh:{" "}
-                  <b>
-                    {selectedUser._id !== tasksCollection.person_in_charge_id
-                      ? null
-                      : selectedUser.name}
-                  </b>
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={5}>
-                <Hidden mdUp implementation="css">
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    className={classes.deadlineWarningText}
-                    gutterBottom
-                  >
-                    Batas Waktu:{" "}
-                    {moment(tasksCollection.deadline)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH.mm")}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    Nilai Maksimum: 100
-                  </Typography>
-                </Hidden>
-                <Hidden smDown implementation="css">
-                  <Typography
-                    variant="body2"
-                    align="right"
-                    color="textSecondary"
-                    className={classes.deadlineWarningText}
-                    gutterBottom
-                  >
-                    Batas Waktu:{" "}
-                    {moment(tasksCollection.deadline)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH.mm")}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    align="right"
-                    color="textSecondary"
-                  >
-                    Nilai Maksimum: 100
-                  </Typography>
-                </Hidden>
-              </Grid>
-            </Grid>
-            {!tasksCollection.description ? null : (
-              <Grid item style={{ marginTop: "40px" }}>
-                <Typography color="primary" gutterBottom>
-                  Deskripsi Tugas:
-                </Typography>
-                <Typography>{tasksCollection.description}</Typography>
-              </Grid>
-            )}
-            {!tasksCollection.lampiran ||
-            tasksCollection.lampiran.length === 0 ? null : (
-              <div style={{ marginTop: "30px" }}>
-                <Typography color="primary" gutterBottom>
-                  Lampiran Berkas:
-                </Typography>
-                <Grid container spacing={1}>
-                  {!tasksCollection.lampiran
-                    ? null
-                    : tasksCollection.lampiran.map((lampiran) => (
-                        <LampiranFile
-                          file_id={lampiran.id}
-                          onPreviewFile={onPreviewFile}
-                          onDownloadFile={onDownloadFile}
-                          filename={lampiran.filename}
-                          filetype={fileType(lampiran.filename)}
-                        />
-                      ))}
-                </Grid>
-              </div>
-            )}
-          </Paper> */}
+          
+
         </Grid>
         <Grid item xs={12} md={4}>
           <Paper className={classes.paperBox}>
@@ -947,7 +834,20 @@ function ViewTaskStudent(props) {
               </Typography>
             </Grid>
             <Divider />
-            {!fileTugas && filesCollection.files.length === 0 ? (
+            {/* <Grid
+                item
+                style={{
+                  padding: "10px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                  {listWorkFile()}
+                  {listFileChosen()}
+              </Grid> */}
+              
+            {fileTugas.length === 0 ? (
               <Grid
                 item
                 style={{
@@ -959,6 +859,7 @@ function ViewTaskStudent(props) {
               >
                 {/* Kasus Kosong */}         
                   {listFileChosen()}
+                {listWorkFile()}
               </Grid>
             ) : (
               <Grid
@@ -967,6 +868,7 @@ function ViewTaskStudent(props) {
                   padding: "10px",
                   display: "flex",
                   flexDirection: "column",
+                  justifyContent: "center",
                 }}
               >
                   {listWorkFile()}
@@ -1047,6 +949,16 @@ function ViewTaskStudent(props) {
             : `${tasksCollection.grades[user._id]}/100`}
         </Typography>
       </Grid>
+      <Snackbar
+        open={fileLimitSnackbar}
+        autoHideDuration={4000}
+        onClose={handleCloseErrorSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <MuiAlert elevation={6} variant="filled" severity="error">
+          {over_limit.length} file melebihi batas 10MB!
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }
@@ -1057,18 +969,6 @@ ViewTaskStudent.propTypes = {
   tasksCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
-  uploadTugas: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
-  deleteTugas: PropTypes.func.isRequired,
-  downloadTugas: PropTypes.func.isRequired,
-  previewTugas: PropTypes.func.isRequired,
-  updateUserData: PropTypes.func.isRequired, // When you upload files, then update the user data.
-  getOneTask: PropTypes.func.isRequired,
-  getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
-  getOneUser: PropTypes.func.isRequired, // For the person in charge task
-  previewLampiran: PropTypes.func.isRequired,
-  downloadLampiran: PropTypes.func.isRequired,
-  clearSuccess: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -1083,12 +983,16 @@ export default connect(mapStateToProps, {
   uploadTugas,
   clearSuccess,
   deleteTugas,
-  downloadTugas,
-  previewTugas,
+  getFileTasks,
+  downloadFileTasks,
+  viewFileTasks,
   getTaskFilesByUser,
   getOneUser,
-  downloadLampiran,
-  previewLampiran,
   getOneTask,
   getAllSubjects,
+  uploadFileSubmitTasks,
+  getFileSubmitTasks,
+  viewFileSubmitTasks,
+  downloadFileSubmitTasks,
+  deleteFileSubmitTasks,
 })(ViewTaskStudent);

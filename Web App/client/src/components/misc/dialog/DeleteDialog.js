@@ -57,7 +57,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function DeleteDialog(props) {
-
   // const {
   //   openDeleteDialog,
   //   handleCloseDeleteDialog,
@@ -69,7 +68,7 @@ function DeleteDialog(props) {
   //   isWarning,
   // } = props;
   const classes = useStyles();
-  const { 
+  const {
     openDeleteDialog,
     handleCloseDeleteDialog,
     itemType,
@@ -126,7 +125,7 @@ function DeleteDialog(props) {
         ) : null}
         <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item>
-          {!redirectLink ?
+          {!redirectLink ? 
             <Button
               onClick={deleteItem}
               startIcon={<DeleteOutlineIcon />}
@@ -134,7 +133,7 @@ function DeleteDialog(props) {
             >
               Iya
             </Button>
-          : 
+            : 
           <Link to={redirectLink}>
             <Button
               onClick={deleteItem}
@@ -147,27 +146,13 @@ function DeleteDialog(props) {
           }
           </Grid>
           <Grid item>
-            {/* {!isLink ? ( */}
-            {/* {!redirectLink ? */}
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={<CancelIcon />}
-                className={classes.dialogCancelButton}
-              >
-                {customDecline ? customDecline : "Tidak"}
-              </Button>
-            {/* ) : ( */}
-            {/* :
-              <Link to={redirectLink}>
-                <Button
-                  startIcon={<CancelIcon />}
-                  className={classes.dialogCancelButton}
-                >
-                  {customDecline ? customDecline : "Batal"}
-                </Button>
-              </Link>
-            )}
-            } */}
+            <Button
+              onClick={handleCloseDeleteDialog}
+              startIcon={<CancelIcon />}
+              className={classes.dialogCancelButton}
+            >
+              {customDecline ? customDecline : "Tidak"}
+            </Button>
           </Grid>
         </Grid>
       </Grid>

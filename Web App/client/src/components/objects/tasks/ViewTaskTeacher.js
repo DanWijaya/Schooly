@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
+
+//Actions
 import { getOneTask, deleteTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import {
@@ -12,8 +14,13 @@ import {
   previewLampiran,
 } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
-import { getStudents } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
+import {
+  getFileTasks,
+  viewFileTasks,
+  downloadFileTasks,
+} from "../../../actions/files/FileTaskActions";
+
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -146,7 +153,7 @@ function LampiranFile(props) {
           disableRipple
           className={classes.listItem}
           onClick={() => {
-            onPreviewFile(file_id, "lampiran");
+            onPreviewFile(file_id);
           }}
         >
           <ListItemAvatar>
@@ -188,16 +195,16 @@ function LampiranFile(props) {
             }
             secondary={filetype}
           />
-          <IconButton
+          {/* <IconButton
             size="small"
             className={classes.downloadIconButton}
             onClick={(e) => {
               e.stopPropagation();
-              onDownloadFile(file_id, "lampiran");
+              onDownloadFile(file_id);
             }}
           >
             <CloudDownloadIcon fontSize="small" />
-          </IconButton>
+          </IconButton> */}
         </ListItem>
       </Paper>
     </Grid>
@@ -217,12 +224,15 @@ function ViewTaskTeacher(props) {
     getOneTask,
     getAllClass,
     getAllSubjects,
-    getStudents
+    getFileTasks,
+    viewFileTasks,
+    downloadFileTasks,
   } = props;
   const { all_classes_map } = props.classesCollection;
   const task_id = props.match.params.id;
   const { all_subjects_map } = props.subjectsCollection;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [fileLampiran, setFileLampiran] = React.useState([]);
 
   // untuk men-disable tombol yang mengarahkan pengguna ke SubmittedTaskList ketika belum ada satupun murid yang mengumpulkan tugas
   const [disableButton, setDisableButton] = React.useState(true); 
@@ -232,7 +242,9 @@ function ViewTaskTeacher(props) {
     getOneTask(task_id);
     getAllClass("map");
     getAllSubjects("map");
-    getStudents();
+    getFileTasks(task_id).then((res) => {
+      setFileLampiran(res);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // [tasksCollection._id, all_classes_map.size, all_subjects_map.size]
@@ -286,17 +298,18 @@ function ViewTaskTeacher(props) {
         return "File Lainnya";
     }
   };
+  /* UNTUK YANG BUKAN CDN
+  // const onDownloadFile = (id, fileCategory = "none") => {
+  //   if (fileCategory === "lampiran") downloadLampiran(id);
+  //   else console.log("File Category is not specified");
+  // };
 
-  // console.log(all_classes_map);
-  const onDownloadFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran") downloadLampiran(id);
-    else console.log("File Category is not specified");
-  };
-
-  const onPreviewFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran") previewLampiran(id);
-    else console.log("File Category is not specified");
-  };
+  // const onPreviewFile = (id, fileCategory = "none") => {
+  //   if (fileCategory === "lampiran") previewLampiran(id);
+  //   else console.log("File Category is not specified");
+  // }; 
+  */
+  
 
   const onDeleteTask = (id) => {
     deleteTask(id);
@@ -406,22 +419,21 @@ function ViewTaskTeacher(props) {
                   <Typography>{tasksCollection.description}</Typography>
                 </Grid>
               )}
-              {!tasksCollection.lampiran ||
-                tasksCollection.lampiran.length === 0 ? null : (
+              {fileLampiran.length === 0 ? null : (
                   <Grid item xs={12}>
                     <Typography color="textSecondary" gutterBottom>
                       Lampiran Berkas:
                     </Typography>
                     <Grid container spacing={1}>
-                      {tasksCollection.lampiran.map((lampiran) => (
-                        <LampiranFile
-                          file_id={lampiran.id}
-                          onPreviewFile={onPreviewFile}
-                          onDownloadFile={onDownloadFile}
-                          filename={lampiran.filename}
-                          filetype={fileType(lampiran.filename)}
-                        />
-                      ))}
+                    {fileLampiran.map((lampiran) => (
+                      <LampiranFile
+                        file_id={lampiran._id}
+                        onPreviewFile={viewFileTasks}
+                        onDownloadFile={downloadFileTasks}
+                        filename={lampiran.filename}
+                        filetype={fileType(lampiran.filename)}
+                      />
+                    ))}
                     </Grid>
                   </Grid>
                 )}
@@ -474,7 +486,6 @@ ViewTaskTeacher.propTypes = {
   tasksCollection: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
-
   downloadLampiran: PropTypes.func.isRequired,
   previewLampiran: PropTypes.func.isRequired,
   deleteTask: PropTypes.func.isRequired,
@@ -483,7 +494,6 @@ ViewTaskTeacher.propTypes = {
   getOneUser: PropTypes.func.isRequired, // For the person in charge task
   getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
   getOneTask: PropTypes.func.isRequired,
-  getStudents: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -502,5 +512,7 @@ export default connect(mapStateToProps, {
   getOneUser,
   getAllClass,
   getAllSubjects,
-  getStudents,
+  getFileTasks,
+  downloadFileTasks,
+  viewFileTasks,
 })(ViewTaskTeacher);

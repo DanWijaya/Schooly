@@ -35,6 +35,7 @@ import PhoneIcon from "@material-ui/icons/Phone";
 import WcIcon from "@material-ui/icons/Wc";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
+import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -170,7 +171,7 @@ function ProfileView(props) {
   const classes = useStyles();
 
   const { user, selectedUser } = props.auth;
-  const { setCurrentClass, classesCollection, getOneUser } = props;
+  const { setCurrentClass, classesCollection, getFileAvatar, getOneUser } = props;
 
   const [namakelas, setNamaKelas] = React.useState("");
 
@@ -224,10 +225,7 @@ function ProfileView(props) {
         <Grid item>
           {avatar ? (
             <StyledBadge>
-              <Avatar
-                src={`/api/upload/avatar/${avatar}`}
-                className={classes.avatar}
-              />
+              <Avatar src={avatar} className={classes.avatar} />
             </StyledBadge>
           ) : (
             <StyledBadge>
@@ -425,6 +423,6 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(mapStateToProps, { updateAvatar, setCurrentClass, getOneUser })(
+export default connect(mapStateToProps, { updateAvatar, setCurrentClass, getFileAvatar,getOneUser })(
   ProfileView
 );

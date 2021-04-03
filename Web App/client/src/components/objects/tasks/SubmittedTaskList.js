@@ -239,7 +239,7 @@ function WorkFile(props) {
             </Typography>
           }
         />
-        <ListItemText
+        {/* <ListItemText
           align="right"
           primary={
             <IconButton
@@ -253,7 +253,7 @@ function WorkFile(props) {
               <CloudDownloadIcon fontSize="small" />
             </IconButton>
           }
-        />
+        /> */}
       </ListItem>
     </Paper>
   );
