@@ -472,6 +472,7 @@ function ReportView(props) {
       if (subjectScores.length !== 0) {
         return (
           <ScoreGraph
+            classes={classes}
             scores={subjectScores}
             names={subjectNames}
             workType={type}
@@ -634,11 +635,11 @@ function ReportView(props) {
   function generateRowCellFormat2(row) {
     let trueSubject = false;
     let nonWaliView = false;
-    if(!kelas.walikelas) {
-      console.log("belum ada")
-    }
-    if(kelas.walikelas === user._id) {
-      if(kelas.subject_assigned && all_subjects) {
+    console.log(kelas)
+    if(kelasWali.get("id") === selectedUser.kelas) {
+      console.log("hitung")
+      if(kelas.subject_assigned) {
+        console.log("hitung2")
         for(let i=0;i<all_subjects.length;i++) {
           if(kelas.subject_assigned.includes(all_subjects[i]._id) && row.subject === all_subjects[i].name) {
             console.log(kelas)
@@ -648,7 +649,7 @@ function ReportView(props) {
         }
       }
     }
-    else {
+    else if (user.role === "Teacher" && kelasWali.get("id") !== selectedUser.kelas) {
       if(Object.keys(user.class_to_subject).includes(kelas._id)) {
         for(let i=0;i<all_subjects.length;i++) {
           if(kelas.subject_assigned) {
@@ -656,6 +657,17 @@ function ReportView(props) {
               nonWaliView = true;
               break;
             }
+          }
+        }
+      }
+    }
+    else if (user.role === "Student") {
+      if(kelas.subject_assigned) {
+        for(let i=0;i<all_subjects.length;i++) {
+          if(kelas.subject_assigned.includes(all_subjects[i]._id) && row.subject === all_subjects[i].name) {
+            console.log(kelas)
+            trueSubject = true;
+            break;
           }
         }
       }
@@ -1278,6 +1290,7 @@ function ReportView(props) {
   } else {
     role = user.role
   }
+
 
   return (
     <div className={classes.root}>

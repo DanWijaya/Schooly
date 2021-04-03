@@ -1492,41 +1492,43 @@ function ViewClass(props) {
               ? null
               : all_subjects.map((subject) => {
                   // let isEmpty = true
-                  return (
-                    <ExpansionPanel>
-                      <ExpansionPanelSummary>
-                        <Grid
-                          container
-                          justify="space-between"
-                          alignItems="center"
-                        >
-                          <Typography variant="h6">{subject.name}</Typography>
-                          <LightTooltip
-                            title="Lihat Profil"
-                            placement="right"
+                  if(kelas.subject_assigned.includes(subject._id)) {
+                    return (
+                      <ExpansionPanel>
+                        <ExpansionPanelSummary>
+                          <Grid
+                            container
+                            justify="space-between"
+                            alignItems="center"
                           >
-                            <Link to={`/mata-pelajaran/${subject._id}`}>
-                              <IconButton
-                                size="small"
-                                className={classes.viewSubjectButton}
-                              >
-                                <PageviewIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
-                      </ExpansionPanelSummary>
-                      <Divider />
-                      <List className={classes.expansionPanelList}>
-                        {showAllbySubject(
-                          listMaterials("subject", subject, "mata_pelajaran").concat(
-                          listTasks("subject", subject, "mata_pelajaran")).concat(
-                          listAssessments("subject", subject, "Kuis", "mata_pelajaran")).concat(
-                          listAssessments("subject", subject, "Ujian", "mata_pelajaran"))
-                        )}
-                      </List>
-                    </ExpansionPanel>
-                  );
+                            <Typography variant="h6">{subject.name}</Typography>
+                            <LightTooltip
+                              title="Lihat Profil"
+                              placement="right"
+                            >
+                              <Link to={`/mata-pelajaran/${subject._id}`}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.viewSubjectButton}
+                                >
+                                  <PageviewIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+                        </ExpansionPanelSummary>
+                        <Divider />
+                        <List className={classes.expansionPanelList}>
+                          {showAllbySubject(
+                            listMaterials("subject", subject, "mata_pelajaran").concat(
+                            listTasks("subject", subject, "mata_pelajaran")).concat(
+                            listAssessments("subject", subject, "Kuis", "mata_pelajaran")).concat(
+                            listAssessments("subject", subject, "Ujian", "mata_pelajaran"))
+                          )}
+                        </List>
+                      </ExpansionPanel>
+                    );
+                  }
                 })}
           </TabPanel>
           <TabPanel value={value} index={2}>
