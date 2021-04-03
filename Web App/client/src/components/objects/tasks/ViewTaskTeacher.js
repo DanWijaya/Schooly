@@ -432,13 +432,13 @@ function ViewTaskTeacher(props) {
           <Grid item style={{ paddingRight: "10px" }}>
             {disableButton ? 
               <Fab variant="extended" className={classes.seeAllTaskButton} disabled>
-                <AssignmentIcon style={{ marginRight: "10px" }} />
+                <AssignmentIcon style={{ marginRight: "7.5px" }} />
                 Lihat Hasil
               </Fab>
               :
               <Link to={`/daftar-tugas-terkumpul/${task_id}`}>
                 <Fab variant="extended" className={classes.seeAllTaskButton}>
-                  <AssignmentIcon style={{ marginRight: "10px" }} />
+                  <AssignmentIcon style={{ marginRight: "7.5px" }} />
                   Lihat Hasil
                 </Fab>
               </Link>

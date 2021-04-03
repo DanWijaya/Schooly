@@ -137,18 +137,21 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     marginTop: "10px",
     alignItems: "center",
+    width: "20vw",
+    [theme.breakpoints.down("sm")]: {
+      width: "200px"
+    }
   },
   greyBackground: {
     display: "flex",
     alignItems: "center",
-    textAlign: "center",
+    justifyContent: "center",
     padding: "15px",
     backgroundColor: "#e3e5e5",
-    height:"270px",
-    width:"250px",
+    height: "21vw",
+    width: "60vw",
     [theme.breakpoints.down("sm")]: {
       height:"200px",
-      width:"180px"
     }
   },
   customMargin: {
@@ -163,11 +166,10 @@ const useStyles = makeStyles((theme) => ({
   },
   graphParentContainer: {
     position: "relative",
-    height:"270px",
-    width:"250px",
+    height: "21vw",
+    width: "60vw",
     [theme.breakpoints.down("sm")]: {
       height:"200px",
-      width:"180px"
     },
   }
 }));
@@ -344,6 +346,9 @@ function ReportView(props) {
 
   // Graph
   const [graphType, setGraphType] = React.useState(0);
+  const [graphSubject, setGraphSubject] = React.useState(
+    null
+  );
   const [taskGraphCurrentSubject, setTaskGraphCurrentSubject] = React.useState(
     null
   );
@@ -354,18 +359,23 @@ function ReportView(props) {
     null
   );
 
-  if (taskGraphCurrentSubject === null && all_subjects.length !== 0) {
-    let randomNumber = Math.floor(Math.random() * all_subjects.length);
-    setTaskGraphCurrentSubject(randomNumber);
-  }
-  if (quizGraphCurrentSubject === null && all_subjects.length !== 0) {
-    let randomNumber = Math.floor(Math.random() * all_subjects.length);
-    setQuizGraphCurrentSubject(randomNumber);
-  }
-  if (examGraphCurrentSubject === null && all_subjects.length !== 0) {
-    let randomNumber = Math.floor(Math.random() * all_subjects.length);
-    setExamGraphCurrentSubject(randomNumber);
-  }
+  React.useEffect(() => {
+    if (all_subjects && all_subjects.length !== 0) {
+      setGraphSubject(Math.floor(Math.random() * all_subjects.length));
+    }
+    // if (taskGraphCurrentSubject === null && all_subjects.length !== 0) {
+    //   let randomNumber = Math.floor(Math.random() * all_subjects.length);
+    //   setTaskGraphCurrentSubject(randomNumber);
+    // }
+    // if (quizGraphCurrentSubject === null && all_subjects.length !== 0) {
+    //   let randomNumber = Math.floor(Math.random() * all_subjects.length);
+    //   setQuizGraphCurrentSubject(randomNumber);
+    // }
+    // if (examGraphCurrentSubject === null && all_subjects.length !== 0) {
+    //   let randomNumber = Math.floor(Math.random() * all_subjects.length);
+    //   setExamGraphCurrentSubject(randomNumber);
+    // }
+  }, [all_subjects]);
 
   function graphTask(subjectIndex) {
     if (all_subjects[subjectIndex]) {
@@ -456,36 +466,36 @@ function ReportView(props) {
     } else return null;
   }
 
-  const changeGraphSubject = (workType, direction, subjectsLength) => {
-    if (workType === "Tugas") {
-      if (direction === "Left" && taskGraphCurrentSubject > 0) {
-        setTaskGraphCurrentSubject(taskGraphCurrentSubject - 1);
-      } else if (
-        direction === "Right" &&
-        taskGraphCurrentSubject < subjectsLength - 1
-      ) {
-        setTaskGraphCurrentSubject(taskGraphCurrentSubject + 1);
-      }
-    } else if (workType === "Kuis") {
-      if (direction === "Left" && quizGraphCurrentSubject > 0) {
-        setQuizGraphCurrentSubject(quizGraphCurrentSubject - 1);
-      } else if (
-        direction === "Right" &&
-        quizGraphCurrentSubject < subjectsLength - 1
-      ) {
-        setQuizGraphCurrentSubject(quizGraphCurrentSubject + 1);
-      }
-    } else if (workType === "Ujian") {
-      if (direction === "Left" && examGraphCurrentSubject > 0) {
-        setExamGraphCurrentSubject(examGraphCurrentSubject - 1);
-      } else if (
-        direction === "Right" &&
-        examGraphCurrentSubject < subjectsLength - 1
-      ) {
-        setExamGraphCurrentSubject(examGraphCurrentSubject + 1);
-      }
-    }
-  };
+  // const changeGraphSubject = (workType, direction, subjectsLength) => {
+  //   if (workType === "Tugas") {
+  //     if (direction === "Left" && taskGraphCurrentSubject > 0) {
+  //       setTaskGraphCurrentSubject(taskGraphCurrentSubject - 1);
+  //     } else if (
+  //       direction === "Right" &&
+  //       taskGraphCurrentSubject < subjectsLength - 1
+  //     ) {
+  //       setTaskGraphCurrentSubject(taskGraphCurrentSubject + 1);
+  //     }
+  //   } else if (workType === "Kuis") {
+  //     if (direction === "Left" && quizGraphCurrentSubject > 0) {
+  //       setQuizGraphCurrentSubject(quizGraphCurrentSubject - 1);
+  //     } else if (
+  //       direction === "Right" &&
+  //       quizGraphCurrentSubject < subjectsLength - 1
+  //     ) {
+  //       setQuizGraphCurrentSubject(quizGraphCurrentSubject + 1);
+  //     }
+  //   } else if (workType === "Ujian") {
+  //     if (direction === "Left" && examGraphCurrentSubject > 0) {
+  //       setExamGraphCurrentSubject(examGraphCurrentSubject - 1);
+  //     } else if (
+  //       direction === "Right" &&
+  //       examGraphCurrentSubject < subjectsLength - 1
+  //     ) {
+  //       setExamGraphCurrentSubject(examGraphCurrentSubject + 1);
+  //     }
+  //   }
+  // };
 
   function showSubject(subjectIndex) {
     if (all_subjects[subjectIndex]) {
@@ -1096,42 +1106,43 @@ function ReportView(props) {
     let subject;
     const types = ["Tugas", "Kuis", "Ujian"];
 
+    subject = showSubject(graphSubject);
     if (types[graphType] === "Tugas") {
-      graph = graphTask(taskGraphCurrentSubject);
-      subject = showSubject(taskGraphCurrentSubject)
+      graph = graphTask(graphSubject);
+      // graph = graphTask(taskGraphCurrentSubject);
+      // subject = showSubject(taskGraphCurrentSubject);
     } else if (types[graphType] === "Kuis") {
-      graph = graphAssessment(quizGraphCurrentSubject, "Kuis");
-      subject = showSubject(quizGraphCurrentSubject)
-
+      graph = graphAssessment(graphSubject, "Kuis");
+      // graph = graphAssessment(quizGraphCurrentSubject, "Kuis");
+      // subject = showSubject(quizGraphCurrentSubject);
     } else {
-      graph = graphAssessment(examGraphCurrentSubject, "Ujian");
-      subject = showSubject(examGraphCurrentSubject)
+      graph = graphAssessment(graphSubject, "Ujian");
+      // graph = graphAssessment(examGraphCurrentSubject, "Ujian");
+      // subject = showSubject(examGraphCurrentSubject);
     }
 
     return (
-      <Grid item xs={12} sm={4} container direction="column" spacing={1} alignItems="center">
-        <Grid item>
-          <div className={classes.graphButtons}>
-            <IconButton
-              onClick={() => {
-                if (graphType - 1 < 0) {
-                  setGraphType(types.length - 1);
-                } else {
-                  setGraphType((graphType - 1) % 3);
-                }
-              }}
-            >
-              <ArrowBackIosIcon />
-            </IconButton>
-            <Typography align="center">
-              Nilai {types[graphType]} Anda
-            </Typography>
-            <IconButton
-              onClick={() => {setGraphType((graphType + 1) % 3)}}
-              >
-              <ArrowForwardIosIcon />
-            </IconButton>
-          </div>
+      <Grid item container direction="column" spacing={1} alignItems="center">
+        <Grid item className={classes.graphButtons} style={{ margin: "0 0 10px" }}>
+          <IconButton
+            onClick={() => {
+              if (graphType - 1 < 0) {
+                setGraphType(types.length - 1);
+              } else {
+                setGraphType(graphType - 1);
+              }
+            }}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
+          <Typography align="center">
+            Nilai {types[graphType]} Anda
+          </Typography>
+          <IconButton
+            onClick={() => { setGraphType((graphType + 1) % types.length) }}
+          >
+            <ArrowForwardIosIcon />
+          </IconButton>
         </Grid>
         <Grid item>
           {graph === null ? (
@@ -1148,28 +1159,32 @@ function ReportView(props) {
             graph
           )}
         </Grid>
-        <Grid item>
-          <div className={classes.graphButtons}>
-            <IconButton
-              onClick={() =>
-                changeGraphSubject(types[graphType], "Left", all_subjects.length)
+        <Grid item className={classes.graphButtons}>
+          <IconButton
+            onClick={() => {
+              if (graphSubject - 1 < 0) {
+                setGraphSubject(all_subjects.length - 1);
+              } else {
+                setGraphSubject(graphSubject - 1);
               }
-            >
-              <ArrowBackIosIcon />
-            </IconButton>
-            {subject}
-            <IconButton
-              onClick={() =>
-                changeGraphSubject(
-                  types[graphType],
-                  "Right",
-                  all_subjects.length
-                )
-              }
-            >
-              <ArrowForwardIosIcon />
-            </IconButton>
-          </div>
+              // changeGraphSubject(types[graphType], "Left", all_subjects.length)
+            }}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
+          {subject}
+          <IconButton
+            onClick={() => {
+              setGraphSubject((graphSubject + 1) % all_subjects.length);
+              // changeGraphSubject(
+              //   types[graphType],
+              //   "Right",
+              //   all_subjects.length
+            }
+            }
+          >
+            <ArrowForwardIosIcon />
+          </IconButton>
         </Grid>
       </Grid>
     )
@@ -1246,14 +1261,17 @@ function ReportView(props) {
             <Divider className={classes.profileDivider} />
           </Grid>
           <Grid
+            item
             container
             justify="center"
-            spacing={4}
+            // spacing={4}
             alignItems="center"
           >
-            {createGraph()}
+            <Paper style={{ padding: "20px", width: "100%"}}>
+              {createGraph()}
+            </Paper>
 
-            {/* ----------------- ini dipake kalau ingin menampilkan 3 graph bersampingan ----------------- */}
+            {/* ----------------- ini dipakai kalau ingin menampilkan 3 graph bersampingan ----------------- */}
             {/* <Grid item container direction="column" spacing={1} xs={12} sm={4} alignItems="center">
               <Grid item>
                 <Typography variant="h6" align="center">

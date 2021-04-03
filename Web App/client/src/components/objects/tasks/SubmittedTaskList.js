@@ -74,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "10px",
   },
   listItem: {
+    padding: "6px 16px",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
@@ -227,25 +228,32 @@ function WorkFile(props) {
           ) : null}
         </ListItemAvatar>
         <ListItemText
-          primary={file_name}
+          primary={
+            <Typography variant="h6" color="textPrimary">
+              {file_name}
+            </Typography>
+            }
           secondary={
-            <Typography variant="caption" color="textSecondary">
+            <Typography variant="body2" color="textSecondary">
               {file_type}
             </Typography>
           }
         />
-        <ListItemIcon>
-          <IconButton
-            size="small"
-            className={classes.downloadIconButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              onDownloadFile(file_id, "lampiran");
-            }}
-          >
-            <CloudDownloadIcon fontSize="small" />
-          </IconButton>
-        </ListItemIcon>
+        <ListItemText
+          align="right"
+          primary={
+            <IconButton
+              size="small"
+              className={classes.downloadIconButton}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDownloadFile(file_id, "lampiran");
+              }}
+            >
+              <CloudDownloadIcon fontSize="small" />
+            </IconButton>
+          }
+        />
       </ListItem>
     </Paper>
   );

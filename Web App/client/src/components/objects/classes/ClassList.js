@@ -631,7 +631,7 @@ function ClassListToolbar(props) {
           </div>
         ) : null}
         {user.role === "Admin" ? (
-          <div>
+          <>
             <form
               onChange={(event) => {
                 handleImportCSV(event);
@@ -675,7 +675,7 @@ function ClassListToolbar(props) {
                 </IconButton>
               </Link>
             </LightTooltip>
-          </div>
+          </>
         ) : null}
         <LightTooltip title="Urutkan Kelas">
           <IconButton
@@ -774,7 +774,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   newClassButton: {
-    marginRight: "6px",
+    marginRight: "10px",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {

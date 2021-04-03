@@ -1004,8 +1004,8 @@ function AssessmentList(props) {
                           }}
                         >
                           <ListItem
-                            button
-                            component="a"
+                            // button
+                            // component="a"
                             className={classes.listItem}
                           >
                             <Hidden smUp implementation="css">

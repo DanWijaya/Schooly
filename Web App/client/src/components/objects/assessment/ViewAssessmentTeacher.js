@@ -487,7 +487,7 @@ function ViewAssessmentTeacher(props) {
                     variant="extended"
                     className={classes.seeAllAssessmentButton}
                   >
-                    <AssignmentIcon style={{ marginRight: "10px" }} />
+                    <AssignmentIcon style={{ marginRight: "7.5px" }} />
                       Lihat Hasil
                     </Fab>
                 </Link>
@@ -498,7 +498,7 @@ function ViewAssessmentTeacher(props) {
                     className={classes.seeAllAssessmentButton}
                     disabled
                   >
-                    <AssignmentIcon style={{ marginRight: "10px" }} />
+                    <AssignmentIcon style={{ marginRight: "7.5px" }} />
                       Lihat Hasil
                 </Fab>
                 </>

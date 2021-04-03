@@ -140,7 +140,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.divider,
       color: "black",
     },
-    marginLeft: "5px"
   },
   RadioQst: {
     "&$disabled": {
@@ -183,9 +182,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   editIconFab: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-    marginRight: 0
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+    marginRight: "7.5px",
   },
   editIconButton: {
     // marginRight: "10px",
@@ -1144,7 +1143,7 @@ function SubmittedAssessmentList(props) {
                   : `/lihat-jawaban-ujian/${selectedAssessments._id}`
               }
             >
-              <Fab size="medium" variant="extended" className={classes.editFab} style={{marginRight: "2px"}}>
+              <Fab size="medium" variant="extended" className={classes.editFab}>
                 <EditIcon className={classes.editIconFab} />
                 Periksa
               </Fab>
@@ -1154,6 +1153,7 @@ function SubmittedAssessmentList(props) {
               <IconButton
                 onClick={handleOpenSortMenu}
                 className={classes.sortButton}
+                style={{ marginRight: "3px" }}
               >
                 <SortIcon />
               </IconButton>
