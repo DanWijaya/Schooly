@@ -1180,8 +1180,7 @@ function ReportView(props) {
               //   types[graphType],
               //   "Right",
               //   all_subjects.length
-            }
-            }
+            }}
           >
             <ArrowForwardIosIcon />
           </IconButton>
