@@ -1168,7 +1168,7 @@ function ViewClass(props) {
 
   return (
     <div className={classes.root}>
-      {(user.role === "Admin" || user.role === "Teacher") ? (
+      {(user.role === "Teacher" || user.role === "Admin") ? (
         <div>
           <Paper className={classes.classPaper}>
             <Typography variant="h3">{kelas.name}</Typography>
@@ -1196,26 +1196,26 @@ function ViewClass(props) {
                         }
                       />
                     </Grid>,
-                    // (user.email === walikelas.email) ? null : ( // menghilangkan tombol lihat profil di diri sendiri
-                    //   <Grid item xs container justify="flex-end">
-                    //     <Grid item>
-                    //       <LightTooltip title="Lihat Profil">
-                    //         <Link
-                    //           to={{
-                    //             pathname: `/lihat-profil/${walikelas._id}`,
-                    //           }}
-                    //         >
-                    //           <IconButton
-                    //             size="small"
-                    //             className={classes.viewMaterialButton}
-                    //           >
-                    //             <PageviewIcon fontSize="small" />
-                    //           </IconButton>
-                    //         </Link>
-                    //       </LightTooltip>
-                    //     </Grid>
-                    //   </Grid>
-                    // )
+                    (user.email === walikelas.email) ? null : ( // menghilangkan tombol lihat profil di diri sendiri
+                      <Grid item xs container justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Lihat Profil">
+                            <Link
+                              to={{
+                                pathname: `/lihat-profil/${walikelas._id}`,
+                              }}
+                            >
+                              <IconButton
+                                size="small"
+                                className={classes.viewMaterialButton}
+                              >
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
+                        </Grid>
+                      </Grid>
+                    )
                   ]}
                 </Grid>
               ) : (
@@ -1254,66 +1254,24 @@ function ViewClass(props) {
                           person_role={student_role(student._id)}
                         />
                       </Grid>
-                      {(walikelas) ? 
-                        (walikelas._id === user._id) ?
-                          <Grid item xs container justify="flex-end">
-                            <Grid item>
-                              <LightTooltip title="Lihat Profil">
-                                <Link
-                                  to={{
-                                    pathname: `/lihat-profil/${student._id}`,
-                                  }}
-                                >
-                                  <IconButton
-                                    size="small"
-                                    className={classes.viewMaterialButton}
-                                  >
-                                    <PageviewIcon fontSize="small" />
-                                  </IconButton>
-                                </Link>
-                              </LightTooltip>
-                            </Grid>
-                          </Grid>
-                        : (user.class_teached).includes(kelas._id) ?
-                          <Grid item xs container justify="flex-end">
-                            <Grid item>
-                              <LightTooltip title="Lihat Profil">
-                                <Link
-                                  to={{
-                                    pathname: `/lihat-profil/${student._id}`,
-                                  }}
-                                >
-                                  <IconButton
-                                    size="small"
-                                    className={classes.viewMaterialButton}
-                                  >
-                                    <PageviewIcon fontSize="small" />
-                                  </IconButton>
-                                </Link>
-                              </LightTooltip>
-                            </Grid>
-                          </Grid>
-                        : null 
-                      : (user.class_teached).includes(kelas._id) ?
-                        <Grid item xs container justify="flex-end">
-                          <Grid item>
-                            <LightTooltip title="Lihat Profil">
-                              <Link
-                                to={{
-                                  pathname: `/lihat-profil/${student._id}`,
-                                }}
+                      <Grid item xs container justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Lihat Profil">
+                            <Link
+                              to={{
+                                pathname: `/lihat-profil/${student._id}`,
+                              }}
+                            >
+                              <IconButton
+                                size="small"
+                                className={classes.viewMaterialButton}
                               >
-                                <IconButton
-                                  size="small"
-                                  className={classes.viewMaterialButton}
-                                >
-                                  <PageviewIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
                         </Grid>
-                      : null}
+                      </Grid>
                     </Grid>
                   ))
                 )}
