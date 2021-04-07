@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers, getStudentsByClass } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
@@ -100,6 +101,8 @@ class EditClass extends Component {
       bendahara: null,
       teacher_options: [],
       openUploadDialog: null,
+      mata_pelajaran: null,
+      allSubjectObject: null
     };
     const { id } = this.props.match.params;
     // console.log(id);
@@ -108,17 +111,39 @@ class EditClass extends Component {
   }
 
   onChange = (e, otherfield = null) => {
-    console.log(this.state.walikelas);
+    // console.log(this.state.walikelas);
     if (otherfield) {
-      this.setState({ [otherfield]: e.target.value });
+      if (otherfield === "mata_pelajaran") {
+        this.setState({ [otherfield]: e });
+      } else {
+        this.setState({ [otherfield]: e.target.value });
+      }
     } else {
       this.setState({ [e.target.id]: e.target.value });
     }
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.success && !prevProps.success) {
+    // if (this.props.success && !prevProps.success) { // (?) kalau pake ini, kadang dialognya bisa kebuka, kadang tidak
+    if (!this.props.errors && this.props.errors !== prevProps.errors) {
       this.handleOpenUploadDialog();
+    }
+
+    if ((prevState.mata_pelajaran === null) && (Object.keys(this.props.classesCollection.kelas).length !== 0) &&
+      this.props.subjectsCollection.all_subjects && (this.props.subjectsCollection.all_subjects.length !== 0)
+    ) {
+      let all_subjects_obj = {};
+      for (let subject of this.props.subjectsCollection.all_subjects) {
+        all_subjects_obj[subject._id] = subject.name;
+      }
+      this.setState({
+        mata_pelajaran: this.props.classesCollection.kelas.subject_assigned.map((subjectId) => {
+          return { _id: subjectId, name: all_subjects_obj[subjectId] }
+        }),
+        allSubjectObject: this.props.subjectsCollection.all_subjects.map((subject) => {
+          return { _id: subject._id, name: subject.name }
+        }),
+      })
     }
   };
 
@@ -169,15 +194,17 @@ class EditClass extends Component {
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
       errors: {},
+      mata_pelajaran: this.state.mata_pelajaran.map((matpel) => (matpel._id))
     };
     this.props.updateClass(classObject, id, this.props.history);
   };
 
   componentDidMount() {
-    const { getTeachers, getStudentsByClass, getAllClass } = this.props;
+    const { getTeachers, getStudentsByClass, getAllClass, getAllSubjects } = this.props;
     getTeachers();
     getStudentsByClass(this.props.match.params.id);
     getAllClass();
+    getAllSubjects();
   }
 
   componentWillUnmount() {
@@ -199,15 +226,6 @@ class EditClass extends Component {
       teacher_options,
     } = this.state;
 
-    const top100Films = [
-      { title: 'The Shawshank Redemption', year: 1994 },
-      { title: 'The Godfather', year: 1972 },
-      { title: 'The Godfather: Part II', year: 1974 },
-      { title: 'The Dark Knight', year: 2008 },
-      { title: '12 Angry Men', year: 1957 },
-      { title: "Schindler's List", year: 1993 },
-      { title: 'Pulp Fiction', year: 1994 }
-    ]
     // var teacher_options = all_teachers
     var student_options = students_by_class;
 
@@ -329,21 +347,27 @@ class EditClass extends Component {
                         <Autocomplete
                           multiple
                           id="tags-outlined"
-                          options={top100Films} // Dummy
-                          getOptionLabel={(option) => option.title}
+                          options={this.state.allSubjectObject ? this.state.allSubjectObject : []}
+                          getOptionLabel={(option) => option.name}
                           filterSelectedOptions
                           classes={{input: classes.underline, inputRoot: classes.underline}}
+                          value={this.state.mata_pelajaran ? this.state.mata_pelajaran : []}
+                          onChange={(event, value) => {
+                            this.onChange(value, "mata_pelajaran");
+                          }}
                           renderInput={(params) => (
                             <TextField
                               variant="outlined"
                               size="small"
                               fullWidth
                               className={classes.underline}
-                              classes={{root: classes.underline}}
-                              InputProps={{className: classes.underline}}
+                              classes={{ root: classes.underline }}
+                              InputProps={{ className: classes.underline }}
+                              error={errors.mata_pelajaran}
+                              helperText={errors.mata_pelajaran}
                               {...params}
                             />
-                          )}   
+                          )}
                         />
                         <FormHelperText>
 
@@ -479,6 +503,7 @@ EditClass.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   getAllClass: PropTypes.func.isRequired,
   success: PropTypes.object.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -486,6 +511,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   classesCollection: state.classesCollection,
   success: state.success,
+  subjectsCollection: state.subjectsCollection,
 });
 
 export default connect(mapStateToProps, {
@@ -493,6 +519,7 @@ export default connect(mapStateToProps, {
   updateClass,
   getStudentsByClass,
   getTeachers,
+  getAllSubjects,
   clearErrors,
   getAllClass,
   clearSuccess,

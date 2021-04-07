@@ -266,14 +266,27 @@ class EditAnnouncement extends Component {
       if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
       selectedAnnouncementProps && selectedAnnouncementProps.constructor === Object && (Object.keys(selectedAnnouncementProps).length !== 0)) {
         
+        let newClassOptions;
         let all_classes_obj = {};
-        this.props.classesCollection.all_classes.forEach((classInfo) => {
-          all_classes_obj[classInfo._id] = classInfo.name; 
-        });
-        
-        let newClassOptions = this.props.auth.user.class_teached.map((classId) => {
-          return { _id: classId, name: all_classes_obj[classId] };
-        })
+
+        if (this.props.auth.user.role === "Teacher") {
+          // perlu dicek karena hanya guru yang memiliki atribut yang berisi kelas-kelas yand diajar
+          
+          this.props.classesCollection.all_classes.forEach((classInfo) => {
+            all_classes_obj[classInfo._id] = classInfo.name; 
+          });
+
+          newClassOptions = this.props.auth.user.class_teached.map((classId) => {
+            return { _id: classId, name: all_classes_obj[classId] };
+          })
+        } else {
+          newClassOptions = [];
+
+          this.props.classesCollection.all_classes.forEach((classInfo) => {
+            all_classes_obj[classInfo._id] = classInfo.name; 
+            newClassOptions.push({ _id: classInfo._id, name: classInfo.name });
+          });
+        }
         
         this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
       }

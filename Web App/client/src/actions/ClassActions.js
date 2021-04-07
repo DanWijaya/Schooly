@@ -18,6 +18,10 @@ export const createClass = (classData, history) => (dispatch) => {
       // alert("Kelas telah dibuat");
       // history.push("/daftar-kelas");
       dispatch({
+        type: GET_ERRORS,
+        payload: false,
+      });
+      dispatch({
         type: GET_SUCCESS_RESPONSE,
         payload: res.data._id,
       });
@@ -93,6 +97,10 @@ export const updateClass = (classData, classId, history) => (dispatch) => {
       console.log("Class updated to be : ", res.data);
       // alert("Kelas telah berhasil disunting");
       // history.push("/daftar-kelas");
+      dispatch({
+        type: GET_ERRORS,
+        payload: false,
+      });
       dispatch({
         type: GET_SUCCESS_RESPONSE,
         payload: classId,

@@ -5,6 +5,7 @@ import classnames from "classnames";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { createClass } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers } from "../../../actions/UserActions";
 import {
   Button,
@@ -74,8 +75,13 @@ class CreateClass extends Component {
   // };
 
   onChange = (e, otherfield = null) => {
-    if (otherfield) this.setState({ [otherfield]: e.target.value });
-    else {
+    if (otherfield) {
+      if (otherfield === "mata_pelajaran") {
+        this.setState({ [otherfield]: e });
+      } else {
+        this.setState({ [otherfield]: e.target.value });
+      }
+    } else {
       this.setState({ [e.target.id]: e.target.value });
     }
   };
@@ -91,6 +97,7 @@ class CreateClass extends Component {
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
       errors: {},
+      mata_pelajaran: this.state.mata_pelajaran.map((matpel) => (matpel._id))
     };
     this.props.createClass(classObject, this.props.history);
   };
@@ -110,6 +117,7 @@ class CreateClass extends Component {
 
   componentDidMount() {
     this.props.getTeachers();
+    this.props.getAllSubjects();
   }
 
   componentWillUnmount() {
@@ -122,15 +130,6 @@ class CreateClass extends Component {
 
     const { all_teachers, user } = this.props.auth;
 
-    const top100Films = [
-      { title: 'The Shawshank Redemption', year: 1994 },
-      { title: 'The Godfather', year: 1972 },
-      { title: 'The Godfather: Part II', year: 1974 },
-      { title: 'The Dark Knight', year: 2008 },
-      { title: '12 Angry Men', year: 1957 },
-      { title: "Schindler's List", year: 1993 },
-      { title: 'Pulp Fiction', year: 1994 }
-    ]
     // console.log(errors);
     // console.log(all_teachers);
     document.title = "Schooly | Buat Kelas";
@@ -227,19 +226,24 @@ class CreateClass extends Component {
                     <Autocomplete
                       multiple
                       id="tags-outlined"
-                      options={top100Films} // Dummy
-                      getOptionLabel={(option) => option.title}
+                      options={this.props.subjectsCollection ? this.props.subjectsCollection.all_subjects : null}
+                      getOptionLabel={(option) => option.name}
                       filterSelectedOptions
                       size="small"
+                      onChange={(event, value) => {
+                        this.onChange(value, "mata_pelajaran");
+                      }}
                       renderInput={(params) => (
                         <TextField
                           {...params}
                           variant="outlined"
                           size="small"
                           fullWidth
-                          style={{border: "none"}}
+                          style={{ border: "none" }}
+                          error={errors.mata_pelajaran}
+                          helperText={errors.mata_pelajaran}
                         />
-                      )}   
+                      )}
                     />
                     <FormHelperText>
 
@@ -302,17 +306,20 @@ CreateClass.propTypes = {
   getTeachers: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
   success: PropTypes.object.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
   success: state.success,
+  subjectsCollection: state.subjectsCollection,
 });
 
 export default connect(mapStateToProps, {
   createClass,
   getTeachers,
+  getAllSubjects,
   clearErrors,
   clearSuccess
 })(withStyles(styles)(CreateClass));

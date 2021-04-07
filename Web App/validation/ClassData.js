@@ -27,6 +27,10 @@ module.exports = function validateClassInput(data) {
     errors.ukuran = "Jumlah murid harus berupa bilangan bulat";
   }
 
+  if (data.mata_pelajaran.length === 0) {
+    errors.mata_pelajaran = "Mata pelajaran belum diisi";
+  }
+
   return {
     errors,
     isValid: isEmpty(errors),
