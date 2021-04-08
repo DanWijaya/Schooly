@@ -280,9 +280,7 @@ function ReportView(props) {
   const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
   const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
 
-
   const { all_classes, all_classes_map } = props.classesCollection;
-
   const { user, students_by_class, selectedUser } = props.auth;
   const { all_subjects_map, all_subjects } = props.subjectsCollection;
   const allTaskArray = props.tasksCollection; // mengambil data dari DB
@@ -549,6 +547,90 @@ function ReportView(props) {
     }
   };
 
+  function createGraph() {
+    let graph;
+    let subject;
+    const types = ["Tugas", "Kuis", "Ujian"];
+
+    if (types[graphType] === "Tugas") {
+      graph = graphTask(taskGraphCurrentSubject);
+      subject = showSubject(taskGraphCurrentSubject)
+    } else if (types[graphType] === "Kuis") {
+      graph = graphAssessment(quizGraphCurrentSubject, "Kuis");
+      subject = showSubject(quizGraphCurrentSubject)
+
+    } else {
+      graph = graphAssessment(examGraphCurrentSubject, "Ujian");
+      subject = showSubject(examGraphCurrentSubject)
+    }
+
+    return (
+      <Grid item xs={12} sm={4} container direction="column" spacing={1} alignItems="center">
+        <Grid item>
+          <div className={classes.graphButtons}>
+            <IconButton
+              onClick={() => {
+                if (graphType - 1 < 0) {
+                  setGraphType(types.length - 1);
+                } else {
+                  setGraphType((graphType - 1) % 3);
+                }
+              }}
+            >
+              <ArrowBackIosIcon />
+            </IconButton>
+            <Typography align="center">
+              Nilai {types[graphType]} Anda
+            </Typography>
+            <IconButton
+              onClick={() => {setGraphType((graphType + 1) % 3)}}
+              >
+              <ArrowForwardIosIcon />
+            </IconButton>
+          </div>
+        </Grid>
+        <Grid item>
+          {graph === null ? (
+            <div className={classes.greyBackground}>
+              <Typography
+                align="center"
+                color="textSecondary"
+                variant="subtitle2"
+              >
+                Belum ada {types[graphType]} yang telah dinilai untuk mata pelajaran terkait
+              </Typography>
+            </div>
+          ) : (
+            graph
+          )}
+        </Grid>
+        <Grid item>
+          <div className={classes.graphButtons}>
+            <IconButton
+              onClick={() =>
+                changeGraphSubject(types[graphType], "Left", all_subjects.length)
+              }
+            >
+              <ArrowBackIosIcon />
+            </IconButton>
+            {subject}
+            <IconButton
+              onClick={() =>
+                changeGraphSubject(
+                  types[graphType],
+                  "Right",
+                  all_subjects.length
+                )
+              }
+            >
+              <ArrowForwardIosIcon />
+            </IconButton>
+          </div>
+        </Grid>
+      </Grid>
+    )
+  }
+
   function showSubject(subjectIndex) {
     if (all_subjects[subjectIndex]) {
       return (
@@ -801,22 +883,24 @@ function ReportView(props) {
 
   function handleKelasChange(event) {
     // reminder: event.target.value berisi value Select yang sedang dipilih
+    let selectedClassId = event.target.value;
+
     if (isSubjectSelected) {
-      setValueKelas(event.target.value);
-      getStudentsByClass(event.target.value); // ini akan membuat useEffect yg depend terhadap students_by_class menjadi dipanggil
+      setValueKelas(selectedClassId);
+      getStudentsByClass(selectedClassId); // ini akan membuat useEffect yg depend terhadap students_by_class menjadi dipanggil
     } else {
-      setValueKelas(event.target.value);
+      setValueKelas(selectedClassId);
       setIsClassSelected(true);
       setValueMatpel("");
 
       // jika guru adalah wali kelas dan kelas yang dipilih adalah kelas wali,
-      if (kelasWali.size !== 0 && event.target.value === kelasWali.get("id")) {
+      if (kelasWali.size !== 0 && selectedClassId === kelasWali.get("id")) {
         setKontenMatpel(semuaMatpel);
       } else {
         // jika guru bukan wali kelas atau kelas yang dipilih bukan kelas wali,
         // tampilkan hanya semua matpel yang diajarkan ke kelas yang dipilih
         let matpel = new Map();
-        user.subject_teached.forEach((subjectId) => {
+        user.class_to_subject[selectedClassId].forEach((subjectId) => {
           matpel.set(subjectId, semuaMatpel.get(subjectId));
         });
         setKontenMatpel(matpel);
@@ -825,19 +909,33 @@ function ReportView(props) {
   }
 
   function handleMatPelChange(event) {
+    let selectedSubjectId = event.target.value;
+
     if (isClassSelected) {
-      setValueMatpel(event.target.value);
+      setValueMatpel(selectedSubjectId);
       getStudentsByClass(valueKelas); // ini akan membuat useEffect yg depend terhadap students_by_class menjadi dipanggil
     } else {
-      // jika guru memilih subject yg diajarnya, isi Select kelas dengan semua kelas
-      if (user.subject_teached.includes(event.target.value)) {
-        setKontenKelas(semuaKelas);
+      // jika guru ini adalah guru wali
+      let kelas = new Map();
+      if (kelasWali.size !== 0) {
+        if (user.subject_teached.includes(selectedSubjectId)) {
+          for (let [classId, subjectIdArray] of Object.entries(user.class_to_subject)) {
+            if (subjectIdArray.includes(selectedSubjectId)) {
+              kelas.set(classId, semuaKelas.get(classId));
+            }
+          }
+          kelas.delete(kelasWali.get("id"));
+        }
       } else {
-        // jika guru memilih subject yg bukan diajarnya, isi kelas hanyalah kelas yang diwalikannya (jika ada)
-        setKontenKelas(new Map());
+        for (let [classId, subjectIdArray] of Object.entries(user.class_to_subject)) {
+          if (subjectIdArray.includes(selectedSubjectId)) {
+            kelas.set(classId, semuaKelas.get(classId));
+          }
+        }
       }
 
-      setValueMatpel(event.target.value);
+      setKontenKelas(kelas);
+      setValueMatpel(selectedSubjectId);
       setIsSubjectSelected(true);
       setValueKelas("");
     }
@@ -1157,10 +1255,9 @@ function ReportView(props) {
         let daftarMatpel = new Map();
         let daftarKelas = new Map();
 
-        // mengisi daftar kelas dengan semua kelas yang ada
-        // (karena guru pasti mengajar minimal satu subject dan setiap subject diajar ke semua kelas)
-        all_classes_map.forEach((classInfo, classId) => {
-          daftarKelas.set(classId, classInfo.name);
+        // mengisi daftar kelas dengan semua kelas yang diajar oleh guru ini
+        user.class_teached.forEach((classId) => {
+          daftarKelas.set(classId, all_classes_map.get(classId).name);
         });
 
         if (kelasWali.size !== 0) {
@@ -1194,91 +1291,6 @@ function ReportView(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kelasWali, all_classes_map, all_subjects_map]);
 
-  function createGraph() {
-    let graph;
-    let subject;
-    const types = ["Tugas", "Kuis", "Ujian"];
-
-    if (types[graphType] === "Tugas") {
-      graph = graphTask(taskGraphCurrentSubject);
-      subject = showSubject(taskGraphCurrentSubject)
-    } else if (types[graphType] === "Kuis") {
-      graph = graphAssessment(quizGraphCurrentSubject, "Kuis");
-      subject = showSubject(quizGraphCurrentSubject)
-
-    } else {
-      graph = graphAssessment(examGraphCurrentSubject, "Ujian");
-      subject = showSubject(examGraphCurrentSubject)
-    }
-
-    return (
-      <Grid item xs={12} sm={4} container direction="column" spacing={1} alignItems="center">
-        <Grid item>
-          <div className={classes.graphButtons}>
-            <IconButton
-              onClick={() => {
-                if (graphType - 1 < 0) {
-                  setGraphType(types.length - 1);
-                } else {
-                  setGraphType((graphType - 1) % 3);
-                }
-              }}
-            >
-              <ArrowBackIosIcon />
-            </IconButton>
-            <Typography align="center">
-              Nilai {types[graphType]} Anda
-            </Typography>
-            <IconButton
-              onClick={() => {setGraphType((graphType + 1) % 3)}}
-              >
-              <ArrowForwardIosIcon />
-            </IconButton>
-          </div>
-        </Grid>
-        <Grid item>
-          {graph === null ? (
-            <div className={classes.greyBackground}>
-              <Typography
-                align="center"
-                color="textSecondary"
-                variant="subtitle2"
-              >
-                Belum ada {types[graphType]} yang telah dinilai untuk mata pelajaran terkait
-              </Typography>
-            </div>
-          ) : (
-            graph
-          )}
-        </Grid>
-        <Grid item>
-          <div className={classes.graphButtons}>
-            <IconButton
-              onClick={() =>
-                changeGraphSubject(types[graphType], "Left", all_subjects.length)
-              }
-            >
-              <ArrowBackIosIcon />
-            </IconButton>
-            {subject}
-            <IconButton
-              onClick={() =>
-                changeGraphSubject(
-                  types[graphType],
-                  "Right",
-                  all_subjects.length
-                )
-              }
-            >
-              <ArrowForwardIosIcon />
-            </IconButton>
-          </div>
-        </Grid>
-      </Grid>
-    )
-  }
-
-
   // Untuk view dari sidebar teacher, untuk sekarang reserve special code "semua"
   let role;
   if(props.match.params.id === "semua" && user.role === "Teacher") {
@@ -1290,7 +1302,6 @@ function ReportView(props) {
   } else {
     role = user.role
   }
-
 
   return (
     <div className={classes.root}>
