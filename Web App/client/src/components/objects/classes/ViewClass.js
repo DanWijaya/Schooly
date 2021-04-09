@@ -286,8 +286,8 @@ function AssessmentListItem(props) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-  const handleOpenDialog = (title, subject, start_date, end_date) => {
-    setCurrentDialogInfo({ title, subject, start_date, end_date });
+  const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
+    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
     setOpenDialog(true);
     console.log(title);
   };
@@ -306,8 +306,9 @@ function AssessmentListItem(props) {
             handleOpenDialog(
               props.work_title,
               props.work_subject,
+              props.work_teacher_name,
               props.work_starttime,
-              props.work_endtime
+              props.work_endtime,
             )
           }
         >
@@ -366,8 +367,9 @@ function AssessmentListItem(props) {
             handleOpenDialog(
               props.work_title,
               props.work_subject,
+              props.work_teacher_name,
               props.work_starttime,
-              props.work_endtime
+              props.work_endtime,
             )
           }
         >
@@ -435,7 +437,12 @@ function AssessmentListItem(props) {
             variant="subtitle1"
             align="center"
             style={{ marginTop: "25px" }}
-            color="textSecondary"
+          >
+            Guru: {currentDialogInfo.teacher_name}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
           >
             Mulai: {currentDialogInfo.start_date}
           </Typography>
@@ -629,6 +636,7 @@ function ViewClass(props) {
               : all_subjects_map.get(row.subject)
           }
           work_status={row.workStatus}
+          work_teacher_name={row.teacher_name}
           work_starttime={moment(row.start_date)
             .locale("id")
             .format("DD MMM YYYY, HH:mm")}
@@ -714,6 +722,7 @@ function ViewClass(props) {
                   : all_subjects_map.get(row.subject)
               }
               work_status={row.workStatus}
+              work_teacher_name={row.teacher_name}
               work_starttime={moment(row.start_date)
                 .locale("id")
                 .format("DD MMM YYYY, HH:mm")}
@@ -874,6 +883,7 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
+                teacher_name: all_teachers.get(assessment.author_id).name,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -915,6 +925,7 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
+                teacher_name: all_teachers.get(assessment.author_id).name,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -962,6 +973,7 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
+                teacher_name: all_teachers.get(assessment.author_id).name,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -1003,6 +1015,7 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
+                teacher_name: all_teachers.get(assessment.author_id).name,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,

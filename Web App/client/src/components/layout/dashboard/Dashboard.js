@@ -13,7 +13,7 @@ import {
   getUjianBySC,
   getAllAssessments,
 } from "../../../actions/AssessmentActions";
-import { getStudents, getStudentsByClass } from "../../../actions/UserActions";
+import { getStudents, getStudentsByClass, getTeachers } from "../../../actions/UserActions";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
@@ -382,6 +382,7 @@ function ListAssessments(props) {
     classId,
     classes,
     all_subjects_map,
+    all_teachers
   } = props;
 
   function AssessmentListItem(props) {
@@ -389,8 +390,8 @@ function ListAssessments(props) {
     const [openDialog, setOpenDialog] = React.useState(false);
     const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-    const handleOpenDialog = (title, subject, start_date, end_date) => {
-      setCurrentDialogInfo({ title, subject, start_date, end_date });
+    const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
+      setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
       setOpenDialog(true);
     };
 
@@ -407,6 +408,7 @@ function ListAssessments(props) {
             handleOpenDialog(
               props.work_title,
               props.work_subject,
+              props.work_teacher_name,
               props.work_starttime,
               props.work_endtime
             )
@@ -467,6 +469,12 @@ function ListAssessments(props) {
               align="center"
               style={{ marginTop: "25px" }}
             >
+              Guru: {currentDialogInfo.teacher_name}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              align="center"
+            >
               Mulai: {currentDialogInfo.start_date}
             </Typography>
             <Typography variant="subtitle1" align="center">
@@ -488,6 +496,7 @@ function ListAssessments(props) {
   }
 
   let AssessmentsList = [];
+  let TeacherList = []
   let result = [];
   if (Boolean(all_assessments.length)) {
     var i;
@@ -495,6 +504,12 @@ function ListAssessments(props) {
       let assessment = all_assessments[i];
       let class_assigned = assessment.class_assigned;
       if (class_assigned.indexOf(classId) !== -1) {
+        for (let j = 0; j < all_teachers.length; j++) {
+          if (all_teachers[j]._id === assessment.author_id) {
+            TeacherList.push(all_teachers[j].name);
+            break;
+          }
+        }
         AssessmentsList.push(assessment);
       }
       // if(i === all_assessments.length - 5){ // item terakhir harus pas index ke 4.
@@ -504,6 +519,7 @@ function ListAssessments(props) {
 
     for (i = 0; i < AssessmentsList.length; i++) {
       let assessment = AssessmentsList[i];
+      let teacher_name = TeacherList[i];
       let workCategoryAvatar =
         type === "Kuis" ? (
           <Avatar className={classes.assignmentLate}>
@@ -527,6 +543,7 @@ function ListAssessments(props) {
             name: assessment.name,
             workCategoryAvatar: workCategoryAvatar,
             subject: assessment.subject,
+            teacher_name: teacher_name,
             start_date: assessment.start_date,
             end_date: assessment.end_date,
             createdAt: assessment.createdAt
@@ -564,6 +581,7 @@ function ListAssessments(props) {
             name: assessment.name,
             workCategoryAvatar: workCategoryAvatar,
             subject: assessment.subject,
+            teacher_name: teacher_name,
             start_date: assessment.start_date,
             end_date: assessment.end_date,
             createdAt: assessment.createdAt
@@ -607,6 +625,7 @@ function ListAssessments(props) {
             ? null
             : all_subjects_map.get(row.subject)
         }
+        work_teacher_name={row.teacher_name}
         // work_status={workStatus}
         work_starttime={moment(row.start_date)
           .locale("id")
@@ -677,13 +696,15 @@ class Dashboard extends Component {
       getAllAssessments,
       getStudentsByClass,
       getStudents,
-      setCurrentClass
+      setCurrentClass,
+      getTeachers
     } = this.props;
     // const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
 
     getAllTask(); // actions yang membuat GET request ke Database.
     getAllSubjects();
+    getTeachers();
     getAllSubjects("map"); // untuk dapatin subject"nya gitu
     setCurrentClass(user.kelas);
 
@@ -795,7 +816,7 @@ class Dashboard extends Component {
   render() {
     const { classes, tasksCollection } = this.props;
 
-    const { user, all_students } = this.props.auth;
+    const { user, all_students, all_teachers } = this.props.auth;
     const { all_user_files } = this.props.filesCollection;
     const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { all_assessments } = this.props.assessmentsCollection;
@@ -803,7 +824,7 @@ class Dashboard extends Component {
 
     const classId = user.kelas;
     console.log(this.props.classesCollection)
-    console.log(all_subjects)
+    console.log(all_teachers)
 
     if (
       this.state.allowedSubjectIndex === null &&
@@ -1012,10 +1033,16 @@ class Dashboard extends Component {
       // tasksByClass.map((task) => {
       tasksByClass.forEach((task) => {
         let flag = true;
+        let teacher_name;
         for (var i = 0; i < all_user_files.length; i++) {
           if (all_user_files[i].for_task_object === task._id) {
             flag = false;
             break;
+          }
+        }
+        for (var i = 0; i < all_teachers.length; i++) {
+          if (all_teachers[i]._id == task.person_in_charge_id) {
+            teacher_name = all_teachers[i].name;
           }
         }
         if (!all_subjects_map.get(task.subject)) {
@@ -1025,9 +1052,10 @@ class Dashboard extends Component {
           result.push({
             _id: task._id,
             name: task.name,
+            teacher_name: teacher_name,
             subject: task.subject,
             deadline: task.deadline,
-            createdAt: task.createdAt
+            createdAt: task.createdAt,
           });
         }
       });
@@ -1295,6 +1323,7 @@ class Dashboard extends Component {
                           classId={classId}
                           classes={classes}
                           all_subjects_map={all_subjects_map}
+                          all_teachers={all_teachers}
                         />
                       </Grid>
                     </Paper>
@@ -1341,6 +1370,7 @@ class Dashboard extends Component {
                           classId={classId}
                           classes={classes}
                           all_subjects_map={all_subjects_map}
+                          all_teachers={all_teachers}
                         />
                       </Grid>
                     </Paper>
@@ -1745,6 +1775,7 @@ Dashboard.propTypes = {
   getTasksBySC: PropTypes.func.isRequired,
   getKuisBySC: PropTypes.func.isRequired,
   getUjianBySC: PropTypes.func.isRequired,
+  getTeachers: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired
 };
 
@@ -1768,6 +1799,7 @@ export default withRouter(
     getTasksBySC,
     getKuisBySC,
     getUjianBySC,
-    setCurrentClass
+    setCurrentClass,
+    getTeachers
   })(withStyles(styles)(Dashboard))
 );

@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import "moment/locale/id";
+import { getTeachers } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
@@ -301,8 +302,8 @@ function AssessmentListItem(props) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-  const handleOpenDialog = (title, subject, start_date, end_date) => {
-    setCurrentDialogInfo({ title, subject, start_date, end_date });
+  const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
+    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
     setOpenDialog(true);
     console.log(title);
   };
@@ -321,6 +322,7 @@ function AssessmentListItem(props) {
             handleOpenDialog(
               props.work_title,
               props.work_subject,
+              props.work_teacher_name,
               props.work_starttime,
               props.work_endtime
             )
@@ -370,6 +372,7 @@ function AssessmentListItem(props) {
             handleOpenDialog(
               props.work_title,
               props.work_subject,
+              props.work_teacher_name,
               props.work_starttime,
               props.work_endtime
             )
@@ -431,6 +434,12 @@ function AssessmentListItem(props) {
             align="center"
             style={{ marginTop: "25px" }}
           >
+            Guru: {currentDialogInfo.teacher_name}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
+          >
             Mulai: {currentDialogInfo.start_date}
           </Typography>
           <Typography variant="subtitle1" align="center">
@@ -453,7 +462,7 @@ function AssessmentListItem(props) {
 
 function ViewSubject(props) {
 
-  const { user } = props.auth;
+  const { user, all_teachers } = props.auth;
   const id = props.match.params.id;
   const {
     setCurrentClass,
@@ -464,6 +473,7 @@ function ViewSubject(props) {
     getMaterial,
     getAllAssessments,
     assessmentsCollection,
+    getTeachers
   } = props;
   const all_assessments = assessmentsCollection.all_assessments;
   const { kelas } = props.classesCollection;
@@ -496,6 +506,7 @@ function ViewSubject(props) {
     getAllTaskFilesByUser(user._id);
     getAllSubjects("map");
     getAllAssessments();
+    getTeachers("map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -772,6 +783,7 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
+                  work_teacher_name={all_teachers.get(assessment.author_id).name}
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -801,6 +813,7 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
+                  work_teacher_name={all_teachers.get(assessment.author_id).name}
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -837,6 +850,7 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
+                  work_teacher_name={all_teachers.get(assessment.author_id).name}
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -865,6 +879,7 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
+                  work_teacher_name={all_teachers.get(assessment.author_id).name}
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -1029,6 +1044,7 @@ ViewSubject.propTypes = {
   setCurrentClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getAllTask: PropTypes.func.isRequired,
+  getTeachers: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
@@ -1051,4 +1067,5 @@ export default connect(mapStateToProps, {
   getAllTaskFilesByUser,
   getMaterial,
   getAllAssessments,
+  getTeachers
 })(ViewSubject);
