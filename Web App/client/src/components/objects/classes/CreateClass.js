@@ -229,7 +229,7 @@ class CreateClass extends Component {
                       options={this.props.subjectsCollection ? this.props.subjectsCollection.all_subjects : null}
                       getOptionLabel={(option) => option.name}
                       filterSelectedOptions
-                      size="small"
+                      // size="small"
                       onChange={(event, value) => {
                         this.onChange(value, "mata_pelajaran");
                       }}
@@ -238,7 +238,7 @@ class CreateClass extends Component {
                           {...params}
                           variant="outlined"
                           size="small"
-                          fullWidth
+                          // fullWidth
                           style={{ border: "none" }}
                           error={errors.mata_pelajaran}
                           helperText={errors.mata_pelajaran}
