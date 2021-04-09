@@ -596,7 +596,7 @@ function AssessmentList(props) {
 
   var rows = [];
   const assessmentRowItem = (data) => {
-    if (data.type === "Kuis" && all_teachers && all_teachers.length !== 0) {
+    if (data.type === "Kuis" && all_teachers instanceof Map) {
       rows.push(
         createData(
           data._id,

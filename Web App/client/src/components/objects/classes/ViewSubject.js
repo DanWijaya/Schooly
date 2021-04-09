@@ -723,7 +723,7 @@ function ViewSubject(props) {
   ) {
     let AssessmentsList = [];
     let result = [];
-    if (Boolean(all_assessments.length)) {
+    if (Boolean(all_assessments.length) && all_teachers instanceof Map) {
       var i;
       for (i = all_assessments.length - 1; i >= 0; i--) {
         let assessment = all_assessments[i];
