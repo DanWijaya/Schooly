@@ -208,13 +208,13 @@ function ViewAssessmentTeacher(props) {
 
   // cek note di model assessment (Assessment.js) untuk melihat aturan-aturan tambahan yang digunakan
 
-  /* 
+  /*
   jika belum ada murid yang mengerjakan assessment, state ini akan berisi object kosong {}.
-  isi: 
+  isi:
   {
     <id murid 1>: {
       ...document untuk model murid
-    }, 
+    },
     <id murid 2>: {
       ...document
     },
@@ -225,7 +225,7 @@ function ViewAssessmentTeacher(props) {
 
   const [qnsIndex, setQnsIndex] = React.useState(0);
 
-  /* 
+  /*
   jika belum ada satupun murid yang jawaban uraiannya sudah dinilai, state ini akan diisi object kosong {}.
   jika assessment ini tidak punya soal uraian, state ini akan diset menjadi null.
   akan diinisialisasi dengan isi:
@@ -235,7 +235,7 @@ function ViewAssessmentTeacher(props) {
       <index soal uraian 2>: <0 s/d nilai maksimum untuk soal ini>
       ...
     }, key -> index semua soal uraian yang sudah dinilai (soal uraian yang belum dinilai tidak disimpan di object ini)
-    
+
     <id murid 2>: {
       <index soal uraian 1>: <0 s/d nilai maksimum untuk soal ini>
       <index soal uraian 2>: <0 s/d nilai maksimum untuk soal ini>
@@ -243,27 +243,27 @@ function ViewAssessmentTeacher(props) {
     },
 
     <id murid 3>: {}, -> diisi object kosong jika semua jawaban uraian murid ini belum dinilai
-    
+
     ...
   } key -> id semua murid yang sudah mengumpulkan jawaban assessment ini
-  
+
   saat textfield nilai diisi, nilai soal tersebut (bagian <0 s/d nilai maksimum untuk soal ini>) akan diisi dengan nilai dalam bentuk string.
   nilai ini akan dikonversi menjadi angka saat klik tombol simpan diklik.
   */
   const [longtextGrades, setLongtextGrades] = React.useState(undefined);
 
-  /* 
-  bentuk isi: 
+  /*
+  bentuk isi:
     {
       studentOptions: {
         combined: [<id murid>, <id murid>, ...] -> semua murid dari semua kelas yang menerima assessment ini
         <id kelas 1>: [<id murid>, <id murid>, ...] -> semua murid yang berada pada kelas ini
         <id kelas 2>: [<id murid>, <id murid>, ...]
         ...
-      } key -> id semua kelas yang menerima assessment ini 
-      ,  
+      } key -> id semua kelas yang menerima assessment ini
+      ,
       classOptions: [
-        {id: <id kelas 1>, name: <nama kelas 1>}, 
+        {id: <id kelas 1>, name: <nama kelas 1>},
         {id: <id kelas 2>, name: <nama kelas 2>},
         ...
       ] -> semua kelas yang menerima assessment ini
@@ -509,7 +509,7 @@ function ViewAssessmentTeacher(props) {
             align="center"
             style={{ marginTop: "15px" }}
             color="primary"
-          >{`Bobot : ${questionWeight}`}</Typography>
+          >{`Bobot: ${questionWeight}`}</Typography>
         </div>
       );
     } else if (questionType === "shorttext") {
@@ -544,7 +544,7 @@ function ViewAssessmentTeacher(props) {
             align="center"
             style={{ marginTop: "15px" }}
             color="primary"
-          >{`Bobot : ${questionWeight}`}</Typography>
+          >{`Bobot: ${questionWeight}`}</Typography>
         </Grid>
       );
     } else {
@@ -631,14 +631,14 @@ function ViewAssessmentTeacher(props) {
             >
               <Grid item>
                 <Typography align="center" color="primary">
-                  Kunci Jawaban : {questionAnswer.join(", ")}
+                  Kunci Jawaban: {questionAnswer.join(", ")}
                 </Typography>
               </Grid>
               <Grid container item justify="center" alignItems="center">
                 <Typography
                   style={{ marginTop: "5px", marginRight: "10px" }}
                   color="primary"
-                >{`Bobot : ${questionWeight}`}</Typography>
+                >{`Bobot: ${questionWeight}`}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -668,14 +668,14 @@ function ViewAssessmentTeacher(props) {
             >
               <Grid item>
                 <Typography align="center" color="primary">
-                  Kunci Jawaban : {questionAnswer.join(", ")}
+                  Kunci Jawaban: {questionAnswer.join(", ")}
                 </Typography>
               </Grid>
               <Grid container item justify="center" alignItems="center">
                 <Typography
                   style={{ marginTop: "5px", marginRight: "10px" }}
                   color="primary"
-                >{`Bobot : ${questionWeight}`}</Typography>
+                >{`Bobot: ${questionWeight}`}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -1692,7 +1692,7 @@ function QuestionPerQuestion(props) {
                 style={{ marginTop: "5px", marginRight: "10px" }}
                 color="textSecondary"
               >
-                Poin :
+                Poin:
               </Typography>
               <TextField
                 value={studentMark}
@@ -1843,7 +1843,7 @@ function QuestionPerQuestion(props) {
                     style={{ marginTop: "5px", marginRight: "10px" }}
                     color="textSecondary"
                   >
-                    Poin :
+                    Poin:
                   </Typography>
                   <TextField
                     disabled
@@ -1884,7 +1884,7 @@ function QuestionPerQuestion(props) {
                     style={{ marginTop: "5px", marginRight: "10px" }}
                     color="textSecondary"
                   >
-                    Poin :
+                    Poin:
                   </Typography>
                   <TextField
                     disabled
@@ -1960,7 +1960,7 @@ function QuestionAnswerPerStudent(props) {
               align="center"
               style={{ marginTop: "15px" }}
               color="primary"
-            >{`Bobot : ${questionWeight}`}</Typography>
+            >{`Bobot: ${questionWeight}`}</Typography>
           </Grid>
 
           <Grid item xs={12}>
@@ -1992,7 +1992,7 @@ function QuestionAnswerPerStudent(props) {
               style={{ marginTop: "5px", marginRight: "10px" }}
               color="textSecondary"
             >
-              Poin :
+              Poin:
             </Typography>
             <TextField
               key={`${studentId}-${questionNumber}`}
@@ -2048,7 +2048,7 @@ function QuestionAnswerPerStudent(props) {
               color="primary"
               style={{ marginTop: "15px" }}
             >
-              Kunci Jawaban : {questionAnswer[0]}
+              Kunci Jawaban: {questionAnswer[0]}
             </Typography>
             <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
           </Hidden>
@@ -2086,7 +2086,7 @@ function QuestionAnswerPerStudent(props) {
               color="primary"
               style={{ marginTop: "15px" }}
             >
-              Kunci Jawaban : {questionAnswer[0]}
+              Kunci Jawaban: {questionAnswer[0]}
             </Typography>
             <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
           </Hidden>
@@ -2170,7 +2170,7 @@ function QuestionAnswerPerStudent(props) {
           >
             <Grid item>
               <Typography align="center" color="primary">
-                Kunci Jawaban : {questionAnswer.join(", ")}
+                Kunci Jawaban: {questionAnswer.join(", ")}
               </Typography>
             </Grid>
             <Grid container item justify="center" alignItems="center">
@@ -2178,7 +2178,7 @@ function QuestionAnswerPerStudent(props) {
                 style={{ marginTop: "5px", marginRight: "10px" }}
                 color="textSecondary"
               >
-                Poin :
+                Poin:
               </Typography>
               <TextField
                 disabled
@@ -2221,7 +2221,7 @@ function QuestionAnswerPerStudent(props) {
                   color="primary"
                   style={{ marginTop: "15px" }}
                 >
-                  Kunci Jawaban : {questionAnswer.join(", ")}
+                  Kunci Jawaban: {questionAnswer.join(", ")}
                 </Typography>
               </Grid>
             ) : null}
@@ -2231,7 +2231,7 @@ function QuestionAnswerPerStudent(props) {
                 style={{ marginTop: "5px", marginRight: "10px" }}
                 color="textSecondary"
               >
-                Poin :
+                Poin:
               </Typography>
               <TextField
                 disabled
