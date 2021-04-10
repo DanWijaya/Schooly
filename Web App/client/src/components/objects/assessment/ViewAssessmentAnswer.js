@@ -125,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
   saveButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    marginLeft: "10px",
+    marginLeft: "15px",
     height: "80%",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.dark,
@@ -1139,8 +1139,8 @@ function ViewAssessmentTeacher(props) {
                 <Divider className={classes.dividerColor} />
               </Grid>
 
-              <Grid item xs={12} style={{ marginTop: "30px" }}>
-                <Typography color="primary" gutterBottom>
+              <Grid item xs={12} style={{ marginTop: "5px" }}>
+                <Typography color="textSecondary" gutterBottom>
                   Kelas yang Diberikan:
                 </Typography>
                 <Typography>
@@ -1160,8 +1160,8 @@ function ViewAssessmentTeacher(props) {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} style={{ marginTop: "30px" }}>
-                <Typography color="primary" gutterBottom>
+              <Grid item xs={12} style={{ marginTop: "20px" }}>
+                <Typography color="textSecondary" gutterBottom>
                   Deskripsi Kuis/Ujian:
                 </Typography>
                 <Typography>{selectedAssessments.description}</Typography>
@@ -1176,13 +1176,8 @@ function ViewAssessmentTeacher(props) {
                 </Grid>
               </Grid>
             </Hidden> */}
-
-            <Grid container spacing={2}>
-              <Grid item xs={12} style={{ marginTop: "18px" }}>
-                <Divider className={classes.dividerColor} />
-              </Grid>
-            </Grid>
-
+          </Paper>
+          <Paper className={classes.content} style={{ marginTop: "15px" }}>
             <Grid container spacing={2}>
               <Grid item xs={1} md={2}>
                 {null}
@@ -1280,7 +1275,7 @@ function ViewAssessmentTeacher(props) {
                     marginTop: "10px",
                   }}
                 >
-                  <Typography>Navigasi Soal :</Typography>
+                  <Typography>Navigasi Soal:</Typography>
                   <LightTooltip title="Soal yang sudah diberi bobot dan nilai untuk semua murid akan diberi badge hijau. Soal akan diberi badge merah jika bobot atau nilai belum lengkap.">
                     <Badge
                       badgeContent={
@@ -1716,6 +1711,7 @@ function QuestionPerQuestion(props) {
                 <Button
                   className={classes.saveButton}
                   size="small"
+                  variant="contained"
                   onClick={() => {
                     handleSaveGrade(studentId, questionNumber - 1);
                   }}
@@ -1945,7 +1941,7 @@ function QuestionAnswerPerStudent(props) {
         <Grid container item xs={12} style={{ padding: "20px" }}>
           <Grid item xs={12}>
             <Typography
-              align="center"
+              align="left"
               variant="h6"
               style={{ marginBottom: "10px" }}
             >
@@ -1955,24 +1951,10 @@ function QuestionAnswerPerStudent(props) {
           <Grid item xs={12}>
             <Typography align="justify">{`${questionName}`}</Typography>
           </Grid>
-          <Grid item xs={12}>
-            <Typography
-              align="center"
-              style={{ marginTop: "15px" }}
-              color="primary"
-            >{`Bobot: ${questionWeight}`}</Typography>
-          </Grid>
 
-          <Grid item xs={12}>
-            <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
-          </Grid>
-
-          <Grid item xs={12}>
-            <Typography
-              variant="h6"
-              style={{ textDecoration: "underline", marginBottom: "10px" }}
-            >
-              <b>Jawaban</b>
+          <Grid item xs={12} style={{ marginTop: "15px" }}>
+            <Typography gutterBottom>
+              <b><u>Jawaban:</u></b>
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -2016,6 +1998,7 @@ function QuestionAnswerPerStudent(props) {
               <Button
                 className={classes.saveButton}
                 size="small"
+                variant="contained"
                 onClick={() => {
                   handleSaveGrade(studentId, questionNumber - 1);
                 }}
