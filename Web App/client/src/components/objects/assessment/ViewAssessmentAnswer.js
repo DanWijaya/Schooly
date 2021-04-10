@@ -1160,7 +1160,7 @@ function ViewAssessmentTeacher(props) {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} style={{ marginTop: "20px" }}>
+              <Grid item xs={12} style={{ marginTop: "15px" }}>
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Kuis/Ujian:
                 </Typography>

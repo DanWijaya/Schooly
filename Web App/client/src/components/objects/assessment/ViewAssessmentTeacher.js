@@ -176,7 +176,7 @@ function ViewAssessmentTeacher(props) {
   }, []);
 
   console.log(lampiranUrls);
-  
+
   const onDeleteAssessment = (id) => {
     deleteAssessment(id);
   };
@@ -361,7 +361,7 @@ function ViewAssessmentTeacher(props) {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ marginTop: "15px" }}>
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Kuis/Ujian:
                 </Typography>
@@ -431,8 +431,8 @@ function ViewAssessmentTeacher(props) {
                     </Grid>
                     <Grid item>
                       {question.type === "radio"
-                        ? 
-                        
+                        ?
+
                           question.options.map((option, i) => (
                             <Grid container alignItems="center">
                               <Grid item className={classes.bullets}>
@@ -452,7 +452,7 @@ function ViewAssessmentTeacher(props) {
                               </Typography>
                             </Grid>
                           ))
-                        
+
                         : question.type === "checkbox"
                         ? question.options.map((option, i) => (
                           <Grid container alignItems="center">

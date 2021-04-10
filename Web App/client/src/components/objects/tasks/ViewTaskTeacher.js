@@ -235,7 +235,7 @@ function ViewTaskTeacher(props) {
   const [fileLampiran, setFileLampiran] = React.useState([]);
 
   // untuk men-disable tombol yang mengarahkan pengguna ke SubmittedTaskList ketika belum ada satupun murid yang mengumpulkan tugas
-  const [disableButton, setDisableButton] = React.useState(true); 
+  const [disableButton, setDisableButton] = React.useState(true);
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -307,9 +307,9 @@ function ViewTaskTeacher(props) {
   // const onPreviewFile = (id, fileCategory = "none") => {
   //   if (fileCategory === "lampiran") previewLampiran(id);
   //   else console.log("File Category is not specified");
-  // }; 
+  // };
   */
-  
+
 
   const onDeleteTask = (id) => {
     deleteTask(id);
@@ -412,7 +412,7 @@ function ViewTaskTeacher(props) {
                 </Typography>
               </Grid>
               {!tasksCollection.description ? null : (
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ marginTop: "15px" }}>
                   <Typography color="textSecondary" gutterBottom>
                     Deskripsi Tugas:
                   </Typography>
@@ -420,7 +420,7 @@ function ViewTaskTeacher(props) {
                 </Grid>
               )}
               {fileLampiran.length === 0 ? null : (
-                  <Grid item xs={12}>
+                  <Grid item xs={12} style={{ marginTop: "15px" }}>
                     <Typography color="textSecondary" gutterBottom>
                       Lampiran Berkas:
                     </Typography>
@@ -442,7 +442,7 @@ function ViewTaskTeacher(props) {
         </Grid>
         <Grid item container justify="flex-end" alignItems="center">
           <Grid item style={{ paddingRight: "10px" }}>
-            {disableButton ? 
+            {disableButton ?
               <Fab variant="extended" className={classes.seeAllTaskButton} disabled>
                 <AssignmentIcon style={{ marginRight: "7.5px" }} />
                 Lihat Hasil

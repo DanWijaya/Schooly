@@ -166,9 +166,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "5px",
   },
   fileNameTrim: {
-    textOverflow: "ellipsis", 
-    overflow: "hidden", 
-    whiteSpace: "nowrap", 
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
     marginRight: "13px"
   }
 }));
@@ -600,7 +600,7 @@ function ViewTaskStudent(props) {
     ));
   };
 
-  
+
   const listFileChosen = () => {
     // Yang belum diupload
     if (fileTugas.length === 0 && fileToSubmit.length === 0) {
@@ -621,7 +621,7 @@ function ViewTaskStudent(props) {
             type="chosen"
           />
         );
-        
+
       }
       return temp;
     }
@@ -727,7 +727,7 @@ function ViewTaskStudent(props) {
 
               <Grid item xs={12} md={7} style={{ paddingTop: "0" }}>
                 <Typography variant="body2" color="textSecondary">
-                  Oleh:   &nbsp;                 
+                  Oleh:   &nbsp;
                   <b>
                     {selectedUser._id !== tasksCollection.person_in_charge_id
                       ? null
@@ -800,7 +800,7 @@ function ViewTaskStudent(props) {
               )}
               {!tasksCollection.lampiran ||
                 tasksCollection.lampiran.length === 0 ? null : (
-                  <Grid item xs={12}>
+                  <Grid item xs={12} style={{ marginTop: "15px" }}>
                     <Typography color="textSecondary" gutterBottom>
                       Lampiran Berkas:
                     </Typography>
@@ -819,7 +819,7 @@ function ViewTaskStudent(props) {
                 )}
             </Grid>
           </Paper>
-          
+
 
         </Grid>
         <Grid item xs={12} md={4}>
@@ -846,7 +846,7 @@ function ViewTaskStudent(props) {
                   {listWorkFile()}
                   {listFileChosen()}
               </Grid> */}
-              
+
             {fileTugas.length === 0 ? (
               <Grid
                 item
@@ -857,7 +857,7 @@ function ViewTaskStudent(props) {
                   justifyContent: "center",
                 }}
               >
-                {/* Kasus Kosong */}         
+                {/* Kasus Kosong */}
                   {listFileChosen()}
                 {listWorkFile()}
               </Grid>

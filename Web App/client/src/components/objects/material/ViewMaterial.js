@@ -210,7 +210,7 @@ function LampiranFile(props) {
             <CloudDownloadIcon className={classes.downloadIcon} />
           </IconButton> */}
         </ListItem>
-        {/* <div id="myProgress" style="display:none;">      
+        {/* <div id="myProgress" style="display:none;">
             sds
           </div>  */}
       </Paper>
@@ -355,7 +355,7 @@ function ViewMaterial(props) {
                   </Typography>
                 </Grid>
               ) : null}
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ marginTop: "15px" }}>
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Materi:
                 </Typography>

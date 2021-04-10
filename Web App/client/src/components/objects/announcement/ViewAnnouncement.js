@@ -237,7 +237,7 @@ function ViewAnnouncement(props) {
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [])
-  
+
   React.useEffect(() => {
     getOneAnnouncement(announcement_id);
     getAllClass("map");
@@ -374,7 +374,7 @@ function ViewAnnouncement(props) {
                     </Grid>
                   ) : null}
 
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ marginTop: "15px" }}>
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Pengumuman:
                 </Typography>
@@ -384,20 +384,20 @@ function ViewAnnouncement(props) {
               </Grid>
               {!selectedAnnouncements.lampiran ||
                 selectedAnnouncements.lampiran.length === 0 ? null : (
-                  <Grid item xs={12}>
+                  <Grid item xs={12} style={{ marginTop: "15px" }}>
                     <Typography color="textSecondary" gutterBottom>
                       Lampiran Berkas:
                     </Typography>
                     <Grid item container spacing={1}>
-                    {fileLampiran.map((lampiran) => (
-                <LampiranFile
-                  file_id={lampiran._id}
-                  onPreviewFile={viewFileAnnouncement}
-                  onDownloadFile={downloadFileAnnouncements}
-                  filename={lampiran.filename}
-                  filetype={fileType(lampiran.filename)}
-                />
-              ))}
+                      {fileLampiran.map((lampiran) => (
+                        <LampiranFile
+                          file_id={lampiran._id}
+                          onPreviewFile={viewFileAnnouncement}
+                          onDownloadFile={downloadFileAnnouncements}
+                          filename={lampiran.filename}
+                          filetype={fileType(lampiran.filename)}
+                        />
+                      ))}
                     </Grid>
                   </Grid>
                 )}
