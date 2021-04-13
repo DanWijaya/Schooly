@@ -693,7 +693,7 @@ function ViewAssessmentTeacher(props) {
     setLongtextGrades(temp);
   }
 
-  function handleSaveGrade(studentId, questionIndex) {
+  function handleSaveGrade(studentId, questionIndex, questionWeight) {
     let temp = { ...longtextGrades };
     let grade = temp[studentId][questionIndex];
 
@@ -703,6 +703,11 @@ function ViewAssessmentTeacher(props) {
       handleOpenSnackbar(
         "error",
         "Nilai harus berupa angka dan tidak boleh kurang dari 0"
+      );
+    } else if (grade > questionWeight) {
+      handleOpenSnackbar(
+        "error",
+        "Nilai tidak boleh melebihi bobot"
       );
     } else {
       temp[studentId] = { ...temp[studentId], [questionIndex]: numberGrade };
@@ -1713,7 +1718,7 @@ function QuestionPerQuestion(props) {
                   size="small"
                   variant="contained"
                   onClick={() => {
-                    handleSaveGrade(studentId, questionNumber - 1);
+                    handleSaveGrade(studentId, questionNumber - 1, questionWeight);
                   }}
                 >
                   SIMPAN
@@ -2000,7 +2005,7 @@ function QuestionAnswerPerStudent(props) {
                 size="small"
                 variant="contained"
                 onClick={() => {
-                  handleSaveGrade(studentId, questionNumber - 1);
+                  handleSaveGrade(studentId, questionNumber - 1, questionWeight);
                 }}
               >
                 SIMPAN
