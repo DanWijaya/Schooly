@@ -1,60 +1,59 @@
 import React from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
-import "moment/locale/id";
-import { getAllTask, deleteTask } from "../../../actions/TaskActions";
-import { getAllClass } from "../../../actions/ClassActions";
+// import moment from "moment";
+import { getTeachers } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import { getAllClass } from "../../../actions/ClassActions";
+
+// import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
-  IconButton,
   Divider,
   ExpansionPanel,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
-  Badge,
   Fab,
   Grid,
   InputAdornment,
+  IconButton,
   Hidden,
-  Paper,
   Menu,
   MenuItem,
+  Paper,
   TableSortLabel,
   TextField,
   Typography,
   ListItem,
-  ListItemAvatar,
   ListItemText,
+  ListItemAvatar,
   Avatar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
-import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { GoSearch } from "react-icons/go";
+import { BiSitemap } from "react-icons/bi";
 import ClearIcon from "@material-ui/icons/Clear";
-import ErrorIcon from "@material-ui/icons/Error";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import { Autocomplete }from '@material-ui/lab';
+
+// FIXME DEV
+function p(s) {
+  console.log(s);
+}
 
 function createData(
   _id,
-  tasktitle,
-  subject,
-  deadline,
-  class_assigned,
-  createdAt
+  name,
+  email,
 ) {
-  return { _id, tasktitle, subject, deadline, class_assigned, createdAt };
+  return { _id, name, email };
 }
-
-var rows = [];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -82,13 +81,13 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function TaskListToolbar(props) {
+function TeacherListToolbar(props) {
   const {
     classes,
     order,
     orderBy,
     onRequestSort,
-    role,
+    // role,
     searchFilter,
     updateSearchFilter,
     searchBarFocus,
@@ -101,36 +100,40 @@ function TaskListToolbar(props) {
 
   const headCells = [
     {
-      id: "tasktitle",
+      id: "name",
       numeric: false,
       disablePadding: true,
-      label: "Nama Tugas",
+      label: "Nama",
     },
     {
-      id: "subject",
+      id: "email",
       numeric: false,
       disablePadding: false,
-      label: "Mata Pelajaran",
+      label: "Email",
     },
-    // { id: "deadline", numeric: false, disablePadding: false, label: "Batas Waktu" },
-    {
-      id: "createdAt",
-      numeric: false,
-      disablePadding: false,
-      label: "Waktu Dibuat",
-    },
-    {
-      id: "class_assigned",
-      numeric: false,
-      disablePadding: false,
-      label: "Ditugaskan Pada",
-    },
+    // {
+    //   id: "author",
+    //   numeric: false,
+    //   disablePadding: false,
+    //   label: "Pemberi Materi",
+    // },
+    // {
+    //   id: "createdAt",
+    //   numeric: false,
+    //   disablePadding: false,
+    //   label: "Waktu Dibuat",
+    // },
+    // {
+    //   id: "class_assigned",
+    //   numeric: false,
+    //   disablePadding: false,
+    //   label: "Kelas yang diberikan",
+    // },
   ];
 
-  if (role === "Student") {
-    // Don't include the class_assigned basically.
-    headCells.pop();
-  }
+  // if (role === "Student") {
+  //   headCells.pop();
+  // }
 
   // Sort Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -141,7 +144,6 @@ function TaskListToolbar(props) {
     setAnchorEl(null);
   };
 
-  // FOR SEARCH FILTER.
   const onChange = (e) => {
     updateSearchFilter(e.target.value);
   };
@@ -163,8 +165,8 @@ function TaskListToolbar(props) {
                 alignItems: "center",
               }}
             >
-              <AssignmentIcon className={classes.titleIcon} fontSize="large" />
-              <Typography variant="h4">Daftar Tugas</Typography>
+              <BiSitemap className={classes.titleIcon} fontSize="large" />
+              <Typography variant="h4">Daftar Guru</Typography>
             </div>
           )}
         </Hidden>
@@ -176,8 +178,8 @@ function TaskListToolbar(props) {
               alignItems: "center",
             }}
           >
-            <AssignmentIcon className={classes.titleIcon} fontSize="large" />
-            <Typography variant="h4">Daftar Tugas</Typography>
+            <BiSitemap className={classes.titleIcon} fontSize="large" />
+            <Typography variant="h4">Daftar Guru</Typography>
           </div>
         </Hidden>
         <Hidden mdUp implementation="css">
@@ -199,7 +201,7 @@ function TaskListToolbar(props) {
                 onChange={onChange}
                 autoFocus
                 onClick={(e) => setSearchBarFocus(true)}
-                placeholder="Cari Tugas"
+                placeholder="Cari Guru"
                 style={{
                   maxWidth: "200px",
                   marginLeft: "10px",
@@ -225,7 +227,7 @@ function TaskListToolbar(props) {
                         id="searchFilterMobile"
                         onClick={(e) => {
                           e.stopPropagation();
-                          onClear(e);
+                          onClear(e, "searchFilterMobile");
                         }}
                         style={{
                           opacity: 0.5,
@@ -263,7 +265,7 @@ function TaskListToolbar(props) {
             onChange={onChange}
             onClick={() => setSearchBarFocus(true)}
             onBlur={() => setSearchBarFocus(false)}
-            placeholder="Cari Tugas"
+            placeholder="Cari Guru"
             style={{
               maxWidth: "250px",
               marginRight: "10px",
@@ -288,7 +290,7 @@ function TaskListToolbar(props) {
                     size="small"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onClear(e);
+                      onClear(e, "searchFilterDesktop");
                     }}
                     style={{
                       opacity: 0.5,
@@ -305,32 +307,32 @@ function TaskListToolbar(props) {
             }}
           />
         </Hidden>
-        <Hidden mdUp implementation="css">
+        {/* <Hidden mdUp implementation="css">
           {role === "Student" ? null : (
-            <LightTooltip title="Buat Tugas">
-              <Link to="/buat-tugas">
-                <Fab size="small" className={classes.newTaskButton}>
-                  <AssignmentIcon className={classes.newTaskIconMobile} />
+            <LightTooltip title="Buat Materi">
+              <Link to="/buat-materi">
+                <Fab size="small" className={classes.newMaterialButton}>
+                  <MenuBookIcon className={classes.newMaterialIconMobile} />
                 </Fab>
               </Link>
             </LightTooltip>
           )}
-        </Hidden>
-        <Hidden smDown implementation="css">
+        </Hidden> */}
+        {/* <Hidden smDown implementation="css">
           {role === "Student" ? null : (
-            <Link to="/buat-tugas">
+            <Link to="/buat-materi">
               <Fab
                 size="medium"
                 variant="extended"
-                className={classes.newTaskButton}
+                className={classes.newMaterialButton}
               >
-                <AssignmentIcon className={classes.newTaskIconDesktop} />
-                Buat Tugas
+                <MenuBookIcon className={classes.newMaterialIconDesktop} />
+                Buat Materi
               </Fab>
             </Link>
           )}
-        </Hidden>
-        <LightTooltip title="Urutkan Tugas">
+        </Hidden> */}
+        <LightTooltip title="Urutkan Guru">
           <IconButton
             onClick={handleOpenSortMenu}
             className={classes.sortButton}
@@ -379,15 +381,16 @@ function TaskListToolbar(props) {
   );
 }
 
-TaskListToolbar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
+// TeacherListToolbar.propTypes = {
+//   classes: PropTypes.object.isRequired,
+//   onRequestSort: PropTypes.func.isRequired,
+//   onSelectAllClick: PropTypes.func.isRequired,
+//   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+//   orderBy: PropTypes.string.isRequired,
+//   rowCount: PropTypes.number.isRequired,
+// };
 
+// FIXME makeStyles
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
@@ -407,24 +410,24 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "15px",
     marginBottom: "15px",
   },
-  newTaskButton: {
-    marginRight: "10px",
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.main,
-      color: "white",
-    },
-  },
-  newTaskIconDesktop: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-    marginRight: "7.5px",
-  },
-  newTaskIconMobile: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
+  // newMaterialButton: {
+  //   marginRight: "10px",
+  //   backgroundColor: theme.palette.success.main,
+  //   color: "white",
+  //   "&:focus, &:hover": {
+  //     backgroundColor: theme.palette.success.main,
+  //     color: "white",
+  //   },
+  // },
+  // newMaterialIconDesktop: {
+  //   width: theme.spacing(3),
+  //   height: theme.spacing(3),
+  //   marginRight: "7.5px",
+  // },
+  // newMaterialIconMobile: {
+  //   width: theme.spacing(3),
+  //   height: theme.spacing(3),
+  // },
   sortButton: {
     backgroundColor: theme.palette.action.selected,
     color: "black",
@@ -444,18 +447,31 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  deadlineWarningText: {
-    color: theme.palette.warning.main,
-  },
-  viewTaskButton: {
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
-    },
-  },
-  editTaskButton: {
+  // viewMaterialButton: {
+  //   backgroundColor: theme.palette.warning.main,
+  //   color: "white",
+  //   "&:focus, &:hover": {
+  //     backgroundColor: "white",
+  //     color: theme.palette.warning.main,
+  //   },
+  // },
+  // editMaterialButton: {
+  //   backgroundColor: theme.palette.primary.main,
+  //   color: "white",
+  //   "&:focus, &:hover": {
+  //     backgroundColor: "white",
+  //     color: theme.palette.primary.main,
+  //   },
+  // },
+  // deleteMaterialButton: {
+  //   backgroundColor: theme.palette.error.dark,
+  //   color: "white",
+  //   "&:focus, &:hover": {
+  //     backgroundColor: "white",
+  //     color: theme.palette.error.dark,
+  //   },
+  // },
+  editTeacherButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -463,137 +479,153 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  deleteTaskButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
-  taskPanelSummary: {
+  teacherPanelSummary: {
     "&:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  taskPaper: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "stretch",
-  },
+  // teacherPaper: {
+  //   display: "flex",
+  //   justifyContent: "space-between",
+  //   alignItems: "center",
+  //   padding: "15px",
+  //   "&:focus, &:hover": {
+  //     backgroundColor: theme.palette.primary.fade,
+  //   },
+  // },
   titleIcon: {
     fontSize: "28px",
     backgroundColor: "white",
     color: theme.palette.primary.main,
     marginRight: "10px",
   },
-  errorIcon: {
-    color: theme.palette.error.main,
-  },
-  warningIcon: {
-    color: theme.palette.warning.main,
-  },
-  checkIcon: {
-    color: theme.palette.success.main,
+  // assignmentLate: {
+  //   backgroundColor: theme.palette.primary.main,
+  // },
+  teacherAvatar: {
+    backgroundColor: theme.palette.primary.main,
+    marginRight: "10px",
   },
   listItem: {
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
     padding: "6px 16px"
-  },
-  assignmentLate: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  assignmentLateTeacher: {
-    backgroundColor: theme.palette.primary.main,
-    marginRight: "10px",
-  },
+  }
 }));
 
-function TaskList(props) {
+// FIXME TeacherList
+function TeacherList(props) {
   const classes = useStyles();
 
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("subject");
-  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [selectedTaskId, setSelectedTaskId] = React.useState(null);
-  const [selectedTaskName, setSelectedTaskName] = React.useState(null);
+  const [orderBy, setOrderBy] = React.useState("name");
+
+  // const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [selectedMaterialId, setSelectedMaterialId] = React.useState(null);
+  const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
 
   const {
-    tasksCollection,
-    getAllTask,
-    deleteTask,
-    getAllClass,
     getAllSubjects,
+    // getMaterial,
+    // deleteMaterial,
+    getAllClass,
+    getTeachers,
   } = props;
+  // const { all_materials, selectedMaterials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
+  const { user, all_teachers } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
-  const { user } = props.auth;
 
-  const taskRowItem = (data) => {
-    rows.push(
+  // FIXME ! potbug
+  const rowsRef = React.useRef([]);
+  const [rows, setRows] = React.useState([]);
+  // const rows = rowsRef.current;
+
+  const teacherRowItem = (data) => {
+    rowsRef.current.push(
       createData(
         data._id,
         data.name,
-        data.subject,
-        data.deadline,
-        data.class_assigned,
-        data.createdAt
+        data.email
+        // !all_teachers.size || !all_teachers.get(data.author_id)
+        //   ? {}
+        //   : all_teachers.get(data.author_id),
+        // data.class_assigned,
+        // data.createdAt
       )
     );
   };
 
-  React.useEffect(
-    () => {
-      window.scrollTo(0, 0);
-      getAllTask();
-      getAllClass("map");
-      getAllSubjects("map");
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+    getAllSubjects("map");
+    getAllClass("map");
+    // getTeachers("map");
+    getTeachers();
 
-  const retrieveTasks = () => {
-    // If tasksCollection is not undefined or an empty array
-    if (tasksCollection.length) {
-      rows = [];
-      if (user.role === "Teacher") {
-        tasksCollection
-          .filter((item) =>
-            item.name.toLowerCase().includes(searchFilter.toLowerCase())
-          )
-          .map((data) => {
-            if (data.person_in_charge_id === user._id) {
-              return taskRowItem(data);
-            }
-            return null;
-          });
-      } else if (user.role === "Student") {
-        tasksCollection
-          .filter((item) =>
-            item.name.toLowerCase().includes(searchFilter.toLowerCase())
-          )
-          .map((data) => {
-            let class_assigned = data.class_assigned;
-            if (class_assigned.indexOf(user.kelas) !== -1) {
-              return taskRowItem(data);
-            }
-            return null;
-          });
-      } else {
-        //Admin
-        tasksCollection
-          .filter((item) =>
-            item.name.toLowerCase().includes(searchFilter.toLowerCase())
-          )
-          .map((data) => taskRowItem(data));
-      }
+    // if (user.role === "Teacher") {
+    //   getMaterial(user._id, "by_author");
+    // } else {
+    //   // for student
+    //   getMaterial(user.kelas, "by_class");
+    // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
+    if (
+      Array.isArray(all_teachers) &&
+      all_teachers.length !== 0
+    ) {
+      all_teachers
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchFilter.toLowerCase())
+        )
+        .forEach((data) => teacherRowItem(data));
+      setRows(rowsRef.current);
     }
-  };
+  }, [all_teachers]);
+
+  React.useEffect(() => {
+    if (
+      Array.isArray(all_teachers) &&
+      all_teachers.length !== 0
+    ) {
+      rowsRef.current = [];
+      all_teachers
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchFilter.toLowerCase())
+        )
+        .forEach((data) => teacherRowItem(data));
+      setRows(rowsRef.current);
+    }
+  }, [searchFilter]);
+
+  // console.log(all_teachers);
+  // const retrieveTeachers = () => {
+  //   rows = [];
+
+  //   if (user.role === "Admin") {
+  //     all_materials
+  //       .filter((item) =>
+  //         item.name.toLowerCase().includes(searchFilter.toLowerCase())
+  //       )
+  //       .map((data) => teacherRowItem(data));
+  //     // all_materials.map(data =>  teacherRowItem(data))
+  //   } else {
+  //     if (selectedMaterials.length) {
+  //       selectedMaterials
+  //         .filter((item) =>
+  //           item.name.toLowerCase().includes(searchFilter.toLowerCase())
+  //         )
+  //         .map((data) => teacherRowItem(data));
+  //       // selectedMaterials.map(data => teacherRowItem(data))
+  //     }
+  //   }
+  // };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -601,53 +633,42 @@ function TaskList(props) {
     setOrderBy(property);
   };
 
-  // Call the function to view the tasks on tablerows.
+  // Call the function to view the Materials on tablerows.
   // This function is defined above.
-  retrieveTasks();
+  // retrieveMaterials();
 
-  const onDeleteTask = (id) => {
-    deleteTask(id);
-  };
+  // const onDeleteMaterial = (id) => {
+  //   deleteMaterial(id);
+  // };
 
   // Delete Dialog
-  const handleOpenDeleteDialog = (e, id, name) => {
-    e.stopPropagation();
-    setOpenDeleteDialog(true);
-    setSelectedTaskId(id);
-    setSelectedTaskName(name);
-  };
+  // const handleOpenDeleteDialog = (e, id, name) => {
+  //   e.stopPropagation();
+  //   setOpenDeleteDialog(true);
+  //   setSelectedMaterialId(id);
+  //   setSelectedMaterialName(name);
+  // };
 
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
-  };
+  // const handleCloseDeleteDialog = () => {
+  //   setOpenDeleteDialog(false);
+  // };
 
-  const workStatus = (task) => {
-    let workStatus = "Belum Dikumpulkan";
-    for (let i = 0; i < user.tugas.length; i++) {
-      if (user.tugas[i].for_task_object === task._id) {
-        workStatus = "Sudah Dikumpulkan";
-        break;
-      }
-    }
-    return workStatus;
-  };
-
-  document.title = "Schooly | Daftar Tugas";
+  document.title = "Schooly | Daftar Guru";
 
   return (
     <div className={classes.root}>
-      <DeleteDialog
+      {/* <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Tugas"
-        itemName={selectedTaskName}
+        itemType="Materi"
+        itemName={selectedMaterialName}
         deleteItem={() => {
-          onDeleteTask(selectedTaskId);
+          onDeleteMaterial(selectedMaterialId);
         }}
-      />
-      <TaskListToolbar
-        role={user.role}
-        deleteTask={deleteTask}
+      /> */}
+      <TeacherListToolbar
+        // role={user.role}
+        // deleteMaterial={deleteMaterial}
         classes={classes}
         order={order}
         orderBy={orderBy}
@@ -668,15 +689,14 @@ function TaskList(props) {
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
-            let viewpage =
-              user.role === "Student"
-                ? `/tugas-murid/${row._id}`
-                : `/tugas-guru/${row._id}`;
+            // let viewpage = `/materi/${row._id}`;
             return (
               <Grid item>
-                {user.role === "Teacher" ? (
+                {/* {user.role === "Teacher" ? ( */}
                   <ExpansionPanel button variant="outlined">
-                    <ExpansionPanelSummary className={classes.taskPanelSummary}>
+                    <ExpansionPanelSummary
+                      className={classes.teacherPanelSummary}
+                    >
                       <Grid
                         container
                         spacing={1}
@@ -685,11 +705,11 @@ function TaskList(props) {
                       >
                         <Grid item>
                           <Hidden smUp implementation="css">
-                            <Typography variant="h6" id={labelId}>
-                              {row.tasktitle}
+                            <Typography variant="subtitle1" id={labelId}>
+                              {row.name}
                             </Typography>
                             <Typography variant="caption" color="textSecondary">
-                              {all_subjects_map.get(row.subject)}
+                              {row.email}
                             </Typography>
                           </Hidden>
                           <Hidden xsDown implementation="css">
@@ -702,88 +722,90 @@ function TaskList(props) {
                               }}
                             >
                               <ListItemAvatar>
-                                <Avatar
-                                  className={classes.assignmentLateTeacher}
-                                >
-                                  <AssignmentIcon />
-                                </Avatar>
+                                {!row.avatar ? (
+                                  <Avatar />
+                                ) : (
+                                  <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                                )}
+                                {/* <Avatar className={classes.teacherAvatar}>
+                                  <BiSitemap />
+                                </Avatar> */}
                               </ListItemAvatar>
                               <div>
-                                <Typography variant="h6" id={labelId}>
-                                  {row.tasktitle}
+                                <Typography variant="h6" color="textPrimary">
+                                  {row.name}
                                 </Typography>
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  {all_subjects_map.get(row.subject)}
+                                <Typography variant="body2" color="textSecondary">
+                                  {row.email}
                                 </Typography>
                               </div>
                             </div>
                           </Hidden>
                         </Grid>
-                        <Grid item xs container spacing={1} justify="flex-end">
-                          <Grid item>
-                            <LightTooltip title="Lihat Lebih Lanjut">
-                              <Link to={viewpage}>
+                        <Hidden smUp implementation="css">
+                          <Grid item xs container spacing={1} justify="flex-end">
+                            {/* <Grid item>
+                              <LightTooltip title="Lihat Lebih Lanjut">
+                                <Link to={viewpage}>
+                                  <IconButton
+                                    size="small"
+                                    className={classes.viewMaterialButton}
+                                  >
+                                    <PageviewIcon fontSize="small" />
+                                  </IconButton>
+                                </Link>
+                              </LightTooltip>
+                            </Grid> */}
+                            <Grid item>
+                              <LightTooltip title="Sunting">
+                                {/* <Link to={`/sunting-materi/${row._id}`}> */}
+                                  <IconButton
+                                    size="small"
+                                    className={classes.editTeacherButton}
+                                  >
+                                    <EditIcon fontSize="small" />
+                                  </IconButton>
+                                {/* </Link> */}
+                              </LightTooltip>
+                            </Grid>
+                            {/* <Grid item>
+                              <LightTooltip title="Hapus">
                                 <IconButton
                                   size="small"
-                                  className={classes.viewTaskButton}
+                                  className={classes.deleteMaterialButton}
+                                  onClick={(e) => {
+                                    handleOpenDeleteDialog(
+                                      e,
+                                      row._id,
+                                      row.materialtitle
+                                    );
+                                  }}
                                 >
-                                  <PageviewIcon fontSize="small" />
+                                  <DeleteIcon fontSize="small" />
                                 </IconButton>
-                              </Link>
-                            </LightTooltip>
+                              </LightTooltip>
+                            </Grid> */}
                           </Grid>
-                          <Grid item>
-                            <LightTooltip title="Sunting">
-                              <Link to={`/sunting-tugas/${row._id}`}>
-                                <IconButton
-                                  size="small"
-                                  className={classes.editTaskButton}
-                                >
-                                  <EditIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
-                          <Grid item>
-                            <LightTooltip title="Hapus">
-                              <IconButton
-                                size="small"
-                                className={classes.deleteTaskButton}
-                                onClick={(e) => {
-                                  handleOpenDeleteDialog(
-                                    e,
-                                    row._id,
-                                    row.tasktitle
-                                  );
-                                }}
-                              >
-                                <DeleteIcon fontSize="small" />
-                              </IconButton>
-                            </LightTooltip>
-                          </Grid>
-                        </Grid>
+                        </Hidden>
                       </Grid>
                     </ExpansionPanelSummary>
                     <Divider />
                     <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
                       <Grid container>
-                        <Grid item xs={12}>
+                        {/* TODO tambahin autocomplete di sini */}
+                        {/* <Grid item xs={12}>
                           <Typography variant="body1">
-                            Kelas yang Ditugaskan:{" "}
+                            Kelas yang Diberikan:{" "}
                             {!all_classes_map.size
                               ? null
-                              : row.class_assigned.map((id, i) => {
-                                  if (all_classes_map.get(id)) {
-                                    if (i === row.class_assigned.length - 1)
-                                      return `${all_classes_map.get(id).name}`;
-                                    return `${all_classes_map.get(id).name}, `;
-                                  } else {
-                                    return undefined;
-                                  }
-                                })}
+                              : row.class_assigned.map((kelas, i) => {
+                                if (all_classes_map.get(kelas)) {
+                                  if (i === row.class_assigned.length - 1)
+                                    return `${all_classes_map.get(kelas).name}`;
+                                  return `${all_classes_map.get(kelas).name}, `;
+                                }
+                                return null;
+                              })}
                           </Typography>
                         </Grid>
                         <Grid item xs={12}>
@@ -793,40 +815,13 @@ function TaskList(props) {
                               .locale("id")
                               .format("DD MMM YYYY, HH.mm")}
                           </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography variant="body1" color="textSecondary">
-                            Batas Waktu:{" "}
-                            {moment(row.deadline)
-                              .locale("id")
-                              .format("DD MMM YYYY, HH.mm")}
-                          </Typography>
-                        </Grid>
+                        </Grid> */}
                       </Grid>
                     </ExpansionPanelDetails>
                   </ExpansionPanel>
-                ) : (
-                  <Link to={viewpage}>
-                    <Paper
-                      button
-                      component="a"
-                      variant="outlined"
-                      className={classes.taskPaper}
-                    >
-                      <Badge
-                        style={{ display: "flex", flexDirection: "row" }}
-                        badgeContent={
-                          workStatus(row) === "Belum Dikumpulkan" ? (
-                            <ErrorIcon className={classes.errorIcon} />
-                          ) : (
-                            <CheckCircleIcon className={classes.checkIcon} />
-                          )
-                        }
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "right",
-                        }}
-                      >
+                {/* ) : (
+                    <Link to={viewpage}>
+                      <Paper variant="outlined">
                         <ListItem
                           // button
                           // component="a"
@@ -835,11 +830,15 @@ function TaskList(props) {
                           <Hidden smUp implementation="css">
                             <ListItemText
                               primary={
-                                <Typography variant="h6">
-                                  {row.tasktitle}
+                                <Typography variant="subtitle1" color="textPrimary">
+                                  {row.materialtitle}
                                 </Typography>
                               }
-                              secondary={all_subjects_map.get(row.subject)}
+                              secondary={
+                                <Typography variant="caption" color="textSecondary">
+                                  {all_subjects_map.get(row.subject)}
+                                </Typography>
+                              }
                             />
                           </Hidden>
                           <Hidden xsDown implementation="css">
@@ -853,28 +852,23 @@ function TaskList(props) {
                             >
                               <ListItemAvatar>
                                 <Avatar className={classes.assignmentLate}>
-                                  <AssignmentIcon />
+                                  <MenuBookIcon />
                                 </Avatar>
                               </ListItemAvatar>
                               <ListItemText
                                 primary={
-                                  <Typography variant="h6">
-                                    {row.tasktitle}
+                                  <Typography variant="h6" color="textPrimary">
+                                    {row.materialtitle}
                                   </Typography>
                                 }
-                                secondary={all_subjects_map.get(row.subject)}
+                                secondary={
+                                  <Typography variant="body2" color="textSecondary">
+                                    {all_subjects_map.get(row.subject)}
+                                  </Typography>
+                                }
                               />
                             </div>
                           </Hidden>
-                          {/* <ListItemText
-                            align="right"
-                            primary={
-                              <Typography variant="subtitle" color="textSecondary">
-                                {row.date}
-                              </Typography>
-                            }
-                            secondary={row.time}
-                          /> */}
                           <ListItemText
                             align="right"
                             primary={
@@ -889,10 +883,9 @@ function TaskList(props) {
                               .format("HH.mm")}
                           />
                         </ListItem>
-                      </Badge>
-                    </Paper>
-                  </Link>
-                )}
+                      </Paper>
+                    </Link>
+                  )} */}
               </Grid>
             );
           })
@@ -902,28 +895,37 @@ function TaskList(props) {
   );
 }
 
-TaskList.propTypes = {
-  getAllTask: PropTypes.func.isRequired,
-  getAllClass: PropTypes.func.isRequired,
-  deleteTask: PropTypes.func.isRequired,
-  tasksCollection: PropTypes.object.isRequired,
-  subjectsCollection: PropTypes.object.isRequired,
-  classesCollection: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
-};
+// TeacherList.propTypes = {
+//   deleteMaterial: PropTypes.func.isRequired,
+//   getAllMaterials: PropTypes.func.isRequired,
+//   getMaterial: PropTypes.func.isRequired,
+//   getTeachers: PropTypes.func.isRequired,
+//   getAllSubjects: PropTypes.func.isRequired,
+//   getSelectedClasses: PropTypes.func.isRequired,
+//   getAllClass: PropTypes.func.isRequired,
+
+//   classesCollection: PropTypes.object.isRequired,
+//   materialsCollection: PropTypes.object.isRequired,
+//   subjectsCollection: PropTypes.object.isRequired,
+//   errors: PropTypes.object.isRequired,
+//   auth: PropTypes.object.isRequired,
+// };
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
-  tasksCollection: state.tasksCollection,
-  subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
+  // materialsCollection: state.materialsCollection,
+  subjectsCollection: state.subjectsCollection,
 });
 
+// parameter 1 : reducer , parameter 2 : actions
 export default connect(mapStateToProps, {
-  getAllTask,
-  deleteTask,
-  getAllClass,
+  // deleteMaterial,
+  // getAllMaterials,
   getAllSubjects,
-})(TaskList);
+  // getMaterial,
+  getTeachers,
+  getAllClass,
+  // getSelectedClasses,
+})(TeacherList);

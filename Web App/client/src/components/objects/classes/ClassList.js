@@ -132,8 +132,9 @@ function ClassListToolbar(props) {
     updateSearchFilter(e.target.value);
   };
 
-  const onClear = (e) => {
+  const onClear = (e, id) => {
     updateSearchFilter("");
+    document.getElementById(id).focus();
   };
 
   const handleClickExport = () => {

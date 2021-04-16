@@ -150,8 +150,9 @@ function MaterialListToolbar(props) {
     updateSearchFilter(e.target.value);
   };
 
-  const onClear = (e) => {
+  const onClear = (e, id) => {
     updateSearchFilter("");
+    document.getElementById(id).focus();
   };
 
   return (
