@@ -537,7 +537,7 @@ class App extends Component {
                     <PrivateRoute
                       exact
                       access={["Admin"]}
-                      path="/daftar-guru"
+                      path="/sunting-guru"
                       component={TeacherList}
                     />
                     {/* Not Found */}

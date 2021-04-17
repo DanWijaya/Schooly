@@ -137,7 +137,7 @@ function TeacherListToolbar(props) {
               }}
             >
               <BiSitemap className={classes.titleIcon} fontSize="large" />
-              <Typography variant="h4">Daftar Guru</Typography>
+              <Typography variant="h4">Sunting Data Ajar Guru</Typography>
             </div>
           )}
         </Hidden>
@@ -150,7 +150,7 @@ function TeacherListToolbar(props) {
             }}
           >
             <BiSitemap className={classes.titleIcon} fontSize="large" />
-            <Typography variant="h4">Daftar Guru</Typography>
+            <Typography variant="h4">Sunting Data Ajar Guru</Typography>
           </div>
         </Hidden>
         <Hidden mdUp implementation="css">
@@ -698,7 +698,7 @@ function TeacherList(props) {
   };
 
 
-  document.title = "Schooly | Daftar Guru";
+  document.title = "Schooly | Sunting Data Ajar Guru";
 
   return (
     <div className={classes.root}>

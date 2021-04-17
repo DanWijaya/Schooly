@@ -269,8 +269,8 @@ function ManageUsersToolbar(props) {
           <>
             {lengthListCheckbox === 0 ? (
               <>
-                <LightTooltip title="Sunting Guru (Mata Pelajaran yang Diajar)">
-                  <Link to="/daftar-guru">
+                <LightTooltip title="Sunting Data Ajar Guru">
+                  <Link to="/sunting-guru">
                     <IconButton
                       className={classes.checkboxModeButton}
                     >
