@@ -551,24 +551,24 @@ function TeacherList(props) {
   const { all_subjects } = props.subjectsCollection;
 
   // FIXME sumber bug potensial
-  const rowsRef = React.useRef([]);
+  // const rowsRef = React.useRef([]);
   const [rows, setRows] = React.useState([]);
   // const rows = rowsRef.current;
 
-  const teacherRowItem = (data) => {
-    rowsRef.current.push(
-      createData(
-        data._id,
-        data.name,
-        data.email
-        // !all_teachers.size || !all_teachers.get(data.author_id)
-        //   ? {}
-        //   : all_teachers.get(data.author_id),
-        // data.class_assigned,
-        // data.createdAt
-      )
-    );
-  };
+  // const teacherRowItem = (data) => {
+  //   rowsRef.current.push(
+  //     createData(
+  //       data._id,
+  //       data.name,
+  //       data.email
+  //       // !all_teachers.size || !all_teachers.get(data.author_id)
+  //       //   ? {}
+  //       //   : all_teachers.get(data.author_id),
+  //       // data.class_assigned,
+  //       // data.createdAt
+  //     )
+  //   );
+  // };
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -589,16 +589,18 @@ function TeacherList(props) {
   }, []);
 
   React.useEffect(() => {
-    console.log(all_teachers)
     if (
       all_teachers
     ) {
-      all_teachers
-        .filter((item) =>
-          item.name.toLowerCase().includes(searchFilter.toLowerCase())
-        )
-        .forEach((data) => teacherRowItem(data));
-      setRows(rowsRef.current);
+      setRows(
+        all_teachers
+          .filter((item) =>
+            item.name.toLowerCase().includes(searchFilter.toLowerCase())
+          )
+          // .forEach((data) => teacherRowItem(data));
+          .map((data) => createData(data))
+      )
+      // setRows(rowsRef.current);
     }
   }, [all_teachers]);
 
@@ -606,13 +608,16 @@ function TeacherList(props) {
     if (
       all_teachers
     ) {
-      rowsRef.current = [];
-      all_teachers
-        .filter((item) =>
-          item.name.toLowerCase().includes(searchFilter.toLowerCase())
-        )
-        .forEach((data) => teacherRowItem(data));
-      setRows(rowsRef.current);
+      // rowsRef.current = [];
+      setRows(
+        all_teachers
+          .filter((item) =>
+            item.name.toLowerCase().includes(searchFilter.toLowerCase())
+          )
+          // .forEach((data) => teacherRowItem(data))
+          .map((data) => createData(data))
+      )
+      // setRows(rowsRef.current);
     }
   }, [searchFilter]);
 
@@ -645,6 +650,9 @@ function TeacherList(props) {
     setOrderBy(property);
   };
 
+  const handleChangeSubject = (value) => {
+    console.log("123")
+  }
   // Call the function to view the Materials on tablerows.
   // This function is defined above.
   // retrieveMaterials();
@@ -806,7 +814,7 @@ function TeacherList(props) {
                       <Grid container>
                         <Grid item xs={6}>
                           <Typography variant="body1">Mata Pelajaran</Typography>
-                          <Autocomplete
+                          {/* <Autocomplete
                             multiple
                             id="mata-pelajaran"
                             options={all_subjects}
@@ -814,7 +822,7 @@ function TeacherList(props) {
                             filterSelectedOptions
                             // size="small"
                             onChange={(event, value) => {
-                              this.handleChangeSubject(value);
+                              handleChangeSubject(value);
                             }}
                             renderInput={(params) => (
                               <TextField
@@ -828,7 +836,7 @@ function TeacherList(props) {
                                 // helperText={errors.mata_pelajaran}
                               />
                             )}
-                          />
+                          /> */}
                         </Grid>
                         <Grid item xs={6}>
                           <Typography variant="body1">Kelas</Typography>
