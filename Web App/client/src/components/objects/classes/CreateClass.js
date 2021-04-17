@@ -245,9 +245,8 @@ class CreateClass extends Component {
                         />
                       )}
                     />
-                    <FormHelperText>
-
-                    </FormHelperText>
+                    {/* <FormHelperText>
+                    </FormHelperText> */}
                   </FormControl>
                 </Grid>
                 {/* <Grid item >

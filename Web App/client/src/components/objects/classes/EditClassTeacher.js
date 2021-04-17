@@ -94,35 +94,39 @@ function EditClassTeacher(props) {
   }, []);
 
   /* 
-  {
-    <id guru>: {
-      name: <nama guru>,
-      email: <email guru>,
-      classId: <id kelas yang diwalikan> -> null jika guru ini tidak mewalikan kelas manapun 
-    },
-    ...
+    bentuk isi:
+    {
+      <id guru>: {
+        name: <nama guru>,
+        email: <email guru>,
+        classId: <id kelas yang diwalikan> -> null jika guru ini tidak mewalikan kelas manapun 
+      },
+      ...
 
-  } key -> id semua guru yang ada di db
+    } key -> id semua guru yang ada di db
   */
   const [statusWali, setStatusWali] = React.useState(null);
 
   /* 
-  {
-    <id kelas>: [<id guru wali 1>, <id guru wali 2>, ...], -> array kosong jika kelas ini tidak memiliki wali kelas
-    ...
-  } key -> id semua kelas yang ada di db
-  <id guru wali> akan berisi id semua guru yang di-assign ke kelas tersebut. akan digunakan untuk memberi tanda pada Select-Select yang memiliki value sama.   
+    bentuk isi:
+    {
+      <id kelas>: [<id guru wali 1>, <id guru wali 2>, ...], -> array kosong jika kelas ini tidak memiliki wali kelas
+      ...
+    } key -> id semua kelas yang ada di db
+
+    <id guru wali> akan berisi id semua guru yang di-assign ke kelas tersebut. akan digunakan untuk memberi tanda pada Select-Select yang memiliki value sama.   
   */
   const [statusKelas, setStatusKelas] = React.useState(null);
 
   /*
-  bentuk isi:
-  {
-    <id kelas>: <id guru wali kelas>, -> undefined jika kelas ini tidak memiliki wali kelas
-    ...
-  } key -> id semua kelas yang ada di db 
-  menyimpan kondisi awal semua kelas.
-  akan digunakan untuk membandingkan kondisi awal sebelum wali kelas diubah dan kondisi sesudah diubah.   
+    bentuk isi:
+    {
+      <id kelas>: <id guru wali kelas>, -> undefined jika kelas ini tidak memiliki wali kelas
+      ...
+    } key -> id semua kelas yang ada di db
+
+    menyimpan kondisi awal semua kelas.
+    akan digunakan untuk membandingkan kondisi awal sebelum wali kelas diubah dan kondisi sesudah diubah.   
   */
   const all_classes_wali = React.useRef({});
 

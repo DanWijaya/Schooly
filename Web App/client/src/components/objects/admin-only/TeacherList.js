@@ -42,11 +42,6 @@ import { BiSitemap } from "react-icons/bi";
 import ClearIcon from "@material-ui/icons/Clear";
 import { Autocomplete }from '@material-ui/lab';
 
-// FIXME DEV
-function p(s) {
-  console.log(s);
-}
-
 function createData(
   _id,
   name,
@@ -527,6 +522,20 @@ function TeacherList(props) {
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
 
+  // FIXME selectedValues
+  /* 
+    isi:
+    {
+      <id guru>: {
+        subject: [<id mata pelajaran 1>, <id mata pelajaran 2>, ...],
+        class: [<id kelas 1>, <id kelas 2>, ...],
+      },
+      ...
+
+    } key -> id semua guru yang ada di db
+  */
+  const [selectedValues, setSelectedValues] = React.useState({});
+
   const {
     getAllSubjects,
     // getMaterial,
@@ -535,11 +544,13 @@ function TeacherList(props) {
     getTeachers,
   } = props;
   // const { all_materials, selectedMaterials } = props.materialsCollection;
-  const { all_classes_map } = props.classesCollection;
+  // const { all_classes_map } = props.classesCollection;
+  const { all_classes } = props.classesCollection;
   const { user, all_teachers } = props.auth;
-  const { all_subjects_map } = props.subjectsCollection;
+  // const { all_subjects_map } = props.subjectsCollection;
+  const { all_subjects } = props.subjectsCollection;
 
-  // FIXME ! potbug
+  // FIXME sumber bug potensial
   const rowsRef = React.useRef([]);
   const [rows, setRows] = React.useState([]);
   // const rows = rowsRef.current;
@@ -561,8 +572,10 @@ function TeacherList(props) {
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
-    getAllSubjects("map");
-    getAllClass("map");
+    // getAllSubjects("map");
+    getAllSubjects();
+    // getAllClass("map");
+    getAllClass();
     // getTeachers("map");
     getTeachers();
 
@@ -576,9 +589,9 @@ function TeacherList(props) {
   }, []);
 
   React.useEffect(() => {
+    console.log(all_teachers)
     if (
-      Array.isArray(all_teachers) &&
-      all_teachers.length !== 0
+      all_teachers
     ) {
       all_teachers
         .filter((item) =>
@@ -591,8 +604,7 @@ function TeacherList(props) {
 
   React.useEffect(() => {
     if (
-      Array.isArray(all_teachers) &&
-      all_teachers.length !== 0
+      all_teachers
     ) {
       rowsRef.current = [];
       all_teachers
@@ -693,7 +705,7 @@ function TeacherList(props) {
             return (
               <Grid item>
                 {/* {user.role === "Teacher" ? ( */}
-                  <ExpansionPanel button variant="outlined">
+                  <ExpansionPanel button variant="outlined" defaultExpanded>
                     <ExpansionPanelSummary
                       className={classes.teacherPanelSummary}
                     >
@@ -792,7 +804,36 @@ function TeacherList(props) {
                     <Divider />
                     <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
                       <Grid container>
-                        {/* TODO tambahin autocomplete di sini */}
+                        <Grid item xs={6}>
+                          <Typography variant="body1">Mata Pelajaran</Typography>
+                          <Autocomplete
+                            multiple
+                            id="mata-pelajaran"
+                            options={all_subjects}
+                            getOptionLabel={(option) => option.name}
+                            filterSelectedOptions
+                            // size="small"
+                            onChange={(event, value) => {
+                              this.handleChangeSubject(value);
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                size="small"
+                                // fullWidth
+                                style={{ border: "none" }}
+                                // TODO
+                                // error={errors.mata_pelajaran}
+                                // helperText={errors.mata_pelajaran}
+                              />
+                            )}
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Typography variant="body1">Kelas</Typography>
+                        </Grid>
+
                         {/* <Grid item xs={12}>
                           <Typography variant="body1">
                             Kelas yang Diberikan:{" "}

@@ -369,9 +369,8 @@ class EditClass extends Component {
                             />
                           )}
                         />
-                        <FormHelperText>
-
-                        </FormHelperText>
+                        {/* <FormHelperText>
+                        </FormHelperText> */}
                       </FormControl>
                     </Grid>
                   </Grid>

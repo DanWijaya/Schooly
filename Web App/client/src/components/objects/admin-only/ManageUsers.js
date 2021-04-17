@@ -48,6 +48,7 @@ import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox"
 import PageviewIcon from "@material-ui/icons/Pageview";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import RecentActorsIcon from '@material-ui/icons/RecentActors';
+import { BiSitemap } from "react-icons/bi";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(
@@ -268,6 +269,15 @@ function ManageUsersToolbar(props) {
           <>
             {lengthListCheckbox === 0 ? (
               <>
+                <LightTooltip title="Sunting Guru (Mata Pelajaran yang Diajar)">
+                  <Link to="/daftar-guru">
+                    <IconButton
+                      className={classes.checkboxModeButton}
+                    >
+                      < BiSitemap />
+                    </IconButton>
+                  </Link>
+                </LightTooltip>
                 <LightTooltip
                   title={
                     !currentCheckboxMode
