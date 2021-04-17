@@ -486,4 +486,28 @@ router.post("/bulkupdateclass/:dummyClassId", (req, res) => {
     });
 });
 
+router.post("/updateTeacher/:id", (req, res) => {
+  let id = req.params.id;
+
+  User.findById(id, (err, user) => {
+    if (!user) {
+      return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan" });
+    } else {
+      user.subject_teached = req.body.subject_teached;
+      user.class_teached = req.body.class_teached;
+      user.class_to_subject = req.body.class_to_subject;
+
+      user
+        .save()
+        .then(() => {
+          res.json("Update teacher completed");
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).json(err);
+        });
+    }
+  });
+});
+
 module.exports = router;

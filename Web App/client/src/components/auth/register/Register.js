@@ -126,7 +126,7 @@ class Register extends Component {
       password2: "",
       errors: {},
       // kelas: "", // Student Data
-      subject_teached: "", // Teacher Data
+      // subject_teached: "", // Teacher Data
       tanggal_lahir: new Date(),
       activeStep: 0,
       snackbarOpen: false,
@@ -206,9 +206,9 @@ class Register extends Component {
     // if (role === "Student") {
     //   newUser.kelas = this.state.kelas;
     // } else if (role === "Teacher") {
-    if (role === "Teacher") {
-      newUser.subject_teached = this.state.subject_teached;
-    }
+    // if (role === "Teacher") {
+    //   newUser.subject_teached = this.state.subject_teached;
+    // }
 
     if (this.state.activeStep === 2) {
       this.setState({ submitButtonClicked: true });

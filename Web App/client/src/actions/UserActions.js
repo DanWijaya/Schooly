@@ -55,10 +55,6 @@ export const updateUserData = (userData, userId, history) => (dispatch) => {
       const decoded = jwt_decode(token);
       // Set current user
       dispatch(setCurrentUser(decoded));
-      dispatch({
-        type: GET_SUCCESS_RESPONSE,
-        payload: null
-      });
     })
     .catch((err) => {
       console.log("jancuk la");
@@ -339,5 +335,22 @@ export const updateStudentsClass = (data, dummyClassId) => {
     })
     .catch((err) => {
       throw new Error(err.response.data);
+    });
+};
+
+export const updateTeacher = (data, teacherId) => (dispatch) => {
+  axios
+    .post(`/api/users/updateTeacher/${teacherId}`, data)
+    .then(() => {
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: teacherId
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
     });
 };

@@ -2,33 +2,27 @@ import React from "react";
 // import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-// import moment from "moment";
-import { getTeachers, updateUserData } from "../../../actions/UserActions";
+import { getTeachers, updateTeacher } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 
-// import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Divider,
   ExpansionPanel,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
-  Fab,
   Grid,
   InputAdornment,
   IconButton,
   Hidden,
   Menu,
   MenuItem,
-  Paper,
   TableSortLabel,
   TextField,
   Typography,
-  ListItem,
-  ListItemText,
   ListItemAvatar,
   Dialog,
   Avatar,
@@ -36,10 +30,7 @@ import {
   Snackbar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
-import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
-import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { GoSearch } from "react-icons/go";
@@ -90,7 +81,6 @@ function TeacherListToolbar(props) {
     order,
     orderBy,
     onRequestSort,
-    // role,
     searchFilter,
     updateSearchFilter,
     searchBarFocus,
@@ -503,65 +493,23 @@ const useStyles = makeStyles((theme) => ({
 function TeacherList(props) {
   const classes = useStyles();
 
-  // const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [selectedMaterialId, setSelectedMaterialId] = React.useState(null);
-  const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
-
-  const [openSuntingDialog, setOpenSuntingDialog] = React.useState(false);
-  const [dialogData, setDialogData] = React.useState(null);
-
-  // FIXME selectedValues
-  /* 
-    isi:
-    {
-      <id guru>: {
-        subject: [<id mata pelajaran 1>, <id mata pelajaran 2>, ...],
-        class: [<id kelas 1>, <id kelas 2>, ...],
-      },
-      ...
-
-    } key -> id semua guru yang ada di db
-  */
-
   const {
     getAllSubjects,
-    // getMaterial,
-    // deleteMaterial,
     getAllClass,
     getTeachers,
-    updateUserData
+    updateTeacher,
+    clearErrors,
+    clearSuccess
   } = props;
-  // const { all_materials, selectedMaterials } = props.materialsCollection;
-  // const { all_classes_map } = props.classesCollection;
   const { all_classes } = props.classesCollection;
   const { user, all_teachers } = props.auth;
-  // const { all_subjects_map } = props.subjectsCollection;
   const { all_subjects } = props.subjectsCollection;
   const errors = props.errors;
   const success = props.success;
 
   const all_teacher_obj = React.useRef({});
-  // FIXME sumber bug potensial
-  // const rowsRef = React.useRef([]);
   const [rows, setRows] = React.useState([]);
-  // const rows = rowsRef.current;
 
-  // const teacherRowItem = (data) => {
-  //   rowsRef.current.push(
-  //     createData(
-  //       data._id,
-  //       data.name,
-  //       data.email
-  //       // !all_teachers.size || !all_teachers.get(data.author_id)
-  //       //   ? {}
-  //       //   : all_teachers.get(data.author_id),
-  //       // data.class_assigned,
-  //       // data.createdAt
-  //     )
-  //   );
-  // };
-
-  // FIXME useeffects
   React.useEffect(() => {
     window.scrollTo(0, 0);
     // getAllSubjects("map");
@@ -573,83 +521,69 @@ function TeacherList(props) {
   }, []);
 
   React.useEffect(() => {
-    if (
-      all_teachers
-    ) {
+    if (all_teachers && all_subjects && all_classes) {
+      let all_subjects_obj = {}
+      all_subjects.forEach((subjectInfo) => {
+        all_subjects_obj[subjectInfo._id] = subjectInfo;
+      })
+      let all_classes_obj = {}
+      all_classes.forEach((classInfo) => {
+        all_classes_obj[classInfo._id] = classInfo;
+      })
+
       let tempRows = [];
       let tempSelectedValues = {};
-      // setRows(
-        all_teachers
-          .filter((item) =>
-            item.name.toLowerCase().includes(searchFilter.toLowerCase())
-          )
-          // .forEach((data) => teacherRowItem(data));
-          .forEach((data) => {
-            tempRows.push(createData(data._id, data.name, data.email));
-            tempSelectedValues[data._id] = {
-              subject: [],
-              class: []
-            };
-            all_teacher_obj.current[data._id] = data;
-          })
-        setRows(tempRows);
-        setSelectedValues(tempSelectedValues);
-         
-      // )
-      // setRows(rowsRef.current);
+      all_teachers
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchFilter.toLowerCase())
+        )
+        .forEach((data) => {
+          tempRows.push(createData(data._id, data.name, data.email));
+          tempSelectedValues[data._id] = {
+            subject: data.subject_teached.map((subjectId) => ({
+              _id: subjectId,
+              name: all_subjects_obj[subjectId] ? all_subjects_obj[subjectId].name : null
+            })),
+            class: data.class_teached.map((classId) => ({
+              _id: classId,
+              name: all_classes_obj[classId] ? all_classes_obj[classId].name : null
+            }))
+          };
+          all_teacher_obj.current[data._id] = data;
+        })
+      setRows(tempRows);
+      setSelectedValues(tempSelectedValues);
     }
-  }, [all_teachers]);
+  }, [all_teachers, all_subjects, all_classes]);
 
   React.useEffect(() => {
-    if (
-      all_teachers
-    ) {
-      // rowsRef.current = [];
+    if (all_teachers) {
       setRows(
         all_teachers
           .filter((item) =>
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )
-          // .forEach((data) => teacherRowItem(data))
           .map((data) => createData(data._id, data.name, data.email))
       )
-      // setRows(rowsRef.current);
     }
   }, [searchFilter]);
 
-  React.useEffect(() => {
-    return () => {
-      clearErrors()
-      clearSuccess()    
-    }
-  }, [])
 
-  React.useEffect(() => {
-    if (errors && (errors.constructor === Object) && (Object.keys(errors).length !== 0)) {
-      handleOpenSnackbar(
-        "error",
-        "Nilai harus berupa angka dan tidak boleh kurang dari 0"
-      );
-    }
-  }, [errors])
+  // SEARCH
+  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
 
-  React.useEffect(() => {
-    if (success) {
-
-    }
-  }, [success])
 
   // SORT
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
-  const [searchFilter, updateSearchFilter] = React.useState("");
-  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
 
   function handleRequestSort(event, property) {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
 
   // SNACKBAR
   const [snackbarContent, setSnackbarContent] = React.useState("");
@@ -669,7 +603,36 @@ function TeacherList(props) {
     setOpenSnackbar(false);
   }
 
-  // AUTOCOMPLETE: untuk memilih subject yang diajar dan kelas yang diajar tiap guru  
+  React.useEffect(() => {
+    if (errors && (errors.constructor === Object) && (Object.keys(errors).length !== 0)) {
+      handleOpenSnackbar(
+        "error",
+        "Data guru gagal disimpan"
+      );
+      clearErrors();
+    }
+  }, [errors])
+
+  React.useEffect(() => {
+    if (success) {
+      handleOpenSnackbar(
+        "success",
+        "Data guru berhasil disimpan"
+      );
+      clearSuccess();
+    }
+  }, [success])
+
+  React.useEffect(() => {
+    return () => {
+      clearErrors();
+      clearSuccess();
+    }
+  }, [])
+
+
+  // AUTOCOMPLETE: untuk memilih subject yang diajar dan kelas yang diajar tiap guru
+
   /* 
     isi:
     {
@@ -688,7 +651,6 @@ function TeacherList(props) {
       ...selectedValues[teacherId],
       subject: selectedSubjectsInfo
     }})
-    // console.log("handleChangeSubject")
   }
 
   function handleChangeClass(selectedClassInfo, teacherId) {
@@ -696,26 +658,33 @@ function TeacherList(props) {
       ...selectedValues[teacherId],
       class: selectedClassInfo
     }})
-    // console.log("handleChangeClass")
   }
 
-  // FIXME handleSave
   function handleSave(teacherId) {
     let teacher = selectedValues[teacherId];
+    let newSubjectTeached = teacher.subject.map((subjectInfo) => (subjectInfo._id));
+    let newClassTeached = teacher.class.map((classInfo) => (classInfo._id));
     let tempClassToSubject = {};
-    for (let subject of teacher.subject) {
+
+    for (let classId of newClassTeached) {
       // akan diubah di waktu mendatang
-      tempClassToSubject[subject] = teacher.class;
+      tempClassToSubject[classId] = newSubjectTeached;
     }
+
     let newTeacherData = {
       ...all_teacher_obj.current[teacherId],
-      subject_teached: teacher.subject,
-      class_teached: teacher.class,
+      subject_teached: newSubjectTeached,
+      class_teached: newClassTeached,
       class_to_subject: tempClassToSubject
     }
-    updateUserData(newTeacherData, teacherId)
-    // console.log("handleSave")
+    
+    updateTeacher(newTeacherData, teacherId);
   }
+
+
+  // DIALOG SUNTING
+  const [openSuntingDialog, setOpenSuntingDialog] = React.useState(false);
+  const [dialogData, setDialogData] = React.useState(null);
 
   const handleClickOpenSuntingDialog = (data) => {
     setDialogData(data)
@@ -726,24 +695,16 @@ function TeacherList(props) {
     setOpenSuntingDialog(false);
   };
 
+
   document.title = "Schooly | Daftar Guru";
 
   return (
     <div className={classes.root}>
-      {/* <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Materi"
-        itemName={selectedMaterialName}
-        deleteItem={() => {
-          onDeleteMaterial(selectedMaterialId);
-        }}
-      /> */}
       {(dialogData) ?
         <Hidden smUp>
-          <Dialog 
-            onClose={handleCloseSuntingDialog} 
-            open={openSuntingDialog} 
+          <Dialog
+            onClose={handleCloseSuntingDialog}
+            open={openSuntingDialog}
             // fullWidth
           >
             <div style={{ width: "450px", maxWidth: "100%", minHeight: "420px" }}>
@@ -768,9 +729,6 @@ function TeacherList(props) {
                   ) : (
                     <Avatar src={`/api/upload/avatar/${dialogData.avatar}`} />
                   )}
-                  {/* <Avatar className={classes.teacherAvatar}>
-                    <BiSitemap />
-                  </Avatar> */}
                 </ListItemAvatar>
                 <div>
                   <Typography variant="h6" color="textPrimary">
@@ -781,60 +739,58 @@ function TeacherList(props) {
                   </Typography>
                 </div>
               </div>
-              <div style={{padding: "12px 30px"}}>
-                <Typography variant="body2" style={{marginBottom: "3px"}}>Mata Pelajaran</Typography>
+              <div style={{ padding: "12px 30px" }}>
+                <Typography variant="body2" style={{ marginBottom: "3px" }}>Mata Pelajaran</Typography>
                 <Autocomplete
                   multiple
-                  id="mata-pelajaran"
+                  value={selectedValues[dialogData._id] ? selectedValues[dialogData._id].subject : null}
                   options={all_subjects}
-                  // getOptionLabel={(option) => option.name}
+                  getOptionLabel={(option) => option.name}
+                  getOptionSelected={(option, value) => (option._id === value._id)}
                   filterSelectedOptions
-                  // size="small"
                   onChange={(event, value) => {
-                    handleChangeSubject(value);
+                    handleChangeSubject(value, dialogData._id);
                   }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       variant="outlined"
                       size="small"
-                      // fullWidth
                       style={{ border: "none" }}
-                      // TODO
-                      // error={errors.mata_pelajaran}
-                      // helperText={errors.mata_pelajaran}
+                    // TODO error helpertext
+                    // error={errors.mata_pelajaran}
+                    // helperText={errors.mata_pelajaran}
                     />
                   )}
                 />
               </div>
-              <div style={{padding: "12px 30px"}}>
-                <Typography variant="body2" style={{marginBottom: "3px"}}>Kelas</Typography>
+              <div style={{ padding: "12px 30px" }}>
+                <Typography variant="body2" style={{ marginBottom: "3px" }}>Kelas</Typography>
                 <Autocomplete
                   multiple
-                  id="mata-pelajaran"
-                  options={all_subjects}
-                  // getOptionLabel={(option) => option.name}
+                  value={selectedValues[dialogData._id] ? selectedValues[dialogData._id].class : null}
+                  options={all_classes}
+                  getOptionLabel={(option) => option.name}
+                  getOptionSelected={(option, value) => (option._id === value._id)}
                   filterSelectedOptions
-                  // size="small"
                   onChange={(event, value) => {
-                    handleChangeSubject(value);
+                    handleChangeClass(value, dialogData._id);
                   }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       variant="outlined"
                       size="small"
-                      // fullWidth
                       style={{ border: "none" }}
-                      // TODO
-                      // error={errors.mata_pelajaran}
-                      // helperText={errors.mata_pelajaran}
+                    // TODO error helpertext
+                    // error={errors.mata_pelajaran}
+                    // helperText={errors.mata_pelajaran}
                     />
                   )}
                 />
               </div>
               <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }} className={classes.content}>
-                <div style={{ display: "flex", alignItems: "center", padding: "4px" }}>            
+                {/* <div style={{ display: "flex", alignItems: "center", padding: "4px" }}>
                   <Button
                     variant="contained"
                     className={classes.cancelButton}
@@ -842,8 +798,8 @@ function TeacherList(props) {
                   >
                     Batal
                   </Button>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", padding: "15px 30px 15px 5px"}}>
+                </div> */}
+                <div style={{ display: "flex", alignItems: "center", padding: "15px 30px 15px 5px" }}>
                   <Button
                     variant="contained"
                     className={classes.editClassButton}
@@ -855,11 +811,9 @@ function TeacherList(props) {
             </div>
           </Dialog>
         </Hidden>
-      : null
+        : null
       }
       <TeacherListToolbar
-        // role={user.role}
-        // deleteMaterial={deleteMaterial}
         classes={classes}
         order={order}
         orderBy={orderBy}
@@ -883,7 +837,6 @@ function TeacherList(props) {
 
             return (
               <Grid item>
-                {/* {user.role === "Teacher" ? ( */}
                 <Hidden xsDown>
                   <ExpansionPanel button variant="outlined" defaultExpanded>
                     <ExpansionPanelSummary
@@ -954,11 +907,11 @@ function TeacherList(props) {
                           <Typography variant="body1">Mata Pelajaran</Typography>
                           <Autocomplete
                             multiple
-                            // id={}
+                            value={selectedValues[row._id] ? selectedValues[row._id].subject : null}
                             options={all_subjects}
                             getOptionLabel={(option) => option.name}
+                            getOptionSelected={(option, value) => (option._id === value._id)}
                             filterSelectedOptions
-                            // size="small"
                             onChange={(event, value) => {
                               handleChangeSubject(value, row._id);
                             }}
@@ -967,7 +920,6 @@ function TeacherList(props) {
                                 {...params}
                                 variant="outlined"
                                 size="small"
-                                // fullWidth
                                 style={{ border: "none" }}
                                 // TODO error helpertext
                                 // error={errors.mata_pelajaran}
@@ -980,11 +932,11 @@ function TeacherList(props) {
                           <Typography variant="body1">Kelas</Typography>
                           <Autocomplete
                             multiple
-                            // id="kelas"
-                            options={all_classes}
+                            value={selectedValues[row._id] ? selectedValues[row._id].class : null}
+                            options={all_classes ? all_classes : null}
                             getOptionLabel={(option) => option.name}
+                            getOptionSelected={(option, value) => (option._id === value._id)}
                             filterSelectedOptions
-                            // size="small"
                             onChange={(event, value) => {
                               handleChangeClass(value, row._id);
                             }}
@@ -995,9 +947,9 @@ function TeacherList(props) {
                                 size="small"
                                 // fullWidth
                                 style={{ border: "none" }}
-                                // TODO error helpertext
-                                // error={errors.mata_pelajaran}
-                                // helperText={errors.mata_pelajaran}
+                              // TODO error helpertext
+                              // error={errors.mata_pelajaran}
+                              // helperText={errors.mata_pelajaran}
                               />
                             )}
                           />
@@ -1008,14 +960,13 @@ function TeacherList(props) {
                             container
                             justify="flex-end"
                             alignItems="center"
-                            // style={{ marginTop: "25px" }}
                           >
-                            {/* FIXME handleSave */}
                             <Button
                               className={classes.saveButton}
                               size="small"
                               onClick={() => {
                                 handleSave(row._id);
+                                handleCloseSuntingDialog();
                               }}
                             >
                               SIMPAN
@@ -1061,9 +1012,6 @@ function TeacherList(props) {
                                 ) : (
                                   <Avatar src={`/api/upload/avatar/${row.avatar}`} />
                                 )}
-                                {/* <Avatar className={classes.teacherAvatar}>
-                                  <BiSitemap />
-                                </Avatar> */}
                               </ListItemAvatar>
                               <div>
                                 <Typography variant="h6" color="textPrimary">
@@ -1077,121 +1025,23 @@ function TeacherList(props) {
                           </Hidden>
                         </Grid>
                         <Grid item xs container spacing={1} justify="flex-end">
-                          {/* <Grid item>
-                            <LightTooltip title="Lihat Lebih Lanjut">
-                              <Link to={viewpage}>
-                                <IconButton
-                                  size="small"
-                                  className={classes.viewMaterialButton}
-                                >
-                                  <PageviewIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid> */}
                           <Grid item>
                             <LightTooltip title="Sunting">
-                              {/* <Link to={`/sunting-materi/${row._id}`}> */}
-                                <IconButton
-                                  size="small"
-                                  className={classes.editTeacherButton}
-                                  onClick={() => handleClickOpenSuntingDialog(row)}
-                                >
-                                  <EditIcon fontSize="small" />
-                                </IconButton>
-                              {/* </Link> */}
-                            </LightTooltip>
-                          </Grid>
-                          {/* <Grid item>
-                            <LightTooltip title="Hapus">
                               <IconButton
                                 size="small"
-                                className={classes.deleteMaterialButton}
-                                onClick={(e) => {
-                                  handleOpenDeleteDialog(
-                                    e,
-                                    row._id,
-                                    row.materialtitle
-                                  );
-                                }}
+                                className={classes.editTeacherButton}
+                                onClick={() => handleClickOpenSuntingDialog(row)}
                               >
-                                <DeleteIcon fontSize="small" />
+                                <EditIcon fontSize="small" />
                               </IconButton>
                             </LightTooltip>
-                          </Grid> */}
+                          </Grid>
                         </Grid>
                       </Grid>
                     </ExpansionPanelSummary>
                     <Divider />
                   </ExpansionPanel>
                 </Hidden>
-                {/* ) : (
-                    <Link to={viewpage}>
-                      <Paper variant="outlined">
-                        <ListItem
-                          // button
-                          // component="a"
-                          className={classes.listItem}
-                        >
-                          <Hidden smUp implementation="css">
-                            <ListItemText
-                              primary={
-                                <Typography variant="subtitle1" color="textPrimary">
-                                  {row.materialtitle}
-                                </Typography>
-                              }
-                              secondary={
-                                <Typography variant="caption" color="textSecondary">
-                                  {all_subjects_map.get(row.subject)}
-                                </Typography>
-                              }
-                            />
-                          </Hidden>
-                          <Hidden xsDown implementation="css">
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              <ListItemAvatar>
-                                <Avatar className={classes.assignmentLate}>
-                                  <MenuBookIcon />
-                                </Avatar>
-                              </ListItemAvatar>
-                              <ListItemText
-                                primary={
-                                  <Typography variant="h6" color="textPrimary">
-                                    {row.materialtitle}
-                                  </Typography>
-                                }
-                                secondary={
-                                  <Typography variant="body2" color="textSecondary">
-                                    {all_subjects_map.get(row.subject)}
-                                  </Typography>
-                                }
-                              />
-                            </div>
-                          </Hidden>
-                          <ListItemText
-                            align="right"
-                            primary={
-                              <Typography variant="body2" color="textSecondary">
-                                {moment(row.createdAt)
-                                  .locale("id")
-                                  .format("DD MMM YYYY")}
-                              </Typography>
-                            }
-                            secondary={moment(row.createdAt)
-                              .locale("id")
-                              .format("HH.mm")}
-                          />
-                        </ListItem>
-                      </Paper>
-                    </Link>
-                  )} */}
               </Grid>
             );
           })
@@ -1239,7 +1089,6 @@ const mapStateToProps = (state) => ({
   success: state.success,
   auth: state.auth,
   classesCollection: state.classesCollection,
-  // materialsCollection: state.materialsCollection,
   subjectsCollection: state.subjectsCollection,
 });
 
@@ -1248,5 +1097,7 @@ export default connect(mapStateToProps, {
   getAllSubjects,
   getTeachers,
   getAllClass,
-  updateUserData
+  updateTeacher,
+  clearErrors,
+  clearSuccess
 })(TeacherList);

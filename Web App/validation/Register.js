@@ -37,9 +37,9 @@ module.exports = function validateRegisterInput(data) {
   // if (data.role === "Student" && Validator.isEmpty(data.kelas)) {
   //   errors.kelas = "Kelas belum dipilih";
   // }
-  if (data.role === "Teacher" && Validator.isEmpty(data.subject_teached)) {
-    errors.subject_teached = "Mata pelajaran belum dipilih";
-  }
+  // if (data.role === "Teacher" && Validator.isEmpty(data.subject_teached)) {
+  //   errors.subject_teached = "Mata pelajaran belum dipilih";
+  // }
 
   // Phone checks
   if (Validator.isEmpty(data.phone)) {
