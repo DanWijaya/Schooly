@@ -461,22 +461,24 @@ const useStyles = makeStyles((theme) => ({
   saveButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    marginLeft: "10px",
-    height: "80%",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.dark,
-    }
-  },
-  editClassButton: {
-    // width: "100%",
-    // marginTop: "20px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
+    // "&:focus, &:hover": {
+    //   backgroundColor: theme.palette.primary.dark,
+    // }
     "&:focus, &:hover": {
       color: theme.palette.primary.main,
       backgroundColor: "white",
     },
   },
+  // editClassButton: {
+    // width: "100%",
+    // marginTop: "20px",
+    // backgroundColor: theme.palette.primary.main,
+    // color: "white",
+    // "&:focus, &:hover": {
+    //   color: theme.palette.primary.main,
+    //   backgroundColor: "white",
+    // },
+  // },
   cancelButton: {
     // width: "100%",
     // marginTop: "20px",
@@ -740,7 +742,7 @@ function TeacherList(props) {
                 </div>
               </div>
               <div style={{ padding: "12px 30px" }}>
-                <Typography variant="body2" style={{ marginBottom: "3px" }}>Mata Pelajaran</Typography>
+                <Typography variant="body2" color="primary" style={{ marginBottom: "3px" }}>Mata Pelajaran</Typography>
                 <Autocomplete
                   multiple
                   value={selectedValues[dialogData._id] ? selectedValues[dialogData._id].subject : null}
@@ -765,7 +767,7 @@ function TeacherList(props) {
                 />
               </div>
               <div style={{ padding: "12px 30px" }}>
-                <Typography variant="body2" style={{ marginBottom: "3px" }}>Kelas</Typography>
+                <Typography variant="body2" color="primary" style={{ marginBottom: "3px" }}>Kelas</Typography>
                 <Autocomplete
                   multiple
                   value={selectedValues[dialogData._id] ? selectedValues[dialogData._id].class : null}
@@ -802,7 +804,10 @@ function TeacherList(props) {
                 <div style={{ display: "flex", alignItems: "center", padding: "15px 30px 15px 5px" }}>
                   <Button
                     variant="contained"
-                    className={classes.editClassButton}
+                    className={classes.saveButton}
+                    onClick={() => {
+                      handleSave(dialogData._id);
+                    }}
                   >
                     Simpan
                   </Button>
@@ -904,7 +909,7 @@ function TeacherList(props) {
                     <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
                       <Grid container spacing={4}>
                         <Grid item xs={12}>
-                          <Typography variant="body1">Mata Pelajaran</Typography>
+                          <Typography variant="body1" color="primary">Mata Pelajaran</Typography>
                           <Autocomplete
                             multiple
                             value={selectedValues[row._id] ? selectedValues[row._id].subject : null}
@@ -929,7 +934,7 @@ function TeacherList(props) {
                           />
                         </Grid>
                         <Grid item xs={12}>
-                          <Typography variant="body1">Kelas</Typography>
+                          <Typography variant="body1" color="primary">Kelas</Typography>
                           <Autocomplete
                             multiple
                             value={selectedValues[row._id] ? selectedValues[row._id].class : null}
@@ -945,7 +950,6 @@ function TeacherList(props) {
                                 {...params}
                                 variant="outlined"
                                 size="small"
-                                // fullWidth
                                 style={{ border: "none" }}
                               // TODO error helpertext
                               // error={errors.mata_pelajaran}
@@ -963,13 +967,12 @@ function TeacherList(props) {
                           >
                             <Button
                               className={classes.saveButton}
-                              size="small"
                               onClick={() => {
                                 handleSave(row._id);
                                 handleCloseSuntingDialog();
                               }}
                             >
-                              SIMPAN
+                              Simpan
                             </Button>
                           </Grid>
                         </Grid>
