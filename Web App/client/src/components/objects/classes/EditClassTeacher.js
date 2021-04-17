@@ -94,7 +94,7 @@ function EditClassTeacher(props) {
   }, []);
 
   /* 
-    bentuk isi:
+    isi:
     {
       <id guru>: {
         name: <nama guru>,
@@ -108,7 +108,7 @@ function EditClassTeacher(props) {
   const [statusWali, setStatusWali] = React.useState(null);
 
   /* 
-    bentuk isi:
+    isi:
     {
       <id kelas>: [<id guru wali 1>, <id guru wali 2>, ...], -> array kosong jika kelas ini tidak memiliki wali kelas
       ...
@@ -119,7 +119,7 @@ function EditClassTeacher(props) {
   const [statusKelas, setStatusKelas] = React.useState(null);
 
   /*
-    bentuk isi:
+    isi:
     {
       <id kelas>: <id guru wali kelas>, -> undefined jika kelas ini tidak memiliki wali kelas
       ...

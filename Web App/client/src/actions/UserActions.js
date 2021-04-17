@@ -14,6 +14,7 @@ import {
   GET_PENDING_STUDENTS,
   GET_PENDING_TEACHERS,
   // SET_DROPBOX_TOKEN,
+  GET_SUCCESS_RESPONSE
 } from "./Types";
 
 // Register User
@@ -54,6 +55,10 @@ export const updateUserData = (userData, userId, history) => (dispatch) => {
       const decoded = jwt_decode(token);
       // Set current user
       dispatch(setCurrentUser(decoded));
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: null
+      });
     })
     .catch((err) => {
       console.log("jancuk la");

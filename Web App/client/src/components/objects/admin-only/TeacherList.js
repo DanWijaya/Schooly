@@ -3,9 +3,11 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 // import moment from "moment";
-import { getTeachers } from "../../../actions/UserActions";
+import { getTeachers, updateUserData } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllClass } from "../../../actions/ClassActions";
+import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
 
 // import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -29,6 +31,8 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
+  Button,
+  Snackbar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -41,6 +45,8 @@ import { GoSearch } from "react-icons/go";
 import { BiSitemap } from "react-icons/bi";
 import ClearIcon from "@material-ui/icons/Clear";
 import { Autocomplete }from '@material-ui/lab';
+import MuiAlert from "@material-ui/lab/Alert";
+// FIXME import
 
 function createData(
   _id,
@@ -106,29 +112,7 @@ function TeacherListToolbar(props) {
       disablePadding: false,
       label: "Email",
     },
-    // {
-    //   id: "author",
-    //   numeric: false,
-    //   disablePadding: false,
-    //   label: "Pemberi Materi",
-    // },
-    // {
-    //   id: "createdAt",
-    //   numeric: false,
-    //   disablePadding: false,
-    //   label: "Waktu Dibuat",
-    // },
-    // {
-    //   id: "class_assigned",
-    //   numeric: false,
-    //   disablePadding: false,
-    //   label: "Kelas yang diberikan",
-    // },
   ];
-
-  // if (role === "Student") {
-  //   headCells.pop();
-  // }
 
   // Sort Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -302,31 +286,6 @@ function TeacherListToolbar(props) {
             }}
           />
         </Hidden>
-        {/* <Hidden mdUp implementation="css">
-          {role === "Student" ? null : (
-            <LightTooltip title="Buat Materi">
-              <Link to="/buat-materi">
-                <Fab size="small" className={classes.newMaterialButton}>
-                  <MenuBookIcon className={classes.newMaterialIconMobile} />
-                </Fab>
-              </Link>
-            </LightTooltip>
-          )}
-        </Hidden> */}
-        {/* <Hidden smDown implementation="css">
-          {role === "Student" ? null : (
-            <Link to="/buat-materi">
-              <Fab
-                size="medium"
-                variant="extended"
-                className={classes.newMaterialButton}
-              >
-                <MenuBookIcon className={classes.newMaterialIconDesktop} />
-                Buat Materi
-              </Fab>
-            </Link>
-          )}
-        </Hidden> */}
         <LightTooltip title="Urutkan Guru">
           <IconButton
             onClick={handleOpenSortMenu}
@@ -506,35 +465,21 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
     },
     padding: "6px 16px"
-  }
+  },
+  saveButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    marginLeft: "10px",
+    height: "80%",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.dark,
+    },
+  },
 }));
 
 // FIXME TeacherList
 function TeacherList(props) {
   const classes = useStyles();
-
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("name");
-
-  // const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [selectedMaterialId, setSelectedMaterialId] = React.useState(null);
-  const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
-  const [searchFilter, updateSearchFilter] = React.useState("");
-  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
-
-  // FIXME selectedValues
-  /* 
-    isi:
-    {
-      <id guru>: {
-        subject: [<id mata pelajaran 1>, <id mata pelajaran 2>, ...],
-        class: [<id kelas 1>, <id kelas 2>, ...],
-      },
-      ...
-
-    } key -> id semua guru yang ada di db
-  */
-  const [selectedValues, setSelectedValues] = React.useState({});
 
   const {
     getAllSubjects,
@@ -542,6 +487,7 @@ function TeacherList(props) {
     // deleteMaterial,
     getAllClass,
     getTeachers,
+    updateUserData
   } = props;
   // const { all_materials, selectedMaterials } = props.materialsCollection;
   // const { all_classes_map } = props.classesCollection;
@@ -549,7 +495,10 @@ function TeacherList(props) {
   const { user, all_teachers } = props.auth;
   // const { all_subjects_map } = props.subjectsCollection;
   const { all_subjects } = props.subjectsCollection;
+  const errors = props.errors;
+  const success = props.success;
 
+  const all_teacher_obj = React.useRef({});
   // FIXME sumber bug potensial
   // const rowsRef = React.useRef([]);
   const [rows, setRows] = React.useState([]);
@@ -570,6 +519,7 @@ function TeacherList(props) {
   //   );
   // };
 
+  // FIXME useeffects
   React.useEffect(() => {
     window.scrollTo(0, 0);
     // getAllSubjects("map");
@@ -578,28 +528,32 @@ function TeacherList(props) {
     getAllClass();
     // getTeachers("map");
     getTeachers();
-
-    // if (user.role === "Teacher") {
-    //   getMaterial(user._id, "by_author");
-    // } else {
-    //   // for student
-    //   getMaterial(user.kelas, "by_class");
-    // }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
     if (
       all_teachers
     ) {
-      setRows(
+      let tempRows = [];
+      let tempSelectedValues = {};
+      // setRows(
         all_teachers
           .filter((item) =>
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )
           // .forEach((data) => teacherRowItem(data));
-          .map((data) => createData(data))
-      )
+          .forEach((data) => {
+            tempRows.push(createData(data._id, data.name, data.email));
+            tempSelectedValues[data._id] = {
+              subject: [],
+              class: []
+            };
+            all_teacher_obj.current[data._id] = data;
+          })
+        setRows(tempRows);
+        setSelectedValues(tempSelectedValues);
+         
+      // )
       // setRows(rowsRef.current);
     }
   }, [all_teachers]);
@@ -615,77 +569,116 @@ function TeacherList(props) {
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )
           // .forEach((data) => teacherRowItem(data))
-          .map((data) => createData(data))
+          .map((data) => createData(data._id, data.name, data.email))
       )
       // setRows(rowsRef.current);
     }
   }, [searchFilter]);
 
-  // console.log(all_teachers);
-  // const retrieveTeachers = () => {
-  //   rows = [];
+  React.useEffect(() => {
+    return () => {
+      clearErrors()
+      clearSuccess()    
+    }
+  }, [])
 
-  //   if (user.role === "Admin") {
-  //     all_materials
-  //       .filter((item) =>
-  //         item.name.toLowerCase().includes(searchFilter.toLowerCase())
-  //       )
-  //       .map((data) => teacherRowItem(data));
-  //     // all_materials.map(data =>  teacherRowItem(data))
-  //   } else {
-  //     if (selectedMaterials.length) {
-  //       selectedMaterials
-  //         .filter((item) =>
-  //           item.name.toLowerCase().includes(searchFilter.toLowerCase())
-  //         )
-  //         .map((data) => teacherRowItem(data));
-  //       // selectedMaterials.map(data => teacherRowItem(data))
-  //     }
-  //   }
-  // };
+  React.useEffect(() => {
+    if (errors && (errors.constructor === Object) && (Object.keys(errors).length !== 0)) {
+      handleOpenSnackbar(
+        "error",
+        "Nilai harus berupa angka dan tidak boleh kurang dari 0"
+      );
+    }
+  }, [errors])
 
-  const handleRequestSort = (event, property) => {
+  React.useEffect(() => {
+    if (success) {
+
+    }
+  }, [success])
+
+  // SORT
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("name");
+  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
+
+  function handleRequestSort(event, property) {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
-  const handleChangeSubject = (value) => {
-    console.log("123")
+  // SNACKBAR
+  const [snackbarContent, setSnackbarContent] = React.useState("");
+  const [severity, setSeverity] = React.useState("info");
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
+  function handleOpenSnackbar(severity, content) {
+    setOpenSnackbar(true);
+    setSeverity(severity);
+    setSnackbarContent(content);
   }
-  // Call the function to view the Materials on tablerows.
-  // This function is defined above.
-  // retrieveMaterials();
 
-  // const onDeleteMaterial = (id) => {
-  //   deleteMaterial(id);
-  // };
+  function handleCloseSnackbar(event, reason) {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  }
 
-  // Delete Dialog
-  // const handleOpenDeleteDialog = (e, id, name) => {
-  //   e.stopPropagation();
-  //   setOpenDeleteDialog(true);
-  //   setSelectedMaterialId(id);
-  //   setSelectedMaterialName(name);
-  // };
+  // AUTOCOMPLETE: untuk memilih subject yang diajar dan kelas yang diajar tiap guru  
+  /* 
+    isi:
+    {
+      <id guru>: {
+        subject: [<id mata pelajaran 1>, <id mata pelajaran 2>, ...],
+        class: [<id kelas 1>, <id kelas 2>, ...],
+      },
+      ...
 
-  // const handleCloseDeleteDialog = () => {
-  //   setOpenDeleteDialog(false);
-  // };
+    } key -> id semua guru yang ada di db
+  */
+  const [selectedValues, setSelectedValues] = React.useState({});
+
+  function handleChangeSubject(selectedSubjectsInfo, teacherId) {
+    setSelectedValues({...selectedValues, [teacherId]: {
+      ...selectedValues[teacherId],
+      subject: selectedSubjectsInfo
+    }})
+    // console.log("handleChangeSubject")
+  }
+
+  function handleChangeClass(selectedClassInfo, teacherId) {
+    setSelectedValues({...selectedValues, [teacherId]: {
+      ...selectedValues[teacherId],
+      class: selectedClassInfo
+    }})
+    // console.log("handleChangeClass")
+  }
+
+  // FIXME handleSave
+  function handleSave(teacherId) {
+    let teacher = selectedValues[teacherId];
+    let tempClassToSubject = {};
+    for (let subject of teacher.subject) {
+      // akan diubah di waktu mendatang
+      tempClassToSubject[subject] = teacher.class;
+    }
+    let newTeacherData = {
+      ...all_teacher_obj.current[teacherId],
+      subject_teached: teacher.subject,
+      class_teached: teacher.class,
+      class_to_subject: tempClassToSubject
+    }
+    updateUserData(newTeacherData, teacherId)
+    // console.log("handleSave")
+  }
 
   document.title = "Schooly | Daftar Guru";
 
   return (
     <div className={classes.root}>
-      {/* <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Materi"
-        itemName={selectedMaterialName}
-        deleteItem={() => {
-          onDeleteMaterial(selectedMaterialId);
-        }}
-      /> */}
       <TeacherListToolbar
         // role={user.role}
         // deleteMaterial={deleteMaterial}
@@ -709,10 +702,9 @@ function TeacherList(props) {
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
-            // let viewpage = `/materi/${row._id}`;
+
             return (
               <Grid item>
-                {/* {user.role === "Teacher" ? ( */}
                   <ExpansionPanel button variant="outlined" defaultExpanded>
                     <ExpansionPanelSummary
                       className={classes.teacherPanelSummary}
@@ -747,9 +739,6 @@ function TeacherList(props) {
                                 ) : (
                                   <Avatar src={`/api/upload/avatar/${row.avatar}`} />
                                 )}
-                                {/* <Avatar className={classes.teacherAvatar}>
-                                  <BiSitemap />
-                                </Avatar> */}
                               </ListItemAvatar>
                               <div>
                                 <Typography variant="h6" color="textPrimary">
@@ -764,65 +753,34 @@ function TeacherList(props) {
                         </Grid>
                         <Hidden smUp implementation="css">
                           <Grid item xs container spacing={1} justify="flex-end">
-                            {/* <Grid item>
-                              <LightTooltip title="Lihat Lebih Lanjut">
-                                <Link to={viewpage}>
-                                  <IconButton
-                                    size="small"
-                                    className={classes.viewMaterialButton}
-                                  >
-                                    <PageviewIcon fontSize="small" />
-                                  </IconButton>
-                                </Link>
-                              </LightTooltip>
-                            </Grid> */}
                             <Grid item>
                               <LightTooltip title="Sunting">
-                                {/* <Link to={`/sunting-materi/${row._id}`}> */}
-                                  <IconButton
-                                    size="small"
-                                    className={classes.editTeacherButton}
-                                  >
-                                    <EditIcon fontSize="small" />
-                                  </IconButton>
-                                {/* </Link> */}
-                              </LightTooltip>
-                            </Grid>
-                            {/* <Grid item>
-                              <LightTooltip title="Hapus">
                                 <IconButton
                                   size="small"
-                                  className={classes.deleteMaterialButton}
-                                  onClick={(e) => {
-                                    handleOpenDeleteDialog(
-                                      e,
-                                      row._id,
-                                      row.materialtitle
-                                    );
-                                  }}
+                                  className={classes.editTeacherButton}
                                 >
-                                  <DeleteIcon fontSize="small" />
+                                  <EditIcon fontSize="small" />
                                 </IconButton>
                               </LightTooltip>
-                            </Grid> */}
+                            </Grid>
                           </Grid>
                         </Hidden>
                       </Grid>
                     </ExpansionPanelSummary>
                     <Divider />
                     <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
-                      <Grid container>
-                        <Grid item xs={6}>
+                      <Grid container spacing={4}>
+                        <Grid item xs={12}>
                           <Typography variant="body1">Mata Pelajaran</Typography>
-                          {/* <Autocomplete
+                          <Autocomplete
                             multiple
-                            id="mata-pelajaran"
+                            // id={}
                             options={all_subjects}
                             getOptionLabel={(option) => option.name}
                             filterSelectedOptions
                             // size="small"
                             onChange={(event, value) => {
-                              handleChangeSubject(value);
+                              handleChangeSubject(value, row._id);
                             }}
                             renderInput={(params) => (
                               <TextField
@@ -831,115 +789,84 @@ function TeacherList(props) {
                                 size="small"
                                 // fullWidth
                                 style={{ border: "none" }}
-                                // TODO
+                                // TODO error helpertext
                                 // error={errors.mata_pelajaran}
                                 // helperText={errors.mata_pelajaran}
                               />
                             )}
-                          /> */}
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Typography variant="body1">Kelas</Typography>
-                        </Grid>
-
-                        {/* <Grid item xs={12}>
-                          <Typography variant="body1">
-                            Kelas yang Diberikan:{" "}
-                            {!all_classes_map.size
-                              ? null
-                              : row.class_assigned.map((kelas, i) => {
-                                if (all_classes_map.get(kelas)) {
-                                  if (i === row.class_assigned.length - 1)
-                                    return `${all_classes_map.get(kelas).name}`;
-                                  return `${all_classes_map.get(kelas).name}, `;
-                                }
-                                return null;
-                              })}
-                          </Typography>
+                          />
                         </Grid>
                         <Grid item xs={12}>
-                          <Typography variant="body1" color="textSecondary">
-                            Waktu Dibuat:{" "}
-                            {moment(row.createdAt)
-                              .locale("id")
-                              .format("DD MMM YYYY, HH.mm")}
-                          </Typography>
-                        </Grid> */}
+                          <Typography variant="body1">Kelas</Typography>
+                          <Autocomplete
+                            multiple
+                            // id="kelas"
+                            options={all_classes}
+                            getOptionLabel={(option) => option.name}
+                            filterSelectedOptions
+                            // size="small"
+                            onChange={(event, value) => {
+                              handleChangeClass(value, row._id);
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                size="small"
+                                // fullWidth
+                                style={{ border: "none" }}
+                                // TODO error helpertext
+                                // error={errors.mata_pelajaran}
+                                // helperText={errors.mata_pelajaran}
+                              />
+                            )}
+                          />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <Grid
+                            container
+                            justify="flex-end"
+                            alignItems="center"
+                            // style={{ marginTop: "25px" }}
+                          >
+                            {/* FIXME handleSave */}
+                            <Button
+                              className={classes.saveButton}
+                              size="small"
+                              onClick={() => {
+                                handleSave(row._id);
+                              }}
+                            >
+                              SIMPAN
+                            </Button>
+                          </Grid>
+                        </Grid>
                       </Grid>
                     </ExpansionPanelDetails>
                   </ExpansionPanel>
-                {/* ) : (
-                    <Link to={viewpage}>
-                      <Paper variant="outlined">
-                        <ListItem
-                          // button
-                          // component="a"
-                          className={classes.listItem}
-                        >
-                          <Hidden smUp implementation="css">
-                            <ListItemText
-                              primary={
-                                <Typography variant="subtitle1" color="textPrimary">
-                                  {row.materialtitle}
-                                </Typography>
-                              }
-                              secondary={
-                                <Typography variant="caption" color="textSecondary">
-                                  {all_subjects_map.get(row.subject)}
-                                </Typography>
-                              }
-                            />
-                          </Hidden>
-                          <Hidden xsDown implementation="css">
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              <ListItemAvatar>
-                                <Avatar className={classes.assignmentLate}>
-                                  <MenuBookIcon />
-                                </Avatar>
-                              </ListItemAvatar>
-                              <ListItemText
-                                primary={
-                                  <Typography variant="h6" color="textPrimary">
-                                    {row.materialtitle}
-                                  </Typography>
-                                }
-                                secondary={
-                                  <Typography variant="body2" color="textSecondary">
-                                    {all_subjects_map.get(row.subject)}
-                                  </Typography>
-                                }
-                              />
-                            </div>
-                          </Hidden>
-                          <ListItemText
-                            align="right"
-                            primary={
-                              <Typography variant="body2" color="textSecondary">
-                                {moment(row.createdAt)
-                                  .locale("id")
-                                  .format("DD MMM YYYY")}
-                              </Typography>
-                            }
-                            secondary={moment(row.createdAt)
-                              .locale("id")
-                              .format("HH.mm")}
-                          />
-                        </ListItem>
-                      </Paper>
-                    </Link>
-                  )} */}
               </Grid>
             );
           })
         )}
       </Grid>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={(event, reason) => {
+          handleCloseSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity={severity}
+          onClose={(event, reason) => {
+            handleCloseSnackbar(event, reason);
+          }}
+        >
+          {snackbarContent}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }
@@ -962,6 +889,7 @@ function TeacherList(props) {
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
+  success: state.success,
   auth: state.auth,
   classesCollection: state.classesCollection,
   // materialsCollection: state.materialsCollection,
@@ -970,11 +898,8 @@ const mapStateToProps = (state) => ({
 
 // parameter 1 : reducer , parameter 2 : actions
 export default connect(mapStateToProps, {
-  // deleteMaterial,
-  // getAllMaterials,
   getAllSubjects,
-  // getMaterial,
   getTeachers,
   getAllClass,
-  // getSelectedClasses,
+  updateUserData
 })(TeacherList);

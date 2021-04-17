@@ -294,9 +294,9 @@ function ReportView(props) {
 
   const [kelas, setKelas] = React.useState("");
 
-  console.log(all_subjects)
+  // console.log(all_subjects)
 
-  console.log(kelas.walikelas)
+  // console.log(kelas.walikelas)
 
   React.useEffect(() => {
     console.log(selectedUser.kelas)

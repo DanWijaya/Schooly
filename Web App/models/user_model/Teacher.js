@@ -8,7 +8,7 @@ const Teacher = User.discriminator(
   new mongoose.Schema({
     subject_teached: { 
       type: [ObjectId],
-      required: true
+      // required: true
     },
     class_teached: {
       type: [ObjectId],
