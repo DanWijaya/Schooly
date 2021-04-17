@@ -30,6 +30,7 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
+  Dialog,
   Avatar,
   Button,
   Snackbar,
@@ -43,6 +44,7 @@ import SortIcon from "@material-ui/icons/Sort";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { GoSearch } from "react-icons/go";
 import { BiSitemap } from "react-icons/bi";
+import CloseIcon from "@material-ui/icons/Close";
 import ClearIcon from "@material-ui/icons/Clear";
 import { Autocomplete }from '@material-ui/lab';
 import MuiAlert from "@material-ui/lab/Alert";
@@ -473,6 +475,26 @@ const useStyles = makeStyles((theme) => ({
     height: "80%",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.dark,
+    }
+  },
+  editClassButton: {
+    // width: "100%",
+    // marginTop: "20px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      color: theme.palette.primary.main,
+      backgroundColor: "white",
+    },
+  },
+  cancelButton: {
+    // width: "100%",
+    // marginTop: "20px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.main,
     },
   },
 }));
@@ -480,6 +502,26 @@ const useStyles = makeStyles((theme) => ({
 // FIXME TeacherList
 function TeacherList(props) {
   const classes = useStyles();
+
+  // const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [selectedMaterialId, setSelectedMaterialId] = React.useState(null);
+  const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
+
+  const [openSuntingDialog, setOpenSuntingDialog] = React.useState(false);
+  const [dialogData, setDialogData] = React.useState(null);
+
+  // FIXME selectedValues
+  /* 
+    isi:
+    {
+      <id guru>: {
+        subject: [<id mata pelajaran 1>, <id mata pelajaran 2>, ...],
+        class: [<id kelas 1>, <id kelas 2>, ...],
+      },
+      ...
+
+    } key -> id semua guru yang ada di db
+  */
 
   const {
     getAllSubjects,
@@ -675,10 +717,146 @@ function TeacherList(props) {
     // console.log("handleSave")
   }
 
+  const handleClickOpenSuntingDialog = (data) => {
+    setDialogData(data)
+    setOpenSuntingDialog(true);
+  };
+
+  const handleCloseSuntingDialog  = () => {
+    setOpenSuntingDialog(false);
+  };
+
   document.title = "Schooly | Daftar Guru";
 
   return (
     <div className={classes.root}>
+      {/* <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Materi"
+        itemName={selectedMaterialName}
+        deleteItem={() => {
+          onDeleteMaterial(selectedMaterialId);
+        }}
+      /> */}
+      {(dialogData) ?
+        <Hidden smUp>
+          <Dialog 
+            onClose={handleCloseSuntingDialog} 
+            open={openSuntingDialog} 
+            // fullWidth
+          >
+            <div style={{ width: "450px", maxWidth: "100%", minHeight: "420px" }}>
+              <div
+                style={{ display: "flex", margin: "20px 23px 0 0px", justifyContent: "flex-end", alignItems: "flex-end" }}
+              >
+                <IconButton size="small" onClick={handleCloseSuntingDialog}>
+                  <CloseIcon />
+                </IconButton>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  padding: "5px 30px 20px 30px",
+                  alignItems: "center"
+                }}
+              >
+                <ListItemAvatar>
+                  {!dialogData.avatar ? (
+                    <Avatar />
+                  ) : (
+                    <Avatar src={`/api/upload/avatar/${dialogData.avatar}`} />
+                  )}
+                  {/* <Avatar className={classes.teacherAvatar}>
+                    <BiSitemap />
+                  </Avatar> */}
+                </ListItemAvatar>
+                <div>
+                  <Typography variant="h6" color="textPrimary">
+                    {dialogData.name}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {dialogData.email}
+                  </Typography>
+                </div>
+              </div>
+              <div style={{padding: "12px 30px"}}>
+                <Typography variant="body2" style={{marginBottom: "3px"}}>Mata Pelajaran</Typography>
+                <Autocomplete
+                  multiple
+                  id="mata-pelajaran"
+                  options={all_subjects}
+                  // getOptionLabel={(option) => option.name}
+                  filterSelectedOptions
+                  // size="small"
+                  onChange={(event, value) => {
+                    handleChangeSubject(value);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      size="small"
+                      // fullWidth
+                      style={{ border: "none" }}
+                      // TODO
+                      // error={errors.mata_pelajaran}
+                      // helperText={errors.mata_pelajaran}
+                    />
+                  )}
+                />
+              </div>
+              <div style={{padding: "12px 30px"}}>
+                <Typography variant="body2" style={{marginBottom: "3px"}}>Kelas</Typography>
+                <Autocomplete
+                  multiple
+                  id="mata-pelajaran"
+                  options={all_subjects}
+                  // getOptionLabel={(option) => option.name}
+                  filterSelectedOptions
+                  // size="small"
+                  onChange={(event, value) => {
+                    handleChangeSubject(value);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      size="small"
+                      // fullWidth
+                      style={{ border: "none" }}
+                      // TODO
+                      // error={errors.mata_pelajaran}
+                      // helperText={errors.mata_pelajaran}
+                    />
+                  )}
+                />
+              </div>
+              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }} className={classes.content}>
+                <div style={{ display: "flex", alignItems: "center", padding: "4px" }}>            
+                  <Button
+                    variant="contained"
+                    className={classes.cancelButton}
+                    onClick={() => handleCloseSuntingDialog()}
+                  >
+                    Batal
+                  </Button>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", padding: "15px 30px 15px 5px"}}>
+                  <Button
+                    variant="contained"
+                    className={classes.editClassButton}
+                  >
+                    Simpan
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Dialog>
+        </Hidden>
+      : null
+      }
       <TeacherListToolbar
         // role={user.role}
         // deleteMaterial={deleteMaterial}
@@ -705,6 +883,8 @@ function TeacherList(props) {
 
             return (
               <Grid item>
+                {/* {user.role === "Teacher" ? ( */}
+                <Hidden xsDown>
                   <ExpansionPanel button variant="outlined" defaultExpanded>
                     <ExpansionPanelSummary
                       className={classes.teacherPanelSummary}
@@ -845,6 +1025,173 @@ function TeacherList(props) {
                       </Grid>
                     </ExpansionPanelDetails>
                   </ExpansionPanel>
+                </Hidden>
+                <Hidden smUp>
+                  <ExpansionPanel button variant="outlined" expanded={false}>
+                    <ExpansionPanelSummary
+                      className={classes.teacherPanelSummary}
+                    >
+                      <Grid
+                        container
+                        spacing={1}
+                        justify="space-between"
+                        alignItems="center"
+                      >
+                        <Grid item>
+                          <Hidden smUp implementation="css">
+                            <Typography variant="subtitle1" id={labelId}>
+                              {row.name}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {row.email}
+                            </Typography>
+                          </Hidden>
+                          <Hidden xsDown implementation="css">
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              <ListItemAvatar>
+                                {!row.avatar ? (
+                                  <Avatar />
+                                ) : (
+                                  <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                                )}
+                                {/* <Avatar className={classes.teacherAvatar}>
+                                  <BiSitemap />
+                                </Avatar> */}
+                              </ListItemAvatar>
+                              <div>
+                                <Typography variant="h6" color="textPrimary">
+                                  {row.name}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                  {row.email}
+                                </Typography>
+                              </div>
+                            </div>
+                          </Hidden>
+                        </Grid>
+                        <Grid item xs container spacing={1} justify="flex-end">
+                          {/* <Grid item>
+                            <LightTooltip title="Lihat Lebih Lanjut">
+                              <Link to={viewpage}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.viewMaterialButton}
+                                >
+                                  <PageviewIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid> */}
+                          <Grid item>
+                            <LightTooltip title="Sunting">
+                              {/* <Link to={`/sunting-materi/${row._id}`}> */}
+                                <IconButton
+                                  size="small"
+                                  className={classes.editTeacherButton}
+                                  onClick={() => handleClickOpenSuntingDialog(row)}
+                                >
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                              {/* </Link> */}
+                            </LightTooltip>
+                          </Grid>
+                          {/* <Grid item>
+                            <LightTooltip title="Hapus">
+                              <IconButton
+                                size="small"
+                                className={classes.deleteMaterialButton}
+                                onClick={(e) => {
+                                  handleOpenDeleteDialog(
+                                    e,
+                                    row._id,
+                                    row.materialtitle
+                                  );
+                                }}
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </LightTooltip>
+                          </Grid> */}
+                        </Grid>
+                      </Grid>
+                    </ExpansionPanelSummary>
+                    <Divider />
+                  </ExpansionPanel>
+                </Hidden>
+                {/* ) : (
+                    <Link to={viewpage}>
+                      <Paper variant="outlined">
+                        <ListItem
+                          // button
+                          // component="a"
+                          className={classes.listItem}
+                        >
+                          <Hidden smUp implementation="css">
+                            <ListItemText
+                              primary={
+                                <Typography variant="subtitle1" color="textPrimary">
+                                  {row.materialtitle}
+                                </Typography>
+                              }
+                              secondary={
+                                <Typography variant="caption" color="textSecondary">
+                                  {all_subjects_map.get(row.subject)}
+                                </Typography>
+                              }
+                            />
+                          </Hidden>
+                          <Hidden xsDown implementation="css">
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              <ListItemAvatar>
+                                <Avatar className={classes.assignmentLate}>
+                                  <MenuBookIcon />
+                                </Avatar>
+                              </ListItemAvatar>
+                              <ListItemText
+                                primary={
+                                  <Typography variant="h6" color="textPrimary">
+                                    {row.materialtitle}
+                                  </Typography>
+                                }
+                                secondary={
+                                  <Typography variant="body2" color="textSecondary">
+                                    {all_subjects_map.get(row.subject)}
+                                  </Typography>
+                                }
+                              />
+                            </div>
+                          </Hidden>
+                          <ListItemText
+                            align="right"
+                            primary={
+                              <Typography variant="body2" color="textSecondary">
+                                {moment(row.createdAt)
+                                  .locale("id")
+                                  .format("DD MMM YYYY")}
+                              </Typography>
+                            }
+                            secondary={moment(row.createdAt)
+                              .locale("id")
+                              .format("HH.mm")}
+                          />
+                        </ListItem>
+                      </Paper>
+                    </Link>
+                  )} */}
               </Grid>
             );
           })
