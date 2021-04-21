@@ -558,6 +558,10 @@ function TeacherList(props) {
     }
   }, [all_teachers, all_subjects, all_classes]);
 
+  // SEARCH
+  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
+
   React.useEffect(() => {
     if (all_teachers) {
       setRows(
@@ -570,12 +574,7 @@ function TeacherList(props) {
     }
   }, [searchFilter]);
 
-
-  // SEARCH
-  const [searchFilter, updateSearchFilter] = React.useState("");
-  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
-
-
+  
   // SORT
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
