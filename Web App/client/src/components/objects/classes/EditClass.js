@@ -165,9 +165,10 @@ class EditClass extends Component {
     ) {
       let all_walikelas = new Set(all_classes.map((cls) => cls.walikelas));
       all_walikelas.delete(kelas.walikelas);
-      let teacher_options = all_teachers.filter(
+      let teacher_options = [{ _id: null, name: 'Kosong' }];
+      teacher_options = teacher_options.concat(all_teachers.filter(
         (teacher) => !all_walikelas.has(teacher._id)
-      );
+      ));
 
       this.setState({
         name: kelas.name,
@@ -323,7 +324,18 @@ class EditClass extends Component {
                             this.onChange(event, "walikelas");
                           }}
                         >
-                          {showValue(teacher_options, "teacher")}
+                          {(this.state.teacher_options !== null) ? (
+                            this.state.teacher_options.map((teacherInfo) => (<MenuItem key={teacherInfo._id} value={teacherInfo._id}>
+                              {(teacherInfo._id !== null)
+                                ? teacherInfo.name
+                                : <em>{teacherInfo.name}</em>
+                              }
+                            </MenuItem>
+                            ))
+                          ) : (
+                            null
+                          )}
+                          {/* {showValue(teacher_options, "teacher")} */}
                         </Select>
                         <FormHelperText>
 

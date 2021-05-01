@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
-import { createClass } from "../../../actions/ClassActions";
+import { createClass, getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers } from "../../../actions/UserActions";
 import {
@@ -56,6 +56,7 @@ class CreateClass extends Component {
       walikelas: {},
       ukuran: 0,
       openUploadDialog: null,
+      teacherOptions: null
       // errors: {},
     };
   }
@@ -63,6 +64,21 @@ class CreateClass extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.success && !prevProps.success) {
       this.handleOpenUploadDialog();
+    }
+
+    if (prevState.teacherOptions === null) {
+      let all_classes = this.props.classesCollection.all_classes;
+      let all_teachers = this.props.auth.all_teachers;
+      if (all_classes && Array.isArray(all_classes) && all_classes.length !== 0 &&
+        all_teachers && Array.isArray(all_teachers) && all_teachers.length !== 0) {
+
+        let all_walikelas = new Set(all_classes.map((cls) => cls.walikelas));
+        let teacherOptions = all_teachers.filter(
+          (teacher) => !all_walikelas.has(teacher._id)
+        );
+
+        this.setState({ teacherOptions });
+      }
     }
   };
 
@@ -118,6 +134,7 @@ class CreateClass extends Component {
   componentDidMount() {
     this.props.getTeachers();
     this.props.getAllSubjects();
+    this.props.getAllClass();
   }
 
   componentWillUnmount() {
@@ -197,13 +214,15 @@ class CreateClass extends Component {
                         this.onChange(event, "walikelas");
                       }}
                     >
-                      {Array.isArray(all_teachers)
-                        ? all_teachers.map((walikelas) => (
-                            <MenuItem value={walikelas}>
-                              {walikelas.name}
-                            </MenuItem>
-                          ))
-                        : null}
+                      {(this.state.teacherOptions !== null) ? (
+                        this.state.teacherOptions.map((teacherInfo) => (
+                          <MenuItem key={teacherInfo._id} value={teacherInfo._id}>
+                            {teacherInfo.name}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        null
+                      )}
                     </Select>
                     <FormHelperText error>
                       {Boolean(errors.walikelas) ? errors.walikelas : null}
@@ -313,6 +332,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   success: state.success,
   subjectsCollection: state.subjectsCollection,
+  classesCollection: state.classesCollection
 });
 
 export default connect(mapStateToProps, {
@@ -320,5 +340,6 @@ export default connect(mapStateToProps, {
   getTeachers,
   getAllSubjects,
   clearErrors,
-  clearSuccess
+  clearSuccess,
+  getAllClass
 })(withStyles(styles)(CreateClass));
