@@ -222,12 +222,14 @@ class CreateAnnouncement extends Component {
         let all_classes_obj = {};
 
         if (this.props.auth.user.role === "Teacher") {
-          // perlu dicek karena hanya guru yang memiliki atribut yang berisi kelas-kelas yand diajar
+          // perlu dicek karena hanya guru yang memiliki atribut yang berisi kelas-kelas yang diajar
           
           this.props.classesCollection.all_classes.forEach((classInfo) => {
             all_classes_obj[classInfo._id] = classInfo.name; 
           });
 
+          // NOTE dengan ini, jika guru tidak mengajar kelas yang diwalikannya, 
+          // guru tidak dapat membuat pengumuman untuk kelas walinya tersebut
           newClassOptions = this.props.auth.user.class_teached.map((classId) => {
             return { _id: classId, name: all_classes_obj[classId] };
           })

@@ -39,7 +39,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import ClearIcon from "@material-ui/icons/Clear";
 import { Autocomplete }from '@material-ui/lab';
 import MuiAlert from "@material-ui/lab/Alert";
-// FIXME import
 
 function createData(
   _id,
@@ -336,7 +335,6 @@ function TeacherListToolbar(props) {
 //   rowCount: PropTypes.number.isRequired,
 // };
 
-// FIXME makeStyles
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
@@ -491,7 +489,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// FIXME TeacherList
 function TeacherList(props) {
   const classes = useStyles();
 
@@ -638,8 +635,8 @@ function TeacherList(props) {
     isi:
     {
       <id guru>: {
-        subject: [<id mata pelajaran 1>, <id mata pelajaran 2>, ...],
-        class: [<id kelas 1>, <id kelas 2>, ...],
+        subject: [<info mata pelajaran 1>, <info mata pelajaran 2>, ...],
+        class: [<info kelas 1>, <info kelas 2>, ...],
       },
       ...
 

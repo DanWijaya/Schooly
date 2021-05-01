@@ -207,7 +207,6 @@ class CreateMaterial extends Component {
       openDeleteDialog: null,
       anchorEl: null,
       // sortFlag: false
-      // FIXME state
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
       allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
@@ -243,7 +242,6 @@ class CreateMaterial extends Component {
     this.setState({ openDeleteDialog: false });
   };
 
-  // FIXME onchange
   onChange = (e, otherfield) => {
     // console.log("On change:", e.target.value);
     // console.log(Array.from(this.state.fileLampiran));
@@ -325,7 +323,6 @@ class CreateMaterial extends Component {
     this.props.createMaterial(formData, materialData, this.props.history);
   };
 
-  // FIXME didupdate
   componentDidUpdate(prevProps, prevState) {
     if (!this.props.errors && this.props.errors !== prevProps.errors) {
       this.handleOpenUploadDialog();
@@ -576,7 +573,6 @@ class CreateMaterial extends Component {
                             this.onChange(event, "subject");
                           }}
                         >
-                          {/* FIXME textfield matpel */}
                           {(this.state.subjectOptions !== null) ? (
                             this.state.subjectOptions.map((subject) => (
                               <MenuItem key={subject._id} value={subject._id}>
@@ -629,7 +625,6 @@ class CreateMaterial extends Component {
                             </div>
                           )}
                         >
-                          {/* FIXME chip kelas */}
                           {(this.state.classOptions !== null) ? (
                             this.state.classOptions.map((classInfo) => (
                               <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
