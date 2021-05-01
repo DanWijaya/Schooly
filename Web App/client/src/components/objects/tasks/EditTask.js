@@ -8,6 +8,7 @@ import classnames from "classnames";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getOneTask, updateTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { refreshTeacher } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions"
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -234,6 +235,7 @@ class EditTask extends Component {
     this.props.getOneTask(this.props.match.params.id);
     this.props.getAllClass();
     this.props.getAllSubjects();
+    this.props.refreshTeacher(this.props.auth.user._id);
   }
 
   componentWillUnmount(){
@@ -268,7 +270,7 @@ class EditTask extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.classOptions === null) {
+    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       const selectedTaskProps = this.props.tasksCollection;
 
       if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
@@ -291,7 +293,7 @@ class EditTask extends Component {
       }
     }
 
-    if (prevState.subjectOptions === null) {
+    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       const selectedTaskProps = this.props.tasksCollection;
 
       if ( this.props.subjectsCollection.all_subjects && ( this.props.subjectsCollection.all_subjects.length !== 0) &&
@@ -883,5 +885,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-    mapStateToProps, { getOneTask, updateTask, getAllClass, getAllSubjects, clearErrors, clearSuccess }
+    mapStateToProps, { getOneTask, updateTask, getAllClass, getAllSubjects, clearErrors, clearSuccess, refreshTeacher }
 ) (withStyles(styles)(EditTask))

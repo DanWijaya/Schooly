@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { createAnnouncement } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
+import { refreshTeacher } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -215,7 +216,7 @@ class CreateAnnouncement extends Component {
       this.handleOpenUploadDialog();
     }
 
-    if (prevState.classOptions === null) {
+    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
 
         let newClassOptions;
@@ -250,9 +251,13 @@ class CreateAnnouncement extends Component {
   componentDidMount() {
     window.scrollTo(0, 0);
     const { user } = this.props.auth;
-    const { getAllClass, setCurrentClass } = this.props;
+    const { getAllClass, setCurrentClass, refreshTeacher } = this.props;
     getAllClass();
-    if (user.role === "Student") setCurrentClass(user.kelas);
+    if (user.role === "Student") {
+      setCurrentClass(user.kelas);
+    } else if (user.role === "Teacher") {
+      refreshTeacher(user._id);
+    }
   }
 
   componentWillUnmount() {
@@ -686,4 +691,5 @@ export default connect(mapStateToProps, {
   getAllClass,
   setCurrentClass,
   clearErrors,
+  refreshTeacher
 })(withStyles(styles)(CreateAnnouncement));

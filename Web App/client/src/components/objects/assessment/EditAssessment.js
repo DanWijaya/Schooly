@@ -10,6 +10,7 @@ import {
 } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { refreshTeacher } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -309,11 +310,12 @@ class EditAssessment extends Component {
 
   componentDidMount(){
     window.scrollTo(0, 0);
-    const { getOneAssessment, getAllClass, getAllSubjects, handleSideDrawerExist} = this.props;
+    const { getOneAssessment, getAllClass, getAllSubjects, handleSideDrawerExist, refreshTeacher } = this.props;
     handleSideDrawerExist(false)
     getAllClass()
     getOneAssessment(this.props.match.params.id)
     getAllSubjects()
+    refreshTeacher(this.props.auth.user._id);
   }
 
   componentWillUnmount() {
@@ -1053,7 +1055,7 @@ class EditAssessment extends Component {
       this.handleOpenUploadDialog();
     }
 
-    if (prevState.classOptions === null) {
+    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       const selectedAssessmentProps = this.props.assessmentsCollection.selectedAssessments;
 
       if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
@@ -1076,7 +1078,7 @@ class EditAssessment extends Component {
       }
     }
 
-    if (prevState.subjectOptions === null) {
+    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       const selectedAssessmentProps = this.props.assessmentsCollection.selectedAssessments;
 
       if ( this.props.subjectsCollection.all_subjects && ( this.props.subjectsCollection.all_subjects.length !== 0) &&
@@ -2042,4 +2044,5 @@ export default connect(mapStateToProps, {
   getAllSubjects,
   updateAssessment,
   clearErrors,
+  refreshTeacher
 })(withStyles(styles)(React.memo(EditAssessment)));

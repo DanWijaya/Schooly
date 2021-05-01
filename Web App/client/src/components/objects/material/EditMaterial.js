@@ -9,6 +9,7 @@ import { getOneMaterial } from "../../../actions/MaterialActions";
 import { updateMaterial} from "../../../actions/MaterialActions"
 import { clearErrors } from "../../../actions/ErrorActions"
 import { clearSuccess } from "../../../actions/SuccessActions"
+import { refreshTeacher } from "../../../actions/UserActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -221,11 +222,12 @@ class EditMaterial extends Component {
 
   componentDidMount() {
     window.scrollTo(0, 0);
-    const { getAllClass, getAllSubjects, getOneMaterial } = this.props;
+    const { getAllClass, getAllSubjects, getOneMaterial, refreshTeacher } = this.props;
 
     getAllClass();
     getOneMaterial(this.props.match.params.id);
     getAllSubjects();
+    refreshTeacher(this.props.auth.user._id);
   }
 
   componentWillUnmount(){
@@ -260,7 +262,7 @@ class EditMaterial extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.classOptions === null) {
+    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       const selectedMaterialProps = this.props.materialsCollection.selectedMaterials;
 
       if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
@@ -283,7 +285,7 @@ class EditMaterial extends Component {
       }
     }
 
-    if (prevState.subjectOptions === null) {
+    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       const selectedMaterialProps = this.props.materialsCollection.selectedMaterials;
 
       if ( this.props.subjectsCollection.all_subjects && ( this.props.subjectsCollection.all_subjects.length !== 0) &&
@@ -844,5 +846,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-    mapStateToProps, { getAllClass, getAllSubjects, clearErrors, getOneMaterial, updateMaterial, clearSuccess }
+  mapStateToProps, { getAllClass, getAllSubjects, clearErrors, getOneMaterial, updateMaterial, clearSuccess, refreshTeacher }
 ) (withStyles(styles)(EditMaterial))

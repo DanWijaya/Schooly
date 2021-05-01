@@ -354,3 +354,14 @@ export const updateTeacher = (data, teacherId) => (dispatch) => {
       });
     });
 };
+
+export const refreshTeacher = (teacherId) => (dispatch) => {
+  axios
+  .get("/api/users/getOneUser/" + teacherId)
+  .then((res) => {
+    dispatch(setCurrentUser(res.data));
+  })
+  .catch((err) => {
+    console.log(err);
+  });    
+};

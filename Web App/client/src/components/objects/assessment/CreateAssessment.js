@@ -7,6 +7,7 @@ import "date-fns";
 import { createAssessment } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { refreshTeacher } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -882,7 +883,7 @@ class CreateAssessment extends Component {
       this.handleOpenUploadDialog();
     }
 
-    if (prevState.classOptions === null) {
+    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
 
         let all_classes_obj = {};
@@ -898,7 +899,7 @@ class CreateAssessment extends Component {
       } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
     }
 
-    if (prevState.subjectOptions === null) {
+    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       if (this.props.subjectsCollection.all_subjects && (this.props.subjectsCollection.all_subjects.length !== 0)) {
 
         let all_subjects_obj = {};
@@ -917,10 +918,11 @@ class CreateAssessment extends Component {
 
   componentDidMount() {
     window.scrollTo(0, 0);
-    const { getAllClass, getAllSubjects, handleSideDrawerExist } = this.props;
+    const { getAllClass, getAllSubjects, handleSideDrawerExist, refreshTeacher } = this.props;
     handleSideDrawerExist(false);
     getAllClass();
     getAllSubjects();
+    refreshTeacher(this.props.auth.user._id);
   }
 
   handleChangePage = (event, newPage) => {
@@ -1830,4 +1832,5 @@ export default connect(mapStateToProps, {
   createAssessment,
   clearErrors,
   clearSuccess,
+  refreshTeacher
 })(withStyles(styles)(React.memo(CreateAssessment)));

@@ -8,6 +8,7 @@ import {
   updateAnnouncement,
 } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
+import { refreshTeacher } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions"
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -221,11 +222,17 @@ class EditAnnouncement extends Component {
   componentDidMount() {
     window.scrollTo(0, 0);
     const { user } = this.props.auth;
-    const { setCurrentClass, getOneAnnouncement, getAllClass } = this.props;
+    const { setCurrentClass, getOneAnnouncement, getAllClass, refreshTeacher } = this.props;
 
     getOneAnnouncement(this.props.match.params.id);
     getAllClass();
-    if (user.role === "Student") setCurrentClass(user.kelas);
+
+    if (user.role === "Student") {
+      setCurrentClass(user.kelas);
+    } else if (user.role === "Teacher") {
+      refreshTeacher(user._id);
+    }
+
   }
 
   componentWillUnmount(){
@@ -260,7 +267,7 @@ class EditAnnouncement extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.classOptions === null) {
+    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       const selectedAnnouncementProps = this.props.announcements.selectedAnnouncements;
 
       if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
@@ -760,5 +767,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-  mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, getAllClass, clearErrors, clearSuccess }
+  mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, getAllClass, clearErrors, clearSuccess, refreshTeacher }
   )(withStyles(styles)(EditAnnouncement))

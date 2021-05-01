@@ -7,6 +7,7 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { createMaterial } from "../../../actions/MaterialActions";
+import { refreshTeacher } from "../../../actions/UserActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -328,7 +329,7 @@ class CreateMaterial extends Component {
       this.handleOpenUploadDialog();
     }
 
-    if (prevState.classOptions === null) {
+    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
 
         let all_classes_obj = {};
@@ -344,7 +345,7 @@ class CreateMaterial extends Component {
       } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
     }
 
-    if (prevState.subjectOptions === null) {
+    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       if (this.props.subjectsCollection.all_subjects && (this.props.subjectsCollection.all_subjects.length !== 0)) {
 
         let all_subjects_obj = {};
@@ -365,6 +366,7 @@ class CreateMaterial extends Component {
     window.scrollTo(0, 0);
     this.props.getAllClass();
     this.props.getAllSubjects();
+    this.props.refreshTeacher(this.props.auth.user._id);
   }
 
   componentWillUnmount() {
@@ -734,4 +736,5 @@ export default connect(mapStateToProps, {
   createMaterial,
   clearErrors,
   clearSuccess,
+  refreshTeacher
 })(withStyles(styles)(CreateMaterial));

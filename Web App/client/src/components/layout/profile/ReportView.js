@@ -24,7 +24,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import FormControl from "@material-ui/core/FormControl";
 import { Bar } from "react-chartjs-2";
-import { getStudentsByClass, getOneUser } from "../../../actions/UserActions";
+import { getStudentsByClass, getOneUser, refreshTeacher } from "../../../actions/UserActions";
 import { getTasksBySC, getAllTask } from "../../../actions/TaskActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import {
@@ -271,14 +271,9 @@ function ReportView(props) {
     getAllTask,
     tasksCollection,
     getOneUser,
-    setCurrentClass
+    setCurrentClass,
+    refreshTeacher
   } = props;
-
-  React.useEffect(() => {
-    window.scrollTo(0, 0);
-    getOneUser(props.match.params.id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
   const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
@@ -294,9 +289,14 @@ function ReportView(props) {
 
   const [kelas, setKelas] = React.useState("");
 
-  // console.log(all_subjects)
-
-  // console.log(kelas.walikelas)
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+    getOneUser(props.match.params.id);
+    if (user.role === "Teacher") {
+      refreshTeacher(user._id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   React.useEffect(() => {
     console.log(selectedUser.kelas)
@@ -1837,5 +1837,6 @@ export default connect(mapStateToProps, {
   getAllSubjects,
   getAllTask,
   getOneUser,
-  setCurrentClass
+  setCurrentClass,
+  refreshTeacher
 })(ReportView);
