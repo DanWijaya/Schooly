@@ -7,6 +7,7 @@ import moment from "moment";
 import "moment/locale/id";
 import { updateAvatar, getOneUser } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
+import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
 import {
   Avatar,
   Badge,
@@ -35,7 +36,6 @@ import PhoneIcon from "@material-ui/icons/Phone";
 import WcIcon from "@material-ui/icons/Wc";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
-import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   profileDataItemAvatar: {
-    backgroundColor: "#00b7ff",
+    backgroundColor: "#00b7ffg",
   },
   buttonRapor: {
     backgroundColor: theme.palette.warning.main,
@@ -172,22 +172,21 @@ function ProfileView(props) {
 
   const { user, selectedUser } = props.auth;
   const { setCurrentClass, classesCollection, getFileAvatar, getOneUser } = props;
-
+  const [avatar, setAvatar] = React.useState(null);
   const [namakelas, setNamaKelas] = React.useState("");
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
-    getOneUser(props.match.params.id);
+    getOneUser(props.match.params.id).then((selectedUser) => {
+      if (selectedUser.role === "Student") {
+        setCurrentClass(selectedUser.kelas)
+      }
+      getFileAvatar(selectedUser._id)
+        .then((result) => setAvatar(result))
+        .catch((err) => console.log(err));
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  React.useEffect(() => {
-    if (selectedUser.role === "Student") {
-      setCurrentClass(selectedUser.kelas)
-    }
-  }, [selectedUser]);
-
-  console.log(selectedUser)
 
   React.useEffect(() => {
     setNamaKelas(classesCollection.kelas.name);
@@ -199,7 +198,6 @@ function ProfileView(props) {
   // }
 
   const {
-    avatar,
     name,
     role,
     viewable_section,
@@ -217,7 +215,7 @@ function ProfileView(props) {
     _id,
     tanggal_lahir,
   } = selectedUser;
-  document.title = `Schooly | ${selectedUser.name}`;
+  document.title = selectedUser.name ? `Schooly | ${selectedUser.name}` : "Schooly";
 
   return (
     <div className={classes.root}>
@@ -423,6 +421,6 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(mapStateToProps, { updateAvatar, setCurrentClass, getFileAvatar,getOneUser })(
+export default connect(mapStateToProps, { updateAvatar, setCurrentClass, getFileAvatar,getOneUser, getFileAvatar })(
   ProfileView
 );

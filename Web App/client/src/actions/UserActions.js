@@ -204,7 +204,7 @@ export const getTeachers = (data = "array") => (dispatch) => {
 };
 
 export const getOneUser = (userId) => (dispatch) => {
-  axios
+  return axios
     .get("/api/users/getOneUser/" + userId)
     .then((res) => {
       console.log(res.data);
@@ -212,6 +212,7 @@ export const getOneUser = (userId) => (dispatch) => {
         type: GET_ONE_USER,
         payload: res.data,
       });
+      return res.data;
     })
     .catch((err) => {
       console.log("Error in getting one user");
