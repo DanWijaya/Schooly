@@ -335,7 +335,7 @@ function ListTester(props) {
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
 
   //props.auth.user
-  //props.auth.all_teachers
+  //props.auth.all_teachers_map
   const {
     getAllSubjects,
     getMaterial,
@@ -345,7 +345,7 @@ function ListTester(props) {
   } = props;
   const { all_materials, selectedMaterials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
-  const { user, all_teachers } = props.auth;
+  const { user, all_teachers_map } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
   const materialRowItem = (data) => {
     rows.push(
@@ -353,9 +353,9 @@ function ListTester(props) {
         data._id,
         data.name,
         data.subject,
-        !all_teachers.size || !all_teachers.get(data.author_id)
+        !all_teachers_map.size || !all_teachers_map.get(data.author_id)
           ? {}
-          : all_teachers.get(data.author_id),
+          : all_teachers_map.get(data.author_id),
         data.class_assigned
       )
     );

@@ -527,7 +527,7 @@ function MaterialList(props) {
   } = props;
   const { all_materials, selectedMaterials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
-  const { user, all_teachers } = props.auth;
+  const { user, all_teachers_map } = props.auth;
 
   const { all_subjects_map } = props.subjectsCollection;
 
@@ -537,9 +537,9 @@ function MaterialList(props) {
         data._id,
         data.name,
         data.subject,
-        !all_teachers.size || !all_teachers.get(data.author_id)
+        !all_teachers_map.size || !all_teachers_map.get(data.author_id)
           ? {}
-          : all_teachers.get(data.author_id),
+          : all_teachers_map.get(data.author_id),
         data.class_assigned,
         data.createdAt
       )
@@ -560,7 +560,7 @@ function MaterialList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(all_teachers);
+  console.log(all_teachers_map);
   const retrieveMaterials = () => {
     // If all_materials is not undefined or an empty array
     rows = [];

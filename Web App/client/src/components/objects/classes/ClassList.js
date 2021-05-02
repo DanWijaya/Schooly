@@ -87,10 +87,10 @@ function stableSort(array, comparator) {
 
 function ClassListToolbar(props) {
   const { classes, user, order, orderBy, onRequestSort, searchFilter, updateSearchFilter, searchBarFocus, setSearchBarFocus} = props;
-  const { all_students, all_teachers } = props;
+  const { all_students, all_teachers_map } = props;
   const { getStudents, handleOpenSnackbar } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
-  // const all_classes = Array.from(all_classes_map.values());
+
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -137,7 +137,7 @@ function ClassListToolbar(props) {
   };
 
   const handleClickExport = () => {
-    if (!all_students || !all_teachers || !all_classes_map) {
+    if (!all_students || !all_teachers_map || !all_classes_map) {
       return;
     }
 
@@ -250,8 +250,8 @@ function ClassListToolbar(props) {
   const handleImportCSV = (event) => {
     event.preventDefault();
     invalidEmails.current = []; // digunakan untuk menampilkan semua email murid yang tidak ditemukan di database
-    // if (!all_students || !all_teachers || !all_classes_map || !tasksCollection || !all_assessments) {
-    if (!all_students || !all_teachers || !all_classes_map) {
+    // if (!all_students || !all_teachers_map || !all_classes_map || !tasksCollection || !all_assessments) {
+    if (!all_students || !all_teachers_map || !all_classes_map) {
       return;
     }
 
@@ -521,7 +521,7 @@ function ClassListToolbar(props) {
                         id="searchFilterMobile"
                         onClick={(e) => {
                           e.stopPropagation();
-                          onClear(e, "searchFilterMobile");
+                          onClear(e);
                         }}
                         style={{
                           opacity: 0.5,
@@ -584,7 +584,7 @@ function ClassListToolbar(props) {
                     size="small"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onClear(e, "searchFilterDesktop");
+                      onClear(e);
                     }}
                     style={{
                       opacity: 0.5,
@@ -869,7 +869,6 @@ function ClassList(props) {
   const [selectedClassName, setSelectedClassName] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
-
   const { classesCollection, tasksCollection } = props;
   const {
     clearErrors,
@@ -880,10 +879,8 @@ function ClassList(props) {
     getAllTask,
     getAllAssessments,
   } = props;
-  // const {updateClassAdmin, updateStudentsClass} = props;
 
-  const { user, all_teachers, all_students } = props.auth;
-  // const { all_classes_map } = props.classesCollection;
+  const { user, all_teachers_map, all_students } = props.auth;
   const { all_assessments } = props.assessmentsCollection;
 
   console.log(classesCollection);
@@ -904,9 +901,9 @@ function ClassList(props) {
       createData(
         data._id,
         data.name,
-        !all_teachers.size || !all_teachers.get(data.walikelas)
+        !all_teachers_map.size || !all_teachers_map.get(data.walikelas)
           ? null
-          : all_teachers.get(data.walikelas).name,
+          : all_teachers_map.get(data.walikelas).name,
         temp_ukuran,
         !data.nihil ? "Nihil" : "Tidak Nihil"
       )
@@ -915,7 +912,6 @@ function ClassList(props) {
   React.useEffect(() => {
     getAllClass();
     getAllClass("map");
-    getTeachers();
     getTeachers("map");
     getStudents();
     getAllTask();
@@ -932,7 +928,7 @@ function ClassList(props) {
 
   console.log(classesCollection);
 
-  console.log(all_teachers);
+  console.log(all_teachers_map);
   const retrieveClasses = () => {
     if (classesCollection.all_classes.length > 0) {
       rows = [];
@@ -1019,7 +1015,7 @@ function ClassList(props) {
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
         classesCollection={classesCollection}
-        all_teachers={all_teachers}
+        all_teachers_map={all_teachers_map}
         all_students={all_students}
         getStudents={getStudents}
         handleOpenSnackbar={handleOpenSnackbar}

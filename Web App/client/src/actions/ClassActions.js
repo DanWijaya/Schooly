@@ -123,7 +123,8 @@ export const deleteClass = (classId) => (dispatch) => {
 
 export const setCurrentClass = (classId) => (dispatch) => {
   // console.log("set current class is runned")
-  axios
+  // sebelumnya tidak ada return
+  return axios
     .get("/api/classes/setCurrentClass/" + classId)
     .then((res) => {
       // console.log("Class to be edited");
@@ -133,7 +134,7 @@ export const setCurrentClass = (classId) => (dispatch) => {
         payload: res.data,
       });
       console.log("setCurrentClass completed");
-      // res.send(classData);
+      return res.data;
     })
     .catch((err) => {
       console.log(classId);

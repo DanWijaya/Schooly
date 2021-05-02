@@ -682,7 +682,6 @@ class Dashboard extends Component {
     getAllTask(); // actions yang membuat GET request ke Database.
     getAllSubjects();
     getAllSubjects("map"); // untuk dapatin subject"nya gitu
-
     // const { all_subjects_map } = this.props.subjectsCollection
     // let subjectArray = Object.keys(all_subjects_map)
 

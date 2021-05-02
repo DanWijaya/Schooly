@@ -91,8 +91,6 @@ const AssessmentSchema = new Schema(
     submissions: {
       type: Map,
     },
-
-    
     type: {
       type: String,
       required: true,

@@ -9,6 +9,7 @@ import {
   GET_USERS,
   GET_ALL_STUDENTS,
   GET_ALL_TEACHERS,
+  GET_ALL_TEACHERS_MAP,
   GET_ONE_USER,
   GET_STUDENTS_BY_CLASS,
   GET_PENDING_STUDENTS,
@@ -173,7 +174,7 @@ export const getStudents = () => (dispatch) => {
 
 export const getTeachers = (data = "array") => (dispatch) => {
   // console.log('getTeacher start')
-  axios
+  return axios
     .get("/api/users/getteachers")
     .then((res) => {
       // console.log(res.data)
@@ -181,16 +182,21 @@ export const getTeachers = (data = "array") => (dispatch) => {
         let temp = new Map();
         res.data.map((teacher) => temp.set(teacher._id, teacher));
         dispatch({
-          type: GET_ALL_TEACHERS,
+          // type: GET_ALL_TEACHERS,
+          type: GET_ALL_TEACHERS_MAP,
           payload: temp,
         });
+        console.log("getTeacher completed");
+        return temp;
       } else {
         dispatch({
           type: GET_ALL_TEACHERS,
           payload: res.data,
         });
+        console.log("getTeacher completed");
+        return res.data
       }
-      console.log("getTeacher completed");
+      
     })
     .catch((err) => {
       console.log("Error in getting all Teachers");

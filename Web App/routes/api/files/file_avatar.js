@@ -249,7 +249,8 @@ router.get("/by_user/:id", (req, res) => {
 router.get("/multi_user", (req,res) => {
   // req.body is in list. 
   let { id_list } = req.query;
-  id_list = id_list.map((id) => ObjectId(id))
+  console.log(id_list)
+  id_list = id_list.map((id) => ObjectId(String(id)))
   FileAvatar.find({ user_id: {$in: id_list}}, (err, avatars) => {
     if(!avatars) {
       return res.status(400).json("Users not found");
