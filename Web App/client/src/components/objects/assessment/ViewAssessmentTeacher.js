@@ -167,7 +167,7 @@ function ViewAssessmentTeacher(props) {
 
   console.log(selectedAssessments);
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    
     getOneAssessment(assessment_id);
     getAllClass("map");
     getAllSubjects("map");

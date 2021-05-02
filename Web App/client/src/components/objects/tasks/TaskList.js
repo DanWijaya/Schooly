@@ -547,7 +547,7 @@ function TaskList(props) {
 
   React.useEffect(
     () => {
-      window.scrollTo(0, 0);
+      
       getAllTask();
       getAllClass("map");
       getAllSubjects("map");

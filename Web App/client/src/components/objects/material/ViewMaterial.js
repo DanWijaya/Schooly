@@ -241,7 +241,7 @@ function ViewMaterial(props) {
 
   console.log(props.materialsFiles);
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    
     getAllSubjects("map"); // this will get the selectedMaterials.
     getOneMaterial(materi_id);
     getAllClass("map");

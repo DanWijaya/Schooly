@@ -500,7 +500,7 @@ function TeacherList(props) {
   const [rows, setRows] = React.useState([]);
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    
     // getAllSubjects("map");
     getAllSubjects();
     // getAllClass("map");

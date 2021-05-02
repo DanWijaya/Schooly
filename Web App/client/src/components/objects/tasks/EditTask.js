@@ -234,7 +234,7 @@ class EditTask extends Component {
   tugasUploader = React.createRef(null);
 
   componentDidMount() {
-    window.scrollTo(0, 0);
+    
     const { id } = this.props.match.params;
     this.props.getOneTask(id);
     this.props.getAllClass();

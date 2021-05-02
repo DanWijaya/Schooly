@@ -83,6 +83,8 @@ import Tester from "./prototypes/Tester";
 import CSV from "./prototypes/contoh-tugas/CSV";
 import Graph from "./prototypes/Graph";
 import Timer from "./prototypes/Timer";
+import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
+import { Fragment } from "react";
 
 //Dropbox
 // import DropboxConnect from "./components/dropbox/DropboxConnect";
@@ -156,13 +158,17 @@ class App extends Component {
   handleNavbar = (showBool) => {
     this.setState({ showNavBar: showBool });
   };
+  
   render() {
     console.log(localStorage.getItem(`status`));
+    ;
     return (
       <div>
         <Provider store={store}>
           <ThemeProvider theme={globalStyles}>
             <Router>
+            {/* <Fragment> */}
+              <ScrollToTop/>
               <div style={{ display: "flex" }}>
                 {this.state.showProgressIndicator ? (
                   <ProgressIndicator/>

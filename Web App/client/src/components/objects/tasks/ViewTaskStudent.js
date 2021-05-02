@@ -539,7 +539,7 @@ function ViewTaskStudent(props) {
   // This page is only for student later on, so for now put the user.role logic condition
   // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
   useEffect(() => {
-    window.scrollTo(0, 0);
+    
     // getTaskFilesByUser(user._id, tugasId)
     getFileSubmitTasks(tugasId, user._id).then((results) =>
       setFileTugas(results)

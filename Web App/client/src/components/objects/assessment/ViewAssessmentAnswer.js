@@ -289,7 +289,7 @@ function ViewAssessmentTeacher(props) {
   // const [value, setValue] = React.useState(1); //dev
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    
     getOneAssessment(assessment_id);
     getAllClass("map");
     getAllSubjects("map");

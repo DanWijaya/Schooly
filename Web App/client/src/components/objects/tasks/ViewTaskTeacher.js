@@ -238,7 +238,7 @@ function ViewTaskTeacher(props) {
   const [disableButton, setDisableButton] = React.useState(true);
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    
     getOneTask(task_id);
     getAllClass("map");
     getAllSubjects("map");

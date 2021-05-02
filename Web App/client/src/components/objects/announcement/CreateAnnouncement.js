@@ -220,7 +220,7 @@ class CreateAnnouncement extends Component {
   }
 
   componentDidMount() {
-    window.scrollTo(0, 0);
+    
     const { user } = this.props.auth;
     const { getAllClass, setCurrentClass } = this.props;
     getAllClass();

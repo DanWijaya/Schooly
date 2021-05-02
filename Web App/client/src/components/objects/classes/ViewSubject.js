@@ -484,7 +484,7 @@ function ViewSubject(props) {
   });
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    
     if (user.role === "Student") {
       getMaterial(user.kelas, "by_class");
     }

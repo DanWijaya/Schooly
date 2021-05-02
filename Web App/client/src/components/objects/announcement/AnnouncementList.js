@@ -1266,7 +1266,7 @@ function AnnouncementList(props) {
   };
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    
   }, [])
 
   React.useEffect(() => {

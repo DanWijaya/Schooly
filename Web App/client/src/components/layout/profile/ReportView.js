@@ -274,7 +274,7 @@ function ReportView(props) {
   } = props;
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    
     getOneUser(props.match.params.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

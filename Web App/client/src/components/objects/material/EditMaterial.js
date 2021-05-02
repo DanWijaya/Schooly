@@ -225,7 +225,7 @@ class EditMaterial extends Component {
   lampiranUploader = React.createRef(null);
 
   componentDidMount() {
-    window.scrollTo(0, 0);
+    
     const {
       getAllClass,
       getAllSubjects,

@@ -249,7 +249,7 @@ function Profile(props) {
   }
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    
   }, [])
   
 

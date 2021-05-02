@@ -388,7 +388,7 @@ function ViewAssessmentStudent(props) {
 
   // nanti pas onSubmit, akan ngeclear localStorage.removeItem("remainingTime");
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    
     getAllSubjects("map");
     getAllClass("map");
     getFileAssessment(id).then((result) => setLampiranUrls(result))

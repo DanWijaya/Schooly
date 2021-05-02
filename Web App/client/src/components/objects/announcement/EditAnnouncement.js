@@ -222,7 +222,7 @@ class EditAnnouncement extends Component {
   uploadedLampiran = React.createRef(null);
 
   componentDidMount() {
-    window.scrollTo(0, 0);
+    
     const { user } = this.props.auth;
     const {
       setCurrentClass,

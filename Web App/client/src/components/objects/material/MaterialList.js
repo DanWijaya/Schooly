@@ -547,7 +547,7 @@ function MaterialList(props) {
   };
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    // 
     getAllSubjects("map");
     getAllClass("map");
     getTeachers("map");

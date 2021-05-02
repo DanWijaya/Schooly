@@ -235,7 +235,7 @@ function ViewAnnouncement(props) {
   const announcement_id = props.match.params.id;
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    
   }, [])
 
   React.useEffect(() => {

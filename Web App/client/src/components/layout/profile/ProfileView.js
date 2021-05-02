@@ -176,7 +176,7 @@ function ProfileView(props) {
   const [namakelas, setNamaKelas] = React.useState("");
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    
     getOneUser(props.match.params.id).then((selectedUser) => {
       if (selectedUser.role === "Student") {
         setCurrentClass(selectedUser.kelas)

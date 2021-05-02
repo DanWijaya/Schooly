@@ -343,7 +343,7 @@ function SubmittedTaskList(props) {
   };
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    
     getOneTask(task_id);
     getStudents();
     getAllClass();
