@@ -167,7 +167,6 @@ class App extends Component {
         <Provider store={store}>
           <ThemeProvider theme={globalStyles}>
             <Router>
-            {/* <Fragment> */}
               <ScrollToTop/>
               <div style={{ display: "flex" }}>
                 {this.state.showProgressIndicator ? (

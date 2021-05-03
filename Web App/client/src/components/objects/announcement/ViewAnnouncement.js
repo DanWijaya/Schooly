@@ -382,8 +382,7 @@ function ViewAnnouncement(props) {
                   {selectedAnnouncements.description}
                 </Typography>
               </Grid>
-              {!selectedAnnouncements.lampiran ||
-                selectedAnnouncements.lampiran.length === 0 ? null : (
+              {!fileLampiran.length === 0 ? null : (
                   <Grid item xs={12} style={{ marginTop: "15px" }}>
                     <Typography color="textSecondary" gutterBottom>
                       Lampiran Berkas:
