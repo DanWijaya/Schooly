@@ -52,6 +52,5 @@ export const deleteAnnouncement = (id, file_to_delete, current_file) => {
     file_to_delete: file_to_delete,
     current_file: current_file,
   };
-
   return axios.delete(`/api/files/announcements/${id}`, { data: data });
 };
