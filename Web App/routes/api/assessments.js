@@ -316,58 +316,57 @@ router.post("/submit/:id", (req, res) => {
         }
 
         // if (!grades.has(userId)) {
-          let studentId = userId; //agar sebagian kode bisa direuse di updateGrade
+        let studentId = userId; //agar sebagian kode bisa direuse di updateGrade
 
-          let weights = assessmentData.question_weight;
-          let point_accumulator = 0;
-          let weight_accumulator = 0;
-          for (let i = 0; i < questions.length; i++) {
-            // answers.length sudah dipastikan sama dengan questions.length di ViewAssessmentStudent.js
-            // answers[i] adalah jawaban murid untuk pertanyaan ke-(i + 1), misal answer[0] adalah jawaban murid untuk pertanyaan pertama.
-            // questions[i].answer adalah kunci jawaban untuk pertanyaan ke-(i + 1).
-            // answers dan questions[i].answer adalah array of array
-            if (questions[i].type === "radio") {
-              if (questions[i].answer[0] === answers[i][0]) {
-                point_accumulator += 1 * weights.radio;
+        let weights = assessmentData.question_weight;
+        let point_accumulator = 0;
+        let weight_accumulator = 0;
+        for (let i = 0; i < questions.length; i++) {
+          // answers.length sudah dipastikan sama dengan questions.length di ViewAssessmentStudent.js
+          // answers[i] adalah jawaban murid untuk pertanyaan ke-(i + 1), misal answer[0] adalah jawaban murid untuk pertanyaan pertama.
+          // questions[i].answer adalah kunci jawaban untuk pertanyaan ke-(i + 1).
+          // answers dan questions[i].answer adalah array of array
+          if (questions[i].type === "radio") {
+            if (questions[i].answer[0] === answers[i][0]) {
+              point_accumulator += 1 * weights.radio;
+            }
+            weight_accumulator += 1 * weights.radio;
+          } else if (questions[i].type === "checkbox") {
+            let temp_correct = 0;
+            answers[i].forEach((student_answer) => {
+              if (questions[i].answer.includes(student_answer)) {
+                temp_correct = temp_correct + 1;
+              } else {
+                temp_correct = temp_correct - 2;
               }
-              weight_accumulator += 1 * weights.radio;
-            } else if (questions[i].type === "checkbox") {
-              let temp_correct = 0;
-              answers[i].forEach((student_answer) => {
-                if (questions[i].answer.includes(student_answer)) {
-                  temp_correct = temp_correct + 1;
-                } else {
-                  temp_correct = temp_correct - 2;
-                }
-              });
-              weight_accumulator += 1 * weights.checkbox;
+            });
+            weight_accumulator += 1 * weights.checkbox;
 
-              if (temp_correct > 0) {
-                // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
-                // karena itu, questions[i].answer.length pasti tidak 0
-                point_accumulator +=
-                  (weights.checkbox * temp_correct) /
-                  questions[i].answer.length;
-              }
-            } else if (questions[i].type === "shorttext") {
-              let temp_correct = 0;
-              for (let j = 0; j < questions[i].answer.length; j++) {
-                if (answers[i][j] === questions[i].answer[j]) {
-                  temp_correct++;
-                }
-              }
+            if (temp_correct > 0) {
               // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
               // karena itu, questions[i].answer.length pasti tidak 0
-              weight_accumulator += 1 * weights.shorttext;
               point_accumulator +=
-                (weights.shorttext * temp_correct) / questions[i].answer.length;
+                (weights.checkbox * temp_correct) / questions[i].answer.length;
             }
+          } else if (questions[i].type === "shorttext") {
+            let temp_correct = 0;
+            for (let j = 0; j < questions[i].answer.length; j++) {
+              if (answers[i][j] === questions[i].answer[j]) {
+                temp_correct++;
+              }
+            }
+            // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
+            // karena itu, questions[i].answer.length pasti tidak 0
+            weight_accumulator += 1 * weights.shorttext;
+            point_accumulator +=
+              (weights.shorttext * temp_correct) / questions[i].answer.length;
           }
-          let score = (100 * point_accumulator) / weight_accumulator;
-          grades.set(studentId, {
-            total_grade: parseFloat(score.toFixed(1)),
-            longtext_grades: null,
-          });
+        }
+        let score = (100 * point_accumulator) / weight_accumulator;
+        grades.set(studentId, {
+          total_grade: parseFloat(score.toFixed(1)),
+          longtext_grades: null,
+        });
         // }
 
         assessmentData.grades = grades;

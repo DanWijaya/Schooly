@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -171,20 +171,24 @@ function ProfileView(props) {
   const classes = useStyles();
 
   const { user, selectedUser } = props.auth;
-  const { setCurrentClass, classesCollection, getFileAvatar, getOneUser } = props;
+  const {
+    setCurrentClass,
+    classesCollection,
+    getFileAvatar,
+    getOneUser,
+  } = props;
   const [avatar, setAvatar] = React.useState(null);
   const [namakelas, setNamaKelas] = React.useState("");
 
   React.useEffect(() => {
-    
     getOneUser(props.match.params.id).then((selectedUser) => {
       if (selectedUser.role === "Student") {
-        setCurrentClass(selectedUser.kelas)
+        setCurrentClass(selectedUser.kelas);
       }
       getFileAvatar(selectedUser._id)
         .then((result) => setAvatar(result))
         .catch((err) => console.log(err));
-    })
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -215,7 +219,9 @@ function ProfileView(props) {
     _id,
     tanggal_lahir,
   } = selectedUser;
-  document.title = selectedUser.name ? `Schooly | ${selectedUser.name}` : "Schooly";
+  document.title = selectedUser.name
+    ? `Schooly | ${selectedUser.name}`
+    : "Schooly";
 
   return (
     <div className={classes.root}>
@@ -421,6 +427,10 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(mapStateToProps, { updateAvatar, setCurrentClass, getFileAvatar,getOneUser, getFileAvatar })(
-  ProfileView
-);
+export default connect(mapStateToProps, {
+  updateAvatar,
+  setCurrentClass,
+  getFileAvatar,
+  getOneUser,
+  getFileAvatar,
+})(ProfileView);

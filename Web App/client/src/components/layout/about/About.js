@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
     color: "white",
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     marginTop: "10px",
     marginBottom: "10px",
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "20px",
   },
@@ -62,19 +62,19 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   centerImage: {
-    display: "flex", 
-    justifyContent: "center"
+    display: "flex",
+    justifyContent: "center",
   },
   imageSize: {
-    [theme.breakpoints.down('xs')]: {
-      maxWidth: "60%", 
-      maxHeight: "60%"
+    [theme.breakpoints.down("xs")]: {
+      maxWidth: "60%",
+      maxHeight: "60%",
     },
-    [theme.breakpoints.up('sm')]: {
-      maxWidth: "100%", 
-      maxHeight: "100%"
+    [theme.breakpoints.up("sm")]: {
+      maxWidth: "100%",
+      maxHeight: "100%",
     },
-  }
+  },
 }));
 
 function About(props) {
@@ -82,7 +82,6 @@ function About(props) {
   const { handleMarginTopValue } = props;
 
   useEffect(() => {
-    
     handleMarginTopValue(0);
     return () => {
       handleMarginTopValue(20);
@@ -143,15 +142,21 @@ function About(props) {
             </Grid>
           </Grid>
           <Hidden xsDown>
-            <Grid item container spacing={5} justify="center" alignItems="center">
+            <Grid
+              item
+              container
+              spacing={5}
+              justify="center"
+              alignItems="center"
+            >
               <Grid item xs={12} sm={6}>
                 <Typography variant="h4" color="primary" gutterBottom>
                   Akses dengan mudah
                 </Typography>
                 <Typography variant="h6">
-                  Akses merupakan salah satu hal yang paling penting dalam sebuah
-                  aplikasi. Schooly dibuat sebagai aplikasi web sehingga bisa
-                  diakses perangkat apa saja dengan mudah.
+                  Akses merupakan salah satu hal yang paling penting dalam
+                  sebuah aplikasi. Schooly dibuat sebagai aplikasi web sehingga
+                  bisa diakses perangkat apa saja dengan mudah.
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6} className={classes.centerImage}>
@@ -164,7 +169,13 @@ function About(props) {
             </Grid>
           </Hidden>
           <Hidden smUp>
-            <Grid item container spacing={5} justify="center" alignItems="center">
+            <Grid
+              item
+              container
+              spacing={5}
+              justify="center"
+              alignItems="center"
+            >
               <Grid item xs={12} sm={6} className={classes.centerImage}>
                 <img
                   alt="Schooly Feature 2"
@@ -177,9 +188,9 @@ function About(props) {
                   Akses dengan mudah
                 </Typography>
                 <Typography variant="h6">
-                  Akses merupakan salah satu hal yang paling penting dalam sebuah
-                  aplikasi. Schooly dibuat sebagai aplikasi web sehingga bisa
-                  diakses perangkat apa saja dengan mudah.
+                  Akses merupakan salah satu hal yang paling penting dalam
+                  sebuah aplikasi. Schooly dibuat sebagai aplikasi web sehingga
+                  bisa diakses perangkat apa saja dengan mudah.
                 </Typography>
               </Grid>
             </Grid>
@@ -188,7 +199,7 @@ function About(props) {
             <Grid item xs={12} sm={6} className={classes.centerImage}>
               <img
                 alt="Schooly Feature 3"
-                src={schoolyFeature3} 
+                src={schoolyFeature3}
                 className={classes.imageSize}
               />
             </Grid>

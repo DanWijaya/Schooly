@@ -43,8 +43,8 @@ const AnnoucementSchema = new Schema(
     // value: "Student" / "Teacher" / "Teacher_Student"
     to: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   { timestamps: true }
 );

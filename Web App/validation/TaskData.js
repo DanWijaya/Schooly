@@ -35,7 +35,7 @@ module.exports = function validateTaskInput(data) {
   if (Validator.isEmpty(data.deadline)) {
     errors.deadline = "Batas waktu belum diisi";
   }
-  console.log("Class assigned: ", data.class_assigned)
+  console.log("Class assigned: ", data.class_assigned);
   if (!data.class_assigned.length) {
     errors.class_assigned = "Kelas yang ditujukan belum diisi";
   }

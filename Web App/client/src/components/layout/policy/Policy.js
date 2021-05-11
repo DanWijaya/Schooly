@@ -5,7 +5,6 @@ function Policy(props) {
   const { handleMarginTopValue } = props;
 
   useEffect(() => {
-    
     handleMarginTopValue(0);
     return () => {
       handleMarginTopValue(20);

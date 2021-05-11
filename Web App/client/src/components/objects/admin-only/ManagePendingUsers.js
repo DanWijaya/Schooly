@@ -41,7 +41,7 @@ import SortIcon from "@material-ui/icons/Sort";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
-import RecentActorsIcon from '@material-ui/icons/RecentActors';
+import RecentActorsIcon from "@material-ui/icons/RecentActors";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(
@@ -177,7 +177,9 @@ const ManageUsersToolbar = (props) => {
       <div
         style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
       >
-        <Typography variant="h5" style={{marginRight: "8px"}}>{heading}</Typography>
+        <Typography variant="h5" style={{ marginRight: "8px" }}>
+          {heading}
+        </Typography>
         {currentCheckboxMode && rowCount !== 0 ? (
           listCheckbox.length === 0 ? (
             <IconButton size="small" onClick={() => selectAllData(role)}>
@@ -218,10 +220,11 @@ const ManageUsersToolbar = (props) => {
                         : () => deactivateCheckboxMode("Student")
                     }
                   >
-                    {!currentCheckboxMode 
-                      ? <CheckBoxIcon />
-                      : <RecentActorsIcon />
-                    }
+                    {!currentCheckboxMode ? (
+                      <CheckBoxIcon />
+                    ) : (
+                      <RecentActorsIcon />
+                    )}
                   </IconButton>
                 </LightTooltip>
                 <LightTooltip title="Urutkan Akun">
@@ -312,10 +315,11 @@ const ManageUsersToolbar = (props) => {
                         : () => deactivateCheckboxMode("Teacher")
                     }
                   >
-                    {!currentCheckboxMode 
-                      ? <CheckBoxIcon />
-                      : <RecentActorsIcon />
-                    }
+                    {!currentCheckboxMode ? (
+                      <CheckBoxIcon />
+                    ) : (
+                      <RecentActorsIcon />
+                    )}
                   </IconButton>
                 </LightTooltip>
                 <LightTooltip title="Urutkan Akun">
@@ -403,7 +407,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -421,7 +425,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0px",
-    minHeight: "unset"
+    minHeight: "unset",
   },
   profileApproveButton: {
     backgroundColor: theme.palette.success.main,
@@ -446,7 +450,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "15px",
     flexDirection: "column",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   dialogApproveButton: {
     width: "125px",
@@ -519,10 +523,10 @@ const useStyles = makeStyles((theme) => ({
   },
   titleName: {
     marginTop: "10px",
-    textOverflow: "ellipsis", 
-    overflow: "hidden", 
-    whiteSpace: "nowrap", 
-  }
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+  },
 }));
 
 function ManageUsers(props) {
@@ -816,7 +820,6 @@ function ManageUsers(props) {
   };
 
   React.useEffect(() => {
-    
     getPendingStudents();
     getPendingTeachers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -906,31 +909,20 @@ function ManageUsers(props) {
   function ApproveDialog() {
     return (
       <Dialog open={openApproveDialog} onClose={handleCloseApproveDialog}>
-        <Grid
-          container
-          className={classes.dialogBox}
-        >
+        <Grid container className={classes.dialogBox}>
           <Typography variant="h6" gutterBottom>
             Aktifkan pengguna berikut?
           </Typography>
-          <Grid
-            item
-            xs={10}
-          >
-            <Typography 
-              align="center" 
+          <Grid item xs={10}>
+            <Typography
+              align="center"
               gutterBottom
               className={classes.titleName}
             >
               <b>{selectedUserName}</b>
             </Typography>
           </Grid>
-          <Grid
-            container
-            spacing={2}
-            justify="center"
-            alignItems="center"
-          >
+          <Grid container spacing={2} justify="center" alignItems="center">
             <Grid item>
               <Button
                 onClick={() => {
@@ -966,10 +958,7 @@ function ManageUsers(props) {
               open={openApproveCheckboxDialogStudent}
               onClose={() => handleCloseCheckboxApproveDialog("Student")}
             >
-              <Grid
-                container
-                className={classes.dialogBox}
-              >
+              <Grid container className={classes.dialogBox}>
                 <Typography variant="h6" gutterBottom align="center">
                   Aktifkan semua pengguna berikut?
                 </Typography>
@@ -1014,10 +1003,7 @@ function ManageUsers(props) {
               open={openApproveCheckboxDialogTeacher}
               onClose={() => handleCloseCheckboxApproveDialog("Teacher")}
             >
-              <Grid
-                container
-                className={classes.dialogBox}
-              >
+              <Grid container className={classes.dialogBox}>
                 <Typography variant="h6" gutterBottom align="center">
                   Aktifkan semua pengguna berikut?
                 </Typography>
@@ -1058,19 +1044,11 @@ function ManageUsers(props) {
             open={openDeleteCheckboxDialogStudent}
             onClose={() => handleCloseCheckboxDeleteDialog("Student")}
           >
-            <Grid
-              container
-              className={classes.dialogBox}
-            >
+            <Grid container className={classes.dialogBox}>
               <Typography variant="h6" gutterBottom align="center">
                 Hapus semua pengguna berikut?
               </Typography>
-              <Grid
-                container
-                spacing={2}
-                justify="center"
-                alignItems="center"
-              >
+              <Grid container spacing={2} justify="center" alignItems="center">
                 <Grid item>
                   <Button
                     onClick={() => {
@@ -1099,19 +1077,11 @@ function ManageUsers(props) {
             open={openDeleteCheckboxDialogTeacher}
             onClose={() => handleCloseCheckboxDeleteDialog("Teacher")}
           >
-            <Grid
-              container
-              className={classes.dialogBox}
-            >
+            <Grid container className={classes.dialogBox}>
               <Typography variant="h6" gutterBottom align="center">
                 Hapus semua pengguna berikut?
               </Typography>
-              <Grid
-                container
-                spacing={2}
-                justify="center"
-                alignItems="center"
-              >
+              <Grid container spacing={2} justify="center" alignItems="center">
                 <Grid item>
                   <Button
                     onClick={() => {
@@ -1153,7 +1123,14 @@ function ManageUsers(props) {
           onDeleteUser(selectedUserId);
         }}
       />
-      <div style={{display: "flex", alignItems: "center", justifyContent: "center", minHeight: "46.5px"}}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "46.5px",
+        }}
+      >
         <Typography variant="h4" align="center">
           Daftar Pengguna Tertunda
         </Typography>
@@ -1185,7 +1162,7 @@ function ManageUsers(props) {
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
       />
-      <Divider variant="inset" className={classes.subTitleDivider}/>
+      <Divider variant="inset" className={classes.subTitleDivider} />
       <Grid
         container
         direction="column"
@@ -1316,7 +1293,7 @@ function ManageUsers(props) {
                       </Grid>
                       <Grid item>
                         <Typography variant="body1" color="textSecondary">
-                          Tanggal lahir: {" "}
+                          Tanggal lahir:{" "}
                           {moment(row.tanggal_lahir)
                             .locale("id")
                             .format("DD MMMM YYYY")}
@@ -1356,12 +1333,8 @@ function ManageUsers(props) {
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
       />
-      <Divider variant="inset" className={classes.subTitleDivider}/>
-      <Grid
-        container
-        direction="column"
-        spacing={2}
-      >
+      <Divider variant="inset" className={classes.subTitleDivider} />
+      <Grid container direction="column" spacing={2}>
         {teacher_rows.length === 0 ? (
           <Typography variant="subtitle1" align="center" color="textSecondary">
             Kosong
@@ -1374,11 +1347,7 @@ function ManageUsers(props) {
             const labelId = `enhanced-table-checkbox-${index}`;
             return (
               <Grid item>
-                <ExpansionPanel
-                  button
-                  variant="outlined"
-                  expanded={false}
-                >
+                <ExpansionPanel button variant="outlined" expanded={false}>
                   <ExpansionPanelSummary
                     className={classes.profilePanelSummary}
                   >

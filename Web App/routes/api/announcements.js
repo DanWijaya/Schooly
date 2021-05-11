@@ -31,7 +31,7 @@ router.post("/create", (req, res) => {
     description: req.body.description,
     class_assigned: class_assigned_ids,
     author_id: req.body.author_id,
-    to: req.body.to
+    to: req.body.to,
     // date_announced: new Date()
   });
   newAnnouncement
@@ -103,16 +103,20 @@ router.get("/viewAdmin", (req, res) => {
         from: User.collection.name,
         localField: "author_id",
         foreignField: "_id",
-        as: "author_info"
-      }
+        as: "author_info",
+      },
     },
-  ]).then((result) => {
-    res.json(result.filter((ann) => {
-      return (ann.author_info[0].role === "Admin");
-    }));
-  }).catch(() => {
-    res.status(500).json(err);
-  });
+  ])
+    .then((result) => {
+      res.json(
+        result.filter((ann) => {
+          return ann.author_info[0].role === "Admin";
+        })
+      );
+    })
+    .catch(() => {
+      res.status(500).json(err);
+    });
 });
 
 // Search announcement by author.

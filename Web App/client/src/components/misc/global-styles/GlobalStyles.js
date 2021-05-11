@@ -39,7 +39,7 @@ export const globalStyles = responsiveFontSizes(
         main: "#0d2481",
       },
       radio: {
-        main: "#02AFF8"
+        main: "#02AFF8",
       },
       checkbox: {
         main: "#049F90",
@@ -100,9 +100,9 @@ export const globalStyles = responsiveFontSizes(
       },
       MuiOutlinedInput: {
         multiline: {
-          padding: "18.5px 0px"
-        }
-      }
+          padding: "18.5px 0px",
+        },
+      },
     },
     props: {
       MuiTab: {
@@ -123,7 +123,7 @@ export const globalStyles = responsiveFontSizes(
             backgroundColor: "white",
             "&:focus, &:hover, &:active": {
               backgroundColor: "white",
-              opacity: 1
+              opacity: 1,
             },
           },
         },

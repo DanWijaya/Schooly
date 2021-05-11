@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -169,8 +169,8 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: "ellipsis",
     overflow: "hidden",
     whiteSpace: "nowrap",
-    marginRight: "13px"
-  }
+    marginRight: "13px",
+  },
 }));
 
 function LampiranFile(props) {
@@ -228,7 +228,9 @@ function LampiranFile(props) {
           <ListItemText
             primary={
               <LightTooltip title={filename} placement="top">
-                <Typography className={classes.fileNameTrim}>{displayedName}</Typography>
+                <Typography className={classes.fileNameTrim}>
+                  {displayedName}
+                </Typography>
               </LightTooltip>
             }
             secondary={filetype}
@@ -303,7 +305,12 @@ function WorkFile(props) {
             <ListItemText
               primary={
                 <LightTooltip title={file_name} placement="top">
-                  <Typography variant="subtitle2" className={classes.fileNameTrim}>{displayedName}</Typography>
+                  <Typography
+                    variant="subtitle2"
+                    className={classes.fileNameTrim}
+                  >
+                    {displayedName}
+                  </Typography>
                 </LightTooltip>
               }
               secondary={file_type}
@@ -459,7 +466,12 @@ function WorkFile(props) {
             <ListItemText
               primary={
                 <LightTooltip title={file_name} placement="top">
-                  <Typography variant="subtitle2" className={classes.fileNameTrim}>{displayedName}</Typography>
+                  <Typography
+                    variant="subtitle2"
+                    className={classes.fileNameTrim}
+                  >
+                    {displayedName}
+                  </Typography>
                 </LightTooltip>
               }
               secondary={file_type}
@@ -539,7 +551,6 @@ function ViewTaskStudent(props) {
   // This page is only for student later on, so for now put the user.role logic condition
   // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
   useEffect(() => {
-    
     // getTaskFilesByUser(user._id, tugasId)
     getFileSubmitTasks(tugasId, user._id).then((results) =>
       setFileTugas(results)
@@ -600,7 +611,6 @@ function ViewTaskStudent(props) {
     ));
   };
 
-
   const listFileChosen = () => {
     // Yang belum diupload
     if (fileTugas.length === 0 && fileToSubmit.length === 0) {
@@ -621,7 +631,6 @@ function ViewTaskStudent(props) {
             type="chosen"
           />
         );
-
       }
       return temp;
     }
@@ -716,18 +725,22 @@ function ViewTaskStudent(props) {
         style={{ marginBottom: "30px" }}
       >
         <Grid item xs={12} md={8}>
-        <Paper className={classes.paperBox}>
+          <Paper className={classes.paperBox}>
             <Grid container spacing={2}>
               <Grid item xs={12} style={{ paddingBottom: "0" }}>
                 <Typography variant="h4">{tasksCollection.name}</Typography>
-                <Typography variant="caption" color="textSecondary" gutterBottom>
+                <Typography
+                  variant="caption"
+                  color="textSecondary"
+                  gutterBottom
+                >
                   <h6>{all_subjects_map.get(tasksCollection.subject)}</h6>
                 </Typography>
               </Grid>
 
               <Grid item xs={12} md={7} style={{ paddingTop: "0" }}>
                 <Typography variant="body2" color="textSecondary">
-                  Oleh:   &nbsp;
+                  Oleh: &nbsp;
                   <b>
                     {selectedUser._id !== tasksCollection.person_in_charge_id
                       ? null
@@ -760,7 +773,11 @@ function ViewTaskStudent(props) {
                     alignItems: "flex-end",
                   }}
                 >
-                  <Typography variant="body2" align="right" color="textSecondary">
+                  <Typography
+                    variant="body2"
+                    align="right"
+                    color="textSecondary"
+                  >
                     Tenggat:{" "}
                     {moment(tasksCollection.deadline)
                       .locale("id")
@@ -799,28 +816,26 @@ function ViewTaskStudent(props) {
                 </Grid>
               )}
               {!tasksCollection.lampiran ||
-                tasksCollection.lampiran.length === 0 ? null : (
-                  <Grid item xs={12} style={{ marginTop: "15px" }}>
-                    <Typography color="textSecondary" gutterBottom>
-                      Lampiran Berkas:
-                    </Typography>
-                    <Grid container spacing={1}>
-                      {tasksCollection.lampiran.map((lampiran) => (
-                        <LampiranFile
-                          file_id={lampiran.id}
-                          // onPreviewFile={onPreviewFile}
-                          // onDownloadFile={onDownloadFile}
-                          filename={lampiran.filename}
-                          filetype={fileType(lampiran.filename)}
-                        />
-                      ))}
-                    </Grid>
+              tasksCollection.lampiran.length === 0 ? null : (
+                <Grid item xs={12} style={{ marginTop: "15px" }}>
+                  <Typography color="textSecondary" gutterBottom>
+                    Lampiran Berkas:
+                  </Typography>
+                  <Grid container spacing={1}>
+                    {tasksCollection.lampiran.map((lampiran) => (
+                      <LampiranFile
+                        file_id={lampiran.id}
+                        // onPreviewFile={onPreviewFile}
+                        // onDownloadFile={onDownloadFile}
+                        filename={lampiran.filename}
+                        filetype={fileType(lampiran.filename)}
+                      />
+                    ))}
                   </Grid>
-                )}
+                </Grid>
+              )}
             </Grid>
           </Paper>
-
-
         </Grid>
         <Grid item xs={12} md={4}>
           <Paper className={classes.paperBox}>
@@ -858,7 +873,7 @@ function ViewTaskStudent(props) {
                 }}
               >
                 {/* Kasus Kosong */}
-                  {listFileChosen()}
+                {listFileChosen()}
                 {listWorkFile()}
               </Grid>
             ) : (
@@ -871,8 +886,8 @@ function ViewTaskStudent(props) {
                   justifyContent: "center",
                 }}
               >
-                  {listWorkFile()}
-                  {listFileChosen()}
+                {listWorkFile()}
+                {listFileChosen()}
               </Grid>
             )}
             <Divider />

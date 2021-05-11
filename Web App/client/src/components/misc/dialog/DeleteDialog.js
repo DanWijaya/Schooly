@@ -50,10 +50,10 @@ const useStyles = makeStyles((theme) => ({
   },
   titleName: {
     marginTop: "10px",
-    textOverflow: "ellipsis", 
-    overflow: "hidden", 
-    whiteSpace: "nowrap", 
-  }
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+  },
 }));
 
 function DeleteDialog(props) {
@@ -76,9 +76,9 @@ function DeleteDialog(props) {
     deleteItem,
     redirectLink,
     customMessage,
-    // customConfirm, 
+    // customConfirm,
     customDecline,
-    isWarning
+    isWarning,
   } = props;
 
   return (
@@ -94,7 +94,9 @@ function DeleteDialog(props) {
           {/* <Typography variant="h5" align="center">
             Hapus {itemType} berikut? */}
           <Typography variant="h6" align="center" gutterBottom>
-            {customMessage ? `${customMessage} ${itemType}` : `Hapus ${itemType} berikut?`}
+            {customMessage
+              ? `${customMessage} ${itemType}`
+              : `Hapus ${itemType} berikut?`}
           </Typography>
         </Grid>
         {itemName ? (
@@ -125,25 +127,25 @@ function DeleteDialog(props) {
         ) : null}
         <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item>
-          {!redirectLink ? 
-            <Button
-              onClick={deleteItem}
-              startIcon={<DeleteOutlineIcon />}
-              className={classes.dialogDeleteButton}
-            >
-              Iya
-            </Button>
-            : 
-          <Link to={redirectLink}>
-            <Button
-              onClick={deleteItem}
-              startIcon={<DeleteOutlineIcon />}
-              className={classes.dialogDeleteButton}
-            >
-              Iya
-            </Button>
-          </Link>
-          }
+            {!redirectLink ? (
+              <Button
+                onClick={deleteItem}
+                startIcon={<DeleteOutlineIcon />}
+                className={classes.dialogDeleteButton}
+              >
+                Iya
+              </Button>
+            ) : (
+              <Link to={redirectLink}>
+                <Button
+                  onClick={deleteItem}
+                  startIcon={<DeleteOutlineIcon />}
+                  className={classes.dialogDeleteButton}
+                >
+                  Iya
+                </Button>
+              </Link>
+            )}
           </Grid>
           <Grid item>
             <Button

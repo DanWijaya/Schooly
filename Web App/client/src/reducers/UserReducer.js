@@ -56,7 +56,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         all_teachers_map: action.payload,
-      }
+      };
     case GET_ALL_STUDENTS:
       return {
         ...state,

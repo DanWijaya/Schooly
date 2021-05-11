@@ -26,7 +26,7 @@ const styles = (theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -62,7 +62,7 @@ class CreateClass extends Component {
     if (this.props.success && !prevProps.success) {
       this.handleOpenUploadDialog();
     }
-  };
+  }
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
@@ -268,5 +268,5 @@ export default connect(mapStateToProps, {
   createClass,
   getTeachers,
   clearErrors,
-  clearSuccess
+  clearSuccess,
 })(withStyles(styles)(CreateClass));

@@ -178,7 +178,7 @@ function ManageUsersToolbar(props) {
               key={headCell.id}
               sortDirection={orderBy === headCell.id ? order : false}
               onClick={createSortHandler(headCell.id)}
-              >
+            >
               <TableSortLabel
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : "asc"}
@@ -205,7 +205,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },

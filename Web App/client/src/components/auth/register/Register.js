@@ -48,7 +48,7 @@ const styles = (theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     minHeight: "500px",
     padding: "10px",
@@ -132,14 +132,14 @@ class Register extends Component {
       snackbarOpen: false,
       dialogOpen: false,
       submitButtonClicked: false,
-      openUploadDialog: false
+      openUploadDialog: false,
     };
   }
 
   componentDidMount() {
     // If logged in and user navigates to Register page, should redirect them to dashboard
     // this.props.getAllClass();
-    
+
     this.props.getAllSubjects();
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");
@@ -155,10 +155,10 @@ class Register extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.errors === false) {
       this.setState({
-        errors: nextProps.errors
+        errors: nextProps.errors,
       });
       return;
-    } 
+    }
 
     if (Object.keys(nextProps.errors).length > 0) {
       console.log(this.state.snackbarOpen);
@@ -174,11 +174,11 @@ class Register extends Component {
   };
 
   onChange = (e, otherfield) => {
-    let field = e.target.id ? e.target.id : otherfield
-    if(this.state.errors[field]){
-      this.setState({ errors: {...this.state.errors, [field] : null}})
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
-    this.setState({ [field] : e.target.value})
+    this.setState({ [field]: e.target.value });
     // if (otherfield === "role") {
     //   this.setState({ role: e.target.value });
     // } else if (otherfield === "subject") {
@@ -215,12 +215,17 @@ class Register extends Component {
     console.log(newUser);
     if (this.state.submitButtonClicked) {
       // this.props.registerUser(newUser, this.props.history);
-      this.props.registerUser(newUser)
-        .then((res) => {this.handleOpenUploadDialog()})
-        .catch((err) => this.setState({
-          errors: err,
-          snackbarOpen: true,
-        }))
+      this.props
+        .registerUser(newUser)
+        .then((res) => {
+          this.handleOpenUploadDialog();
+        })
+        .catch((err) =>
+          this.setState({
+            errors: err,
+            snackbarOpen: true,
+          })
+        );
     }
   };
 
@@ -338,64 +343,67 @@ class Register extends Component {
                 />
               </Grid>
               {
-              // this.state.role === "Student" ? (
-              //   <Grid item>
-              //     <FormControl
-              //       id="kelas"
-              //       variant="outlined"
-              //       color="primary"
-              //       fullWidth
-              //       error={Boolean(errors.kelas)}
-              //     >
-              //       <InputLabel id="kelas-label">Kelas</InputLabel>
-              //       <Select
-              //         labelId="kelas-label"
-              //         label="Kelas"
-              //         value={this.state.kelas}
-              //         onChange={(event) => {
-              //           this.onChange(event, "kelas");
-              //         }}
-              //       >
-              //         {all_classes.map((kelas) => (
-              //           <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
-              //         ))}
-              //       </Select>
-              //       <FormHelperText>
-              //         {Boolean(errors.kelas) ? errors.kelas : null}
-              //       </FormHelperText>
-              //     </FormControl>
-              //   </Grid>
-              // ) : 
-              this.state.role === "Teacher" ? (
-                <Grid item>
-                  <FormControl
-                    id="subject"
-                    variant="outlined"
-                    color="primary"
-                    fullWidth
-                    error={Boolean(errors.subject_teached)}
-                  >
-                    <InputLabel id="subject-label">Mata Pelajaran</InputLabel>
-                    <Select
-                      labelId="subject-label"
-                      label="Mata Pelajaran"
-                      value={this.state.subject_teached}
-                      onChange={(event) => {
-                        this.onChange(event, "subject");
-                      }}
+                // this.state.role === "Student" ? (
+                //   <Grid item>
+                //     <FormControl
+                //       id="kelas"
+                //       variant="outlined"
+                //       color="primary"
+                //       fullWidth
+                //       error={Boolean(errors.kelas)}
+                //     >
+                //       <InputLabel id="kelas-label">Kelas</InputLabel>
+                //       <Select
+                //         labelId="kelas-label"
+                //         label="Kelas"
+                //         value={this.state.kelas}
+                //         onChange={(event) => {
+                //           this.onChange(event, "kelas");
+                //         }}
+                //       >
+                //         {all_classes.map((kelas) => (
+                //           <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
+                //         ))}
+                //       </Select>
+                //       <FormHelperText>
+                //         {Boolean(errors.kelas) ? errors.kelas : null}
+                //       </FormHelperText>
+                //     </FormControl>
+                //   </Grid>
+                // ) :
+                this.state.role === "Teacher" ? (
+                  <Grid item>
+                    <FormControl
+                      id="subject"
+                      variant="outlined"
+                      color="primary"
+                      fullWidth
+                      error={Boolean(errors.subject_teached)}
                     >
-                      {all_subjects.map((subject) => (
-                        <MenuItem value={subject._id}>{subject.name}</MenuItem>
-                      ))}
-                    </Select>
-                    <FormHelperText>
-                      {Boolean(errors.subject_teached)
-                        ? errors.subject_teached
-                        : null}
-                    </FormHelperText>
-                  </FormControl>
-                </Grid>
-              ) : null}
+                      <InputLabel id="subject-label">Mata Pelajaran</InputLabel>
+                      <Select
+                        labelId="subject-label"
+                        label="Mata Pelajaran"
+                        value={this.state.subject_teached}
+                        onChange={(event) => {
+                          this.onChange(event, "subject");
+                        }}
+                      >
+                        {all_subjects.map((subject) => (
+                          <MenuItem value={subject._id}>
+                            {subject.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <FormHelperText>
+                        {Boolean(errors.subject_teached)
+                          ? errors.subject_teached
+                          : null}
+                      </FormHelperText>
+                    </FormControl>
+                  </Grid>
+                ) : null
+              }
               <Grid item>
                 <TextField
                   fullWidth

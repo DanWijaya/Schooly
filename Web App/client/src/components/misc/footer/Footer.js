@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     margin: "auto",
     marginTop: "100px",

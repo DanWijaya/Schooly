@@ -241,30 +241,30 @@ router.get("/by_user/:id", (req, res) => {
     //   ResponseContentDisposition: `inline;filename=${result.filename}`,
     // };
     // const url = s3bucket.getSignedUrl("getObject", params);
-    const url = `${keys.cdn}/${result.s3_key}`
+    const url = `${keys.cdn}/${result.s3_key}`;
     return res.status(200).json(url);
   });
 });
 
-router.get("/multi_user", (req,res) => {
-  // req.body is in list. 
+router.get("/multi_user", (req, res) => {
+  // req.body is in list.
   let { id_list } = req.query;
-  console.log(id_list)
-  id_list = id_list.map((id) => ObjectId(String(id)))
-  FileAvatar.find({ user_id: {$in: id_list}}, (err, avatars) => {
-    if(!avatars) {
+  console.log(id_list);
+  id_list = id_list.map((id) => ObjectId(String(id)));
+  FileAvatar.find({ user_id: { $in: id_list } }, (err, avatars) => {
+    if (!avatars) {
       return res.status(400).json("Users not found");
     }
-    console.log(avatars)
-    var urls = {}
+    console.log(avatars);
+    var urls = {};
     avatars.forEach((a) => {
-      urls[a.user_id] = `${keys.cdn}/${a.s3_key}`
+      urls[a.user_id] = `${keys.cdn}/${a.s3_key}`;
       // urls.set(u._id, `${keys.cdn}/${u.s3_key}`)
-    })
-    console.log("URL:", urls)
+    });
+    console.log("URL:", urls);
 
     return res.status(200).json(urls);
-  })
-})
+  });
+});
 
 module.exports = router;

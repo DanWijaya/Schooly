@@ -29,7 +29,7 @@ import {
   ListItemText,
   Paper,
   Typography,
-  Divider
+  Divider,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     display: "flex",
     flexDirection: "column",
@@ -241,7 +241,6 @@ function ViewMaterial(props) {
 
   console.log(props.materialsFiles);
   React.useEffect(() => {
-    
     getAllSubjects("map"); // this will get the selectedMaterials.
     getOneMaterial(materi_id);
     getAllClass("map");
@@ -318,7 +317,11 @@ function ViewMaterial(props) {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Typography variant="h4">{selectedMaterials.name}</Typography>
-                <Typography variant="caption" color="textSecondary" gutterBottom>
+                <Typography
+                  variant="caption"
+                  color="textSecondary"
+                  gutterBottom
+                >
                   <h6>{all_subjects_map.get(selectedMaterials.subject)}</h6>
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
@@ -346,7 +349,10 @@ function ViewMaterial(props) {
                       ? null
                       : selectedMaterials.class_assigned.map((kelas, i) => {
                           if (all_classes_map.get(kelas)) {
-                            if (i === selectedMaterials.class_assigned.length - 1)
+                            if (
+                              i ===
+                              selectedMaterials.class_assigned.length - 1
+                            )
                               return `${all_classes_map.get(kelas).name}`;
                             return `${all_classes_map.get(kelas).name}, `;
                           }
@@ -362,14 +368,14 @@ function ViewMaterial(props) {
                 <Typography>{selectedMaterials.description}</Typography>
               </Grid>
               {fileLampiran.map((lampiran) => (
-                  <LampiranFile
-                    file_id={lampiran._id}
-                    onPreviewFile={viewFileMaterial}
-                    onDownloadFile={downloadFileMaterial}
-                    filename={lampiran.filename}
-                    filetype={fileType(lampiran.filename)}
-                  />
-                ))}
+                <LampiranFile
+                  file_id={lampiran._id}
+                  onPreviewFile={viewFileMaterial}
+                  onDownloadFile={downloadFileMaterial}
+                  filename={lampiran.filename}
+                  filetype={fileType(lampiran.filename)}
+                />
+              ))}
             </Grid>
           </Paper>
         </Grid>

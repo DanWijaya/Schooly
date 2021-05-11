@@ -61,7 +61,7 @@ const styles = (theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -72,7 +72,7 @@ const styles = (theme) => ({
     padding: "20px 20px 20px",
     [theme.breakpoints.down("xs")]: {
       padding: "20px 10px 20px",
-    }
+    },
   },
   settingsButton: {
     // backgroundColor: "white",
@@ -82,9 +82,9 @@ const styles = (theme) => ({
     //   color: "white",
     // },
     [theme.breakpoints.down("xs")]: {
-      paddingRight: "0", 
-      paddingLeft: "0"
-    }
+      paddingRight: "0",
+      paddingLeft: "0",
+    },
   },
   divider: {
     [theme.breakpoints.down("sm")]: {
@@ -250,21 +250,21 @@ class CreateAssessment extends Component {
         radio: undefined,
         checkbox: undefined,
         shorttext: undefined,
-      }, // weight radio, checkbox, shorttext akan diset null ketika masih bernilai undefined saat tombol create assessment ditekan 
+      }, // weight radio, checkbox, shorttext akan diset null ketika masih bernilai undefined saat tombol create assessment ditekan
       longtextWeight: [-1],
       // array longtextWeight akan memiliki elemen sebanyak pertanyaan di assessment
       // longtextWeight[0] = 10 -> berarti pertanyaan nomor 1 adalah soal uraian dan memiliki bobot 10
       // longtextWeight[1] = -1 -> berarti pertanyaan nomor 2 adalah soal non uraian
       // longtextWeight[2] = undefined -> berarti pertanyaan nomor 3 adalah soal uraian yang bobotnya belum diubah
       // sejak pertama kali soal tersebut ditambahkan
-      // longtextWeight[2] = null -> berarti bobot soal uraian ini masih undefined saat tombol create assessment ditekan 
+      // longtextWeight[2] = null -> berarti bobot soal uraian ini masih undefined saat tombol create assessment ditekan
       backtickErrors: [],
       // array backtickErrors akan memiliki elemen sebanyak pertanyaan di assessment
       // backtickErrors[0] = false -> berarti pertanyaan nomor 1 sudah valid
-      // backtickErrors[1] = true -> berarti terdapat jawaban kosong (``) atau jumlah backtick ganjil pada pertanyaan nomor 2  
+      // backtickErrors[1] = true -> berarti terdapat jawaban kosong (``) atau jumlah backtick ganjil pada pertanyaan nomor 2
       // backtickErrors[2] = -1 -> berarti pertanyaan nomor 2 adalah soal non isian. Nilai "-1" dapat diabaikan, ini dapat diganti dengan nilai lain selain true false
       renderbtErrors: false, // abaikan nilainya, ini hanya dipakai agar QuestionItem dirender ulang saat submit dan ada soal yang dihapus
-      over_limit: []
+      over_limit: [],
     };
   }
 
@@ -358,14 +358,17 @@ class CreateAssessment extends Component {
           }
         }
       }
-      this.setState({ backtickErrors: newBtErrors, renderbtErrors: !this.state.renderbtErrors });
+      this.setState({
+        backtickErrors: newBtErrors,
+        renderbtErrors: !this.state.renderbtErrors,
+      });
 
       // pengecekan bobot
       let filteredtypeCount = Object.entries(typeCount).filter(
         (pair) => pair[1] > 0
       );
       if (filteredtypeCount.length !== 0) {
-        let newWeights = {...this.state.weights};
+        let newWeights = { ...this.state.weights };
         let newLongtextWeight = [...this.state.longtextWeight];
 
         for (let pair of filteredtypeCount) {
@@ -373,7 +376,9 @@ class CreateAssessment extends Component {
 
           if (type === "longtext") {
             // menghapus elemen bobot soal non uraian pada array bobot soal uraian
-            let longtextCount = this.state.longtextWeight.filter((value) => (value !== -1));
+            let longtextCount = this.state.longtextWeight.filter(
+              (value) => value !== -1
+            );
 
             for (let i = 0; i <= longtextCount.length - 1; i++) {
               let weight = longtextCount[i];
@@ -404,7 +409,10 @@ class CreateAssessment extends Component {
           }
         }
         // agar error di textfield bobot muncul ketika textfield masih kosong saat create assessment
-        this.setState({ weights: newWeights, longtextWeight: newLongtextWeight });
+        this.setState({
+          weights: newWeights,
+          longtextWeight: newLongtextWeight,
+        });
       } else {
         completeWeight = false;
       }
@@ -426,9 +434,12 @@ class CreateAssessment extends Component {
       }
       let question_weight = {
         radio: typeCount.radio === 0 ? null : Number(this.state.weights.radio),
-        checkbox: typeCount.checkbox === 0 ? null : Number(this.state.weights.checkbox),
+        checkbox:
+          typeCount.checkbox === 0 ? null : Number(this.state.weights.checkbox),
         shorttext:
-          typeCount.shorttext === 0 ? null : Number(this.state.weights.shorttext),
+          typeCount.shorttext === 0
+            ? null
+            : Number(this.state.weights.shorttext),
         longtext: longtext,
       };
 
@@ -705,7 +716,7 @@ class CreateAssessment extends Component {
   };
 
   handleDuplicateQuestion = (i) => {
-    console.log(i)
+    console.log(i);
     let questions = this.state.questions;
     // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
@@ -734,7 +745,11 @@ class CreateAssessment extends Component {
       let btErrors = [...state.backtickErrors];
       value.splice(i + 1, 0, state.longtextWeight[i]);
       btErrors.splice(i + 1, 0, state.backtickErrors[i]);
-      return { longtextWeight: value, backtickErrors: btErrors, renderbtErrors: !this.state.renderbtErrors };
+      return {
+        longtextWeight: value,
+        backtickErrors: btErrors,
+        renderbtErrors: !this.state.renderbtErrors,
+      };
     });
   };
 
@@ -747,23 +762,27 @@ class CreateAssessment extends Component {
     let newBtErrors = [];
     for (var i = 0; i < questions.length; i++) {
       let qns = questions[i];
-        if (qns.type === "shorttext") {
-          if (qns.answer.length === 0) {
+      if (qns.type === "shorttext") {
+        if (qns.answer.length === 0) {
+          newBtErrors[i] = true;
+        } else {
+          if (qns.answer.includes("")) {
             newBtErrors[i] = true;
           } else {
-            if (qns.answer.includes("")) {
-              newBtErrors[i] = true;
-            } else {
-              newBtErrors[i] = false;
-            }
+            newBtErrors[i] = false;
           }
         }
+      }
     }
 
     this.setState((state) => {
       let value = [...state.longtextWeight];
       value.splice(index, 1);
-      return { longtextWeight: value, backtickErrors: newBtErrors, renderbtErrors: !this.state.renderbtErrors };
+      return {
+        longtextWeight: value,
+        backtickErrors: newBtErrors,
+        renderbtErrors: !this.state.renderbtErrors,
+      };
     });
   };
 
@@ -778,11 +797,19 @@ class CreateAssessment extends Component {
       if (e.target.files) {
         // Untuk kasus pas mau upload foto
         const files = Array.from(e.target.files);
-        let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 5);
-        let file_to_upload = files.filter((file) => file.size / Math.pow(10, 6) <= 5);
+        let over_limit = files.filter(
+          (file) => file.size / Math.pow(10, 6) > 5
+        );
+        let file_to_upload = files.filter(
+          (file) => file.size / Math.pow(10, 6) <= 5
+        );
         let temp = questions[qnsIndex].lampiran.concat(file_to_upload);
         questions[qnsIndex].lampiran = temp;
-        this.setState({ questions: questions, fileLimitSnackbar: over_limit.length > 0 , over_limit: over_limit});
+        this.setState({
+          questions: questions,
+          fileLimitSnackbar: over_limit.length > 0,
+          over_limit: over_limit,
+        });
       }
     }
   };
@@ -853,7 +880,6 @@ class CreateAssessment extends Component {
   }
 
   componentDidMount() {
-    
     const { getAllClass, getAllSubjects, handleSideDrawerExist } = this.props;
     handleSideDrawerExist(false);
     getAllClass();
@@ -956,7 +982,8 @@ class CreateAssessment extends Component {
       for (let pair of filteredtypeCount) {
         let type = pair[0];
         let weight = this.state.weights[type];
-        let showError = (weight !==  undefined && (Number(weight) <= 0 || weight === null));
+        let showError =
+          weight !== undefined && (Number(weight) <= 0 || weight === null);
 
         gridItemMobileView.push(
           <Grid container>
@@ -1293,9 +1320,7 @@ class CreateAssessment extends Component {
           // isLink={true}
           // redirectLink="/daftar-kuis"
           redirectLink={
-            this.state.type === "Kuis"
-              ? `/daftar-kuis`
-              : `/daftar-ujian`
+            this.state.type === "Kuis" ? `/daftar-kuis` : `/daftar-ujian`
           }
           isWarning={false}
         />
@@ -1632,10 +1657,7 @@ class CreateAssessment extends Component {
                   alignItems="center"
                   className={classes.pageNavigatorContent}
                 >
-                  <Grid
-                    item
-                    className={classes.pageNavigator}
-                  >
+                  <Grid item className={classes.pageNavigator}>
                     <Grid item>
                       <LightTooltip title={`Pengaturan`}>
                         <IconButton
@@ -1686,14 +1708,8 @@ class CreateAssessment extends Component {
                       </Menu>
                     </Grid>
                   </Grid>
-                  <Grid
-                    item
-                    className={classes.assessmentSettings}
-                  >
-                    <Grid
-                      container
-                      spacing={1}
-                    >
+                  <Grid item className={classes.assessmentSettings}>
+                    <Grid container spacing={1}>
                       <Grid item>
                         <Button
                           variant="contained"
@@ -1741,11 +1757,7 @@ class CreateAssessment extends Component {
           onClose={this.handleFileLimitSnackbar}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          <MuiAlert
-            elevation={6}
-            variant="filled"
-            severity="error"
-          >
+          <MuiAlert elevation={6} variant="filled" severity="error">
             {this.state.over_limit.length} file melebihi batas 5MB!
           </MuiAlert>
         </Snackbar>

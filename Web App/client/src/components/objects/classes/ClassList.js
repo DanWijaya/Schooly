@@ -37,7 +37,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button
+  Button,
 } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
@@ -86,11 +86,20 @@ function stableSort(array, comparator) {
 }
 
 function ClassListToolbar(props) {
-  const { classes, user, order, orderBy, onRequestSort, searchFilter, updateSearchFilter, searchBarFocus, setSearchBarFocus} = props;
+  const {
+    classes,
+    user,
+    order,
+    orderBy,
+    onRequestSort,
+    searchFilter,
+    updateSearchFilter,
+    searchBarFocus,
+    setSearchBarFocus,
+  } = props;
   const { all_students, all_teachers_map } = props;
   const { getStudents, handleOpenSnackbar } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
-
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -145,7 +154,7 @@ function ClassListToolbar(props) {
       [dummyClassId]: {
         studentsEmail: [], // semua murid di kelas dummy ini merupakan murid yang belum ditempatkan ke kelas manapun
         classNames: dummyClassName,
-      }
+      },
     };
     /* contoh isi:
       {
@@ -319,10 +328,7 @@ function ClassListToolbar(props) {
             // jika sel tidak ada atau berisi string kosong, tidak lakukan apa-apa
             // jika sel berisi email murid,
             let currentEmail = dataMatrix[row][column];
-            if (
-              currentEmail !== "" &&
-              currentEmail !== undefined
-            ) {
+            if (currentEmail !== "" && currentEmail !== undefined) {
               // cek duplikasi email
               if (allStudentEmail.has(currentEmail)) {
                 throw new Error(
@@ -412,7 +418,7 @@ function ClassListToolbar(props) {
               // agar text jumlah murid di halaman ini diperbarui, panggil ulang getStudents
               getStudents();
               if (invalidEmails.current.length !== 0) {
-                handleOpenEmailDialog()
+                handleOpenEmailDialog();
               }
               handleOpenSnackbar(
                 "success",
@@ -497,7 +503,7 @@ function ClassListToolbar(props) {
                 onClick={(e) => setSearchBarFocus(true)}
                 placeholder="Kelas"
                 style={{
-                  maxWidth: (user.role === "Admin" ? "110px" : "200px"),
+                  maxWidth: user.role === "Admin" ? "110px" : "200px",
                   marginLeft: "10px",
                 }}
                 InputProps={{
@@ -670,7 +676,10 @@ function ClassListToolbar(props) {
 
             <LightTooltip title="Atur Wali Kelas">
               <Link to="/atur-walikelas">
-                <IconButton className={classes.toolbarButtons} style={{ marginRight: "3px" }}>
+                <IconButton
+                  className={classes.toolbarButtons}
+                  style={{ marginRight: "3px" }}
+                >
                   <AiOutlineUserSwitch />
                 </IconButton>
               </Link>
@@ -732,7 +741,15 @@ function ClassListToolbar(props) {
         <DialogTitle>Email berikut tidak ditemukan di basis data</DialogTitle>
         <DialogContent dividers>
           {invalidEmails.current.map((email, idx) => (
-            <Typography variant="body1" style={{marginBottom: (idx === invalidEmails.current.length - 1 ? "0" : "16px")}}>{email}</Typography>
+            <Typography
+              variant="body1"
+              style={{
+                marginBottom:
+                  idx === invalidEmails.current.length - 1 ? "0" : "16px",
+              }}
+            >
+              {email}
+            </Typography>
           ))}
         </DialogContent>
         <DialogActions>
@@ -759,7 +776,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -850,13 +867,13 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: "6px",
     backgroundColor: theme.palette.error.main,
     color: "white",
-    marginLeft: "5px"
+    marginLeft: "5px",
   },
   dialogPaper: {
-    maxHeight: '70vh',
+    maxHeight: "70vh",
     // width: "300px",
     // maxWidth: "100%",
-  }
+  },
 }));
 
 function ClassList(props) {
@@ -932,9 +949,11 @@ function ClassList(props) {
   const retrieveClasses = () => {
     if (classesCollection.all_classes.length > 0) {
       rows = [];
-      classesCollection.all_classes.filter((item) =>
-        item.name.toLowerCase().includes(searchFilter.toLowerCase())
-      ).map((data, i) => classItem(data, i));
+      classesCollection.all_classes
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchFilter.toLowerCase())
+        )
+        .map((data, i) => classItem(data, i));
     }
   };
 
@@ -1040,10 +1059,7 @@ function ClassList(props) {
                 return (
                   <Grid item xs={12} sm={6} md={4}>
                     <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
-                      <Paper
-                        button
-                        className={classes.classPaper}
-                      >
+                      <Paper button className={classes.classPaper}>
                         <Avatar
                           variant="square"
                           style={{
@@ -1065,7 +1081,7 @@ function ClassList(props) {
                           <Typography id={labelId} variant="h5" align="center">
                             {row.name}
                           </Typography>
-                          {(row.homeroomTeacher && row.homeroomTeacher !== "") ?
+                          {row.homeroomTeacher && row.homeroomTeacher !== "" ? (
                             <Typography
                               variant="body1"
                               color="textSecondary"
@@ -1074,8 +1090,16 @@ function ClassList(props) {
                             >
                               Wali Kelas: {row.homeroomTeacher}
                             </Typography>
-                          :
-                            <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", marginTop: "5px"}}>
+                          ) : (
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                marginTop: "5px",
+                              }}
+                            >
                               <Typography
                                 variant="body1"
                                 color="textSecondary"
@@ -1084,10 +1108,10 @@ function ClassList(props) {
                                 Wali Kelas:
                               </Typography>
                               <Paper className={classes.emptyClass}>
-                                  <Typography variant="body2">KOSONG</Typography>
+                                <Typography variant="body2">KOSONG</Typography>
                               </Paper>
                             </div>
-                          }
+                          )}
                         </div>
                         <Divider />
                         <Grid

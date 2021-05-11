@@ -40,7 +40,7 @@ const AssessmentSchema = new Schema(
         name: { type: String, default: "" },
         options: { type: [String] },
         answer: { type: [String] },
-        lampiran: [{ type: ObjectId, default: []}],
+        lampiran: [{ type: ObjectId, default: [] }],
         type: { type: String, required: true },
       },
     ],
@@ -118,7 +118,7 @@ const AssessmentSchema = new Schema(
     // }
 
     // NOTE
-    // (di CreateAssessment.js, di fungsi onSubmit) 
+    // (di CreateAssessment.js, di fungsi onSubmit)
     // - assessment tidak punya suatu tipe soal jika dan hanya jika value untuk key tipe soal tersebut = null
     // - bobot semua soal yang ada pada suatu assessment dipastikan diisi dan tidak bernilai <= 0
   },

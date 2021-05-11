@@ -23,7 +23,7 @@ import {
   Input,
   Snackbar,
   Divider,
-  useMediaQuery
+  useMediaQuery,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -32,7 +32,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LinkIcon from "@material-ui/icons/Link";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import MuiAlert from "@material-ui/lab/Alert";
 import SwitchBase from "@material-ui/core/internal/SwitchBase";
 
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     display: "flex",
     flexDirection: "column",
@@ -110,7 +110,7 @@ const useStyles = makeStyles((theme) => ({
   },
   optionText: {
     color: "black",
-    marginLeft: "8px"
+    marginLeft: "8px",
   },
   paperBox: {
     padding: "20px",
@@ -122,21 +122,21 @@ const useStyles = makeStyles((theme) => ({
   checkIcon: {
     color: theme.palette.success.dark,
     fontSize: "1rem",
-    verticalAlign: "middle"
+    verticalAlign: "middle",
   },
   fiberIcon: {
     fontSize: "0.5rem",
-    verticalAlign: "middle"
+    verticalAlign: "middle",
   },
   bullets: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    width: "1rem"
+    width: "1rem",
   },
   questionName: {
-    fontSize: "1.1rem"
-  }
+    fontSize: "1.1rem",
+  },
 }));
 
 function ViewAssessmentTeacher(props) {
@@ -150,7 +150,7 @@ function ViewAssessmentTeacher(props) {
     getAllClass,
     getAllSubjects,
     deleteAssessment,
-    getFileAssessment
+    getFileAssessment,
   } = props;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
@@ -167,11 +167,10 @@ function ViewAssessmentTeacher(props) {
 
   console.log(selectedAssessments);
   React.useEffect(() => {
-    
     getOneAssessment(assessment_id);
     getAllClass("map");
     getAllSubjects("map");
-    getFileAssessment(assessment_id).then((result) => setLampiranUrls(result))
+    getFileAssessment(assessment_id).then((result) => setLampiranUrls(result));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -392,52 +391,58 @@ function ViewAssessmentTeacher(props) {
                         style={{ margin: "10px 0px 10px 0px" }}
                       >
                         {question.lampiran.map((img, i) => {
-                        let image = img;
-                        if(lampiranUrls.has(image.toString())){
-                          return (
-                            <GridListTile key={image} cols={1}>
-                              <img
-                                alt="current img"
-                                // src={`/api/upload/att_assessment/${image}`}
-                                src={lampiranUrls.get(image.toString())}
-                              />
-                              <GridListTileBar
-                                title={`Gambar ${i + 1}`}
-                                titlePosition="top"
-                                actionPosition="right"
-                              />
-                            </GridListTile>
-                          )}
-                          return null
-                        }
-                        )}
+                          let image = img;
+                          if (lampiranUrls.has(image.toString())) {
+                            return (
+                              <GridListTile key={image} cols={1}>
+                                <img
+                                  alt="current img"
+                                  // src={`/api/upload/att_assessment/${image}`}
+                                  src={lampiranUrls.get(image.toString())}
+                                />
+                                <GridListTileBar
+                                  title={`Gambar ${i + 1}`}
+                                  titlePosition="top"
+                                  actionPosition="right"
+                                />
+                              </GridListTile>
+                            );
+                          }
+                          return null;
+                        })}
                       </GridList>
                       {/* <Typography variant="h6"> */}
-                        {question.type === "shorttext" ? (
-                          generateSoalShortTextTeacher(question, i)
-                        ) : question.type === "longtext" ? (
-                          <>
-                            <Typography className={classes.questionName} style={{ paddingBottom: "16px" }}>
-                              {question.name}
-                            </Typography>
-                            <Typography className={classes.questionName} color="textSecondary">
-                              {question.answer}
-                            </Typography>
-                          </>
-                        ) : (
-                          <Typography className={classes.questionName}>{question.name}</Typography>
-                        )}
+                      {question.type === "shorttext" ? (
+                        generateSoalShortTextTeacher(question, i)
+                      ) : question.type === "longtext" ? (
+                        <>
+                          <Typography
+                            className={classes.questionName}
+                            style={{ paddingBottom: "16px" }}
+                          >
+                            {question.name}
+                          </Typography>
+                          <Typography
+                            className={classes.questionName}
+                            color="textSecondary"
+                          >
+                            {question.answer}
+                          </Typography>
+                        </>
+                      ) : (
+                        <Typography className={classes.questionName}>
+                          {question.name}
+                        </Typography>
+                      )}
                       {/* </Typography> */}
                     </Grid>
                     <Grid item>
                       {question.type === "radio"
-                        ?
-
-                          question.options.map((option, i) => (
+                        ? question.options.map((option, i) => (
                             <Grid container alignItems="center">
                               <Grid item className={classes.bullets}>
                                 {question.answer[0] ===
-                                  String.fromCharCode(97 + i).toUpperCase() ? (
+                                String.fromCharCode(97 + i).toUpperCase() ? (
                                   <CheckCircleIcon
                                     className={classes.checkIcon}
                                   />
@@ -452,27 +457,26 @@ function ViewAssessmentTeacher(props) {
                               </Typography>
                             </Grid>
                           ))
-
                         : question.type === "checkbox"
                         ? question.options.map((option, i) => (
-                          <Grid container alignItems="center">
-                            <Grid item className={classes.bullets}>
-                              {question.answer.includes(
-                                String.fromCharCode(97 + i).toUpperCase()
-                              ) ? (
-                                <CheckCircleIcon
-                                  className={classes.checkIcon}
-                                />
-                              ) : (
-                                <FiberManualRecordIcon
-                                  className={classes.fiberIcon}
-                                />
-                              )}
+                            <Grid container alignItems="center">
+                              <Grid item className={classes.bullets}>
+                                {question.answer.includes(
+                                  String.fromCharCode(97 + i).toUpperCase()
+                                ) ? (
+                                  <CheckCircleIcon
+                                    className={classes.checkIcon}
+                                  />
+                                ) : (
+                                  <FiberManualRecordIcon
+                                    className={classes.fiberIcon}
+                                  />
+                                )}
+                              </Grid>
+                              <Typography className={classes.optionText}>
+                                {option}
+                              </Typography>
                             </Grid>
-                            <Typography className={classes.optionText}>
-                              {option}
-                            </Typography>
-                          </Grid>
                           ))
                         : // question.type === "shorttext" || question.type === "shorttext"
                           null}
@@ -481,38 +485,44 @@ function ViewAssessmentTeacher(props) {
                 </Paper>
               </Grid>
             ))}
-        <Grid item container justify="flex-end" alignItems="center" style={{ paddingTop: "4px" }}>
+        <Grid
+          item
+          container
+          justify="flex-end"
+          alignItems="center"
+          style={{ paddingTop: "4px" }}
+        >
           <Grid item style={{ paddingRight: "10px" }}>
-            {
-              selectedAssessments && (selectedAssessments.submissions) && (Object.keys(selectedAssessments.submissions).length !== 0) ? (
-                <Link
-                  to={
-                    selectedAssessments.type === "Kuis"
-                      ? `/daftar-kuis-terkumpul/${assessment_id}`
-                      : `/daftar-ujian-terkumpul/${assessment_id}`
-                  }
-                >
-                  <Fab
-                    variant="extended"
-                    className={classes.seeAllAssessmentButton}
-                  >
-                    <AssignmentIcon style={{ marginRight: "7.5px" }} />
-                      Lihat Hasil
-                    </Fab>
-                </Link>
-              ) : (
-                <>
+            {selectedAssessments &&
+            selectedAssessments.submissions &&
+            Object.keys(selectedAssessments.submissions).length !== 0 ? (
+              <Link
+                to={
+                  selectedAssessments.type === "Kuis"
+                    ? `/daftar-kuis-terkumpul/${assessment_id}`
+                    : `/daftar-ujian-terkumpul/${assessment_id}`
+                }
+              >
                 <Fab
-                    variant="extended"
-                    className={classes.seeAllAssessmentButton}
-                    disabled
-                  >
-                    <AssignmentIcon style={{ marginRight: "7.5px" }} />
-                      Lihat Hasil
+                  variant="extended"
+                  className={classes.seeAllAssessmentButton}
+                >
+                  <AssignmentIcon style={{ marginRight: "7.5px" }} />
+                  Lihat Hasil
                 </Fab>
-                </>
-              )
-            }
+              </Link>
+            ) : (
+              <>
+                <Fab
+                  variant="extended"
+                  className={classes.seeAllAssessmentButton}
+                  disabled
+                >
+                  <AssignmentIcon style={{ marginRight: "7.5px" }} />
+                  Lihat Hasil
+                </Fab>
+              </>
+            )}
           </Grid>
           <Grid item style={{ paddingRight: "10px" }}>
             <LightTooltip title="Salin Tautan">
@@ -582,5 +592,5 @@ export default connect(mapStateToProps, {
   deleteAssessment,
   getAllClass,
   getAllSubjects,
-  getFileAssessment
+  getFileAssessment,
 })(ViewAssessmentTeacher);

@@ -50,7 +50,7 @@ const styles = (theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -123,7 +123,7 @@ const styles = (theme) => ({
       backgroundColor: theme.palette.error.main,
       color: "white",
     },
-    marginRight: "7.5px"
+    marginRight: "7.5px",
   },
 });
 
@@ -285,7 +285,6 @@ class CreateMaterial extends Component {
   }
 
   componentDidMount() {
-    
     this.props.getAllClass();
     this.props.getAllSubjects();
   }
@@ -417,9 +416,7 @@ class CreateMaterial extends Component {
             itemName={this.state.name}
             // isLink={true}
             // redirectLink="/daftar-kuis"
-            redirectLink={
-              `/daftar-materi`
-            }
+            redirectLink={`/daftar-materi`}
             isWarning={false}
           />
           <Paper>

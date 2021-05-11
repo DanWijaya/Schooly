@@ -396,7 +396,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -502,8 +502,8 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
-    padding: "6px 24px"
-  }
+    padding: "6px 24px",
+  },
 }));
 
 function MaterialList(props) {
@@ -547,7 +547,7 @@ function MaterialList(props) {
   };
 
   React.useEffect(() => {
-    // 
+    //
     getAllSubjects("map");
     getAllClass("map");
     getTeachers("map");
@@ -679,7 +679,9 @@ function MaterialList(props) {
                               }}
                             >
                               <ListItemAvatar>
-                                <Avatar className={classes.assignmentLateTeacher}>
+                                <Avatar
+                                  className={classes.assignmentLateTeacher}
+                                >
                                   <MenuBookIcon />
                                 </Avatar>
                               </ListItemAvatar>
@@ -687,7 +689,10 @@ function MaterialList(props) {
                                 <Typography variant="h6" color="textPrimary">
                                   {row.materialtitle}
                                 </Typography>
-                                <Typography variant="body2" color="textSecondary">
+                                <Typography
+                                  variant="body2"
+                                  color="textSecondary"
+                                >
                                   {all_subjects_map.get(row.subject)}
                                 </Typography>
                               </div>
@@ -748,13 +753,17 @@ function MaterialList(props) {
                             {!all_classes_map.size
                               ? null
                               : row.class_assigned.map((kelas, i) => {
-                                if (all_classes_map.get(kelas)) {
-                                  if (i === row.class_assigned.length - 1)
-                                    return `${all_classes_map.get(kelas).name}`;
-                                  return `${all_classes_map.get(kelas).name}, `;
-                                }
-                                return null;
-                              })}
+                                  if (all_classes_map.get(kelas)) {
+                                    if (i === row.class_assigned.length - 1)
+                                      return `${
+                                        all_classes_map.get(kelas).name
+                                      }`;
+                                    return `${
+                                      all_classes_map.get(kelas).name
+                                    }, `;
+                                  }
+                                  return null;
+                                })}
                           </Typography>
                         </Grid>
                         <Grid item xs={12}>
@@ -769,72 +778,81 @@ function MaterialList(props) {
                     </ExpansionPanelDetails>
                   </ExpansionPanel>
                 ) : (
-                    <Link to={viewpage}>
-                      <Paper variant="outlined">
-                        <ListItem
-                          // button
-                          // component="a"
-                          className={classes.listItem}
-                        >
-                          <Hidden smUp implementation="css">
+                  <Link to={viewpage}>
+                    <Paper variant="outlined">
+                      <ListItem
+                        // button
+                        // component="a"
+                        className={classes.listItem}
+                      >
+                        <Hidden smUp implementation="css">
+                          <ListItemText
+                            primary={
+                              <Typography
+                                variant="subtitle1"
+                                color="textPrimary"
+                              >
+                                {row.materialtitle}
+                              </Typography>
+                            }
+                            secondary={
+                              <Typography
+                                variant="caption"
+                                color="textSecondary"
+                              >
+                                {all_subjects_map.get(row.subject)}
+                              </Typography>
+                            }
+                          />
+                        </Hidden>
+                        <Hidden xsDown implementation="css">
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <ListItemAvatar>
+                              <Avatar className={classes.assignmentLate}>
+                                <MenuBookIcon />
+                              </Avatar>
+                            </ListItemAvatar>
                             <ListItemText
                               primary={
-                                <Typography variant="subtitle1" color="textPrimary">
+                                <Typography variant="h6" color="textPrimary">
                                   {row.materialtitle}
                                 </Typography>
                               }
                               secondary={
-                                <Typography variant="caption" color="textSecondary">
+                                <Typography
+                                  variant="body2"
+                                  color="textSecondary"
+                                >
                                   {all_subjects_map.get(row.subject)}
                                 </Typography>
                               }
                             />
-                          </Hidden>
-                          <Hidden xsDown implementation="css">
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              <ListItemAvatar>
-                                <Avatar className={classes.assignmentLate}>
-                                  <MenuBookIcon />
-                                </Avatar>
-                              </ListItemAvatar>
-                              <ListItemText
-                                primary={
-                                  <Typography variant="h6" color="textPrimary">
-                                    {row.materialtitle}
-                                  </Typography>
-                                }
-                                secondary={
-                                  <Typography variant="body2" color="textSecondary">
-                                    {all_subjects_map.get(row.subject)}
-                                  </Typography>
-                                }
-                              />
-                            </div>
-                          </Hidden>
-                          <ListItemText
-                            align="right"
-                            primary={
-                              <Typography variant="body2" color="textSecondary">
-                                {moment(row.createdAt)
-                                  .locale("id")
-                                  .format("DD MMM YYYY")}
-                              </Typography>
-                            }
-                            secondary={moment(row.createdAt)
-                              .locale("id")
-                              .format("HH.mm")}
-                          />
-                        </ListItem>
-                      </Paper>
-                    </Link>
-                  )}
+                          </div>
+                        </Hidden>
+                        <ListItemText
+                          align="right"
+                          primary={
+                            <Typography variant="body2" color="textSecondary">
+                              {moment(row.createdAt)
+                                .locale("id")
+                                .format("DD MMM YYYY")}
+                            </Typography>
+                          }
+                          secondary={moment(row.createdAt)
+                            .locale("id")
+                            .format("HH.mm")}
+                        />
+                      </ListItem>
+                    </Paper>
+                  </Link>
+                )}
               </Grid>
             );
           })

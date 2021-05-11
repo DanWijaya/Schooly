@@ -411,7 +411,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -546,8 +546,8 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
-    padding: "6px 24px"
-  }
+    padding: "6px 24px",
+  },
 }));
 
 function AssessmentList(props) {
@@ -611,7 +611,6 @@ function AssessmentList(props) {
 
   React.useEffect(
     () => {
-      
       getAllAssessments();
       getAllClass("map");
       getAllSubjects("map");

@@ -20,17 +20,16 @@ export const getFileAvatar = (id) => (dispatch) => {
     .catch((err) => new Error(err));
 };
 
-
 export const getMultipleFileAvatar = (id_list) => (dispatch) => {
   return axios
-      .get(`/api/files/avatar/multi_user`, { params: { id_list: id_list } })
-      .then((res) => {
-        console.log(res)
-        console.log("Multiple avatars:", res.data)
-        return res.data
-      })
-      .catch((err) => new Error(err));
-}
+    .get(`/api/files/avatar/multi_user`, { params: { id_list: id_list } })
+    .then((res) => {
+      console.log(res);
+      console.log("Multiple avatars:", res.data);
+      return res.data;
+    })
+    .catch((err) => new Error(err));
+};
 
 export const downloadFileAvatar = (id) => (dispatch) => {
   return axios

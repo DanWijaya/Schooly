@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getFileAssessment } from "../../../actions/files/FileAssessmentActions"
+import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
 import {
   getOneAssessment,
   submitAssessment,
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -369,7 +369,7 @@ function ViewAssessmentStudent(props) {
     getAllSubjects,
     getAllClass,
     submitAssessment,
-    getFileAssessment
+    getFileAssessment,
   } = props;
   const { user } = props.auth;
 
@@ -388,11 +388,10 @@ function ViewAssessmentStudent(props) {
 
   // nanti pas onSubmit, akan ngeclear localStorage.removeItem("remainingTime");
   React.useEffect(() => {
-    
     getAllSubjects("map");
     getAllClass("map");
-    getFileAssessment(id).then((result) => setLampiranUrls(result))
-    
+    getFileAssessment(id).then((result) => setLampiranUrls(result));
+
     new Promise((resolve, reject) => {
       getOneAssessment(id, resolve);
     }).then((res) => {

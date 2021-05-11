@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -161,9 +161,7 @@ function EditClassTeacher(props) {
   function generateAllClassMenuItems() {
     let menuItems = [
       <MenuItem key="null" value={null}>
-        <em>
-          Kosong
-        </em>
+        <em>Kosong</em>
       </MenuItem>,
     ];
     for (let classInfo of all_classes) {
@@ -218,7 +216,8 @@ function EditClassTeacher(props) {
         return;
       } else {
         let waliSebelum = all_classes_wali.current[classId];
-        let waliSesudah = (teacherIdArray.length === 0) ? null : teacherIdArray[0];
+        let waliSesudah =
+          teacherIdArray.length === 0 ? null : teacherIdArray[0];
         if (waliSebelum !== waliSesudah) {
           classToUpdate[classId] = waliSesudah;
           // value bisa null

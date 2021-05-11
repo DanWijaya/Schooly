@@ -145,7 +145,7 @@ router.delete("/:id", (req, res) => {
             Key: file.s3_key,
           };
           s3bucket.deleteObject(params, (err, data) => {
-            console.log("Data materi: ", data)
+            console.log("Data materi: ", data);
             if (err) return res.status(404).json(err);
           });
         });
@@ -177,7 +177,7 @@ router.get("/:id", (req, res) => {
       ResponseContentDisposition: `inline;filename=${result.filename}`,
     };
     // const url = s3bucket.getSignedUrl("getObject", params);
-    const url = `${keys.cdn}/${result.s3_key}`
+    const url = `${keys.cdn}/${result.s3_key}`;
     return res.status(200).json(url);
   });
 });

@@ -128,7 +128,6 @@ function ProfilePictureEditorDialog(props) {
     let formData = new FormData();
     formData.append("avatar", profileImg);
 
-
     let userId = user._id;
     uploadFileAvatar(userId, formData);
 

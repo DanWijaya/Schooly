@@ -9,7 +9,7 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getOneTask, updateTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import { clearSuccess } from "../../../actions/SuccessActions"
+import { clearSuccess } from "../../../actions/SuccessActions";
 import {
   deleteFileTasks,
   getFileTasks,
@@ -63,7 +63,7 @@ const styles = (theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
   },
   content: {
@@ -136,7 +136,7 @@ const styles = (theme) => ({
       backgroundColor: theme.palette.error.main,
       color: "white",
     },
-    marginRight: "7.5px"
+    marginRight: "7.5px",
   },
 });
 
@@ -234,7 +234,6 @@ class EditTask extends Component {
   tugasUploader = React.createRef(null);
 
   componentDidMount() {
-    
     const { id } = this.props.match.params;
     this.props.getOneTask(id);
     this.props.getAllClass();
@@ -537,9 +536,7 @@ class EditTask extends Component {
             itemName={this.state.name}
             // isLink={true}
             // redirectLink="/daftar-kuis"
-            redirectLink={
-              `/daftar-tugas`
-            }
+            redirectLink={`/daftar-tugas`}
             isWarning={false}
           />
           <Paper>

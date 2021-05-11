@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     display: "flex",
     flexDirection: "column",
@@ -238,7 +238,6 @@ function ViewTaskTeacher(props) {
   const [disableButton, setDisableButton] = React.useState(true);
 
   React.useEffect(() => {
-    
     getOneTask(task_id);
     getAllClass("map");
     getAllSubjects("map");
@@ -250,11 +249,19 @@ function ViewTaskTeacher(props) {
   // [tasksCollection._id, all_classes_map.size, all_subjects_map.size]
 
   React.useEffect(() => {
-    if (tasksCollection && (Object.keys(tasksCollection).length !== 0) && all_students && (all_students.length !== 0)) {
+    if (
+      tasksCollection &&
+      Object.keys(tasksCollection).length !== 0 &&
+      all_students &&
+      all_students.length !== 0
+    ) {
       // untuk setiap murid yang ada,
       for (let j = 0; j < all_students.length; j++) {
         // jika murid ini mendapatkan tugas ini
-        if (tasksCollection.class_assigned && tasksCollection.class_assigned.includes(all_students[j].kelas)) {
+        if (
+          tasksCollection.class_assigned &&
+          tasksCollection.class_assigned.includes(all_students[j].kelas)
+        ) {
           // untuk setiap file yang pernah dikumpulkan murid ini,
           for (const studentTask of all_students[j].tugas) {
             // jika file ditujukan untuk tugas ini,
@@ -310,7 +317,6 @@ function ViewTaskTeacher(props) {
   // };
   */
 
-
   const onDeleteTask = (id) => {
     deleteTask(id);
     // setFileTugas(null)
@@ -346,7 +352,11 @@ function ViewTaskTeacher(props) {
             <Grid container spacing={2}>
               <Grid item xs={12} style={{ paddingBottom: "0" }}>
                 <Typography variant="h4">{tasksCollection.name}</Typography>
-                <Typography variant="caption" color="textSecondary" gutterBottom>
+                <Typography
+                  variant="caption"
+                  color="textSecondary"
+                  gutterBottom
+                >
                   <h6>{all_subjects_map.get(tasksCollection.subject)}</h6>
                 </Typography>
               </Grid>
@@ -381,7 +391,11 @@ function ViewTaskTeacher(props) {
                     alignItems: "flex-end",
                   }}
                 >
-                  <Typography variant="body2" align="right" color="textSecondary">
+                  <Typography
+                    variant="body2"
+                    align="right"
+                    color="textSecondary"
+                  >
                     Tenggat:{" "}
                     {moment(tasksCollection.deadline)
                       .locale("id")
@@ -402,13 +416,13 @@ function ViewTaskTeacher(props) {
                   {!tasksCollection.class_assigned || !all_classes_map.size
                     ? null
                     : tasksCollection.class_assigned.map((kelas, i) => {
-                      if (all_classes_map.get(kelas)) {
-                        if (i === tasksCollection.class_assigned.length - 1)
-                          return `${all_classes_map.get(kelas).name}`;
-                        return `${all_classes_map.get(kelas).name}, `;
-                      }
-                      return null;
-                    })}
+                        if (all_classes_map.get(kelas)) {
+                          if (i === tasksCollection.class_assigned.length - 1)
+                            return `${all_classes_map.get(kelas).name}`;
+                          return `${all_classes_map.get(kelas).name}, `;
+                        }
+                        return null;
+                      })}
                 </Typography>
               </Grid>
               {!tasksCollection.description ? null : (
@@ -420,11 +434,11 @@ function ViewTaskTeacher(props) {
                 </Grid>
               )}
               {fileLampiran.length === 0 ? null : (
-                  <Grid item xs={12} style={{ marginTop: "15px" }}>
-                    <Typography color="textSecondary" gutterBottom>
-                      Lampiran Berkas:
-                    </Typography>
-                    <Grid container spacing={1}>
+                <Grid item xs={12} style={{ marginTop: "15px" }}>
+                  <Typography color="textSecondary" gutterBottom>
+                    Lampiran Berkas:
+                  </Typography>
+                  <Grid container spacing={1}>
                     {fileLampiran.map((lampiran) => (
                       <LampiranFile
                         file_id={lampiran._id}
@@ -434,27 +448,31 @@ function ViewTaskTeacher(props) {
                         filetype={fileType(lampiran.filename)}
                       />
                     ))}
-                    </Grid>
                   </Grid>
-                )}
+                </Grid>
+              )}
             </Grid>
           </Paper>
         </Grid>
         <Grid item container justify="flex-end" alignItems="center">
           <Grid item style={{ paddingRight: "10px" }}>
-            {disableButton ?
-              <Fab variant="extended" className={classes.seeAllTaskButton} disabled>
+            {disableButton ? (
+              <Fab
+                variant="extended"
+                className={classes.seeAllTaskButton}
+                disabled
+              >
                 <AssignmentIcon style={{ marginRight: "7.5px" }} />
                 Lihat Hasil
               </Fab>
-              :
+            ) : (
               <Link to={`/daftar-tugas-terkumpul/${task_id}`}>
                 <Fab variant="extended" className={classes.seeAllTaskButton}>
                   <AssignmentIcon style={{ marginRight: "7.5px" }} />
                   Lihat Hasil
                 </Fab>
               </Link>
-            }
+            )}
           </Grid>
           <Grid item style={{ paddingRight: "10px" }}>
             <Link to={`/sunting-tugas/${task_id}`}>

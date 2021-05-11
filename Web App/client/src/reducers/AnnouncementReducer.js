@@ -1,9 +1,13 @@
-import { GET_ALL_ANNOUNCEMENTS, GET_ANNOUNCEMENT, GET_ADMIN_ANNOUNCEMENTS } from "../actions/Types";
+import {
+  GET_ALL_ANNOUNCEMENTS,
+  GET_ANNOUNCEMENT,
+  GET_ADMIN_ANNOUNCEMENTS,
+} from "../actions/Types";
 
 const initialState = {
   selectedAnnouncements: [],
   all_announcements: [],
-  adminAnnouncements: []
+  adminAnnouncements: [],
 };
 
 export default function (state = initialState, action) {

@@ -458,14 +458,16 @@ router.post("/bulkupdateclass/:dummyClassId", (req, res) => {
   let dummyClassId = req.params.dummyClassId;
 
   for (let entries of Object.entries(req.body)) {
-
     let classId = entries[0];
     let studentIdArray = entries[1];
 
     operations.push({
       updateMany: {
         filter: { _id: { $in: studentIdArray } },
-        update: (classId === dummyClassId) ? { $unset: { kelas: "" } } : { kelas: classId }
+        update:
+          classId === dummyClassId
+            ? { $unset: { kelas: "" } }
+            : { kelas: classId },
       },
     });
   }

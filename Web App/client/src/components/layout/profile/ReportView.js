@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import {  Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import "moment/locale/id";
 import {
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -139,8 +139,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     width: "20vw",
     [theme.breakpoints.down("sm")]: {
-      width: "200px"
-    }
+      width: "200px",
+    },
   },
   greyBackground: {
     display: "flex",
@@ -151,8 +151,8 @@ const useStyles = makeStyles((theme) => ({
     height: "21vw",
     width: "60vw",
     [theme.breakpoints.down("sm")]: {
-      height:"200px",
-    }
+      height: "200px",
+    },
   },
   customMargin: {
     [theme.breakpoints.down("sm")]: {
@@ -169,9 +169,9 @@ const useStyles = makeStyles((theme) => ({
     height: "21vw",
     width: "60vw",
     [theme.breakpoints.down("sm")]: {
-      height:"200px",
+      height: "200px",
     },
-  }
+  },
 }));
 
 function ScoreGraph(props) {
@@ -270,18 +270,16 @@ function ReportView(props) {
     getAllTask,
     tasksCollection,
     getOneUser,
-    setCurrentClass
+    setCurrentClass,
   } = props;
 
   React.useEffect(() => {
-    
     getOneUser(props.match.params.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
   const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
-
 
   const { all_classes, all_classes_map } = props.classesCollection;
 
@@ -291,21 +289,21 @@ function ReportView(props) {
   const { all_assessments } = props.assessmentsCollection;
 
   const { name, _id } = selectedUser;
-  const id = _id
+  const id = _id;
 
   const [kelas, setKelas] = React.useState("");
 
-  console.log(props.classesCollection)
+  console.log(props.classesCollection);
 
-  console.log(selectedUser)
+  console.log(selectedUser);
 
   React.useEffect(() => {
-    console.log(selectedUser.kelas)
-    setCurrentClass(selectedUser.kelas)
+    console.log(selectedUser.kelas);
+    setCurrentClass(selectedUser.kelas);
   }, [selectedUser]);
 
   React.useEffect(() => {
-    console.log(props.classesCollection)
+    console.log(props.classesCollection);
     setKelas(props.classesCollection.kelas);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.classesCollection.kelas]);
@@ -346,9 +344,7 @@ function ReportView(props) {
 
   // Graph
   const [graphType, setGraphType] = React.useState(0);
-  const [graphSubject, setGraphSubject] = React.useState(
-    null
-  );
+  const [graphSubject, setGraphSubject] = React.useState(null);
   const [taskGraphCurrentSubject, setTaskGraphCurrentSubject] = React.useState(
     null
   );
@@ -680,7 +676,12 @@ function ReportView(props) {
     let message = [];
     if (emptyCondition.includes("noStudent")) {
       message.push(
-        <Grid container alignItems="center" justify="center" style={{ height: "20vh" }}>
+        <Grid
+          container
+          alignItems="center"
+          justify="center"
+          style={{ height: "20vh" }}
+        >
           <Typography variant="h5" color="textSecondary" align="center">
             Kelas ini tidak memiliki murid
           </Typography>
@@ -689,7 +690,12 @@ function ReportView(props) {
     }
     if (emptyCondition.includes("noGrade")) {
       message.push(
-        <Grid container alignItems="center" justify="center" style={{ height: "20vh" }}>
+        <Grid
+          container
+          alignItems="center"
+          justify="center"
+          style={{ height: "20vh" }}
+        >
           <Typography variant="h5" color="textSecondary" align="center">
             Belum ada tugas, kuis, atau ujian
           </Typography>
@@ -1123,7 +1129,11 @@ function ReportView(props) {
 
     return (
       <Grid item container direction="column" spacing={1} alignItems="center">
-        <Grid item className={classes.graphButtons} style={{ margin: "0 0 10px" }}>
+        <Grid
+          item
+          className={classes.graphButtons}
+          style={{ margin: "0 0 10px" }}
+        >
           <IconButton
             onClick={() => {
               if (graphType - 1 < 0) {
@@ -1135,11 +1145,11 @@ function ReportView(props) {
           >
             <ArrowBackIosIcon />
           </IconButton>
-          <Typography align="center">
-            Nilai {types[graphType]} Anda
-          </Typography>
+          <Typography align="center">Nilai {types[graphType]} Anda</Typography>
           <IconButton
-            onClick={() => { setGraphType((graphType + 1) % types.length) }}
+            onClick={() => {
+              setGraphType((graphType + 1) % types.length);
+            }}
           >
             <ArrowForwardIosIcon />
           </IconButton>
@@ -1152,7 +1162,8 @@ function ReportView(props) {
                 color="textSecondary"
                 variant="subtitle2"
               >
-                Belum ada {types[graphType]} yang telah dinilai untuk mata pelajaran terkait
+                Belum ada {types[graphType]} yang telah dinilai untuk mata
+                pelajaran terkait
               </Typography>
             </div>
           ) : (
@@ -1186,20 +1197,17 @@ function ReportView(props) {
           </IconButton>
         </Grid>
       </Grid>
-    )
+    );
   }
-
 
   // Untuk view dari sidebar teacher, untuk sekarang reserve special code "semua"
   let role;
-  if(props.match.params.id === "semua" && user.role === "Teacher") {
-    role = "Other"
+  if (props.match.params.id === "semua" && user.role === "Teacher") {
+    role = "Other";
   } else if (props.match.params.id === "semua" && user.role !== "Teacher") {
-    return (
-      <Redirect to="/tidak-ditemukan" />
-    )
+    return <Redirect to="/tidak-ditemukan" />;
   } else {
-    role = user.role
+    role = user.role;
   }
 
   return (
@@ -1266,7 +1274,7 @@ function ReportView(props) {
             // spacing={4}
             alignItems="center"
           >
-            <Paper style={{ padding: "20px", width: "100%"}}>
+            <Paper style={{ padding: "20px", width: "100%" }}>
               {createGraph()}
             </Paper>
 
@@ -1650,5 +1658,5 @@ export default connect(mapStateToProps, {
   getAllSubjects,
   getAllTask,
   getOneUser,
-  setCurrentClass
+  setCurrentClass,
 })(ReportView);

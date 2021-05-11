@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -289,7 +289,6 @@ function ViewAssessmentTeacher(props) {
   // const [value, setValue] = React.useState(1); //dev
 
   React.useEffect(() => {
-    
     getOneAssessment(assessment_id);
     getAllClass("map");
     getAllSubjects("map");
@@ -679,7 +678,7 @@ function ViewAssessmentTeacher(props) {
               </Grid>
             </Grid>
           </Grid>
-        </Hidden>
+        </Hidden>,
       ];
     }
 
@@ -705,10 +704,7 @@ function ViewAssessmentTeacher(props) {
         "Nilai harus berupa angka dan tidak boleh kurang dari 0"
       );
     } else if (grade > questionWeight) {
-      handleOpenSnackbar(
-        "error",
-        "Nilai tidak boleh melebihi bobot"
-      );
+      handleOpenSnackbar("error", "Nilai tidak boleh melebihi bobot");
     } else {
       temp[studentId] = { ...temp[studentId], [questionIndex]: numberGrade };
       setLongtextGrades(temp);
@@ -1718,7 +1714,11 @@ function QuestionPerQuestion(props) {
                   size="small"
                   variant="contained"
                   onClick={() => {
-                    handleSaveGrade(studentId, questionNumber - 1, questionWeight);
+                    handleSaveGrade(
+                      studentId,
+                      questionNumber - 1,
+                      questionWeight
+                    );
                   }}
                 >
                   SIMPAN
@@ -1959,7 +1959,9 @@ function QuestionAnswerPerStudent(props) {
 
           <Grid item xs={12} style={{ marginTop: "15px" }}>
             <Typography gutterBottom>
-              <b><u>Jawaban:</u></b>
+              <b>
+                <u>Jawaban:</u>
+              </b>
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -2005,7 +2007,11 @@ function QuestionAnswerPerStudent(props) {
                 size="small"
                 variant="contained"
                 onClick={() => {
-                  handleSaveGrade(studentId, questionNumber - 1, questionWeight);
+                  handleSaveGrade(
+                    studentId,
+                    questionNumber - 1,
+                    questionWeight
+                  );
                 }}
               >
                 SIMPAN

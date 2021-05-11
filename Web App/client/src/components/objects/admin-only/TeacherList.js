@@ -36,14 +36,10 @@ import { GoSearch } from "react-icons/go";
 import { BiSitemap } from "react-icons/bi";
 import CloseIcon from "@material-ui/icons/Close";
 import ClearIcon from "@material-ui/icons/Clear";
-import { Autocomplete }from '@material-ui/lab';
+import { Autocomplete } from "@material-ui/lab";
 import MuiAlert from "@material-ui/lab/Alert";
 
-function createData(
-  _id,
-  name,
-  email,
-) {
+function createData(_id, name, email) {
   return { _id, name, email };
 }
 
@@ -330,7 +326,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -444,7 +440,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
-    padding: "6px 16px"
+    padding: "6px 16px",
   },
   saveButton: {
     backgroundColor: theme.palette.primary.main,
@@ -458,14 +454,14 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   // editClassButton: {
-    // width: "100%",
-    // marginTop: "20px",
-    // backgroundColor: theme.palette.primary.main,
-    // color: "white",
-    // "&:focus, &:hover": {
-    //   color: theme.palette.primary.main,
-    //   backgroundColor: "white",
-    // },
+  // width: "100%",
+  // marginTop: "20px",
+  // backgroundColor: theme.palette.primary.main,
+  // color: "white",
+  // "&:focus, &:hover": {
+  //   color: theme.palette.primary.main,
+  //   backgroundColor: "white",
+  // },
   // },
   cancelButton: {
     // width: "100%",
@@ -488,7 +484,7 @@ function TeacherList(props) {
     getTeachers,
     updateTeacher,
     clearErrors,
-    clearSuccess
+    clearSuccess,
   } = props;
   const { all_classes } = props.classesCollection;
   const { all_teachers } = props.auth;
@@ -500,7 +496,6 @@ function TeacherList(props) {
   const [rows, setRows] = React.useState([]);
 
   React.useEffect(() => {
-    
     // getAllSubjects("map");
     getAllSubjects();
     // getAllClass("map");
@@ -512,14 +507,14 @@ function TeacherList(props) {
 
   React.useEffect(() => {
     if (all_teachers && all_subjects && all_classes) {
-      let all_subjects_obj = {}
+      let all_subjects_obj = {};
       all_subjects.forEach((subjectInfo) => {
         all_subjects_obj[subjectInfo._id] = subjectInfo;
-      })
-      let all_classes_obj = {}
+      });
+      let all_classes_obj = {};
       all_classes.forEach((classInfo) => {
         all_classes_obj[classInfo._id] = classInfo;
-      })
+      });
 
       let tempRows = [];
       let tempSelectedValues = {};
@@ -532,15 +527,19 @@ function TeacherList(props) {
           tempSelectedValues[data._id] = {
             subject: data.subject_teached.map((subjectId) => ({
               _id: subjectId,
-              name: all_subjects_obj[subjectId] ? all_subjects_obj[subjectId].name : null
+              name: all_subjects_obj[subjectId]
+                ? all_subjects_obj[subjectId].name
+                : null,
             })),
             class: data.class_teached.map((classId) => ({
               _id: classId,
-              name: all_classes_obj[classId] ? all_classes_obj[classId].name : null
-            }))
+              name: all_classes_obj[classId]
+                ? all_classes_obj[classId].name
+                : null,
+            })),
           };
           all_teacher_obj.current[data._id] = data;
-        })
+        });
       setRows(tempRows);
       setSelectedValues(tempSelectedValues);
     }
@@ -559,12 +558,11 @@ function TeacherList(props) {
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )
           .map((data) => createData(data._id, data.name, data.email))
-      )
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchFilter]);
 
-  
   // SORT
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
@@ -573,8 +571,7 @@ function TeacherList(props) {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
-  };
-
+  }
 
   // SNACKBAR
   const [snackbarContent, setSnackbarContent] = React.useState("");
@@ -595,35 +592,32 @@ function TeacherList(props) {
   }
 
   React.useEffect(() => {
-    if (errors && (errors.constructor === Object) && (Object.keys(errors).length !== 0)) {
-      handleOpenSnackbar(
-        "error",
-        "Data guru gagal disimpan"
-      );
+    if (
+      errors &&
+      errors.constructor === Object &&
+      Object.keys(errors).length !== 0
+    ) {
+      handleOpenSnackbar("error", "Data guru gagal disimpan");
       clearErrors();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [errors])
+  }, [errors]);
 
   React.useEffect(() => {
     if (success) {
-      handleOpenSnackbar(
-        "success",
-        "Data guru berhasil disimpan"
-      );
+      handleOpenSnackbar("success", "Data guru berhasil disimpan");
       clearSuccess();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success])
+  }, [success]);
 
   React.useEffect(() => {
     return () => {
       clearErrors();
       clearSuccess();
-    }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
+  }, []);
 
   // AUTOCOMPLETE: untuk memilih subject yang diajar dan kelas yang diajar tiap guru
 
@@ -641,23 +635,31 @@ function TeacherList(props) {
   const [selectedValues, setSelectedValues] = React.useState({});
 
   function handleChangeSubject(selectedSubjectsInfo, teacherId) {
-    setSelectedValues({...selectedValues, [teacherId]: {
-      ...selectedValues[teacherId],
-      subject: selectedSubjectsInfo
-    }})
+    setSelectedValues({
+      ...selectedValues,
+      [teacherId]: {
+        ...selectedValues[teacherId],
+        subject: selectedSubjectsInfo,
+      },
+    });
   }
 
   function handleChangeClass(selectedClassInfo, teacherId) {
-    setSelectedValues({...selectedValues, [teacherId]: {
-      ...selectedValues[teacherId],
-      class: selectedClassInfo
-    }})
+    setSelectedValues({
+      ...selectedValues,
+      [teacherId]: {
+        ...selectedValues[teacherId],
+        class: selectedClassInfo,
+      },
+    });
   }
 
   function handleSave(teacherId) {
     let teacher = selectedValues[teacherId];
-    let newSubjectTeached = teacher.subject.map((subjectInfo) => (subjectInfo._id));
-    let newClassTeached = teacher.class.map((classInfo) => (classInfo._id));
+    let newSubjectTeached = teacher.subject.map(
+      (subjectInfo) => subjectInfo._id
+    );
+    let newClassTeached = teacher.class.map((classInfo) => classInfo._id);
     let tempClassToSubject = {};
 
     for (let classId of newClassTeached) {
@@ -669,41 +671,46 @@ function TeacherList(props) {
       ...all_teacher_obj.current[teacherId],
       subject_teached: newSubjectTeached,
       class_teached: newClassTeached,
-      class_to_subject: tempClassToSubject
-    }
-    
+      class_to_subject: tempClassToSubject,
+    };
+
     updateTeacher(newTeacherData, teacherId);
   }
-
 
   // DIALOG SUNTING
   const [openSuntingDialog, setOpenSuntingDialog] = React.useState(false);
   const [dialogData, setDialogData] = React.useState(null);
 
   const handleClickOpenSuntingDialog = (data) => {
-    setDialogData(data)
+    setDialogData(data);
     setOpenSuntingDialog(true);
   };
 
-  const handleCloseSuntingDialog  = () => {
+  const handleCloseSuntingDialog = () => {
     setOpenSuntingDialog(false);
   };
-
 
   document.title = "Schooly | Sunting Data Ajar Guru";
 
   return (
     <div className={classes.root}>
-      {(dialogData) ?
+      {dialogData ? (
         <Hidden smUp>
           <Dialog
             onClose={handleCloseSuntingDialog}
             open={openSuntingDialog}
             // fullWidth
           >
-            <div style={{ width: "450px", maxWidth: "100%", minHeight: "420px" }}>
+            <div
+              style={{ width: "450px", maxWidth: "100%", minHeight: "420px" }}
+            >
               <div
-                style={{ display: "flex", margin: "20px 23px 0 0px", justifyContent: "flex-end", alignItems: "flex-end" }}
+                style={{
+                  display: "flex",
+                  margin: "20px 23px 0 0px",
+                  justifyContent: "flex-end",
+                  alignItems: "flex-end",
+                }}
               >
                 <IconButton size="small" onClick={handleCloseSuntingDialog}>
                   <CloseIcon />
@@ -714,7 +721,7 @@ function TeacherList(props) {
                   display: "flex",
                   flexDirection: "row",
                   padding: "5px 30px 20px 30px",
-                  alignItems: "center"
+                  alignItems: "center",
                 }}
               >
                 <ListItemAvatar>
@@ -734,13 +741,25 @@ function TeacherList(props) {
                 </div>
               </div>
               <div style={{ padding: "12px 30px" }}>
-                <Typography variant="body2" color="primary" style={{ marginBottom: "3px" }}>Mata Pelajaran</Typography>
+                <Typography
+                  variant="body2"
+                  color="primary"
+                  style={{ marginBottom: "3px" }}
+                >
+                  Mata Pelajaran
+                </Typography>
                 <Autocomplete
                   multiple
-                  value={selectedValues[dialogData._id] ? selectedValues[dialogData._id].subject : null}
+                  value={
+                    selectedValues[dialogData._id]
+                      ? selectedValues[dialogData._id].subject
+                      : null
+                  }
                   options={all_subjects}
                   getOptionLabel={(option) => option.name}
-                  getOptionSelected={(option, value) => (option._id === value._id)}
+                  getOptionSelected={(option, value) =>
+                    option._id === value._id
+                  }
                   filterSelectedOptions
                   onChange={(event, value) => {
                     handleChangeSubject(value, dialogData._id);
@@ -751,21 +770,33 @@ function TeacherList(props) {
                       variant="outlined"
                       size="small"
                       style={{ border: "none" }}
-                    // TODO error helpertext
-                    // error={errors.mata_pelajaran}
-                    // helperText={errors.mata_pelajaran}
+                      // TODO error helpertext
+                      // error={errors.mata_pelajaran}
+                      // helperText={errors.mata_pelajaran}
                     />
                   )}
                 />
               </div>
               <div style={{ padding: "12px 30px" }}>
-                <Typography variant="body2" color="primary" style={{ marginBottom: "3px" }}>Kelas</Typography>
+                <Typography
+                  variant="body2"
+                  color="primary"
+                  style={{ marginBottom: "3px" }}
+                >
+                  Kelas
+                </Typography>
                 <Autocomplete
                   multiple
-                  value={selectedValues[dialogData._id] ? selectedValues[dialogData._id].class : null}
+                  value={
+                    selectedValues[dialogData._id]
+                      ? selectedValues[dialogData._id].class
+                      : null
+                  }
                   options={all_classes}
                   getOptionLabel={(option) => option.name}
-                  getOptionSelected={(option, value) => (option._id === value._id)}
+                  getOptionSelected={(option, value) =>
+                    option._id === value._id
+                  }
                   filterSelectedOptions
                   onChange={(event, value) => {
                     handleChangeClass(value, dialogData._id);
@@ -776,14 +807,21 @@ function TeacherList(props) {
                       variant="outlined"
                       size="small"
                       style={{ border: "none" }}
-                    // TODO error helpertext
-                    // error={errors.mata_pelajaran}
-                    // helperText={errors.mata_pelajaran}
+                      // TODO error helpertext
+                      // error={errors.mata_pelajaran}
+                      // helperText={errors.mata_pelajaran}
                     />
                   )}
                 />
               </div>
-              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }} className={classes.content}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: "20px",
+                }}
+                className={classes.content}
+              >
                 {/* <div style={{ display: "flex", alignItems: "center", padding: "4px" }}>
                   <Button
                     variant="contained"
@@ -793,7 +831,13 @@ function TeacherList(props) {
                     Batal
                   </Button>
                 </div> */}
-                <div style={{ display: "flex", alignItems: "center", padding: "15px 30px 15px 5px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "15px 30px 15px 5px",
+                  }}
+                >
                   <Button
                     variant="contained"
                     className={classes.saveButton}
@@ -808,8 +852,7 @@ function TeacherList(props) {
             </div>
           </Dialog>
         </Hidden>
-        : null
-      }
+      ) : null}
       <TeacherListToolbar
         classes={classes}
         order={order}
@@ -867,14 +910,19 @@ function TeacherList(props) {
                                 {!row.avatar ? (
                                   <Avatar />
                                 ) : (
-                                  <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                                  <Avatar
+                                    src={`/api/upload/avatar/${row.avatar}`}
+                                  />
                                 )}
                               </ListItemAvatar>
                               <div>
                                 <Typography variant="h6" color="textPrimary">
                                   {row.name}
                                 </Typography>
-                                <Typography variant="body2" color="textSecondary">
+                                <Typography
+                                  variant="body2"
+                                  color="textSecondary"
+                                >
                                   {row.email}
                                 </Typography>
                               </div>
@@ -882,7 +930,13 @@ function TeacherList(props) {
                           </Hidden>
                         </Grid>
                         <Hidden smUp implementation="css">
-                          <Grid item xs container spacing={1} justify="flex-end">
+                          <Grid
+                            item
+                            xs
+                            container
+                            spacing={1}
+                            justify="flex-end"
+                          >
                             <Grid item>
                               <LightTooltip title="Sunting">
                                 <IconButton
@@ -901,13 +955,21 @@ function TeacherList(props) {
                     <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
                       <Grid container spacing={4}>
                         <Grid item xs={12}>
-                          <Typography variant="body1" color="primary">Mata Pelajaran</Typography>
+                          <Typography variant="body1" color="primary">
+                            Mata Pelajaran
+                          </Typography>
                           <Autocomplete
                             multiple
-                            value={selectedValues[row._id] ? selectedValues[row._id].subject : null}
+                            value={
+                              selectedValues[row._id]
+                                ? selectedValues[row._id].subject
+                                : null
+                            }
                             options={all_subjects}
                             getOptionLabel={(option) => option.name}
-                            getOptionSelected={(option, value) => (option._id === value._id)}
+                            getOptionSelected={(option, value) =>
+                              option._id === value._id
+                            }
                             filterSelectedOptions
                             onChange={(event, value) => {
                               handleChangeSubject(value, row._id);
@@ -926,13 +988,21 @@ function TeacherList(props) {
                           />
                         </Grid>
                         <Grid item xs={12}>
-                          <Typography variant="body1" color="primary">Kelas</Typography>
+                          <Typography variant="body1" color="primary">
+                            Kelas
+                          </Typography>
                           <Autocomplete
                             multiple
-                            value={selectedValues[row._id] ? selectedValues[row._id].class : null}
+                            value={
+                              selectedValues[row._id]
+                                ? selectedValues[row._id].class
+                                : null
+                            }
                             options={all_classes ? all_classes : null}
                             getOptionLabel={(option) => option.name}
-                            getOptionSelected={(option, value) => (option._id === value._id)}
+                            getOptionSelected={(option, value) =>
+                              option._id === value._id
+                            }
                             filterSelectedOptions
                             onChange={(event, value) => {
                               handleChangeClass(value, row._id);
@@ -943,9 +1013,9 @@ function TeacherList(props) {
                                 variant="outlined"
                                 size="small"
                                 style={{ border: "none" }}
-                              // TODO error helpertext
-                              // error={errors.mata_pelajaran}
-                              // helperText={errors.mata_pelajaran}
+                                // TODO error helpertext
+                                // error={errors.mata_pelajaran}
+                                // helperText={errors.mata_pelajaran}
                               />
                             )}
                           />
@@ -1005,14 +1075,19 @@ function TeacherList(props) {
                                 {!row.avatar ? (
                                   <Avatar />
                                 ) : (
-                                  <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                                  <Avatar
+                                    src={`/api/upload/avatar/${row.avatar}`}
+                                  />
                                 )}
                               </ListItemAvatar>
                               <div>
                                 <Typography variant="h6" color="textPrimary">
                                   {row.name}
                                 </Typography>
-                                <Typography variant="body2" color="textSecondary">
+                                <Typography
+                                  variant="body2"
+                                  color="textSecondary"
+                                >
                                   {row.email}
                                 </Typography>
                               </div>
@@ -1025,7 +1100,9 @@ function TeacherList(props) {
                               <IconButton
                                 size="small"
                                 className={classes.editTeacherButton}
-                                onClick={() => handleClickOpenSuntingDialog(row)}
+                                onClick={() =>
+                                  handleClickOpenSuntingDialog(row)
+                                }
                               >
                                 <EditIcon fontSize="small" />
                               </IconButton>
@@ -1094,5 +1171,5 @@ export default connect(mapStateToProps, {
   getAllClass,
   updateTeacher,
   clearErrors,
-  clearSuccess
+  clearSuccess,
 })(TeacherList);

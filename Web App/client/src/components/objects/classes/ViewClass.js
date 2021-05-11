@@ -17,7 +17,10 @@ import {
   getTaskByClass,
 } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
-import { getFileAvatar, getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
+import {
+  getFileAvatar,
+  getMultipleFileAvatar,
+} from "../../../actions/files/FileAvatarActions";
 import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import viewClassPicture from "./ViewClassPicture.png";
@@ -62,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -173,8 +176,8 @@ function sortAscByCreatedAt(rows) {
       return 1;
     }
     return 0;
-  }
-  const comparator =  (a, b) => descendingComparator(a, b, "createdAt");
+  };
+  const comparator = (a, b) => descendingComparator(a, b, "createdAt");
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -301,7 +304,6 @@ function AssessmentListItem(props) {
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
-
 
   return (
     <div>
@@ -571,7 +573,7 @@ function ViewClass(props) {
     getAllAssessments,
     assessmentsCollection,
     getFileAvatar,
-    getMultipleFileAvatar
+    getMultipleFileAvatar,
   } = props;
   // const { all_user_files } = props.filesCollection;
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
@@ -591,11 +593,7 @@ function ViewClass(props) {
   function showTasks(data) {
     if (data.length === 0) {
       return (
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="textSecondary"
-        >
+        <Typography variant="subtitle1" align="center" color="textSecondary">
           Kosong
         </Typography>
       );
@@ -620,11 +618,7 @@ function ViewClass(props) {
   function showAssessments(data) {
     if (data.length === 0) {
       return (
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="textSecondary"
-        >
+        <Typography variant="subtitle1" align="center" color="textSecondary">
           Kosong
         </Typography>
       );
@@ -654,11 +648,7 @@ function ViewClass(props) {
   function showMaterials(data) {
     if (data.length === 0) {
       return (
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="textSecondary"
-        >
+        <Typography variant="subtitle1" align="center" color="textSecondary">
           Kosong
         </Typography>
       );
@@ -678,11 +668,7 @@ function ViewClass(props) {
   function showAllbySubject(data) {
     if (data.length === 0) {
       return (
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="textSecondary"
-        >
+        <Typography variant="subtitle1" align="center" color="textSecondary">
           Kosong
         </Typography>
       );
@@ -796,7 +782,7 @@ function ViewClass(props) {
               workStatus: workStatus,
               createdAt: task.createdAt,
               objectType: "Tugas",
-              category: category
+              category: category,
             });
             if (!category && result.length === 5) break;
 
@@ -815,8 +801,8 @@ function ViewClass(props) {
               workStatus: workStatus,
               createdAt: task.createdAt,
               objectType: "Task",
-              category: category
-          });
+              category: category,
+            });
           }
         }
       }
@@ -888,7 +874,7 @@ function ViewClass(props) {
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
                 objectType: "Kuis",
-                category: category
+                category: category,
               });
               // result.push(
               //   <AssessmentListItem
@@ -929,7 +915,7 @@ function ViewClass(props) {
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
                 objectType: "Ujian",
-                category: category
+                category: category,
               });
               // result.push(
               //   <AssessmentListItem
@@ -975,7 +961,7 @@ function ViewClass(props) {
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
                 objectType: "Kuis",
-                category: category
+                category: category,
               });
               // result.push(
               //   <AssessmentListItem
@@ -1015,7 +1001,7 @@ function ViewClass(props) {
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
                 objectType: "Ujian",
-                category: category
+                category: category,
               });
               // result.push(
               //   <AssessmentListItem
@@ -1069,7 +1055,7 @@ function ViewClass(props) {
             workCategoryAvatar: workCategoryAvatar,
             subject: material.subject,
             createdAt: material.createdAt,
-            objectType: "Material"
+            objectType: "Material",
           });
         }
         if (tab === "pekerjaan_kelas") {
@@ -1086,15 +1072,14 @@ function ViewClass(props) {
   }
 
   React.useEffect(() => {
-    
     if (user.role === "Student") {
-      if (user.kelas && (user.kelas === classId)) {
-        // jika murid ini sudah ditempatkan ke suatu kelas dan 
+      if (user.kelas && user.kelas === classId) {
+        // jika murid ini sudah ditempatkan ke suatu kelas dan
         // id kelas yang dimasukan sebagai parameter adalah id milik kelas yang ditempati murid ini,
         getMaterial(user.kelas, "by_class");
         getAllTask(); // get the tasksCollection
       } else {
-        // jika murid ini belum ditempatkan di kelas manapun atau mencoba membuka halaman untuk kelas lain, 
+        // jika murid ini belum ditempatkan di kelas manapun atau mencoba membuka halaman untuk kelas lain,
         // tidak load data apa-apa dan langsung redirect ke halaman yang sesuai (di bawah)
         return;
       }
@@ -1121,20 +1106,21 @@ function ViewClass(props) {
   React.useEffect(() => {
     //Untuk mendapatkan kelas current, digunakan untuk:
     //  -> Dapatin id walikelas
-    // -> pindahkan getTeachers("map") di sini karena mau execute setWalikelas hanya setelah itu selesai. 
+    // -> pindahkan getTeachers("map") di sini karena mau execute setWalikelas hanya setelah itu selesai.
     var id_list;
     setCurrentClass(classId).then((kelas) => {
-      id_list = [kelas.walikelas]
-      console.log("ID LIST: ", id_list)
-      students_by_class.forEach((s) => id_list.push(s._id))
+      id_list = [kelas.walikelas];
+      console.log("ID LIST: ", id_list);
+      students_by_class.forEach((s) => id_list.push(s._id));
       getMultipleFileAvatar(id_list).then((results) => {
-        console.log(results)
-        setAvatar(results)
-      })
-      getTeachers("map").then((results) => setWalikelas(results.get(kelas.walikelas)))
+        console.log(results);
+        setAvatar(results);
+      });
+      getTeachers("map").then((results) =>
+        setWalikelas(results.get(kelas.walikelas))
+      );
       // setWalikelas(all_teachers_map.get(kelas.walikelas));
-    })
-    
+    });
   }, [students_by_class.length, kelas.walikelas]);
 
   const [value, setValue] = React.useState(0);
@@ -1143,7 +1129,7 @@ function ViewClass(props) {
   };
 
   // console.log(selectedMaterials)
-  console.log("Avatars: ", avatar, user._id)
+  console.log("Avatars: ", avatar, user._id);
   document.title = !kelas.name
     ? "Schooly | Lihat Kelas"
     : `Schooly | ${kelas.name}`;
@@ -1173,18 +1159,25 @@ function ViewClass(props) {
     }
   }
 
-  if ((user.role === "Student")) {
+  if (user.role === "Student") {
     if (user.kelas) {
       if (classId !== user.kelas) {
         // jika murid ini membuka halaman kelas lain,
         return <Redirect to="/tidak-ditemukan" />;
       }
       // jika murid ini membuka kelas sendiri, muat halaman
-
     } else {
       // jika murid ini belum ditempatkan di kelas manapun,
       return (
-        <div className={classes.root} style={{display: "flex", alignItems: "center", justifyContent: "center", height: "48vh"}}>
+        <div
+          className={classes.root}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "48vh",
+          }}
+        >
           <Typography variant="h5" color="textSecondary">
             Anda belum ditempatkan di kelas manapun
           </Typography>
@@ -1195,7 +1188,7 @@ function ViewClass(props) {
 
   return (
     <div className={classes.root}>
-      {(user.role === "Admin" || user.role === "Teacher") ? (
+      {user.role === "Admin" || user.role === "Teacher" ? (
         <div>
           <Paper className={classes.classPaper}>
             <Typography variant="h3">{kelas.name}</Typography>
@@ -1206,7 +1199,7 @@ function ViewClass(props) {
           <div style={{ padding: "20px", marginBottom: "40px" }}>
             <Typography variant="h4" gutterBottom>
               Wali Kelas
-              </Typography>
+            </Typography>
             <Divider className={classes.personListDivider} />
             <List className={classes.listContainer}>
               {!isObjEmpty(walikelas) ? (
@@ -1223,7 +1216,7 @@ function ViewClass(props) {
                         }
                       />
                     </Grid>,
-                    (user.email === walikelas.email) ? null : ( // menghilangkan tombol lihat profil di diri sendiri
+                    user.email === walikelas.email ? null : ( // menghilangkan tombol lihat profil di diri sendiri
                       <Grid item xs container justify="flex-end">
                         <Grid item>
                           <LightTooltip title="Lihat Profil">
@@ -1242,24 +1235,24 @@ function ViewClass(props) {
                           </LightTooltip>
                         </Grid>
                       </Grid>
-                    )
+                    ),
                   ]}
                 </Grid>
               ) : (
-                  <Typography
-                    variant="subtitle1"
-                    align="center"
-                    color="textSecondary"
-                  >
-                    Kosong
-                  </Typography>
-                )}
+                <Typography
+                  variant="subtitle1"
+                  align="center"
+                  color="textSecondary"
+                >
+                  Kosong
+                </Typography>
+              )}
             </List>
           </div>
           <div style={{ padding: "20px" }}>
             <Typography variant="h4" gutterBottom>
               Murid
-              </Typography>
+            </Typography>
             <Divider className={classes.personListDivider} />
             <List className={classes.listContainer}>
               {students_by_class.length === 0 ? (
@@ -1271,38 +1264,38 @@ function ViewClass(props) {
                   Kosong
                 </Typography>
               ) : (
-                  students_by_class.map((student) => (
-                    <Grid container justify="space-between" alignItems="center">
+                students_by_class.map((student) => (
+                  <Grid container justify="space-between" alignItems="center">
+                    <Grid item>
+                      <PersonListItem
+                        // person_avatar={`/api/upload/avatar/${student.avatar}`}
+                        person_avatar={avatar[student._id]}
+                        person_name={student.name}
+                        person_id={student._id}
+                        person_role={student_role(student._id)}
+                      />
+                    </Grid>
+                    <Grid item xs container justify="flex-end">
                       <Grid item>
-                        <PersonListItem
-                          // person_avatar={`/api/upload/avatar/${student.avatar}`}
-                          person_avatar={avatar[student._id]}
-                          person_name={student.name}
-                          person_id={student._id}
-                          person_role={student_role(student._id)}
-                        />
-                      </Grid>
-                      <Grid item xs container justify="flex-end">
-                        <Grid item>
-                          <LightTooltip title="Lihat Profil">
-                            <Link
-                              to={{
-                                pathname: `/lihat-profil/${student._id}`,
-                              }}
+                        <LightTooltip title="Lihat Profil">
+                          <Link
+                            to={{
+                              pathname: `/lihat-profil/${student._id}`,
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              className={classes.viewMaterialButton}
                             >
-                              <IconButton
-                                size="small"
-                                className={classes.viewMaterialButton}
-                              >
-                                <PageviewIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
+                              <PageviewIcon fontSize="small" />
+                            </IconButton>
+                          </Link>
+                        </LightTooltip>
                       </Grid>
                     </Grid>
-                  ))
-                )}
+                  </Grid>
+                ))
+              )}
             </List>
           </div>
         </div>
@@ -1487,10 +1480,7 @@ function ViewClass(props) {
                           alignItems="center"
                         >
                           <Typography variant="h6">{subject.name}</Typography>
-                          <LightTooltip
-                            title="Lihat Profil"
-                            placement="right"
-                          >
+                          <LightTooltip title="Lihat Profil" placement="right">
                             <Link to={`/mata-pelajaran/${subject._id}`}>
                               <IconButton
                                 size="small"
@@ -1505,10 +1495,26 @@ function ViewClass(props) {
                       <Divider />
                       <List className={classes.expansionPanelList}>
                         {showAllbySubject(
-                          listMaterials("subject", subject, "mata_pelajaran").concat(
-                          listTasks("subject", subject, "mata_pelajaran")).concat(
-                          listAssessments("subject", subject, "Kuis", "mata_pelajaran")).concat(
-                          listAssessments("subject", subject, "Ujian", "mata_pelajaran"))
+                          listMaterials("subject", subject, "mata_pelajaran")
+                            .concat(
+                              listTasks("subject", subject, "mata_pelajaran")
+                            )
+                            .concat(
+                              listAssessments(
+                                "subject",
+                                subject,
+                                "Kuis",
+                                "mata_pelajaran"
+                              )
+                            )
+                            .concat(
+                              listAssessments(
+                                "subject",
+                                subject,
+                                "Ujian",
+                                "mata_pelajaran"
+                              )
+                            )
                         )}
                       </List>
                     </ExpansionPanel>
@@ -1532,20 +1538,14 @@ function ViewClass(props) {
                       Kosong
                     </Typography>
                   ) : (
-                    <Grid
-                      container
-                      justify="space-between"
-                      alignItems="center"
-                    >
+                    <Grid container justify="space-between" alignItems="center">
                       <Grid item>
                         <PersonListItem
                           person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
                           person_name={walikelas.name}
                           person_role={
                             all_subjects_map
-                              ? all_subjects_map.get(
-                                  walikelas.subject_teached
-                                )
+                              ? all_subjects_map.get(walikelas.subject_teached)
                               : null
                           }
                         />
@@ -1601,7 +1601,7 @@ function ViewClass(props) {
                               person_role={student_role(student._id)}
                             />
                           </Grid>,
-                          (user.email === student.email) ? null : (
+                          user.email === student.email ? null : (
                             <Grid item xs container justify="flex-end">
                               <Grid item>
                                 <LightTooltip title="Lihat Profil">
@@ -1620,7 +1620,7 @@ function ViewClass(props) {
                                 </LightTooltip>
                               </Grid>
                             </Grid>
-                          )
+                          ),
                         ]}
                       </Grid>
                     ))
@@ -1675,5 +1675,5 @@ export default connect(mapStateToProps, {
   getStudents,
   getTaskAtmpt,
   getFileAvatar,
-  getMultipleFileAvatar
+  getMultipleFileAvatar,
 })(ViewClass);

@@ -186,7 +186,11 @@ export const updateMaterial = (
           formData
         );
       } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
-      else return {_id:res.data._id ,message: "Successfully updated task with no lampiran"};
+      else
+        return {
+          _id: res.data._id,
+          message: "Successfully updated task with no lampiran",
+        };
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");

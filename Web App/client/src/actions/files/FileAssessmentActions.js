@@ -9,22 +9,24 @@ export const uploadFileAssessment = (id, formData) => {
 };
 
 export const getFileAssessment = (id) => (dispatch) => {
-  console.log(id)
+  console.log(id);
   return axios
     .get(`/api/files/assessments/by_assessment/${id}`)
     .then((res) => {
       console.log("assessmentnya: ", res.data);
-      let file_ids = res.data.map((file) => file._id)
+      let file_ids = res.data.map((file) => file._id);
       // file_ids = [...new Set(file_ids)]
-      console.log(file_ids)
-      return axios.post(`/api/files/assessments/getS3Url`, { file_ids: file_ids })
+      console.log(file_ids);
+      return axios.post(`/api/files/assessments/getS3Url`, {
+        file_ids: file_ids,
+      });
     })
     .then((res) => {
-      const { ids, urls} = res.data;
-      // ids dan urls nya itu sesuai dengan urutannya. 
+      const { ids, urls } = res.data;
+      // ids dan urls nya itu sesuai dengan urutannya.
       let idsToUrls = new Map();
-      for(var i = 0; i < urls.length; i++){
-        idsToUrls.set(ids[i], urls[i])
+      for (var i = 0; i < urls.length; i++) {
+        idsToUrls.set(ids[i], urls[i]);
       }
 
       return idsToUrls;

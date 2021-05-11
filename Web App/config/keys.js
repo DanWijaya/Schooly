@@ -19,5 +19,5 @@ module.exports = {
     AWS_REGION: "ap-southeast-1",
     AWS_BUCKET_NAME: "test-storage1",
   },
-  cdn: "https://cdn.schoolysystem.com"
+  cdn: "https://cdn.schoolysystem.com",
 };

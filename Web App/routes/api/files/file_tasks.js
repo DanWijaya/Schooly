@@ -196,7 +196,7 @@ router.get("/:id", (req, res) => {
     //   ResponseContentDisposition: `inline;filename=${result.filename}`,
     // };
     // const url = s3bucket.getSignedUrl("getObject", params);
-    const url = `${keys.cdn}/${result.s3_key}`
+    const url = `${keys.cdn}/${result.s3_key}`;
     return res.status(200).json(url);
     s3bucket.getObject(
       {

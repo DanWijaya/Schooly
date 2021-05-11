@@ -19,27 +19,28 @@ import {
 
 // Register User
 export const registerUser = (userData, history) => (dispatch) => {
-  return axios
-    .post("/api/users/register", userData)
-    // .then((res) => {
+  return (
+    axios
+      .post("/api/users/register", userData)
+      // .then((res) => {
       // alert("Akun baru telah terdaftar");
       // history.push("/masuk");
-    // })
-    .then(() => {
-      dispatch({
-        type: GET_ERRORS,
-        payload: false,
-      });
-      return true // Success
-    })
-    .catch((err) => {
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      });
-      throw err.response.data // Fail
-    });
-    
+      // })
+      .then(() => {
+        dispatch({
+          type: GET_ERRORS,
+          payload: false,
+        });
+        return true; // Success
+      })
+      .catch((err) => {
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data,
+        });
+        throw err.response.data; // Fail
+      })
+  );
 };
 
 export const updateUserData = (userData, userId, history) => (dispatch) => {
@@ -116,7 +117,7 @@ export const loginUser = (userData) => (dispatch) => {
 
       // Set current user
       dispatch(setCurrentUser(decoded));
-      return true
+      return true;
     })
     .catch((err) => {
       console.log("error");
@@ -124,7 +125,7 @@ export const loginUser = (userData) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
-      throw err.response.data
+      throw err.response.data;
     });
 };
 
@@ -199,9 +200,8 @@ export const getTeachers = (data = "array") => (dispatch) => {
           payload: res.data,
         });
         console.log("getTeacher completed");
-        return res.data
+        return res.data;
       }
-      
     })
     .catch((err) => {
       console.log("Error in getting all Teachers");

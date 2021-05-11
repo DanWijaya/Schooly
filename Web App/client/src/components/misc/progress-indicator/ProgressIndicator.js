@@ -1,7 +1,5 @@
 import React from "react";
-import {
-  CircularProgress, Typography 
-} from "@material-ui/core";
+import { CircularProgress, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,18 +14,20 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: theme.zIndex.tooltip
-  }
+    zIndex: theme.zIndex.tooltip,
+  },
 }));
 
 function ProgressIndicator() {
-	const classes = useStyles();
+  const classes = useStyles();
 
   return (
-	  <div className={classes.loadingBackground}>
+    <div className={classes.loadingBackground}>
       <CircularProgress size="3rem" disableShrink />
-      <Typography variant="h4" style={{marginTop: "1rem"}}>Memuat...</Typography>
-	  </div>
+      <Typography variant="h4" style={{ marginTop: "1rem" }}>
+        Memuat...
+      </Typography>
+    </div>
   );
 }
 

@@ -70,16 +70,16 @@ const useStyles = makeStyles((theme) => ({
   },
   formLabel: {
     display: "flex",
-    flexGrow: "1"
+    flexGrow: "1",
   },
   helpIcon: {
     cursor: "default",
     color: "grey",
-    marginTop: "5px"
+    marginTop: "5px",
   },
   inputSize: {
-    fontSize: "inherit!important"
-  }
+    fontSize: "inherit!important",
+  },
 }));
 
 function QuestionItem(props) {
@@ -105,7 +105,7 @@ function QuestionItem(props) {
     longtextWeight,
     backtickError,
     renderbtErrors,
-    lampiranUrls
+    lampiranUrls,
   } = props;
   const classes = useStyles();
 
@@ -222,7 +222,7 @@ function QuestionItem(props) {
   // console.log("Current lampiran : ", currentLampiran);
   // console.log("Lampiran to preview: ", lampiranToPreview);
   let lampiranToUrl = isEdit ? new Map(JSON.parse(lampiranUrls)) : null;
-  
+
   return (
     <Grid item>
       <Paper>
@@ -260,7 +260,9 @@ function QuestionItem(props) {
                             actionIcon={
                               <IconButton
                                 style={{ color: "white" }}
-                                onClick={(e) => handleQuestionImage(e, index, i)}
+                                onClick={(e) =>
+                                  handleQuestionImage(e, index, i)
+                                }
                               >
                                 <CloseIcon />
                               </IconButton>
@@ -312,7 +314,9 @@ function QuestionItem(props) {
                               <IconButton
                                 style={{ color: "white" }}
                                 // onClick={(e) => handleQuestionImage(e, index, i + currentLampiran.length)
-                                onClick={(e) => handleQuestionImage(e, index, i)}
+                                onClick={(e) =>
+                                  handleQuestionImage(e, index, i)
+                                }
                               >
                                 <CloseIcon />
                               </IconButton>
@@ -362,7 +366,9 @@ function QuestionItem(props) {
                             actionIcon={
                               <IconButton
                                 style={{ color: "white" }}
-                                onClick={(e) => handleQuestionImage(e, index, i)}
+                                onClick={(e) =>
+                                  handleQuestionImage(e, index, i)
+                                }
                               >
                                 <CloseIcon />
                               </IconButton>
@@ -397,41 +403,69 @@ function QuestionItem(props) {
                 <TextField
                   FormHelperTextProps={{
                     style: {
-                      marginRight: "12px"
-                    }
+                      marginRight: "12px",
+                    },
                   }}
                   helperText={
                     <>
-                    {!name.length ? 
-                      <div style={{display: "flex", justifyContent: "space-between"}}>
-                        <Typography variant="caption">
-                          Belum diisi 
-                        </Typography>
-                        <LightTooltip title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. 
-                        Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian.">
-                          <HelpIcon fontSize="small" className={classes.helpIcon} />
-                        </LightTooltip>
-                      </div>
-                    : localBtError ? 
-                      <div style={{display: "flex", justifyContent: "space-between"}}>
-                        <Typography variant="caption">
-                          Periksa kembali 
-                        </Typography>
-                        <LightTooltip title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. 
-                        Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian.">
-                          <HelpIcon fontSize="small" className={classes.helpIcon} />
-                        </LightTooltip>
-                      </div>
-                    : 
-                      <div style={{display: "flex", justifyContent: "flex-end"}}>
-                        <LightTooltip title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. 
-                        Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian.">
-                          <HelpIcon fontSize="small" className={classes.helpIcon} />
-                        </LightTooltip>
-                      </div>
-                    }
-                      </>
-                    }
+                      {!name.length ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography variant="caption">Belum diisi</Typography>
+                          <LightTooltip
+                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. 
+                        Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian."
+                          >
+                            <HelpIcon
+                              fontSize="small"
+                              className={classes.helpIcon}
+                            />
+                          </LightTooltip>
+                        </div>
+                      ) : localBtError ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography variant="caption">
+                            Periksa kembali
+                          </Typography>
+                          <LightTooltip
+                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. 
+                        Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian."
+                          >
+                            <HelpIcon
+                              fontSize="small"
+                              className={classes.helpIcon}
+                            />
+                          </LightTooltip>
+                        </div>
+                      ) : (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <LightTooltip
+                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. 
+                        Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian."
+                          >
+                            <HelpIcon
+                              fontSize="small"
+                              className={classes.helpIcon}
+                            />
+                          </LightTooltip>
+                        </div>
+                      )}
+                    </>
+                  }
                   error={!name.length || localBtError}
                   multiline
                   rowsMax={10}
@@ -509,7 +543,7 @@ function QuestionItem(props) {
                               placeholder="Isi Pilihan"
                             />
                           }
-                          classes={{label: classes.formLabel}}
+                          classes={{ label: classes.formLabel }}
                         />
                         <IconButton
                           onClick={(e) =>
@@ -563,7 +597,7 @@ function QuestionItem(props) {
                               placeholder="Isi Pilihan"
                             />
                           }
-                          classes={{label: classes.formLabel}}
+                          classes={{ label: classes.formLabel }}
                         />
                         <IconButton
                           onClick={(e) =>
@@ -742,7 +776,7 @@ export default React.memo(
       prevProps.options === nextProps.options &&
       prevProps.answer === nextProps.answer &&
       prevProps.lampiran_length === nextProps.lampiran_length &&
-      prevProps.longtextWeight === nextProps.longtextWeight && 
+      prevProps.longtextWeight === nextProps.longtextWeight &&
       prevProps.renderbtErrors === nextProps.renderbtErrors &&
       prevProps.lampiranUrls === nextProps.lampiranUrls
     );

@@ -125,7 +125,7 @@ class App extends Component {
     marginTopValue: 20,
     posts: [],
     sideDrawerExist: true,
-    showProgressIndicator: false
+    showProgressIndicator: false,
   };
 
   handleLoading = (value) => {
@@ -158,19 +158,18 @@ class App extends Component {
   handleNavbar = (showBool) => {
     this.setState({ showNavBar: showBool });
   };
-  
+
   render() {
     console.log(localStorage.getItem(`status`));
-    ;
     return (
       <div>
         <Provider store={store}>
           <ThemeProvider theme={globalStyles}>
             <Router>
-              <ScrollToTop/>
+              <ScrollToTop />
               <div style={{ display: "flex" }}>
                 {this.state.showProgressIndicator ? (
-                  <ProgressIndicator/>
+                  <ProgressIndicator />
                 ) : null}
                 {this.state.showNavBar ? (
                   <NavBar
@@ -193,7 +192,6 @@ class App extends Component {
                     flexGrow: "1",
                     overflowX: "hidden",
                     marginTop: `${this.state.marginTopValue}px`,
-
                   }}
                 >
                   {this.state.showNavBar ? <Toolbar /> : null}
@@ -297,11 +295,7 @@ class App extends Component {
                     <Route exact path="/graph" component={Graph} />{" "}
                     {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
-                    <PrivateRoute 
-                      exact 
-                      path="/profil" 
-                      component={Profile} 
-                    />
+                    <PrivateRoute exact path="/profil" component={Profile} />
                     <PrivateRoute
                       exact
                       path="/lihat-profil/:id"

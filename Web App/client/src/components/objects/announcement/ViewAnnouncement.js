@@ -31,7 +31,7 @@ import {
   ListItemText,
   Paper,
   Typography,
-  Divider
+  Divider,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     display: "flex",
     flexDirection: "column",
@@ -234,9 +234,7 @@ function ViewAnnouncement(props) {
 
   const announcement_id = props.match.params.id;
 
-  React.useEffect(() => {
-    
-  }, [])
+  React.useEffect(() => {}, []);
 
   React.useEffect(() => {
     getOneAnnouncement(announcement_id);
@@ -323,23 +321,25 @@ function ViewAnnouncement(props) {
           <Paper className={classes.paperBox}>
             <Grid container spacing={2}>
               <Grid item xs={12} style={{ paddingBottom: "0" }}>
-                <Typography variant="h4">{selectedAnnouncements.title}</Typography>
+                <Typography variant="h4">
+                  {selectedAnnouncements.title}
+                </Typography>
               </Grid>
               <Grid item xs={12} style={{ paddingTop: "0" }}>
                 <h6 style={{ marginBottom: "0" }}>
                   <Typography
                     variant="body2"
                     color="textSecondary"
-                  // style={{ marginTop: "10px" }}
+                    // style={{ marginTop: "10px" }}
                   >
                     Oleh:{" "}
                     <b>
                       {!retrieved_users.size ||
-                        !selectedAnnouncements.author_id ||
-                        !retrieved_users.get(selectedAnnouncements.author_id)
+                      !selectedAnnouncements.author_id ||
+                      !retrieved_users.get(selectedAnnouncements.author_id)
                         ? ""
                         : retrieved_users.get(selectedAnnouncements.author_id)
-                          .name}
+                            .name}
                     </b>
                   </Typography>
                 </h6>
@@ -353,26 +353,33 @@ function ViewAnnouncement(props) {
               <Grid item xs={12}>
                 <Divider className={classes.dividerColor} />
               </Grid>
-              {(user.role === "Teacher") && retrieved_users.size &&
-                  selectedAnnouncements.author_id && (retrieved_users.get(selectedAnnouncements.author_id).role === "Teacher") ? (
-                    <Grid item xs={12}>
-                      <Typography color="textSecondary" gutterBottom>
-                        Kelas yang Diberikan:
-                      </Typography>
-                      <Typography>
-                        {!selectedAnnouncements.class_assigned || !all_classes_map.size
-                          ? null
-                          : selectedAnnouncements.class_assigned.map((kelas, i) => {
-                            if (all_classes_map.get(kelas)) {
-                              if (i === selectedAnnouncements.class_assigned.length - 1)
-                                return `${all_classes_map.get(kelas).name}`;
-                              return `${all_classes_map.get(kelas).name}, `;
-                            }
-                            return null;
-                          })}
-                      </Typography>
-                    </Grid>
-                  ) : null}
+              {user.role === "Teacher" &&
+              retrieved_users.size &&
+              selectedAnnouncements.author_id &&
+              retrieved_users.get(selectedAnnouncements.author_id).role ===
+                "Teacher" ? (
+                <Grid item xs={12}>
+                  <Typography color="textSecondary" gutterBottom>
+                    Kelas yang Diberikan:
+                  </Typography>
+                  <Typography>
+                    {!selectedAnnouncements.class_assigned ||
+                    !all_classes_map.size
+                      ? null
+                      : selectedAnnouncements.class_assigned.map((kelas, i) => {
+                          if (all_classes_map.get(kelas)) {
+                            if (
+                              i ===
+                              selectedAnnouncements.class_assigned.length - 1
+                            )
+                              return `${all_classes_map.get(kelas).name}`;
+                            return `${all_classes_map.get(kelas).name}, `;
+                          }
+                          return null;
+                        })}
+                  </Typography>
+                </Grid>
+              ) : null}
 
               <Grid item xs={12} style={{ marginTop: "15px" }}>
                 <Typography color="textSecondary" gutterBottom>
@@ -383,27 +390,28 @@ function ViewAnnouncement(props) {
                 </Typography>
               </Grid>
               {!fileLampiran.length === 0 ? null : (
-                  <Grid item xs={12} style={{ marginTop: "15px" }}>
-                    <Typography color="textSecondary" gutterBottom>
-                      Lampiran Berkas:
-                    </Typography>
-                    <Grid item container spacing={1}>
-                      {fileLampiran.map((lampiran) => (
-                        <LampiranFile
-                          file_id={lampiran._id}
-                          onPreviewFile={viewFileAnnouncement}
-                          onDownloadFile={downloadFileAnnouncements}
-                          filename={lampiran.filename}
-                          filetype={fileType(lampiran.filename)}
-                        />
-                      ))}
-                    </Grid>
+                <Grid item xs={12} style={{ marginTop: "15px" }}>
+                  <Typography color="textSecondary" gutterBottom>
+                    Lampiran Berkas:
+                  </Typography>
+                  <Grid item container spacing={1}>
+                    {fileLampiran.map((lampiran) => (
+                      <LampiranFile
+                        file_id={lampiran._id}
+                        onPreviewFile={viewFileAnnouncement}
+                        onDownloadFile={downloadFileAnnouncements}
+                        filename={lampiran.filename}
+                        filetype={fileType(lampiran.filename)}
+                      />
+                    ))}
                   </Grid>
-                )}
+                </Grid>
+              )}
             </Grid>
           </Paper>
         </Grid>
-        {user.role === "Admin" || user._id === selectedAnnouncements.author_id ? ( // kalau studentnya ketua kelas yang buat pengumumannya
+        {user.role === "Admin" ||
+        user._id === selectedAnnouncements.author_id ? ( // kalau studentnya ketua kelas yang buat pengumumannya
           <Grid item container justify="flex-end" alignItems="center">
             <Grid item>
               {/* <div className={classes.teacherButtonContainer}> */}
@@ -426,8 +434,8 @@ function ViewAnnouncement(props) {
               </LightTooltip>
             </Grid>
           </Grid>
-          // {/* </div> */}
-        ) : null}
+        ) : // {/* </div> */}
+        null}
       </Grid>
     </div>
   );

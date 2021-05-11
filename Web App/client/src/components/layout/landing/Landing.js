@@ -18,7 +18,7 @@ import {
   Grid,
   Paper,
   Typography,
-  Hidden
+  Hidden,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -48,7 +48,7 @@ const styles = (theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "20px",
     color: "white",
@@ -58,7 +58,7 @@ const styles = (theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     marginTop: "30px",
     marginBottom: "30px",
@@ -72,7 +72,7 @@ const styles = (theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     marginTop: "50px",
     marginBottom: "75px",
@@ -116,7 +116,7 @@ const styles = (theme) => ({
     padding: "10px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
   },
   sendMessageButton: {
@@ -428,7 +428,13 @@ class Landing extends Component {
             </div>
           </Hidden>
           <Hidden smUp>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
               <Button
                 variant="contained"
                 href="mailto:schoolysystem@gmail.com"
@@ -449,7 +455,6 @@ class Landing extends Component {
               </Button>
             </div>
           </Hidden>
-
         </div>
       </div>
     );

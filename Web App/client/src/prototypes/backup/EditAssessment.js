@@ -81,7 +81,7 @@ const styles = (theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -1427,7 +1427,9 @@ class EditAssessment extends Component {
                       <ListItemIcon>
                         <LinkIcon />
                       </ListItemIcon>
-                      <ListItemText primary={`Salin Tautan ${this.state.type}`} />
+                      <ListItemText
+                        primary={`Salin Tautan ${this.state.type}`}
+                      />
                     </MenuItem>
                     <MenuItem
                       button

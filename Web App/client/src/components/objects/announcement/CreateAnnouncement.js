@@ -50,7 +50,7 @@ const styles = (theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -123,7 +123,7 @@ const styles = (theme) => ({
       backgroundColor: theme.palette.error.main,
       color: "white",
     },
-    marginRight: "7.5px"
+    marginRight: "7.5px",
   },
 });
 
@@ -220,7 +220,6 @@ class CreateAnnouncement extends Component {
   }
 
   componentDidMount() {
-    
     const { user } = this.props.auth;
     const { getAllClass, setCurrentClass } = this.props;
     getAllClass();
@@ -308,10 +307,15 @@ class CreateAnnouncement extends Component {
     const announcementData = {
       title: this.state.title,
       description: this.state.description,
-      class_assigned: user.role === "Student" ? [kelas] : user.role === "Admin" ? [null] : this.state.class_assigned,
+      class_assigned:
+        user.role === "Student"
+          ? [kelas]
+          : user.role === "Admin"
+          ? [null]
+          : this.state.class_assigned,
       author_id: user._id,
       errors: {},
-      to: user.role === "Admin" ? this.state.target_role : "Student"
+      to: user.role === "Admin" ? this.state.target_role : "Student",
     };
 
     if (this.state.fileLampiran)
@@ -427,9 +431,7 @@ class CreateAnnouncement extends Component {
           // itemName={this.state.name}
           // isLink={true}
           // redirectLink="/daftar-kuis"
-          redirectLink={
-            `/daftar-pengumuman`
-          }
+          redirectLink={`/daftar-pengumuman`}
           isWarning={false}
         />
         <Paper>
@@ -498,47 +500,48 @@ class CreateAnnouncement extends Component {
               />
               <Grid item xs={12} md className={classes.content}>
                 <Grid container direction="column" spacing={4}>
-                  {user.role === "Student" ? null :
-                    user.role === "Admin" ? (
-                      <Grid item>
-                        <Typography
-                          component="label"
-                          for="target_role"
-                          color="primary"
+                  {user.role === "Student" ? null : user.role === "Admin" ? (
+                    <Grid item>
+                      <Typography
+                        component="label"
+                        for="target_role"
+                        color="primary"
+                      >
+                        Ditujukan Kepada
+                      </Typography>
+                      <FormControl
+                        variant="outlined"
+                        fullWidth
+                        error={Boolean(errors.to) && target_role.length === 0}
+                      >
+                        <Select
+                          id="target_role"
+                          MenuProps={MenuProps}
+                          value={target_role}
+                          onChange={(event) => {
+                            this.onChange(event, "target_role");
+                          }}
                         >
-                          Ditujukan Kepada
-                        </Typography>
-                        <FormControl
-                          variant="outlined"
-                          fullWidth
-                          error={
-                            Boolean(errors.to) &&
-                            target_role.length === 0
-                          }
-                        >
-                          <Select
-                            id="target_role"
-                            MenuProps={MenuProps}
-                            value={target_role}
-                            onChange={(event) => {
-                              this.onChange(event, "target_role");
-                            }}
-                          >
-                            {[["Student", "Murid"], ["Teacher", "Guru"], ["Teacher_Student", "Keduanya"]].map((peran) => {
-                              return (
-                                <MenuItem key={peran[0]} value={peran[0]}>{peran[1]}</MenuItem>
-                              );
-                            })}
-                          </Select>
-                          <FormHelperText>
-                            {Boolean(errors.to) &&
-                              target_role.length === 0
-                              ? errors.to
-                              : null}
-                          </FormHelperText>
-                        </FormControl>
-                      </Grid>
-                    ) : (
+                          {[
+                            ["Student", "Murid"],
+                            ["Teacher", "Guru"],
+                            ["Teacher_Student", "Keduanya"],
+                          ].map((peran) => {
+                            return (
+                              <MenuItem key={peran[0]} value={peran[0]}>
+                                {peran[1]}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                        <FormHelperText>
+                          {Boolean(errors.to) && target_role.length === 0
+                            ? errors.to
+                            : null}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+                  ) : (
                     <Grid item>
                       <Typography
                         component="label"
@@ -657,11 +660,7 @@ class CreateAnnouncement extends Component {
           onClose={this.handleCloseErrorSnackbar}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          <MuiAlert
-            elevation={6}
-            variant="filled"
-            severity="error"
-          >
+          <MuiAlert elevation={6} variant="filled" severity="error">
             {this.state.over_limit.length} file melebihi batas 10MB!
           </MuiAlert>
         </Snackbar>

@@ -44,7 +44,7 @@ import {
 import SortIcon from "@material-ui/icons/Sort";
 import EditIcon from "@material-ui/icons/Edit";
 import { BsFlagFill, BsFlag } from "react-icons/bs";
-import GetAppIcon from '@material-ui/icons/GetApp';
+import GetAppIcon from "@material-ui/icons/GetApp";
 // const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -238,11 +238,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   emptyDescription: {
-    padding: "8px 0", 
+    padding: "8px 0",
     [theme.breakpoints.down("xs")]: {
-      margin: "20px"
-    }
-  }
+      margin: "20px",
+    },
+  },
 }));
 
 function TabPanel(props) {
@@ -327,7 +327,6 @@ function SubmittedAssessmentList(props) {
   const [suspects, setSuspects] = React.useState(null);
 
   React.useEffect(() => {
-    
     getOneAssessment(assessment_id);
     getStudents();
     getAllClass();
@@ -454,60 +453,63 @@ function SubmittedAssessmentList(props) {
   };
 
   const handleExportAssessment = () => {
-    console.log(selectedAssessments)
-    let result = ""
-    let classArray = []
+    console.log(selectedAssessments);
+    let result = "";
+    let classArray = [];
     selectedAssessments.class_assigned.forEach((kelas, i) => {
       let className = all_classes.find((cls) => cls._id === kelas).name;
-      if(i !== 0){
-        result = result + ','
+      if (i !== 0) {
+        result = result + ",";
       }
       result = result + className;
-      if(i !== selectedAssessments.class_assigned.length - 1){
-        result = result + ','
+      if (i !== selectedAssessments.class_assigned.length - 1) {
+        result = result + ",";
       }
-      classArray.push([kelas])
-    })
-    console.log(Object.keys(selectedAssessments.grades))
+      classArray.push([kelas]);
+    });
+    console.log(Object.keys(selectedAssessments.grades));
 
-    let gradeKeys = Object.keys(selectedAssessments.grades)
-    let gradeValues = Object.values(selectedAssessments.grades)
-    console.log(gradeValues)
+    let gradeKeys = Object.keys(selectedAssessments.grades);
+    let gradeValues = Object.values(selectedAssessments.grades);
+    console.log(gradeValues);
     gradeKeys.forEach((student_id, i) => {
-      let studentData = all_students.find((std) => std._id === student_id)
-      let studentName = studentData.name
-      let studentClass = studentData.kelas
-      for(let j=0;j<classArray.length;j++){
-        if(classArray[j][0] === studentClass){
-          classArray[j].push({studentName: studentName, studentScore: gradeValues[i].total_grade})
+      let studentData = all_students.find((std) => std._id === student_id);
+      let studentName = studentData.name;
+      let studentClass = studentData.kelas;
+      for (let j = 0; j < classArray.length; j++) {
+        if (classArray[j][0] === studentClass) {
+          classArray[j].push({
+            studentName: studentName,
+            studentScore: gradeValues[i].total_grade,
+          });
           break;
         }
       }
-    })
+    });
 
-    let classLength = []
-    for(let i=0;i<classArray.length;i++){
-      classLength.push(classArray[i].length)
+    let classLength = [];
+    for (let i = 0; i < classArray.length; i++) {
+      classLength.push(classArray[i].length);
     }
-    let maxClassLength = Math.max(...classLength)-1
+    let maxClassLength = Math.max(...classLength) - 1;
 
-    for(let i=0;i<maxClassLength;i++){
-      result = result + '\n'
-      for(let j=0;j<classArray.length;j++){
-        if(j !== 0){
-          result = result + ',';
+    for (let i = 0; i < maxClassLength; i++) {
+      result = result + "\n";
+      for (let j = 0; j < classArray.length; j++) {
+        if (j !== 0) {
+          result = result + ",";
         }
-        if(i+1 < classArray[j].length){
-          result = result + classArray[j][i+1].studentName
-          result = result + ',';
-          result = result + classArray[j][i+1].studentScore
+        if (i + 1 < classArray[j].length) {
+          result = result + classArray[j][i + 1].studentName;
+          result = result + ",";
+          result = result + classArray[j][i + 1].studentScore;
         }
-        if(i+1 >= classArray[j].length){
-          result = result + ',';
+        if (i + 1 >= classArray[j].length) {
+          result = result + ",";
         }
       }
     }
-    console.log(result)
+    console.log(result);
     const blob = new Blob([result], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -515,7 +517,7 @@ function SubmittedAssessmentList(props) {
     a.setAttribute("href", url);
     a.setAttribute("download", `Hasil ${selectedAssessments.name}.csv`);
     a.click();
-  }
+  };
 
   const listClassTabPanel = () => {
     let TabPanelList = [];
@@ -730,7 +732,8 @@ function SubmittedAssessmentList(props) {
           // layar mobile
           let columns2 = [];
 
-          if (scores) { // jika murid mengerjakan assessment ini, scores akan berisi nilai murid
+          if (scores) {
+            // jika murid mengerjakan assessment ini, scores akan berisi nilai murid
             let c = 0; // digunakan untuk menambahkan divider di antara elemen tipe soal
             for (let typeArray of types.entries()) {
               let type = typeArray[0]; //isi array ini ada 2, dua-duanya nilainya sama, yaitu tipe soal
@@ -836,10 +839,15 @@ function SubmittedAssessmentList(props) {
             isClassSubmissionEmpty = false;
           } else {
             let content = (
-              <Typography variant="subtitle1" color="textSecondary" align="center" className={classes.emptyDescription}>
+              <Typography
+                variant="subtitle1"
+                color="textSecondary"
+                align="center"
+                className={classes.emptyDescription}
+              >
                 Belum mengerjakan
               </Typography>
-            )
+            );
             columns1.push(content);
             columns2.push(content);
           }
@@ -1056,16 +1064,23 @@ function SubmittedAssessmentList(props) {
             </ExpansionPanel>
           );
         }
-        
+
         TabPanelList.push(
           <TabPanel value={value} index={i}>
-            {isClassSubmissionEmpty ? 
-              <Grid container alignItems="center" justify="center" style={{ height: "20vh" }}>
+            {isClassSubmissionEmpty ? (
+              <Grid
+                container
+                alignItems="center"
+                justify="center"
+                style={{ height: "20vh" }}
+              >
                 <Typography variant="h5" color="textSecondary" align="center">
                   {`Belum ada murid yang mengerjakan ${selectedAssessments.type.toLowerCase()}`}
                 </Typography>
               </Grid>
-            : students_in_class}
+            ) : (
+              students_in_class
+            )}
           </TabPanel>
         );
       }
@@ -1073,7 +1088,9 @@ function SubmittedAssessmentList(props) {
     return selectedAssessments.class_assigned.length > 0 ? TabPanelList : null;
   };
 
-  document.title = `Schooly | Daftar ${(selectedAssessments.type === "Kuis") ? "Kuis" : "Ujian"} Terkumpul`;
+  document.title = `Schooly | Daftar ${
+    selectedAssessments.type === "Kuis" ? "Kuis" : "Ujian"
+  } Terkumpul`;
   return (
     <div className={classes.root}>
       <Paper className={classes.paperbox}>
@@ -1203,7 +1220,7 @@ function SubmittedAssessmentList(props) {
               </IconButton>
             </LightTooltip>
           </Grid>
-          <Grid item style={{paddingBottom: "0"}}>
+          <Grid item style={{ paddingBottom: "0" }}>
             {listClassTab()}
           </Grid>
         </Grid>

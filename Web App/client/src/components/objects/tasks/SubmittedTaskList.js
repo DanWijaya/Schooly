@@ -32,7 +32,7 @@ import {
   TextField,
   Typography,
   Grid,
-  Hidden
+  Hidden,
 } from "@material-ui/core";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { makeStyles } from "@material-ui/core/styles";
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -232,7 +232,7 @@ function WorkFile(props) {
             <Typography variant="h6" color="textPrimary">
               {file_name}
             </Typography>
-            }
+          }
           secondary={
             <Typography variant="body2" color="textSecondary">
               {file_type}
@@ -318,10 +318,11 @@ function SubmittedTaskList(props) {
     success,
   } = props;
   const { all_classes } = props.classesCollection;
-  const { 
-    all_students, 
-    // dropbox_token, 
-    user } = props.auth;
+  const {
+    all_students,
+    // dropbox_token,
+    user,
+  } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
   const task_id = props.match.params.id;
 
@@ -343,7 +344,6 @@ function SubmittedTaskList(props) {
   };
 
   React.useEffect(() => {
-    
     getOneTask(task_id);
     getStudents();
     getAllClass();
@@ -442,60 +442,63 @@ function SubmittedTaskList(props) {
   }
 
   const handleExportTask = () => {
-    console.log(tasksCollection)
-    let result = ""
-    let classArray = []
+    console.log(tasksCollection);
+    let result = "";
+    let classArray = [];
     tasksCollection.class_assigned.forEach((kelas, i) => {
       let className = all_classes.find((cls) => cls._id === kelas).name;
-      if(i !== 0){
-        result = result + ','
+      if (i !== 0) {
+        result = result + ",";
       }
       result = result + className;
-      if(i !== tasksCollection.class_assigned.length - 1){
-        result = result + ','
+      if (i !== tasksCollection.class_assigned.length - 1) {
+        result = result + ",";
       }
-      classArray.push([kelas])
-    })
-    console.log(Object.keys(tasksCollection.grades))
+      classArray.push([kelas]);
+    });
+    console.log(Object.keys(tasksCollection.grades));
 
-    let gradeKeys = Object.keys(tasksCollection.grades)
-    let gradeValues = Object.values(tasksCollection.grades)
-    console.log(gradeValues)
+    let gradeKeys = Object.keys(tasksCollection.grades);
+    let gradeValues = Object.values(tasksCollection.grades);
+    console.log(gradeValues);
     gradeKeys.forEach((student_id, i) => {
-      let studentData = all_students.find((std) => std._id === student_id)
-      let studentName = studentData.name
-      let studentClass = studentData.kelas
-      for(let j=0;j<classArray.length;j++){
-        if(classArray[j][0] === studentClass){
-          classArray[j].push({studentName: studentName, studentScore: gradeValues[i]})
+      let studentData = all_students.find((std) => std._id === student_id);
+      let studentName = studentData.name;
+      let studentClass = studentData.kelas;
+      for (let j = 0; j < classArray.length; j++) {
+        if (classArray[j][0] === studentClass) {
+          classArray[j].push({
+            studentName: studentName,
+            studentScore: gradeValues[i],
+          });
           break;
         }
       }
-    })
+    });
 
-    let classLength = []
-    for(let i=0;i<classArray.length;i++){
-      classLength.push(classArray[i].length)
+    let classLength = [];
+    for (let i = 0; i < classArray.length; i++) {
+      classLength.push(classArray[i].length);
     }
-    let maxClassLength = Math.max(...classLength)-1
+    let maxClassLength = Math.max(...classLength) - 1;
 
-    for(let i=0;i<maxClassLength;i++){
-      result = result + '\n'
-      for(let j=0;j<classArray.length;j++){
-        if(j !== 0){
-          result = result + ',';
+    for (let i = 0; i < maxClassLength; i++) {
+      result = result + "\n";
+      for (let j = 0; j < classArray.length; j++) {
+        if (j !== 0) {
+          result = result + ",";
         }
-        if(i+1 < classArray[j].length){
-          result = result + classArray[j][i+1].studentName
-          result = result + ',';
-          result = result + classArray[j][i+1].studentScore
+        if (i + 1 < classArray[j].length) {
+          result = result + classArray[j][i + 1].studentName;
+          result = result + ",";
+          result = result + classArray[j][i + 1].studentScore;
         }
-        if(i+1 >= classArray[j].length){
-          result = result + ',';
+        if (i + 1 >= classArray[j].length) {
+          result = result + ",";
         }
       }
     }
-    console.log(result)
+    console.log(result);
     const blob = new Blob([result], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -503,7 +506,7 @@ function SubmittedTaskList(props) {
     a.setAttribute("href", url);
     a.setAttribute("download", `Hasil ${tasksCollection.name}.csv`);
     a.click();
-  }
+  };
 
   const listClassTab = () => {
     let class_assigned = [];
@@ -548,7 +551,7 @@ function SubmittedTaskList(props) {
       return null;
     } else {
       let student_task_files_id; // to handle the download all, this is needed.
-      
+
       // untuk setiap kelas yang diberikan task ini,
       for (var i = 0; i < tasksCollection.class_assigned.length; i++) {
         let students_in_class = [];
@@ -557,7 +560,7 @@ function SubmittedTaskList(props) {
         // untuk setiap murid yang ada,
         for (var j = 0; j < all_students.length; j++) {
           student_task_files_id = [];
-          
+
           // check if the id of the class is the same or not (means student is inside)
           if (all_students[j].kelas === tasksCollection.class_assigned[i]) {
             let student = all_students[j];
@@ -708,13 +711,20 @@ function SubmittedTaskList(props) {
 
         TabPanelList.push(
           <TabPanel value={value} index={i}>
-            {isClassSubmissionEmpty ?
-              <Grid container alignItems="center" justify="center" style={{ height: "20vh" }}>
+            {isClassSubmissionEmpty ? (
+              <Grid
+                container
+                alignItems="center"
+                justify="center"
+                style={{ height: "20vh" }}
+              >
                 <Typography variant="h5" color="textSecondary" align="center">
                   Belum ada murid yang mengumpulkan tugas
                 </Typography>
               </Grid>
-              : students_in_class}
+            ) : (
+              students_in_class
+            )}
           </TabPanel>
         );
       }
@@ -740,14 +750,14 @@ function SubmittedTaskList(props) {
       </Snackbar>
       <Paper className={classes.paperBox}>
         <Grid container spacing={2}>
-          <Grid item xs={12} style={{paddingBottom: "0"}}>
+          <Grid item xs={12} style={{ paddingBottom: "0" }}>
             <Typography variant="h4">{tasksCollection.name}</Typography>
             <Typography variant="caption" color="textSecondary" gutterBottom>
               <h6>{all_subjects_map.get(tasksCollection.subject)}</h6>
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={7} style={{paddingTop: "0"}}>
+          <Grid item xs={12} md={7} style={{ paddingTop: "0" }}>
             <Typography variant="body2" color="textSecondary">
               Oleh: <b>{user.name}</b>
             </Typography>
@@ -815,7 +825,7 @@ function SubmittedTaskList(props) {
             </LightTooltip>
           </Grid>
 
-          <Grid item style={{paddingBottom: "0"}}>
+          <Grid item style={{ paddingBottom: "0" }}>
             {listClassTab()}
           </Grid>
         </Grid>
@@ -845,7 +855,7 @@ const mapStateToProps = (state) => ({
   tasksCollection: state.tasksCollection,
   success: state.success,
   classesCollection: state.classesCollection,
-  subjectsCollection: state.subjectsCollection
+  subjectsCollection: state.subjectsCollection,
 });
 
 export default connect(mapStateToProps, {

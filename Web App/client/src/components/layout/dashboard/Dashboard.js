@@ -55,7 +55,7 @@ const styles = (theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -249,21 +249,20 @@ function AssessmentListItemTeacher(props) {
               <Hidden xsDown>
                 <ListItemAvatar>
                   <Avatar className={classes.assignmentLate}>
-                    {props.type === "Kuis" ? <FaClipboardList /> : <BsClipboardData />}
+                    {props.type === "Kuis" ? (
+                      <FaClipboardList />
+                    ) : (
+                      <BsClipboardData />
+                    )}
                   </Avatar>
                 </ListItemAvatar>
               </Hidden>
-              <ListItemText
-                primary={props.title}
-                secondary={props.subject}
-              />
+              <ListItemText primary={props.title} secondary={props.subject} />
               <ListItemText
                 align="right"
                 primary={
                   <Typography variant="body2" color="textSecondary">
-                    {moment(props.createdAt)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
+                    {moment(props.createdAt).locale("id").format("DD MMM YYYY")}
                   </Typography>
                 }
                 secondary={
@@ -361,8 +360,8 @@ function sortAscByCreatedAt(rows) {
       return 1;
     }
     return 0;
-  }
-  const comparator =  (a, b) => descendingComparator(a, b, "createdAt");
+  };
+  const comparator = (a, b) => descendingComparator(a, b, "createdAt");
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -528,7 +527,7 @@ function ListAssessments(props) {
             subject: assessment.subject,
             start_date: assessment.start_date,
             end_date: assessment.end_date,
-            createdAt: assessment.createdAt
+            createdAt: assessment.createdAt,
           });
           // result.push(
           //   <AssessmentListItem
@@ -565,7 +564,7 @@ function ListAssessments(props) {
             subject: assessment.subject,
             start_date: assessment.start_date,
             end_date: assessment.end_date,
-            createdAt: assessment.createdAt
+            createdAt: assessment.createdAt,
           });
           // result.push(
           //   <AssessmentListItem
@@ -602,9 +601,7 @@ function ListAssessments(props) {
         work_title={row.name}
         work_category_avatar={row.workCategoryAvatar}
         work_subject={
-          category === "subject"
-            ? null
-            : all_subjects_map.get(row.subject)
+          category === "subject" ? null : all_subjects_map.get(row.subject)
         }
         // work_status={workStatus}
         work_starttime={moment(row.start_date)
@@ -821,8 +818,9 @@ class Dashboard extends Component {
                   color="textSecondary"
                   variant="subtitle1"
                 >
-                  Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
-              </Typography>
+                  Belum ada Tugas yang telah dinilai untuk mata pelajaran
+                  terkait
+                </Typography>
               </div>
             </Grid>
 
@@ -914,8 +912,9 @@ class Dashboard extends Component {
                   color="textSecondary"
                   variant="subtitle1"
                 >
-                  Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
-              </Typography>
+                  Belum ada {type} yang telah dinilai untuk mata pelajaran
+                  terkait
+                </Typography>
               </div>
             </Grid>
 
@@ -969,7 +968,7 @@ class Dashboard extends Component {
             name: task.name,
             subject: task.subject,
             deadline: task.deadline,
-            createdAt: task.createdAt
+            createdAt: task.createdAt,
           });
         }
       });
@@ -1021,8 +1020,8 @@ class Dashboard extends Component {
               name: task.name,
               subject: task.subject,
               deadline: task.deadline,
-              createdAt: task.createdAt
-            })
+              createdAt: task.createdAt,
+            });
           }
         }
       }
@@ -1048,7 +1047,7 @@ class Dashboard extends Component {
               work_link={`/tugas-guru/${row._id}`}
               work_dateposted={row.createdAt}
             />
-          )
+          );
         });
       }
     }
@@ -1057,31 +1056,38 @@ class Dashboard extends Component {
       // menampilkan assessment jika ada submission yang belum selesai dinilai
 
       let result = [];
-      let lowerCaseType = (assessmentType === "Kuis") ? "kuis" : "ujian";
+      let lowerCaseType = assessmentType === "Kuis" ? "kuis" : "ujian";
 
       for (let i = 0; i < all_assessments.length; i++) {
         let assessment = all_assessments[i];
         if (assessment.type === assessmentType) {
-
           // jika terdapat soal uraian pada kuis ini dan sudah ada 1 atau lebih murid yg mengumpulkan jawaban
-          if ((assessment.question_weight.longtext !== null) && (assessment.submissions) && (Object.keys(assessment.submissions).length > 0)) {
-
+          if (
+            assessment.question_weight.longtext !== null &&
+            assessment.submissions &&
+            Object.keys(assessment.submissions).length > 0
+          ) {
             // jika ada murid yang jawaban uraiannya sudah dinilai
-            if ((assessment.grades) && (Object.keys(assessment.grades).length > 0)) {
-
+            if (
+              assessment.grades &&
+              Object.keys(assessment.grades).length > 0
+            ) {
               // untuk setiap murid yang sudah mengumpulkan jawaban
               for (const studentId of Object.keys(assessment.submissions)) {
-
                 // jika ada jawaban uraian yang belum dinilai
-                if (!(Object.keys(assessment.grades).includes(studentId) && (assessment.grades[studentId].total_grade !== null))) {
-
+                if (
+                  !(
+                    Object.keys(assessment.grades).includes(studentId) &&
+                    assessment.grades[studentId].total_grade !== null
+                  )
+                ) {
                   // tampilkan di list
                   result.push({
                     _id: assessment._id,
                     title: assessment.name,
                     subject: assessment.subject,
                     createdAt: assessment.createdAt,
-                    type: assessment.type
+                    type: assessment.type,
                   });
                   break;
                 }
@@ -1093,7 +1099,7 @@ class Dashboard extends Component {
                 title: assessment.name,
                 subject: assessment.subject,
                 createdAt: assessment.createdAt,
-                type: assessment.type
+                type: assessment.type,
               });
             }
           }
@@ -1117,7 +1123,7 @@ class Dashboard extends Component {
               createdAt={row.createdAt}
               type={row.type}
             />
-          )
+          );
         });
       }
     }
@@ -1545,11 +1551,7 @@ class Dashboard extends Component {
                   </Menu>
                 </Grid>
               </Grid>
-              <Grid
-                item
-                xs={12}
-                style={{ marginTop: "20px" }}
-              >
+              <Grid item xs={12} style={{ marginTop: "20px" }}>
                 <Grid container direction="column" spacing={2}>
                   <Grid item>
                     <Paper style={{ padding: "20px" }}>
@@ -1596,7 +1598,11 @@ class Dashboard extends Component {
                         <Grid item>
                           <Grid container alignItems="center">
                             <FaClipboardList
-                              style={{ marginRight: "10px", fontSize: "20px", color: "grey"}}
+                              style={{
+                                marginRight: "10px",
+                                fontSize: "20px",
+                                color: "grey",
+                              }}
                             />
                             <Typography variant="h5" color="primary">
                               Kuis yang Belum Diperiksa
@@ -1630,7 +1636,11 @@ class Dashboard extends Component {
                           <Grid container alignItems="center">
                             <BsClipboardData
                               color="action"
-                              style={{ marginRight: "10px", fontSize: "20px", color: "grey"}}
+                              style={{
+                                marginRight: "10px",
+                                fontSize: "20px",
+                                color: "grey",
+                              }}
                             />
                             <Typography variant="h5" color="primary">
                               Ujian yang Belum Diperiksa

@@ -11,7 +11,7 @@ import {
   deleteSubject,
 } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import { clearSuccess } from "../../../actions/SuccessActions"
+import { clearSuccess } from "../../../actions/SuccessActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -33,7 +33,7 @@ import {
   ListItemText,
   ListItemAvatar,
   InputAdornment,
-  Avatar
+  Avatar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -135,7 +135,10 @@ function SubjectListToolbar(props) {
                 alignItems: "center",
               }}
             >
-              <LibraryBooksIcon className={classes.titleIcon} fontSize="large" />
+              <LibraryBooksIcon
+                className={classes.titleIcon}
+                fontSize="large"
+              />
               <Typography variant="h4">Daftar Mata Pelajaran</Typography>
             </div>
           )}
@@ -279,11 +282,12 @@ function SubjectListToolbar(props) {
         </Hidden>
         <Hidden mdUp implementation="css">
           <LightTooltip title="Buat Mata Pelajaran">
-            <Fab 
-              size="small" 
-              onClick={handleOpenFormDialog} 
-              className={classes.newMaterialButton}>
-              <LibraryBooksIcon className={classes.newMaterialIconMobile} /> 
+            <Fab
+              size="small"
+              onClick={handleOpenFormDialog}
+              className={classes.newMaterialButton}
+            >
+              <LibraryBooksIcon className={classes.newMaterialIconMobile} />
             </Fab>
           </LightTooltip>
         </Hidden>
@@ -357,7 +361,7 @@ SubjectListToolbar.propTypes = {
   searchFilter: PropTypes.string,
   updateSearchFilter: PropTypes.func,
   setSearchBarFocus: PropTypes.func,
-  searchBarFocus: PropTypes.bool
+  searchBarFocus: PropTypes.bool,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -365,7 +369,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -468,7 +472,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.dark,
       color: "white",
-      border: `1px solid ${theme.palette.primary.dark}`,  
+      border: `1px solid ${theme.palette.primary.dark}`,
     },
   },
   dialogCancelButton: {
@@ -491,7 +495,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   listItem: {
-    padding: "6px 24px"
+    padding: "6px 24px",
   },
   listAvatar: {
     backgroundColor: theme.palette.primary.main,
@@ -501,7 +505,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "white",
     color: theme.palette.primary.main,
     marginRight: "10px",
-  }
+  },
 }));
 
 function SubjectList(props) {
@@ -530,7 +534,7 @@ function SubjectList(props) {
     createSubject,
     deleteSubject,
     errors,
-    success
+    success,
   } = props;
   const { all_subjects } = props.subjectsCollection;
   const { user, retrieved_users } = props.auth;
@@ -541,13 +545,12 @@ function SubjectList(props) {
   };
 
   React.useEffect(() => {
-    
     getAllSubjects();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
-    console.log(success)
+    console.log(success);
     if (success && forceSuccess) {
       if (action === "Edit") {
         handleOpenEditDialog();
@@ -555,9 +558,9 @@ function SubjectList(props) {
         handleOpenCreateDialog();
       }
       clearSuccess();
-      setAction("")
-      setForceSuccess(false)
-    } 
+      setAction("");
+      setForceSuccess(false);
+    }
     // jika clearSuccess sudah dijalankan, success akan bernilai null
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -581,9 +584,11 @@ function SubjectList(props) {
     console.log(retrieved_users);
     // If all_subjects is not undefined or an empty array
     rows = [];
-    all_subjects.filter((item) => {
-      return item.name.toLowerCase().includes(searchFilter.toLowerCase()
-    )}).map((data) => subjectRowItem(data));
+    all_subjects
+      .filter((item) => {
+        return item.name.toLowerCase().includes(searchFilter.toLowerCase());
+      })
+      .map((data) => subjectRowItem(data));
   };
 
   const handleRequestSort = (event, property) => {
@@ -730,7 +735,7 @@ function SubjectList(props) {
               <Button
                 onClick={handleCloseFormDialog}
                 startIcon={<CancelIcon />}
-                className={ classes.dialogCancelButton}
+                className={classes.dialogCancelButton}
               >
                 Batal
               </Button>
@@ -745,7 +750,7 @@ function SubjectList(props) {
 
   return (
     <div className={classes.root}>
-       <UploadDialog
+      <UploadDialog
         openUploadDialog={openCreateDialog}
         handleCloseUploadDialog={handleCloseCreateDialog}
         success={success}
@@ -802,13 +807,13 @@ function SubjectList(props) {
                   >
                     <Hidden smUp implementation="css">
                       <ListItemText
-                        style={{margin: "6px 0"}}
+                        style={{ margin: "6px 0" }}
                         primary={
                           <Grid container alignItems="center">
                             <Typography variant="subtitle1" color="textPrimary">
                               {row.name}
                             </Typography>
-                            <Grid item style={{visibility: "hidden"}}>
+                            <Grid item style={{ visibility: "hidden" }}>
                               <Typography variant="subtitle1">
                                 {"\u200B"}
                               </Typography>
@@ -835,23 +840,23 @@ function SubjectList(props) {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          style={{margin: "6px 0"}}
-                          primary={                          
+                          style={{ margin: "6px 0" }}
+                          primary={
                             <Grid container alignItems="center">
                               <Typography variant="h6" color="textPrimary">
                                 {row.name}
                               </Typography>
                               <Grid item style={{ visibility: "hidden" }}>
                                 <Grid container direction="column">
-                                    <Typography variant="h6">
-                                      {"\u200B"}
-                                    </Typography>
-                                    <Typography variant="body2">
-                                      {"\u200B"}
-                                    </Typography>
+                                  <Typography variant="h6">
+                                    {"\u200B"}
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    {"\u200B"}
+                                  </Typography>
                                 </Grid>
                               </Grid>
-                          </Grid>
+                            </Grid>
                           }
                         />
                       </div>
@@ -866,8 +871,13 @@ function SubjectList(props) {
                                 size="small"
                                 className={classes.editSubjectButton}
                                 onClick={(e) =>
-                                  handleOpenFormDialog(e, row._id, row.name, true)
-                                }          
+                                  handleOpenFormDialog(
+                                    e,
+                                    row._id,
+                                    row.name,
+                                    true
+                                  )
+                                }
                               >
                                 <EditIcon fontSize="small" />
                               </IconButton>
@@ -927,5 +937,5 @@ export default connect(mapStateToProps, {
   getSubject,
   createSubject,
   clearErrors,
-  clearSuccess
+  clearSuccess,
 })(SubjectList);

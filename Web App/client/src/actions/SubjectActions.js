@@ -3,7 +3,7 @@ import {
   GET_ALL_SUBJECTS,
   GET_ERRORS,
   GET_ALL_SUBJECTS_MAP,
-  GET_SUCCESS_RESPONSE
+  GET_SUCCESS_RESPONSE,
 } from "./Types";
 import axios from "axios";
 

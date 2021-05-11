@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-        maxWidth: "100%",
+      maxWidth: "100%",
     },
     padding: "20px",
   },
@@ -472,11 +472,11 @@ function ViewSubject(props) {
 
   let subjects_list = Array.from(all_subjects_map.keys());
   let background_idx = subjects_list.indexOf(id) % subjectBackground.length;
-  let background_image, background_color
+  let background_image, background_color;
 
-  if(background_idx !== -1){
-    background_image = Object.values(subjectBackground[background_idx])[0]
-    background_color = Object.keys(subjectBackground[background_idx])[0]
+  if (background_idx !== -1) {
+    background_image = Object.values(subjectBackground[background_idx])[0];
+    background_color = Object.keys(subjectBackground[background_idx])[0];
   }
   const classes = useStyles({
     backgroundColor: background_color,
@@ -484,7 +484,6 @@ function ViewSubject(props) {
   });
 
   React.useEffect(() => {
-    
     if (user.role === "Student") {
       getMaterial(user.kelas, "by_class");
     }

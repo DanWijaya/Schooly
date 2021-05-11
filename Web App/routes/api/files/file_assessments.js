@@ -25,7 +25,7 @@ AWS.config.update({
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
 router.post("/upload/:id", upload.array("lampiran_assessment"), (req, res) => {
   var filesArray = req.files;
-  console.log(req.files)
+  console.log(req.files);
   let s3bucket = new AWS.S3({
     accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
     secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
@@ -78,21 +78,24 @@ router.post("/upload/:id", upload.array("lampiran_assessment"), (req, res) => {
               if (numFileToUpload == 0) {
                 FileAssessment.insertMany(newFileList)
                   .then((result) => {
-                    console.log(result)
+                    console.log(result);
                     return result.map((r) => r._id);
                   })
                   .then((file_ids) => {
-                    console.log(file_ids)
+                    console.log(file_ids);
                     let nums_lampiran_added = 0;
-                    // nilainya itu array, tiap elemen di index itu tunjukkan ada berapa lampiran yang ada di soal di index itu. 
-                    lampiranCountArray.forEach((l,idx) => {
-                      if(l > 0){
-                        let temp = file_ids.slice(nums_lampiran_added, nums_lampiran_added+l)
-                        temp = questionsArray[idx].lampiran.concat(temp)
+                    // nilainya itu array, tiap elemen di index itu tunjukkan ada berapa lampiran yang ada di soal di index itu.
+                    lampiranCountArray.forEach((l, idx) => {
+                      if (l > 0) {
+                        let temp = file_ids.slice(
+                          nums_lampiran_added,
+                          nums_lampiran_added + l
+                        );
+                        temp = questionsArray[idx].lampiran.concat(temp);
                         questionsArray[idx].lampiran = temp;
                         nums_lampiran_added = nums_lampiran_added + l;
                       }
-                    })
+                    });
                     // let temp = questionsArray[question_idx].lampiran.concat(
                     //   file_ids
                     // );
@@ -105,7 +108,7 @@ router.post("/upload/:id", upload.array("lampiran_assessment"), (req, res) => {
                   })
                   .then(() => {
                     assessment.questions = questionsArray;
-                    console.log(assessment.questions)
+                    console.log(assessment.questions);
                     assessment
                       .save() // kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client.
                       .then(() => {
@@ -177,7 +180,7 @@ router.delete("/:id", (req, res) => {
               };
               s3bucket.deleteObject(params, (err, data) => {
                 fileUploaded++;
-                if(fileUploaded == file_to_delete.length){
+                if (fileUploaded == file_to_delete.length) {
                   return res.status(200).send("Success");
                 }
               });
@@ -187,47 +190,49 @@ router.delete("/:id", (req, res) => {
       }
     );
   } else {
-    FileAssessment.find({ _id: { $in: file_to_delete }}).then((file_assessments) => {
-      FileAssessment.deleteMany(
-        {
-          _id: {
-            $in: file_to_delete,
+    FileAssessment.find({ _id: { $in: file_to_delete } }).then(
+      (file_assessments) => {
+        FileAssessment.deleteMany(
+          {
+            _id: {
+              $in: file_to_delete,
+            },
           },
-        },
-        function (err, results) {
-          if (!results) {
-            return res.status(404).json(err);
+          function (err, results) {
+            if (!results) {
+              return res.status(404).json(err);
+            }
+
+            let s3bucket = new AWS.S3();
+            let fileUploaded = 0;
+            file_assessments.forEach((file) => {
+              console.log(file);
+              let params = {
+                Bucket: keys.awsKey.AWS_BUCKET_NAME,
+                Key: file.s3_key,
+              };
+              s3bucket.deleteObject(params, (err, data) => {
+                if (err) {
+                  return res.status(404).json(err);
+                }
+                fileUploaded++;
+                if (fileUploaded == file_to_delete.length) {
+                  return res.status(200).send("Success");
+                }
+              });
+            });
           }
-  
-          let s3bucket = new AWS.S3();
-          let fileUploaded = 0;
-          file_assessments.forEach((file) => {
-            console.log(file)
-            let params = {
-              Bucket: keys.awsKey.AWS_BUCKET_NAME,
-              Key: file.s3_key,
-            };
-            s3bucket.deleteObject(params, (err, data) => {
-              if (err) {
-                return res.status(404).json(err);
-              }
-              fileUploaded++;
-              if(fileUploaded == file_to_delete.length){
-                return res.status(200).send("Success");
-              }
-            })
-          });
-        })
-    })
-   
-    }
+        );
+      }
+    );
+  }
 });
 
 router.get("/by_assessment/:id", (req, res) => {
   FileAssessment.find({ assessment_id: req.params.id }).then((results, err) => {
     if (!results) return res.status(400).json(err);
     else {
-      console.log("Assessment: ", results)
+      console.log("Assessment: ", results);
       results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
       return res.status(200).json(results);
     }
@@ -243,27 +248,26 @@ router.post("/getS3Url", (req, res) => {
     file_ids.map((id) => {
       return new Promise((resolve, reject) => {
         FileAssessment.findById(id).then((result, err) => {
-        if (!result){ 
-          reject(err)
-        }
-        // let params = {
-        //   Bucket: keys.awsKey.AWS_BUCKET_NAME,
-        //   Key: result.s3_key,
-        //   Expires: 5 * 60,
-        //   ResponseContentDisposition: `inline;filename=${result.filename}`,
-        // };
-        // const url = s3bucket.getSignedUrl("getObject", params);
-        const url = `${keys.cdn}/${result.s3_key}`
-        resolve(url);
+          if (!result) {
+            reject(err);
+          }
+          // let params = {
+          //   Bucket: keys.awsKey.AWS_BUCKET_NAME,
+          //   Key: result.s3_key,
+          //   Expires: 5 * 60,
+          //   ResponseContentDisposition: `inline;filename=${result.filename}`,
+          // };
+          // const url = s3bucket.getSignedUrl("getObject", params);
+          const url = `${keys.cdn}/${result.s3_key}`;
+          resolve(url);
+        });
       });
-    });
-  })
+    })
   ).then((results) => {
     // let all_idToUrl = new Map();
     // results.forEach((idToUrl) => all_idToUrl = new Map([...all_idToUrl, ...idToUrl]))
-    return res.status(200).json({urls: results, ids: file_ids});
-  })
-
+    return res.status(200).json({ urls: results, ids: file_ids });
+  });
 });
 
 module.exports = router;
