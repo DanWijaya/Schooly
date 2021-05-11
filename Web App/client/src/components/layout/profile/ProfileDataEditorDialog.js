@@ -197,7 +197,7 @@ function ProfileDataEditorDialog(props) {
   const onSubmit = (e) => {
     e.preventDefault();
     let userId = user._id;
-    if (!isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
+    if (isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
       props.handleOpenAlert();
 
     updateUserData(dataProfil, userId, props.history);

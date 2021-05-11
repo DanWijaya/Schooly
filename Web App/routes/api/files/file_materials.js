@@ -38,7 +38,7 @@ router.post("/upload/:id", upload.array("lampiran_materi"), (req, res) => {
       Key: "materi/" + uuidv4() + "_" + file.originalname,
       Body: file.buffer,
       ContentType: file.mimetype,
-      ContentDisposition: `attachment;filename=${file.originalname}`,
+      ContentDisposition: `inline;filename=${file.originalname}`,
     };
     s3bucket
       .upload(params, function (err, data) {

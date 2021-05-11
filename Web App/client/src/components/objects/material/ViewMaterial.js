@@ -143,7 +143,7 @@ function LampiranFile(props) {
   const classes = useStyles();
 
   const { file_id, filename, filetype, onDownloadFile, onPreviewFile } = props;
-  const [progress, setProgress] = React.useState(null);
+
   var req = null;
   let displayedName = "";
   filename.length >= 31

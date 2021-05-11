@@ -3,11 +3,14 @@ const isEmpty = require("is-empty");
 
 module.exports = function validateAssessmentInput(data) {
   let errors = {};
-  data.name = isEmpty(data.name) ? "" : data.name;
-  data.subject = isEmpty(data.subject) ? "" : data.subject;
-  data.description = isEmpty(data.description) ? "" : data.description;
-  data.type = isEmpty(data.type) ? "" : data.type;
+  // data keys: name, subject, description, type
 
+  for (let key in Object.keys(data)) {
+    if (isEmpty(data[key])) {
+      data[key] = "";
+    }
+  }
+  
   if (Validator.isEmpty(data.name)) {
     errors.name = "Nama belum diisi";
   }

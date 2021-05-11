@@ -4,6 +4,21 @@ const isEmpty = require("is-empty");
 module.exports = function validateTaskInput(data) {
   let errors = {};
   // isEmpty method is used for string, so don't use it for class_assigned data bcs it is array.
+  // name,
+  // subject,
+  // description,
+  // grade,
+  // deadline,
+  // class_assigned
+  if (isEmpty(data.grade)) {
+    if (data.grade > 100 || data.grade < 0) {
+      errors = { grade: "Nilai harus diantara 0 dan 100" };
+    }
+    return {
+      errors,
+      isValid: isEmpty(errors),
+    };
+  }
   data.name = isEmpty(data.name) ? "" : data.name;
   // data.deadline, there is no need?
   data.subject = isEmpty(data.subject) ? "" : data.subject;
@@ -13,15 +28,7 @@ module.exports = function validateTaskInput(data) {
 
   console.log(data.description, "Description");
 
-  if (!isEmpty(data.grade)) {
-    if (data.grade > 100 || data.grade < 0) {
-      errors = { grade: "Nilai harus diantara 0 dan 100" };
-    }
-    return {
-      errors,
-      isValid: isEmpty(errors),
-    };
-  }
+  
   if (Validator.isEmpty(data.name)) {
     errors.name = "Nama tugas belum diisi";
   }

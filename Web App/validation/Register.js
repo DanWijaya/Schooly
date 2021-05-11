@@ -4,9 +4,19 @@ const isEmpty = require("is-empty");
 module.exports = function validateRegisterInput(data) {
   let errors = {};
   // Convert empty fields to an empty string so we can use validator functions
+  // data keys: name
+  //  email
+  //  role 
+  //  subject_teached 
+  //  phone 
+  //  emergency_phone 
+  //  address
+  //  password
+  //  password2
+  //  tanggal_lahir 
 
   for (let key in Object.keys(data)) {
-    if (!isEmpty(data[key])) {
+    if (isEmpty(data[key])) {
       data[key] = "";
     }
   }
