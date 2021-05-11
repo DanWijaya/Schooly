@@ -60,24 +60,30 @@ module.exports = function validateRegisterInput(data) {
     errors.address = "Alamat belum diisi";
   }
 
-  // Password checks
+  // Password checks error messagenya terlalu panjang kadang kadang
   if (Validator.isEmpty(data.password)) {
     errors.password = "Kata sandi belum diisi";
+  } else{
+    if(data.password.length < 8){
+      errors.password = "Kata sandi wajib memiliki 8 karakter atau lebih";
+    }
+    else if(!Validator.isStrongPassword(data.password, {minSymbols: 0})){
+      errors.password = "Kata sandi wajib memiliki minimal 1 huruf kecil, 1 huruf besar dan 1 angka.";
+    }
   }
 
+  //Password confirmation checks
   if (Validator.isEmpty(data.password2)) {
     errors.password2 = "Konfirmasi kata sandi belum diisi";
   }
 
-  if (
-    !Validator.isEmpty(data.password) &&
-    !Validator.isLength(data.password, { min: 8, max: 30 })
-  ) {
-    errors.password = "Kata sandi wajib memiliki 8 karakter atau lebih";
-  }
-
   if (!Validator.equals(data.password, data.password2)) {
     errors.password2 = "Kata sandi harus sama";
+  }
+
+  //tanggal lahir checks
+  if(!data.tanggal_lahir){
+    errors.tanggal_lahir = "Tanggal lahir belum diisi"
   }
 
   return {

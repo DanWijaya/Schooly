@@ -99,7 +99,7 @@ export const updateAvatar = (userData, userId, formData) => (dispatch) => {
 // to initiate a dispatch, pass the result to the dispatch() function.
 // Login - get user token
 export const loginUser = (userData) => (dispatch) => {
-  axios
+  return axios
     .post("/api/users/login", userData)
     .then((res) => {
       console.log("Berhasil login");
@@ -116,6 +116,7 @@ export const loginUser = (userData) => (dispatch) => {
 
       // Set current user
       dispatch(setCurrentUser(decoded));
+      return true
     })
     .catch((err) => {
       console.log("error");
@@ -123,6 +124,7 @@ export const loginUser = (userData) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data
     });
 };
 

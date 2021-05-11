@@ -103,9 +103,6 @@ class Login extends Component {
       // nextProps.auth.isAuthenticated = kalau true,
       return { isAuthenticated: nextProps.auth.isAuthenticated };
     // ini sama dengan this.setState({ isAuthenticated : nextProps.auth.isAuthenticated })
-    else if (nextProps.errors)
-      // kalau errorsnya ngak false.
-      return { errors: nextProps.errors };
     else return null; // gak ngapa ngapain
   }
 
@@ -133,7 +130,9 @@ class Login extends Component {
       email: this.state.email,
       password: this.state.password,
     };
-    this.props.loginUser(userData);
+    this.props.loginUser(userData).catch((err) => {
+      this.setState({ errors: err})
+    });
   };
 
   togglePasswordVisibility = () => {

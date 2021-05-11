@@ -127,7 +127,7 @@ class Register extends Component {
       errors: {},
       // kelas: "", // Student Data
       subject_teached: "", // Teacher Data
-      tanggal_lahir: new Date(),
+      tanggal_lahir: null,
       activeStep: 0,
       snackbarOpen: false,
       dialogOpen: false,
@@ -217,8 +217,8 @@ class Register extends Component {
       // this.props.registerUser(newUser, this.props.history);
       this.props.registerUser(newUser)
         .then((res) => {this.handleOpenUploadDialog()})
-        .catch((res) => this.setState({
-          errors: res,
+        .catch((err) => this.setState({
+          errors: err,
           snackbarOpen: true,
         }))
     }
@@ -457,6 +457,9 @@ class Register extends Component {
                     okLabel="Simpan"
                     cancelLabel="Batal"
                     id="tanggal_lahir"
+                    defaultValue={null}
+                    error={errors.tanggal_lahir}
+                    helperText={errors.tanggal_lahir}
                     value={this.state.tanggal_lahir}
                     onChange={(date) => this.handleDateChange(date)}
                   />
