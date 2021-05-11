@@ -174,17 +174,18 @@ class Register extends Component {
   };
 
   onChange = (e, otherfield) => {
-    // if (otherfield === "kelas") {
-    //   console.log(e.target.value);
-    //   this.setState({ kelas: e.target.value });
-    // } else if (otherfield === "role") {
-    if (otherfield === "role") {
-      this.setState({ role: e.target.value });
-    } else if (otherfield === "subject") {
-      this.setState({ subject_teached: e.target.value });
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
+    let field = e.target.id ? e.target.id : otherfield
+    if(this.state.errors[field]){
+      this.setState({ errors: {...this.state.errors, [field] : null}})
     }
+    this.setState({ [field] : e.target.value})
+    // if (otherfield === "role") {
+    //   this.setState({ role: e.target.value });
+    // } else if (otherfield === "subject") {
+    //   this.setState({ subject_teached: e.target.value });
+    // } else {
+    //   this.setState({ [e.target.id]: e.target.value });
+    // }
   };
 
   onSubmit = (e) => {
@@ -203,9 +204,6 @@ class Register extends Component {
 
     const role = this.state.role;
 
-    // if (role === "Student") {
-    //   newUser.kelas = this.state.kelas;
-    // } else if (role === "Teacher") {
     if (role === "Teacher") {
       newUser.subject_teached = this.state.subject_teached;
     }
@@ -217,8 +215,12 @@ class Register extends Component {
     console.log(newUser);
     if (this.state.submitButtonClicked) {
       // this.props.registerUser(newUser, this.props.history);
-      this.props.registerUser(newUser);
-      this.handleOpenUploadDialog();
+      this.props.registerUser(newUser)
+        .then((res) => {this.handleOpenUploadDialog()})
+        .catch((res) => this.setState({
+          errors: res,
+          snackbarOpen: true,
+        }))
     }
   };
 

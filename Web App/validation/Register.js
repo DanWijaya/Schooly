@@ -3,19 +3,14 @@ const isEmpty = require("is-empty");
 
 module.exports = function validateRegisterInput(data) {
   let errors = {};
-
   // Convert empty fields to an empty string so we can use validator functions
-  data.name = !isEmpty(data.name) ? data.name : "";
-  data.email = !isEmpty(data.email) ? data.email : "";
-  data.phone = !isEmpty(data.phone) ? data.phone : "";
-  data.emergency_phone = !isEmpty(data.emergency_phone)
-    ? data.emergency_phone
-    : "";
-  data.address = !isEmpty(data.address) ? data.address : "";
-  data.password = !isEmpty(data.password) ? data.password : "";
-  data.password2 = !isEmpty(data.password2) ? data.password2 : "";
-  data.role = !isEmpty(data.role) ? data.role : "";
 
+  for (let key in Object.keys(data)){
+    if(!isEmpty(data[key])){
+      data[key] = ""
+    }
+  }
+ 
   // Name checks
   if (Validator.isEmpty(data.name)) {
     errors.name = "Nama belum diisi";
@@ -31,24 +26,33 @@ module.exports = function validateRegisterInput(data) {
   //Role checks
   if (Validator.isEmpty(data.role)) {
     errors.role = "Peran belum diisi";
+  } else {
+    // Specific to Teacher
+    if (data.role === "Teacher") {
+      if(Validator.isEmpty(data.subject_teached)){
+        errors.subject_teached = "Mata pelajaran belum dipilih";
+      }
+    }
   }
 
-  // Check for student class field
-  // if (data.role === "Student" && Validator.isEmpty(data.kelas)) {
-  //   errors.kelas = "Kelas belum dipilih";
-  // }
-  if (data.role === "Teacher" && Validator.isEmpty(data.subject_teached)) {
-    errors.subject_teached = "Mata pelajaran belum dipilih";
-  }
+  
 
   // Phone checks
   if (Validator.isEmpty(data.phone)) {
     errors.phone = "Nomor telepon belum diisi";
+  } else{
+    if(!Validator.isNumeric(data.phone)){
+      errors.phone = "Nomor telepon harus berupa angka semua"
+    }
   }
 
   // Emergency phone checks
   if (Validator.isEmpty(data.emergency_phone)) {
     errors.emergency_phone = "Nomor telepon darurat belum diisi";
+  } else{
+    if(!Validator.isNumeric(data.emergency_phone)){
+      errors.emergency_phone = "Nomor telepon harus berupa angka semua"
+    }
   }
 
   // Address checks

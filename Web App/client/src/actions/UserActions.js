@@ -19,7 +19,7 @@ import {
 
 // Register User
 export const registerUser = (userData, history) => (dispatch) => {
-  axios
+  return axios
     .post("/api/users/register", userData)
     // .then((res) => {
       // alert("Akun baru telah terdaftar");
@@ -30,13 +30,16 @@ export const registerUser = (userData, history) => (dispatch) => {
         type: GET_ERRORS,
         payload: false,
       });
+      return true // Success
     })
     .catch((err) => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data // Fail
     });
+    
 };
 
 export const updateUserData = (userData, userId, history) => (dispatch) => {
