@@ -68,7 +68,7 @@ app.use(express.static("public"));
 app.use(passport.initialize());
 
 // Passport config
-require("./config/passport")(passport);
+require("./passport")(passport);
 console.log("Check routes");
 
 // Routes
