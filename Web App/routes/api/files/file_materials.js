@@ -65,6 +65,7 @@ router.post("/upload/:id", upload.array("lampiran_materi"), (req, res) => {
           numsFileUploaded++;
           if (numsFileUploaded == files.length) {
             return res.json({
+              _id: req.params.id,
               success: "Successfully uploaded the lampiran file",
             });
           }

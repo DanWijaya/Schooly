@@ -12,7 +12,7 @@ export const createAnnouncement = (formData, announcementData, history) => (
   dispatch
 ) => {
   console.log("RUNLAH!!", formData, announcementData);
-  axios
+  return axios
     .post("/api/announcements/create", announcementData)
     .then((res) => {
       console.log("this is the res", res.data);
@@ -50,6 +50,7 @@ export const createAnnouncement = (formData, announcementData, history) => (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };
 
@@ -167,7 +168,7 @@ export const updateAnnouncement = (
   history
 ) => (dispatch) => {
   // formData is the lampiran files
-  axios
+  return axios
     .post(`/api/announcements/update/${annId}`, annData)
     .then((res) => {
       console.log("Task updated to be :", res.data);
@@ -204,6 +205,7 @@ export const updateAnnouncement = (
         type: GET_SUCCESS_RESPONSE,
         payload: true,
       });
+      return true;
       // alert("Announcement is created")
       // history.push("/daftar-pengumuman");
     })
@@ -214,5 +216,6 @@ export const updateAnnouncement = (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };

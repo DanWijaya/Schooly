@@ -9,7 +9,7 @@ const Material = require("../../models/Material");
 
 router.post("/create", (req, res) => {
   const { errors, isValid } = validateMaterialInput(req.body);
-  console.log(errors);
+  console.log("MASALAH DI CREATE", errors, isValid);
   if (!isValid) {
     console.log(errors);
     return res.status(400).json(errors);
@@ -38,7 +38,9 @@ router.post("/create", (req, res) => {
     .save()
     .then((material) => {
       console.log("Material is created");
-      res.json(material);
+      console.log(material);
+      return res.status(200).json(material);
+      // res.json(material);
     })
     .catch((err) => console.log(err));
 });

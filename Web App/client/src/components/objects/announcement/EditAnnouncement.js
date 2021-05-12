@@ -204,6 +204,7 @@ class EditAnnouncement extends Component {
     this.state = {
       title: "",
       description: "",
+      originalFileLampiran: [],
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
@@ -234,13 +235,13 @@ class EditAnnouncement extends Component {
     getOneAnnouncement(id);
     getAllClass();
     getFileAnnouncements(id).then((result) => {
-      this.setState({ fileLampiran: result });
+      this.setState({ fileLampiran: result, originalFileLampiran: result });
     });
     if (user.role === "Student") setCurrentClass(user.kelas);
   }
 
   componentWillUnmount() {
-    this.props.clearErrors();
+    // this.props.clearErrors();
     this.props.clearSuccess();
   }
 
@@ -250,24 +251,22 @@ class EditAnnouncement extends Component {
 
     // console.log(nextProps.tasksCollection.deadline);
 
-    if (!nextProps.errors) {
-      this.handleOpenUploadDialog();
-    }
+    // if (!nextProps.errors) {
+    //   this.handleOpenUploadDialog();
+    // }
 
-    if (nextProps.errors) {
-      // if edited, nextProps.errors is false, supaya ndak run ini..
-      this.setState({
-        title: selectedAnnouncements.title,
-        description: selectedAnnouncements.description,
-        // fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : [],
-        class_assigned: Boolean(selectedAnnouncements.class_assigned)
-          ? selectedAnnouncements.class_assigned
-          : [],
-        target_role: selectedAnnouncements.to,
-        // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
-        // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
-      });
-    }
+    // if edited, nextProps.errors is false, supaya ndak run ini..
+    this.setState({
+      title: selectedAnnouncements.title,
+      description: selectedAnnouncements.description,
+      // fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : [],
+      class_assigned: Boolean(selectedAnnouncements.class_assigned)
+        ? selectedAnnouncements.class_assigned
+        : [],
+      target_role: selectedAnnouncements.to,
+      // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
+      // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
+    });
   }
 
   handleLampiranUpload = (e) => {
@@ -363,11 +362,11 @@ class EditAnnouncement extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-    if (otherfield) {
-      this.setState({ [otherfield]: e.target.value });
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
+    this.setState({ [field]: e.target.value });
   };
 
   onSubmit = (e) => {
@@ -401,15 +400,29 @@ class EditAnnouncement extends Component {
       formData.append("lampiran_announcement", fileLampiranToAdd[i]);
     }
 
-    this.props.updateAnnouncement(
-      formData,
-      fileLampiranToDelete,
-      selectedAnnouncements.lampiran,
-      announcementObject,
-      id,
-      this.props.history
-    );
-    this.setState({ fileLampiranToDelete: [] });
+    this.props
+      .updateAnnouncement(
+        formData,
+        fileLampiranToDelete,
+        selectedAnnouncements.lampiran,
+        announcementObject,
+        id,
+        this.props.history
+      )
+      .then((res) => {
+        this.handleOpenUploadDialog();
+      })
+      .catch((err) =>
+        this.setState({
+          errors: err,
+          fileLampiran: [
+            ...this.state.originalFileLampiran,
+            ...this.state.fileLampiranToAdd,
+          ],
+          fileLampiranToDelete: [],
+        })
+      );
+    // this.setState({ fileLampiranToDelete: [] });
   };
 
   render() {
@@ -427,8 +440,8 @@ class EditAnnouncement extends Component {
     };
 
     const { classes } = this.props;
-    const { fileLampiran, class_assigned, target_role } = this.state;
-    const { errors, success } = this.props;
+    const { fileLampiran, class_assigned, target_role, errors } = this.state;
+    const { success } = this.props;
     const { user } = this.props.auth;
     const { all_classes, kelas } = this.props.classesCollection;
 

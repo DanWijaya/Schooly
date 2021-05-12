@@ -10,7 +10,7 @@ module.exports = function validateAssessmentInput(data) {
       data[key] = "";
     }
   }
-  
+
   if (Validator.isEmpty(data.name)) {
     errors.name = "Nama belum diisi";
   }

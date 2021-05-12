@@ -28,7 +28,6 @@ module.exports = function validateTaskInput(data) {
 
   console.log(data.description, "Description");
 
-  
   if (Validator.isEmpty(data.name)) {
     errors.name = "Nama tugas belum diisi";
   }

@@ -213,6 +213,7 @@ class EditMaterial extends Component {
       errors: {},
       anchorEl: null,
       classChanged: false,
+      originalFileLampiran: [],
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
@@ -237,7 +238,7 @@ class EditMaterial extends Component {
     getOneMaterial(id);
     getAllSubjects();
     getFileMaterials(id).then((result) => {
-      this.setState({ fileLampiran: result });
+      this.setState({ fileLampiran: result, originalFileLampiran: result });
     });
   }
 
@@ -250,21 +251,17 @@ class EditMaterial extends Component {
     console.log("Tasks props is received");
     const { selectedMaterials } = nextProps.materialsCollection;
     // console.log(selectedMaterials.deadline);
-    if (!nextProps.errors) {
-      this.handleOpenUploadDialog();
-    }
-    if (Boolean(selectedMaterials) && nextProps.errors) {
-      this.setState({
-        name: selectedMaterials.name,
-        subject: selectedMaterials.subject,
-        deadline: selectedMaterials.deadline,
-        class_assigned: Boolean(selectedMaterials.class_assigned)
-          ? selectedMaterials.class_assigned
-          : [],
-        description: selectedMaterials.description,
-        // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
-      });
-    }
+
+    this.setState({
+      name: selectedMaterials.name,
+      subject: selectedMaterials.subject,
+      deadline: selectedMaterials.deadline,
+      class_assigned: Boolean(selectedMaterials.class_assigned)
+        ? selectedMaterials.class_assigned
+        : [],
+      description: selectedMaterials.description,
+      // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
+    });
   }
 
   onSubmit = (e, classesOptions) => {
@@ -298,15 +295,27 @@ class EditMaterial extends Component {
     }
 
     const { selectedMaterials } = this.props.materialsCollection;
-    this.props.updateMaterial(
-      formData,
-      fileLampiranToDelete,
-      selectedMaterials.lampiran,
-      materialObject,
-      id,
-      this.props.history
-    );
-    this.setState({ fileLampiranToDelete: [] });
+    this.props
+      .updateMaterial(
+        formData,
+        fileLampiranToDelete,
+        selectedMaterials.lampiran,
+        materialObject,
+        id,
+        this.props.history
+      )
+      .then((res) => this.handleOpenUploadDialog())
+      .catch((err) =>
+        this.setState({
+          errors: err,
+          fileLampiran: [
+            ...this.state.originalFileLampiran,
+            ...this.state.fileLampiranToAdd,
+          ],
+          fileLampiranToDelete: [],
+        })
+      );
+    // this.setState({ fileLampiranToDelete: [] });
   };
 
   handleLampiranUpload = (e) => {
@@ -396,17 +405,11 @@ class EditMaterial extends Component {
   };
 
   onChange = (e, otherfield) => {
-    console.log(this.state.fileLampiran);
-    if (otherfield) {
-      if (otherfield === "deadline") this.setState({ [otherfield]: e });
-      // e is the date value itself for KeyboardDatePicker
-      else this.setState({ [otherfield]: e.target.value });
-    } else this.setState({ [e.target.id]: e.target.value });
-  };
-
-  onDateChange = (date) => {
-    console.log(date);
-    this.setState({ deadline: date });
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+    this.setState({ [field]: e.target.value });
   };
 
   handleCloseErrorSnackbar = (event, reason) => {
@@ -417,11 +420,11 @@ class EditMaterial extends Component {
   };
 
   render() {
-    const { classes, errors, success } = this.props;
+    const { classes, success } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { selectedMaterials } = this.props.materialsCollection;
-    const { class_assigned, fileLampiran } = this.state;
+    const { class_assigned, fileLampiran, errors } = this.state;
     const { user } = this.props.auth;
 
     // console.log("FileLampiran:", this.state.fileLampiran)

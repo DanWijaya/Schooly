@@ -11,7 +11,7 @@ export const createMaterial = (formData, materialData, history) => (
   dispatch
 ) => {
   console.log("RUNLAH!!", formData, materialData);
-  axios
+  return axios
     .post("/api/materials/create", materialData)
     .then((res) => {
       console.log(formData.getAll("lampiran_materi"));
@@ -21,10 +21,11 @@ export const createMaterial = (formData, materialData, history) => (
         type: GET_ERRORS,
         payload: false,
       });
+
       if (formData.has("lampiran_materi")) {
         console.log("Post lampiran material is running");
         return axios.post(
-          `/api/upload/att_material/lampiran/${res.data._id}`,
+          `/api/files/materials/upload/${res.data._id}`,
           formData
         );
       } else {
@@ -42,6 +43,7 @@ export const createMaterial = (formData, materialData, history) => (
         type: GET_SUCCESS_RESPONSE,
         payload: success_res,
       });
+      return success_res;
       //   window.location.href="/daftar-materi"
       //   history.push("/daftar-materi")
     })
@@ -51,6 +53,7 @@ export const createMaterial = (formData, materialData, history) => (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };
 
@@ -157,7 +160,7 @@ export const updateMaterial = (
   history
 ) => (dispatch) => {
   // formData is the lampiran files
-  axios
+  return axios
     .post(`/api/materials/update/${materialId}`, materialData)
     .then((res) => {
       console.log("Material updated to be :", res.data);
@@ -188,7 +191,7 @@ export const updateMaterial = (
       } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
       else
         return {
-          _id: res.data._id,
+          _id: materialId,
           message: "Successfully updated task with no lampiran",
         };
     })
@@ -198,6 +201,7 @@ export const updateMaterial = (
         type: GET_SUCCESS_RESPONSE,
         payload: true,
       });
+      return true;
     })
 
     .catch((err) => {
@@ -206,5 +210,6 @@ export const updateMaterial = (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };

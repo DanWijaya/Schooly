@@ -243,13 +243,11 @@ class CreateMaterial extends Component {
   };
 
   onChange = (e, otherfield) => {
-    console.log("On change:", e.target.value);
-    console.log(Array.from(this.state.fileLampiran));
-    if (otherfield) {
-      if (otherfield === "deadline") this.setState({ [otherfield]: e });
-      // e is the date value itself for KeyboardDatePicker
-      else this.setState({ [otherfield]: e.target.value });
-    } else this.setState({ [e.target.id]: e.target.value });
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+    this.setState({ [field]: e.target.value });
   };
 
   onSubmit = (e, id) => {
@@ -275,14 +273,20 @@ class CreateMaterial extends Component {
     };
 
     console.log(this.state.fileLampiran);
-    this.props.createMaterial(formData, materialData, this.props.history);
+    // this.props.createMaterial(formData, materialData, this.props.history)
+    this.props
+      .createMaterial(formData, materialData, this.props.history)
+      .then((res) => this.handleOpenUploadDialog())
+      .catch((err) => {
+        this.setState({ errors: err });
+      });
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    if (!this.props.errors && this.props.errors !== prevProps.errors) {
-      this.handleOpenUploadDialog();
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (!this.props.errors && this.props.errors !== prevProps.errors) {
+  //     this.handleOpenUploadDialog();
+  //   }
+  // }
 
   componentDidMount() {
     this.props.getAllClass();
@@ -319,6 +323,13 @@ class CreateMaterial extends Component {
     let file_to_upload = temp.filter(
       (file) => file.size / Math.pow(10, 6) <= 10
     );
+
+    if (this.state.errors.lampiran_materi) {
+      // karena errornya ini berupa lampiran_materi
+      this.setState({
+        errors: { ...this.state.errors, lampiran_materi: null },
+      });
+    }
     this.setState({
       fileLampiran: file_to_upload,
       over_limit: over_limit,
@@ -328,10 +339,10 @@ class CreateMaterial extends Component {
   };
 
   render() {
-    const { classes, success, errors } = this.props;
+    const { classes, success } = this.props; // originally have errors
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
-    const { class_assigned, fileLampiran } = this.state;
+    const { class_assigned, fileLampiran, errors } = this.state;
     const { user } = this.props.auth;
 
     console.log(class_assigned);

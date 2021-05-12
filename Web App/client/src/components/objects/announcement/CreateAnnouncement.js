@@ -213,11 +213,11 @@ class CreateAnnouncement extends Component {
 
   lampiranUploader = React.createRef(null);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (!this.props.errors && this.props.errors !== prevProps.errors) {
-      this.handleOpenUploadDialog();
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (!this.props.errors && this.props.errors !== prevProps.errors) {
+  //     this.handleOpenUploadDialog();
+  //   }
+  // }
 
   componentDidMount() {
     const { user } = this.props.auth;
@@ -226,9 +226,9 @@ class CreateAnnouncement extends Component {
     if (user.role === "Student") setCurrentClass(user.kelas);
   }
 
-  componentWillUnmount() {
-    this.props.clearErrors();
-  }
+  // componentWillUnmount() {
+  //   this.props.clearErrors();
+  // }
 
   handleClickMenu = (event) => {
     // Needed so it will not be run when filetugas = null or filetugas array is empty
@@ -257,12 +257,11 @@ class CreateAnnouncement extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-    if (otherfield) {
-      this.setState({ [otherfield]: e.target.value });
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
-    console.log(this.props.errors);
+    this.setState({ [field]: e.target.value });
   };
 
   handleLampiranDelete = (e, i) => {
@@ -327,11 +326,14 @@ class CreateAnnouncement extends Component {
       formData.getAll("lampiran_announcement"),
       this.state.fileLampiran
     );
-    this.props.createAnnouncement(
-      formData,
-      announcementData,
-      this.props.history
-    );
+    this.props
+      .createAnnouncement(formData, announcementData, this.props.history)
+      .then(() => {
+        this.handleOpenUploadDialog();
+      })
+      .catch((err) => {
+        this.setState({ errors: err });
+      });
   };
 
   render() {
@@ -350,8 +352,8 @@ class CreateAnnouncement extends Component {
 
     const { classes, success } = this.props;
     const { all_classes, kelas } = this.props.classesCollection;
-    const { class_assigned, fileLampiran, target_role } = this.state;
-    const { errors } = this.props;
+    const { class_assigned, fileLampiran, target_role, errors } = this.state;
+    // const { errors } = this.props;
     const { user } = this.props.auth;
 
     const fileType = (filename) => {
