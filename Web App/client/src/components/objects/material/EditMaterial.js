@@ -238,7 +238,6 @@ class EditMaterial extends Component {
       refreshTeacher
     } = this.props;
     const { id } = this.props.match.params;
-    window.scrollTo(0, 0);
 
     getAllClass();
     getOneMaterial(id);

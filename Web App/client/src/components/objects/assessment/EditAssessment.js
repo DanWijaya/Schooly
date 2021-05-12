@@ -313,7 +313,6 @@ class EditAssessment extends Component {
   imageUploader = React.createRef(null); // untuk ngerefer html object yang lain
 
   componentDidMount() {
-    window.scrollTo(0, 0);
     const {
       getOneAssessment,
       getAllClass,

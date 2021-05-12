@@ -290,7 +290,6 @@ function ReportView(props) {
   const [kelas, setKelas] = React.useState("");
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
     getOneUser(props.match.params.id);
     if (user.role === "Teacher") {
       refreshTeacher(user._id);

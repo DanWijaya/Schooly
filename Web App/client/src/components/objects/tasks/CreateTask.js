@@ -343,7 +343,6 @@ class CreateTask extends Component {
   };
 
   componentDidMount() {
-    window.scrollTo(0, 0);
     const { getAllClass, getAllSubjects, refreshTeacher } = this.props;
     getAllClass();
     getAllSubjects();
