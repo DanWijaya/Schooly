@@ -16,7 +16,7 @@
   "dependencies": {
     "@material-ui/lab": "^4.0.0-alpha.47",
     "async": "^3.2.0",
-    "aws-sdk": "^2.804.0",
+    "aws-sdk": "^2.905.0",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
