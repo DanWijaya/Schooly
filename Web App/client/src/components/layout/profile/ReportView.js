@@ -816,7 +816,7 @@ function ReportView(props) {
       }
     }
     else if (user.role === "Teacher" && kelasWali.get("id") !== selectedUser.kelas) {
-      if(Object.keys(user.class_to_subject).includes(kelas._id)) {
+      if (user.class_to_subject && user.class_to_subject[kelas._id]) {
         for(let i=0;i<all_subjects.length;i++) {
           if(kelas.subject_assigned) {
             if(user.class_to_subject[kelas._id].includes(all_subjects[i]._id) && row.subject === all_subjects[i].name) {
@@ -984,9 +984,11 @@ function ReportView(props) {
         // jika guru bukan wali kelas atau kelas yang dipilih bukan kelas wali,
         // tampilkan hanya semua matpel yang diajarkan ke kelas yang dipilih
         let matpel = new Map();
-        user.class_to_subject[selectedClassId].forEach((subjectId) => {
-          matpel.set(subjectId, semuaMatpel.get(subjectId));
-        });
+        if (user.class_to_subject && user.class_to_subject[selectedClassId]) {
+          user.class_to_subject[selectedClassId].forEach((subjectId) => {
+            matpel.set(subjectId, semuaMatpel.get(subjectId));
+          });
+        }
         setKontenMatpel(matpel);
       }
     }
@@ -1001,19 +1003,21 @@ function ReportView(props) {
     } else {
       // jika guru ini adalah guru wali
       let kelas = new Map();
-      if (kelasWali.size !== 0) {
-        if (user.subject_teached.includes(selectedSubjectId)) {
+      if (user.class_to_subject) {
+        if (kelasWali.size !== 0) {
+          if (user.subject_teached.includes(selectedSubjectId)) {
+            for (let [classId, subjectIdArray] of Object.entries(user.class_to_subject)) {
+              if (subjectIdArray.includes(selectedSubjectId)) {
+                kelas.set(classId, semuaKelas.get(classId));
+              }
+            }
+            kelas.delete(kelasWali.get("id")); // perlu didelete karena pada saat meng-generate opsi kelas, kelas yang diwalikan guru ini sudah ditambahkan
+          } // jika guru ini memilih mata pelajaran yang tidak diajarkannya, dia hanya dapat memilih kelas yg diwalikannya
+        } else {
           for (let [classId, subjectIdArray] of Object.entries(user.class_to_subject)) {
             if (subjectIdArray.includes(selectedSubjectId)) {
               kelas.set(classId, semuaKelas.get(classId));
             }
-          }
-          kelas.delete(kelasWali.get("id"));
-        }
-      } else {
-        for (let [classId, subjectIdArray] of Object.entries(user.class_to_subject)) {
-          if (subjectIdArray.includes(selectedSubjectId)) {
-            kelas.set(classId, semuaKelas.get(classId));
           }
         }
       }

@@ -275,9 +275,11 @@ class EditMaterial extends Component {
 
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
         let newClassOptions = [];
-        for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
-          if (subjectIdArray.includes(selectedMaterialProps.subject)) {
-            newClassOptions.push({ _id: classId, name: all_classes_obj[classId] });
+        if (this.props.auth.user.class_to_subject) {
+          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+            if (subjectIdArray.includes(selectedMaterialProps.subject)) {
+              newClassOptions.push({ _id: classId, name: all_classes_obj[classId] });
+            }
           }
         }
 
@@ -298,12 +300,19 @@ class EditMaterial extends Component {
   
         // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
         let subjectMatrix = [];
-        for (let classId of selectedMaterialProps.class_assigned) {
-          subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+        if (this.props.auth.user.class_to_subject) {
+          for (let classId of selectedMaterialProps.class_assigned) {
+            if (this.props.auth.user.class_to_subject[classId]) {
+              subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+            }
+          }
         }
-        let subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
-          return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
-        });
+        let subjects = [];
+        if (subjectMatrix.length !== 0) {
+          subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+            return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
+         });
+        }
 
         // menambahkan matpel tersebut ke opsi matpel
         let newSubjectOptions = [];
@@ -433,9 +442,11 @@ class EditMaterial extends Component {
       } else if (otherfield === "subject") { // jika guru memilih mata pelajaran
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
         let newClassOptions = [];
-        for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
-          if (subjectIdArray.includes(e.target.value)) {
-            newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+        if (this.props.auth.user.class_to_subject) {
+          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+            if (subjectIdArray.includes(e.target.value)) {
+              newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+            }
           }
         }
 
@@ -455,12 +466,19 @@ class EditMaterial extends Component {
         } else { // jika guru menambahkan atau mengurangi pilihan kelas
           // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
           let subjectMatrix = [];
-          for (let classId of selectedClasses) {
-            subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+          if (this.props.auth.user.class_to_subject) {
+            for (let classId of selectedClasses) {
+              if (this.props.auth.user.class_to_subject[classId]) {
+                subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+              }
+            }
           }
-          let subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
-            return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
-          });
+          let subjects= []; 
+          if (subjectMatrix.length !== 0) {
+            subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+              return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
+            });
+          }
 
           // menambahkan matpel tersebut ke opsi matpel
           let newSubjectOptions = [];
