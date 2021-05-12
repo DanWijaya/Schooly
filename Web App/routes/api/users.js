@@ -124,6 +124,8 @@ router.post("/login", (req, res) => {
           payload.tugas = user.tugas;
         } else if (user.role === "Teacher") {
           payload.subject_teached = user.subject_teached;
+          payload.class_teached = user.class_teached;
+          payload.class_to_subject = user.class_to_subject;
         }
         // Sign token
         jwt.sign(
@@ -221,6 +223,8 @@ router.post("/update/data/:id", (req, res) => {
         payload.tugas = user.tugas;
       } else if (user.role === "Teacher") {
         payload.subject_teached = user.subject_teached;
+        payload.class_teached = user.class_teached;
+        payload.class_to_subject = user.class_to_subject;
       }
 
       jwt.sign(
@@ -322,6 +326,8 @@ router.post(
           payload.kelas = user.kelas;
         } else if (user.role === "Teacher") {
           payload.subject_teached = user.subject_teached;
+          payload.class_teached = user.class_teached;
+          payload.class_to_subject = user.class_to_subject;
         }
         // Sign token
         jwt.sign(
@@ -358,7 +364,7 @@ router.get("/getstudents", (req, res) => {
 });
 
 router.get("/getOneUser/:id", (req, res) => {
-  console.log("getOneUser is runned");
+  // console.log("getOneUser is runned");
   let id = req.params.id;
   User.findById(id, (err, user) => {
     if (!user || !user.active)
@@ -480,6 +486,30 @@ router.post("/bulkupdateclass/:dummyClassId", (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
+});
+
+router.post("/updateTeacher/:id", (req, res) => {
+  let id = req.params.id;
+
+  User.findById(id, (err, user) => {
+    if (!user) {
+      return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan" });
+    } else {
+      user.subject_teached = req.body.subject_teached;
+      user.class_teached = req.body.class_teached;
+      user.class_to_subject = req.body.class_to_subject;
+
+      user
+        .save()
+        .then(() => {
+          res.json("Update teacher completed");
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).json(err);
+        });
+    }
+  });
 });
 
 module.exports = router;

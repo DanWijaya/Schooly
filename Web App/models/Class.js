@@ -28,9 +28,8 @@ const ClassSchema = new Schema({
   },
 
   /* 
-  implementasi sekarang:
   - ketua_kelas, bendahara, dan sekretaris bisa 1 orang yang sama
-  - field ketua_kelas, bendahara, dan sekretaris akan dihapus ketika admin memindahkan murid yang bersangkutan ke kelas lain.
+  - field ketua_kelas, bendahara, dan sekretaris akan dihapus ketika admin memindahkan murid yang bersangkutan ke kelas lain
   - ketua_kelas, bendahara, dan sekretaris tidak bisa disunting menjadi kosong
   */
   ketua_kelas: {
@@ -45,6 +44,10 @@ const ClassSchema = new Schema({
     type: ObjectId,
     ref: "users",
   },
+
+  subject_assigned: {
+    type: [ObjectId],
+  }
 });
 
 module.exports = Class = mongoose.model("class", ClassSchema);

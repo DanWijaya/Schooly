@@ -7,10 +7,10 @@ const SubjectSchema = new Schema({
     type: String,
     required: true,
   },
-  all_class: {
-    type: Boolean,
-    default: true,
-  },
+  // all_class: {
+  //   type: Boolean,
+  //   default: true,
+  // },
 });
 
 module.exports = Subject = mongoose.model("subjects", SubjectSchema);

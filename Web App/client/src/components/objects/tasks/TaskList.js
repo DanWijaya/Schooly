@@ -146,8 +146,9 @@ function TaskListToolbar(props) {
     updateSearchFilter(e.target.value);
   };
 
-  const onClear = (e) => {
+  const onClear = (e, id) => {
     updateSearchFilter("");
+    document.getElementById(id).focus();
   };
 
   return (
@@ -496,10 +497,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.success.main,
   },
   listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
-    padding: "6px 24px",
+    padding: "6px 16px"
   },
   assignmentLate: {
     backgroundColor: theme.palette.primary.main,

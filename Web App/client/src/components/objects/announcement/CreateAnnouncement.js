@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { createAnnouncement } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
+import { refreshTeacher } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -208,6 +209,8 @@ class CreateAnnouncement extends Component {
       target_role: "",
       fileLimitSnackbar: false,
       over_limit: [],
+      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
     };
   }
 
@@ -217,13 +220,48 @@ class CreateAnnouncement extends Component {
     if (!this.props.errors && this.props.errors !== prevProps.errors) {
       this.handleOpenUploadDialog();
     }
+
+    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
+      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
+
+        let newClassOptions;
+        let all_classes_obj = {};
+
+        if (this.props.auth.user.role === "Teacher") {
+          // perlu dicek karena hanya guru yang memiliki atribut yang berisi kelas-kelas yang diajar
+          
+          this.props.classesCollection.all_classes.forEach((classInfo) => {
+            all_classes_obj[classInfo._id] = classInfo.name; 
+          });
+
+          // NOTE dengan ini, jika guru tidak mengajar kelas yang diwalikannya, 
+          // guru tidak dapat membuat pengumuman untuk kelas walinya tersebut
+          newClassOptions = this.props.auth.user.class_teached.map((classId) => {
+            return { _id: classId, name: all_classes_obj[classId] };
+          })
+        } else {
+          newClassOptions = [];
+
+          this.props.classesCollection.all_classes.forEach((classInfo) => {
+            all_classes_obj[classInfo._id] = classInfo.name; 
+            newClassOptions.push({ _id: classInfo._id, name: classInfo.name });
+          });
+        }
+
+        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
+    }
   }
 
   componentDidMount() {
     const { user } = this.props.auth;
-    const { getAllClass, setCurrentClass } = this.props;
+    const { getAllClass, setCurrentClass, refreshTeacher } = this.props;
     getAllClass();
-    if (user.role === "Student") setCurrentClass(user.kelas);
+    if (user.role === "Student") {
+      setCurrentClass(user.kelas);
+    } else if (user.role === "Teacher") {
+      refreshTeacher(user._id);
+    }
   }
 
   componentWillUnmount() {
@@ -568,13 +606,11 @@ class CreateAnnouncement extends Component {
                           }}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
-                              {selected.map((kelas) => {
-                                console.log(selected);
-                                console.log(kelas, class_assigned);
+                              {selected.map((classId) => {
                                 return (
                                   <Chip
-                                    key={kelas}
-                                    label={kelas.name}
+                                    key={classId}
+                                    label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
                                     className={classes.chip}
                                   />
                                 );
@@ -582,18 +618,15 @@ class CreateAnnouncement extends Component {
                             </div>
                           )}
                         >
-                          {all_classes.map((kelas) => {
-                            console.log(kelas, class_assigned);
-                            return (
-                              <MenuItem
-                                key={kelas}
-                                selected={true}
-                                value={kelas}
-                              >
-                                {kelas.name}
+                          {(this.state.classOptions !== null) ? (
+                            this.state.classOptions.map((classInfo) => (
+                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
+                                {classInfo.name}
                               </MenuItem>
-                            );
-                          })}
+                            ))
+                          ) : (
+                            null
+                          )}
                         </Select>
                         <FormHelperText>
                           {Boolean(errors.class_assigned) &&
@@ -689,4 +722,5 @@ export default connect(mapStateToProps, {
   setCurrentClass,
   clearErrors,
   clearSuccess,
+  refreshTeacher
 })(withStyles(styles)(CreateAnnouncement));

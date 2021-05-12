@@ -1166,10 +1166,7 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   listItem: {
-    padding: "6px 24px",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
+    padding: "6px 16px"
   },
   titleIcon: {
     fontSize: "28px",

@@ -25,9 +25,10 @@ router.post("/create", (req, res) => {
     } else {
       const newKelas = new Class({
         name: req.body.name,
-        walikelas: req.body.walikelas._id,
+        walikelas: req.body.walikelas,
         nihil: req.body.nihil,
         ukuran: req.body.ukuran,
+        subject_assigned: req.body.mata_pelajaran.map((id) => (new ObjectId(id)))
       });
 
       newKelas
@@ -130,6 +131,7 @@ router.post("/update/:id", (req, res) => {
     classData.bendahara = req.body.bendahara;
     classData.nihil = req.body.nihil;
     classData.ukuran = req.body.ukuran;
+    classData.subject_assigned = req.body.mata_pelajaran.map((id) => (new ObjectId(id)));
 
     classData
       .save()

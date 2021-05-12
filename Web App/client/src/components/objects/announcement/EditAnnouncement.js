@@ -9,6 +9,7 @@ import {
   updateAnnouncement,
 } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
+import { refreshTeacher } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -215,6 +216,8 @@ class EditAnnouncement extends Component {
       openDeleteDialog: null,
       errors: {},
       target_role: "",
+      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
     };
   }
 
@@ -228,6 +231,7 @@ class EditAnnouncement extends Component {
       getOneAnnouncement,
       getAllClass,
       getFileAnnouncements,
+      refreshTeacher
     } = this.props;
     const { id } = this.props.match.params;
 
@@ -236,7 +240,13 @@ class EditAnnouncement extends Component {
     getFileAnnouncements(id).then((result) => {
       this.setState({ fileLampiran: result });
     });
-    if (user.role === "Student") setCurrentClass(user.kelas);
+
+    if (user.role === "Student") {
+      setCurrentClass(user.kelas);
+    } else if (user.role === "Teacher") {
+      refreshTeacher(user._id);
+    }
+
   }
 
   componentWillUnmount() {
@@ -267,6 +277,40 @@ class EditAnnouncement extends Component {
         // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
         // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
       });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
+      const selectedAnnouncementProps = this.props.announcements.selectedAnnouncements;
+
+      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
+      selectedAnnouncementProps && selectedAnnouncementProps.constructor === Object && (Object.keys(selectedAnnouncementProps).length !== 0)) {
+        
+        let newClassOptions;
+        let all_classes_obj = {};
+
+        if (this.props.auth.user.role === "Teacher") {
+          // perlu dicek karena hanya guru yang memiliki atribut yang berisi kelas-kelas yand diajar
+          
+          this.props.classesCollection.all_classes.forEach((classInfo) => {
+            all_classes_obj[classInfo._id] = classInfo.name; 
+          });
+
+          newClassOptions = this.props.auth.user.class_teached.map((classId) => {
+            return { _id: classId, name: all_classes_obj[classId] };
+          })
+        } else {
+          newClassOptions = [];
+
+          this.props.classesCollection.all_classes.forEach((classInfo) => {
+            all_classes_obj[classInfo._id] = classInfo.name; 
+            newClassOptions.push({ _id: classInfo._id, name: classInfo.name });
+          });
+        }
+        
+        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+      }
     }
   }
 
@@ -644,36 +688,28 @@ class EditAnnouncement extends Component {
                           renderValue={(selected) => {
                             return (
                               <div className={classes.chips}>
-                                {selected.map((id) => {
-                                  let name;
-                                  if (all_classes.length === 0) return null;
-                                  else {
-                                    for (var i in all_classes) {
-                                      if (all_classes[i]._id === id) {
-                                        name = all_classes[i].name;
-                                        break;
-                                      }
-                                    }
-                                    return (
-                                      <Chip
-                                        key={id}
-                                        label={name}
-                                        className={classes.chip}
-                                      />
-                                    );
-                                  }
+                                {selected.map((classId) => {
+                                  return (
+                                    <Chip
+                                      key={classId}
+                                      label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
+                                      className={classes.chip}
+                                    />
+                                  );
                                 })}
                               </div>
                             );
                           }}
                         >
-                          {all_classes.map((kelas) => {
-                            return (
-                              <MenuItem value={kelas._id}>
-                                {kelas.name}
+                          {(this.state.classOptions !== null) ? (
+                            this.state.classOptions.map((classInfo) => (
+                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
+                                {classInfo.name}
                               </MenuItem>
-                            );
-                          })}
+                            ))
+                          ) : (
+                            null
+                          )}
                         </Select>
                         <FormHelperText>
                           {Boolean(errors.class_assigned)
@@ -781,4 +817,5 @@ export default connect(mapStateToProps, {
   clearErrors,
   clearSuccess,
   getFileAnnouncements,
+  refreshTeacher
 })(withStyles(styles)(EditAnnouncement));

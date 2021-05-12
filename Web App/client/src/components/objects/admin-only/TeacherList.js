@@ -36,10 +36,14 @@ import { GoSearch } from "react-icons/go";
 import { BiSitemap } from "react-icons/bi";
 import CloseIcon from "@material-ui/icons/Close";
 import ClearIcon from "@material-ui/icons/Clear";
-import { Autocomplete } from "@material-ui/lab";
+import { Autocomplete }from '@material-ui/lab';
 import MuiAlert from "@material-ui/lab/Alert";
 
-function createData(_id, name, email) {
+function createData(
+  _id,
+  name,
+  email,
+) {
   return { _id, name, email };
 }
 
@@ -321,6 +325,15 @@ function TeacherListToolbar(props) {
   );
 }
 
+// TeacherListToolbar.propTypes = {
+//   classes: PropTypes.object.isRequired,
+//   onRequestSort: PropTypes.func.isRequired,
+//   onSelectAllClick: PropTypes.func.isRequired,
+//   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+//   orderBy: PropTypes.string.isRequired,
+//   rowCount: PropTypes.number.isRequired,
+// };
+
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
@@ -440,7 +453,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
-    padding: "6px 16px",
+    padding: "6px 16px"
   },
   saveButton: {
     backgroundColor: theme.palette.primary.main,
@@ -484,10 +497,10 @@ function TeacherList(props) {
     getTeachers,
     updateTeacher,
     clearErrors,
-    clearSuccess,
+    clearSuccess
   } = props;
   const { all_classes } = props.classesCollection;
-  const { all_teachers } = props.auth;
+  const { user, all_teachers } = props.auth;
   const { all_subjects } = props.subjectsCollection;
   const errors = props.errors;
   const success = props.success;
@@ -496,6 +509,7 @@ function TeacherList(props) {
   const [rows, setRows] = React.useState([]);
 
   React.useEffect(() => {
+    window.scrollTo(0, 0);
     // getAllSubjects("map");
     getAllSubjects();
     // getAllClass("map");
@@ -639,8 +653,8 @@ function TeacherList(props) {
       ...selectedValues,
       [teacherId]: {
         ...selectedValues[teacherId],
-        subject: selectedSubjectsInfo,
-      },
+        subject: selectedSubjectsInfo
+      }
     });
   }
 
@@ -649,17 +663,15 @@ function TeacherList(props) {
       ...selectedValues,
       [teacherId]: {
         ...selectedValues[teacherId],
-        class: selectedClassInfo,
-      },
+        class: selectedClassInfo
+      }
     });
   }
 
   function handleSave(teacherId) {
     let teacher = selectedValues[teacherId];
-    let newSubjectTeached = teacher.subject.map(
-      (subjectInfo) => subjectInfo._id
-    );
-    let newClassTeached = teacher.class.map((classInfo) => classInfo._id);
+    let newSubjectTeached = teacher.subject.map((subjectInfo) => (subjectInfo._id));
+    let newClassTeached = teacher.class.map((classInfo) => (classInfo._id));
     let tempClassToSubject = {};
 
     for (let classId of newClassTeached) {
@@ -671,11 +683,12 @@ function TeacherList(props) {
       ...all_teacher_obj.current[teacherId],
       subject_teached: newSubjectTeached,
       class_teached: newClassTeached,
-      class_to_subject: tempClassToSubject,
+      class_to_subject: tempClassToSubject
     };
-
+    
     updateTeacher(newTeacherData, teacherId);
   }
+
 
   // DIALOG SUNTING
   const [openSuntingDialog, setOpenSuntingDialog] = React.useState(false);
@@ -721,7 +734,7 @@ function TeacherList(props) {
                   display: "flex",
                   flexDirection: "row",
                   padding: "5px 30px 20px 30px",
-                  alignItems: "center",
+                  alignItems: "center"
                 }}
               >
                 <ListItemAvatar>
@@ -1171,5 +1184,5 @@ export default connect(mapStateToProps, {
   getAllClass,
   updateTeacher,
   clearErrors,
-  clearSuccess,
+  clearSuccess
 })(TeacherList);

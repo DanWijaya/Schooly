@@ -8,6 +8,7 @@ import {
   getAllAssessments,
   deleteAssessment,
 } from "../../../actions/AssessmentActions";
+import { getTeachers } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -63,7 +64,8 @@ function createData(
   class_assigned,
   type,
   createdAt,
-  submissions
+  submissions,
+  teacher_name
 ) {
   return {
     _id,
@@ -75,6 +77,7 @@ function createData(
     type,
     createdAt,
     submissions,
+    teacher_name
   };
 }
 
@@ -543,11 +546,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
   },
   listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
-    padding: "6px 24px",
-  },
+    padding: "6px 16px"
+  }
 }));
 
 function AssessmentList(props) {
@@ -569,19 +569,20 @@ function AssessmentList(props) {
     deleteAssessment,
     getAllClass,
     getAllSubjects,
+    getTeachers
   } = props;
   const { all_assessments } = props.assessmentsCollection;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
-  const { user } = props.auth;
+  const { user, all_teachers } = props.auth;
   // Fitur 2 -- Dialog
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-  console.log(all_assessments);
+  console.log(props.auth);
 
-  const handleOpenDialog = (title, subject, start_date, end_date) => {
-    setCurrentDialogInfo({ title, subject, start_date, end_date });
+  const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
+    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
     setOpenDialog(true);
     console.log(title);
   };
@@ -592,7 +593,7 @@ function AssessmentList(props) {
 
   var rows = [];
   const assessmentRowItem = (data) => {
-    if (data.type === "Kuis") {
+    if (data.type === "Kuis" && all_teachers instanceof Map) {
       rows.push(
         createData(
           data._id,
@@ -603,7 +604,8 @@ function AssessmentList(props) {
           data.class_assigned,
           data.type,
           data.createdAt,
-          data.submissions
+          data.submissions,
+          all_teachers.get(data.author_id).name
         )
       );
     }
@@ -614,6 +616,7 @@ function AssessmentList(props) {
       getAllAssessments();
       getAllClass("map");
       getAllSubjects("map");
+      getTeachers("map");
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -748,6 +751,12 @@ function AssessmentList(props) {
               align="center"
               style={{ marginTop: "25px" }}
             >
+              Guru: {currentDialogInfo.teacher_name}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              align="center"
+            >
               Mulai: {currentDialogInfo.start_date}
             </Typography>
             <Typography variant="subtitle1" align="center">
@@ -779,7 +788,6 @@ function AssessmentList(props) {
         />
         <Divider variant="inset" className={classes.titleDivider} />
         <Grid container direction="column" spacing={2}>
-          {/* REVIEW stablesort element*/}
           {rows.length === 0 ? (
             <Typography
               variant="subtitle1"
@@ -791,6 +799,7 @@ function AssessmentList(props) {
           ) : (
             stableSort(rows, getComparator(order, orderBy)).map(
               (row, index) => {
+                console.log(row.teacher_name)
                 const labelId = `enhanced-table-checkbox-${index}`;
                 let viewpage =
                   user.role === "Student"
@@ -979,6 +988,7 @@ function AssessmentList(props) {
                           handleOpenDialog(
                             row.assessmenttitle,
                             all_subjects_map.get(row.subject),
+                            row.teacher_name,
                             moment(row.start_date)
                               .locale("id")
                               .format("DD MMM YYYY, HH.mm"),
@@ -1094,6 +1104,7 @@ function AssessmentList(props) {
 AssessmentList.propTypes = {
   getAllAssessments: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
+  getTeachers: PropTypes.func.isRequired,
   deleteAssessment: PropTypes.func.isRequired,
   assessmentsCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
@@ -1115,4 +1126,5 @@ export default connect(mapStateToProps, {
   deleteAssessment,
   getAllClass,
   getAllSubjects,
+  getTeachers
 })(AssessmentList);

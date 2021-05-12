@@ -40,7 +40,7 @@ const AnnoucementSchema = new Schema(
     //     required: true
     // }
 
-    // value: "Student" / "Teacher" / "Teacher_Student"
+    // bernilai "Student", "Teacher", atau "Teacher_Student"
     to: {
       type: String,
       required: true,

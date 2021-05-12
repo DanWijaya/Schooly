@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
-import { createClass } from "../../../actions/ClassActions";
+import { createClass, getAllClass } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers } from "../../../actions/UserActions";
 import {
   Button,
@@ -20,6 +21,7 @@ import {
 } from "@material-ui/core";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import { withStyles } from "@material-ui/core/styles";
+import { Autocomplete }from '@material-ui/lab';
 
 const styles = (theme) => ({
   root: {
@@ -54,6 +56,7 @@ class CreateClass extends Component {
       walikelas: {},
       ukuran: 0,
       openUploadDialog: null,
+      teacherOptions: null
       // errors: {},
     };
   }
@@ -62,7 +65,22 @@ class CreateClass extends Component {
     if (this.props.success && !prevProps.success) {
       this.handleOpenUploadDialog();
     }
-  }
+
+    if (prevState.teacherOptions === null) {
+      let all_classes = this.props.classesCollection.all_classes;
+      let all_teachers = this.props.auth.all_teachers;
+      if (all_classes && Array.isArray(all_classes) && all_classes.length !== 0 &&
+        all_teachers && Array.isArray(all_teachers) && all_teachers.length !== 0) {
+
+        let all_walikelas = new Set(all_classes.map((cls) => cls.walikelas));
+        let teacherOptions = all_teachers.filter(
+          (teacher) => !all_walikelas.has(teacher._id)
+        );
+
+        this.setState({ teacherOptions });
+      }
+    }
+  };
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
@@ -73,8 +91,13 @@ class CreateClass extends Component {
   // };
 
   onChange = (e, otherfield = null) => {
-    if (otherfield) this.setState({ [otherfield]: e.target.value });
-    else {
+    if (otherfield) {
+      if (otherfield === "mata_pelajaran") {
+        this.setState({ [otherfield]: e });
+      } else {
+        this.setState({ [otherfield]: e.target.value });
+      }
+    } else {
       this.setState({ [e.target.id]: e.target.value });
     }
   };
@@ -90,6 +113,7 @@ class CreateClass extends Component {
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
       errors: {},
+      mata_pelajaran: this.state.mata_pelajaran.map((matpel) => (matpel._id))
     };
     this.props.createClass(classObject, this.props.history);
   };
@@ -109,6 +133,8 @@ class CreateClass extends Component {
 
   componentDidMount() {
     this.props.getTeachers();
+    this.props.getAllSubjects();
+    this.props.getAllClass();
   }
 
   componentWillUnmount() {
@@ -120,6 +146,7 @@ class CreateClass extends Component {
     const { classes, success, errors } = this.props;
 
     const { all_teachers, user } = this.props.auth;
+
     // console.log(errors);
     // console.log(all_teachers);
     document.title = "Schooly | Buat Kelas";
@@ -187,17 +214,58 @@ class CreateClass extends Component {
                         this.onChange(event, "walikelas");
                       }}
                     >
-                      {Array.isArray(all_teachers)
-                        ? all_teachers.map((walikelas) => (
-                            <MenuItem value={walikelas}>
-                              {walikelas.name}
-                            </MenuItem>
-                          ))
-                        : null}
+                      {(this.state.teacherOptions !== null) ? (
+                        this.state.teacherOptions.map((teacherInfo) => (
+                          <MenuItem key={teacherInfo._id} value={teacherInfo._id}>
+                            {teacherInfo.name}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        null
+                      )}
                     </Select>
                     <FormHelperText error>
                       {Boolean(errors.walikelas) ? errors.walikelas : null}
                     </FormHelperText>
+                  </FormControl>
+                </Grid>
+                <Grid item>
+                  <Typography
+                    component="label"
+                    for="matapelajaran"
+                    color="primary"
+                  >
+                    Mata Pelajaran
+                  </Typography>
+                  <FormControl
+                    id="matapelajaran"
+                    color="primary"
+                    fullWidth
+                  >
+                    <Autocomplete
+                      multiple
+                      id="tags-outlined"
+                      options={this.props.subjectsCollection ? this.props.subjectsCollection.all_subjects : null}
+                      getOptionLabel={(option) => option.name}
+                      filterSelectedOptions
+                      // size="small"
+                      onChange={(event, value) => {
+                        this.onChange(value, "mata_pelajaran");
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="outlined"
+                          size="small"
+                          // fullWidth
+                          style={{ border: "none" }}
+                          error={errors.mata_pelajaran}
+                          helperText={errors.mata_pelajaran}
+                        />
+                      )}
+                    />
+                    {/* <FormHelperText>
+                    </FormHelperText> */}
                   </FormControl>
                 </Grid>
                 {/* <Grid item >
@@ -256,17 +324,22 @@ CreateClass.propTypes = {
   getTeachers: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
   success: PropTypes.object.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
   success: state.success,
+  subjectsCollection: state.subjectsCollection,
+  classesCollection: state.classesCollection
 });
 
 export default connect(mapStateToProps, {
   createClass,
   getTeachers,
+  getAllSubjects,
   clearErrors,
   clearSuccess,
+  getAllClass
 })(withStyles(styles)(CreateClass));

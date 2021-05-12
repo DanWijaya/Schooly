@@ -150,8 +150,9 @@ function MaterialListToolbar(props) {
     updateSearchFilter(e.target.value);
   };
 
-  const onClear = (e) => {
+  const onClear = (e, id) => {
     updateSearchFilter("");
+    document.getElementById(id).focus();
   };
 
   return (
@@ -499,11 +500,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
   },
   listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
-    padding: "6px 24px",
-  },
+    padding: "6px 16px"
+  }
 }));
 
 function MaterialList(props) {

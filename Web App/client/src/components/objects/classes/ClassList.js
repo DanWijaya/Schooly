@@ -49,6 +49,7 @@ import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import { GoSearch } from "react-icons/go";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { AiOutlineUserSwitch } from "react-icons/ai";
+import { GiTeacher } from "react-icons/gi";
 import ClearIcon from "@material-ui/icons/Clear";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -141,8 +142,9 @@ function ClassListToolbar(props) {
     updateSearchFilter(e.target.value);
   };
 
-  const onClear = (e) => {
+  const onClear = (e, id) => {
     updateSearchFilter("");
+    document.getElementById(id).focus();
   };
 
   const handleClickExport = () => {
@@ -653,7 +655,7 @@ function ClassListToolbar(props) {
                 className={classes.toolbarButtons}
                 style={{ marginRight: "3px" }}
               >
-                <AccountTreeIcon />
+                <GiTeacher />
               </IconButton>
             </LightTooltip>
             <Menu

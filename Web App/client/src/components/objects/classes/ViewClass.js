@@ -295,8 +295,8 @@ function AssessmentListItem(props) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-  const handleOpenDialog = (title, subject, start_date, end_date) => {
-    setCurrentDialogInfo({ title, subject, start_date, end_date });
+  const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
+    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
     setOpenDialog(true);
     console.log(title);
   };
@@ -315,8 +315,9 @@ function AssessmentListItem(props) {
             handleOpenDialog(
               props.work_title,
               props.work_subject,
+              props.work_teacher_name,
               props.work_starttime,
-              props.work_endtime
+              props.work_endtime,
             )
           }
         >
@@ -375,8 +376,9 @@ function AssessmentListItem(props) {
             handleOpenDialog(
               props.work_title,
               props.work_subject,
+              props.work_teacher_name,
               props.work_starttime,
-              props.work_endtime
+              props.work_endtime,
             )
           }
         >
@@ -444,7 +446,12 @@ function AssessmentListItem(props) {
             variant="subtitle1"
             align="center"
             style={{ marginTop: "25px" }}
-            color="textSecondary"
+          >
+            Guru: {currentDialogInfo.teacher_name}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
           >
             Mulai: {currentDialogInfo.start_date}
           </Typography>
@@ -633,6 +640,7 @@ function ViewClass(props) {
               : all_subjects_map.get(row.subject)
           }
           work_status={row.workStatus}
+          work_teacher_name={row.teacher_name}
           work_starttime={moment(row.start_date)
             .locale("id")
             .format("DD MMM YYYY, HH:mm")}
@@ -710,6 +718,7 @@ function ViewClass(props) {
                   : all_subjects_map.get(row.subject)
               }
               work_status={row.workStatus}
+              work_teacher_name={row.teacher_name}
               work_starttime={moment(row.start_date)
                 .locale("id")
                 .format("DD MMM YYYY, HH:mm")}
@@ -870,6 +879,7 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
+                teacher_name: (all_teachers instanceof Map) ? all_teachers.get(assessment.author_id).name : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -911,6 +921,7 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
+                teacher_name: (all_teachers instanceof Map) ? all_teachers.get(assessment.author_id).name : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -957,6 +968,7 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
+                teacher_name: (all_teachers instanceof Map) ? all_teachers.get(assessment.author_id).name : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -997,6 +1009,7 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
+                teacher_name: (all_teachers instanceof Map) ? all_teachers.get(assessment.author_id).name : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -1471,54 +1484,43 @@ function ViewClass(props) {
               ? null
               : all_subjects.map((subject) => {
                   // let isEmpty = true
-                  return (
-                    <ExpansionPanel>
-                      <ExpansionPanelSummary>
-                        <Grid
-                          container
-                          justify="space-between"
-                          alignItems="center"
-                        >
-                          <Typography variant="h6">{subject.name}</Typography>
-                          <LightTooltip title="Lihat Profil" placement="right">
-                            <Link to={`/mata-pelajaran/${subject._id}`}>
-                              <IconButton
-                                size="small"
-                                className={classes.viewSubjectButton}
-                              >
-                                <PageviewIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
-                      </ExpansionPanelSummary>
-                      <Divider />
-                      <List className={classes.expansionPanelList}>
-                        {showAllbySubject(
-                          listMaterials("subject", subject, "mata_pelajaran")
-                            .concat(
-                              listTasks("subject", subject, "mata_pelajaran")
-                            )
-                            .concat(
-                              listAssessments(
-                                "subject",
-                                subject,
-                                "Kuis",
-                                "mata_pelajaran"
-                              )
-                            )
-                            .concat(
-                              listAssessments(
-                                "subject",
-                                subject,
-                                "Ujian",
-                                "mata_pelajaran"
-                              )
-                            )
-                        )}
-                      </List>
-                    </ExpansionPanel>
-                  );
+                  if(kelas.subject_assigned.includes(subject._id)) {
+                    return (
+                      <ExpansionPanel>
+                        <ExpansionPanelSummary>
+                          <Grid
+                            container
+                            justify="space-between"
+                            alignItems="center"
+                          >
+                            <Typography variant="h6">{subject.name}</Typography>
+                            <LightTooltip
+                              title="Lihat Profil"
+                              placement="right"
+                            >
+                              <Link to={`/mata-pelajaran/${subject._id}`}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.viewSubjectButton}
+                                >
+                                  <PageviewIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+                        </ExpansionPanelSummary>
+                        <Divider />
+                        <List className={classes.expansionPanelList}>
+                          {showAllbySubject(
+                            listMaterials("subject", subject, "mata_pelajaran").concat(
+                            listTasks("subject", subject, "mata_pelajaran")).concat(
+                            listAssessments("subject", subject, "Kuis", "mata_pelajaran")).concat(
+                            listAssessments("subject", subject, "Ujian", "mata_pelajaran"))
+                          )}
+                        </List>
+                      </ExpansionPanel>
+                    );
+                  }
                 })}
           </TabPanel>
           <TabPanel value={value} index={2}>

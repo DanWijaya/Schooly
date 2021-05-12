@@ -21,7 +21,7 @@ router.post("/create", (req, res) => {
     if (class_assigned[0] === null) {
       class_assigned_ids.push(null);
     } else {
-      class_assigned.map((kelas) => class_assigned_ids.push(kelas._id));
+      class_assigned.forEach((kelas) => class_assigned_ids.push(kelas));
     }
   }
   console.log(class_assigned_ids);

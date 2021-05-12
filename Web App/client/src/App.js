@@ -78,6 +78,7 @@ import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
 import SubjectList from "./components/objects/admin-only/SubjectList";
 import EditClassTeacher from "./components/objects/classes/EditClassTeacher";
+import TeacherList from "./components/objects/admin-only/TeacherList";
 //Prototypes
 import Tester from "./prototypes/Tester";
 import CSV from "./prototypes/contoh-tugas/CSV";
@@ -532,6 +533,12 @@ class App extends Component {
                       access={["Admin"]}
                       path="/atur-walikelas"
                       component={EditClassTeacher}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={["Admin"]}
+                      path="/sunting-guru"
+                      component={TeacherList}
                     />
                     {/* Not Found */}
                     <Route
