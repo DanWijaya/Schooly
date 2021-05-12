@@ -692,6 +692,7 @@ function ClassListToolbar(props) {
           <IconButton
             onClick={handleOpenSortMenu}
             className={classes.toolbarButtons}
+            style={user.role === "Admin" ? { marginLeft: "3px" } : null}
           >
             <SortIcon />
           </IconButton>
