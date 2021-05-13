@@ -7,6 +7,8 @@ const keys = require("../../config/keys");
 const validateMaterialInput = require("../../validation/MaterialData");
 const Material = require("../../models/Material");
 
+const mongoose = require("mongoose");
+
 router.post("/create", (req, res) => {
   const { errors, isValid } = validateMaterialInput(req.body);
   console.log(errors);
@@ -132,6 +134,40 @@ router.delete("/delete/:id", (req, res) => {
       res.status(400).json(err);
     } else {
       res.json(materials);
+    }
+  });
+});
+
+router.post("/updatecomment/:id", (req, res) => {
+  let newComments = req.body.materialComments;
+  let editedCommentIdx = req.body.editedCommentIdx;
+
+  Material.findById(req.params.id, (err, materialData) => {
+    if (!materialData) {
+      return res.status(404).send("Material data is not found");
+    } else {
+      let prevComments = materialData.comments ? materialData.comments : [];
+
+      if (newComments.length > prevComments.length) { // jika ada komen baru yang ditambahkan
+        if (newComments[newComments.length - 1].content.length === 0) {
+          res.status(400).json("Isi komentar tidak boleh kosong");
+          return;
+        }
+        newComments[newComments.length - 1].createdAt = new mongoose.Types.ObjectId().getTimestamp();
+        // asumsi urutan isi atribut comments: [komen yg pertama dibuat, komen kedua, ..., komen terbaru]
+      } else if (newComments.length === prevComments.length && editedCommentIdx !== null) { // jika ada komen yang disunting        
+        newComments[editedCommentIdx].edited = true;
+      } // jika ada komen yg dihapus (newComments.length < prevComments.length), tidak perlu melakukan apa-apa 
+
+      materialData.comments = newComments;
+      materialData
+        .save()
+        .then(() => {
+          res.json("Update material comments complete")
+        })
+        .catch(() => {
+          res.status(400).send("Unable to update material comments")
+        });
     }
   });
 });

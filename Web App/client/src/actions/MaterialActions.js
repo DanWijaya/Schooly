@@ -208,3 +208,25 @@ export const updateMaterial = (
       });
     });
 };
+
+
+export const updateMaterialComment = (
+  materialComments,
+  materialId,
+  editedCommentIdx = null
+) => (dispatch) => {
+  axios
+    .post(`/api/materials/updatecomment/${materialId}`, { materialComments, editedCommentIdx })
+    .then(() => {
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: true
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};

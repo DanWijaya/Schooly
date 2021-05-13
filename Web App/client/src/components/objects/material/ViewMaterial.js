@@ -10,12 +10,21 @@ import {
   viewFileMaterial,
 } from "../../../actions/files/FileMaterialActions";
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
-import { getOneUser } from "../../../actions/UserActions";
+import { 
+  getOneUser, 
+
+  getTeachers, 
+  getStudents 
+} from "../../../actions/UserActions";
 import {
   getOneMaterial,
   deleteMaterial,
+  
+  updateMaterialComment
 } from "../../../actions/MaterialActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -30,6 +39,9 @@ import {
   Paper,
   Typography,
   Divider,
+
+  TextField,
+  Button
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
@@ -44,6 +56,7 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+// REVIEW import
 
 const path = require("path");
 
@@ -221,7 +234,7 @@ function LampiranFile(props) {
 function ViewMaterial(props) {
   const classes = useStyles();
 
-  const { user, selectedUser } = props.auth;
+  const { user, selectedUser, all_students, all_teachers } = props.auth;
   const {
     deleteMaterial,
     getOneUser,
@@ -231,27 +244,155 @@ function ViewMaterial(props) {
     getOneMaterial,
     getAllClass,
     getFileMaterials,
+
+    getTeachers, 
+    getStudents,
+    updateMaterialComment,
+    clearErrors,
+    clearSuccess
   } = props;
   const { selectedMaterials, all_materials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
   const materi_id = props.match.params.id;
   const { all_subjects_map } = props.subjectsCollection;
+  const errors = props.errors;
+  const success = props.success;
+  
+
+  // REVIEW states
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [fileLampiran, setFileLampiran] = React.useState([]);
+  const [commentValue, setCommentValue] = React.useState("");
+  const [commentEditorValue, setCommentEditorValue] = React.useState("");
+  const [commentList, setCommentList] = React.useState([]);
+  const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
 
   console.log(props.materialsFiles);
+
+  // REVIEW useeffects
   React.useEffect(() => {
     getAllSubjects("map"); // this will get the selectedMaterials.
     getOneMaterial(materi_id);
     getAllClass("map");
-    getOneUser(selectedMaterials.author_id);
     // COba S3
     getFileMaterials(materi_id).then((result) => {
       setFileLampiran(result);
     });
     // bakal ngedapat collection of S3 files di
+    getStudents();
+    getTeachers();
+    clearErrors();
+    clearSuccess();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
+    getOneUser(selectedMaterials.author_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMaterials.author_id]);
+
+  React.useEffect(() => {
+    if (all_students && Array.isArray(all_students) && all_teachers && Array.isArray(all_teachers) &&
+      selectedMaterials && selectedMaterials.comments) {
+      let usernames = {};
+      for (let studentInfo of all_students) {
+        usernames[studentInfo._id] = studentInfo.name;
+      }
+      for (let teacherInfo of all_teachers) {
+        usernames[teacherInfo._id] = teacherInfo.name;
+      }
+
+      setCommentList(selectedMaterials.comments.map((comment) => ({ ...comment, name: usernames[comment.author_id] })));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedMaterials, all_teachers, all_students]);
+
+  React.useEffect(() => {
+    if (
+      errors &&
+      errors.constructor === Object &&
+      Object.keys(errors).length !== 0
+    ) {
+      // handleOpenSnackbar("error", "Data guru gagal disimpan");
+      alert("gagal");
+      clearErrors();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errors]);
+
+  React.useEffect(() => {
+    if (success) {
+      // handleOpenSnackbar("success", "Data guru berhasil disimpan");
+      alert("berhasil");
+      getOneMaterial(materi_id);
+      setCommentValue("");
+      clearSuccess();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [success]);
+
+  React.useEffect(() => {
+    return () => {
+      clearErrors();
+      clearSuccess();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+
+  // REVIEW handlers
+  const handleCommentInputChange = (e) => {
+    setCommentValue(e.target.value);
+  };
+
+  const handleCommentEditorChange = (e) => {
+    setCommentEditorValue(e.target.value);
+  };
+
+  const closeEditMode = () => {
+    setCommentEditorValue("");
+    setSelectedCommentIdx(null);
+  };
+
+  const handleClickEdit = (idx) => {
+    setCommentEditorValue(commentList[idx].content);
+    setSelectedCommentIdx(idx)
+  };
+
+  const handleCreateComment = () => {
+    let newCommentList = commentList.map((comment) => {
+      let filteredComment = { ...comment };
+      delete filteredComment['name'];
+      return filteredComment;
+    });
+    newCommentList.push({
+      author_id: user._id,
+      content: commentValue
+    });
+    updateMaterialComment(newCommentList, materi_id);
+  };
+
+  const handleEditComment = () => {
+    if (commentEditorValue.length === 0) {
+      handleDeleteComment(selectedCommentIdx);
+    } else {
+      let newCommentList = [...commentList];
+      newCommentList[selectedCommentIdx].content = commentEditorValue;
+      newCommentList[selectedCommentIdx].edited = true;
+      updateMaterialComment(newCommentList, materi_id, selectedCommentIdx);
+    }
+    closeEditMode();
+  };
+
+  const handleDeleteComment = (idx) => {
+    let newCommentList = [...commentList];
+    newCommentList.splice(idx, 1);
+    if (selectedCommentIdx !== null && idx < selectedCommentIdx) {
+      setSelectedCommentIdx(selectedCommentIdx - 1);
+    }
+    updateMaterialComment(newCommentList, materi_id);
+  };
+
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
@@ -379,6 +520,82 @@ function ViewMaterial(props) {
             </Grid>
           </Paper>
         </Grid>
+
+
+        {/* REVIEW elements*/}
+        <Grid item>
+          {commentList.map((comment, idx) => {
+            return (
+              <>
+                <p>{comment.name}</p>
+
+                <p>{comment.createdAt}</p>
+
+                {comment.edited === true ? <p>edited</p> : null}
+
+                {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
+                  <TextField
+                    variant="outlined"
+                    onChange={handleCommentEditorChange}
+                    value={commentEditorValue}
+                  />
+                  :
+                  <p>{comment.content}</p>
+                }
+
+                {(comment.author_id === user._id) ? (
+                  <>
+                    {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
+                      <>
+                        <Button
+                          variant="contained"
+                          onClick={closeEditMode}
+                        >
+                          Batal
+                        </Button>
+                        <Button
+                          variant="contained"
+                          onClick={handleEditComment}
+                        >
+                          Simpan
+                        </Button>
+                      </>
+                      :
+                      <>
+                        <Button
+                          variant="contained"
+                          onClick={() => handleDeleteComment(idx)}
+                        >
+                          Hapus
+                        </Button>
+                        <Button
+                          variant="contained"
+                          onClick={() => handleClickEdit(idx)}
+                        >
+                          Sunting
+                        </Button>
+                      </>
+                    }
+                  </>
+                ) : null}
+              </>
+            );
+          })}
+          <br/>
+          <TextField
+            variant="outlined"
+            onChange={handleCommentInputChange}
+            value={commentValue}
+          />
+          <Button
+            variant="contained"
+            onClick={handleCreateComment}
+          >
+            Kirim
+          </Button>          
+        </Grid>
+
+
         {user.role === "Teacher" ? (
           <Grid item container justify="flex-end" alignItems="center">
             <Grid item>
@@ -431,6 +648,9 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
   materialsFiles: state.materialsFiles,
+
+  errors: state.errors,
+  success: state.success
 });
 
 export default connect(mapStateToProps, {
@@ -443,4 +663,10 @@ export default connect(mapStateToProps, {
   getFileMaterials,
   viewFileMaterial,
   downloadFileMaterial,
+
+  updateMaterialComment,
+  getTeachers, 
+  getStudents,
+  clearErrors,
+  clearSuccess
 })(ViewMaterial);
