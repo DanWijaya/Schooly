@@ -36,6 +36,7 @@ import {
   ListItemText,
   Paper,
   Typography,
+  TextField,
   Badge,
   Snackbar,
 } from "@material-ui/core";
@@ -54,6 +55,8 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import SendIcon from '@material-ui/icons/Send';
+import CreateIcon from '@material-ui/icons/Create';
 
 const path = require("path");
 
@@ -171,6 +174,20 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "nowrap",
     marginRight: "13px",
   },
+  commentLittleIcon: {
+    color: theme.palette.text.disabled,
+    "&:focus, &:hover": {
+      opacity: 0.5,
+      cursor: "pointer"
+    },
+  },
+  sendIcon: {
+    color: theme.palette.text.disabled,
+    "&:focus, &:hover": {
+      opacity: 0.5,
+      cursor: "pointer"
+    },
+  }
 }));
 
 function LampiranFile(props) {
@@ -691,6 +708,65 @@ function ViewTaskStudent(props) {
     clearSuccess();
   };
 
+  // Komentar
+  // Kalau avatar belum ada, pakai default
+  const generateComments = (avatar=false, stdName, date, comment, isSelfMade) => {
+    return (
+      <Grid container item xs={12} direction="row" spacing={2}>
+        <Grid item xs={1}>
+          {(!avatar) ?
+            <Avatar/>
+          : 
+            <Avatar src={avatar}/>
+          }
+        </Grid>
+        <Grid item xs={11}>
+          <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+            <Typography style={{marginRight: "10px"}}><b>{stdName}</b></Typography>
+            <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>{date}</Typography>
+            {(isSelfMade) ?
+              <>
+                <LightTooltip title="Sunting">
+                  <CreateIcon style={{marginRight: "2px"}} className={classes.commentLittleIcon} fontSize="small"/>
+                </LightTooltip>
+                <LightTooltip title="Hapus">
+                  <DeleteIcon className={classes.commentLittleIcon} fontSize="small"/>
+                </LightTooltip>
+              </>
+            : null}
+          </div>
+          <Typography style={{marginTop: "5px"}}>{comment}</Typography>
+        </Grid>
+      </Grid>
+    )
+  }
+
+  // Dummy Komentar
+  // isSelfMade = true -> artinya komentar tersebut dibuat oleh user yang sedang login; false sebaliknya
+  const dummyComments = [
+    {
+      avatar: false,
+      name: "Nama Murid",
+      date: "1 Jan 2021, 18:35",
+      comment: "Jadi ceritanya pada interface tersebut dirancang sudah dipikirkan bahwa akan ada banyak sekali ragam Collections yang akan mengimplementasikan interface tersebut di class yang dibuat. Perancang interface menganggap bahwa bisa jadi ada collections jenis tertentu yang bisa jadi tidak membutuhkan methode tersebut, karenanya dia ditandai optional. Memang di Java bagaimanapun yang namanya methode di suatu interface tetap harus diimplementasikan di class yang menggunakannya namun bisa saja isinya \"kosong\" yaitu cuman mengirimkan UnsupportedOperationException.",
+      isSelfMade: true
+    },
+    {
+      avatar: false,
+      name: "Gibran",
+      date: "15 Feb 2021, 02:24",
+      comment: "Jadi ceritanya pada interface tersebut dirancang sudah dipikirkan bahwa akan ada banyak sekali ragam Collections yang akan mengimplementasikan interface tersebut di class yang dibuat.",
+      isSelfMade: false
+    },
+    {
+      avatar: false,
+      name: "Nama Murid",
+      date: "29 Mar 2022, 20:08",
+      comment: "Interface tersebut dapat dibuat dengan JavaFX",
+      isSelfMade: true
+    },
+  ]
+
   document.title = !tasksCollection.name
     ? "Schooly | Lihat Tugas"
     : `Schooly | ${tasksCollection.name}`;
@@ -836,9 +912,48 @@ function ViewTaskStudent(props) {
               )}
             </Grid>
           </Paper>
+          <Paper className={classes.paperBox} style={{marginTop: "20px"}}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} style={{ paddingBottom: "0" }}>
+                <Typography variant="h6">Komentar Kelas</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider className={classes.dividerColor} />
+              </Grid>
+              {
+                dummyComments.map((value) => (
+                  generateComments(value.avatar, value.name, value.date, value.comment, value.isSelfMade)
+                ))
+              }
+              <Grid item xs={12}>
+                <Divider className={classes.dividerColor} />
+              </Grid>
+              <Grid container item xs={12} direction="row" spacing={2} alignItems="center">
+                <Grid item xs={1}>
+                  <Avatar src={`/api/upload/avatar/${user.avatar}`}/>
+                </Grid>
+                <Grid item xs={10}>
+                  <TextField
+                    className={classes.margin}
+                    variant="outlined"
+                    style={{display: "flex"}}
+                    InputProps={{style: {borderRadius: "15px"}}}
+                    placeholder="Tambahkan komentar..."
+                  />
+                </Grid>
+                <Grid container item xs={1} justify="flex-end">
+                  <Grid item>
+                    <LightTooltip title="Kirim">
+                      <SendIcon className={classes.sendIcon}/>
+                    </LightTooltip>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Paper>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Paper className={classes.paperBox}>
+          <Paper className={classes.paperBox} style={{paddingBottom: "10px"}}>
             <Grid item>
               <Typography
                 variant="h5"
@@ -944,25 +1059,27 @@ function ViewTaskStudent(props) {
               </form>
             </Grid>
           </Paper>
+          <Paper className={classes.paperBox} style={{marginTop: "20px", paddingBottom: "10px"}}>
+            <Grid container direction="column" alignItems="center">
+              <Typography variant="subtitle1">
+                Status:{" "}
+                {!tasksCollection.grades
+                  ? "Belum Diperiksa"
+                  : !tasksCollection.grades[user._id]
+                  ? "Belum Diperiksa"
+                  : "Telah Diperiksa"}
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                Nilai:{" "}
+                {!tasksCollection.grades
+                  ? "N/A"
+                  : !tasksCollection.grades[user._id]
+                  ? "N/A"
+                  : `${tasksCollection.grades[user._id]}/100`}
+              </Typography>
+            </Grid>
+          </Paper>
         </Grid>
-      </Grid>
-      <Grid container direction="column" alignItems="center">
-        <Typography variant="h6">
-          Status:{" "}
-          {!tasksCollection.grades
-            ? "Belum Diperiksa"
-            : !tasksCollection.grades[user._id]
-            ? "Belum Diperiksa"
-            : "Telah Diperiksa"}
-        </Typography>
-        <Typography variant="h4" gutterBottom>
-          Nilai:{" "}
-          {!tasksCollection.grades
-            ? "N/A"
-            : !tasksCollection.grades[user._id]
-            ? "N/A"
-            : `${tasksCollection.grades[user._id]}/100`}
-        </Typography>
       </Grid>
       <Snackbar
         open={fileLimitSnackbar}
