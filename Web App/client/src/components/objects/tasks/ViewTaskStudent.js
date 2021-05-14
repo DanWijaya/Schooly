@@ -949,6 +949,136 @@ function ViewTaskStudent(props) {
               )}
             </Grid>
           </Paper>
+          <Hidden smUp>
+            <Grid item xs={12} md={4}>
+              <Paper className={classes.paperBox} style={{paddingBottom: "10px", marginTop: "20px"}}>
+                <Grid item>
+                  <Typography
+                    variant="h5"
+                    align="center"
+                    style={{ marginBottom: "20px" }}
+                  >
+                    Hasil Pekerjaan
+                  </Typography>
+                </Grid>
+                <Divider />
+                {/* <Grid
+                    item
+                    style={{
+                      padding: "10px",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                    }}
+                  >
+                      {listWorkFile()}
+                      {listFileChosen()}
+                  </Grid> */}
+
+                {fileTugas.length === 0 ? (
+                  <Grid
+                    item
+                    style={{
+                      padding: "10px",
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {/* Kasus Kosong */}
+                    {listFileChosen()}
+                    {listWorkFile()}
+                  </Grid>
+                ) : (
+                  <Grid
+                    item
+                    style={{
+                      padding: "10px",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {listWorkFile()}
+                    {listFileChosen()}
+                  </Grid>
+                )}
+                <Divider />
+                <Grid
+                  item
+                  container
+                  direction="column"
+                  alignItems="center"
+                  spacing={2}
+                  style={{ padding: "20px" }}
+                >
+                  <form onSubmit={onSubmitTugas}>
+                    <div style={{ marginBottom: "15px" }}>
+                      <input
+                        type="file"
+                        multiple={true}
+                        name="tugas"
+                        onChange={handleTugasUpload}
+                        ref={tugasUploader}
+                        accept="file/*"
+                        style={{ display: "none" }}
+                      />
+                      <input
+                        type="file"
+                        multiple={true}
+                        name="file"
+                        id="file"
+                        ref={uploadedTugas}
+                        style={{ display: "none" }}
+                      />
+                      <Button
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                        className={classes.selectFileButton}
+                        onClick={() => {
+                          tugasUploader.current.click();
+                        }}
+                      >
+                        Pilih Berkas
+                      </Button>
+                    </div>
+                    <div>
+                      <Button
+                        variant="contained"
+                        startIcon={<PublishIcon />}
+                        className={classes.submitWorkButton}
+                        type="submit"
+                        disabled={!fileTugas}
+                        // onClick={handleOpenUploadDialog}
+                      >
+                        Kumpul Tugas
+                      </Button>
+                    </div>
+                  </form>
+                </Grid>
+              </Paper>
+              <Paper className={classes.paperBox} style={{marginTop: "20px", paddingBottom: "10px"}}>
+                <Grid container direction="column" alignItems="center">
+                  <Typography variant="subtitle1">
+                    Status:{" "}
+                    {!tasksCollection.grades
+                      ? "Belum Diperiksa"
+                      : !tasksCollection.grades[user._id]
+                      ? "Belum Diperiksa"
+                      : "Telah Diperiksa"}
+                  </Typography>
+                  <Typography variant="h6" gutterBottom>
+                    Nilai:{" "}
+                    {!tasksCollection.grades
+                      ? "N/A"
+                      : !tasksCollection.grades[user._id]
+                      ? "N/A"
+                      : `${tasksCollection.grades[user._id]}/100`}
+                  </Typography>
+                </Grid>
+              </Paper>
+            </Grid>
+          </Hidden>
           <Paper className={classes.paperBox} style={{marginTop: "20px"}}>
             <Grid container spacing={2}>
               <Grid item xs={12} style={{ paddingBottom: "0" }}>
@@ -989,7 +1119,7 @@ function ViewTaskStudent(props) {
                   </Grid>
                 </Hidden>
                 <Hidden smUp>
-                  <Grid item>
+                  <Grid item style={{width: "52px"}}>
                     <Avatar src={`/api/upload/avatar/${user.avatar}`}/>
                   </Grid>
                   <Grid container item xs={10} direction="row" alignItems="center">
@@ -1016,134 +1146,136 @@ function ViewTaskStudent(props) {
             </Grid>
           </Paper>
         </Grid>
-        <Grid item xs={12} md={4}>
-          <Paper className={classes.paperBox} style={{paddingBottom: "10px"}}>
-            <Grid item>
-              <Typography
-                variant="h5"
-                align="center"
-                style={{ marginBottom: "20px" }}
-              >
-                Hasil Pekerjaan
-              </Typography>
-            </Grid>
-            <Divider />
-            {/* <Grid
-                item
-                style={{
-                  padding: "10px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
+        <Hidden xsDown>
+          <Grid item xs={12} md={4}>
+            <Paper className={classes.paperBox} style={{paddingBottom: "10px"}}>
+              <Grid item>
+                <Typography
+                  variant="h5"
+                  align="center"
+                  style={{ marginBottom: "20px" }}
+                >
+                  Hasil Pekerjaan
+                </Typography>
+              </Grid>
+              <Divider />
+              {/* <Grid
+                  item
+                  style={{
+                    padding: "10px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                    {listWorkFile()}
+                    {listFileChosen()}
+                </Grid> */}
+
+              {fileTugas.length === 0 ? (
+                <Grid
+                  item
+                  style={{
+                    padding: "10px",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* Kasus Kosong */}
+                  {listFileChosen()}
+                  {listWorkFile()}
+                </Grid>
+              ) : (
+                <Grid
+                  item
+                  style={{
+                    padding: "10px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
                   {listWorkFile()}
                   {listFileChosen()}
-              </Grid> */}
-
-            {fileTugas.length === 0 ? (
+                </Grid>
+              )}
+              <Divider />
               <Grid
                 item
-                style={{
-                  padding: "10px",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                }}
+                container
+                direction="column"
+                alignItems="center"
+                spacing={2}
+                style={{ padding: "20px" }}
               >
-                {/* Kasus Kosong */}
-                {listFileChosen()}
-                {listWorkFile()}
+                <form onSubmit={onSubmitTugas}>
+                  <div style={{ marginBottom: "15px" }}>
+                    <input
+                      type="file"
+                      multiple={true}
+                      name="tugas"
+                      onChange={handleTugasUpload}
+                      ref={tugasUploader}
+                      accept="file/*"
+                      style={{ display: "none" }}
+                    />
+                    <input
+                      type="file"
+                      multiple={true}
+                      name="file"
+                      id="file"
+                      ref={uploadedTugas}
+                      style={{ display: "none" }}
+                    />
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      className={classes.selectFileButton}
+                      onClick={() => {
+                        tugasUploader.current.click();
+                      }}
+                    >
+                      Pilih Berkas
+                    </Button>
+                  </div>
+                  <div>
+                    <Button
+                      variant="contained"
+                      startIcon={<PublishIcon />}
+                      className={classes.submitWorkButton}
+                      type="submit"
+                      disabled={!fileTugas}
+                      // onClick={handleOpenUploadDialog}
+                    >
+                      Kumpul Tugas
+                    </Button>
+                  </div>
+                </form>
               </Grid>
-            ) : (
-              <Grid
-                item
-                style={{
-                  padding: "10px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                {listWorkFile()}
-                {listFileChosen()}
+            </Paper>
+            <Paper className={classes.paperBox} style={{marginTop: "20px", paddingBottom: "10px"}}>
+              <Grid container direction="column" alignItems="center">
+                <Typography variant="subtitle1">
+                  Status:{" "}
+                  {!tasksCollection.grades
+                    ? "Belum Diperiksa"
+                    : !tasksCollection.grades[user._id]
+                    ? "Belum Diperiksa"
+                    : "Telah Diperiksa"}
+                </Typography>
+                <Typography variant="h6" gutterBottom>
+                  Nilai:{" "}
+                  {!tasksCollection.grades
+                    ? "N/A"
+                    : !tasksCollection.grades[user._id]
+                    ? "N/A"
+                    : `${tasksCollection.grades[user._id]}/100`}
+                </Typography>
               </Grid>
-            )}
-            <Divider />
-            <Grid
-              item
-              container
-              direction="column"
-              alignItems="center"
-              spacing={2}
-              style={{ padding: "20px" }}
-            >
-              <form onSubmit={onSubmitTugas}>
-                <div style={{ marginBottom: "15px" }}>
-                  <input
-                    type="file"
-                    multiple={true}
-                    name="tugas"
-                    onChange={handleTugasUpload}
-                    ref={tugasUploader}
-                    accept="file/*"
-                    style={{ display: "none" }}
-                  />
-                  <input
-                    type="file"
-                    multiple={true}
-                    name="file"
-                    id="file"
-                    ref={uploadedTugas}
-                    style={{ display: "none" }}
-                  />
-                  <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    className={classes.selectFileButton}
-                    onClick={() => {
-                      tugasUploader.current.click();
-                    }}
-                  >
-                    Pilih Berkas
-                  </Button>
-                </div>
-                <div>
-                  <Button
-                    variant="contained"
-                    startIcon={<PublishIcon />}
-                    className={classes.submitWorkButton}
-                    type="submit"
-                    disabled={!fileTugas}
-                    // onClick={handleOpenUploadDialog}
-                  >
-                    Kumpul Tugas
-                  </Button>
-                </div>
-              </form>
-            </Grid>
-          </Paper>
-          <Paper className={classes.paperBox} style={{marginTop: "20px", paddingBottom: "10px"}}>
-            <Grid container direction="column" alignItems="center">
-              <Typography variant="subtitle1">
-                Status:{" "}
-                {!tasksCollection.grades
-                  ? "Belum Diperiksa"
-                  : !tasksCollection.grades[user._id]
-                  ? "Belum Diperiksa"
-                  : "Telah Diperiksa"}
-              </Typography>
-              <Typography variant="h6" gutterBottom>
-                Nilai:{" "}
-                {!tasksCollection.grades
-                  ? "N/A"
-                  : !tasksCollection.grades[user._id]
-                  ? "N/A"
-                  : `${tasksCollection.grades[user._id]}/100`}
-              </Typography>
-            </Grid>
-          </Paper>
-        </Grid>
+            </Paper>
+          </Grid>
+        </Hidden>
       </Grid>
       <Snackbar
         open={fileLimitSnackbar}
