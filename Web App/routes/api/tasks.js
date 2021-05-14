@@ -3,7 +3,7 @@ const router = express.Router();
 const keys = require("../../config/keys");
 
 //Load input validation
-const validateTaskInput = require("../../validation/TaskData");
+const { validateTaskInput, validateTaskGrade } = require("../../validation/TaskData");
 // Load Task model
 const Task = require("../../models/Task");
 const Class = require("../../models/Class");
@@ -13,12 +13,13 @@ const Class = require("../../models/Class");
 router.post("/create", (req, res) => {
   // pakai body parser
   console.log(req.body);
+  console.log("COBA MUNCULIN LAH")
   const { errors, isValid } = validateTaskInput(req.body);
   if (!isValid) {
     console.log("Not Valid");
     return res.status(400).json(errors); // errors ini kan juga json
   }
-
+  console.log(req.body);
   Task.findOne({ name: req.body.name, subject: req.body.subject }).then(
     (task) => {
       if (task) {
@@ -39,13 +40,14 @@ router.post("/create", (req, res) => {
         newTask
           .save()
           .then((task) => {
-            res.json(task);
             console.log("Task is created");
+            res.json(task);
           })
           .catch((err) => console.log(err));
       }
     }
-  );
+  )
+  .catch((err) => res.status(400).json(err));
 });
 
 //Define View classes route
@@ -82,12 +84,11 @@ router.get("/view/:id", (req, res) => {
 router.post("/update/:id", (req, res) => {
   let grade = req.body.grade;
   const { errors, isValid } = validateTaskInput(req.body);
-
   if (!isValid) {
     console.log("Not Valid");
     return res.status(400).json(errors);
   }
-
+  
   let id = req.params.id;
 
   console.log(req.body.name);
@@ -105,6 +106,10 @@ router.post("/update/:id", (req, res) => {
         taskData.description = req.body.description;
         taskData.deadline = req.body.deadline;
       } else {
+          const {errorsGrade, isValidGrade} = validateTaskGrade(req.body);
+          if(!isValidGrade){
+            return res.status(400).json(errorsGrade)
+          }
         //grade kan dia Map (key, value). grade -> (studentId, nilainya)
         // untuk yang kasi nilai
         taskData.grades.set(req.body.studentId, grade);

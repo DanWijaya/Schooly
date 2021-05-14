@@ -58,8 +58,6 @@ const path = require("path");
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
-    justifyContent: "center",
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
@@ -219,6 +217,7 @@ class EditTask extends Component {
       classChanged: false,
       focused: false,
       description: "",
+      originalFileLampiran: [],
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
@@ -241,6 +240,7 @@ class EditTask extends Component {
     this.props.getFileTasks(id).then((res) => {
       this.setState({
         fileLampiran: res,
+        originalFileLampiran: res
       });
     });
   }
@@ -251,14 +251,9 @@ class EditTask extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { tasksCollection, errors } = nextProps;
+    const { tasksCollection } = nextProps;
 
-    // pass errorsnya false makanya berhasil
-    if (!nextProps.errors) {
-      this.handleOpenUploadDialog();
-    }
-
-    if (Boolean(tasksCollection) && errors) {
+    if (Boolean(tasksCollection)) {
       this.setState({
         name: tasksCollection.name,
         subject: tasksCollection.subject,
@@ -320,9 +315,11 @@ class EditTask extends Component {
       taskObject,
       id,
       this.props.history
-    );
-
-    this.setState({ fileLampiranToDelete: [] });
+    ).then((res) => this.handleOpenUploadDialog())
+    .catch((err) => this.setState({ errors: err,fileLampiran: [
+      ...this.state.originalFileLampiran,
+      ...this.state.fileLampiranToAdd,
+    ],fileLampiranToDelete:[]}));
   };
 
   handleLampiranUpload = (e) => {
@@ -421,27 +418,26 @@ class EditTask extends Component {
 
   onChange = (e, otherfield = null) => {
     console.log(this.state.class_assigned);
-    if (otherfield) {
-      if (otherfield == "deadline") {
-        this.setState({ [otherfield]: e });
-      } else {
-        // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
-        this.setState({ [otherfield]: e.target.value });
-      }
+    if (otherfield == "deadline") {
+      this.setState({ [otherfield]: e });
     } else {
-      this.setState({ [e.target.id]: e.target.value });
+      let field = e.target.id ? e.target.id : otherfield;
+      if (this.state.errors[field]) {
+        this.setState({ errors: { ...this.state.errors, [field]: null } });
+      }
+      this.setState({ [field]: e.target.value });
     }
-  };
+  }
 
   render() {
-    const { fileLampiran, class_assigned } = this.state;
-    const { classes, errors, success } = this.props;
+    const { fileLampiran, class_assigned, errors } = this.state;
+    const { classes, success } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
-
     // const task_id = this.props.match.params.id;
 
+    
     let classIds = [];
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
@@ -721,8 +717,7 @@ class EditTask extends Component {
                               ))}
                         </Select>
                         <FormHelperText>
-                          {Boolean(errors.class_assigned) &&
-                          class_assigned.length === 0
+                        {Boolean(errors.class_assigned)
                             ? errors.class_assigned
                             : null}
                         </FormHelperText>

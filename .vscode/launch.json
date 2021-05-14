@@ -5,21 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Chrome",
+            "name": "Client",
             "request": "launch",
             "type": "pwa-chrome",
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}/Web App/client"
         },
-
-    
-    {
-        "command": "npm run dev",
-        "name": "Run Schooly",
-        "request": "launch",
-        "type": "node-terminal",
-        "localRoot": "${workspaceFolder}/Web App/client"
-    },
+        {
+            "name": "Server",
+            "type": "node",
+            "runtimeExecutable": "nodemon",
+            "request": "launch",
+            "program": "${workspaceFolder}/Web App/server.js",
+            "console": "integratedTerminal"
+        },
         {
             "type": "pwa-node",
             "request": "launch",
@@ -27,7 +26,13 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/Web App/client/src/components/misc/nav-bar/NavBarLoggedInContents.js"
+            "program": "${workspaceFolder}/Web App/server.js"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Compound",
+            "configurations": ["Server", "Client"]
         }
     ]
 }

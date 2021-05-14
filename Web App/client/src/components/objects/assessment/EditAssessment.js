@@ -302,6 +302,7 @@ class EditAssessment extends Component {
       ready: false,
       lampiranUrls: new Map(),
       over_limit: [],
+      errors: {}
     };
   }
 
@@ -335,9 +336,9 @@ class EditAssessment extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { selectedAssessments } = nextProps.assessmentsCollection;
 
-    if (!nextProps.errors) {
-      this.handleOpenUploadDialog();
-    }
+    // if (!nextProps.errors) {
+    //   this.handleOpenUploadDialog();
+    // }
     if (Boolean(selectedAssessments) && nextProps.errors) {
       if (Object.keys(selectedAssessments).length !== 0) {
         let weights = {
@@ -581,9 +582,13 @@ class EditAssessment extends Component {
         history
       )
         .then((res) => {
-          console.log("Assessment is updated successfully");
+          this.handleOpenUploadDialog()
+          // console.log("Assessment is updated successfully");
         })
-        .catch(() => this.handleOpenErrorSnackbar());
+        .catch((err) => {
+          this.setState({ errors: err})
+          this.handleOpenErrorSnackbar()
+        });
     } else {
       this.handleOpenErrorSnackbar();
     }
@@ -602,15 +607,15 @@ class EditAssessment extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-    if (otherfield) {
       if (otherfield === "end_date" || otherfield === "start_date") {
         this.setState({ [otherfield]: e });
       } else {
-        this.setState({ [otherfield]: e.target.value });
-      }
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
-    }
+        let field = e.target.id ? e.target.id : otherfield;
+        if (this.state.errors[field]) {
+          this.setState({ errors: { ...this.state.errors, [field]: null } });
+        }
+        this.setState({ [field]: e.target.value });
+    } 
   };
 
   onDateChange = (date) => {
@@ -1380,8 +1385,8 @@ class EditAssessment extends Component {
   };
 
   render() {
-    const { class_assigned } = this.state;
-    const { classes, errors, success } = this.props;
+    const { class_assigned, errors } = this.state;
+    const { classes, success } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
 
@@ -1613,7 +1618,7 @@ class EditAssessment extends Component {
                           >
                             <KeyboardDateTimePicker
                               fullWidth
-                              disablePast
+                              // disablePast
                               inputVariant="outlined"
                               format="dd/MM/yyyy - HH:mm"
                               ampm={false}
@@ -1677,8 +1682,7 @@ class EditAssessment extends Component {
                           variant="outlined"
                           fullWidth
                           error={
-                            Boolean(errors.class_assigned) &&
-                            class_assigned.length === 0
+                            Boolean(errors.class_assigned)
                           }
                         >
                           <Select
@@ -1719,8 +1723,7 @@ class EditAssessment extends Component {
                             ))}
                           </Select>
                           <FormHelperText>
-                            {Boolean(errors.class_assigned) &&
-                            class_assigned.length === 0
+                            {Boolean(errors.class_assigned)
                               ? errors.class_assigned
                               : null}
                           </FormHelperText>

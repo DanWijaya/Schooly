@@ -56,7 +56,8 @@ export const createAssessment = (formData, assessment, history) => (
           type: GET_ERRORS,
           payload: err.response.data,
         });
-        throw new Error("Assessment is not created successfully");
+        throw err.response.data;
+        // throw new Error("Assessment is not created successfully");
       }
     });
 };
@@ -143,7 +144,7 @@ export const updateAssessment = (
         type: GET_ERRORS,
         payload: err.response.data,
       });
-      throw new Error("Assessment is not updated successfully");
+      throw err.response.data;
     });
 };
 

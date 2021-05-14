@@ -249,14 +249,11 @@ class CreateTask extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-    console.log(this.state.class_assigned, e.target.value);
-    // if (Object.keys(this.props.errors).length !== 0)
-    if (otherfield) {
-      // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
-      this.setState({ [otherfield]: e.target.value });
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
+    this.setState({ [field]: e.target.value });
   };
 
   onDateChange = (date) => {
@@ -285,7 +282,9 @@ class CreateTask extends Component {
       }
     console.log(formData.getAll("lampiran_tugas"), this.state.fileLampiran);
     console.log(taskData);
-    this.props.createTask(formData, taskData, this.props.history);
+    this.props.createTask(formData, taskData, this.props.history)
+        .then((res) => this.handleOpenUploadDialog())
+        .catch((err) => this.setState({ errors: err}));
   };
 
   componentDidMount() {
@@ -300,16 +299,14 @@ class CreateTask extends Component {
   }
 
   // akan selalu dirun kalau ada terima state atau props yang berubah.
-  componentDidUpdate(prevProps, prevState) {
-    console.log(this.props.errors);
-    // this.props.errors = false, ini berarti kan !this.props.erros itu true
-
-    if (!this.props.errors && this.props.errors !== prevProps.errors) {
-      // pertama kali run yang didalam ini, itu this.props.errors = false dan prevProps.errors = { "description": dedwde}, this.state.dialogopen = false, prevState.dialog = false
-      // setelah ngerun this.handleOpenUploadDialog(), komponennya dirender lagi. Karena itu jd tuh prevProps.errors = false, this.props.errors = false. maka this.props.errors = false dan prevProps.errors = false. this.state.dialog = true, prevState.dialog = false
-      this.handleOpenUploadDialog();
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   // this.props.errors = false, ini berarti kan !this.props.erros itu true
+  //   if (!this.props.errors && this.props.errors !== prevProps.errors) {
+  //     // pertama kali run yang didalam ini, itu this.props.errors = false dan prevProps.errors = { "description": dedwde}, this.state.dialogopen = false, prevState.dialog = false
+  //     // setelah ngerun this.handleOpenUploadDialog(), komponennya dirender lagi. Karena itu jd tuh prevProps.errors = false, this.props.errors = false. maka this.props.errors = false dan prevProps.errors = false. this.state.dialog = true, prevState.dialog = false
+  //     this.handleOpenUploadDialog();
+  //   }
+  // }
 
   handleCloseErrorSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -345,8 +342,8 @@ class CreateTask extends Component {
   };
 
   render() {
-    const { classes, errors, success } = this.props;
-    const { class_assigned, fileLampiran } = this.state;
+    const { classes, success } = this.props;
+    const { class_assigned, fileLampiran, errors } = this.state;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
@@ -620,10 +617,7 @@ class CreateTask extends Component {
                           })}
                         </Select>
                         <FormHelperText>
-                          {Boolean(errors.class_assigned) &&
-                          class_assigned.length === 0
-                            ? errors.class_assigned
-                            : null}
+                          {errors.class_assigned}
                         </FormHelperText>
                       </FormControl>
                     </Grid>

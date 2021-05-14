@@ -248,7 +248,7 @@ class EditMaterial extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    console.log("Tasks props is received");
+    console.log("Materials props is");
     const { selectedMaterials } = nextProps.materialsCollection;
     // console.log(selectedMaterials.deadline);
 

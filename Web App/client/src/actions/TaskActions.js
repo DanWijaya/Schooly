@@ -9,7 +9,7 @@ import {
 
 // Add Task
 export const createTask = (formData, taskData, history) => (dispatch) => {
-  axios
+  return axios
     .post("/api/tasks/create", taskData)
     .then((res) => {
       console.log("this is the res", res.data._id);
@@ -37,6 +37,7 @@ export const createTask = (formData, taskData, history) => (dispatch) => {
         type: GET_SUCCESS_RESPONSE,
         payload: success_res,
       });
+      return success_res
     })
     .catch((err) => {
       console.log("error happened");
@@ -44,6 +45,7 @@ export const createTask = (formData, taskData, history) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data
     });
 };
 
@@ -110,7 +112,7 @@ export const updateTask = (
   history
 ) => (dispatch) => {
   // formData is the lampiran files
-  axios
+  return axios
     .post(`/api/tasks/update/${taskId}`, taskData)
     .then((res) => {
       console.log("Task updated to be :", res.data);
@@ -128,11 +130,11 @@ export const updateTask = (
       else return "No lampiran file is going to be deleted";
     })
     .then((res) => {
-      console.log("Update the lampiran files, upload some new lampiran files");
-      console.log(
-        formData.has("lampiran_tugas"),
-        formData.getAll("lampiran_tugas")
-      );
+      // console.log("Update the lampiran files, upload some new lampiran files");
+      // console.log(
+      //   formData.has("lampiran_tugas"),
+      //   formData.getAll("lampiran_tugas")
+      // );
       if (formData.has("lampiran_tugas"))
         return axios.post(`/api/files/tasks/upload/${taskId}`, formData);
       // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
@@ -144,14 +146,15 @@ export const updateTask = (
         type: GET_SUCCESS_RESPONSE,
         payload: true,
       });
+      return true
     })
-
     .catch((err) => {
       console.log(err);
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data
     });
 };
 

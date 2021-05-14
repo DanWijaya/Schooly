@@ -265,6 +265,7 @@ class CreateAssessment extends Component {
       // backtickErrors[2] = -1 -> berarti pertanyaan nomor 2 adalah soal non isian. Nilai "-1" dapat diabaikan, ini dapat diganti dengan nilai lain selain true false
       renderbtErrors: false, // abaikan nilainya, ini hanya dipakai agar QuestionItem dirender ulang saat submit dan ada soal yang dihapus
       over_limit: [],
+      errors: {}
     };
   }
 
@@ -467,7 +468,9 @@ class CreateAssessment extends Component {
         .then((res) => {
           console.log("Assessment is created successfully");
         })
-        .catch(() => this.handleOpenErrorSnackbar());
+        .catch((err) => {
+        this.setState({ errors: err})
+        this.handleOpenErrorSnackbar()});
     } else {
       this.handleOpenErrorSnackbar();
     }
@@ -486,15 +489,15 @@ class CreateAssessment extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-    if (otherfield) {
-      if (otherfield === "end_date" || otherfield === "start_date") {
-        this.setState({ [otherfield]: e });
-      } else {
-        this.setState({ [otherfield]: e.target.value });
-      }
+    if (otherfield === "end_date" || otherfield === "start_date") {
+      this.setState({ [otherfield]: e });
     } else {
-      this.setState({ [e.target.id]: e.target.value });
-    }
+      let field = e.target.id ? e.target.id : otherfield;
+      if (this.state.errors[field]) {
+        this.setState({ errors: { ...this.state.errors, [field]: null } });
+      }
+      this.setState({ [field]: e.target.value });
+    } 
   };
 
   onDateChange = (date) => {
@@ -1226,8 +1229,8 @@ class CreateAssessment extends Component {
 
   render() {
     console.log(this.state.questions);
-    const { class_assigned } = this.state;
-    const { classes, errors, success } = this.props;
+    const { class_assigned, errors } = this.state;
+    const { classes, success } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
@@ -1534,8 +1537,7 @@ class CreateAssessment extends Component {
                           variant="outlined"
                           fullWidth
                           error={
-                            Boolean(errors.class_assigned) &&
-                            class_assigned.length === 0
+                            Boolean(errors.class_assigned)
                           }
                         >
                           <Select
@@ -1576,8 +1578,7 @@ class CreateAssessment extends Component {
                             ))}
                           </Select>
                           <FormHelperText>
-                            {Boolean(errors.class_assigned) &&
-                            class_assigned.length === 0
+                            {Boolean(errors.class_assigned)
                               ? errors.class_assigned
                               : null}
                           </FormHelperText>
