@@ -59,8 +59,6 @@ const path = require("path");
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
-    justifyContent: "center",
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
