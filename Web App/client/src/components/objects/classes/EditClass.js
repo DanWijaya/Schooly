@@ -78,19 +78,18 @@ class EditClass extends Component {
   }
 
   onChange = (e, otherfield = null) => {
-    console.log(this.state.walikelas);
-    if (otherfield) {
-      this.setState({ [otherfield]: e.target.value });
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
+    this.setState({ [field]: e.target.value });
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.success && !prevProps.success) {
-      this.handleOpenUploadDialog();
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.props.success && !prevProps.success) {
+  //     this.handleOpenUploadDialog();
+  //   }
+  // }
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
@@ -140,7 +139,11 @@ class EditClass extends Component {
       bendahara: this.state.bendahara,
       errors: {},
     };
-    this.props.updateClass(classObject, id, this.props.history);
+    this.props.updateClass(classObject, id, this.props.history)
+      .then(() => this.handleOpenUploadDialog())
+      .catch((err) => {
+        this.setState({ errors: err })
+      })
   };
 
   componentDidMount() {
@@ -157,16 +160,16 @@ class EditClass extends Component {
   }
 
   render() {
-    const { classes, errors, success } = this.props;
-    const { user } = this.props.auth;
+    const { classes, success } = this.props;
+    const { user, students_by_class } = this.props.auth;
     // const { all_teachers} = this.props.auth;
-    const { students_by_class } = this.props.auth;
     const {
       sekretaris,
       bendahara,
       ketua_kelas,
       walikelas,
       teacher_options,
+      errors
     } = this.state;
     // var teacher_options = all_teachers
     var student_options = students_by_class;

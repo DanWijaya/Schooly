@@ -50,7 +50,7 @@ export const getAllSubjects = (data = "array") => (dispatch) => {
 };
 export const createSubject = (subjectData) => (dispatch) => {
   // router.post()
-  axios
+  return axios
     .post("/api/subjects/create", subjectData)
     .then((res) => {
       console.log("Run create subject");
@@ -59,12 +59,14 @@ export const createSubject = (subjectData) => (dispatch) => {
         type: GET_SUCCESS_RESPONSE,
         payload: res.data,
       });
+      return res.data
     })
     .catch((err) => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data
     });
 };
 
@@ -80,7 +82,7 @@ export const deleteSubject = (subjectId) => (dispatch) => {
     });
 };
 export const editSubject = (subjectData) => (dispatch) => {
-  axios
+  return axios
     .post(`/api/subjects/edit/${subjectData.id}`, subjectData)
     .then((res) => {
       console.log("Edited subject", res.data);
@@ -89,6 +91,7 @@ export const editSubject = (subjectData) => (dispatch) => {
         type: GET_SUCCESS_RESPONSE,
         payload: res.data,
       });
+      return res.data
     })
     .catch((err) => {
       console.log(err, "Error in editing the subject");
@@ -96,5 +99,6 @@ export const editSubject = (subjectData) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data
     });
 };

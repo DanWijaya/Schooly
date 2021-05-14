@@ -11,7 +11,7 @@ import {
 // Add Class
 export const createClass = (classData, history) => (dispatch) => {
   console.log(classData);
-  axios
+  return axios
     .post("/api/classes/create", classData)
     .then((res) => {
       console.log(res.data);
@@ -21,12 +21,15 @@ export const createClass = (classData, history) => (dispatch) => {
         type: GET_SUCCESS_RESPONSE,
         payload: res.data._id,
       });
+      return res.data._id
     })
-    .catch((err) =>
+    .catch((err) => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
       })
+      throw err.response.data
+      }
     );
 };
 
@@ -87,7 +90,7 @@ export const getSelectedClasses = (classes_ids) => (dispatch) => {
 };
 
 export const updateClass = (classData, classId, history) => (dispatch) => {
-  axios
+  return axios
     .post("/api/classes/update/" + classId, classData)
     .then((res) => {
       console.log("Class updated to be : ", res.data);
@@ -97,12 +100,14 @@ export const updateClass = (classData, classId, history) => (dispatch) => {
         type: GET_SUCCESS_RESPONSE,
         payload: classId,
       });
+      return classId
     })
     .catch((err) => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data
     });
 };
 

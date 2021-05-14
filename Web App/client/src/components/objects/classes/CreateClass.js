@@ -54,15 +54,15 @@ class CreateClass extends Component {
       walikelas: {},
       ukuran: 0,
       openUploadDialog: null,
-      // errors: {},
+      errors: {},
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.success && !prevProps.success) {
-      this.handleOpenUploadDialog();
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.props.success && !prevProps.success) {
+  //     this.handleOpenUploadDialog();
+  //   }
+  // }
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
@@ -73,10 +73,11 @@ class CreateClass extends Component {
   // };
 
   onChange = (e, otherfield = null) => {
-    if (otherfield) this.setState({ [otherfield]: e.target.value });
-    else {
-      this.setState({ [e.target.id]: e.target.value });
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
+    this.setState({ [field]: e.target.value });
   };
 
   onSubmit = (e) => {
@@ -91,7 +92,11 @@ class CreateClass extends Component {
       bendahara: this.state.bendahara,
       errors: {},
     };
-    this.props.createClass(classObject, this.props.history);
+    this.props.createClass(classObject, this.props.history)
+    .then((res) => this.handleOpenUploadDialog())
+    .catch((err) => {
+      this.setState({errors: err})
+    })
   };
 
   onSelect = (selectedList, selectedItem) => {
@@ -117,8 +122,8 @@ class CreateClass extends Component {
   }
 
   render() {
-    const { classes, success, errors } = this.props;
-
+    const { classes, success } = this.props;
+    const { errors } = this.state;
     const { all_teachers, user } = this.props.auth;
     // console.log(errors);
     // console.log(all_teachers);

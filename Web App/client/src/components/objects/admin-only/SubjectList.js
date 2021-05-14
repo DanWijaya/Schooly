@@ -522,7 +522,8 @@ function SubjectList(props) {
   const [selectedSubjectId, setSelectedSubjectId] = React.useState(null);
   const [selectedSubjectName, setSelectedSubjectName] = React.useState(null);
   const [action, setAction] = React.useState("");
-  const [forceSuccess, setForceSuccess] = React.useState(false);
+  const [errors, setErrors] = React.useState({});
+  // const [forceSuccess, setForceSuccess] = React.useState(false);
   const [subject, setSubject] = React.useState({});
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
@@ -533,7 +534,7 @@ function SubjectList(props) {
     clearErrors,
     createSubject,
     deleteSubject,
-    errors,
+    // errors,
     success,
   } = props;
   const { all_subjects } = props.subjectsCollection;
@@ -549,22 +550,23 @@ function SubjectList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
-    console.log(success);
-    if (success && forceSuccess) {
-      if (action === "Edit") {
-        handleOpenEditDialog();
-      } else if (action === "Create") {
-        handleOpenCreateDialog();
-      }
-      clearSuccess();
-      setAction("");
-      setForceSuccess(false);
-    }
-    // jika clearSuccess sudah dijalankan, success akan bernilai null
+  // React.useEffect(() => {
+  //   console.log(success);
+  //   if (success && forceSuccess) {
+  //     if (action === "Edit") {
+  //       handleOpenEditDialog();
+  //     }
+  //     //  else if (action === "Create") {
+  //     //   handleOpenCreateDialog();
+  //     // }
+  //     clearSuccess();
+  //     setAction("");
+  //     setForceSuccess(false);
+  //   }
+  //   // jika clearSuccess sudah dijalankan, success akan bernilai null
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceSuccess, success]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [forceSuccess, success]);
 
   React.useEffect(() => {
     if (openCreateDialog === false) {
@@ -652,8 +654,8 @@ function SubjectList(props) {
 
   const handleCloseFormDialog = () => {
     setOpenFormDialog(false);
+    setErrors({});
     setSubject({});
-    clearErrors();
   };
 
   const onChange = (e) => {
@@ -668,12 +670,22 @@ function SubjectList(props) {
   const onSubmit = (e) => {
     e.preventDefault();
     if (action === "Edit") {
-      editSubject(subject);
+      editSubject(subject)
+        .then(() => {
+          handleCloseFormDialog()
+          handleOpenEditDialog()
+        })
+        .catch((err) => setErrors(err))
     } else if (action === "Create") {
-      createSubject(subject);
+      createSubject(subject)
+        .then(() => {
+          handleCloseFormDialog()
+          handleOpenCreateDialog()
+        })
+        .catch((err) => setErrors(err));
     }
-    handleCloseFormDialog();
-    setForceSuccess(true);
+    // handleCloseFormDialog();
+    // setForceSuccess(true);
   };
 
   function FormDialog() {
