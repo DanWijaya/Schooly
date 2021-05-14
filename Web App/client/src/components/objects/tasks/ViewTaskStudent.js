@@ -176,8 +176,9 @@ const useStyles = makeStyles((theme) => ({
   },
   commentLittleIcon: {
     color: theme.palette.text.disabled,
+    opacity: 0.5,
     "&:focus, &:hover": {
-      opacity: 0.5,
+      opacity: 1,
       cursor: "pointer"
     },
   },
@@ -186,6 +187,12 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       opacity: 0.5,
       cursor: "pointer"
+    },
+  },
+  marginMobile: {
+    [theme.breakpoints.down("sm")]: {
+      marginRight: "14px",
+      marginLeft: "7.6px"
     },
   }
 }));
@@ -713,30 +720,60 @@ function ViewTaskStudent(props) {
   const generateComments = (avatar=false, stdName, date, comment, isSelfMade) => {
     return (
       <Grid container item xs={12} direction="row" spacing={2}>
-        <Grid item xs={1}>
-          {(!avatar) ?
-            <Avatar/>
-          : 
-            <Avatar src={avatar}/>
-          }
-        </Grid>
-        <Grid item xs={11}>
-          <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-            <Typography style={{marginRight: "10px"}}><b>{stdName}</b></Typography>
-            <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>{date}</Typography>
-            {(isSelfMade) ?
-              <>
-                <LightTooltip title="Sunting">
-                  <CreateIcon style={{marginRight: "2px"}} className={classes.commentLittleIcon} fontSize="small"/>
-                </LightTooltip>
-                <LightTooltip title="Hapus">
-                  <DeleteIcon className={classes.commentLittleIcon} fontSize="small"/>
-                </LightTooltip>
-              </>
-            : null}
+        <Hidden xsDown>
+          <Grid item xs={1}>
+            {(!avatar) ?
+              <Avatar/>
+            : 
+              <Avatar src={avatar}/>
+            }
+          </Grid>
+          <Grid item xs={11}>
+            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+              <Typography style={{marginRight: "10px"}}><b>{stdName}</b></Typography>
+              <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>{date}</Typography>
+              {(isSelfMade) ?
+                <>
+                  <LightTooltip title="Sunting">
+                    <CreateIcon style={{marginRight: "2px"}} className={classes.commentLittleIcon} fontSize="small"/>
+                  </LightTooltip>
+                  <LightTooltip title="Hapus">
+                    <DeleteIcon className={classes.commentLittleIcon} fontSize="small"/>
+                  </LightTooltip>
+                </>
+              : null}
+            </div>
+            <Typography style={{marginTop: "5px"}}>{comment}</Typography>
+          </Grid>
+        </Hidden>
+        <Hidden smUp>
+          <div style={{display: "flex", flexDirection: "row", margin: "5px 0"}}>
+            <div className={classes.marginMobile}>
+              {(!avatar) ?
+                <Avatar/>
+              : 
+                <Avatar src={avatar}/>
+              }
+            </div>
+            <div>
+              <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                <Typography style={{marginRight: "10px"}}><b>{stdName}</b></Typography>
+                <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>{date}</Typography>
+                {(isSelfMade) ?
+                  <>
+                    <LightTooltip title="Sunting">
+                      <CreateIcon style={{marginRight: "2px"}} className={classes.commentLittleIcon} fontSize="small"/>
+                    </LightTooltip>
+                    <LightTooltip title="Hapus">
+                      <DeleteIcon className={classes.commentLittleIcon} fontSize="small"/>
+                    </LightTooltip>
+                  </>
+                : null}
+              </div>
+              <Typography style={{marginTop: "5px"}}>{comment}</Typography>
+            </div>
           </div>
-          <Typography style={{marginTop: "5px"}}>{comment}</Typography>
-        </Grid>
+        </Hidden>
       </Grid>
     )
   }
@@ -929,25 +966,52 @@ function ViewTaskStudent(props) {
                 <Divider className={classes.dividerColor} />
               </Grid>
               <Grid container item xs={12} direction="row" spacing={2} alignItems="center">
-                <Grid item xs={1}>
-                  <Avatar src={`/api/upload/avatar/${user.avatar}`}/>
-                </Grid>
-                <Grid item xs={10}>
-                  <TextField
-                    className={classes.margin}
-                    variant="outlined"
-                    style={{display: "flex"}}
-                    InputProps={{style: {borderRadius: "15px"}}}
-                    placeholder="Tambahkan komentar..."
-                  />
-                </Grid>
-                <Grid container item xs={1} justify="flex-end">
-                  <Grid item>
-                    <LightTooltip title="Kirim">
-                      <SendIcon className={classes.sendIcon}/>
-                    </LightTooltip>
+                <Hidden xsDown>
+                  <Grid item xs={1}>
+                    <Avatar src={`/api/upload/avatar/${user.avatar}`}/>
                   </Grid>
-                </Grid>
+                  <Grid item xs={10}>
+                    <TextField
+                      className={classes.margin}
+                      variant="outlined"
+                      multiline
+                      style={{display: "flex"}}
+                      InputProps={{style: {borderRadius: "15px"}}}
+                      placeholder="Tambahkan komentar..."
+                    />
+                  </Grid>
+                  <Grid container item xs={1} justify="flex-end">
+                    <Grid item>
+                      <LightTooltip title="Kirim">
+                        <SendIcon className={classes.sendIcon}/>
+                      </LightTooltip>
+                    </Grid>
+                  </Grid>
+                </Hidden>
+                <Hidden smUp>
+                  <Grid item>
+                    <Avatar src={`/api/upload/avatar/${user.avatar}`}/>
+                  </Grid>
+                  <Grid container item xs={10} direction="row" alignItems="center">
+                    <Grid item xs={11}>
+                      <TextField
+                        className={classes.margin}
+                        variant="outlined"
+                        multiline
+                        style={{display: "flex"}}
+                        InputProps={{style: {borderRadius: "15px"}}}
+                        placeholder="Tambahkan komentar..."
+                      />
+                    </Grid>
+                    <Grid container item xs={1} justify="flex-end">
+                      <Grid item xs={1}>
+                        <LightTooltip title="Kirim">
+                          <SendIcon className={classes.sendIcon}/>
+                        </LightTooltip>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Hidden>
               </Grid>
             </Grid>
           </Paper>
