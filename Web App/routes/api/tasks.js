@@ -8,6 +8,8 @@ const validateTaskInput = require("../../validation/TaskData");
 const Task = require("../../models/Task");
 const Class = require("../../models/Class");
 
+const mongoose = require("mongoose");
+
 //Define create route
 
 router.post("/create", (req, res) => {
@@ -142,4 +144,39 @@ router.get("/byclass/:classId", (req, res) => {
     }
   });
 });
+
+router.post("/updatecomment/:id", (req, res) => {
+  let newComments = req.body.taskComments;
+  let editedCommentIdx = req.body.editedCommentIdx;
+
+  Task.findById(req.params.id, (err, taskData) => {
+    if (!taskData) {
+      return res.status(404).send("Task data is not found");
+    } else {
+      let prevComments = taskData.comments ? taskData.comments : [];
+
+      if (newComments.length > prevComments.length) { // jika ada komen baru yang ditambahkan
+        if (newComments[newComments.length - 1].content.length === 0) {
+          res.status(400).json("Isi komentar tidak boleh kosong");
+          return;
+        }
+        newComments[newComments.length - 1].createdAt = new mongoose.Types.ObjectId().getTimestamp();
+        // asumsi urutan isi atribut comments: [komen yg pertama dibuat, komen kedua, ..., komen terbaru]
+      } else if (newComments.length === prevComments.length && editedCommentIdx !== null) { // jika ada komen yang disunting        
+        newComments[editedCommentIdx].edited = true;
+      } // jika ada komen yg dihapus (newComments.length < prevComments.length), tidak perlu melakukan apa-apa 
+
+      taskData.comments = newComments;
+      taskData
+        .save()
+        .then(() => {
+          res.json("Update task comments complete")
+        })
+        .catch(() => {
+          res.status(400).send("Unable to update task comments")
+        });
+    }
+  });
+});
+
 module.exports = router;

@@ -209,7 +209,6 @@ export const updateMaterial = (
     });
 };
 
-
 export const updateMaterialComment = (
   materialComments,
   materialId,
@@ -220,13 +219,19 @@ export const updateMaterialComment = (
     .then(() => {
       dispatch({
         type: GET_SUCCESS_RESPONSE,
-        payload: true
+        payload: {
+          action: "updateMaterialComment",
+          response: true
+        }
       });
     })
     .catch((err) => {
       dispatch({
         type: GET_ERRORS,
-        payload: err.response.data,
+        payload: {
+          action: "updateMaterialComment",
+          response: err.response.data
+        }
       });
     });
 };

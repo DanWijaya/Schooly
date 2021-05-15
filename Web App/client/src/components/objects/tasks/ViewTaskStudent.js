@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { clearSuccess } from "../../../actions/SuccessActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 import { uploadTugas, deleteTugas } from "../../../actions/UploadActions";
 import {
   deleteFileSubmitTasks,
@@ -17,10 +18,14 @@ import {
   getFileTasks,
   viewFileTasks,
 } from "../../../actions/files/FileTaskActions";
-import { getOneTask } from "../../../actions/TaskActions";
+import { getOneTask, updateTaskComment } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
-import { getOneUser } from "../../../actions/UserActions";
+import { 
+  getOneUser,
+  getTeachers, 
+  getStudents  
+} from "../../../actions/UserActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -530,7 +535,12 @@ function WorkFile(props) {
 function ViewTaskStudent(props) {
   const classes = useStyles();
 
-  const { user, selectedUser } = props.auth;
+  const { 
+    user, 
+    selectedUser,
+    all_students,
+    all_teachers 
+  } = props.auth;
   const {
     uploadFileSubmitTasks,
     viewFileSubmitTasks,
@@ -539,15 +549,20 @@ function ViewTaskStudent(props) {
     deleteFileSubmitTasks,
     deleteTugas,
     success,
+    errors,
     tasksCollection,
     filesCollection,
     clearSuccess,
+    clearErrors,
     getOneTask,
     getOneUser,
     getAllSubjects,
     getFileTasks,
     viewFileTasks,
     downloadFileTasks,
+    getTeachers, 
+    getStudents,
+    updateTaskComment
   } = props;
   const { all_subjects_map } = props.subjectsCollection;
 
@@ -568,10 +583,30 @@ function ViewTaskStudent(props) {
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
 
+  // USER COMMENT
+  const [commentValue, setCommentValue] = React.useState("");
+  const [commentEditorValue, setCommentEditorValue] = React.useState("");
+  const [commentList, setCommentList] = React.useState([]);
+  const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
+  const commentActionType = React.useRef(null);
+
+  // SNACKBAR
+  const [snackbarContent, setSnackbarContent] = React.useState("");
+  const [severity, setSeverity] = React.useState("info");
+  const [openCommentSnackbar, setOpenCommentSnackbar] = React.useState(false);
+
   let tugasId = props.match.params.id;
   // kalau misalnya parameter keduanya masukkin aja array kosong, dia acts like compomnentDidMount()
   // useEffect(() => {getAllSubjects("map")}, [])
 
+  useEffect(() => {
+    getStudents();
+    getTeachers();
+    clearErrors();
+    clearSuccess();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
   // This page is only for student later on, so for now put the user.role logic condition
   // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
   useEffect(() => {
@@ -590,6 +625,151 @@ function ViewTaskStudent(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [success, tasksCollection.person_in_charge_id]);
 
+  useEffect(() => {
+    if (
+      all_students &&
+      Array.isArray(all_students) &&
+      all_teachers &&
+      Array.isArray(all_teachers) &&
+      tasksCollection &&
+      tasksCollection.comments
+    ) {
+      let usernames = {};
+      for (let studentInfo of all_students) {
+        usernames[studentInfo._id] = studentInfo.name;
+      }
+      for (let teacherInfo of all_teachers) {
+        usernames[teacherInfo._id] = teacherInfo.name;
+      }
+
+      setCommentList(tasksCollection.comments.map((comment) => ({ ...comment, name: usernames[comment.author_id] })));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tasksCollection, all_teachers, all_students]);
+
+  useEffect(() => {
+    if (
+      errors &&
+      errors.constructor === Object &&
+      errors.action === "updateTaskComment"
+    ) {
+      let content = "Komentar gagal ";
+      if (commentActionType.current === "create") {
+        content += "dibuat";
+      } else if (commentActionType.current === "edit") {
+        content += "disunting";
+      } else {
+        content += "dihapus";
+      }
+      commentActionType.current = null;
+      handleOpenCommentSnackbar("error", content);
+      clearErrors();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errors]);
+
+  useEffect(() => {
+    if (
+      success &&
+      success.constructor === Object &&
+      success.action === "updateTaskComment"
+    ) {
+      let content = "Komentar berhasil ";
+      if (commentActionType.current === "create") {
+        content += "dibuat";
+      } else if (commentActionType.current === "edit") {
+        content += "disunting";
+      } else {
+        content += "dihapus";
+      }
+      commentActionType.current = null;
+      handleOpenCommentSnackbar("success", content);
+      getOneTask(tugasId);
+      setCommentValue("");
+      clearSuccess();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [success]);
+
+  useEffect(() => {
+    return () => {
+      clearErrors();
+      clearSuccess();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleCommentInputChange = (e) => {
+    setCommentValue(e.target.value);
+  };
+
+  const handleCommentEditorChange = (e) => {
+    setCommentEditorValue(e.target.value);
+  };
+
+  const closeEditMode = () => {
+    setCommentEditorValue("");
+    setSelectedCommentIdx(null);
+  };
+
+  const handleClickEdit = (idx) => {
+    setCommentEditorValue(commentList[idx].content);
+    setSelectedCommentIdx(idx)
+  };
+
+  const handleCreateComment = () => {
+    if (commentValue.length === 0) {
+      handleOpenCommentSnackbar("error", "Isi komentar tidak boleh kosong");
+    } else {
+      let newCommentList = commentList.map((comment) => {
+        let filteredComment = { ...comment };
+        delete filteredComment['name'];
+        return filteredComment;
+      });
+      newCommentList.push({
+        author_id: user._id,
+        content: commentValue
+      });
+      updateTaskComment(newCommentList, tugasId);
+    }
+  };
+
+  const handleEditComment = () => {
+    if (commentEditorValue.length === 0) {
+      handleDeleteComment(selectedCommentIdx);
+    } else {
+      let newCommentList = [...commentList];
+      newCommentList[selectedCommentIdx].content = commentEditorValue;
+      newCommentList[selectedCommentIdx].edited = true;
+      updateTaskComment(newCommentList, tugasId, selectedCommentIdx);
+      commentActionType.current = "edit";
+    }
+    closeEditMode();
+  };
+
+  const handleDeleteComment = (idx) => {
+    let newCommentList = [...commentList];
+    newCommentList.splice(idx, 1);
+    if (selectedCommentIdx !== null && idx < selectedCommentIdx) {
+      setSelectedCommentIdx(selectedCommentIdx - 1);
+    }
+    updateTaskComment(newCommentList, tugasId);
+    commentActionType.current = "delete";
+  };
+
+  const handleOpenCommentSnackbar = (severity, content) => {
+    setOpenCommentSnackbar(true);
+    setSeverity(severity);
+    setSnackbarContent(content);
+  };
+
+  const handleCloseCommentSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenCommentSnackbar(false);
+  };
+  
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
     switch (ext_file) {
@@ -1287,6 +1467,23 @@ function ViewTaskStudent(props) {
           {over_limit.length} file melebihi batas 10MB!
         </MuiAlert>
       </Snackbar>
+      <Snackbar
+        open={openCommentSnackbar}
+        autoHideDuration={3000}
+        onClose={(event, reason) => {
+          handleCloseCommentSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity={severity}
+          onClose={(event, reason) => {
+            handleCloseCommentSnackbar(event, reason);
+          }}
+        >
+          {snackbarContent}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }
@@ -1302,6 +1499,7 @@ ViewTaskStudent.propTypes = {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   success: state.success,
+  errors: state.errors,
   tasksCollection: state.tasksCollection,
   subjectsCollection: state.subjectsCollection,
   filesCollection: state.filesCollection,
@@ -1310,6 +1508,7 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   uploadTugas,
   clearSuccess,
+  clearErrors,
   deleteTugas,
   getFileTasks,
   downloadFileTasks,
@@ -1323,4 +1522,7 @@ export default connect(mapStateToProps, {
   viewFileSubmitTasks,
   downloadFileSubmitTasks,
   deleteFileSubmitTasks,
+  updateTaskComment,
+  getTeachers, 
+  getStudents
 })(ViewTaskStudent);

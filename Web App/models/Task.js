@@ -46,6 +46,26 @@ const TaskSchema = new Schema({
   //     //submissions berupa user_id -> Object
   //     //Objectnya berupa object dengan key-pair (file id, file name)
   // }
+  comments: [
+    {
+      author_id: { 
+        type: ObjectId, 
+        required: true 
+      },
+      content: { 
+        type: String,
+        required: true
+      },
+      edited: {
+        type: Boolean,
+        default: false
+      },
+      createdAt: {
+        type: Date,
+        required: true
+      }
+    },
+  ]
 });
 
 const Task = mongoose.model("tasks", TaskSchema);

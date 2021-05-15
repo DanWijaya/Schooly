@@ -6,14 +6,24 @@ import moment from "moment";
 import "moment/locale/id";
 
 //Actions
-import { getOneTask, deleteTask } from "../../../actions/TaskActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
+import { clearErrors } from "../../../actions/ErrorActions";
+import { 
+  getOneTask, 
+  deleteTask,
+  updateTaskComment
+ } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import {
   uploadTugas,
   downloadLampiran,
   previewLampiran,
 } from "../../../actions/UploadActions";
-import { getOneUser } from "../../../actions/UserActions";
+import { 
+  getOneUser,
+  getTeachers, 
+  getStudents  
+} from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import {
   getFileTasks,
@@ -35,6 +45,8 @@ import {
   Paper,
   Typography,
   Divider,
+  TextField,
+  Button
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -215,7 +227,11 @@ function LampiranFile(props) {
 function ViewTaskTeacher(props) {
   const classes = useStyles();
 
-  const { user, all_students } = props.auth;
+  const { 
+    user, 
+    all_students, 
+    all_teachers
+  } = props.auth;
   const {
     deleteTask,
     tasksCollection,
@@ -227,6 +243,13 @@ function ViewTaskTeacher(props) {
     getFileTasks,
     viewFileTasks,
     downloadFileTasks,
+    errors,
+    success,
+    clearErrors,
+    clearSuccess,
+    getTeachers, 
+    getStudents,
+    updateTaskComment
   } = props;
   const { all_classes_map } = props.classesCollection;
   const task_id = props.match.params.id;
@@ -237,6 +260,18 @@ function ViewTaskTeacher(props) {
   // untuk men-disable tombol yang mengarahkan pengguna ke SubmittedTaskList ketika belum ada satupun murid yang mengumpulkan tugas
   const [disableButton, setDisableButton] = React.useState(true);
 
+  // USER COMMENT
+  const [commentValue, setCommentValue] = React.useState("");
+  const [commentEditorValue, setCommentEditorValue] = React.useState("");
+  const [commentList, setCommentList] = React.useState([]);
+  const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
+  const commentActionType = React.useRef(null);
+
+  // SNACKBAR
+  const [snackbarContent, setSnackbarContent] = React.useState("");
+  const [severity, setSeverity] = React.useState("info");
+  const [openCommentSnackbar, setOpenCommentSnackbar] = React.useState(false);
+
   React.useEffect(() => {
     getOneTask(task_id);
     getAllClass("map");
@@ -244,6 +279,10 @@ function ViewTaskTeacher(props) {
     getFileTasks(task_id).then((res) => {
       setFileLampiran(res);
     });
+    getStudents();
+    getTeachers();
+    clearErrors();
+    clearSuccess();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // [tasksCollection._id, all_classes_map.size, all_subjects_map.size]
@@ -275,6 +314,151 @@ function ViewTaskTeacher(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasksCollection, all_students]);
+
+  React.useEffect(() => {
+    if (
+      all_students &&
+      Array.isArray(all_students) &&
+      all_teachers &&
+      Array.isArray(all_teachers) &&
+      tasksCollection &&
+      tasksCollection.comments
+    ) {
+      let usernames = {};
+      for (let studentInfo of all_students) {
+        usernames[studentInfo._id] = studentInfo.name;
+      }
+      for (let teacherInfo of all_teachers) {
+        usernames[teacherInfo._id] = teacherInfo.name;
+      }
+
+      setCommentList(tasksCollection.comments.map((comment) => ({ ...comment, name: usernames[comment.author_id] })));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tasksCollection, all_teachers, all_students]);
+
+  React.useEffect(() => {
+    if (
+      errors &&
+      errors.constructor === Object &&
+      errors.action === "updateTaskComment"
+    ) {
+      let content = "Komentar gagal ";
+      if (commentActionType.current === "create") {
+        content += "dibuat";
+      } else if (commentActionType.current === "edit") {
+        content += "disunting";
+      } else {
+        content += "dihapus";
+      }
+      commentActionType.current = null;
+      handleOpenCommentSnackbar("error", content);
+      clearErrors();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errors]);
+
+  React.useEffect(() => {
+    if (
+      success &&
+      success.constructor === Object &&
+      success.action === "updateTaskComment"
+    ) {
+      let content = "Komentar berhasil ";
+      if (commentActionType.current === "create") {
+        content += "dibuat";
+      } else if (commentActionType.current === "edit") {
+        content += "disunting";
+      } else {
+        content += "dihapus";
+      }
+      commentActionType.current = null;
+      handleOpenCommentSnackbar("success", content);
+      getOneTask(task_id);
+      setCommentValue("");
+      clearSuccess();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [success]);
+
+  React.useEffect(() => {
+    return () => {
+      clearErrors();
+      clearSuccess();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleCommentInputChange = (e) => {
+    setCommentValue(e.target.value);
+  };
+
+  const handleCommentEditorChange = (e) => {
+    setCommentEditorValue(e.target.value);
+  };
+
+  const closeEditMode = () => {
+    setCommentEditorValue("");
+    setSelectedCommentIdx(null);
+  };
+
+  const handleClickEdit = (idx) => {
+    setCommentEditorValue(commentList[idx].content);
+    setSelectedCommentIdx(idx)
+  };
+
+  const handleCreateComment = () => {
+    if (commentValue.length === 0) {
+      handleOpenCommentSnackbar("error", "Isi komentar tidak boleh kosong");
+    } else {
+      let newCommentList = commentList.map((comment) => {
+        let filteredComment = { ...comment };
+        delete filteredComment['name'];
+        return filteredComment;
+      });
+      newCommentList.push({
+        author_id: user._id,
+        content: commentValue
+      });
+      updateTaskComment(newCommentList, task_id);
+    }
+  };
+
+  const handleEditComment = () => {
+    if (commentEditorValue.length === 0) {
+      handleDeleteComment(selectedCommentIdx);
+    } else {
+      let newCommentList = [...commentList];
+      newCommentList[selectedCommentIdx].content = commentEditorValue;
+      newCommentList[selectedCommentIdx].edited = true;
+      updateTaskComment(newCommentList, task_id, selectedCommentIdx);
+      commentActionType.current = "edit";
+    }
+    closeEditMode();
+  };
+
+  const handleDeleteComment = (idx) => {
+    let newCommentList = [...commentList];
+    newCommentList.splice(idx, 1);
+    if (selectedCommentIdx !== null && idx < selectedCommentIdx) {
+      setSelectedCommentIdx(selectedCommentIdx - 1);
+    }
+    updateTaskComment(newCommentList, task_id);
+    commentActionType.current = "delete";
+  };
+
+  const handleOpenCommentSnackbar = (severity, content) => {
+    setOpenCommentSnackbar(true);
+    setSeverity(severity);
+    setSnackbarContent(content);
+  };
+
+  const handleCloseCommentSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenCommentSnackbar(false);
+  };
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
@@ -516,6 +700,8 @@ ViewTaskTeacher.propTypes = {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  success: state.success,
+  errors: state.errors,
   tasksCollection: state.tasksCollection,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
@@ -533,4 +719,9 @@ export default connect(mapStateToProps, {
   getFileTasks,
   downloadFileTasks,
   viewFileTasks,
+  clearSuccess,
+  clearErrors,
+  updateTaskComment,
+  getTeachers, 
+  getStudents
 })(ViewTaskTeacher);

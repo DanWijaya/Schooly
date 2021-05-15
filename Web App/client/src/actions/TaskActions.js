@@ -226,3 +226,30 @@ export const getTaskByClass = (classId) => (dispatch) => {
     return res.data;
   });
 };
+
+export const updateTaskComment = (
+  taskComments,
+  taskId,
+  editedCommentIdx = null
+) => (dispatch) => {
+  axios
+    .post(`/api/tasks/updatecomment/${taskId}`, { taskComments, editedCommentIdx })
+    .then(() => {
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: {
+          action: "updateTaskComment",
+          response: true
+        }
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: {
+          action: "updateTaskComment",
+          response: err.response.data
+        }
+      });
+    });
+};

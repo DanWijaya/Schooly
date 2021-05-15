@@ -43,9 +43,11 @@ import {
   Divider,
   Hidden,
   TextField,
-  Button
+  Button,
+  Snackbar
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import MuiAlert from "@material-ui/lab/Alert";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -316,15 +318,22 @@ function ViewMaterial(props) {
   const errors = props.errors;
   const success = props.success;
   
-
   // REVIEW states
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [fileLampiran, setFileLampiran] = React.useState([]);
+
+  // USER COMMENT
   const [commentValue, setCommentValue] = React.useState("");
   const [commentEditorValue, setCommentEditorValue] = React.useState("");
   const [commentList, setCommentList] = React.useState([]);
   const [commentAvatar, setCommentAvatar] = React.useState({});
   const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
+  const commentActionType = React.useRef(null);
+
+  // SNACKBAR
+  const [snackbarContent, setSnackbarContent] = React.useState("");
+  const [severity, setSeverity] = React.useState("info");
+  const [openCommentSnackbar, setOpenCommentSnackbar] = React.useState(false);
 
   console.log(props.materialsFiles);
   console.log(commentList);
@@ -339,6 +348,7 @@ function ViewMaterial(props) {
       setFileLampiran(result);
     });
     // bakal ngedapat collection of S3 files di
+    
     getStudents();
     getTeachers();
     clearErrors();
@@ -352,8 +362,14 @@ function ViewMaterial(props) {
   }, [selectedMaterials.author_id]);
 
   React.useEffect(() => {
-    if (all_students && Array.isArray(all_students) && all_teachers && Array.isArray(all_teachers) &&
-      selectedMaterials && selectedMaterials.comments) {
+    if (
+      all_students &&
+      Array.isArray(all_students) &&
+      all_teachers &&
+      Array.isArray(all_teachers) &&
+      selectedMaterials &&
+      selectedMaterials.comments
+    ) {
       let usernames = {};
       for (let studentInfo of all_students) {
         usernames[studentInfo._id] = studentInfo.name;
@@ -363,7 +379,7 @@ function ViewMaterial(props) {
       }
       
       setCommentList(selectedMaterials.comments.map((comment) => ({ ...comment, name: usernames[comment.author_id] })));
-    }
+    } 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMaterials, all_teachers, all_students]);
 
@@ -383,19 +399,39 @@ function ViewMaterial(props) {
     if (
       errors &&
       errors.constructor === Object &&
-      Object.keys(errors).length !== 0
+      errors.action === "updateMaterialComment"
     ) {
-      // handleOpenSnackbar("error", "Data guru gagal disimpan");
-      alert("gagal");
+      let content = "Komentar gagal ";
+      if (commentActionType.current === "create") {
+        content += "dibuat";
+      } else if (commentActionType.current === "edit") {
+        content += "disunting";
+      } else {
+        content += "dihapus";
+      }
+      commentActionType.current = null;
+      handleOpenCommentSnackbar("error", content);
       clearErrors();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errors]);
 
   React.useEffect(() => {
-    if (success) {
-      // handleOpenSnackbar("success", "Data guru berhasil disimpan");
-      alert("berhasil");
+    if (
+      success &&
+      success.constructor === Object &&
+      success.action === "updateMaterialComment"
+    ) {
+      let content = "Komentar berhasil ";
+      if (commentActionType.current === "create") {
+        content += "dibuat";
+      } else if (commentActionType.current === "edit") {
+        content += "disunting";
+      } else {
+        content += "dihapus";
+      }
+      commentActionType.current = null;
+      handleOpenCommentSnackbar("success", content);
       getOneMaterial(materi_id);
       setCommentValue("");
       clearSuccess();
@@ -432,16 +468,21 @@ function ViewMaterial(props) {
   };
 
   const handleCreateComment = () => {
-    let newCommentList = commentList.map((comment) => {
-      let filteredComment = { ...comment };
-      delete filteredComment['name'];
-      return filteredComment;
-    });
-    newCommentList.push({
-      author_id: user._id,
-      content: commentValue
-    });
-    updateMaterialComment(newCommentList, materi_id);
+    if (commentValue.length === 0) {
+      handleOpenCommentSnackbar("error", "Isi komentar tidak boleh kosong");
+    } else {
+      let newCommentList = commentList.map((comment) => {
+        let filteredComment = { ...comment };
+        delete filteredComment['name'];
+        return filteredComment;
+      });
+      newCommentList.push({
+        author_id: user._id,
+        content: commentValue
+      });
+      updateMaterialComment(newCommentList, materi_id);
+      commentActionType.current = "create";
+    }
   };
 
   const handleEditComment = () => {
@@ -452,6 +493,7 @@ function ViewMaterial(props) {
       newCommentList[selectedCommentIdx].content = commentEditorValue;
       newCommentList[selectedCommentIdx].edited = true;
       updateMaterialComment(newCommentList, materi_id, selectedCommentIdx);
+      commentActionType.current = "edit";
     }
     closeEditMode();
   };
@@ -463,8 +505,21 @@ function ViewMaterial(props) {
       setSelectedCommentIdx(selectedCommentIdx - 1);
     }
     updateMaterialComment(newCommentList, materi_id);
+    commentActionType.current = "delete";
   };
 
+  const handleOpenCommentSnackbar = (severity, content) => {
+    setOpenCommentSnackbar(true);
+    setSeverity(severity);
+    setSnackbarContent(content);
+  };
+
+  const handleCloseCommentSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenCommentSnackbar(false);
+  };
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
@@ -773,80 +828,6 @@ function ViewMaterial(props) {
             </Grid>
           </Paper>
         </Grid>
-
-
-        {/* REVIEW elements
-        <Grid item>
-          {commentList.map((comment, idx) => {
-            return (
-              <>
-                <p>{comment.name}</p>
-
-                <p>{comment.createdAt}</p>
-
-                {comment.edited === true ? <p>edited</p> : null}
-
-                {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
-                  <TextField
-                    variant="outlined"
-                    onChange={handleCommentEditorChange}
-                    value={commentEditorValue}
-                  />
-                  :
-                  <p>{comment.content}</p>
-                }
-
-                {(comment.author_id === user._id) ? (
-                  <>
-                    {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
-                      <>
-                        <Button
-                          variant="contained"
-                          onClick={closeEditMode}
-                        >
-                          Batal
-                        </Button>
-                        <Button
-                          variant="contained"
-                          onClick={handleEditComment}
-                        >
-                          Simpan
-                        </Button>
-                      </>
-                      :
-                      <>
-                        <Button
-                          variant="contained"
-                          onClick={() => handleDeleteComment(idx)}
-                        >
-                          Hapus
-                        </Button>
-                        <Button
-                          variant="contained"
-                          onClick={() => handleClickEdit(idx)}
-                        >
-                          Sunting
-                        </Button>
-                      </>
-                    }
-                  </>
-                ) : null}
-              </>
-            );
-          })}
-          <br/>
-          <TextField
-            variant="outlined"
-            onChange={handleCommentInputChange}
-            value={commentValue}
-          />
-          <Button
-            variant="contained"
-            onClick={handleCreateComment}
-          >
-            Kirim
-          </Button>          
-        </Grid> */}
         <Grid item>
           <Paper className={classes.paperBox} style={{marginTop: "20px"}}>
             <Grid container spacing={2}>
@@ -941,6 +922,23 @@ function ViewMaterial(props) {
           </Grid>
         ) : null}
       </Grid>
+      <Snackbar
+        open={openCommentSnackbar}
+        autoHideDuration={3000}
+        onClose={(event, reason) => {
+          handleCloseCommentSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity={severity}
+          onClose={(event, reason) => {
+            handleCloseCommentSnackbar(event, reason);
+          }}
+        >
+          {snackbarContent}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }
@@ -951,7 +949,6 @@ ViewMaterial.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   materialsFiles: PropTypes.object.isRequired,
-
   deleteMaterial: PropTypes.func.isRequired,
   getOneUser: PropTypes.func.isRequired, // For the person in charge task
   getOneMaterial: PropTypes.func.isRequired,
@@ -969,7 +966,6 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
   materialsFiles: state.materialsFiles,
-
   errors: state.errors,
   success: state.success
 });
@@ -984,7 +980,6 @@ export default connect(mapStateToProps, {
   getFileMaterials,
   viewFileMaterial,
   downloadFileMaterial,
-
   updateMaterialComment,
   getTeachers, 
   getStudents,
