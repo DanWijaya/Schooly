@@ -12,16 +12,18 @@ import {
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { 
   getOneUser, 
-
   getTeachers, 
   getStudents 
 } from "../../../actions/UserActions";
 import {
   getOneMaterial,
   deleteMaterial,
-  
   updateMaterialComment
 } from "../../../actions/MaterialActions";
+import {
+  getFileAvatar,
+  getMultipleFileAvatar
+} from "../../../actions/files/FileAvatarActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
@@ -299,12 +301,13 @@ function ViewMaterial(props) {
     getOneMaterial,
     getAllClass,
     getFileMaterials,
-
     getTeachers, 
     getStudents,
     updateMaterialComment,
     clearErrors,
-    clearSuccess
+    clearSuccess,
+    getFileAvatar,
+    getMultipleFileAvatar
   } = props;
   const { selectedMaterials, all_materials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
@@ -320,9 +323,11 @@ function ViewMaterial(props) {
   const [commentValue, setCommentValue] = React.useState("");
   const [commentEditorValue, setCommentEditorValue] = React.useState("");
   const [commentList, setCommentList] = React.useState([]);
+  const [commentAvatar, setCommentAvatar] = React.useState({});
   const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
 
   console.log(props.materialsFiles);
+  console.log(commentList);
 
   // REVIEW useeffects
   React.useEffect(() => {
@@ -356,11 +361,23 @@ function ViewMaterial(props) {
       for (let teacherInfo of all_teachers) {
         usernames[teacherInfo._id] = teacherInfo.name;
       }
-
+      
       setCommentList(selectedMaterials.comments.map((comment) => ({ ...comment, name: usernames[comment.author_id] })));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMaterials, all_teachers, all_students]);
+
+  React.useEffect(() => {
+    let listId = []
+    commentList.map((comment) => {
+      listId.push(comment.author_id)
+    })
+    listId.push(user._id)
+    getMultipleFileAvatar(listId).then((results) => {
+      setCommentAvatar(results);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [commentList]);
 
   React.useEffect(() => {
     if (
@@ -495,30 +512,25 @@ function ViewMaterial(props) {
 
   // Komentar
   // Kalau avatar belum ada, pakai default
-  const generateComments = (avatar=false, stdName, date, comment, isSelfMade, idx) => {
+  const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
     return (
       <Grid container item xs={12} direction="row" spacing={2}>
         <Hidden smUp>
           <Grid item xs={1} sm={0} className={classes.smAvatar}>
-            {(!avatar) ?
-              <Avatar/>
-            : 
-              <Avatar src={avatar}/>
-            }
+            <Avatar src={commentAvatar[author_id]}/>
           </Grid>
         </Hidden>
         <Hidden xsDown>
           <Grid item className={classes.smAvatar}>
-            {(!avatar) ?
-              <Avatar/>
-            : 
-              <Avatar src={avatar}/>
-            }
+            <Avatar src={commentAvatar[author_id]}/>
           </Grid>
         </Hidden>
         <Grid item xs={10} sm={10} md={11}>
           <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-            <Typography style={{marginRight: "10px"}}><b>{stdName}</b></Typography>
+            <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
+            {edited === true ? 
+              <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography> 
+            : null}
             <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
               {moment(date)
                     .locale("id")
@@ -846,7 +858,7 @@ function ViewMaterial(props) {
               </Grid>
               {
                 commentList.map((comment, idx) => (
-                  generateComments(false, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx)
+                  generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)
                 ))
               }
               <Grid item xs={12}>
@@ -855,7 +867,7 @@ function ViewMaterial(props) {
               <Grid container item xs={12} direction="row" spacing={2} alignItems="center">
                 <Hidden xsDown>
                   <Grid item className={classes.smAvatar}>
-                    <Avatar src={`/api/upload/avatar/${user.avatar}`}/>
+                    <Avatar src={commentAvatar[user._id]}/>
                   </Grid>
                   <Grid item sm={10} md={11}>
                     <TextField
@@ -977,5 +989,7 @@ export default connect(mapStateToProps, {
   getTeachers, 
   getStudents,
   clearErrors,
-  clearSuccess
+  clearSuccess,
+  getFileAvatar,
+  getMultipleFileAvatar
 })(ViewMaterial);
