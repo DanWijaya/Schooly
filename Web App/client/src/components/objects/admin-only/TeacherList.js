@@ -507,6 +507,31 @@ function TeacherList(props) {
 
   const all_teacher_obj = React.useRef({});
   const [rows, setRows] = React.useState([]);
+  /*
+    isi:
+    {
+      <id guru>: {
+        subject: [<info mata pelajaran 1>, <info mata pelajaran 2>, ...],
+        class: [<info kelas 1>, <info kelas 2>, ...],
+      },
+      ...
+
+    } key -> id semua guru yang ada di db
+  */
+  const [selectedValues, setSelectedValues] = React.useState({});
+
+  // SEARCH
+  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
+
+  // SORT
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("name");
+
+  // SNACKBAR
+  const [snackbarContent, setSnackbarContent] = React.useState("");
+  const [severity, setSeverity] = React.useState("info");
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
   React.useEffect(() => {
     // getAllSubjects("map");
@@ -559,10 +584,6 @@ function TeacherList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all_teachers, all_subjects, all_classes]);
 
-  // SEARCH
-  const [searchFilter, updateSearchFilter] = React.useState("");
-  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
-
   React.useEffect(() => {
     if (all_teachers) {
       setRows(
@@ -575,34 +596,6 @@ function TeacherList(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchFilter]);
-
-  // SORT
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("name");
-
-  function handleRequestSort(event, property) {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  }
-
-  // SNACKBAR
-  const [snackbarContent, setSnackbarContent] = React.useState("");
-  const [severity, setSeverity] = React.useState("info");
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
-
-  function handleOpenSnackbar(severity, content) {
-    setOpenSnackbar(true);
-    setSeverity(severity);
-    setSnackbarContent(content);
-  }
-
-  function handleCloseSnackbar(event, reason) {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnackbar(false);
-  }
 
   React.useEffect(() => {
     if (
@@ -634,18 +627,24 @@ function TeacherList(props) {
 
   // AUTOCOMPLETE: untuk memilih subject yang diajar dan kelas yang diajar tiap guru
 
-  /* 
-    isi:
-    {
-      <id guru>: {
-        subject: [<info mata pelajaran 1>, <info mata pelajaran 2>, ...],
-        class: [<info kelas 1>, <info kelas 2>, ...],
-      },
-      ...
+  function handleRequestSort(event, property) {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  }
 
-    } key -> id semua guru yang ada di db
-  */
-  const [selectedValues, setSelectedValues] = React.useState({});
+  function handleOpenSnackbar(severity, content) {
+    setOpenSnackbar(true);
+    setSeverity(severity);
+    setSnackbarContent(content);
+  }
+
+  function handleCloseSnackbar(event, reason) {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  }
 
   function handleChangeSubject(selectedSubjectsInfo, teacherId) {
     setSelectedValues({
