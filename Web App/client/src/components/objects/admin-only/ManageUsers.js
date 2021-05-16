@@ -856,19 +856,6 @@ function ManageUsers(props) {
     setListCheckboxTeacher(result);
   };
 
-  // const handleApproveListStudent = () => {
-  //   for (let i = 0; i < listCheckboxStudent.length; i++) {
-  //     onApproveUser(listCheckboxStudent[i].row._id)
-  //   }
-  //   setListCheckboxStudent([])
-  // }
-
-  // const handleApproveListTeacher = () => {
-  //   for (let i = 0; i < listCheckboxTeacher.length; i++) {
-  //     onApproveUser(listCheckboxTeacher[i].row._id)
-  //   }
-  //   setListCheckboxTeacher([])
-  // }
 
   const handleDeleteListStudent = () => {
     for (let i = 0; i < listCheckboxStudent.length; i++) {
@@ -999,7 +986,7 @@ function ManageUsers(props) {
 
     if (Array.isArray(all_students)) {
       all_students.filter((item) =>
-      item.name.toLowerCase().includes(searchFilterS.toLowerCase())
+      item.name.toLowerCase().includes(searchFilterS.toLowerCase()) || item.email.toLowerCase().includes(searchFilterS.toLowerCase())
     ).forEach((data) => {
         userRowItem(data);
         currentListBooleanStudent.push(false);
@@ -1007,7 +994,7 @@ function ManageUsers(props) {
     }
     if (Array.isArray(all_teachers)) {
       all_teachers.filter((item) =>
-      item.name.toLowerCase().includes(searchFilterT.toLowerCase())
+      item.name.toLowerCase().includes(searchFilterT.toLowerCase()) || item.email.toLowerCase().includes(searchFilterT.toLowerCase())
     ).forEach((data) => {
         userRowItem(data);
         currentListBooleanTeacher.push(false);
