@@ -206,6 +206,7 @@ class EditMaterial extends Component {
     super(props);
     this.state = {
       name: "",
+      // name1: "",
       subject: "",
       focused: false,
       class_assigned: [],

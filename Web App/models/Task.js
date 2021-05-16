@@ -40,13 +40,14 @@ const TaskSchema = new Schema({
     type: Map,
     default: new Map(), // userId -> the score.
   },
+  
   // submissions: {
   //     type: Map,
   //     default: new Map()
   //     //submissions berupa user_id -> Object
   //     //Objectnya berupa object dengan key-pair (file id, file name)
   // }
-});
+},{ timestamps: true });
 
 const Task = mongoose.model("tasks", TaskSchema);
 module.exports = Task;

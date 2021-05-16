@@ -696,10 +696,10 @@ function SubmittedTaskList(props) {
                           student_name={student.name}
                           grade={grade}
                         />
-                        <UnduhSemuaButton
+                        {/* <UnduhSemuaButton
                           onDownloadFile={onDownloadFile}
                           student_task_files_id={student_task_files_id}
-                        />
+                        /> */}
                       </div>
                     </div>
                   ) : null}
