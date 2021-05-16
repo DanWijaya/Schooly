@@ -209,18 +209,17 @@ export const updateMaterial = (
     });
 };
 
-export const updateMaterialComment = (
-  materialComments,
+export const createMaterialComment = (
   materialId,
-  editedCommentIdx = null
+  comment
 ) => (dispatch) => {
   axios
-    .post(`/api/materials/updatecomment/${materialId}`, { materialComments, editedCommentIdx })
+    .post(`/api/materials/createcomment/${materialId}`, comment)
     .then(() => {
       dispatch({
         type: GET_SUCCESS_RESPONSE,
         payload: {
-          action: "updateMaterialComment",
+          action: "createMaterialComment",
           response: true
         }
       });
@@ -229,7 +228,60 @@ export const updateMaterialComment = (
       dispatch({
         type: GET_ERRORS,
         payload: {
-          action: "updateMaterialComment",
+          action: "createMaterialComment",
+          response: err.response.data
+        }
+      });
+    });
+};
+
+export const editMaterialComment = (
+  materialId,
+  updatedContent,
+  commentId
+) => (dispatch) => {
+  axios
+    .post(`/api/materials/editcomment/${materialId}`, { updatedContent, commentId })
+    .then(() => {
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: {
+          action: "editMaterialComment",
+          response: true
+        }
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: {
+          action: "editMaterialComment",
+          response: err.response.data
+        }
+      });
+    });
+};
+
+export const deleteMaterialComment = (
+  materialId,
+  commentId
+) => (dispatch) => {
+  axios
+    .delete(`/api/materials/deletecomment/${materialId}`, { data: { commentId } })
+    .then(() => {
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: {
+          action: "deleteMaterialComment",
+          response: true
+        }
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: {
+          action: "deleteMaterialComment",
           response: err.response.data
         }
       });

@@ -227,18 +227,17 @@ export const getTaskByClass = (classId) => (dispatch) => {
   });
 };
 
-export const updateTaskComment = (
-  taskComments,
+export const createTaskComment = (
   taskId,
-  editedCommentIdx = null
+  comment
 ) => (dispatch) => {
   axios
-    .post(`/api/tasks/updatecomment/${taskId}`, { taskComments, editedCommentIdx })
+    .post(`/api/tasks/createcomment/${taskId}`, comment)
     .then(() => {
       dispatch({
         type: GET_SUCCESS_RESPONSE,
         payload: {
-          action: "updateTaskComment",
+          action: "createTaskComment",
           response: true
         }
       });
@@ -247,7 +246,60 @@ export const updateTaskComment = (
       dispatch({
         type: GET_ERRORS,
         payload: {
-          action: "updateTaskComment",
+          action: "createTaskComment",
+          response: err.response.data
+        }
+      });
+    });
+};
+
+export const editTaskComment = (
+  taskId,
+  updatedContent,
+  commentId
+) => (dispatch) => {
+  axios
+    .post(`/api/tasks/editcomment/${taskId}`, { updatedContent, commentId })
+    .then(() => {
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: {
+          action: "editTaskComment",
+          response: true
+        }
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: {
+          action: "editTaskComment",
+          response: err.response.data
+        }
+      });
+    });
+};
+
+export const deleteTaskComment = (
+  taskId,
+  commentId
+) => (dispatch) => {
+  axios
+    .delete(`/api/tasks/deletecomment/${taskId}`, { data: { commentId } })
+    .then(() => {
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: {
+          action: "deleteTaskComment",
+          response: true
+        }
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: {
+          action: "deleteTaskComment",
           response: err.response.data
         }
       });

@@ -18,7 +18,9 @@ import {
 import {
   getOneMaterial,
   deleteMaterial,
-  updateMaterialComment
+  createMaterialComment,
+  editMaterialComment,
+  deleteMaterialComment
 } from "../../../actions/MaterialActions";
 import {
   getFileAvatar,
@@ -305,7 +307,9 @@ function ViewMaterial(props) {
     getFileMaterials,
     getTeachers, 
     getStudents,
-    updateMaterialComment,
+    createMaterialComment,
+    editMaterialComment,
+    deleteMaterialComment,
     clearErrors,
     clearSuccess,
     getFileAvatar,
@@ -404,17 +408,18 @@ function ViewMaterial(props) {
     if (
       errors &&
       errors.constructor === Object &&
-      errors.action === "updateMaterialComment"
+      Object.keys(errors).length !== 0
     ) {
       let content = "Komentar gagal ";
-      if (commentActionType.current === "create") {
+      if (errors.action === "createMaterialComment") {
         content += "dibuat";
-      } else if (commentActionType.current === "edit") {
+      } else if (errors.action === "editMaterialComment") {
         content += "disunting";
-      } else {
+      } else if (errors.action === "deleteMaterialComment") {
         content += "dihapus";
+      } else {
+        return;
       }
-      commentActionType.current = null;
       handleOpenCommentSnackbar("error", content);
       clearErrors();
     }
@@ -424,18 +429,18 @@ function ViewMaterial(props) {
   React.useEffect(() => {
     if (
       success &&
-      success.constructor === Object &&
-      success.action === "updateMaterialComment"
+      success.constructor === Object
     ) {
       let content = "Komentar berhasil ";
-      if (commentActionType.current === "create") {
+      if (success.action === "createMaterialComment") {
         content += "dibuat";
-      } else if (commentActionType.current === "edit") {
+      } else if (success.action === "editMaterialComment") {
         content += "disunting";
-      } else {
+      } else if (success.action === "deleteMaterialComment") {
         content += "dihapus";
+      } else {
+        return;
       }
-      commentActionType.current = null;
       handleOpenCommentSnackbar("success", content);
       getOneMaterial(materi_id);
       setCommentValue("");
@@ -474,17 +479,10 @@ function ViewMaterial(props) {
     if (commentValue.length === 0) {
       handleOpenCommentSnackbar("error", "Isi komentar tidak boleh kosong");
     } else {
-      let newCommentList = commentList.map((comment) => {
-        let filteredComment = { ...comment };
-        delete filteredComment['name'];
-        return filteredComment;
-      });
-      newCommentList.push({
+      createMaterialComment(materi_id, {
         author_id: user._id,
         content: commentValue
       });
-      updateMaterialComment(newCommentList, materi_id);
-      commentActionType.current = "create";
     }
   };
 
@@ -492,11 +490,7 @@ function ViewMaterial(props) {
     if (commentEditorValue.length === 0) {
       handleDeleteComment(selectedCommentIdx);
     } else {
-      let newCommentList = [...commentList];
-      newCommentList[selectedCommentIdx].content = commentEditorValue;
-      newCommentList[selectedCommentIdx].edited = true;
-      updateMaterialComment(newCommentList, materi_id, selectedCommentIdx);
-      commentActionType.current = "edit";
+      editMaterialComment( materi_id, commentEditorValue, commentList[selectedCommentIdx]._id);
     }
     closeEditMode();
   };
@@ -504,8 +498,7 @@ function ViewMaterial(props) {
   const handleDeleteComment = (idx) => {
     let newCommentList = [...commentList];
     newCommentList.splice(idx, 1);
-    updateMaterialComment(newCommentList, materi_id);
-    commentActionType.current = "delete";
+    deleteMaterialComment(materi_id, commentList[idx]._id);
     handleCloseDeleteCommentDialog();
   };
 
@@ -1013,8 +1006,10 @@ export default connect(mapStateToProps, {
   getFileMaterials,
   viewFileMaterial,
   downloadFileMaterial,
-  updateMaterialComment,
-  getTeachers, 
+  createMaterialComment,
+  editMaterialComment,
+  deleteMaterialComment,
+  getTeachers,
   getStudents,
   clearErrors,
   clearSuccess,

@@ -35,6 +35,7 @@ const MaterialSchema = new Schema(
     ],
     comments: [
       {
+        // nilai atribut "_id" (yang di-generate secara default) akan digunakan dalam penghapusan dan penyuntingan komentar 
         author_id: { 
           type: ObjectId, 
           required: true 

@@ -22,7 +22,12 @@ import {
   getFileAvatar,
   getMultipleFileAvatar
 } from "../../../actions/files/FileAvatarActions";
-import { getOneTask, updateTaskComment } from "../../../actions/TaskActions";
+import { 
+  getOneTask, 
+  createTaskComment,
+  editTaskComment,
+  deleteTaskComment,
+} from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
 import { 
@@ -586,7 +591,9 @@ function ViewTaskStudent(props) {
     downloadFileTasks,
     getTeachers, 
     getStudents,
-    updateTaskComment,
+    createTaskComment,
+    editTaskComment,
+    deleteTaskComment,
     getMultipleFileAvatar
   } = props;
   const { all_subjects_map } = props.subjectsCollection;
@@ -690,22 +697,22 @@ function ViewTaskStudent(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commentList]);
 
-
   useEffect(() => {
     if (
       errors &&
       errors.constructor === Object &&
-      errors.action === "updateTaskComment"
+      Object.keys(errors).length !== 0
     ) {
       let content = "Komentar gagal ";
-      if (commentActionType.current === "create") {
+      if (errors.action === "createTaskComment") {
         content += "dibuat";
-      } else if (commentActionType.current === "edit") {
+      } else if (errors.action === "editTaskComment") {
         content += "disunting";
-      } else {
+      } else if (errors.action === "deleteTaskComment") {
         content += "dihapus";
+      } else {
+        return;
       }
-      commentActionType.current = null;
       handleOpenCommentSnackbar("error", content);
       clearErrors();
     }
@@ -715,18 +722,18 @@ function ViewTaskStudent(props) {
   useEffect(() => {
     if (
       success &&
-      success.constructor === Object &&
-      success.action === "updateTaskComment"
+      success.constructor === Object
     ) {
       let content = "Komentar berhasil ";
-      if (commentActionType.current === "create") {
+      if (success.action === "createTaskComment") {
         content += "dibuat";
-      } else if (commentActionType.current === "edit") {
+      } else if (success.action === "editTaskComment") {
         content += "disunting";
-      } else {
+      } else if (success.action === "deleteTaskComment") {
         content += "dihapus";
+      } else {
+        return;
       }
-      commentActionType.current = null;
       handleOpenCommentSnackbar("success", content);
       getOneTask(tugasId);
       setCommentValue("");
@@ -765,17 +772,10 @@ function ViewTaskStudent(props) {
     if (commentValue.length === 0) {
       handleOpenCommentSnackbar("error", "Isi komentar tidak boleh kosong");
     } else {
-      let newCommentList = commentList.map((comment) => {
-        let filteredComment = { ...comment };
-        delete filteredComment['name'];
-        return filteredComment;
-      });
-      newCommentList.push({
+      createTaskComment(tugasId, {
         author_id: user._id,
         content: commentValue
       });
-      updateTaskComment(newCommentList, tugasId);
-      commentActionType.current = "create";
     }
   };
 
@@ -783,11 +783,7 @@ function ViewTaskStudent(props) {
     if (commentEditorValue.length === 0) {
       handleDeleteComment(selectedCommentIdx);
     } else {
-      let newCommentList = [...commentList];
-      newCommentList[selectedCommentIdx].content = commentEditorValue;
-      newCommentList[selectedCommentIdx].edited = true;
-      updateTaskComment(newCommentList, tugasId, selectedCommentIdx);
-      commentActionType.current = "edit";
+      editTaskComment(tugasId, commentEditorValue, commentList[selectedCommentIdx]._id);
     }
     closeEditMode();
   };
@@ -795,8 +791,7 @@ function ViewTaskStudent(props) {
   const handleDeleteComment = (idx) => {
     let newCommentList = [...commentList];
     newCommentList.splice(idx, 1);
-    updateTaskComment(newCommentList, tugasId);
-    commentActionType.current = "delete";
+    deleteTaskComment(tugasId, commentList[idx]._id);
     handleCloseDeleteCommentDialog();
   };
 
@@ -1769,8 +1764,10 @@ export default connect(mapStateToProps, {
   viewFileSubmitTasks,
   downloadFileSubmitTasks,
   deleteFileSubmitTasks,
-  updateTaskComment,
-  getTeachers, 
+  createTaskComment,
+  editTaskComment,
+  deleteTaskComment,
+  getTeachers,
   getStudents,
   getMultipleFileAvatar
 })(ViewTaskStudent);

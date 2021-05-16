@@ -11,7 +11,9 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import { 
   getOneTask, 
   deleteTask,
-  updateTaskComment
+  createTaskComment,
+  editTaskComment,
+  deleteTaskComment
  } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import {
@@ -305,7 +307,9 @@ function ViewTaskTeacher(props) {
     clearSuccess,
     getTeachers, 
     getStudents,
-    updateTaskComment,
+    createTaskComment,
+    editTaskComment,
+    deleteTaskComment,
     getMultipleFileAvatar
   } = props;
   const { all_classes_map } = props.classesCollection;
@@ -416,17 +420,18 @@ function ViewTaskTeacher(props) {
     if (
       errors &&
       errors.constructor === Object &&
-      errors.action === "updateTaskComment"
+      Object.keys(errors).length !== 0
     ) {
       let content = "Komentar gagal ";
-      if (commentActionType.current === "create") {
+      if (errors.action === "createTaskComment") {
         content += "dibuat";
-      } else if (commentActionType.current === "edit") {
+      } else if (errors.action === "editTaskComment") {
         content += "disunting";
-      } else {
+      } else if (errors.action === "deleteTaskComment") {
         content += "dihapus";
+      } else {
+        return;
       }
-      commentActionType.current = null;
       handleOpenCommentSnackbar("error", content);
       clearErrors();
     }
@@ -436,18 +441,18 @@ function ViewTaskTeacher(props) {
   React.useEffect(() => {
     if (
       success &&
-      success.constructor === Object &&
-      success.action === "updateTaskComment"
+      success.constructor === Object
     ) {
       let content = "Komentar berhasil ";
-      if (commentActionType.current === "create") {
+      if (success.action === "createTaskComment") {
         content += "dibuat";
-      } else if (commentActionType.current === "edit") {
+      } else if (success.action === "editTaskComment") {
         content += "disunting";
-      } else {
+      } else if (success.action === "deleteTaskComment") {
         content += "dihapus";
+      } else {
+        return;
       }
-      commentActionType.current = null;
       handleOpenCommentSnackbar("success", content);
       getOneTask(task_id);
       setCommentValue("");
@@ -486,17 +491,10 @@ function ViewTaskTeacher(props) {
     if (commentValue.length === 0) {
       handleOpenCommentSnackbar("error", "Isi komentar tidak boleh kosong");
     } else {
-      let newCommentList = commentList.map((comment) => {
-        let filteredComment = { ...comment };
-        delete filteredComment['name'];
-        return filteredComment;
-      });
-      newCommentList.push({
+      createTaskComment(task_id, {
         author_id: user._id,
         content: commentValue
       });
-      updateTaskComment(newCommentList, task_id);
-      commentActionType.current = "create";
     }
   };
 
@@ -504,11 +502,7 @@ function ViewTaskTeacher(props) {
     if (commentEditorValue.length === 0) {
       handleDeleteComment(selectedCommentIdx);
     } else {
-      let newCommentList = [...commentList];
-      newCommentList[selectedCommentIdx].content = commentEditorValue;
-      newCommentList[selectedCommentIdx].edited = true;
-      updateTaskComment(newCommentList, task_id, selectedCommentIdx);
-      commentActionType.current = "edit";
+      editTaskComment(task_id, commentEditorValue, commentList[selectedCommentIdx]._id);
     }
     closeEditMode();
   };
@@ -516,8 +510,7 @@ function ViewTaskTeacher(props) {
   const handleDeleteComment = (idx) => {
     let newCommentList = [...commentList];
     newCommentList.splice(idx, 1);
-    updateTaskComment(newCommentList, task_id);
-    commentActionType.current = "delete";
+    deleteTaskComment(task_id, commentList[idx]._id);
     handleCloseDeleteCommentDialog();
   };
 
@@ -999,8 +992,10 @@ export default connect(mapStateToProps, {
   viewFileTasks,
   clearSuccess,
   clearErrors,
-  updateTaskComment,
-  getTeachers, 
+  createTaskComment,
+  editTaskComment,
+  deleteTaskComment,
+  getTeachers,
   getStudents,
   getMultipleFileAvatar
 })(ViewTaskTeacher);
