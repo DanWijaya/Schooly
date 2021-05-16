@@ -329,6 +329,8 @@ function ViewMaterial(props) {
   const [commentAvatar, setCommentAvatar] = React.useState({});
   const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
   const commentActionType = React.useRef(null);
+  const [openDeleteCommentDialog, setOpenDeleteCommentDialog] = React.useState(null);
+  const [deleteCommentIdx, setDeleteCommentIdx] = React.useState(null);
 
   // SNACKBAR
   const [snackbarContent, setSnackbarContent] = React.useState("");
@@ -506,6 +508,7 @@ function ViewMaterial(props) {
     }
     updateMaterialComment(newCommentList, materi_id);
     commentActionType.current = "delete";
+    handleCloseDeleteCommentDialog();
   };
 
   const handleOpenCommentSnackbar = (severity, content) => {
@@ -565,6 +568,16 @@ function ViewMaterial(props) {
     setOpenDeleteDialog(false);
   };
 
+  const handleOpenDeleteCommentDialog = (idx) => {
+    setDeleteCommentIdx(idx)
+    setOpenDeleteCommentDialog(true);
+  };
+
+  const handleCloseDeleteCommentDialog = () => {
+    setDeleteCommentIdx(null)
+    setOpenDeleteCommentDialog(false);
+  };
+
   // Komentar
   // Kalau avatar belum ada, pakai default
   const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
@@ -605,7 +618,7 @@ function ViewMaterial(props) {
                   <DeleteIcon
                     className={classes.commentLittleIcon}
                     fontSize="small"
-                    onClick={() => handleDeleteComment(idx)}
+                    onClick={() => handleOpenDeleteCommentDialog(idx)}
                   />
                 </LightTooltip>
               </>
@@ -758,6 +771,15 @@ function ViewMaterial(props) {
         itemName={selectedMaterials.name}
         deleteItem={() => {
           onDeleteTask(materi_id);
+        }}
+      />
+      <DeleteDialog
+        openDeleteDialog={openDeleteCommentDialog}
+        handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
+        itemType="Komentar"
+        itemName=""
+        deleteItem={() => {
+          handleDeleteComment(deleteCommentIdx);
         }}
       />
       <Grid container direction="column" spacing={2}>

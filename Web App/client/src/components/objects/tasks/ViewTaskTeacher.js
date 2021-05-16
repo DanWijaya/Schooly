@@ -30,7 +30,10 @@ import {
   viewFileTasks,
   downloadFileTasks,
 } from "../../../actions/files/FileTaskActions";
-
+import {
+  getFileAvatar,
+  getMultipleFileAvatar
+} from "../../../actions/files/FileAvatarActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -46,9 +49,11 @@ import {
   Typography,
   Divider,
   TextField,
-  Button
+  Button,
+  Snackbar
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import MuiAlert from "@material-ui/lab/Alert";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -62,6 +67,10 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import SendIcon from '@material-ui/icons/Send';
+import CreateIcon from '@material-ui/icons/Create';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const path = require("path");
 
@@ -145,6 +154,52 @@ const useStyles = makeStyles((theme) => ({
   dividerColor: {
     backgroundColor: theme.palette.primary.main,
   },
+  commentLittleIcon: {
+    color: theme.palette.text.disabled,
+    opacity: 0.5,
+    "&:focus, &:hover": {
+      opacity: 1,
+      cursor: "pointer"
+    },
+  },
+  sendIcon: {
+    color: theme.palette.text.disabled,
+    "&:focus, &:hover": {
+      opacity: 0.5,
+      cursor: "pointer"
+    },
+  },
+  marginMobile: {
+    [theme.breakpoints.down("sm")]: {
+      marginRight: "14px",
+      marginLeft: "7.6px"
+    },
+  },
+  smAvatar: {
+    [theme.breakpoints.down("xs")]: {
+      minWidth: "50px"
+    },
+  },
+  textField: {
+
+  },
+  checkButton: {
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    marginTop: "6px",
+    marginRight: "3px",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.dark
+    },
+  },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    marginTop: "6px",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.dark
+    },
+  }
 }));
 
 function LampiranFile(props) {
@@ -249,7 +304,8 @@ function ViewTaskTeacher(props) {
     clearSuccess,
     getTeachers, 
     getStudents,
-    updateTaskComment
+    updateTaskComment,
+    getMultipleFileAvatar
   } = props;
   const { all_classes_map } = props.classesCollection;
   const task_id = props.match.params.id;
@@ -264,8 +320,11 @@ function ViewTaskTeacher(props) {
   const [commentValue, setCommentValue] = React.useState("");
   const [commentEditorValue, setCommentEditorValue] = React.useState("");
   const [commentList, setCommentList] = React.useState([]);
+  const [commentAvatar, setCommentAvatar] = React.useState({});
   const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
   const commentActionType = React.useRef(null);
+  const [openDeleteCommentDialog, setOpenDeleteCommentDialog] = React.useState(null);
+  const [deleteCommentIdx, setDeleteCommentIdx] = React.useState(null);
 
   // SNACKBAR
   const [snackbarContent, setSnackbarContent] = React.useState("");
@@ -336,6 +395,18 @@ function ViewTaskTeacher(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasksCollection, all_teachers, all_students]);
+
+  React.useEffect(() => {
+    let listId = []
+    commentList.map((comment) => {
+      listId.push(comment.author_id)
+    })
+    listId.push(user._id)
+    getMultipleFileAvatar(listId).then((results) => {
+      setCommentAvatar(results);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [commentList]);
 
   React.useEffect(() => {
     if (
@@ -421,6 +492,7 @@ function ViewTaskTeacher(props) {
         content: commentValue
       });
       updateTaskComment(newCommentList, task_id);
+      commentActionType.current = "create";
     }
   };
 
@@ -445,6 +517,7 @@ function ViewTaskTeacher(props) {
     }
     updateTaskComment(newCommentList, task_id);
     commentActionType.current = "delete";
+    handleCloseDeleteCommentDialog();
   };
 
   const handleOpenCommentSnackbar = (severity, content) => {
@@ -515,6 +588,101 @@ function ViewTaskTeacher(props) {
     setOpenDeleteDialog(false);
   };
 
+  const handleOpenDeleteCommentDialog = (idx) => {
+    setDeleteCommentIdx(idx)
+    setOpenDeleteCommentDialog(true);
+  };
+
+  const handleCloseDeleteCommentDialog = () => {
+    setDeleteCommentIdx(null)
+    setOpenDeleteCommentDialog(false);
+  };
+
+  // Komentar
+  // Kalau avatar belum ada, pakai default
+  
+  const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
+    return (
+      <Grid container item xs={12} direction="row" spacing={2}>
+        <Hidden smUp>
+          <Grid item xs={1} sm={0} className={classes.smAvatar}>
+            <Avatar src={commentAvatar[author_id]}/>
+          </Grid>
+        </Hidden>
+        <Hidden xsDown>
+          <Grid item className={classes.smAvatar}>
+            <Avatar src={commentAvatar[author_id]}/>
+          </Grid>
+        </Hidden>
+        <Grid item xs={10} sm={10} md={11}>
+          <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+            <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
+            {edited === true ? 
+              <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography> 
+            : null}
+            <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
+              {moment(date)
+                    .locale("id")
+                    .format("DD MMM YYYY, HH.mm")}
+            </Typography>
+            {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
+              <>
+                <LightTooltip title="Sunting">
+                  <CreateIcon
+                    style={{marginRight: "2px"}}
+                    className={classes.commentLittleIcon}
+                    fontSize="small"
+                    onClick={() => handleClickEdit(idx)}
+                  />
+                </LightTooltip>
+                <LightTooltip title="Hapus">
+                  <DeleteIcon
+                    className={classes.commentLittleIcon}
+                    fontSize="small"
+                    onClick={() => handleOpenDeleteCommentDialog(idx)}
+                  />
+                </LightTooltip>
+              </>
+            : null}
+          </div>
+          {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
+              <div style={{display: "flex", flexDirection: "column"}}>
+                <TextField
+                  variant="outlined"
+                  onChange={handleCommentEditorChange}
+                  value={commentEditorValue}
+                  style={{marginTop: "5px"}}
+                  multiline
+                />
+                <div style={{display: "flex", alignItems: "center"}}>
+                  <Button
+                    variant="contained"
+                    color="default"
+                    className={classes.checkButton}
+                    startIcon={<CheckCircleIcon />}
+                    onClick={handleEditComment}
+                  >
+                    Simpan
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="default"
+                    className={classes.cancelButton}
+                    startIcon={<CancelIcon />}
+                    onClick={closeEditMode}
+                  >
+                    Batal
+                  </Button>
+                </div>
+              </div>
+            :
+              <Typography style={{marginTop: "5px"}}>{comment}</Typography>
+          }
+        </Grid>
+      </Grid>
+    )
+  }
+
   document.title = !tasksCollection.name
     ? "Schooly | Lihat Tugas"
     : `Schooly | ${tasksCollection.name}`;
@@ -528,6 +696,15 @@ function ViewTaskTeacher(props) {
         itemName={tasksCollection.name}
         deleteItem={() => {
           onDeleteTask(task_id);
+        }}
+      />
+      <DeleteDialog
+        openDeleteDialog={openDeleteCommentDialog}
+        handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
+        itemType="Komentar"
+        itemName=""
+        deleteItem={() => {
+          handleDeleteComment(deleteCommentIdx);
         }}
       />
       <Grid container direction="column" spacing={2}>
@@ -638,6 +815,83 @@ function ViewTaskTeacher(props) {
             </Grid>
           </Paper>
         </Grid>
+        <Grid item>
+          <Paper className={classes.paperBox} style={{marginTop: "20px"}}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} style={{ paddingBottom: "0" }}>
+                <Typography variant="h6">Komentar Kelas</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              {
+                commentList.map((comment, idx) => (
+                  generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)
+                ))
+              }
+              {
+                (commentList.length === 0) ?
+                  <Grid item xs={12}>
+                    <Typography color="textSecondary" align="center">Belum ada komentar</Typography>
+                  </Grid>
+                : null
+              }
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid container item xs={12} direction="row" spacing={2} alignItems="center">
+                <Hidden xsDown>
+                  <Grid item className={classes.smAvatar}>
+                    <Avatar src={commentAvatar[user._id]}/>
+                  </Grid>
+                  <Grid item sm={10} md={11}>
+                    <TextField
+                      className={classes.textField}
+                      variant="outlined"
+                      multiline
+                      style={{display: "flex"}}
+                      InputProps={{style: {borderRadius: "15px"}}}
+                      placeholder="Tambahkan komentar..."
+                      onChange={handleCommentInputChange}
+                      value={commentValue}
+                    />
+                  </Grid>
+                  <Grid item style={{maxWidth: "10px"}}>
+                    <LightTooltip title="Kirim">
+                      <SendIcon className={classes.sendIcon} onClick={handleCreateComment}/>
+                    </LightTooltip>
+                  </Grid>
+                </Hidden>
+                <Hidden smUp>
+                  <Grid item style={{width: "52px"}}>
+                    <Avatar src={`/api/upload/avatar/${user.avatar}`}/>
+                  </Grid>
+                  <Grid container item xs={10} direction="row" alignItems="center">
+                    <Grid item xs={11}>
+                      <TextField
+                        className={classes.textField}
+                        variant="outlined"
+                        multiline
+                        style={{display: "flex"}}
+                        InputProps={{style: {borderRadius: "15px"}}}
+                        placeholder="Tambahkan komentar..."
+                        onChange={handleCommentInputChange}
+                        value={commentValue}
+                      />
+                    </Grid>
+                    <Grid container item xs={1} justify="flex-end">
+                      <Grid item xs={1}>
+                        <LightTooltip title="Kirim">
+                          <SendIcon className={classes.sendIcon} onClick={handleCreateComment}/>
+                        </LightTooltip>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Hidden>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
         <Grid item container justify="flex-end" alignItems="center">
           <Grid item style={{ paddingRight: "10px" }}>
             {disableButton ? (
@@ -679,6 +933,23 @@ function ViewTaskTeacher(props) {
           </Grid>
         </Grid>
       </Grid>
+      <Snackbar
+        open={openCommentSnackbar}
+        autoHideDuration={3000}
+        onClose={(event, reason) => {
+          handleCloseCommentSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity={severity}
+          onClose={(event, reason) => {
+            handleCloseCommentSnackbar(event, reason);
+          }}
+        >
+          {snackbarContent}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }
@@ -723,5 +994,6 @@ export default connect(mapStateToProps, {
   clearErrors,
   updateTaskComment,
   getTeachers, 
-  getStudents
+  getStudents,
+  getMultipleFileAvatar
 })(ViewTaskTeacher);

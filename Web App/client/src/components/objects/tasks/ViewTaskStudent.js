@@ -614,6 +614,8 @@ function ViewTaskStudent(props) {
   const [commentAvatar, setCommentAvatar] = React.useState({});
   const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
   const commentActionType = React.useRef(null);
+  const [openDeleteCommentDialog, setOpenDeleteCommentDialog] = React.useState(null);
+  const [deleteCommentIdx, setDeleteCommentIdx] = React.useState(null);
 
   // SNACKBAR
   const [snackbarContent, setSnackbarContent] = React.useState("");
@@ -769,6 +771,7 @@ function ViewTaskStudent(props) {
         content: commentValue
       });
       updateTaskComment(newCommentList, tugasId);
+      commentActionType.current = "create";
     }
   };
 
@@ -793,6 +796,7 @@ function ViewTaskStudent(props) {
     }
     updateTaskComment(newCommentList, tugasId);
     commentActionType.current = "delete";
+    handleCloseDeleteCommentDialog();
   };
 
   const handleOpenCommentSnackbar = (severity, content) => {
@@ -923,6 +927,16 @@ function ViewTaskStudent(props) {
     setOpenDeleteDialog(false);
   };
 
+  const handleOpenDeleteCommentDialog = (idx) => {
+    setDeleteCommentIdx(idx)
+    setOpenDeleteCommentDialog(true);
+  };
+
+  const handleCloseDeleteCommentDialog = () => {
+    setDeleteCommentIdx(null)
+    setOpenDeleteCommentDialog(false);
+  };
+
   // Upload Dialog
   const [openUploadDialog, setOpenUploadDialog] = React.useState(null);
   const handleOpenUploadDialog = () => {
@@ -933,7 +947,7 @@ function ViewTaskStudent(props) {
     clearSuccess();
   };
 
- // Komentar
+  // Komentar
   // Kalau avatar belum ada, pakai default
   const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
     return (
@@ -967,7 +981,7 @@ function ViewTaskStudent(props) {
                     <DeleteIcon
                       className={classes.commentLittleIcon}
                       fontSize="small"
-                      onClick={() => handleDeleteComment(idx)}
+                      onClick={() => handleOpenDeleteCommentDialog(idx)}
                     />
                   </LightTooltip>
                 </>
@@ -1037,7 +1051,7 @@ function ViewTaskStudent(props) {
                     <DeleteIcon
                       className={classes.commentLittleIcon}
                       fontSize="small"
-                      onClick={() => handleDeleteComment(idx)}
+                      onClick={() => handleOpenDeleteCommentDialog(idx)}
                     />
                   </LightTooltip>
                 </>
@@ -1206,6 +1220,15 @@ function ViewTaskStudent(props) {
         itemName={selectedFileName}
         deleteItem={() => {
           deleteFileSubmitTasks(selectedFileId);
+        }}
+      />
+      <DeleteDialog
+        openDeleteDialog={openDeleteCommentDialog}
+        handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
+        itemType="Komentar"
+        itemName=""
+        deleteItem={() => {
+          handleDeleteComment(deleteCommentIdx);
         }}
       />
       <UploadDialog
