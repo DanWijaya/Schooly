@@ -143,6 +143,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#808080",
   },
   submittedButton: {
+    margin:"auto",
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
@@ -868,7 +869,8 @@ function ViewTaskStudent(props) {
                 style={{
                   padding: "10px",
                   display: "flex",
-                  flexDirection: "row",
+                  flexDirection: "column",
+                  // alignItems:"center",
                   justifyContent: "center",
                 }}
               >

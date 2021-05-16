@@ -204,9 +204,9 @@ class Register extends Component {
 
     const role = this.state.role;
 
-    if (role === "Teacher") {
-      newUser.subject_teached = this.state.subject_teached;
-    }
+    // if (role === "Teacher") {
+    //   newUser.subject_teached = this.state.subject_teached;
+    // }
 
     if (this.state.activeStep === 2) {
       this.setState({ submitButtonClicked: true });
@@ -371,38 +371,6 @@ class Register extends Component {
                 //     </FormControl>
                 //   </Grid>
                 // ) :
-                this.state.role === "Teacher" ? (
-                  <Grid item>
-                    <FormControl
-                      id="subject"
-                      variant="outlined"
-                      color="primary"
-                      fullWidth
-                      error={Boolean(errors.subject_teached)}
-                    >
-                      <InputLabel id="subject-label">Mata Pelajaran</InputLabel>
-                      <Select
-                        labelId="subject-label"
-                        label="Mata Pelajaran"
-                        value={this.state.subject_teached}
-                        onChange={(event) => {
-                          this.onChange(event, "subject");
-                        }}
-                      >
-                        {all_subjects.map((subject) => (
-                          <MenuItem value={subject._id}>
-                            {subject.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      <FormHelperText>
-                        {Boolean(errors.subject_teached)
-                          ? errors.subject_teached
-                          : null}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-                ) : null
               }
               <Grid item>
                 <TextField

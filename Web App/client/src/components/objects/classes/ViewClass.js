@@ -1109,18 +1109,20 @@ function ViewClass(props) {
     // -> pindahkan getTeachers("map") di sini karena mau execute setWalikelas hanya setelah itu selesai.
     var id_list;
     setCurrentClass(classId).then((kelas) => {
-      id_list = [kelas.walikelas];
-      console.log("ID LIST: ", id_list);
-      students_by_class.forEach((s) => id_list.push(s._id));
-      getMultipleFileAvatar(id_list).then((results) => {
-        console.log(results);
-        setAvatar(results);
+      if(kelas){
+        id_list = [kelas.walikelas];
+        console.log("ID LIST: ", id_list);
+        students_by_class.forEach((s) => id_list.push(s._id));
+        getMultipleFileAvatar(id_list).then((results) => {
+          console.log(results);
+          setAvatar(results);
+        });
+        getTeachers("map").then((results) =>
+          setWalikelas(results.get(kelas.walikelas))
+        );
+      }
+        // setWalikelas(all_teachers_map.get(kelas.walikelas));
       });
-      getTeachers("map").then((results) =>
-        setWalikelas(results.get(kelas.walikelas))
-      );
-      // setWalikelas(all_teachers_map.get(kelas.walikelas));
-    });
   }, [students_by_class.length, kelas.walikelas]);
 
   const [value, setValue] = React.useState(0);

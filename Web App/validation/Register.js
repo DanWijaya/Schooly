@@ -36,14 +36,15 @@ module.exports = function validateRegisterInput(data) {
   //Role checks
   if (Validator.isEmpty(data.role)) {
     errors.role = "Peran belum diisi";
-  } else {
-    // Specific to Teacher
-    if (data.role === "Teacher") {
-      if (Validator.isEmpty(data.subject_teached)) {
-        errors.subject_teached = "Mata pelajaran belum dipilih";
-      }
-    }
-  }
+  } 
+  // else {
+  //   // Specific to Teacher
+  //   if (data.role === "Teacher") {
+  //     if (Validator.isEmpty(data.subject_teached)) {
+  //       errors.subject_teached = "Mata pelajaran belum dipilih";
+  //     }
+  //   }
+  // }
 
   // Phone checks
   if (Validator.isEmpty(data.phone)) {

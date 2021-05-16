@@ -993,12 +993,12 @@ function ManageUsers(props) {
       });
     }
     if (Array.isArray(all_teachers)) {
-      all_teachers.filter((item) =>
+      all_teachers.filter((item) => 
       item.name.toLowerCase().includes(searchFilterT.toLowerCase()) || item.email.toLowerCase().includes(searchFilterT.toLowerCase())
     ).forEach((data) => {
         userRowItem(data);
         currentListBooleanTeacher.push(false);
-      });
+    });
     }
   };
 
