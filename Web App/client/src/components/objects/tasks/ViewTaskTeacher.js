@@ -165,7 +165,8 @@ const useStyles = makeStyles((theme) => ({
   sendIcon: {
     color: theme.palette.text.disabled,
     "&:focus, &:hover": {
-      opacity: 0.5,
+      color: theme.palette.primary.main,
+      // opacity: 0.5,
       cursor: "pointer"
     },
   },
@@ -322,9 +323,9 @@ function ViewTaskTeacher(props) {
   const [commentList, setCommentList] = React.useState([]);
   const [commentAvatar, setCommentAvatar] = React.useState({});
   const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
-  const commentActionType = React.useRef(null);
   const [openDeleteCommentDialog, setOpenDeleteCommentDialog] = React.useState(null);
   const [deleteCommentIdx, setDeleteCommentIdx] = React.useState(null);
+  const commentActionType = React.useRef(null);
 
   // SNACKBAR
   const [snackbarContent, setSnackbarContent] = React.useState("");
@@ -390,8 +391,11 @@ function ViewTaskTeacher(props) {
       for (let teacherInfo of all_teachers) {
         usernames[teacherInfo._id] = teacherInfo.name;
       }
-
       setCommentList(tasksCollection.comments.map((comment) => ({ ...comment, name: usernames[comment.author_id] })));
+      if (selectedCommentIdx !== null && deleteCommentIdx !== null && deleteCommentIdx < selectedCommentIdx) {
+        setSelectedCommentIdx(selectedCommentIdx - 1);
+      }
+      setDeleteCommentIdx(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasksCollection, all_teachers, all_students]);
@@ -512,9 +516,6 @@ function ViewTaskTeacher(props) {
   const handleDeleteComment = (idx) => {
     let newCommentList = [...commentList];
     newCommentList.splice(idx, 1);
-    if (selectedCommentIdx !== null && idx < selectedCommentIdx) {
-      setSelectedCommentIdx(selectedCommentIdx - 1);
-    }
     updateTaskComment(newCommentList, task_id);
     commentActionType.current = "delete";
     handleCloseDeleteCommentDialog();
@@ -594,7 +595,7 @@ function ViewTaskTeacher(props) {
   };
 
   const handleCloseDeleteCommentDialog = () => {
-    setDeleteCommentIdx(null)
+    // setDeleteCommentIdx(null) akan dijalankan setelah task dimuat ulang 
     setOpenDeleteCommentDialog(false);
   };
 
@@ -825,20 +826,26 @@ function ViewTaskTeacher(props) {
                 <Divider />
               </Grid>
               {
-                commentList.map((comment, idx) => (
-                  generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)
-                ))
+                (commentList.length !== 0) ?
+                  <>
+                    {
+                      commentList.map((comment, idx) => (
+                        generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)
+                      ))
+                    }
+                    <Grid item xs={12}>
+                      <Divider />
+                    </Grid>
+                  </>
+                : null
               }
-              {
+              {/* {
                 (commentList.length === 0) ?
                   <Grid item xs={12}>
                     <Typography color="textSecondary" align="center">Belum ada komentar</Typography>
                   </Grid>
                 : null
-              }
-              <Grid item xs={12}>
-                <Divider />
-              </Grid>
+              } */}
               <Grid container item xs={12} direction="row" spacing={2} alignItems="center">
                 <Hidden xsDown>
                   <Grid item className={classes.smAvatar}>
@@ -864,7 +871,7 @@ function ViewTaskTeacher(props) {
                 </Hidden>
                 <Hidden smUp>
                   <Grid item style={{width: "52px"}}>
-                    <Avatar src={`/api/upload/avatar/${user.avatar}`}/>
+                    <Avatar src={commentAvatar[user._id]} />
                   </Grid>
                   <Grid container item xs={10} direction="row" alignItems="center">
                     <Grid item xs={11}>
