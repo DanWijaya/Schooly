@@ -18,6 +18,10 @@ import {
   getFileTasks,
   viewFileTasks,
 } from "../../../actions/files/FileTaskActions";
+import {
+  getFileAvatar,
+  getMultipleFileAvatar
+} from "../../../actions/files/FileAvatarActions";
 import { getOneTask, updateTaskComment } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
@@ -62,6 +66,8 @@ import {
 } from "react-icons/fa";
 import SendIcon from '@material-ui/icons/Send';
 import CreateIcon from '@material-ui/icons/Create';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const path = require("path");
 
@@ -198,6 +204,23 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       marginRight: "14px",
       marginLeft: "7.6px"
+    },
+  },
+  checkButton: {
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    marginTop: "6px",
+    marginRight: "3px",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.dark
+    },
+  },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    marginTop: "6px",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.dark
     },
   }
 }));
@@ -562,7 +585,8 @@ function ViewTaskStudent(props) {
     downloadFileTasks,
     getTeachers, 
     getStudents,
-    updateTaskComment
+    updateTaskComment,
+    getMultipleFileAvatar
   } = props;
   const { all_subjects_map } = props.subjectsCollection;
 
@@ -587,6 +611,7 @@ function ViewTaskStudent(props) {
   const [commentValue, setCommentValue] = React.useState("");
   const [commentEditorValue, setCommentEditorValue] = React.useState("");
   const [commentList, setCommentList] = React.useState([]);
+  const [commentAvatar, setCommentAvatar] = React.useState({});
   const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
   const commentActionType = React.useRef(null);
 
@@ -646,6 +671,19 @@ function ViewTaskStudent(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasksCollection, all_teachers, all_students]);
+
+  useEffect(() => {
+    let listId = []
+    commentList.map((comment) => {
+      listId.push(comment.author_id)
+    })
+    listId.push(user._id)
+    getMultipleFileAvatar(listId).then((results) => {
+      setCommentAvatar(results);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [commentList]);
+
 
   useEffect(() => {
     if (
@@ -895,68 +933,236 @@ function ViewTaskStudent(props) {
     clearSuccess();
   };
 
-  // Komentar
+ // Komentar
   // Kalau avatar belum ada, pakai default
-  const generateComments = (avatar=false, stdName, date, comment, isSelfMade) => {
+  const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
     return (
       <Grid container item xs={12} direction="row" spacing={2}>
         <Hidden xsDown>
           <Grid item xs={1}>
-            {(!avatar) ?
-              <Avatar/>
-            : 
-              <Avatar src={avatar}/>
-            }
+            <Avatar src={commentAvatar[author_id]}/>
           </Grid>
           <Grid item xs={11}>
             <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-              <Typography style={{marginRight: "10px"}}><b>{stdName}</b></Typography>
-              <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>{date}</Typography>
-              {(isSelfMade) ?
+              <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
+              {edited === true ? 
+                <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography> 
+              : null}
+              <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
+                {moment(date)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH.mm")}
+              </Typography>
+              {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
                 <>
                   <LightTooltip title="Sunting">
-                    <CreateIcon style={{marginRight: "2px"}} className={classes.commentLittleIcon} fontSize="small"/>
+                    <CreateIcon
+                      style={{marginRight: "2px"}}
+                      className={classes.commentLittleIcon}
+                      fontSize="small"
+                      onClick={() => handleClickEdit(idx)}
+                    />
                   </LightTooltip>
                   <LightTooltip title="Hapus">
-                    <DeleteIcon className={classes.commentLittleIcon} fontSize="small"/>
+                    <DeleteIcon
+                      className={classes.commentLittleIcon}
+                      fontSize="small"
+                      onClick={() => handleDeleteComment(idx)}
+                    />
                   </LightTooltip>
                 </>
               : null}
             </div>
-            <Typography style={{marginTop: "5px"}}>{comment}</Typography>
+            {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
+              <div style={{display: "flex", flexDirection: "column"}}>
+                  <TextField
+                    variant="outlined"
+                    onChange={handleCommentEditorChange}
+                    value={commentEditorValue}
+                    style={{marginTop: "5px"}}
+                    multiline
+                  />
+                  <div style={{display: "flex", alignItems: "center"}}>
+                    <Button
+                      variant="contained"
+                      color="default"
+                      className={classes.checkButton}
+                      startIcon={<CheckCircleIcon />}
+                      onClick={handleEditComment}
+                    >
+                      Simpan
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="default"
+                      className={classes.cancelButton}
+                      startIcon={<CancelIcon />}
+                      onClick={closeEditMode}
+                    >
+                      Batal
+                    </Button>
+                  </div>
+                </div>
+              :
+                <Typography style={{marginTop: "5px"}}>{comment}</Typography>
+              }
           </Grid>
         </Hidden>
         <Hidden smUp>
-          <div style={{display: "flex", flexDirection: "row", margin: "5px 0"}}>
-            <div className={classes.marginMobile}>
-              {(!avatar) ?
-                <Avatar/>
-              : 
-                <Avatar src={avatar}/>
-              }
+          <Grid item>
+            <Avatar src={commentAvatar[author_id]}/>
+          </Grid>
+          <Grid item xs={10} sm={10} md={11}>
+            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+              <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
+              {edited === true ? 
+                <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography> 
+              : null}
+              <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
+                {moment(date)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH.mm")}
+              </Typography>
+              {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
+                <>
+                  <LightTooltip title="Sunting">
+                    <CreateIcon
+                      style={{marginRight: "2px"}}
+                      className={classes.commentLittleIcon}
+                      fontSize="small"
+                      onClick={() => handleClickEdit(idx)}
+                    />
+                  </LightTooltip>
+                  <LightTooltip title="Hapus">
+                    <DeleteIcon
+                      className={classes.commentLittleIcon}
+                      fontSize="small"
+                      onClick={() => handleDeleteComment(idx)}
+                    />
+                  </LightTooltip>
+                </>
+              : null}
             </div>
-            <div>
-              <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-                <Typography style={{marginRight: "10px"}}><b>{stdName}</b></Typography>
-                <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>{date}</Typography>
-                {(isSelfMade) ?
-                  <>
-                    <LightTooltip title="Sunting">
-                      <CreateIcon style={{marginRight: "2px"}} className={classes.commentLittleIcon} fontSize="small"/>
-                    </LightTooltip>
-                    <LightTooltip title="Hapus">
-                      <DeleteIcon className={classes.commentLittleIcon} fontSize="small"/>
-                    </LightTooltip>
-                  </>
-                : null}
+            {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
+              <div style={{display: "flex", flexDirection: "column"}}>
+                <TextField
+                  variant="outlined"
+                  onChange={handleCommentEditorChange}
+                  value={commentEditorValue}
+                  style={{marginTop: "5px"}}
+                  multiline
+                />
+                <div style={{display: "flex", alignItems: "center"}}>
+                  <Button
+                    variant="contained"
+                    color="default"
+                    className={classes.checkButton}
+                    startIcon={<CheckCircleIcon />}
+                    onClick={handleEditComment}
+                  >
+                    Simpan
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="default"
+                    className={classes.cancelButton}
+                    startIcon={<CancelIcon />}
+                    onClick={closeEditMode}
+                  >
+                    Batal
+                  </Button>
+                </div>
               </div>
+            :
               <Typography style={{marginTop: "5px"}}>{comment}</Typography>
-            </div>
-          </div>
+            }
+          </Grid>
         </Hidden>
       </Grid>
     )
   }
+
+  // const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
+  //   return (
+  //     <Grid container item xs={12} direction="row" spacing={2}>
+  //       <Hidden smUp>
+  //         <Grid item xs={1} sm={0} className={classes.smAvatar}>
+  //           <Avatar src={commentAvatar[author_id]}/>
+  //         </Grid>
+  //       </Hidden>
+  //       <Hidden xsDown>
+  //         <Grid item className={classes.smAvatar}>
+  //           <Avatar src={commentAvatar[author_id]}/>
+  //         </Grid>
+  //       </Hidden>
+  //       <Grid item xs={10} sm={10} md={11}>
+  //         <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+  //           <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
+  //           {edited === true ? 
+  //             <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography> 
+  //           : null}
+  //           <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
+  //             {moment(date)
+  //                   .locale("id")
+  //                   .format("DD MMM YYYY, HH.mm")}
+  //           </Typography>
+  //           {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
+  //             <>
+  //               <LightTooltip title="Sunting">
+  //                 <CreateIcon
+  //                   style={{marginRight: "2px"}}
+  //                   className={classes.commentLittleIcon}
+  //                   fontSize="small"
+  //                   onClick={() => handleClickEdit(idx)}
+  //                 />
+  //               </LightTooltip>
+  //               <LightTooltip title="Hapus">
+  //                 <DeleteIcon
+  //                   className={classes.commentLittleIcon}
+  //                   fontSize="small"
+  //                   onClick={() => handleDeleteComment(idx)}
+  //                 />
+  //               </LightTooltip>
+  //             </>
+  //           : null}
+  //         </div>
+  //         {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
+  //             <div style={{display: "flex", flexDirection: "column"}}>
+  //               <TextField
+  //                 variant="outlined"
+  //                 onChange={handleCommentEditorChange}
+  //                 value={commentEditorValue}
+  //                 style={{marginTop: "5px"}}
+  //                 multiline
+  //               />
+  //               <div style={{display: "flex", alignItems: "center"}}>
+  //                 <Button
+  //                   variant="contained"
+  //                   color="default"
+  //                   className={classes.checkButton}
+  //                   startIcon={<CheckCircleIcon />}
+  //                   onClick={handleEditComment}
+  //                 >
+  //                   Simpan
+  //                 </Button>
+  //                 <Button
+  //                   variant="contained"
+  //                   color="default"
+  //                   className={classes.cancelButton}
+  //                   startIcon={<CancelIcon />}
+  //                   onClick={closeEditMode}
+  //                 >
+  //                   Batal
+  //                 </Button>
+  //               </div>
+  //             </div>
+  //           :
+  //             <Typography style={{marginTop: "5px"}}>{comment}</Typography>
+  //         }
+  //       </Grid>
+  //     </Grid>
+  //   )
+  // }
 
   // Dummy Komentar
   // isSelfMade = true -> artinya komentar tersebut dibuat oleh user yang sedang login; false sebaliknya
@@ -1268,9 +1474,16 @@ function ViewTaskStudent(props) {
                 <Divider className={classes.dividerColor} />
               </Grid>
               {
-                dummyComments.map((value) => (
-                  generateComments(value.avatar, value.name, value.date, value.comment, value.isSelfMade)
+                commentList.map((comment, idx) => (
+                  generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)
                 ))
+              }  
+              {
+                (commentList.length === 0) ?
+                  <Grid item xs={12}>
+                    <Typography color="textSecondary" align="center">Belum ada komentar</Typography>
+                  </Grid>
+                : null
               }
               <Grid item xs={12}>
                 <Divider className={classes.dividerColor} />
@@ -1278,45 +1491,49 @@ function ViewTaskStudent(props) {
               <Grid container item xs={12} direction="row" spacing={2} alignItems="center">
                 <Hidden xsDown>
                   <Grid item xs={1}>
-                    <Avatar src={`/api/upload/avatar/${user.avatar}`}/>
+                    <Avatar src={commentAvatar[user._id]}/>
                   </Grid>
                   <Grid item xs={10}>
                     <TextField
-                      className={classes.margin}
+                      className={classes.textField}
                       variant="outlined"
                       multiline
                       style={{display: "flex"}}
                       InputProps={{style: {borderRadius: "15px"}}}
                       placeholder="Tambahkan komentar..."
+                      onChange={handleCommentInputChange}
+                      value={commentValue}
                     />
                   </Grid>
                   <Grid container item xs={1} justify="flex-end">
                     <Grid item>
                       <LightTooltip title="Kirim">
-                        <SendIcon className={classes.sendIcon}/>
+                        <SendIcon className={classes.sendIcon} onClick={handleCreateComment}/>
                       </LightTooltip>
                     </Grid>
                   </Grid>
                 </Hidden>
                 <Hidden smUp>
                   <Grid item style={{width: "52px"}}>
-                    <Avatar src={`/api/upload/avatar/${user.avatar}`}/>
+                    <Avatar src={commentAvatar[user._id]}/>
                   </Grid>
                   <Grid container item xs={10} direction="row" alignItems="center">
                     <Grid item xs={11}>
                       <TextField
-                        className={classes.margin}
+                        className={classes.textField}
                         variant="outlined"
                         multiline
                         style={{display: "flex"}}
                         InputProps={{style: {borderRadius: "15px"}}}
                         placeholder="Tambahkan komentar..."
+                        onChange={handleCommentInputChange}
+                        value={commentValue}
                       />
                     </Grid>
                     <Grid container item xs={1} justify="flex-end">
                       <Grid item xs={1}>
                         <LightTooltip title="Kirim">
-                          <SendIcon className={classes.sendIcon}/>
+                          <SendIcon className={classes.sendIcon} onClick={handleCreateComment}/>
                         </LightTooltip>
                       </Grid>
                     </Grid>
@@ -1524,5 +1741,6 @@ export default connect(mapStateToProps, {
   deleteFileSubmitTasks,
   updateTaskComment,
   getTeachers, 
-  getStudents
+  getStudents,
+  getMultipleFileAvatar
 })(ViewTaskStudent);

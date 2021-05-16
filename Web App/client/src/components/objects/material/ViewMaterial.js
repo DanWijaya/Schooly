@@ -842,6 +842,13 @@ function ViewMaterial(props) {
                   generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)
                 ))
               }
+              {
+                (commentList.length === 0) ?
+                  <Grid item xs={12}>
+                    <Typography color="textSecondary" align="center">Belum ada komentar</Typography>
+                  </Grid>
+                : null
+              }
               <Grid item xs={12}>
                 <Divider />
               </Grid>
