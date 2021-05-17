@@ -1249,7 +1249,7 @@ function Help(props) {
                   <EmailIcon className={classes.mailIcon} />
                 </Avatar>
                 <Typography variant="caption">
-                  <b>schoolysystem@gmail.com</b>
+                  schoolysystem@gmail.com
                 </Typography>
               </Paper>
             </Hidden>
@@ -1277,7 +1277,7 @@ function Help(props) {
                   <InstagramIcon className={classes.instagramIcon} />
                 </Avatar>
                 <Typography variant="caption">
-                  <b>schoolysystem</b>
+                  schoolysystem
                 </Typography>
               </Paper>
             </Hidden>

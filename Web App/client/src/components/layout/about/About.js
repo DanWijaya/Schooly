@@ -28,6 +28,19 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
     color: "white",
   },
+  schoolyDefinition: {
+    maxWidth: "70%",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "90%",
+    },
+  },
+  schoolyQuotes: {
+    maxWidth: "60%",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "80%",
+    },
+    margin: "20px 0px 25px 0px",
+  },
   schoolyFeatures: {
     margin: "auto",
     maxWidth: "80%",
@@ -108,12 +121,12 @@ function About(props) {
           <Typography variant="h3" align="center" gutterBottom>
             Apa itu Schooly?
           </Typography>
-          <Typography variant="h6" align="center" paragraph>
+          <Typography variant="h6" align="center" paragraph className={classes.schoolyDefinition}>
             Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang
             dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang
             ada di sekolah.
           </Typography>
-          <Typography align="center" style={{ marginBottom: "40px" }}>
+          <Typography align="center" className={classes.schoolyQuotes}>
             "Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk
             kegiatan persekolahan akan menjadi lebih efektif dan efisien."
           </Typography>

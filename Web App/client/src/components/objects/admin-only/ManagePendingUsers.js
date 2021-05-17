@@ -11,6 +11,7 @@ import {
 } from "../../../actions/UserActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import Empty from "../../misc/empty/Empty";
 import {
   Avatar,
   Button,
@@ -1297,7 +1298,7 @@ function ManageUsers(props) {
           minHeight: "46.5px",
         }}
       >
-        <Typography variant="h4" align="center">
+        <Typography variant="h4" align="left">
           Daftar Pengguna Tertunda
         </Typography>
       </div>
@@ -1339,12 +1340,10 @@ function ManageUsers(props) {
         container
         direction="column"
         spacing={2}
-        style={{ marginBottom: "32px" }}
+        style={{ marginBottom: "100px" }}
       >
         {student_rows.length === 0 ? (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         ) : (
           stableSort(
             student_rows,
@@ -1514,9 +1513,7 @@ function ManageUsers(props) {
       <Divider variant="inset" className={classes.subTitleDivider} />
       <Grid container direction="column" spacing={2}>
         {teacher_rows.length === 0 ? (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         ) : (
           stableSort(
             teacher_rows,

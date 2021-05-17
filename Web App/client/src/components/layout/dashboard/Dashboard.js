@@ -40,6 +40,7 @@ import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import { AiOutlineUserSwitch } from "react-icons/ai";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
@@ -117,6 +118,19 @@ const styles = (theme) => ({
     },
   },
   manageTaskIcon: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+    marginRight: "7.5px",
+  },
+  manageHomeroomTeacherButton: {
+    backgroundColor: theme.palette.primary.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.dark,
+    },
+  },
+  manageHomeroomTeacherIcon: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
     marginRight: "7.5px",
@@ -1470,17 +1484,6 @@ class Dashboard extends Component {
                 justify="flex-end"
                 alignItems="center"
               >
-                {/* <Grid item>
-                  <Link to="/daftar-tugas">
-                    <Fab
-                      variant="extended"
-                      className={classes.manageTaskButton}
-                    >
-                      <AssignmentIcon className={classes.manageTaskIcon} />
-                      Lihat Tugas
-                    </Fab>
-                  </Link>
-                </Grid> */}
                 <Grid item>
                   <Fab
                     className={classes.createButton}
@@ -1666,7 +1669,15 @@ class Dashboard extends Component {
               </Grid>
             </>
           ) : (
-            <Grid item container direction="row" justify="flex-end">
+            <Grid item container direction="row" justify="flex-end" alignItems="center" spacing={1}>
+              <Grid item>
+                <Link to="/atur-walikelas">
+                  <Fab variant="extended" className={classes.manageHomeroomTeacherButton}>
+                    <AiOutlineUserSwitch className={classes.manageHomeroomTeacherIcon} />
+                    Atur Wali Kelas
+                  </Fab>
+                </Link>
+              </Grid>
               <Grid item>
                 <Link to="/daftar-kelas">
                   <Fab variant="extended" className={classes.manageClassButton}>
@@ -1674,6 +1685,53 @@ class Dashboard extends Component {
                     Atur Kelas
                   </Fab>
                 </Link>
+              </Grid>
+              <Grid item>
+                <Fab
+                  className={classes.createButton}
+                  onClick={(event) => this.handleMenuOpen(event)}
+                >
+                  <AddIcon />
+                </Fab>
+                <Menu
+                  keepMounted
+                  anchorEl={this.state.anchorEl}
+                  open={Boolean(this.state.anchorEl)}
+                  onClose={this.handleMenuClose}
+                  getContentAnchorEl={null}
+                  style={{ marginTop: "10px" }}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  <MenuItem
+                    button
+                    component="a"
+                    href="/buat-kelas"
+                    className={classes.menuItem}
+                  >
+                    <ListItemIcon>
+                      <FaChalkboardTeacher className={classes.manageClassIcon} />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Kelas" />
+                  </MenuItem>
+                  <MenuItem
+                    button
+                    component="a"
+                    href="/buat-pengumuman"
+                    className={classes.menuItem}
+                  >
+                    <ListItemIcon>
+                      <AnnouncementIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Pengumuman" />
+                  </MenuItem>
+                </Menu>
               </Grid>
             </Grid>
           )}
