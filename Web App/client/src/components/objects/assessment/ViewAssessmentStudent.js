@@ -39,6 +39,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import moment from "moment";
+import CustomLinkify from "../../misc/linkify/Linkify"
 import "moment/locale/id";
 import SubmitDialog from "../../misc/dialog/SubmitDialog";
 import ToggleButton from "@material-ui/lab/ToggleButton";
@@ -701,7 +702,7 @@ function ViewAssessmentStudent(props) {
                       generateSoalShortTextStudent()
                     ) : (
                       <Typography variant="h6" gutterButtom>
-                        {questions[qnsIndex].name}
+                        <CustomLinkify text={questions[qnsIndex].name}/>
                       </Typography>
                     )}
                   </Grid>

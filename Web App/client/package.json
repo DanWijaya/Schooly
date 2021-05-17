@@ -26,6 +26,7 @@
     "react-icons": "^3.11.0",
     "react-images-upload": "^1.2.8",
     "react-katex": "^2.0.2",
+    "react-linkify": "^1.0.0-alpha",
     "react-mathjax2": "0.0.2",
     "react-redux": "^5.1.1",
     "react-router-dom": "^5.0.1",
