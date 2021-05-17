@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
+import CustomLinkify from "../../misc/linkify/Linkify"
 import {
   getFileMaterials,
   downloadFileMaterial,
@@ -365,7 +366,9 @@ function ViewMaterial(props) {
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Materi:
                 </Typography>
-                <Typography>{selectedMaterials.description}</Typography>
+                <Typography variant="body1">
+                  <CustomLinkify text={selectedMaterials.description}/>
+                </Typography>
               </Grid>
               {fileLampiran.map((lampiran) => (
                 <LampiranFile

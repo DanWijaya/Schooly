@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
+import CustomLinkify from "../../misc/linkify/Linkify"
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { uploadTugas, deleteTugas } from "../../../actions/UploadActions";
 import {
@@ -34,6 +35,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Link,
   Paper,
   Typography,
   Badge,
@@ -813,7 +815,10 @@ function ViewTaskStudent(props) {
                   <Typography color="textSecondary" gutterBottom>
                     Deskripsi Tugas:
                   </Typography>
-                  <Typography>{tasksCollection.description}</Typography>
+                  <Typography>
+                    <CustomLinkify text={tasksCollection.description}/>
+                  </Typography>
+                  {/* <Typography>{tasksCollection.description}</Typography> */}
                 </Grid>
               )}
               {!tasksCollection.lampiran ||

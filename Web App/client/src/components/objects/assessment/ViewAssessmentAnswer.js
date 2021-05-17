@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import {
   getOneAssessment,
   updateAssessmentGrades,
@@ -1165,7 +1166,9 @@ function ViewAssessmentTeacher(props) {
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Kuis/Ujian:
                 </Typography>
-                <Typography>{selectedAssessments.description}</Typography>
+                <Typography variant="body1">
+                  <CustomLinkify text={selectedAssessments.description}/>
+                  </Typography>
               </Grid>
             </Grid>
             {/* <Hidden smDown>

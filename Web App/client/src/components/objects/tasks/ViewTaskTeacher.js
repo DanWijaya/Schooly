@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-
+import CustomLinkify from "../../misc/linkify/Linkify"
 //Actions
 import { getOneTask, deleteTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -430,7 +430,11 @@ function ViewTaskTeacher(props) {
                   <Typography color="textSecondary" gutterBottom>
                     Deskripsi Tugas:
                   </Typography>
-                  <Typography>{tasksCollection.description}</Typography>
+                  <Typography>
+                    <CustomLinkify text={tasksCollection.description}/>
+                  </Typography>
+                  {/* <Link href="https://www.google.com">{tasksCollection.description}</Link> */}
+                  {/* <Typography>{tasksCollection.description}</Typography> */}
                 </Grid>
               )}
               {fileLampiran.length === 0 ? null : (

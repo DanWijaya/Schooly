@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
+import CustomLinkify from "../../misc/linkify/Linkify"
 import {
   getFileAnnouncements,
   downloadFileAnnouncements,
@@ -386,8 +387,7 @@ function ViewAnnouncement(props) {
                   Deskripsi Pengumuman:
                 </Typography>
                 <Typography variant="body1">
-                  {selectedAnnouncements.description}
-                </Typography>
+                <CustomLinkify text={selectedAnnouncements.description}/></Typography>
               </Grid>
               {!fileLampiran.length === 0 ? null : (
                 <Grid item xs={12} style={{ marginTop: "15px" }}>
