@@ -672,15 +672,15 @@ function SubjectList(props) {
     if (action === "Edit") {
       editSubject(subject)
         .then(() => {
-          handleCloseFormDialog()
-          handleOpenEditDialog()
+          handleCloseFormDialog();
+          handleOpenEditDialog();
         })
-        .catch((err) => setErrors(err))
+        .catch((err) => setErrors(err));
     } else if (action === "Create") {
       createSubject(subject)
         .then(() => {
-          handleCloseFormDialog()
-          handleOpenCreateDialog()
+          handleCloseFormDialog();
+          handleOpenCreateDialog();
         })
         .catch((err) => setErrors(err));
     }

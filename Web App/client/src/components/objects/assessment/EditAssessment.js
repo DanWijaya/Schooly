@@ -302,7 +302,7 @@ class EditAssessment extends Component {
       ready: false,
       lampiranUrls: new Map(),
       over_limit: [],
-      errors: {}
+      errors: {},
     };
   }
 
@@ -582,12 +582,12 @@ class EditAssessment extends Component {
         history
       )
         .then((res) => {
-          this.handleOpenUploadDialog()
+          this.handleOpenUploadDialog();
           // console.log("Assessment is updated successfully");
         })
         .catch((err) => {
-          this.setState({ errors: err})
-          this.handleOpenErrorSnackbar()
+          this.setState({ errors: err });
+          this.handleOpenErrorSnackbar();
         });
     } else {
       this.handleOpenErrorSnackbar();
@@ -607,15 +607,15 @@ class EditAssessment extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-      if (otherfield === "end_date" || otherfield === "start_date") {
-        this.setState({ [otherfield]: e });
-      } else {
-        let field = e.target.id ? e.target.id : otherfield;
-        if (this.state.errors[field]) {
-          this.setState({ errors: { ...this.state.errors, [field]: null } });
-        }
-        this.setState({ [field]: e.target.value });
-    } 
+    if (otherfield === "end_date" || otherfield === "start_date") {
+      this.setState({ [otherfield]: e });
+    } else {
+      let field = e.target.id ? e.target.id : otherfield;
+      if (this.state.errors[field]) {
+        this.setState({ errors: { ...this.state.errors, [field]: null } });
+      }
+      this.setState({ [field]: e.target.value });
+    }
   };
 
   onDateChange = (date) => {
@@ -1681,9 +1681,7 @@ class EditAssessment extends Component {
                         <FormControl
                           variant="outlined"
                           fullWidth
-                          error={
-                            Boolean(errors.class_assigned)
-                          }
+                          error={Boolean(errors.class_assigned)}
                         >
                           <Select
                             multiple

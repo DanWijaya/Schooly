@@ -18,17 +18,16 @@ function Empty(props) {
   const { classes } = props;
 
   return (
-    <div style={{ height: "200px", width: "100%", padding: "0px 10px 0px 10px" }}>
+    <div
+      style={{ height: "200px", width: "100%", padding: "0px 10px 0px 10px" }}
+    >
       <div className={classes.greyBackground}>
-        <Typography
-          align="center"
-          color="textSecondary"
-        >
+        <Typography align="center" color="textSecondary">
           Kosong
         </Typography>
       </div>
     </div>
-  )
-};
+  );
+}
 
-export default (withStyles(styles)(Empty));
+export default withStyles(styles)(Empty);

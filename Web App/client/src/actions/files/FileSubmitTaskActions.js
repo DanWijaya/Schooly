@@ -16,9 +16,21 @@ export const uploadFileSubmitTasks = (formData, task_id, author_id) => (
     });
 };
 
-export const getFileSubmitTasks = (task_id, author_id) => (dispatch) => {
+export const getFileSubmitTasks_T = (task_id) => (dispatch) => {
   return axios
-    .get(`/api/files/submit_tasks/by_task/${task_id}&${author_id}`)
+    .get(`/api/files/submit_tasks/by_task/${task_id}`)
+    .then((res) => {
+      console.log("Tasknya: ", res.data);
+      return res.data;
+    })
+    .catch((err) => {
+      throw err;
+    });
+};
+export const getFileSubmitTasks_AT = (task_id, author_id) => (dispatch) => {
+  //artinya mencari filesubmittasks by tasks and author
+  return axios
+    .get(`/api/files/submit_tasks/by_task_author/${task_id}&${author_id}`)
     .then((res) => {
       console.log("Tasknya: ", res.data);
       return res.data;
@@ -32,7 +44,7 @@ export const getFileSubmitTasks = (task_id, author_id) => (dispatch) => {
         type: GET_ERRORS,
         payload: err,
       });
-      return new Error(err);
+      throw new Error(err);
     });
 };
 
@@ -61,6 +73,7 @@ export const downloadFileSubmitTasks = (id) => (dispatch) => {
 };
 
 export const viewFileSubmitTasks = (id) => (dispatch) => {
+  console.log(id)
   axios
     .get(`/api/files/submit_tasks/${id}`)
     .then((res) => {

@@ -139,11 +139,12 @@ class EditClass extends Component {
       bendahara: this.state.bendahara,
       errors: {},
     };
-    this.props.updateClass(classObject, id, this.props.history)
+    this.props
+      .updateClass(classObject, id, this.props.history)
       .then(() => this.handleOpenUploadDialog())
       .catch((err) => {
-        this.setState({ errors: err })
-      })
+        this.setState({ errors: err });
+      });
   };
 
   componentDidMount() {
@@ -169,7 +170,7 @@ class EditClass extends Component {
       ketua_kelas,
       walikelas,
       teacher_options,
-      errors
+      errors,
     } = this.state;
     // var teacher_options = all_teachers
     var student_options = students_by_class;

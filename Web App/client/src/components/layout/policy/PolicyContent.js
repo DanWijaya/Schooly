@@ -135,13 +135,13 @@ function PolicyContent() {
             Pelajar (didefinisikan di bawah) yang diberikan kepada Schooly
             melalui penggunaan Produk-produk ini diatur oleh ketentuan
             perjanjian antara Schooly dan lembaga pendidikan yang relevan dengan
-            penggunaan Anda atas Produk. Di antara Schooly dan Anda, Anda dan/atau
-            lembaga pendidikan memiliki semua hak, kepemilikan, dan minat
-            terhadap semua Data Siswa yang Anda berikan atau sediakan bagi kami,
-            dan kami tidak memiliki, mengendalikan, atau melisensikan Data Siswa
-            tersebut, kecuali jika untuk menyediakan Produk kepada Anda dan ke
-            lembaga pendidikan yang menyediakan produk dan mengendalikan Data
-            Siswa dari catatan pendidikan, jika berlaku, dan sebagaimana
+            penggunaan Anda atas Produk. Di antara Schooly dan Anda, Anda
+            dan/atau lembaga pendidikan memiliki semua hak, kepemilikan, dan
+            minat terhadap semua Data Siswa yang Anda berikan atau sediakan bagi
+            kami, dan kami tidak memiliki, mengendalikan, atau melisensikan Data
+            Siswa tersebut, kecuali jika untuk menyediakan Produk kepada Anda
+            dan ke lembaga pendidikan yang menyediakan produk dan mengendalikan
+            Data Siswa dari catatan pendidikan, jika berlaku, dan sebagaimana
             dijelaskan di sini. “Data Siswa” adalah segala informasi (dalam
             format apa pun) yang secara langsung terkait dengan siswa saat ini
             atau mantan siswa yang dikelola oleh sekolah, distrik sekolah, atau
@@ -164,29 +164,28 @@ function PolicyContent() {
           </Typography>
           <Typography align="justify" paragraph>
             Anda bertanggung jawab atas Konten yang Anda bagikan ke Produk, dan
-            segala konsekuensinya. Konten yang Anda bagikan atau
-            tampilkan dapat dilihat oleh Pengguna Produk lainnya.
+            segala konsekuensinya. Konten yang Anda bagikan atau tampilkan dapat
+            dilihat oleh Pengguna Produk lainnya.
           </Typography>
           <Typography align="justify" paragraph>
-            Anda memegang hak Anda untuk Konten yang Anda bagikan
-            atau tampilkan pada atau melalui Produk. Dengan membagikan atau
-            menampilkan Konten pada atau melalui Produk, Anda
-            memberi kami lisensi bebas royalti di seluruh dunia, non-eksklusif,
-            dengan hak untuk mensublisensikan untuk menggunakan,
-            menyelenggarakan, menyimpan, menyalin, mereproduksi, memproses,
-            beradaptasi, memodifikasi, menerbitkan, mentransmisikan, membuat
-            karya turunan dari, mengomunikasikan, menampilkan, dan/atau
-            mendistribusikan Konten tersebut di setiap dan semua media atau
-            metode distribusi (sekarang dikenal atau belakangan dikembangkan)
-            sebagai bagian dari penyediaan Produk apa pun. Anda setuju bahwa
-            lisensi ini mencakup hak Schooly untuk menyediakan, mempromosikan,
-            dan meningkatkan Produk dan untuk membuat Konten yang dikirimkan ke
-            atau melalui Produk tersedia untuk institusi atau individu lain
-            sebagai bagian dari penyediaan Produk (termasuk setelah penghentian
-            penggunaan Anda atas Produk). Anda menyatakan dan menjamin bahwa
-            Anda memiliki semua hak, kekuasaan, dan otoritas yang diperlukan
-            untuk memberikan hak yang diberikan di sini untuk Konten apa pun
-            yang Anda kirimkan.
+            Anda memegang hak Anda untuk Konten yang Anda bagikan atau tampilkan
+            pada atau melalui Produk. Dengan membagikan atau menampilkan Konten
+            pada atau melalui Produk, Anda memberi kami lisensi bebas royalti di
+            seluruh dunia, non-eksklusif, dengan hak untuk mensublisensikan
+            untuk menggunakan, menyelenggarakan, menyimpan, menyalin,
+            mereproduksi, memproses, beradaptasi, memodifikasi, menerbitkan,
+            mentransmisikan, membuat karya turunan dari, mengomunikasikan,
+            menampilkan, dan/atau mendistribusikan Konten tersebut di setiap dan
+            semua media atau metode distribusi (sekarang dikenal atau belakangan
+            dikembangkan) sebagai bagian dari penyediaan Produk apa pun. Anda
+            setuju bahwa lisensi ini mencakup hak Schooly untuk menyediakan,
+            mempromosikan, dan meningkatkan Produk dan untuk membuat Konten yang
+            dikirimkan ke atau melalui Produk tersedia untuk institusi atau
+            individu lain sebagai bagian dari penyediaan Produk (termasuk
+            setelah penghentian penggunaan Anda atas Produk). Anda menyatakan
+            dan menjamin bahwa Anda memiliki semua hak, kekuasaan, dan otoritas
+            yang diperlukan untuk memberikan hak yang diberikan di sini untuk
+            Konten apa pun yang Anda kirimkan.
           </Typography>
           <Typography align="justify" paragraph>
             Semua Konten, baik yang dipublikasikan atau dikirimkan secara
@@ -198,9 +197,9 @@ function PolicyContent() {
             Produk adalah risiko Anda sendiri.
           </Typography>
           <Typography align="justify" paragraph>
-            Lebih lanjut, sehubungan dengan Konten yang Anda bagikan
-            atau tampilkan pada atau melalui Produk, Anda menegaskan, mewakili,
-            dan menjamin hal-hal berikut: (a) Anda memiliki persetujuan tertulis
+            Lebih lanjut, sehubungan dengan Konten yang Anda bagikan atau
+            tampilkan pada atau melalui Produk, Anda menegaskan, mewakili, dan
+            menjamin hal-hal berikut: (a) Anda memiliki persetujuan tertulis
             dari setiap orang yang diidentifikasi dalam Konten, jika ada, untuk
             menggunakan nama atau kemiripan orang tersebut dengan cara yang
             dimaksud oleh Produk apa pun dan Ketentuan ini, dan setiap orang
@@ -333,14 +332,15 @@ function PolicyContent() {
             <b>5. Hak Schooly</b>
           </Typography>
           <Typography align="justify" paragraph>
-            Produk selalu berevolusi dimana bentuk, sifat, dan/atau fungsi Produk
-            dapat berubah dari waktu ke waktu tanpa pemberitahuan sebelumnya
-            kepada Anda. Selain itu, Schooly dapat berhenti (secara permanen
-            atau sementara) menyediakan Produk (atau fitur apa pun dalam Produk)
-            kepada Anda atau kepada Pengguna secara umum dan mungkin tidak dapat
-            memberi Anda pemberitahuan sebelumnya. Kami juga memiliki hak untuk
-            membatasi penggunaan dan penyimpanan atas kebijakan kami kapan saja
-            tanpa pemberitahuan sebelumnya kepada Anda.
+            Produk selalu berevolusi dimana bentuk, sifat, dan/atau fungsi
+            Produk dapat berubah dari waktu ke waktu tanpa pemberitahuan
+            sebelumnya kepada Anda. Selain itu, Schooly dapat berhenti (secara
+            permanen atau sementara) menyediakan Produk (atau fitur apa pun
+            dalam Produk) kepada Anda atau kepada Pengguna secara umum dan
+            mungkin tidak dapat memberi Anda pemberitahuan sebelumnya. Kami juga
+            memiliki hak untuk membatasi penggunaan dan penyimpanan atas
+            kebijakan kami kapan saja tanpa pemberitahuan sebelumnya kepada
+            Anda.
           </Typography>
           <Typography align="justify" paragraph>
             Semua hak, kepemilikan, dan minat pada dan terhadap Produk (tidak
@@ -433,9 +433,9 @@ function PolicyContent() {
           </Typography>
           <Typography align="justify" paragraph>
             SAMPAI KEPADA BATAS MAKSIMUM YANG DIIZINKAN OLEH UNDANG-UNDANG YANG
-            BERLAKU, ENTITAS SCHOOLY TIDAK AKAN BERTANGGUNG JAWAB ATAS
-            KERUSAKAN LANGSUNG, INSIDENTAL, KHUSUS, KONSEKUENSIAL ATAU PUNITIF,
-            ATAU KEHILANGAN KEUNTUNGAN ATAU PENDAPATAN, APAKAH TERJADI SECARA
+            BERLAKU, ENTITAS SCHOOLY TIDAK AKAN BERTANGGUNG JAWAB ATAS KERUSAKAN
+            LANGSUNG, INSIDENTAL, KHUSUS, KONSEKUENSIAL ATAU PUNITIF, ATAU
+            KEHILANGAN KEUNTUNGAN ATAU PENDAPATAN, APAKAH TERJADI SECARA
             LANGSUNG ATAU TIDAK LANGSUNG, ATAU ADANYA KEHILANGAN DATA,
             PENGGUNAAN, ATAU KERUGIAN TIDAK BERWUJUD LAINNYA HASIL DARI (i)
             AKSES ANDA UNTUK ATAU PENGGUNAAN ATAU KETIDAKMAMPUAN UNTUK MENGAKSES
@@ -454,12 +454,11 @@ function PolicyContent() {
           </Typography>
           <Typography align="justify" paragraph>
             Ketentuan ini dan Kebijakan Privasi kami adalah keseluruhan dan
-            perjanjian eksklusif antara Schooly dan Anda mengenai Produk,
-            dan Ketentuan ini memperbaharui dan menggantikan perjanjian
-            sebelumnya antara Schooly dan Anda mengenai Produk. Selain anggota
-            grup perusahaan di mana Schooly adalah induknya, tidak ada orang
-            atau perusahaan lain yang akan menjadi penerima pihak ketiga
-            Persyaratan.
+            perjanjian eksklusif antara Schooly dan Anda mengenai Produk, dan
+            Ketentuan ini memperbaharui dan menggantikan perjanjian sebelumnya
+            antara Schooly dan Anda mengenai Produk. Selain anggota grup
+            perusahaan di mana Schooly adalah induknya, tidak ada orang atau
+            perusahaan lain yang akan menjadi penerima pihak ketiga Persyaratan.
           </Typography>
           <Typography align="justify" paragraph>
             Terlepas dari hal yang telah disebutkan sebelumnya, tidak ada dalam
@@ -473,12 +472,12 @@ function PolicyContent() {
             akan berlaku.
           </Typography>
           <Typography align="justify" paragraph>
-            Kami dapat merevisi Ketentuan ini dari waktu ke waktu,
-            versi terbaru akan selalu tersedia di{" "}
+            Kami dapat merevisi Ketentuan ini dari waktu ke waktu, versi terbaru
+            akan selalu tersedia di{" "}
             <Link href="https://www.schoolysystem.com">
               https://www.schoolysystem.com
-            </Link>.
-            Jika revisi, atas kebijakan kami sendiri, adalah materi, kami akan
+            </Link>
+            . Jika revisi, atas kebijakan kami sendiri, adalah materi, kami akan
             memberi tahu Anda melalui Produk atau melalui email yang terkait
             dengan profil Anda. Dengan terus mengakses atau menggunakan Produk
             setelah revisi tersebut berlaku, Anda setuju untuk terikat oleh
@@ -495,7 +494,8 @@ function PolicyContent() {
             mengenai kebijakan penggunaan di atas, silahkan menghubungi kami di{" "}
             <Link href="mailto:schoolysystem@gmail.com">
               schoolysystem@gmail.com
-            </Link>.
+            </Link>
+            .
           </Typography>
         </div>
       </div>

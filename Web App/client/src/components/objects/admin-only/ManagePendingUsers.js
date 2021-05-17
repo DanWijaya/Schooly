@@ -309,7 +309,7 @@ const ManageUsersToolbar = (props) => {
         ) : null}
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
-      <Hidden smDown implementation="css">
+        <Hidden smDown implementation="css">
           <TextField
             variant="outlined"
             id="searchFilterDesktop"
@@ -968,21 +968,29 @@ function ManageUsers(props) {
     console.log("retrieve users");
     if (Array.isArray(pending_students)) {
       // pending_students.map((data) => {
-      pending_students.filter((item) =>
-      item.name.toLowerCase().includes(searchFilterS.toLowerCase()) || item.email.toLowerCase().includes(searchFilterS.toLowerCase())
-    ).forEach((data) => {
-        userRowItem(data, "Student");
-        currentListBooleanStudent.push(false);
-      });
+      pending_students
+        .filter(
+          (item) =>
+            item.name.toLowerCase().includes(searchFilterS.toLowerCase()) ||
+            item.email.toLowerCase().includes(searchFilterS.toLowerCase())
+        )
+        .forEach((data) => {
+          userRowItem(data, "Student");
+          currentListBooleanStudent.push(false);
+        });
     }
     if (Array.isArray(pending_teachers)) {
       // pending_teachers.map((data) => {
-      pending_teachers.filter((item) =>
-      item.name.toLowerCase().includes(searchFilterT.toLowerCase()) || item.email.toLowerCase().includes(searchFilterT.toLowerCase())
-    ).forEach((data) => {
-        userRowItem(data, "Teacher");
-        currentListBooleanTeacher.push(false);
-      });
+      pending_teachers
+        .filter(
+          (item) =>
+            item.name.toLowerCase().includes(searchFilterT.toLowerCase()) ||
+            item.email.toLowerCase().includes(searchFilterT.toLowerCase())
+        )
+        .forEach((data) => {
+          userRowItem(data, "Teacher");
+          currentListBooleanTeacher.push(false);
+        });
     }
   };
 

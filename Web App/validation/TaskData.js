@@ -1,7 +1,8 @@
 const Validator = require("validator");
 const isEmpty = require("is-empty");
 
-function validateTaskGrade(data){ // the data is grade
+function validateTaskGrade(data) {
+  // the data is grade
   let errors = {};
   if (isEmpty(data.grade)) {
     if (data.grade > 100 || data.grade < 0) {
@@ -63,9 +64,9 @@ function validateTaskInput(data) {
     errors,
     isValid: isEmpty(errors),
   };
-};
+}
 
 module.exports = {
   validateTaskGrade: validateTaskGrade,
-  validateTaskInput: validateTaskInput
-}
+  validateTaskInput: validateTaskInput,
+};

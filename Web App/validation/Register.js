@@ -36,7 +36,7 @@ module.exports = function validateRegisterInput(data) {
   //Role checks
   if (Validator.isEmpty(data.role)) {
     errors.role = "Peran belum diisi";
-  } 
+  }
   // else {
   //   // Specific to Teacher
   //   if (data.role === "Teacher") {

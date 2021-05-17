@@ -1669,11 +1669,23 @@ class Dashboard extends Component {
               </Grid>
             </>
           ) : (
-            <Grid item container direction="row" justify="flex-end" alignItems="center" spacing={1}>
+            <Grid
+              item
+              container
+              direction="row"
+              justify="flex-end"
+              alignItems="center"
+              spacing={1}
+            >
               <Grid item>
                 <Link to="/atur-walikelas">
-                  <Fab variant="extended" className={classes.manageHomeroomTeacherButton}>
-                    <AiOutlineUserSwitch className={classes.manageHomeroomTeacherIcon} />
+                  <Fab
+                    variant="extended"
+                    className={classes.manageHomeroomTeacherButton}
+                  >
+                    <AiOutlineUserSwitch
+                      className={classes.manageHomeroomTeacherIcon}
+                    />
                     Atur Wali Kelas
                   </Fab>
                 </Link>
@@ -1716,7 +1728,9 @@ class Dashboard extends Component {
                     className={classes.menuItem}
                   >
                     <ListItemIcon>
-                      <FaChalkboardTeacher className={classes.manageClassIcon} />
+                      <FaChalkboardTeacher
+                        className={classes.manageClassIcon}
+                      />
                     </ListItemIcon>
                     <ListItemText primary="Buat Kelas" />
                   </MenuItem>

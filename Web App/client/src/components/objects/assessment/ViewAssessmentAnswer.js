@@ -1167,8 +1167,8 @@ function ViewAssessmentTeacher(props) {
                   Deskripsi Kuis/Ujian:
                 </Typography>
                 <Typography variant="body1">
-                  <CustomLinkify text={selectedAssessments.description}/>
-                  </Typography>
+                  <CustomLinkify text={selectedAssessments.description} />
+                </Typography>
               </Grid>
             </Grid>
             {/* <Hidden smDown>

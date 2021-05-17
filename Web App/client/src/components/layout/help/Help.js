@@ -1276,9 +1276,7 @@ function Help(props) {
                 <Avatar className={classes.iconAvatar}>
                   <InstagramIcon className={classes.instagramIcon} />
                 </Avatar>
-                <Typography variant="caption">
-                  schoolysystem
-                </Typography>
+                <Typography variant="caption">schoolysystem</Typography>
               </Paper>
             </Hidden>
           </Grid>

@@ -21,16 +21,15 @@ export const createClass = (classData, history) => (dispatch) => {
         type: GET_SUCCESS_RESPONSE,
         payload: res.data._id,
       });
-      return res.data._id
+      return res.data._id;
     })
     .catch((err) => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
-      })
-      throw err.response.data
-      }
-    );
+      });
+      throw err.response.data;
+    });
 };
 
 // View All Class
@@ -100,14 +99,14 @@ export const updateClass = (classData, classId, history) => (dispatch) => {
         type: GET_SUCCESS_RESPONSE,
         payload: classId,
       });
-      return classId
+      return classId;
     })
     .catch((err) => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
       });
-      throw err.response.data
+      throw err.response.data;
     });
 };
 
