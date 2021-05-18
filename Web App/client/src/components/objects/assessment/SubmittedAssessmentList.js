@@ -45,7 +45,6 @@ import SortIcon from "@material-ui/icons/Sort";
 import EditIcon from "@material-ui/icons/Edit";
 import { BsFlagFill, BsFlag } from "react-icons/bs";
 import GetAppIcon from "@material-ui/icons/GetApp";
-// const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,9 +55,6 @@ const useStyles = makeStyles((theme) => ({
     },
     padding: "10px",
   },
-  // studentFileListContainer: {
-  //   margin: "20px",
-  // },
   personListContainer: {
     display: "flex",
     alignItems: "center",
@@ -72,53 +68,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  // checkCircleIcon: {
-  //   marginRight: "10px",
-  //   backgroundColor: theme.palette.primary.main,
-  //   color: "white",
-  //   "&:focus, &:hover": {
-  //     backgroundColor: "white",
-  //     color: theme.palette.primary.main
-  //   },
-  // },
-  // downloadAllButton: {
-  //   backgroundColor: theme.palette.primary.main,
-  //   color: "white",
-  //   "&:focus, &:hover": {
-  //     backgroundColor: "white",
-  //     color: theme.palette.primary.main
-  //   }
-  // },
-  // downloadIconButton: {
-  //   marginLeft: "5px",
-  //   backgroundColor: theme.palette.primary.main,
-  //   color: "white",
-  //   "&:focus, &:hover": {
-  //     backgroundColor: "white",
-  //     color: theme.palette.primary.main,
-  //   },
-  // },
-  // wordFileTypeIcon: {
-  //   backgroundColor: "#16B0DD",
-  // },
-  // excelFileTypeIcon: {
-  //   backgroundColor: "#68C74F",
-  // },
-  // imageFileTypeIcon: {
-  //   backgroundColor: "#974994",
-  // },
-  // pdfFileTypeIcon: {
-  //   backgroundColor: "#E43B37",
-  // },
-  // textFileTypeIcon: {
-  //   backgroundColor: "#F7BC24",
-  // },
-  // presentationFileTypeIcon: {
-  //   backgroundColor: "#FD931D",
-  // },
-  // otherFileTypeIcon: {
-  //   backgroundColor: "#808080",
-  // },
   paperbox: {
     padding: "20px 20px 0 20px",
   },
@@ -629,6 +578,7 @@ function SubmittedAssessmentList(props) {
             scores = JSON.parse(JSON.stringify(scoresTemplate));
 
             if (hasLongtextQuestion) {
+              console.log("ADA Long text")
               if (
                 selectedAssessments.grades &&
                 selectedAssessments.grades[student._id]

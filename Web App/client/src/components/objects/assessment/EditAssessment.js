@@ -286,7 +286,8 @@ class EditAssessment extends Component {
         checkbox: undefined,
         shorttext: undefined,
       }, // weight radio, checkbox, shorttext akan diset null ketika masih bernilai undefined saat tombol create assessment ditekan
-      longtextWeight: [-1],
+      // longtextWeight: [-1],
+      longtextWeight: [],
       // array longtextWeight akan memiliki elemen sebanyak pertanyaan di assessment
       // longtextWeight[0] = 10 -> berarti pertanyaan nomor 1 adalah soal uraian dan memiliki bobot 10
       // longtextWeight[1] = -1 -> berarti pertanyaan nomor 2 adalah soal non uraian
@@ -348,9 +349,9 @@ class EditAssessment extends Component {
         };
 
         let longtextWeight = [];
-        for (let i = 0; i <= selectedAssessments.questions.length - 1; i++) {
-          longtextWeight.push(-1);
-        }
+        // for (let i = 0; i <= selectedAssessments.questions.length - 1; i++) {
+        //   longtextWeight.push(-1);
+        // }
 
         if (selectedAssessments.question_weight.longtext) {
           for (let [key, value] of Object.entries(
