@@ -267,7 +267,7 @@ function GradeButton(props) {
     student_id,
     grade,
     student_name,
-    student_task_files_id,
+    // student_task_files_id,
   } = props;
 
   return (
@@ -278,7 +278,7 @@ function GradeButton(props) {
       onClick={() =>
         onGradeTugas(
           task_id,
-          student_task_files_id,
+          // student_task_files_id,
           student_id,
           student_name,
           grade
@@ -400,7 +400,7 @@ function SubmittedTaskList(props) {
 
   const onGradeTugas = (
     taskId,
-    student_task_files_id,
+    // student_task_files_id,
     studentId,
     student_name,
     grade
@@ -411,12 +411,13 @@ function SubmittedTaskList(props) {
       grade: parseInt(grade.get(studentId)),
       studentId: studentId,
     };
+    console.log(gradingData);
     let gradeStatusMap = gradeStatus;
 
     if (grade.has(studentId)) {
       gradeStatusMap.set(studentId, "Graded");
       setGradeStatus(gradeStatusMap);
-      getOneTask(task_id);
+      // getOneTask(task_id);
       gradeTask(taskId, gradingData, student_name);
       // moveToDropbox(dropbox_token, student_task_files_id);
     }
@@ -484,15 +485,17 @@ function SubmittedTaskList(props) {
     console.log(gradeValues);
     gradeKeys.forEach((student_id, i) => {
       let studentData = all_students.find((std) => std._id === student_id);
-      let studentName = studentData.name;
-      let studentClass = studentData.kelas;
-      for (let j = 0; j < classArray.length; j++) {
-        if (classArray[j][0] === studentClass) {
-          classArray[j].push({
-            studentName: studentName,
-            studentScore: gradeValues[i],
-          });
-          break;
+      if(studentData){
+        let studentName = studentData.name;
+        let studentClass = studentData.kelas;
+        for (let j = 0; j < classArray.length; j++) {
+          if (classArray[j][0] === studentClass) {
+            classArray[j].push({
+              studentName: studentName,
+              studentScore: gradeValues[i],
+            });
+            break;
+          }
         }
       }
     });
@@ -641,6 +644,60 @@ function SubmittedTaskList(props) {
               <Divider />
               <div className={classes.studentFileListContainer}>
                 <List>{task_list_on_panel}</List>
+                {students_files.length > 0 ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+                      }}
+                    >
+                      <div
+                        style={{
+                          marginRight: "20px",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <TextField
+                          defaultValue={
+                            grade.has(student._id) ||
+                            tasksCollection.grades === null
+                              ? grade.get(student._id)
+                              : tasksCollection.grades[student._id]
+                          }
+                          onChange={(e) => {
+                            handleChangeGrade(e, student._id);
+                          }}
+                          inputProps={{
+                            style: {
+                              borderBottom: "none",
+                              boxShadow: "none",
+                              margin: "0px",
+                              width: "35px",
+                            },
+                          }}
+                          InputProps={{
+                            endAdornment: "/ 100",
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <GradeButton
+                          onGradeTugas={onGradeTugas}
+                          // student_task_files_id={student_task_files_id}
+                          task_id={task_id}
+                          student_id={student._id}
+                          student_name={student.name}
+                          grade={grade}
+                        />
+                        <UnduhSemuaButton
+                          onDownloadFile={onDownloadFile}
+                          // student_task_files_id={student_task_files_id}
+                        />
+                      </div>
+                    </div>
+                  ) : null}
               </div>
             </ExpansionPanel>
           );

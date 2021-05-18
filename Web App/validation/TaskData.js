@@ -8,11 +8,11 @@ function validateTaskGrade(data) {
     if (data.grade > 100 || data.grade < 0) {
       errors = { grade: "Nilai harus diantara 0 dan 100" };
     }
-    return {
-      errorsGrade,
-      isValidGrade: isEmpty(errors),
-    };
   }
+  return {
+    errors,
+    isValidGrade: isEmpty(errors),
+  };
 }
 
 function validateTaskInput(data) {

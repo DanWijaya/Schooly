@@ -125,11 +125,6 @@ export const updateTask = (
       else return "No lampiran file is going to be deleted";
     })
     .then((res) => {
-      // console.log("Update the lampiran files, upload some new lampiran files");
-      // console.log(
-      //   formData.has("lampiran_tugas"),
-      //   formData.getAll("lampiran_tugas")
-      // );
       if (formData.has("lampiran_tugas"))
         return axios.post(`/api/files/tasks/upload/${taskId}`, formData);
       // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
@@ -154,8 +149,9 @@ export const updateTask = (
 };
 
 export const gradeTask = (taskId, gradingData, student_name) => (dispatch) => {
+  console.log(gradingData);
   axios
-    .post(`/api/tasks/update/${taskId}`, gradingData)
+    .post(`/api/tasks/grade/${taskId}`, gradingData)
     .then((res) => {
       console.log("Grade task is added");
       // alert(`Tugas ${student_name} berhasil dinilai `);

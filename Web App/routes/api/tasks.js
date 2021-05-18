@@ -82,6 +82,27 @@ router.get("/view/:id", (req, res) => {
   });
 });
 
+router.post("/grade/:id", (req,res) => {
+  let { id } = req.params;
+  console.log(req.body);
+  const {errorsGrade, isValidGrade} = validateTaskGrade(req.body);
+  if(!isValidGrade){
+    return res.status(400).json(errorsGrade);
+  }
+  let grade = req.body.grade;
+  Task.findById(id, (err, taskData) => {
+    if (!taskData) return res.status(404).send("Task data is not found");
+    //grade kan dia Map (key, value). grade -> (studentId, nilainya)
+    // untuk yang kasi nilai
+    taskData.grades.set(req.body.studentId, grade);
+
+    taskData
+        .save()
+        .then((taskData) => res.json("Grade Task complete"))
+        .catch((err) => res.status(400).send("Unable to find task in database"));
+  })
+})
+
 //Define update routes
 router.post("/update/:id", (req, res) => {
   let grade = req.body.grade;
@@ -98,24 +119,23 @@ router.post("/update/:id", (req, res) => {
     if (!taskData) return res.status(404).send("Task data is not found");
     else {
       // taskData.grades
-      console.log(grade);
-      if (!grade) {
-        // Untuk taskData yang bukan edit atau kasi nilai
-        taskData.name = req.body.name;
-        taskData.deadine = req.body.deadine;
-        taskData.subject = req.body.subject;
-        taskData.class_assigned = req.body.class_assigned;
-        taskData.description = req.body.description;
-        taskData.deadline = req.body.deadline;
-      } else {
-        const { errorsGrade, isValidGrade } = validateTaskGrade(req.body);
-        if (!isValidGrade) {
-          return res.status(400).json(errorsGrade);
-        }
-        //grade kan dia Map (key, value). grade -> (studentId, nilainya)
-        // untuk yang kasi nilai
-        taskData.grades.set(req.body.studentId, grade);
-      }
+      // Untuk taskData yang bukan edit atau kasi nilai
+      taskData.name = req.body.name;
+      taskData.deadine = req.body.deadine;
+      taskData.subject = req.body.subject;
+      taskData.class_assigned = req.body.class_assigned;
+      taskData.description = req.body.description;
+      taskData.deadline = req.body.deadline;
+      
+      // else {
+      //   const { errorsGrade, isValidGrade } = validateTaskGrade(req.body);
+      //   if (!isValidGrade) {
+      //     return res.status(400).json(errorsGrade);
+      //   }
+      //   //grade kan dia Map (key, value). grade -> (studentId, nilainya)
+      //   // untuk yang kasi nilai
+      //   taskData.grades.set(req.body.studentId, grade);
+      // }
 
       taskData
         .save()
