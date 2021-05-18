@@ -821,22 +821,21 @@ function ViewTaskStudent(props) {
                   {/* <Typography>{tasksCollection.description}</Typography> */}
                 </Grid>
               )}
-              {!tasksCollection.lampiran ||
-              tasksCollection.lampiran.length === 0 ? null : (
+              {fileLampiran.length === 0 ? null : (
                 <Grid item xs={12} style={{ marginTop: "15px" }}>
                   <Typography color="textSecondary" gutterBottom>
                     Lampiran Berkas:
                   </Typography>
                   <Grid container spacing={1}>
-                    {tasksCollection.lampiran.map((lampiran) => (
-                      <LampiranFile
-                        file_id={lampiran.id}
-                        // onPreviewFile={onPreviewFile}
-                        // onDownloadFile={onDownloadFile}
-                        filename={lampiran.filename}
-                        filetype={fileType(lampiran.filename)}
-                      />
-                    ))}
+                    {fileLampiran.map((lampiran) => (
+                        <LampiranFile
+                          file_id={lampiran._id}
+                          onPreviewFile={viewFileTasks}
+                          onDownloadFile={downloadFileTasks}
+                          filename={lampiran.filename}
+                          filetype={fileType(lampiran.filename)}
+                        />
+                      ))}
                   </Grid>
                 </Grid>
               )}
