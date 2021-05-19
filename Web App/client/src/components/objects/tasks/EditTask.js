@@ -326,7 +326,7 @@ class EditTask extends Component {
         }
         let subjects = [];
         if (subjectMatrix.length !== 0) {
-          subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+          subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
             return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
           });
         }
@@ -525,7 +525,7 @@ class EditTask extends Component {
           }
           let subjects = [];
           if (subjectMatrix.length !== 0) {
-            subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+            subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
               return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
             });
           }

@@ -432,7 +432,7 @@ class CreateAssessment extends Component {
         // mengonversi bobot soal uraian dari string menjadi bilangan
         longtext = {};
         this.state.longtextWeight.forEach((val, idx) => {
-          if (val !== null) {
+          if (val !== -1) {
             longtext[idx] = Number(val);
           }
         });
@@ -530,7 +530,7 @@ class CreateAssessment extends Component {
           }
           let subjects = [];
           if (subjectMatrix.length !== 0) {
-            subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+            subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
               return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
             });
           }

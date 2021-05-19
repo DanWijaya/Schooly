@@ -574,7 +574,7 @@ function AssessmentList(props) {
   const { all_assessments } = props.assessmentsCollection;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
-  const { user, all_teachers } = props.auth;
+  const { user, all_teachers_map } = props.auth;
   // Fitur 2 -- Dialog
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
@@ -593,7 +593,7 @@ function AssessmentList(props) {
 
   var rows = [];
   const assessmentRowItem = (data) => {
-    if (data.type === "Kuis" && all_teachers instanceof Map) {
+    if (data.type === "Kuis" && all_teachers_map instanceof Map) {
       rows.push(
         createData(
           data._id,
@@ -605,7 +605,7 @@ function AssessmentList(props) {
           data.type,
           data.createdAt,
           data.submissions,
-          all_teachers.get(data.author_id).name
+          all_teachers_map.get(data.author_id).name
         )
       );
     }
