@@ -879,7 +879,7 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
-                teacher_name: (all_teachers_map instanceof Map) ? all_teachers_map.get(assessment.author_id).name : null,
+                teacher_name: (all_teachers_map instanceof Map && all_teachers_map.get(assessment.author_id)) ? all_teachers_map.get(assessment.author_id).name : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -921,7 +921,7 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
-                teacher_name: (all_teachers_map instanceof Map) ? all_teachers_map.get(assessment.author_id).name : null,
+                teacher_name: (all_teachers_map instanceof Map && all_teachers_map.get(assessment.author_id)) ? all_teachers_map.get(assessment.author_id).name : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -968,7 +968,7 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
-                teacher_name: (all_teachers_map instanceof Map) ? all_teachers_map.get(assessment.author_id).name : null,
+                teacher_name: (all_teachers_map instanceof Map && all_teachers_map.get(assessment.author_id)) ? all_teachers_map.get(assessment.author_id).name : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -1009,7 +1009,7 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
-                teacher_name: (all_teachers_map instanceof Map) ? all_teachers_map.get(assessment.author_id).name : null,
+                teacher_name: (all_teachers_map instanceof Map && all_teachers_map.get(assessment.author_id)) ? all_teachers_map.get(assessment.author_id).name : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -1484,7 +1484,7 @@ function ViewClass(props) {
               ? null
               : all_subjects.map((subject) => {
                   // let isEmpty = true
-                  if(kelas.subject_assigned.includes(subject._id)) {
+                  if (kelas.subject_assigned && kelas.subject_assigned.includes(subject._id)) {
                     return (
                       <ExpansionPanel>
                         <ExpansionPanelSummary>
