@@ -429,7 +429,7 @@ class CreateAssessment extends Component {
         // mengonversi bobot soal uraian dari string menjadi bilangan
         longtext = {};
         this.state.longtextWeight.forEach((val, idx) => {
-          if (val !== null) {
+          if (val !== -1) {
             longtext[idx] = Number(val);
           }
         });
