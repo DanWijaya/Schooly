@@ -334,7 +334,7 @@ function ViewMaterial(props) {
   const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
   const [openDeleteCommentDialog, setOpenDeleteCommentDialog] = React.useState(null);
   const [deleteCommentIdx, setDeleteCommentIdx] = React.useState(null);
-  const commentActionType = React.useRef(null);
+  const deleteDialogHandler = React.useRef(null);
 
   // SNACKBAR
   const [snackbarContent, setSnackbarContent] = React.useState("");
@@ -383,6 +383,8 @@ function ViewMaterial(props) {
         usernames[teacherInfo._id] = teacherInfo.name;
       }
       materialAuthorName.current = usernames[selectedMaterials.author_id];
+
+      // memindahkan textfield edit
       setCommentList(selectedMaterials.comments.map((comment) => ({ ...comment, name: usernames[comment.author_id] })));
       if (selectedCommentIdx !== null && deleteCommentIdx !== null && deleteCommentIdx < selectedCommentIdx) {
         setSelectedCommentIdx(selectedCommentIdx - 1);
@@ -434,6 +436,7 @@ function ViewMaterial(props) {
       let content = "Komentar berhasil ";
       if (success.action === "createMaterialComment") {
         content += "dibuat";
+        setCommentValue("");
       } else if (success.action === "editMaterialComment") {
         content += "disunting";
       } else if (success.action === "deleteMaterialComment") {
@@ -443,7 +446,6 @@ function ViewMaterial(props) {
       }
       handleOpenCommentSnackbar("success", content);
       getOneMaterial(materi_id);
-      setCommentValue("");
       clearSuccess();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -488,17 +490,18 @@ function ViewMaterial(props) {
 
   const handleEditComment = () => {
     if (commentEditorValue.length === 0) {
-      handleDeleteComment(selectedCommentIdx);
+      handleOpenDeleteCommentDialog(selectedCommentIdx);
     } else {
       editMaterialComment( materi_id, commentEditorValue, commentList[selectedCommentIdx]._id);
+      closeEditMode();
     }
-    closeEditMode();
   };
 
   const handleDeleteComment = (idx) => {
     let newCommentList = [...commentList];
     newCommentList.splice(idx, 1);
     deleteMaterialComment(materi_id, commentList[idx]._id);
+    setDeleteCommentIdx(idx);
     handleCloseDeleteCommentDialog();
   };
 
@@ -560,9 +563,15 @@ function ViewMaterial(props) {
   };
 
   const handleOpenDeleteCommentDialog = (idx) => {
-    setDeleteCommentIdx(idx)
     setOpenDeleteCommentDialog(true);
-  };
+    deleteDialogHandler.current =  (idx === selectedCommentIdx) 
+    ? () => {
+      handleDeleteComment(idx);
+      closeEditMode();
+    }
+    : () => {
+      handleDeleteComment(idx);
+    }  };
 
   const handleCloseDeleteCommentDialog = () => {
     // setDeleteCommentIdx(null) akan dijalankan setelah material dimuat ulang 
@@ -769,9 +778,7 @@ function ViewMaterial(props) {
         handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
         itemType="Komentar"
         itemName=""
-        deleteItem={() => {
-          handleDeleteComment(deleteCommentIdx);
-        }}
+        deleteItem={deleteDialogHandler.current}
       />
       <Grid container direction="column" spacing={2}>
         <Grid item>

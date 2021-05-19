@@ -623,7 +623,7 @@ function ViewTaskStudent(props) {
   const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
   const [openDeleteCommentDialog, setOpenDeleteCommentDialog] = React.useState(null);
   const [deleteCommentIdx, setDeleteCommentIdx] = React.useState(null);
-  const commentActionType = React.useRef(null);
+  const deleteDialogHandler = React.useRef(null);
 
   // SNACKBAR
   const [snackbarContent, setSnackbarContent] = React.useState("");
@@ -677,6 +677,8 @@ function ViewTaskStudent(props) {
         usernames[teacherInfo._id] = teacherInfo.name;
       }
       setCommentList(tasksCollection.comments.map((comment) => ({ ...comment, name: usernames[comment.author_id] })));
+
+      // memindahkan textfield edit
       if (selectedCommentIdx !== null && deleteCommentIdx !== null && deleteCommentIdx < selectedCommentIdx) {
         setSelectedCommentIdx(selectedCommentIdx - 1);
       }
@@ -727,6 +729,7 @@ function ViewTaskStudent(props) {
       let content = "Komentar berhasil ";
       if (success.action === "createTaskComment") {
         content += "dibuat";
+        setCommentValue("");
       } else if (success.action === "editTaskComment") {
         content += "disunting";
       } else if (success.action === "deleteTaskComment") {
@@ -736,7 +739,6 @@ function ViewTaskStudent(props) {
       }
       handleOpenCommentSnackbar("success", content);
       getOneTask(tugasId);
-      setCommentValue("");
       clearSuccess();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -781,17 +783,18 @@ function ViewTaskStudent(props) {
 
   const handleEditComment = () => {
     if (commentEditorValue.length === 0) {
-      handleDeleteComment(selectedCommentIdx);
+      handleOpenDeleteCommentDialog(selectedCommentIdx);
     } else {
       editTaskComment(tugasId, commentEditorValue, commentList[selectedCommentIdx]._id);
+      closeEditMode();
     }
-    closeEditMode();
   };
 
   const handleDeleteComment = (idx) => {
     let newCommentList = [...commentList];
     newCommentList.splice(idx, 1);
     deleteTaskComment(tugasId, commentList[idx]._id);
+    setDeleteCommentIdx(idx);
     handleCloseDeleteCommentDialog();
   };
 
@@ -924,8 +927,15 @@ function ViewTaskStudent(props) {
   };
 
   const handleOpenDeleteCommentDialog = (idx) => {
-    setDeleteCommentIdx(idx)
     setOpenDeleteCommentDialog(true);
+    deleteDialogHandler.current =  (idx === selectedCommentIdx) 
+    ? () => {
+      handleDeleteComment(idx);
+      closeEditMode();
+    }
+    : () => {
+      handleDeleteComment(idx);
+    }
   };
 
   const handleCloseDeleteCommentDialog = () => {
@@ -1223,9 +1233,7 @@ function ViewTaskStudent(props) {
         handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
         itemType="Komentar"
         itemName=""
-        deleteItem={() => {
-          handleDeleteComment(deleteCommentIdx);
-        }}
+        deleteItem={deleteDialogHandler.current}
       />
       <UploadDialog
         openUploadDialog={openUploadDialog}
