@@ -12,6 +12,7 @@ import {
   deleteAnnouncement,
 } from "../../../actions/AnnouncementActions";
 import { getUsers } from "../../../actions/UserActions";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Divider,
@@ -765,12 +766,10 @@ function AnnouncementListItems(props) {
       container
       direction="column"
       spacing={2}
-      style={{ marginBottom: addBottomMargin ? "32px" : "0" }}
+      style={{ marginBottom: addBottomMargin ? "100px" : "0" }}
     >
       {rows.length === 0 ? (
-        <Typography variant="subtitle1" align="center" color="textSecondary">
-          Kosong
-        </Typography>
+        <Empty />
       ) : (
         stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
           //agar bisa menambahkan elemen <Link> berdasarkan kondisi

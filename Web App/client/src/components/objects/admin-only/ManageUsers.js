@@ -14,6 +14,7 @@ import { setCurrentClass } from "../../../actions/ClassActions";
 import { getStudentsByClass } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -1304,12 +1305,10 @@ function ManageUsers(props) {
         container
         direction="column"
         spacing={2}
-        style={{ marginBottom: "32px" }}
+        style={{ marginBottom: "100px" }}
       >
         {student_rows.length === 0 ? (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         ) : (
           stableSort(
             student_rows,
@@ -1493,9 +1492,7 @@ function ManageUsers(props) {
       <Divider variant="inset" className={classes.subTitleDivider} />
       <Grid container direction="column" spacing={2}>
         {teacher_rows.length === 0 ? (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         ) : (
           stableSort(
             teacher_rows,
@@ -1550,32 +1547,6 @@ function ManageUsers(props) {
                               to={{
                                 pathname: `/lihat-profil/${row._id}`,
                               }}
-                              // to={{
-                              //   pathname: "/lihat-profil",
-                              //   state: {
-                              //     avatar: row.avatar,
-                              //     nama: row.name,
-                              //     subject_teached:
-                              //       all_teachers[index].subject_teached,
-                              //     viewable_section: "with_karir",
-                              //     tanggal_lahir: moment(row.tanggal_lahir)
-                              //       .locale("id")
-                              //       .format("DD MMMM YYYY"),
-                              //     jenis_kelamin:
-                              //       all_teachers[index].jenis_kelamin,
-                              //     role: "Teacher",
-                              //     sekolah: row.sekolah,
-                              //     email: row.email,
-                              //     phone: row.phone,
-                              //     emergency_phone: row.emergency_phone,
-                              //     alamat: row.address,
-                              //     hobi: all_teachers[index].hobi_minat,
-                              //     ket: all_teachers[index].ket_non_teknis,
-                              //     cita: all_teachers[index].cita_cita,
-                              //     uni: all_teachers[index].uni_impian,
-                              //     admin: true,
-                              //   },
-                              // }}
                             >
                               <IconButton
                                 size="small"

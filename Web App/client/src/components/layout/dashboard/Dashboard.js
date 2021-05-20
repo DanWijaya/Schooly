@@ -16,6 +16,7 @@ import { getStudents, getStudentsByClass } from "../../../actions/UserActions";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Fab,
@@ -605,9 +606,7 @@ function ListAssessments(props) {
   }
   if (result.length === 0) {
     return (
-      <Typography variant="subtitle1" align="center" color="textSecondary">
-        Kosong
-      </Typography>
+      <Empty />
     );
   } else {
     return sortAscByCreatedAt(result).map((row) => (
@@ -988,9 +987,7 @@ class Dashboard extends Component {
       });
       if (result.length === 0) {
         return (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         );
       } else {
         return sortAscByCreatedAt(result).map((row) => (
@@ -1041,9 +1038,7 @@ class Dashboard extends Component {
       }
       if (result.length === 0) {
         return (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         );
       } else {
         return sortAscByCreatedAt(result).map((row) => {
@@ -1122,9 +1117,7 @@ class Dashboard extends Component {
 
       if (result.length === 0) {
         return (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         );
       } else {
         return sortAscByCreatedAt(result).map((row) => {

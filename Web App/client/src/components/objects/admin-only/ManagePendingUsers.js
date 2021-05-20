@@ -10,8 +10,8 @@ import {
   setUserActive,
 } from "../../../actions/UserActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import Empty from "../../misc/empty/Empty";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Button,
