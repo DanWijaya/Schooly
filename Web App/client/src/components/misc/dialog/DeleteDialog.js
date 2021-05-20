@@ -38,21 +38,16 @@ const useStyles = makeStyles((theme) => ({
   warningText: {
     color: theme.palette.error.main,
     marginLeft: "3px",
+    fontSize: "10px",
   },
   warningIcon: {
     color: theme.palette.error.main,
+    width: "15px",
+    height: "15px",
   },
   warning: {
     display: "flex",
-    flexDirection: "row",
     alignItems: "center",
-    marginBottom: "5px",
-  },
-  titleName: {
-    marginTop: "10px",
-    textOverflow: "ellipsis",
-    overflow: "hidden",
-    whiteSpace: "nowrap",
   },
 }));
 
@@ -99,32 +94,31 @@ function DeleteDialog(props) {
               : `Hapus ${itemType} berikut?`}
           </Typography>
         </Grid>
-        {itemName ? (
-          <Grid item xs={10}>
-            <Typography
-              align="center"
-              gutterBottom
-              className={classes.titleName}
-            >
-              <b>{itemName}</b>
-            </Typography>
-            {isWarning ? (
-              <div className={classes.warning}>
-                <ErrorOutlineIcon
-                  className={classes.warningIcon}
-                  fontSize="small"
-                />
+        <Grid item container direction="column" alignItems="center">
+          <Grid item>
+            {itemName ? (
                 <Typography
-                  variant="caption"
                   align="center"
-                  className={classes.warningText}
+                  gutterBottom
                 >
-                  Nilai Murid pada {itemType} ini juga akan dihapus
+                  <b>{itemName}</b>
                 </Typography>
-              </div>
             ) : null}
           </Grid>
-        ) : null}
+          <Grid item>
+            {isWarning ? (
+                <div className={classes.warning}>
+                  <ErrorOutlineIcon className={classes.warningIcon} />
+                  <Typography
+                    align="center"
+                    className={classes.warningText}
+                  >
+                    Nilai Murid pada {itemType} ini juga akan dihapus
+                  </Typography>
+                </div>
+            ) : null}
+          </Grid>
+        </Grid>
         <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item>
             {!redirectLink ? (

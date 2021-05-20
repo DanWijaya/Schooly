@@ -181,7 +181,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.main,
       color: "white",
       cursor: "pointer",
-      "&:hover": {
+      "&:focus, &:hover": {
         backgroundColor: theme.palette.primary.main,
       },
     },

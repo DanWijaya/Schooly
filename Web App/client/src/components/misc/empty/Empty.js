@@ -1,8 +1,8 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core/";
 
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
   greyBackground: {
     display: "flex",
     justifyContent: "center",
@@ -12,10 +12,10 @@ const styles = (theme) => ({
     height: "100%",
     backgroundColor: "#e3e5e5",
   },
-});
+}));
 
 function Empty(props) {
-  const { classes } = props;
+  const classes = useStyles();
 
   return (
     <div
@@ -30,4 +30,4 @@ function Empty(props) {
   );
 }
 
-export default withStyles(styles)(Empty);
+export default Empty;
