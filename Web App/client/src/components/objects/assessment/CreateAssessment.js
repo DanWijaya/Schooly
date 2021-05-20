@@ -251,7 +251,8 @@ class CreateAssessment extends Component {
         checkbox: undefined,
         shorttext: undefined,
       }, // weight radio, checkbox, shorttext akan diset null ketika masih bernilai undefined saat tombol create assessment ditekan
-      longtextWeight: [-1],
+      // longtextWeight: [-1],
+      longtextWeight: [],
       // array longtextWeight akan memiliki elemen sebanyak pertanyaan di assessment
       // longtextWeight[0] = 10 -> berarti pertanyaan nomor 1 adalah soal uraian dan memiliki bobot 10
       // longtextWeight[1] = -1 -> berarti pertanyaan nomor 2 adalah soal non uraian
@@ -265,7 +266,7 @@ class CreateAssessment extends Component {
       // backtickErrors[2] = -1 -> berarti pertanyaan nomor 2 adalah soal non isian. Nilai "-1" dapat diabaikan, ini dapat diganti dengan nilai lain selain true false
       renderbtErrors: false, // abaikan nilainya, ini hanya dipakai agar QuestionItem dirender ulang saat submit dan ada soal yang dihapus
       over_limit: [],
-      errors: {}
+      errors: {},
     };
   }
 
@@ -469,8 +470,9 @@ class CreateAssessment extends Component {
           console.log("Assessment is created successfully");
         })
         .catch((err) => {
-        this.setState({ errors: err})
-        this.handleOpenErrorSnackbar()});
+          this.setState({ errors: err });
+          this.handleOpenErrorSnackbar();
+        });
     } else {
       this.handleOpenErrorSnackbar();
     }
@@ -497,7 +499,7 @@ class CreateAssessment extends Component {
         this.setState({ errors: { ...this.state.errors, [field]: null } });
       }
       this.setState({ [field]: e.target.value });
-    } 
+    }
   };
 
   onDateChange = (date) => {
@@ -1536,9 +1538,7 @@ class CreateAssessment extends Component {
                         <FormControl
                           variant="outlined"
                           fullWidth
-                          error={
-                            Boolean(errors.class_assigned)
-                          }
+                          error={Boolean(errors.class_assigned)}
                         >
                           <Select
                             multiple

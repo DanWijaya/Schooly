@@ -3,13 +3,13 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import CustomLinkify from "../../misc/linkify/Linkify"
+import CustomLinkify from "../../misc/linkify/Linkify";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { uploadTugas, deleteTugas } from "../../../actions/UploadActions";
 import {
   deleteFileSubmitTasks,
   uploadFileSubmitTasks,
-  getFileSubmitTasks,
+  getFileSubmitTasks_AT,
   viewFileSubmitTasks,
   downloadFileSubmitTasks,
 } from "../../../actions/files/FileSubmitTaskActions";
@@ -145,7 +145,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#808080",
   },
   submittedButton: {
-    margin:"auto",
+    margin: "auto",
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
@@ -514,7 +514,7 @@ function ViewTaskStudent(props) {
     uploadFileSubmitTasks,
     viewFileSubmitTasks,
     downloadFileSubmitTasks,
-    getFileSubmitTasks,
+    getFileSubmitTasks_AT,
     deleteFileSubmitTasks,
     deleteTugas,
     success,
@@ -555,7 +555,7 @@ function ViewTaskStudent(props) {
   // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
   useEffect(() => {
     // getTaskFilesByUser(user._id, tugasId)
-    getFileSubmitTasks(tugasId, user._id).then((results) =>
+    getFileSubmitTasks_AT(tugasId, user._id).then((results) =>
       setFileTugas(results)
     );
     getOneTask(tugasId);
@@ -677,7 +677,7 @@ function ViewTaskStudent(props) {
     setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
     setSelectedFileId(fileid);
     setSelectedFileName(filename);
-    // getFileSubmitTasks(tugasId, user._id).then((items) => setTaskContents(items))
+    // getFileSubmitTasks_AT(tugasId, user._id).then((items) => setTaskContents(items))
   };
 
   const handleCloseDeleteDialog = () => {
@@ -816,27 +816,26 @@ function ViewTaskStudent(props) {
                     Deskripsi Tugas:
                   </Typography>
                   <Typography>
-                    <CustomLinkify text={tasksCollection.description}/>
+                    <CustomLinkify text={tasksCollection.description} />
                   </Typography>
                   {/* <Typography>{tasksCollection.description}</Typography> */}
                 </Grid>
               )}
-              {!tasksCollection.lampiran ||
-              tasksCollection.lampiran.length === 0 ? null : (
+              {fileLampiran.length === 0 ? null : (
                 <Grid item xs={12} style={{ marginTop: "15px" }}>
                   <Typography color="textSecondary" gutterBottom>
                     Lampiran Berkas:
                   </Typography>
                   <Grid container spacing={1}>
-                    {tasksCollection.lampiran.map((lampiran) => (
-                      <LampiranFile
-                        file_id={lampiran.id}
-                        // onPreviewFile={onPreviewFile}
-                        // onDownloadFile={onDownloadFile}
-                        filename={lampiran.filename}
-                        filetype={fileType(lampiran.filename)}
-                      />
-                    ))}
+                    {fileLampiran.map((lampiran) => (
+                        <LampiranFile
+                          file_id={lampiran._id}
+                          onPreviewFile={viewFileTasks}
+                          onDownloadFile={downloadFileTasks}
+                          filename={lampiran.filename}
+                          filetype={fileType(lampiran.filename)}
+                        />
+                      ))}
                   </Grid>
                 </Grid>
               )}
@@ -1013,7 +1012,7 @@ export default connect(mapStateToProps, {
   getOneTask,
   getAllSubjects,
   uploadFileSubmitTasks,
-  getFileSubmitTasks,
+  getFileSubmitTasks_AT,
   viewFileSubmitTasks,
   downloadFileSubmitTasks,
   deleteFileSubmitTasks,

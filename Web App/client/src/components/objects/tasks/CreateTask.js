@@ -282,9 +282,10 @@ class CreateTask extends Component {
       }
     console.log(formData.getAll("lampiran_tugas"), this.state.fileLampiran);
     console.log(taskData);
-    this.props.createTask(formData, taskData, this.props.history)
-        .then((res) => this.handleOpenUploadDialog())
-        .catch((err) => this.setState({ errors: err}));
+    this.props
+      .createTask(formData, taskData, this.props.history)
+      .then((res) => this.handleOpenUploadDialog())
+      .catch((err) => this.setState({ errors: err }));
   };
 
   componentDidMount() {
@@ -616,9 +617,7 @@ class CreateTask extends Component {
                             );
                           })}
                         </Select>
-                        <FormHelperText>
-                          {errors.class_assigned}
-                        </FormHelperText>
+                        <FormHelperText>{errors.class_assigned}</FormHelperText>
                       </FormControl>
                     </Grid>
                     <Grid item>

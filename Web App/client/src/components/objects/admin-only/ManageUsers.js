@@ -295,7 +295,7 @@ function ManageUsersToolbar(props) {
         ) : null}
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
-      <Hidden smDown implementation="css">
+        <Hidden smDown implementation="css">
           <TextField
             variant="outlined"
             id="searchFilterDesktop"
@@ -856,7 +856,6 @@ function ManageUsers(props) {
     setListCheckboxTeacher(result);
   };
 
-
   const handleDeleteListStudent = () => {
     for (let i = 0; i < listCheckboxStudent.length; i++) {
       onDeleteUser(listCheckboxStudent[i].row._id);
@@ -985,20 +984,28 @@ function ManageUsers(props) {
     currentListBooleanTeacher = [];
 
     if (Array.isArray(all_students)) {
-      all_students.filter((item) =>
-      item.name.toLowerCase().includes(searchFilterS.toLowerCase()) || item.email.toLowerCase().includes(searchFilterS.toLowerCase())
-    ).forEach((data) => {
-        userRowItem(data);
-        currentListBooleanStudent.push(false);
-      });
+      all_students
+        .filter(
+          (item) =>
+            item.name.toLowerCase().includes(searchFilterS.toLowerCase()) ||
+            item.email.toLowerCase().includes(searchFilterS.toLowerCase())
+        )
+        .forEach((data) => {
+          userRowItem(data);
+          currentListBooleanStudent.push(false);
+        });
     }
     if (Array.isArray(all_teachers)) {
-      all_teachers.filter((item) =>
-      item.name.toLowerCase().includes(searchFilterT.toLowerCase()) || item.email.toLowerCase().includes(searchFilterT.toLowerCase())
-    ).forEach((data) => {
-        userRowItem(data);
-        currentListBooleanTeacher.push(false);
-    });
+      all_teachers
+        .filter(
+          (item) =>
+            item.name.toLowerCase().includes(searchFilterT.toLowerCase()) ||
+            item.email.toLowerCase().includes(searchFilterT.toLowerCase())
+        )
+        .forEach((data) => {
+          userRowItem(data);
+          currentListBooleanTeacher.push(false);
+        });
     }
   };
 

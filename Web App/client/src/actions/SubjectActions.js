@@ -59,14 +59,14 @@ export const createSubject = (subjectData) => (dispatch) => {
         type: GET_SUCCESS_RESPONSE,
         payload: res.data,
       });
-      return res.data
+      return res.data;
     })
     .catch((err) => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
       });
-      throw err.response.data
+      throw err.response.data;
     });
 };
 
@@ -91,7 +91,7 @@ export const editSubject = (subjectData) => (dispatch) => {
         type: GET_SUCCESS_RESPONSE,
         payload: res.data,
       });
-      return res.data
+      return res.data;
     })
     .catch((err) => {
       console.log(err, "Error in editing the subject");
@@ -99,6 +99,6 @@ export const editSubject = (subjectData) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
-      throw err.response.data
+      throw err.response.data;
     });
 };

@@ -37,7 +37,7 @@ export const createTask = (formData, taskData, history) => (dispatch) => {
         type: GET_SUCCESS_RESPONSE,
         payload: success_res,
       });
-      return success_res
+      return success_res;
     })
     .catch((err) => {
       console.log("error happened");
@@ -45,7 +45,7 @@ export const createTask = (formData, taskData, history) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
-      throw err.response.data
+      throw err.response.data;
     });
 };
 
@@ -78,7 +78,7 @@ export const getAllTask = () => (dispatch) => {
 
 // View One Task
 export const getOneTask = (taskId) => (dispatch) => {
-  axios
+  return axios
     .get("/api/tasks/view/" + taskId)
     .then((res) => {
       console.log("Task to be received: ", res.data);
@@ -86,6 +86,7 @@ export const getOneTask = (taskId) => (dispatch) => {
         type: GET_ALL_TASKS,
         payload: res.data,
       });
+      return res.data;
     })
     .catch((err) => {
       console.log("error");
@@ -93,14 +94,8 @@ export const getOneTask = (taskId) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
-  // .catch((err) => {
-  //   console.log("error");
-  //   dispatch({
-  //     type: GET_ERRORS,
-  //     payload: err.response.data,
-  //   });
-  // });
 };
 
 export const updateTask = (
@@ -130,11 +125,6 @@ export const updateTask = (
       else return "No lampiran file is going to be deleted";
     })
     .then((res) => {
-      // console.log("Update the lampiran files, upload some new lampiran files");
-      // console.log(
-      //   formData.has("lampiran_tugas"),
-      //   formData.getAll("lampiran_tugas")
-      // );
       if (formData.has("lampiran_tugas"))
         return axios.post(`/api/files/tasks/upload/${taskId}`, formData);
       // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
@@ -146,7 +136,7 @@ export const updateTask = (
         type: GET_SUCCESS_RESPONSE,
         payload: true,
       });
-      return true
+      return true;
     })
     .catch((err) => {
       console.log(err);
@@ -154,13 +144,14 @@ export const updateTask = (
         type: GET_ERRORS,
         payload: err.response.data,
       });
-      throw err.response.data
+      throw err.response.data;
     });
 };
 
 export const gradeTask = (taskId, gradingData, student_name) => (dispatch) => {
+  console.log(gradingData);
   axios
-    .post(`/api/tasks/update/${taskId}`, gradingData)
+    .post(`/api/tasks/grade/${taskId}`, gradingData)
     .then((res) => {
       console.log("Grade task is added");
       // alert(`Tugas ${student_name} berhasil dinilai `);

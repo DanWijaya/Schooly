@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
-import CustomLinkify from "../../misc/linkify/Linkify"
+import CustomLinkify from "../../misc/linkify/Linkify";
 import {
   getOneAssessment,
   deleteAssessment,
@@ -365,7 +365,9 @@ function ViewAssessmentTeacher(props) {
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Kuis/Ujian:
                 </Typography>
-                <Typography variant="body1"><CustomLinkify text={selectedAssessments.description}/></Typography>
+                <Typography variant="body1">
+                  <CustomLinkify text={selectedAssessments.description} />
+                </Typography>
               </Grid>
             </Grid>
           </Paper>
@@ -417,7 +419,9 @@ function ViewAssessmentTeacher(props) {
                         generateSoalShortTextTeacher(question, i)
                       ) : question.type === "longtext" ? (
                         <>
-                            <Typography variant="body1"><CustomLinkify text={question.name}/></Typography>
+                          <Typography variant="body1">
+                            <CustomLinkify text={question.name} />
+                          </Typography>
                           <Typography
                             className={classes.questionName}
                             color="textSecondary"
@@ -426,9 +430,8 @@ function ViewAssessmentTeacher(props) {
                           </Typography>
                         </>
                       ) : (
-                        
                         <Typography className={classes.questionName}>
-                        <CustomLinkify text={question.name}/>
+                          <CustomLinkify text={question.name} />
                         </Typography>
                       )}
                       {/* </Typography> */}

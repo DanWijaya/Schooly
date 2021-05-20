@@ -240,7 +240,7 @@ class EditTask extends Component {
     this.props.getFileTasks(id).then((res) => {
       this.setState({
         fileLampiran: res,
-        originalFileLampiran: res
+        originalFileLampiran: res,
       });
     });
   }
@@ -308,18 +308,26 @@ class EditTask extends Component {
       formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i]);
     }
     console.log(taskObject);
-    this.props.updateTask(
-      formData,
-      fileLampiranToDelete,
-      this.props.tasksCollection.lampiran,
-      taskObject,
-      id,
-      this.props.history
-    ).then((res) => this.handleOpenUploadDialog())
-    .catch((err) => this.setState({ errors: err,fileLampiran: [
-      ...this.state.originalFileLampiran,
-      ...this.state.fileLampiranToAdd,
-    ],fileLampiranToDelete:[]}));
+    this.props
+      .updateTask(
+        formData,
+        fileLampiranToDelete,
+        this.props.tasksCollection.lampiran,
+        taskObject,
+        id,
+        this.props.history
+      )
+      .then((res) => this.handleOpenUploadDialog())
+      .catch((err) =>
+        this.setState({
+          errors: err,
+          fileLampiran: [
+            ...this.state.originalFileLampiran,
+            ...this.state.fileLampiranToAdd,
+          ],
+          fileLampiranToDelete: [],
+        })
+      );
   };
 
   handleLampiranUpload = (e) => {
@@ -427,7 +435,7 @@ class EditTask extends Component {
       }
       this.setState({ [field]: e.target.value });
     }
-  }
+  };
 
   render() {
     const { fileLampiran, class_assigned, errors } = this.state;
@@ -437,7 +445,6 @@ class EditTask extends Component {
     const { user } = this.props.auth;
     // const task_id = this.props.match.params.id;
 
-    
     let classIds = [];
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
@@ -717,7 +724,7 @@ class EditTask extends Component {
                               ))}
                         </Select>
                         <FormHelperText>
-                        {Boolean(errors.class_assigned)
+                          {Boolean(errors.class_assigned)
                             ? errors.class_assigned
                             : null}
                         </FormHelperText>

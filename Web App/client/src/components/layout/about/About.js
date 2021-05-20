@@ -121,7 +121,12 @@ function About(props) {
           <Typography variant="h3" align="center" gutterBottom>
             Apa itu Schooly?
           </Typography>
-          <Typography variant="h6" align="center" paragraph className={classes.schoolyDefinition}>
+          <Typography
+            variant="h6"
+            align="center"
+            paragraph
+            className={classes.schoolyDefinition}
+          >
             Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang
             dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang
             ada di sekolah.

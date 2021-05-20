@@ -1,17 +1,18 @@
 const Validator = require("validator");
 const isEmpty = require("is-empty");
 
-function validateTaskGrade(data){ // the data is grade
+function validateTaskGrade(data) {
+  // the data is grade
   let errors = {};
   if (isEmpty(data.grade)) {
     if (data.grade > 100 || data.grade < 0) {
       errors = { grade: "Nilai harus diantara 0 dan 100" };
     }
-    return {
-      errorsGrade,
-      isValidGrade: isEmpty(errors),
-    };
   }
+  return {
+    errors,
+    isValidGrade: isEmpty(errors),
+  };
 }
 
 function validateTaskInput(data) {
@@ -63,9 +64,9 @@ function validateTaskInput(data) {
     errors,
     isValid: isEmpty(errors),
   };
-};
+}
 
 module.exports = {
   validateTaskGrade: validateTaskGrade,
-  validateTaskInput: validateTaskInput
-}
+  validateTaskInput: validateTaskInput,
+};

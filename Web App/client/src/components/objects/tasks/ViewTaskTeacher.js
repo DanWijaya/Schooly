@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import CustomLinkify from "../../misc/linkify/Linkify"
+import CustomLinkify from "../../misc/linkify/Linkify";
 //Actions
 import { getOneTask, deleteTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -13,7 +13,7 @@ import {
   downloadLampiran,
   previewLampiran,
 } from "../../../actions/UploadActions";
-import { getOneUser } from "../../../actions/UserActions";
+import { getOneUser, getStudents } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import {
   getFileTasks,
@@ -50,6 +50,8 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import axios from "axios";
+import { getFileSubmitTasks_T } from "../../../actions/files/FileSubmitTaskActions";
 
 const path = require("path");
 
@@ -227,6 +229,8 @@ function ViewTaskTeacher(props) {
     getFileTasks,
     viewFileTasks,
     downloadFileTasks,
+    getStudents,
+    getFileSubmitTasks_T,
   } = props;
   const { all_classes_map } = props.classesCollection;
   const task_id = props.match.params.id;
@@ -244,37 +248,46 @@ function ViewTaskTeacher(props) {
     getFileTasks(task_id).then((res) => {
       setFileLampiran(res);
     });
+    getStudents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // [tasksCollection._id, all_classes_map.size, all_subjects_map.size]
 
   React.useEffect(() => {
-    if (
-      tasksCollection &&
-      Object.keys(tasksCollection).length !== 0 &&
-      all_students &&
-      all_students.length !== 0
-    ) {
-      // untuk setiap murid yang ada,
-      for (let j = 0; j < all_students.length; j++) {
-        // jika murid ini mendapatkan tugas ini
-        if (
-          tasksCollection.class_assigned &&
-          tasksCollection.class_assigned.includes(all_students[j].kelas)
-        ) {
-          // untuk setiap file yang pernah dikumpulkan murid ini,
-          for (const studentTask of all_students[j].tugas) {
-            // jika file ditujukan untuk tugas ini,
-            if (studentTask.for_task_object === task_id) {
-              setDisableButton(false);
-              return;
-            }
-          }
-        }
+    getFileSubmitTasks_T(task_id).then((res) => {
+      if (res.length) {
+        setDisableButton(false);
       }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasksCollection, all_students]);
+    });
+  });
+  // React.useEffect(() => {
+  // if (
+  //   tasksCollection &&
+  //   Object.keys(tasksCollection).length !== 0 &&
+  //   all_students &&
+  //   all_students.length !== 0
+  // ) {
+  //   // untuk setiap murid yang ada,
+  //   for (let j = 0; j < all_students.length; j++) {
+  //     console.log(all_students[j].kelas)
+  //     // jika murid ini mendapatkan tugas ini
+  //     if (
+  //       tasksCollection.class_assigned &&
+  //       tasksCollection.class_assigned.includes(all_students[j].kelas)
+  //     ) {
+  //       // untuk setiap file yang pernah dikumpulkan murid ini,
+  //       for (const studentTask of all_students[j].tugas) {
+  //         // jika file ditujukan untuk tugas ini,
+  //         if (studentTask.for_task_object === task_id) {
+  //           // setDisableButton(false);
+  //           return;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []); //[tasksCollection, all_students]
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
@@ -431,7 +444,7 @@ function ViewTaskTeacher(props) {
                     Deskripsi Tugas:
                   </Typography>
                   <Typography>
-                    <CustomLinkify text={tasksCollection.description}/>
+                    <CustomLinkify text={tasksCollection.description} />
                   </Typography>
                   {/* <Link href="https://www.google.com">{tasksCollection.description}</Link> */}
                   {/* <Typography>{tasksCollection.description}</Typography> */}
@@ -537,4 +550,6 @@ export default connect(mapStateToProps, {
   getFileTasks,
   downloadFileTasks,
   viewFileTasks,
+  getStudents,
+  getFileSubmitTasks_T,
 })(ViewTaskTeacher);

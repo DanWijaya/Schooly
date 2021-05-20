@@ -92,11 +92,12 @@ class CreateClass extends Component {
       bendahara: this.state.bendahara,
       errors: {},
     };
-    this.props.createClass(classObject, this.props.history)
-    .then((res) => this.handleOpenUploadDialog())
-    .catch((err) => {
-      this.setState({errors: err})
-    })
+    this.props
+      .createClass(classObject, this.props.history)
+      .then((res) => this.handleOpenUploadDialog())
+      .catch((err) => {
+        this.setState({ errors: err });
+      });
   };
 
   onSelect = (selectedList, selectedItem) => {

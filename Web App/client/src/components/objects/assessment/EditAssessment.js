@@ -286,7 +286,8 @@ class EditAssessment extends Component {
         checkbox: undefined,
         shorttext: undefined,
       }, // weight radio, checkbox, shorttext akan diset null ketika masih bernilai undefined saat tombol create assessment ditekan
-      longtextWeight: [-1],
+      // longtextWeight: [-1],
+      longtextWeight: [],
       // array longtextWeight akan memiliki elemen sebanyak pertanyaan di assessment
       // longtextWeight[0] = 10 -> berarti pertanyaan nomor 1 adalah soal uraian dan memiliki bobot 10
       // longtextWeight[1] = -1 -> berarti pertanyaan nomor 2 adalah soal non uraian
@@ -302,7 +303,7 @@ class EditAssessment extends Component {
       ready: false,
       lampiranUrls: new Map(),
       over_limit: [],
-      errors: {}
+      errors: {},
     };
   }
 
@@ -348,9 +349,9 @@ class EditAssessment extends Component {
         };
 
         let longtextWeight = [];
-        for (let i = 0; i <= selectedAssessments.questions.length - 1; i++) {
-          longtextWeight.push(-1);
-        }
+        // for (let i = 0; i <= selectedAssessments.questions.length - 1; i++) {
+        //   longtextWeight.push(-1);
+        // }
 
         if (selectedAssessments.question_weight.longtext) {
           for (let [key, value] of Object.entries(
@@ -582,12 +583,12 @@ class EditAssessment extends Component {
         history
       )
         .then((res) => {
-          this.handleOpenUploadDialog()
+          this.handleOpenUploadDialog();
           // console.log("Assessment is updated successfully");
         })
         .catch((err) => {
-          this.setState({ errors: err})
-          this.handleOpenErrorSnackbar()
+          this.setState({ errors: err });
+          this.handleOpenErrorSnackbar();
         });
     } else {
       this.handleOpenErrorSnackbar();
@@ -607,15 +608,15 @@ class EditAssessment extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-      if (otherfield === "end_date" || otherfield === "start_date") {
-        this.setState({ [otherfield]: e });
-      } else {
-        let field = e.target.id ? e.target.id : otherfield;
-        if (this.state.errors[field]) {
-          this.setState({ errors: { ...this.state.errors, [field]: null } });
-        }
-        this.setState({ [field]: e.target.value });
-    } 
+    if (otherfield === "end_date" || otherfield === "start_date") {
+      this.setState({ [otherfield]: e });
+    } else {
+      let field = e.target.id ? e.target.id : otherfield;
+      if (this.state.errors[field]) {
+        this.setState({ errors: { ...this.state.errors, [field]: null } });
+      }
+      this.setState({ [field]: e.target.value });
+    }
   };
 
   onDateChange = (date) => {
@@ -1681,9 +1682,7 @@ class EditAssessment extends Component {
                         <FormControl
                           variant="outlined"
                           fullWidth
-                          error={
-                            Boolean(errors.class_assigned)
-                          }
+                          error={Boolean(errors.class_assigned)}
                         >
                           <Select
                             multiple
