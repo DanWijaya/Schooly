@@ -251,8 +251,7 @@ class CreateAssessment extends Component {
         checkbox: undefined,
         shorttext: undefined,
       }, // weight radio, checkbox, shorttext akan diset null ketika masih bernilai undefined saat tombol create assessment ditekan
-      // longtextWeight: [-1],
-      longtextWeight: [],
+      longtextWeight: [-1],
       // array longtextWeight akan memiliki elemen sebanyak pertanyaan di assessment
       // longtextWeight[0] = 10 -> berarti pertanyaan nomor 1 adalah soal uraian dan memiliki bobot 10
       // longtextWeight[1] = -1 -> berarti pertanyaan nomor 2 adalah soal non uraian
@@ -267,6 +266,10 @@ class CreateAssessment extends Component {
       renderbtErrors: false, // abaikan nilainya, ini hanya dipakai agar QuestionItem dirender ulang saat submit dan ada soal yang dihapus
       over_limit: [],
       errors: {},
+      // classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
+      // subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
+      // allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      // allSubjectObject: null // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
     };
   }
 
@@ -415,10 +418,78 @@ class CreateAssessment extends Component {
           weights: newWeights,
           longtextWeight: newLongtextWeight,
         });
+
+        for (let [type, count] of filteredtypeCount) {
+          if (type === "longtext") {
+            // menghapus elemen bobot soal non uraian pada array bobot soal uraian
+            // let longtextCount = this.state.longtextWeight.filter(
+            //   (value) => value !== -1
+            // );
+
+            for (let weight of newLongtextWeight) {
+            // for (let i = 0; i <= longtextCount.length - 1; i++) {
+              // let weight = longtextCount[i];
+
+              // agar error di textfield bobot muncul ketika textfield masih kosong saat create assessment
+              // if (weight === undefined) {
+              //   newLongtextWeight[i] = null;
+              // }
+
+              // agar data assessment tidak disubmit ketika ada bobot yang tidak valid
+              if (weight !== -1 && (isNaN(Number(weight)) || Number(weight) <= 0)) {
+                  completeWeight = false;
+              }
+
+            }
+          } else {
+            // agar error di textfield bobot muncul ketika textfield masih kosong saat create assessment
+            // if (this.state.weights[type] === undefined) {
+            //   newWeights[type] = null;
+            // }
+
+            // agar data assessment tidak disubmit ketika ada bobot yang tidak valid
+            if (
+              isNaN(Number(this.state.weights[type])) ||
+              Number(this.state.weights[type]) <= 0
+            ) {
+              completeWeight = false;
+            }
+          }
+        }
       } else {
         completeWeight = false;
       }
     }
+
+    
+    let newWeights = { ...this.state.weights };
+    let newLongtextWeight;
+
+    for (let [type, count] of Object.entries(typeCount)) {
+      if (count === 0) {
+        continue;
+      }
+
+      if (type === "longtext") {
+        newLongtextWeight = [...this.state.longtextWeight].map((weight) => {
+          if (weight === undefined) {
+            return null;
+          }
+          return weight;
+        });
+        console.log(newLongtextWeight)
+      } else {
+        if (this.state.weights[type] === undefined) {
+          newWeights[type] = null;
+        }
+      }
+
+    }
+
+    this.setState({
+      weights: newWeights,
+      longtextWeight: newLongtextWeight,
+    });
 
     // jika soal dan bobot sudah lengkap dan benar, submit
     if (invalidQuestionIndex.length === 0 && completeWeight) {
@@ -430,7 +501,11 @@ class CreateAssessment extends Component {
         longtext = {};
         this.state.longtextWeight.forEach((val, idx) => {
           if (val !== -1) {
-            longtext[idx] = Number(val);
+            if (val === null || val === "") {
+              longtext[idx] = null;
+            } else {
+              longtext[idx] = Number(val);
+            }
           }
         });
       }
@@ -467,6 +542,7 @@ class CreateAssessment extends Component {
       };
       createAssessment(formData, assessmentData, history)
         .then((res) => {
+          this.handleOpenUploadDialog();
           console.log("Assessment is created successfully");
         })
         .catch((err) => {
@@ -500,6 +576,66 @@ class CreateAssessment extends Component {
       }
       this.setState({ [field]: e.target.value });
     }
+    // if (otherfield) {
+    //   if (otherfield === "end_date" || otherfield === "start_date") {
+    //     this.setState({ [otherfield]: e });
+    //   }
+      // else if (otherfield === "subject") { // jika guru memilih mata pelajaran
+      //   // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
+      //   let newClassOptions = [];
+      //   if (this.props.auth.user.class_to_subject) {
+      //     for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+      //       if (subjectIdArray.includes(e.target.value)) {
+      //         newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+      //       }
+      //     }
+      //   }
+
+      //   this.setState({ subject: e.target.value, classOptions: newClassOptions });
+
+      // } else if (otherfield === "class_assigned") { // jika guru memilih kelas
+      //   let selectedClasses = e.target.value;
+
+      //   if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
+      //     this.setState((prevState, props) => {
+      //       return {
+      //         class_assigned: selectedClasses,
+      //         // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
+      //         subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
+      //       }
+      //     });
+      //   } else { // jika guru menambahkan atau mengurangi pilihan kelas
+      //     // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
+      //     let subjectMatrix = [];
+      //     if (this.props.auth.user.class_to_subject) {
+      //       for (let classId of selectedClasses) {
+      //         if (this.props.auth.user.class_to_subject[classId]) {
+      //           subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+      //         }
+      //       }
+      //     }
+      //     let subjects = [];
+      //     if (subjectMatrix.length !== 0) {
+      //       subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+      //         return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
+      //       });
+      //     }
+
+      //     // menambahkan matpel tersebut ke opsi matpel
+      //     let newSubjectOptions = [];
+      //     subjects.forEach((subjectId) => {
+      //       newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
+      //     })
+
+      //     this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
+      //   }
+    //    else {
+    //     this.setState({ [otherfield]: e.target.value });
+    //   }
+    // } else {
+    //   this.setState({ [e.target.id]: e.target.value });
+    // }
+
   };
 
   onDateChange = (date) => {
@@ -878,11 +1014,45 @@ class CreateAssessment extends Component {
     return questionList;
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    if (!this.props.errors && this.props.errors !== prevProps.errors) {
-      this.handleOpenUploadDialog();
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+    // if (!this.props.errors && this.props.errors !== prevProps.errors) {
+    //   this.handleOpenUploadDialog();
+    // }
+
+    // if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
+    //   if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
+
+    //     let all_classes_obj = {};
+    //     this.props.classesCollection.all_classes.forEach((classInfo) => {
+    //       all_classes_obj[classInfo._id] = classInfo.name;
+    //     });
+
+    //     if(this.props.auth.user.class_teached){
+    //     let newClassOptions = this.props.auth.user.class_teached.map((classId) => {
+    //       return { _id: classId, name: all_classes_obj[classId] };
+    //     })
+
+    //     this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+    //   } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
+    // }
+    // }
+
+    // if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
+    //   if (this.props.subjectsCollection.all_subjects && (this.props.subjectsCollection.all_subjects.length !== 0)) {
+
+    //     let all_subjects_obj = {};
+    //     this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
+    //       all_subjects_obj[subjectInfo._id] = subjectInfo.name;
+    //     });
+
+    //     let newSubjectOptions = this.props.auth.user.subject_teached.map((subjectId) => {
+    //       return { _id: subjectId, name: all_subjects_obj[subjectId] };
+    //     })
+
+    //     this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
+    //   } // jika memang belum ada matpel yang tercatat di sistem, opsi matpel akan tetap null
+    // }
+  // }
 
   componentDidMount() {
     const { getAllClass, getAllSubjects, handleSideDrawerExist } = this.props;
@@ -1552,7 +1722,7 @@ class CreateAssessment extends Component {
                             }
                             renderValue={(selected) => (
                               <div className={classes.chips}>
-                                {selected.map((id) => {
+                               {selected.map((id) => {
                                   let name;
                                   for (let i in all_classes) {
                                     if (all_classes[i]._id === id) {
@@ -1571,14 +1741,14 @@ class CreateAssessment extends Component {
                               </div>
                             )}
                           >
-                            {all_classes.map((kelas) => (
+                           {all_classes.map((kelas) => (
                               <MenuItem value={kelas._id}>
                                 {kelas.name}
                               </MenuItem>
                             ))}
                           </Select>
                           <FormHelperText>
-                            {Boolean(errors.class_assigned)
+                          {Boolean(errors.class_assigned)
                               ? errors.class_assigned
                               : null}
                           </FormHelperText>
