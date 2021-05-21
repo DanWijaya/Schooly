@@ -8,8 +8,8 @@ import "moment/locale/id";
 //Actions
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import { 
-  getOneTask, 
+import {
+  getOneTask,
   deleteTask,
   createTaskComment,
   editTaskComment,
@@ -21,10 +21,10 @@ import {
   downloadLampiran,
   previewLampiran,
 } from "../../../actions/UploadActions";
-import { 
+import {
   getOneUser,
-  getTeachers, 
-  getStudents  
+  getTeachers,
+  getStudents
 } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import {
@@ -285,9 +285,9 @@ function LampiranFile(props) {
 function ViewTaskTeacher(props) {
   const classes = useStyles();
 
-  const { 
-    user, 
-    all_students, 
+  const {
+    user,
+    all_students,
     all_teachers
   } = props.auth;
   const {
@@ -305,7 +305,7 @@ function ViewTaskTeacher(props) {
     success,
     clearErrors,
     clearSuccess,
-    getTeachers, 
+    getTeachers,
     getStudents,
     createTaskComment,
     editTaskComment,
@@ -396,7 +396,7 @@ function ViewTaskTeacher(props) {
         usernames[teacherInfo._id] = teacherInfo.name;
       }
       setCommentList(tasksCollection.comments.map((comment) => ({ ...comment, name: usernames[comment.author_id] })));
-      
+
       // memindahkan textfield edit
       if (selectedCommentIdx !== null && deleteCommentIdx !== null && deleteCommentIdx < selectedCommentIdx) {
         setSelectedCommentIdx(selectedCommentIdx - 1);
@@ -587,7 +587,7 @@ function ViewTaskTeacher(props) {
 
   const handleOpenDeleteCommentDialog = (idx) => {
     setOpenDeleteCommentDialog(true);
-    deleteDialogHandler.current =  (idx === selectedCommentIdx) 
+    deleteDialogHandler.current =  (idx === selectedCommentIdx)
     ? () => {
       handleDeleteComment(idx);
       closeEditMode();
@@ -598,13 +598,13 @@ function ViewTaskTeacher(props) {
   };
 
   const handleCloseDeleteCommentDialog = () => {
-    // setDeleteCommentIdx(null) akan dijalankan setelah task dimuat ulang 
+    // setDeleteCommentIdx(null) akan dijalankan setelah task dimuat ulang
     setOpenDeleteCommentDialog(false);
   };
 
   // Komentar
   // Kalau avatar belum ada, pakai default
-  
+
   const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
     return (
       <Grid container item xs={12} direction="row" spacing={2}>
@@ -623,8 +623,8 @@ function ViewTaskTeacher(props) {
             <Typography style={{marginRight: "10px", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: "50px", overflow: "hidden"}}>
               <b>{authorName}</b>
             </Typography>
-            {edited === true ? 
-              <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography> 
+            {edited === true ?
+              <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography>
             : null}
             <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
               {moment(date)
@@ -821,34 +821,9 @@ function ViewTaskTeacher(props) {
         </Grid>
         <Grid item>
           <Paper className={classes.paperBox} style={{marginTop: "20px"}}>
+            <Typography variant="h6" gutterBottom>Komentar Kelas</Typography>
+            <Divider style={{ marginBottom: "17.5px" }} />
             <Grid container spacing={2}>
-              <Grid item xs={12} style={{ paddingBottom: "0" }}>
-                <Typography variant="h6">Komentar Kelas</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider />
-              </Grid>
-              {
-                (commentList.length !== 0) ?
-                  <>
-                    {
-                      commentList.map((comment, idx) => (
-                        generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)
-                      ))
-                    }
-                    <Grid item xs={12}>
-                      <Divider />
-                    </Grid>
-                  </>
-                : null
-              }
-              {/* {
-                (commentList.length === 0) ?
-                  <Grid item xs={12}>
-                    <Typography color="textSecondary" align="center">Belum ada komentar</Typography>
-                  </Grid>
-                : null
-              } */}
               <Grid container item xs={12} direction="row" spacing={2} alignItems="center">
                 <Hidden xsDown>
                   <Grid item className={classes.smAvatar}>
