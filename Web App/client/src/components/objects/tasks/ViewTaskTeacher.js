@@ -52,7 +52,8 @@ import {
   Divider,
   TextField,
   Button,
-  Snackbar
+  Snackbar,
+  Box
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -167,10 +168,12 @@ const useStyles = makeStyles((theme) => ({
   sendIcon: {
     color: theme.palette.text.disabled,
     "&:focus, &:hover": {
-      color: theme.palette.primary.main,
-      // opacity: 0.5,
       cursor: "pointer"
     },
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: "15px"
+    },
+    marginLeft: "20px"
   },
   marginMobile: {
     [theme.breakpoints.down("sm")]: {
@@ -180,8 +183,9 @@ const useStyles = makeStyles((theme) => ({
   },
   smAvatar: {
     [theme.breakpoints.down("xs")]: {
-      minWidth: "50px"
+      marginRight: "15px"
     },
+    marginRight: "20px"
   },
   textField: {
 
@@ -607,84 +611,98 @@ function ViewTaskTeacher(props) {
 
   const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
     return (
-      <Grid container item xs={12} direction="row" spacing={2}>
-        <Hidden smUp>
-          <Grid item xs={1} sm={0} className={classes.smAvatar}>
-            <Avatar src={commentAvatar[author_id]}/>
-          </Grid>
-        </Hidden>
-        <Hidden xsDown>
-          <Grid item className={classes.smAvatar}>
-            <Avatar src={commentAvatar[author_id]}/>
-          </Grid>
-        </Hidden>
-        <Grid item xs={10} sm={10} md={11}>
+      <Grid container item direction="row" style={{flexWrap: "nowrap"}}>
+      <div className={classes.smAvatar}>
+        <Avatar src={commentAvatar[author_id]}/>
+      </div>
+      <Box flexGrow={1}>
+        <div style={{display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
           <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-            <Typography style={{marginRight: "10px", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: "50px", overflow: "hidden"}}>
-              <b>{authorName}</b>
-            </Typography>
-            {edited === true ?
-              <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography>
-            : null}
-            <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
-              {moment(date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH.mm")}
-            </Typography>
-            {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
-              <>
-                <LightTooltip title="Sunting">
-                  <CreateIcon
-                    style={{marginRight: "2px"}}
-                    className={classes.commentLittleIcon}
-                    fontSize="small"
-                    onClick={() => handleClickEdit(idx)}
-                  />
-                </LightTooltip>
-                <LightTooltip title="Hapus">
-                  <DeleteIcon
-                    className={classes.commentLittleIcon}
-                    fontSize="small"
-                    onClick={() => handleOpenDeleteCommentDialog(idx)}
-                  />
-                </LightTooltip>
-              </>
-            : null}
+            <Hidden smUp>
+              <Typography style={{marginRight: "10px", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: "50px", overflow: "hidden"}}>
+                <b>{authorName}</b>
+              </Typography>
+              <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                  {edited === true ?
+                    <Typography color="textSecondary" variant="body2" style={{marginRight: "10px", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>Edited</Typography>
+                  : null}
+                  <Typography color="textSecondary" variant="body2" style={{marginRight: "10px", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                    {moment(date)
+                          .locale("id")
+                          .format("DD MMM YYYY, HH.mm")}
+                  </Typography>
+                </div>
+              </Hidden>
+              <Hidden xsDown>
+                <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
+                {edited === true ? 
+                  <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography>
+                : null}
+                  <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
+                    {moment(date)
+                          .locale("id")
+                          .format("DD MMM YYYY, HH.mm")}
+                  </Typography>
+              </Hidden>
+            </div>
+            <div>
+              {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
+                <>
+                  <LightTooltip title="Sunting">
+                    <CreateIcon
+                      style={{marginRight: "2px"}}
+                      className={classes.commentLittleIcon}
+                      fontSize="small"
+                      onClick={() => handleClickEdit(idx)}
+                    />
+                  </LightTooltip>
+                  <LightTooltip title="Hapus">
+                    <DeleteIcon
+                      className={classes.commentLittleIcon}
+                      fontSize="small"
+                      onClick={() => handleOpenDeleteCommentDialog(idx)}
+                    />
+                  </LightTooltip>
+                </>
+              : null}
+            </div>
           </div>
           {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
-              <div style={{display: "flex", flexDirection: "column"}}>
-                <TextField
-                  variant="outlined"
-                  onChange={handleCommentEditorChange}
-                  value={commentEditorValue}
-                  style={{marginTop: "5px"}}
-                  multiline
-                />
-                <div style={{display: "flex", alignItems: "center"}}>
-                  <Button
-                    variant="contained"
-                    color="default"
-                    className={classes.checkButton}
-                    startIcon={<CheckCircleIcon />}
-                    onClick={handleEditComment}
-                  >
-                    Simpan
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="default"
-                    className={classes.cancelButton}
-                    startIcon={<CancelIcon />}
-                    onClick={closeEditMode}
-                  >
-                    Batal
-                  </Button>
-                </div>
+            <div style={{display: "flex", flexDirection: "column"}}>
+              <TextField
+                variant="outlined"
+                onChange={handleCommentEditorChange}
+                value={commentEditorValue}
+                style={{marginTop: "5px"}}
+                multiline
+              />
+              <div style={{display: "flex", alignItems: "center"}}>
+                <Button
+                  variant="contained"
+                  color="default"
+                  className={classes.checkButton}
+                  startIcon={<CheckCircleIcon />}
+                  onClick={handleEditComment}
+                >
+                  Simpan
+                </Button>
+                <Button
+                  variant="contained"
+                  color="default"
+                  className={classes.cancelButton}
+                  startIcon={<CancelIcon />}
+                  onClick={closeEditMode}
+                >
+                  Batal
+                </Button>
               </div>
-            :
-              <Typography style={{marginTop: "5px"}}>{comment}</Typography>
+            </div>
+          :
+            <div style={{wordWrap: "break-word"}}>
+              <Typography style={{marginTop: "5px"}} align="justify">{comment}</Typography>
+            </div>
           }
-        </Grid>
+        </Box>
       </Grid>
     )
   }
@@ -824,55 +842,48 @@ function ViewTaskTeacher(props) {
             <Typography variant="h6" gutterBottom>Komentar Kelas</Typography>
             <Divider style={{ marginBottom: "17.5px" }} />
             <Grid container spacing={2}>
-              <Grid container item xs={12} direction="row" spacing={2} alignItems="center">
-                <Hidden xsDown>
-                  <Grid item className={classes.smAvatar}>
-                    <Avatar src={commentAvatar[user._id]}/>
-                  </Grid>
-                  <Grid item sm={10} md={11}>
-                    <TextField
-                      className={classes.textField}
-                      variant="outlined"
-                      multiline
-                      style={{display: "flex"}}
-                      InputProps={{style: {borderRadius: "15px"}}}
-                      placeholder="Tambahkan komentar..."
-                      onChange={handleCommentInputChange}
-                      value={commentValue}
-                    />
-                  </Grid>
-                  <Grid item style={{maxWidth: "10px"}}>
-                    <LightTooltip title="Kirim">
-                      <SendIcon className={classes.sendIcon} onClick={handleCreateComment}/>
-                    </LightTooltip>
-                  </Grid>
-                </Hidden>
-                <Hidden smUp>
-                  <Grid item style={{width: "52px"}}>
-                    <Avatar src={commentAvatar[user._id]} />
-                  </Grid>
-                  <Grid container item xs={10} direction="row" alignItems="center">
-                    <Grid item xs={11}>
-                      <TextField
-                        className={classes.textField}
-                        variant="outlined"
-                        multiline
-                        style={{display: "flex"}}
-                        InputProps={{style: {borderRadius: "15px"}}}
-                        placeholder="Tambahkan komentar..."
-                        onChange={handleCommentInputChange}
-                        value={commentValue}
-                      />
+              {
+                (commentList.length !== 0) ?
+                  <>
+                    {
+                      commentList.map((comment, idx) => (
+                        generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)
+                      ))
+                    }
+                    <Grid item xs={12}>
+                      <Divider />
                     </Grid>
-                    <Grid container item xs={1} justify="flex-end">
-                      <Grid item xs={1}>
-                        <LightTooltip title="Kirim">
-                          <SendIcon className={classes.sendIcon} onClick={handleCreateComment}/>
-                        </LightTooltip>
-                      </Grid>
-                    </Grid>
+                  </>
+                : null
+              }
+              {/* {
+                (commentList.length === 0) ?
+                  <Grid item xs={12}>
+                    <Typography color="textSecondary" align="center">Belum ada komentar</Typography>
                   </Grid>
-                </Hidden>
+                : null
+              } */}
+              <Grid container item direction="row" alignItems="center">
+                <div className={classes.smAvatar}>
+                  <Avatar src={commentAvatar[user._id]}/>
+                </div>
+                <Box flexGrow={1}>
+                  <TextField
+                    className={classes.textField}
+                    variant="outlined"
+                    multiline
+                    style={{display: "flex"}}
+                    InputProps={{style: {borderRadius: "15px"}}}
+                    placeholder="Tambahkan komentar..."
+                    onChange={handleCommentInputChange}
+                    value={commentValue}
+                  />
+                </Box>
+                <div>
+                  <LightTooltip title="Kirim">
+                    <SendIcon className={classes.sendIcon} onClick={handleCreateComment}/>
+                  </LightTooltip>
+                </div>
               </Grid>
             </Grid>
           </Paper>
