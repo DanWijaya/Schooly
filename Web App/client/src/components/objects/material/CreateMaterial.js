@@ -342,6 +342,7 @@ class CreateMaterial extends Component {
       this.handleOpenUploadDialog();
     }
 
+    // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas dan mata pelajaran
     if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
 
@@ -350,10 +351,12 @@ class CreateMaterial extends Component {
           all_classes_obj[classInfo._id] = classInfo.name;
         });
 
-        let newClassOptions = this.props.auth.user.class_teached.map((classId) => {
-          return { _id: classId, name: all_classes_obj[classId] };
-        })
-
+        let newClassOptions = [];
+        if (this.props.auth.user.class_teached) {
+          newClassOptions = this.props.auth.user.class_teached.map((classId) => {
+            return { _id: classId, name: all_classes_obj[classId] };
+          });
+        }
         this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
       } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
     }
@@ -366,9 +369,12 @@ class CreateMaterial extends Component {
           all_subjects_obj[subjectInfo._id] = subjectInfo.name;
         });
 
-        let newSubjectOptions = this.props.auth.user.subject_teached.map((subjectId) => {
-          return { _id: subjectId, name: all_subjects_obj[subjectId] };
-        })
+        let newSubjectOptions = [];
+        if (this.props.auth.user.subject_teached) {
+          newSubjectOptions = this.props.auth.user.subject_teached.map((subjectId) => {
+            return { _id: subjectId, name: all_subjects_obj[subjectId] };
+          });
+        }
 
         this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
       } // jika memang belum ada matpel yang tercatat di sistem, opsi matpel akan tetap null

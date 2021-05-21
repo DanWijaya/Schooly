@@ -281,6 +281,7 @@ class EditAnnouncement extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas
     if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       const selectedAnnouncementProps = this.props.announcements.selectedAnnouncements;
 
@@ -292,23 +293,26 @@ class EditAnnouncement extends Component {
 
         if (this.props.auth.user.role === "Teacher") {
           // perlu dicek karena hanya guru yang memiliki atribut yang berisi kelas-kelas yand diajar
-          
+
           this.props.classesCollection.all_classes.forEach((classInfo) => {
-            all_classes_obj[classInfo._id] = classInfo.name; 
+            all_classes_obj[classInfo._id] = classInfo.name;
           });
 
-          newClassOptions = this.props.auth.user.class_teached.map((classId) => {
-            return { _id: classId, name: all_classes_obj[classId] };
-          })
+          let newClassOptions = [];
+          if (this.props.auth.user.class_teached) {
+            newClassOptions = this.props.auth.user.class_teached.map((classId) => {
+              return { _id: classId, name: all_classes_obj[classId] };
+            });
+          }
         } else {
           newClassOptions = [];
 
           this.props.classesCollection.all_classes.forEach((classInfo) => {
-            all_classes_obj[classInfo._id] = classInfo.name; 
+            all_classes_obj[classInfo._id] = classInfo.name;
             newClassOptions.push({ _id: classInfo._id, name: classInfo.name });
           });
         }
-        
+
         this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
       }
     }
