@@ -183,9 +183,6 @@ const useStyles = makeStyles((theme) => ({
       minWidth: "50px"
     },
   },
-  textField: {
-
-  },
   checkButton: {
     backgroundColor: theme.palette.success.main,
     color: "white",
