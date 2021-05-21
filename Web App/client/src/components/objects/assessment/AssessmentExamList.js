@@ -11,6 +11,7 @@ import {
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Divider,
@@ -789,9 +790,7 @@ function AssessmentList(props) {
       <Grid container direction="column" spacing={2}>
         {/* REVIEW stablesort element*/}
         {rows.length === 0 ? (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
@@ -1065,7 +1064,7 @@ function AssessmentList(props) {
         onClose={handleCloseCopySnackBar}
       >
         <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
-          Link {type} berhasil disalin ke Clipboard Anda!
+          Tautan {type} berhasil disalin ke Clipboard Anda!
         </MuiAlert>
       </Snackbar>
     </div>

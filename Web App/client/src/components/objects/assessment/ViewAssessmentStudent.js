@@ -9,6 +9,7 @@ import {
   getOneAssessment,
   submitAssessment,
 } from "../../../actions/AssessmentActions";
+import FlexibleInput from "../../misc/flexible-textfield/FlexibleInput";
 import {
   Avatar,
   Badge,
@@ -174,7 +175,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.main,
       color: "white",
       cursor: "pointer",
-      "&:hover": {
+      "&:focus, &:hover": {
         backgroundColor: theme.palette.primary.main,
       },
     },
@@ -346,16 +347,8 @@ function questionPage(
           horizontal: "right",
         }}
       >
-        {/* <Paper
-          buttons
-          variant="outlined"
-          className={classes.questionPage}
-          onClick={() => handleChangeQuestion(question_number-1)}
-        > */}
         <Typography>{question_number}</Typography>
-        {/* </Paper> */}
       </Badge>
-      {/* </Grid> */}
     </ToggleButton>
   );
 }
@@ -477,7 +470,7 @@ function ViewAssessmentStudent(props) {
 
     for (let i = 1; i <= splitResult.length - 2; i += 2) {
       splitResult[i] = (
-        <Input
+        <FlexibleInput
           type="text"
           key={`${qnsIndex}-${idIterator}`}
           id={idIterator}
@@ -653,13 +646,6 @@ function ViewAssessmentStudent(props) {
                           i + 1,
                           answer
                         );
-                        // return (
-                        // <QuestionPage
-                        //   classes={classes}
-                        //   question_number={i + 1}
-                        //   handleChangeQuestion={handleChangeQuestion}
-                        //   answer={answer}/>
-                        // )
                       })}
                 </ToggleButtonGroup>
               </Grid>
@@ -672,7 +658,7 @@ function ViewAssessmentStudent(props) {
               <Grid item xs sm className={classes.content}>
                 <Grid container direction="column" spacing={2}>
                   <Grid item>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6" color="primary" gutterBottom>
                       Soal {qnsIndex + 1}
                     </Typography>
                     <GridList
@@ -686,7 +672,6 @@ function ViewAssessmentStudent(props) {
                             <GridListTile key={image} cols={1}>
                               <img
                                 alt="current img"
-                                // src={`/api/upload/att_assessment/${image}`}
                                 src={lampiranUrls.get(image)}
                               />
                               <GridListTileBar
@@ -701,7 +686,7 @@ function ViewAssessmentStudent(props) {
                       "shorttext" ? (
                       generateSoalShortTextStudent()
                     ) : (
-                      <Typography variant="h6" gutterButtom>
+                      <Typography gutterButtom>
                         <CustomLinkify text={questions[qnsIndex].name} />
                       </Typography>
                     )}
@@ -762,9 +747,8 @@ function ViewAssessmentStudent(props) {
                             );
                           })}
                         </FormGroup>
-                      ) : questions[qnsIndex].type ===
-                        "shorttext" ? null : questions[qnsIndex].type ===
-                        "longtext" ? (
+                      ) : questions[qnsIndex].type === "shorttext" ? null
+                      : questions[qnsIndex].type === "longtext" ? (
                         <TextField
                           key={`${user._id}-${qnsIndex}`}
                           id="answer"

@@ -49,9 +49,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     padding: "10px",
   },
-  // content: {
-  //   padding: "20px",
-  // },
   seeAllAssessmentButton: {
     backgroundColor: theme.palette.success.main,
     color: "white",
@@ -385,7 +382,7 @@ function ViewAssessmentTeacher(props) {
                     className={classes.content}
                   >
                     <Grid item>
-                      <Typography variant="h6" gutterBottom color="primary">
+                      <Typography variant="h6" color="primary" gutterBottom>
                         Soal {i + 1}
                       </Typography>
                       <GridList
@@ -400,7 +397,6 @@ function ViewAssessmentTeacher(props) {
                               <GridListTile key={image} cols={1}>
                                 <img
                                   alt="current img"
-                                  // src={`/api/upload/att_assessment/${image}`}
                                   src={lampiranUrls.get(image.toString())}
                                 />
                                 <GridListTileBar
@@ -563,7 +559,7 @@ function ViewAssessmentTeacher(props) {
         onClose={handleCloseCopySnackBar}
       >
         <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
-          Link {type} berhasil disalin ke Clipboard Anda!
+          Tautan {type} berhasil disalin ke Clipboard Anda!
         </MuiAlert>
       </Snackbar>
     </div>

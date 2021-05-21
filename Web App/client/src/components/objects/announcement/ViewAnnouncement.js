@@ -359,7 +359,7 @@ function ViewAnnouncement(props) {
               selectedAnnouncements.author_id &&
               retrieved_users.get(selectedAnnouncements.author_id).role ===
                 "Teacher" ? (
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ marginBottom: "15px" }}>
                   <Typography color="textSecondary" gutterBottom>
                     Kelas yang Diberikan:
                   </Typography>
@@ -382,7 +382,7 @@ function ViewAnnouncement(props) {
                 </Grid>
               ) : null}
 
-              <Grid item xs={12} style={{ marginTop: "15px" }}>
+              <Grid item xs={12}>
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Pengumuman:
                 </Typography>

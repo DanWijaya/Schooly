@@ -154,7 +154,7 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div hidden={value !== index} id={`simple-tabpanel-${index}`} {...other}>
+    <div hidden={value !== index} id={`scrollable-force-tabpanel-${index}`} {...other}>
       {value === index && (
         <Box p={3}>
           <Typography>{children}</Typography>
@@ -172,7 +172,7 @@ TabPanel.propTypes = {
 
 function TabIndex(index) {
   return {
-    id: `simple-tab-${index}`,
+    id: `scrollable-force-tab-${index}`,
   };
 }
 
@@ -555,6 +555,7 @@ function SubmittedTaskList(props) {
           <Tabs
             value={value}
             variant="scrollable"
+            scrollButtons="on"
             onChange={handleChange}
             indicatorColor="primary"
             textColor="primary"
@@ -716,13 +717,13 @@ function SubmittedTaskList(props) {
                 </Typography>
               </Grid>
             ) : (
-              students_in_class 
+              students_in_class
             )}
           </TabPanel>
         );
         return TabPanelList;
       }
-     
+
     // return tasksCollection.class_assigned.length > 0 ? TabPanelList : null;
   };
 
@@ -771,15 +772,6 @@ function SubmittedTaskList(props) {
             </Hidden>
           </Grid>
 
-          {/* <Grid item xs={12} md={5} style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end"}} > */}
-          {/* <Hidden mdUp>
-              <Typography variant="body2" color="textSecondary">
-                Tenggat: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Nilai Maksimum: 100
-              </Typography>
-            </Hidden> */}
           <Hidden smDown style={{ display: "flex" }}>
             <Grid
               item
@@ -797,12 +789,8 @@ function SubmittedTaskList(props) {
                   .locale("id")
                   .format("DD MMM YYYY, HH.mm")}
               </Typography>
-              {/* <Typography variant="body2" align="right" color="textSecondary">
-                Nilai Maksimum: 100
-              </Typography> */}
             </Grid>
           </Hidden>
-          {/* </Grid> */}
 
           <Grid item xs={12}>
             <Divider className={classes.dividerColor} />
@@ -819,7 +807,7 @@ function SubmittedTaskList(props) {
             </LightTooltip>
           </Grid>
 
-          <Grid item style={{ paddingBottom: "0" }}>
+          <Grid item style={{ paddingBottom: "0", width: "100%" }}>
             {listClassTab()}
           </Grid>
         </Grid>

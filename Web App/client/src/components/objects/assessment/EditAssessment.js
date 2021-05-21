@@ -2079,7 +2079,7 @@ class EditAssessment extends Component {
           onClose={this.handleCloseCopySnackBar}
         >
           <MuiAlert onClose={this.handleCloseCopySnackBar} severity="success">
-            Link {this.state.type} berhasil disalin ke Clipboard Anda!
+            Tautan {this.state.type} berhasil disalin ke Clipboard Anda!
           </MuiAlert>
         </Snackbar>
         <Snackbar

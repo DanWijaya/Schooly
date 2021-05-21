@@ -24,8 +24,8 @@ import {
 import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import viewClassPicture from "./ViewClassPicture.png";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-
 import {
   Avatar,
   Box,
@@ -593,9 +593,7 @@ function ViewClass(props) {
   function showTasks(data) {
     if (data.length === 0) {
       return (
-        <Typography variant="subtitle1" align="center" color="textSecondary">
-          Kosong
-        </Typography>
+        <Empty />
       );
     } else {
       return sortAscByCreatedAt(data).map((row) => (
@@ -618,9 +616,7 @@ function ViewClass(props) {
   function showAssessments(data) {
     if (data.length === 0) {
       return (
-        <Typography variant="subtitle1" align="center" color="textSecondary">
-          Kosong
-        </Typography>
+        <Empty />
       );
     } else {
       return sortAscByCreatedAt(data).map((row) => (
@@ -648,9 +644,7 @@ function ViewClass(props) {
   function showMaterials(data) {
     if (data.length === 0) {
       return (
-        <Typography variant="subtitle1" align="center" color="textSecondary">
-          Kosong
-        </Typography>
+        <Empty />
       );
     } else {
       return sortAscByCreatedAt(data).map((row) => (
@@ -668,9 +662,7 @@ function ViewClass(props) {
   function showAllbySubject(data) {
     if (data.length === 0) {
       return (
-        <Typography variant="subtitle1" align="center" color="textSecondary">
-          Kosong
-        </Typography>
+        <Empty />
       );
     } else {
       return sortAscByCreatedAt(data).map((row) => {
