@@ -1166,7 +1166,7 @@ function ViewAssessmentTeacher(props) {
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Kuis/Ujian:
                 </Typography>
-                <Typography variant="body1">
+                <Typography variant="body1" align="justify" style={{wordBreak: "break-word", whiteSpace: "pre-wrap"}}>
                   <CustomLinkify text={selectedAssessments.description} />
                 </Typography>
               </Grid>
