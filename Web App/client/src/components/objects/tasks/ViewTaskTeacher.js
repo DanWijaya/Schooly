@@ -702,7 +702,7 @@ function ViewTaskTeacher(props) {
             </div>
           </div>
         :
-          <Typography style={{marginTop: "5px", wordBreak: "break-word"}} align="justify">{comment}</Typography>
+          <Typography style={{marginTop: "5px", wordBreak: "break-word", whiteSpace: "pre-wrap"}} align="justify">{comment}</Typography>
         }
       </Box>
     </Grid>
