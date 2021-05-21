@@ -725,6 +725,7 @@ function QuestionItem(props) {
               <Grid item style={{ height: "3rem" }}>
                 <TextField
                   value={longtextValue}
+                  key={Math.random()}
                   onChange={(e) => {
                     handleLongtextWeight(e, index);
                   }}

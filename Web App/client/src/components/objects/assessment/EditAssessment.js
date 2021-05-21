@@ -362,7 +362,11 @@ class EditAssessment extends Component {
           for (let [key, value] of Object.entries(
             selectedAssessments.question_weight.longtext
           )) {
-            longtextWeight[key] = value;
+            if (value === null) {
+              longtextWeight[key] = undefined;
+            } else {
+              longtextWeight[key] = value;
+            }
           }
         }
 
@@ -482,38 +486,18 @@ class EditAssessment extends Component {
       let filteredtypeCount = Object.entries(typeCount).filter(
         (pair) => pair[1] > 0
       );
-      if (filteredtypeCount.length !== 0) {
-        let newWeights = { ...this.state.weights };
-        let newLongtextWeight = [...this.state.longtextWeight];
-
-        for (let pair of filteredtypeCount) {
-          let type = pair[0];
-
+      if (filteredtypeCount.length === 0) {
+        completeWeight = false;
+      } else {
+        for (let [type, count] of filteredtypeCount) {
           if (type === "longtext") {
-            // menghapus elemen bobot soal non uraian pada array bobot soal uraian
-            let longtextCount = this.state.longtextWeight.filter(
-              (value) => value !== -1
-            );
-
-            for (let i = 0; i <= longtextCount.length - 1; i++) {
-              let weight = longtextCount[i];
-
-              // agar error di textfield bobot muncul ketika textfield masih kosong saat create assessment
-              if (weight === undefined) {
-                newLongtextWeight[i] = null;
-              }
-
+            for (let weight of this.state.longtextWeight) {
               // agar data assessment tidak disubmit ketika ada bobot yang tidak valid
-              if (isNaN(Number(weight)) || Number(weight) <= 0) {
+              if (weight !== -1 && (isNaN(Number(weight)) || Number(weight) <= 0)) {
                 completeWeight = false;
               }
             }
           } else {
-            // agar error di textfield bobot muncul ketika textfield masih kosong saat create assessment
-            if (this.state.weights[type] === undefined) {
-              newWeights[type] = null;
-            }
-
             // agar data assessment tidak disubmit ketika ada bobot yang tidak valid
             if (
               isNaN(Number(this.state.weights[type])) ||
@@ -523,15 +507,33 @@ class EditAssessment extends Component {
             }
           }
         }
-        // agar error di textfield bobot muncul ketika textfield masih kosong saat create assessment
-        this.setState({
-          weights: newWeights,
-          longtextWeight: newLongtextWeight,
-        });
-      } else {
-        completeWeight = false;
       }
     }
+
+    let newWeights = { ...this.state.weights };
+    let newLongtextWeight;
+    for (let [type, count] of Object.entries(typeCount)) {
+      if (count === 0) {
+        continue;
+      }
+      if (type === "longtext") {
+        newLongtextWeight = [...this.state.longtextWeight].map((weight) => {
+          if (weight === undefined) {
+            return null;
+          }
+          return weight;
+        });
+      } else {
+        if (this.state.weights[type] === undefined) {
+          newWeights[type] = null;
+        }
+      }
+    }
+
+    this.setState({
+      weights: newWeights,
+      longtextWeight: newLongtextWeight,
+    });
 
     // jika soal dan bobot sudah lengkap dan benar, submit
     if (invalidQuestionIndex.length === 0 && completeWeight) {
@@ -543,7 +545,11 @@ class EditAssessment extends Component {
         longtext = {};
         this.state.longtextWeight.forEach((val, idx) => {
           if (val !== -1) {
-            longtext[idx] = Number(val);
+            if (val === null || val === "") {
+              longtext[idx] = null;
+            } else {
+              longtext[idx] = Number(val);
+            }
           }
         });
       }
@@ -1253,7 +1259,7 @@ class EditAssessment extends Component {
         let type = pair[0];
         let weight = this.state.weights[type];
         let showError =
-          weight !== undefined && (Number(weight) <= 0 || weight === null);
+          weight === null || (weight !== undefined && Number(weight) <= 0);
 
         gridItemMobileView.push(
           <Grid container>
