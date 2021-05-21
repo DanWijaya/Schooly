@@ -206,6 +206,11 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer"
     },
   },
+  smAvatar: {
+    [theme.breakpoints.down("xs")]: {
+      minWidth: "50px"
+    },
+  },
   marginMobile: {
     [theme.breakpoints.down("sm")]: {
       marginRight: "14px",
@@ -1029,39 +1034,43 @@ function ViewTaskStudent(props) {
           </Grid>
         </Hidden>
         <Hidden smUp>
-          <Grid item>
+          <Grid item xs={1} className={classes.smAvatar}>
             <Avatar src={commentAvatar[author_id]}/>
           </Grid>
           <Grid item xs={10} sm={10} md={11}>
             <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-              <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
-              {edited === true ? 
-                <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography> 
-              : null}
-              <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
-                {moment(date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH.mm")}
+              <Typography style={{marginRight: "10px", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: "50px", overflow: "hidden"}}>
+                <b>{authorName}</b>
               </Typography>
-              {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
-                <>
-                  <LightTooltip title="Sunting">
-                    <CreateIcon
-                      style={{marginRight: "2px"}}
-                      className={classes.commentLittleIcon}
-                      fontSize="small"
-                      onClick={() => handleClickEdit(idx)}
-                    />
-                  </LightTooltip>
-                  <LightTooltip title="Hapus">
-                    <DeleteIcon
-                      className={classes.commentLittleIcon}
-                      fontSize="small"
-                      onClick={() => handleOpenDeleteCommentDialog(idx)}
-                    />
-                  </LightTooltip>
-                </>
-              : null}
+              <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                {edited === true ? 
+                  <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography> 
+                : null}
+                <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
+                  {moment(date)
+                        .locale("id")
+                        .format("DD MMM YYYY, HH.mm")}
+                </Typography>
+                {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
+                  <>
+                    <LightTooltip title="Sunting">
+                      <CreateIcon
+                        style={{marginRight: "2px"}}
+                        className={classes.commentLittleIcon}
+                        fontSize="small"
+                        onClick={() => handleClickEdit(idx)}
+                      />
+                    </LightTooltip>
+                    <LightTooltip title="Hapus">
+                      <DeleteIcon
+                        className={classes.commentLittleIcon}
+                        fontSize="small"
+                        onClick={() => handleOpenDeleteCommentDialog(idx)}
+                      />
+                    </LightTooltip>
+                  </>
+                : null}
+              </div>
             </div>
             {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
               <div style={{display: "flex", flexDirection: "column"}}>

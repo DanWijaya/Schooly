@@ -595,15 +595,32 @@ function ViewMaterial(props) {
         </Hidden>
         <Grid item xs={10} sm={10} md={11}>
           <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-            <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
-            {edited === true ? 
-              <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography> 
-            : null}
-            <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
-              {moment(date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH.mm")}
-            </Typography>
+            <Hidden smUp>
+              <Typography style={{marginRight: "10px", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: "50px", overflow: "hidden"}}>
+                <b>{authorName}</b>
+              </Typography>
+              <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                {edited === true ?
+                  <Typography color="textSecondary" variant="body2" style={{marginRight: "10px", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>Edited</Typography>
+                : null}
+                <Typography color="textSecondary" variant="body2" style={{marginRight: "10px", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                  {moment(date)
+                        .locale("id")
+                        .format("DD MMM YYYY, HH.mm")}
+                </Typography>
+              </div>
+            </Hidden>
+            <Hidden xsDown>
+              <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
+              {edited === true ? 
+                <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography>
+              : null}
+                <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
+                  {moment(date)
+                        .locale("id")
+                        .format("DD MMM YYYY, HH.mm")}
+                </Typography>
+            </Hidden>
             {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
               <>
                 <LightTooltip title="Sunting">

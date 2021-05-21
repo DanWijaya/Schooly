@@ -620,7 +620,9 @@ function ViewTaskTeacher(props) {
         </Hidden>
         <Grid item xs={10} sm={10} md={11}>
           <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-            <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
+            <Typography style={{marginRight: "10px", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: "50px", overflow: "hidden"}}>
+              <b>{authorName}</b>
+            </Typography>
             {edited === true ? 
               <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography> 
             : null}
