@@ -194,9 +194,6 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     maxWidth: "50px",
   },
-  textField: {
-
-  },
   checkButton: {
     backgroundColor: theme.palette.success.main,
     color: "white",
