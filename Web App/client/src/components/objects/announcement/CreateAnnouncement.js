@@ -221,6 +221,7 @@ class CreateAnnouncement extends Component {
       this.handleOpenUploadDialog();
     }
 
+    // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas
     if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
 
@@ -234,12 +235,15 @@ class CreateAnnouncement extends Component {
             all_classes_obj[classInfo._id] = classInfo.name; 
           });
 
-          // NOTE dengan ini, jika guru tidak mengajar kelas yang diwalikannya, 
-          // guru tidak dapat membuat pengumuman untuk kelas walinya tersebut
-          newClassOptions = this.props.auth.user.class_teached.map((classId) => {
-            return { _id: classId, name: all_classes_obj[classId] };
-          })
-        } else {
+          let newClassOptions = [];
+          if (this.props.auth.user.class_teached) {
+            // NOTE dengan ini, jika guru tidak mengajar kelas yang diwalikannya, 
+            // guru tidak dapat membuat pengumuman untuk kelas walinya tersebut
+            newClassOptions = this.props.auth.user.class_teached.map((classId) => {
+              return { _id: classId, name: all_classes_obj[classId] };
+            });
+          }
+          } else {
           newClassOptions = [];
 
           this.props.classesCollection.all_classes.forEach((classInfo) => {

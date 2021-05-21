@@ -279,6 +279,7 @@ class EditTask extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas dan mata pelajaran
     if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       const selectedTaskProps = this.props.tasksCollection;
 
