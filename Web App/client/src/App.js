@@ -62,6 +62,7 @@ import ViewTaskStudent from "./components/objects/tasks/ViewTaskStudent";
 import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
 import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
 import TaskList from "./components/objects/tasks/TaskList";
+/*
 //Assessment
 import AssessmentList from "./components/objects/assessment/AssessmentQuizList";
 import AssessmentTestList from "./components/objects/assessment/AssessmentExamList";
@@ -71,6 +72,7 @@ import ViewAssessmentTeacher from "./components/objects/assessment/ViewAssessmen
 import ViewAssessmentStudent from "./components/objects/assessment/ViewAssessmentStudent";
 import SubmittedAssessmentList from "./components/objects/assessment/SubmittedAssessmentList";
 import ViewAssessmentAnswer from "./components/objects/assessment/ViewAssessmentAnswer";
+*/
 //Admin Only
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
@@ -407,8 +409,9 @@ class App extends Component {
                       path="/daftar-tugas"
                       component={TaskList}
                     />
+                    
                     {/* Route Assessment - Prototype */}
-                    <PrivateRoute
+                    {/* <PrivateRoute
                       exact
                       access={["Student", "Teacher"]}
                       path="/buat-kuis-ujian"
@@ -490,7 +493,8 @@ class App extends Component {
                       access={["Teacher"]}
                       path="/lihat-jawaban-ujian/:id"
                       component={ViewAssessmentAnswer}
-                    />
+                    /> */}
+                    
                     {/* Route Admin-Only */}
                     <PrivateRoute
                       exact
