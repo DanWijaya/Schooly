@@ -680,9 +680,7 @@ function ViewMaterial(props) {
             </div>
           </div>
         :
-          <div style={{wordWrap: "break-word"}}>
-            <Typography style={{marginTop: "5px"}} align="justify">{comment}</Typography>
-          </div>
+          <Typography style={{marginTop: "5px", wordBreak: "break-word"}} align="justify">{comment}</Typography>
         }
       </Box>
     </Grid>
