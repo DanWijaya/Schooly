@@ -49,32 +49,32 @@ const AssessmentSchema = new Schema(
       type: Map,
       // of: Object
     },
-    // isi grades adalah pasangan <id murid> - <value>.
-    // <value> adalah Object yang memiliki 2 pasangan key-value:
-    // 1) "total_grade" - <nilai dengan range 0-100>
-    // 2) "longtext_grades" - < Object yg memiliki pasangan-pasangan key-value = <idx soal uraian>-<nilai dengan range 0-bobot soal> >
+    /*
+    isi grades adalah pasangan <id murid> - <value>.
+    <value> adalah Object yang memiliki 2 pasangan key-value:
+    1) "total_grade" - <nilai dengan range 0-100>
+    2) "longtext_grades" - < Object yg memiliki pasangan-pasangan key-value = <idx soal uraian>-<nilai dengan range 0-bobot soal> >
 
-    // contoh value grades:
-    // Map {
-    //   5e9486667f32fa38946dc963: {
-    //     total_grade: 95,
-    //     longtext_grades: {
-    //       0: 10,
-    //       1: 10,
-    //       2: 10,
-    //     }
-    //   },
-    //   5ed4ee415caa50389efaf014: {
-    //     total_grade: 87,
-    //     longtext_grades: {
-    //       0: 0,
-    //       1: 0,
-    //       2: 10,
-    //     }
-    //   },
-    // }
+    contoh value grades:
+    Map {
+      5e9486667f32fa38946dc963: {
+        total_grade: 95,
+        longtext_grades: {
+          0: 10,
+          1: 10,
+          2: 10,
+        }
+      },
+      5ed4ee415caa50389efaf014: {
+        total_grade: 87,
+        longtext_grades: {
+          0: 0,
+          1: 0,
+          2: 10,
+        }
+      },
+    }
 
-    /* NOTE
     - jika suatu soal uraian sudah dinilai, pasangan <idx soal uraian>-<nilai dengan range 0-bobot soal> > ditambahkan ke dalam longtext_grades.
       jika belum dinilai, pasangan tidak ditambahkan.
     - ketika assessment pertama kali dibuat, atribut grades tidak ada. 
@@ -104,23 +104,29 @@ const AssessmentSchema = new Schema(
       shorttext: Number,
       longtext: Object,
     },
-    // value longtext adalah Object yg memiliki pasangan-pasangan key-value = <idx soal uraian>-<bobot>
-    // contoh value question_weight:
-    // {
-    //   radio: 5,
-    //   checkbox: 5,
-    //   shorttext: 3,
-    //   longtext: {
-    //     0: 20,
-    //     1: 20,
-    //     2: 20
-    //   }
-    // }
+    /* 
+    contoh value question_weight:
+    {
+      radio: 5,
+      checkbox: 5,
+      shorttext: 3,
+      longtext: {
+        0: 20,
+        1: 20,
+        2: 20
+      }
+    }
+    - value "longtext" adalah Object yg memiliki pasangan-pasangan key-value: <index soal uraian>-<bobot> 
+    - "<tipe soal>: null" jika dan hanya jika assessment tidak memiliki soal bertipe <tipe soal>. 
+    contoh: assessment A cuma punya soal pg, maka isi question_weight: {
+      radio: <nilai bobot pg>,
+      checkbox: null,
+      shorttext: null,
+      longtext: null
+    } 
+    - bobot semua soal yang ada pada suatu assessment dipastikan diisi dan tidak bernilai <= 0
+    */
 
-    // NOTE
-    // (di CreateAssessment.js, di fungsi onSubmit)
-    // - assessment tidak punya suatu tipe soal jika dan hanya jika value untuk key tipe soal tersebut = null
-    // - bobot semua soal yang ada pada suatu assessment dipastikan diisi dan tidak bernilai <= 0
   },
   { timestamps: true }
 );
