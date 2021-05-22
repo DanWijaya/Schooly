@@ -132,8 +132,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     width: "1rem",
   },
-  questionName: {
-    fontSize: "1.1rem",
+  shortAnswerText: {
+    color: theme.palette.text.secondary,
   },
 }));
 
@@ -196,18 +196,18 @@ function ViewAssessmentTeacher(props) {
 
     for (let i = 1; i <= splitResult.length - 2; i += 2) {
       splitResult[i] = (
-        <Input
-          type="text"
+        <span
+          className={classes.shortAnswerText}
           key={`${qstIndex}-${iterator}`}
-          disabled={true}
-          value={qst.answer[iterator]}
-        />
+        >
+          <u>{qst.answer[iterator]}</u>
+        </span>
       );
       iterator++;
     }
 
     return (
-      <Typography className={classes.questionName}>
+      <Typography>
         <form>{splitResult}</form>
       </Typography>
     );
@@ -414,19 +414,22 @@ function ViewAssessmentTeacher(props) {
                       {question.type === "shorttext" ? (
                         generateSoalShortTextTeacher(question, i)
                       ) : question.type === "longtext" ? (
-                        <>
-                          <Typography variant="body1">
-                            <CustomLinkify text={question.name} />
-                          </Typography>
-                          <Typography
-                            className={classes.questionName}
-                            color="textSecondary"
-                          >
-                            {question.answer}
-                          </Typography>
-                        </>
+                        <Grid container direction="column" spacing={2}>
+                          <Grid item>
+                            <Typography variant="body1">
+                              <CustomLinkify text={question.name} />
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography
+                              color="textSecondary"
+                            >
+                              {question.answer}
+                            </Typography>
+                          </Grid>
+                        </Grid>
                       ) : (
-                        <Typography className={classes.questionName}>
+                        <Typography>
                           <CustomLinkify text={question.name} />
                         </Typography>
                       )}

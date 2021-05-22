@@ -376,6 +376,7 @@ function SubmittedAssessmentList(props) {
           <Tabs
             value={value}
             variant="scrollable"
+            scrollButtons="on"
             onChange={handleChange}
             indicatorColor="primary"
             textColor="primary"
@@ -1170,7 +1171,7 @@ function SubmittedAssessmentList(props) {
               </IconButton>
             </LightTooltip>
           </Grid>
-          <Grid item style={{ paddingBottom: "0" }}>
+          <Grid item style={{ width:"100%", paddingBottom: "0" }}>
             {listClassTab()}
           </Grid>
         </Grid>
