@@ -496,21 +496,29 @@ function ViewAssessmentTeacher(props) {
     let content;
     if (questionType === "longtext") {
       content = (
-        <div>
-          <Typography
-            align="center"
-            variant="h6"
-            style={{ marginBottom: "10px" }}
-          >
-            <b>{`Soal ${questionNumber}`}</b>
-          </Typography>
-          <Typography align="justify">{`${questionName}`}</Typography>
-          <Typography
-            align="center"
-            style={{ marginTop: "15px" }}
-            color="primary"
-          >{`Bobot: ${questionWeight}`}</Typography>
-        </div>
+        //(Per Soal Uraian)
+        <Grid container direction="column" spacing={2}>
+          <Grid item>
+            <Typography
+              align="center"
+              variant="h6"
+              color="primary"
+            >
+              <b>{`Soal ${questionNumber}`}</b>
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography align="justify">{`${questionName}`}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography
+              align="center"
+              color="textSecondary"
+            >
+              {`Bobot: ${questionWeight}`}
+            </Typography>
+          </Grid>
+        </Grid>
       );
     } else if (questionType === "shorttext") {
       let splitResult = questionName.split("`");
@@ -518,54 +526,70 @@ function ViewAssessmentTeacher(props) {
 
       for (let i = 1; i <= splitResult.length - 2; i += 2) {
         splitResult[i] = (
-          <Input
-            type="text"
+          <span
+            style={{
+              // color: "#FFFFFF",
+              // opacity: "0.7",
+            }}
             key={`${questionNumber}-${iterator}`}
-            disabled={true}
-            value={questionAnswer[iterator]}
-          />
+          >
+            <u>{questionAnswer[iterator]}</u>
+          </span>
         );
         iterator++;
       }
 
       content = (
-        <Grid item>
-          <Typography
-            align="center"
-            variant="h6"
-            style={{ marginBottom: "10px" }}
-          >
-            <b>{`Soal ${questionNumber}`}</b>
-          </Typography>
-          <Typography align="justify">
-            <form>{splitResult}</form>
-          </Typography>
-          <Typography
-            align="center"
-            style={{ marginTop: "15px" }}
-            color="primary"
-          >{`Bobot: ${questionWeight}`}</Typography>
+        //Per Soal Isilah
+        <Grid container direction="column" spacing={2}>
+          <Grid item>
+            <Typography
+              align="center"
+              variant="h6"
+              color="primary"
+            >
+              <b>{`Soal ${questionNumber}`}</b>
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography color="textSecondary" align="justify">
+              <form>{splitResult}</form>
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography
+              align="center"
+              color="textSecondary"
+            >
+              {`Bobot: ${questionWeight}`}
+            </Typography>
+          </Grid>
         </Grid>
       );
     } else {
       let answer;
       if (questionType === "radio") {
         answer = (
-          <Grid item>
-            <Typography align="justify">{`${questionName}`}</Typography>
-            <RadioGroup value={questionAnswer[0]}>
-              {questionOptions.map((option, i) => (
-                <div style={{ display: "flex" }}>
-                  <FormControlLabel
-                    disabled
-                    style={{ width: "100%" }}
-                    value={String.fromCharCode(97 + i).toUpperCase()}
-                    control={<Radio color="primary" />}
-                    label={option}
-                  />
-                </div>
-              ))}
-            </RadioGroup>
+          //Per Soal Pilihan Ganda
+          <Grid container direction="column" spacing={2}>
+            <Grid item>
+              <Typography align="justify">{`${questionName}`}</Typography>
+            </Grid>
+            <Grid item>
+              <RadioGroup value={questionAnswer[0]}>
+                {questionOptions.map((option, i) => (
+                  <div style={{ display: "flex" }}>
+                    <FormControlLabel
+                      disabled
+                      style={{ width: "100%" }}
+                      value={String.fromCharCode(97 + i).toUpperCase()}
+                      control={<Radio color="primary" />}
+                      label={option}
+                    />
+                  </div>
+                ))}
+              </RadioGroup>
+            </Grid>
           </Grid>
         );
       } else {
@@ -2177,22 +2201,11 @@ function QuestionAnswerPerStudent(props) {
               >
                 Poin:
               </Typography>
-              <TextField
-                disabled
-                defaultValue={studentMark}
+              <Typography
                 key={questionNumber}
-                inputProps={{
-                  style: {
-                    borderBottom: "none",
-                    boxShadow: "none",
-                    margin: "0px",
-                    width: "30px",
-                  },
-                }}
-                InputProps={{
-                  endAdornment: `/ ${questionWeight}`,
-                }}
-              />
+              >
+                {studentMark} / {questionWeight}
+              </Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -2230,22 +2243,11 @@ function QuestionAnswerPerStudent(props) {
               >
                 Poin:
               </Typography>
-              <TextField
-                disabled
-                defaultValue={studentMark}
+              <Typography
                 key={questionNumber}
-                inputProps={{
-                  style: {
-                    borderBottom: "none",
-                    boxShadow: "none",
-                    margin: "0px",
-                    width: "30px",
-                  },
-                }}
-                InputProps={{
-                  endAdornment: `/ ${questionWeight}`,
-                }}
-              />
+              >
+                {studentMark} / {questionWeight}
+              </Typography>
             </Grid>
           </Grid>
         </Grid>

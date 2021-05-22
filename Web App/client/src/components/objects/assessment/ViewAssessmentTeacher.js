@@ -416,7 +416,7 @@ function ViewAssessmentTeacher(props) {
                       ) : question.type === "longtext" ? (
                         <Grid container direction="column" spacing={2}>
                           <Grid item>
-                            <Typography variant="body1">
+                            <Typography>
                               <CustomLinkify text={question.name} />
                             </Typography>
                           </Grid>

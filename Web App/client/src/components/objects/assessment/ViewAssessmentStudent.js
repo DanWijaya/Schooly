@@ -9,7 +9,6 @@ import {
   getOneAssessment,
   submitAssessment,
 } from "../../../actions/AssessmentActions";
-import FlexibleInput from "../../misc/flexible-textfield/FlexibleInput";
 import {
   Avatar,
   Badge,
@@ -470,7 +469,7 @@ function ViewAssessmentStudent(props) {
 
     for (let i = 1; i <= splitResult.length - 2; i += 2) {
       splitResult[i] = (
-        <FlexibleInput
+        <Input
           type="text"
           key={`${qnsIndex}-${idIterator}`}
           id={idIterator}
@@ -484,7 +483,7 @@ function ViewAssessmentStudent(props) {
     }
 
     return (
-      <Typography variant="body1" gutterButtom>
+      <Typography gutterButtom>
         <form>{splitResult}</form>
       </Typography>
     );

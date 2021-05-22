@@ -104,6 +104,7 @@ function SubmitDialog(props) {
           <Grid container spacing={2} justify="center" alignItems="center">
             <Grid item>
               <Button
+                variant="contained"
                 onClick={handleClick}
                 className={classes.dialogSubmitButton}
               >
@@ -112,6 +113,7 @@ function SubmitDialog(props) {
             </Grid>
             <Grid item>
               <Button
+                variant="contained"
                 onClick={handleCloseSubmitDialog}
                 startIcon={<CancelIcon />}
                 className={classes.dialogCancelButton}
