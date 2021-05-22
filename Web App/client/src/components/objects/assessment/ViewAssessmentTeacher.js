@@ -421,9 +421,7 @@ function ViewAssessmentTeacher(props) {
                             </Typography>
                           </Grid>
                           <Grid item>
-                            <Typography
-                              color="textSecondary"
-                            >
+                            <Typography color="textSecondary">
                               {question.answer}
                             </Typography>
                           </Grid>

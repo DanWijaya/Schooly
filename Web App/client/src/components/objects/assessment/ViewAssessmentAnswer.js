@@ -192,6 +192,9 @@ const useStyles = makeStyles((theme) => ({
   dividerColor: {
     backgroundColor: theme.palette.primary.main,
   },
+  shortAnswerText: {
+    color: theme.palette.text.secondary,
+  },
 }));
 
 function ViewAssessmentTeacher(props) {
@@ -504,7 +507,7 @@ function ViewAssessmentTeacher(props) {
               variant="h6"
               color="primary"
             >
-              <b>{`Soal ${questionNumber}`}</b>
+              {`Soal ${questionNumber}`}
             </Typography>
           </Grid>
           <Grid item>
@@ -527,10 +530,7 @@ function ViewAssessmentTeacher(props) {
       for (let i = 1; i <= splitResult.length - 2; i += 2) {
         splitResult[i] = (
           <span
-            style={{
-              // color: "#FFFFFF",
-              // opacity: "0.7",
-            }}
+            className={classes.shortTextAnswer}
             key={`${questionNumber}-${iterator}`}
           >
             <u>{questionAnswer[iterator]}</u>
@@ -548,7 +548,7 @@ function ViewAssessmentTeacher(props) {
               variant="h6"
               color="primary"
             >
-              <b>{`Soal ${questionNumber}`}</b>
+              {`Soal ${questionNumber}`}
             </Typography>
           </Grid>
           <Grid item>
@@ -571,7 +571,7 @@ function ViewAssessmentTeacher(props) {
       if (questionType === "radio") {
         answer = (
           //Per Soal Pilihan Ganda
-          <Grid container direction="column" spacing={2}>
+          <Grid container direction="column" spacing={1}>
             <Grid item>
               <Typography align="justify">{`${questionName}`}</Typography>
             </Grid>
@@ -593,117 +593,58 @@ function ViewAssessmentTeacher(props) {
           </Grid>
         );
       } else {
-        // type = checkbox
+        //Per Soal Pilihan Checkbox
         answer = (
-          <Grid item>
-            {/* <Typography align="left" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography> */}
-            <Typography align="justify">{`${questionName}`}</Typography>
-            <FormGroup>
-              {questionOptions.map((option, i) => (
-                <div style={{ display: "flex" }}>
-                  <FormControlLabel
-                    disabled
-                    style={{ width: "100%" }}
-                    value={String.fromCharCode(97 + i).toUpperCase()}
-                    label={option}
-                    control={
-                      <Checkbox
-                        checked={questionAnswer.includes(
-                          String.fromCharCode(97 + i).toUpperCase()
-                        )}
-                        color="primary"
-                      />
-                    }
-                  />
-                </div>
-              ))}
-            </FormGroup>
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <Typography align="justify">{`${questionName}`}</Typography>
+            </Grid>
+            <Grid item>
+              <FormGroup>
+                {questionOptions.map((option, i) => (
+                  <div style={{ display: "flex" }}>
+                    <FormControlLabel
+                      disabled
+                      style={{ width: "100%" }}
+                      value={String.fromCharCode(97 + i).toUpperCase()}
+                      label={option}
+                      control={
+                        <Checkbox
+                          checked={questionAnswer.includes(
+                            String.fromCharCode(97 + i).toUpperCase()
+                          )}
+                          color="primary"
+                        />
+                      }
+                    />
+                  </div>
+                ))}
+              </FormGroup>
+            </Grid>
           </Grid>
         );
       }
 
       content = [
-        <Hidden smDown>
-          <Grid container>
-            <Grid item xs={12}>
-              <Typography
-                align="center"
-                variant="h6"
-                style={{ marginBottom: "10px" }}
-              >
-                <b>{`Soal ${questionNumber}`}</b>
-              </Typography>
-            </Grid>
-            <Grid item xs={9}>
-              {answer}
-            </Grid>
-
-            <Grid item>
-              <Divider
-                orientation="vertical"
-                style={{ marginLeft: "10px", marginRight: "10px" }}
-              />
-            </Grid>
-
-            <Grid
-              item
-              wrap="nowrap"
-              direction="column"
-              justify="center"
-              alignItems="center"
-              style={{ display: "flex", flexGrow: "1" }}
+        <Grid container direction="column" spacing={2}>
+          <Grid item>
+            <Typography
+              variant="h6"
+              color="primary"
+              align="center"
             >
-              <Grid item>
-                <Typography align="center" color="primary">
-                  Kunci Jawaban: {questionAnswer.join(", ")}
-                </Typography>
-              </Grid>
-              <Grid container item justify="center" alignItems="center">
-                <Typography
-                  style={{ marginTop: "5px", marginRight: "10px" }}
-                  color="primary"
-                >{`Bobot: ${questionWeight}`}</Typography>
-              </Grid>
-            </Grid>
+              {`Soal ${questionNumber}`}
+            </Typography>
           </Grid>
-        </Hidden>,
-        <Hidden mdUp>
-          <Grid container>
-            <Grid item xs={12}>
-              <Typography
-                align="center"
-                variant="h6"
-                style={{ marginBottom: "10px" }}
-              >
-                <b>{`Soal ${questionNumber}`}</b>
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              {answer}
-            </Grid>
-
-            <Grid
-              item
-              xs={12}
-              wrap="nowrap"
-              direction="column"
-              justify="center"
-              alignItems="center"
-            >
-              <Grid item>
-                <Typography align="center" color="primary">
-                  Kunci Jawaban: {questionAnswer.join(", ")}
-                </Typography>
-              </Grid>
-              <Grid container item justify="center" alignItems="center">
-                <Typography
-                  style={{ marginTop: "5px", marginRight: "10px" }}
-                  color="primary"
-                >{`Bobot: ${questionWeight}`}</Typography>
-              </Grid>
-            </Grid>
+          <Grid item>
+            {answer}
           </Grid>
-        </Hidden>,
+          <Grid item container justify="flex-end">
+            <Typography color="textSecondary">
+              {`Bobot: ${questionWeight}`}
+            </Typography>
+          </Grid>
+        </Grid>
       ];
     }
 
@@ -1046,43 +987,6 @@ function ViewAssessmentTeacher(props) {
         <Grid item>
           <Paper className={classes.content}>
             <Grid container spacing={2}>
-              {/* <Grid item xs={12} md={7}>
-                  <Typography variant="h4" gutterBottom>
-                    {selectedAssessments.name}
-                  </Typography>
-                  <Typography variant="caption" color="textSecondary">
-                    <h6>Mata Pelajaran: {all_subjects_map.get(selectedAssessments.subject)}</h6>
-                  </Typography>
-                  <Hidden smDown implementation="css">
-                    <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
-                      Deskripsi Kuis/Ujian:
-                    </Typography>
-                  </Hidden>
-                </Grid>
-                <Grid item xs={12} md={5} spacing={2}>
-                  <Hidden mdUp implementation="css">
-                    <Typography variant="body2" color="textSecondary">
-                      Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
-                    </Typography>
-                    <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
-                      Deskripsi Kuis/Ujian:
-                    </Typography>
-                    <Typography align="justify">
-                      {selectedAssessments.description}
-                    </Typography>
-                  </Hidden>
-                  <Hidden smDown implementation="css">
-                    <Typography align="right" variant="body2" color="textSecondary">
-                      Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
-                    </Typography>
-                    <Typography align="right" variant="body2" color="textSecondary">
-                      Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
-                    </Typography>
-                  </Hidden>
-                </Grid> */}
 
               <Hidden smDown>
                 <Grid item xs={12} style={{ paddingBottom: "0" }}>
@@ -1090,7 +994,6 @@ function ViewAssessmentTeacher(props) {
                     {selectedAssessments.name}
                   </Typography>
                 </Grid>
-
                 <Grid
                   item
                   xs={12}
@@ -1102,7 +1005,6 @@ function ViewAssessmentTeacher(props) {
                     <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
                   </Typography>
                 </Grid>
-
                 <Grid
                   item
                   xs={12}
@@ -1195,15 +1097,6 @@ function ViewAssessmentTeacher(props) {
                 </Typography>
               </Grid>
             </Grid>
-            {/* <Hidden smDown>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography align="justify">
-                    {selectedAssessments.description}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Hidden> */}
           </Paper>
           <Paper className={classes.content} style={{ marginTop: "15px" }}>
             <Grid container spacing={2}>
@@ -1427,50 +1320,6 @@ function ViewAssessmentTeacher(props) {
 
           {/* Tab Panel Per Murid */}
           <div hidden={value === 0} style={{ padding: "24px" }}>
-            {/* <Hidden smUp>
-              <Paper>
-                <Grid
-                  item
-                  xs={12}
-                  md={2}
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginBottom: "20px",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Button
-                    onClick={() => {
-                      handleChangeQuestion(qnsIndex - 1);
-                    }}
-                  >
-                    <div className={classes.mobileNav}>
-                      <NavigateBeforeIcon className={classes.mobileNavButton} />
-                      <Typography variant="subtitle-2">Sebelum</Typography>
-                    </div>
-                  </Button>
-                  <Button onClick={handleOpenNavDialog}>
-                    <div className={classes.mobileNav}>
-                      <ExploreIcon className={classes.mobileNavButton} />
-                      <Typography variant="subtitle-2">
-                        Navigasi Soal
-                      </Typography>
-                    </div>
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleChangeQuestion(qnsIndex + 1);
-                    }}
-                  >
-                    <div className={classes.mobileNav}>
-                      <NavigateNextIcon className={classes.mobileNavButton} />
-                      <Typography variant="subtitle-2">Sesudah</Typography>
-                    </div>
-                  </Button>
-                </Grid>
-              </Paper>
-            </Hidden> */}
             <Paper className={classes.perStudentSelect}>
               <div className={classes.selectDiv}>
                 <Grid container>
@@ -1681,36 +1530,30 @@ function QuestionPerQuestion(props) {
             )
           }
         >
-          <Grid container item xs={12} style={{ padding: "20px" }}>
-            <Grid item xs={12}>
-              <Typography variant="h6">
-                <b>{`${studentName}`}</b>
-              </Typography>
+          <Grid container direction="column" spacing={2} style={{ padding: "20px" }}>
+            <Grid item>
+              <Grid container direction="column">
+                <Grid item>
+                  <Typography variant="h6">
+                    <b>{`${studentName}`}</b>
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle-1" color="textSecondary">
+                    {`${studentClass}`}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Divider style={{ marginTop: "5px" }}/>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Typography
-                variant="subtitle-1"
-                color="textSecondary"
-              >{`${studentClass}`}</Typography>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Divider style={{ marginBottom: "10px", marginTop: "10px" }} />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Typography align="justify">
+            <Grid item>
+              <Typography align="justify" color="textSecondary">
                 {studentAnswer[0] ? `${studentAnswer[0]}` : "Tidak menjawab"}
               </Typography>
             </Grid>
-
-            <Grid
-              container
-              item
-              justify="flex-end"
-              alignItems="center"
-              style={{ marginTop: "25px" }}
-            >
+            <Grid item container justify="flex-end" alignItems="center">
               <Typography
                 style={{ marginTop: "5px", marginRight: "10px" }}
                 color="textSecondary"
@@ -1760,46 +1603,42 @@ function QuestionPerQuestion(props) {
     let answer;
     if (questionType === "radio") {
       answer = (
-        <Grid item>
-          <RadioGroup value={studentAnswer[0]}>
-            {questionOptions.map((option, i) => (
-              <div style={{ display: "flex" }}>
-                <FormControlLabel
-                  disabled
-                  style={{ width: "100%" }}
-                  value={String.fromCharCode(97 + i).toUpperCase()}
-                  control={<Radio color="primary" />}
-                  label={option}
-                />
-              </div>
-            ))}
-          </RadioGroup>
-        </Grid>
+        <RadioGroup value={studentAnswer[0]}>
+          {questionOptions.map((option, i) => (
+            <div style={{ display: "flex" }}>
+              <FormControlLabel
+                disabled
+                style={{ width: "100%" }}
+                value={String.fromCharCode(97 + i).toUpperCase()}
+                control={<Radio color="primary" />}
+                label={option}
+              />
+            </div>
+          ))}
+        </RadioGroup>
       );
     } else if (questionType === "checkbox") {
       answer = (
-        <Grid item>
-          <FormGroup>
-            {questionOptions.map((option, i) => (
-              <div style={{ display: "flex" }}>
-                <FormControlLabel
-                  disabled
-                  style={{ width: "100%" }}
-                  value={String.fromCharCode(97 + i).toUpperCase()}
-                  label={option}
-                  control={
-                    <Checkbox
-                      checked={studentAnswer.includes(
-                        String.fromCharCode(97 + i).toUpperCase()
-                      )}
-                      color="primary"
-                    />
-                  }
-                />
-              </div>
-            ))}
-          </FormGroup>
-        </Grid>
+        <FormGroup>
+          {questionOptions.map((option, i) => (
+            <div style={{ display: "flex" }}>
+              <FormControlLabel
+                disabled
+                style={{ width: "100%" }}
+                value={String.fromCharCode(97 + i).toUpperCase()}
+                label={option}
+                control={
+                  <Checkbox
+                    checked={studentAnswer.includes(
+                      String.fromCharCode(97 + i).toUpperCase()
+                    )}
+                    color="primary"
+                  />
+                }
+              />
+            </div>
+          ))}
+        </FormGroup>
       );
     } else {
       let splitResult = questionName.split("`");
@@ -1807,22 +1646,20 @@ function QuestionPerQuestion(props) {
 
       for (let i = 1; i <= splitResult.length - 2; i += 2) {
         splitResult[i] = (
-          <Input
-            type="text"
+          <span
+            className={classes.shortTextAnswer}
             key={`${studentId}-${iterator}`}
-            disabled={true}
-            value={studentAnswer[iterator]}
-          />
+          >
+            <u>{studentAnswer[iterator]}</u>
+          </span>
         );
         iterator++;
       }
 
       answer = (
-        <Grid item>
-          <Typography align="justify">
-            <form>{splitResult}</form>
-          </Typography>
-        </Grid>
+        <Typography align="justify">
+          <form>{splitResult}</form>
+        </Typography>
       );
     }
 
@@ -1866,29 +1703,13 @@ function QuestionPerQuestion(props) {
                 alignItems="center"
                 style={{ display: "flex", flexGrow: "1" }}
               >
-                <Grid container item justify="center" alignItems="center">
+                <Grid item container justify="center" alignItems="center">
                   <Typography
-                    style={{ marginTop: "5px", marginRight: "10px" }}
+                    key={`${studentId}-${questionNumber}`}
                     color="textSecondary"
                   >
-                    Poin:
+                    Poin: {studentMark} / {questionWeight}
                   </Typography>
-                  <TextField
-                    disabled
-                    key={`${studentId}-${questionNumber}`}
-                    defaultValue={studentMark}
-                    inputProps={{
-                      style: {
-                        borderBottom: "none",
-                        boxShadow: "none",
-                        margin: "0px",
-                        width: "30px",
-                      },
-                    }}
-                    InputProps={{
-                      endAdornment: `/ ${questionWeight}`,
-                    }}
-                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -1909,27 +1730,11 @@ function QuestionPerQuestion(props) {
               >
                 <Grid container item justify="center" alignItems="center">
                   <Typography
-                    style={{ marginTop: "5px", marginRight: "10px" }}
+                    key={`${studentId}-${questionNumber}`}
                     color="textSecondary"
                   >
-                    Poin:
+                    Poin: {studentMark} / {questionWeight}
                   </Typography>
-                  <TextField
-                    disabled
-                    key={`${studentId}-${questionNumber}`}
-                    defaultValue={studentMark}
-                    inputProps={{
-                      style: {
-                        borderBottom: "none",
-                        boxShadow: "none",
-                        margin: "0px",
-                        width: "30px",
-                      },
-                    }}
-                    InputProps={{
-                      endAdornment: `/ ${questionWeight}`,
-                    }}
-                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -1975,24 +1780,18 @@ function QuestionAnswerPerStudent(props) {
             <Typography
               align="left"
               variant="h6"
+              color="primary"
               style={{ marginBottom: "10px" }}
             >
-              <b>{`Soal ${questionNumber}`}</b>
+              {`Soal ${questionNumber}`}
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography align="justify">{`${questionName}`}</Typography>
           </Grid>
 
-          <Grid item xs={12} style={{ marginTop: "15px" }}>
-            <Typography gutterBottom>
-              <b>
-                <u>Jawaban:</u>
-              </b>
-            </Typography>
-          </Grid>
           <Grid item xs={12}>
-            <Typography align="justify">
+            <Typography color="textSecondary" align="justify">
               {studentAnswer[0] ? `${studentAnswer[0]}` : "Tidak menjawab"}
             </Typography>
           </Grid>
@@ -2057,9 +1856,10 @@ function QuestionAnswerPerStudent(props) {
           <Typography
             align="left"
             variant="h6"
+            color="primary"
             style={{ marginBottom: "10px" }}
           >
-            <b>{`Soal ${questionNumber}`}</b>
+            {`Soal ${questionNumber}`}
           </Typography>
           <Typography align="justify">{`${questionName}`}</Typography>
 
@@ -2095,9 +1895,10 @@ function QuestionAnswerPerStudent(props) {
           <Typography
             align="left"
             variant="h6"
+            color="primary"
             style={{ marginBottom: "10px" }}
           >
-            <b>{`Soal ${questionNumber}`}</b>
+            {`Soal ${questionNumber}`}
           </Typography>
           <Typography align="justify">{`${questionName}`}</Typography>
 
@@ -2141,12 +1942,12 @@ function QuestionAnswerPerStudent(props) {
 
       for (let i = 1; i <= splitResult.length - 2; i += 2) {
         splitResult[i] = (
-          <Input
-            type="text"
+          <span
+            className={classes.shortTextAnswer}
             key={`${questionNumber}-${iterator}`}
-            disabled={true}
-            value={studentAnswer[iterator]}
-          />
+          >
+            {studentAnswer[iterator]}
+          </span>
         );
         iterator++;
       }
@@ -2156,9 +1957,10 @@ function QuestionAnswerPerStudent(props) {
           <Typography
             align="left"
             variant="h6"
+            color="primary"
             style={{ marginBottom: "10px" }}
           >
-            <b>{`Soal ${questionNumber}`}</b>
+            {`Soal ${questionNumber}`}
           </Typography>
           <Typography align="justify">
             <form>{splitResult}</form>
@@ -2196,15 +1998,10 @@ function QuestionAnswerPerStudent(props) {
             </Grid>
             <Grid container item justify="center" alignItems="center">
               <Typography
-                style={{ marginTop: "5px", marginRight: "10px" }}
+                key={questionNumber}
                 color="textSecondary"
               >
-                Poin:
-              </Typography>
-              <Typography
-                key={questionNumber}
-              >
-                {studentMark} / {questionWeight}
+                Poin: {studentMark} / {questionWeight}
               </Typography>
             </Grid>
           </Grid>
@@ -2236,17 +2033,12 @@ function QuestionAnswerPerStudent(props) {
               </Grid>
             ) : null}
 
-            <Grid container item justify="center" alignItems="center">
-              <Typography
-                style={{ marginTop: "5px", marginRight: "10px" }}
-                color="textSecondary"
-              >
-                Poin:
-              </Typography>
+            <Grid item container justify="center" alignItems="center">
               <Typography
                 key={questionNumber}
+                color="textSecondary"
               >
-                {studentMark} / {questionWeight}
+                Poin: {studentMark} / {questionWeight}
               </Typography>
             </Grid>
           </Grid>
