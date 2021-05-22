@@ -386,7 +386,7 @@ function ViewAnnouncement(props) {
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Pengumuman:
                 </Typography>
-                <Typography variant="body1">
+                <Typography variant="body1" align="justify" style={{wordBreak: "break-word", whiteSpace: "pre-wrap"}}>
                   <CustomLinkify text={selectedAnnouncements.description} />
                 </Typography>
               </Grid>

@@ -440,10 +440,10 @@ function ViewTaskTeacher(props) {
               </Grid>
               {!tasksCollection.description ? null : (
                 <Grid item xs={12} style={{ marginTop: "15px" }}>
-                  <Typography color="textSecondary" gutterBottom>
+                  <Typography color="textSecondary" gutterBottom style={{wordBreak: "break-word", whiteSpace: "pre-wrap"}}>
                     Deskripsi Tugas:
                   </Typography>
-                  <Typography>
+                  <Typography align="justify" style={{wordBreak: "break-word", whiteSpace: "pre-wrap"}}>
                     <CustomLinkify text={tasksCollection.description} />
                   </Typography>
                   {/* <Link href="https://www.google.com">{tasksCollection.description}</Link> */}

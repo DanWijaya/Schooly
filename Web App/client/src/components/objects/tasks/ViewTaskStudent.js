@@ -815,10 +815,9 @@ function ViewTaskStudent(props) {
                   <Typography color="textSecondary" gutterBottom>
                     Deskripsi Tugas:
                   </Typography>
-                  <Typography>
+                  <Typography align="justify" style={{wordBreak: "break-word", whiteSpace: "pre-wrap"}}>
                     <CustomLinkify text={tasksCollection.description} />
                   </Typography>
-                  {/* <Typography>{tasksCollection.description}</Typography> */}
                 </Grid>
               )}
               {fileLampiran.length === 0 ? null : (
