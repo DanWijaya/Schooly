@@ -27,6 +27,7 @@
     "react-images-upload": "^1.2.8",
     "react-katex": "^2.0.2",
     "react-linkify": "^1.0.0-alpha",
+    "react-markdown": "^6.0.2",
     "react-mathjax2": "0.0.2",
     "react-redux": "^5.1.1",
     "react-router-dom": "^5.0.1",
@@ -35,6 +36,7 @@
     "react-swipeable-views": "^0.13.9",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
+    "remark-math": "^4.0.0",
     "styled-components": "^4.3.2"
   },
   "scripts": {

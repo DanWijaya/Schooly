@@ -195,6 +195,9 @@ const useStyles = makeStyles((theme) => ({
   shortAnswerText: {
     color: theme.palette.text.secondary,
   },
+  shortTextKeyAns: {
+    color: theme.palette.success.main
+  }
 }));
 
 function ViewAssessmentTeacher(props) {
@@ -532,20 +535,21 @@ function ViewAssessmentTeacher(props) {
         </Grid>
       );
     } else if (questionType === "shorttext") {
-      let splitResult = questionName.split("`");
+      let splitQnsResult = questionName.split("`");
       let iterator = 0;
-
-      for (let i = 1; i <= splitResult.length - 2; i += 2) {
-        splitResult[i] = (
-          <span
-            className={classes.shortTextAnswer}
+      for (let i = 0; i <= splitQnsResult.length - 2; i += 1) {
+        if(i % 2 == 1){
+          splitQnsResult[i] = (<Typography display="inline" color="textSecondary" align="justify">
+            <span
+            className={classes.shortAnswerText}
             key={`${questionNumber}-${iterator}`}
           >
             <u>{questionAnswer[iterator]}</u>
           </span>
-        );
-        iterator++;
-      }
+          </Typography>)
+          iterator++;
+        }
+    }
 
       content = (
         //Per Soal Isilah
@@ -559,11 +563,9 @@ function ViewAssessmentTeacher(props) {
               {`Soal ${questionNumber}`}
             </Typography>
           </Grid>
-          <Grid item>
-            <Typography color="textSecondary" align="justify">
-              <form>{splitResult}</form>
-            </Typography>
-          </Grid>
+           <Grid item>
+              {splitQnsResult}
+            </Grid>
           <Grid item>
             <Typography
               align="center"
@@ -773,6 +775,7 @@ function ViewAssessmentTeacher(props) {
 
       return (
         <QuestionPerQuestion
+          questionAnswer={question.answer}
           classes={classes}
           studentId={studentId}
           studentName={studentInfo.name}
@@ -1515,6 +1518,7 @@ function QuestionPerQuestion(props) {
     questionNumber,
     questionWeight,
     questionInfo,
+    questionAnswer
   } = props;
   const { handleGradeChange, handleSaveGrade } = props;
   let questionType = questionInfo.type;
@@ -1649,25 +1653,26 @@ function QuestionPerQuestion(props) {
         </FormGroup>
       );
     } else {
-      let splitResult = questionName.split("`");
+      let splitQnsResult = questionName.split("`");
       let iterator = 0;
 
-      for (let i = 1; i <= splitResult.length - 2; i += 2) {
-        splitResult[i] = (
-          <span
-            className={classes.shortTextAnswer}
-            key={`${studentId}-${iterator}`}
+      for (let i = 1; i <= splitQnsResult.length - 2; i += 2) {
+          splitQnsResult[i] = (
+            <span
+            className={classes.shortAnswerText}
+            key={`${questionNumber}-${iterator}`}
           >
+            <Typography display="inline">
             <u>{studentAnswer[iterator]}</u>
+            <b className={classes.shortTextKeyAns}>({questionAnswer[iterator]})</b>
+            </Typography>
           </span>
-        );
-        iterator++;
-      }
+         )
+          iterator++;
+    }
 
       answer = (
-        <Typography align="justify">
-          <form>{splitResult}</form>
-        </Typography>
+          <form>{splitQnsResult}</form>
       );
     }
 
@@ -1945,11 +1950,11 @@ function QuestionAnswerPerStudent(props) {
       );
     } else {
       //type = shorttext
-      let splitResult = questionName.split("`");
+      let splitQnsResult = questionName.split("`");
       let iterator = 0;
 
-      for (let i = 1; i <= splitResult.length - 2; i += 2) {
-        splitResult[i] = (
+      for (let i = 1; i <= splitQnsResult.length - 2; i += 2) {
+        splitQnsResult[i] = (
           <span
             className={classes.shortTextAnswer}
             key={`${questionNumber}-${iterator}`}
@@ -1971,7 +1976,7 @@ function QuestionAnswerPerStudent(props) {
             {`Soal ${questionNumber}`}
           </Typography>
           <Typography align="justify">
-            <form>{splitResult}</form>
+            <form>{splitQnsResult}</form>
           </Typography>
         </Grid>
       );
