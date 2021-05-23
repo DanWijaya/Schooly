@@ -515,6 +515,14 @@ function ViewAssessmentTeacher(props) {
           </Grid>
           <Grid item>
             <Typography
+              color="textSecondary"
+              align="justify"
+            >
+              {questionAnswer}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography
               align="center"
               color="textSecondary"
             >
