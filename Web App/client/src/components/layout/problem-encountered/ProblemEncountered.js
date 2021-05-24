@@ -1,11 +1,11 @@
-import React from "react";
+import React, {Component} from "react";
 import problemEncounteredBackground from "./ProblemEncounteredBackground.png";
 import { Button, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
+import { makeStyles, withStyles  } from "@material-ui/core/styles";
+import { Link, withRouter } from "react-router-dom";
 import EmailIcon from "@material-ui/icons/Email";
 
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
@@ -46,17 +46,27 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-}));
+});
 
-function ProblemEncountered(props) {
-  const classes = useStyles();
-
-  const [isFirsttimeRendered, setFirstTime] = React.useState(false);
-  const { handleMarginTopValue } = props;
-  if (!isFirsttimeRendered) {
-    handleMarginTopValue(0);
-    setFirstTime(true);
+class ProblemEncountered extends Component {
+  constructor(props){
+    super(props)
   }
+
+  componentDidUpdate(prevProps){
+    if(prevProps.location != this.props.location){
+        this.props.handleProblemEncountered(false)
+    }
+  }
+
+  componentWillUnmount(){
+    this.props.handleProblemEncountered(false)
+  }
+
+  render(){
+
+  const { classes, problemEncountered, handleProblemEncountered } = this.props;
+  
 
   document.title = "Schooly | Problem Encountered";
 
@@ -85,6 +95,7 @@ function ProblemEncountered(props) {
       </div>
     </div>
   );
+  }
 }
 
-export default ProblemEncountered;
+export default withRouter(withStyles(styles)(React.memo(ProblemEncountered)));
