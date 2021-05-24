@@ -5,12 +5,12 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { stopReportingRuntimeErrors } from "react-error-overlay"
 
+
+
 stopReportingRuntimeErrors()
 
 ReactDOM.render(
-<React.StrictMode>
-    <App />
-</React.StrictMode>,
+    <App />,
 document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change

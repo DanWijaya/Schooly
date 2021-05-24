@@ -57,11 +57,7 @@ class ProblemEncountered extends Component {
     if(prevProps.location != this.props.location){
         this.props.handleProblemEncountered(false)
     }
-  }
-
-  componentWillUnmount(){
-    this.props.handleProblemEncountered(false)
-  }
+}
 
   render(){
 

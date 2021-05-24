@@ -747,7 +747,7 @@ function AssessmentList(props) {
       >
         <div style={{ padding: "20px" }}>
           <Typography variant="h4" align="center">
-            {currentDialogInfo}
+            {currentDialogInfo.title}
           </Typography>
           <Typography variant="h6" align="center" color="primary">
             {currentDialogInfo.subject}

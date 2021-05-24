@@ -244,10 +244,12 @@ router.post("/update/:id", (req, res) => {
             if (!isLongtextQuestionAdded) {
               // weight_accumulator sudah dipastikan tidak 0
               let score = (100 * point_accumulator) / weight_accumulator;
-              assessmentData.grades.set(key, {
-                total_grade: parseFloat(score.toFixed(1)),
-                longtext_grades: longtextGrade,
-              });
+              if(assessmentData.grades){
+                assessmentData.grades.set(key, {
+                  total_grade: parseFloat(score.toFixed(1)),
+                  longtext_grades: longtextGrade,
+                });
+              }
             }
             assessmentData.submissions.set(
               key,
@@ -288,7 +290,8 @@ router.post("/submit/:id", (req, res) => {
         return res.json("Assessment not posted");
       }
       console.log(answers, classId, userId);
-      let { submissions, grades, questions } = assessmentData;
+      let { submissions, questions } = assessmentData;
+      let grades;
       if (submissions) {
         if (!submissions.has(userId)) {
           submissions.set(userId, answers);

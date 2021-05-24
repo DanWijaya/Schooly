@@ -197,7 +197,12 @@ const useStyles = makeStyles((theme) => ({
   },
   shortTextKeyAnswer: {
     color: theme.palette.success.main
-  }
+  },
+  checkIcon: {
+    color: theme.palette.success.dark,
+    fontSize: "1rem",
+    verticalAlign: "middle",
+  },
 }));
 
 function ViewAssessmentTeacher(props) {
@@ -1722,14 +1727,20 @@ function QuestionAnswerPerStudent(props) {
           <Grid item>
             <RadioGroup value={studentAnswer[0]}>
               {questionOptions.map((option, i) => (
-                <div style={{ display: "flex" }}>
+                <div style={{ display: "flex", justifyContent:"flex-start", alignItems:"center" }}>
                   <FormControlLabel
                     disabled
-                    style={{ width: "100%" }}
+                    // style={{ width: "100%" }}
                     value={String.fromCharCode(97 + i).toUpperCase()}
                     control={<Radio color="primary" />}
                     label={option}
                   />
+                   {
+                    questionAnswer.includes(String.fromCharCode(97 + i).toUpperCase()) ? 
+                    <CheckCircleIcon className={classes.checkIcon}/> 
+                      : 
+                    null
+                  }
                 </div>
               ))}
             </RadioGroup>
@@ -1745,21 +1756,27 @@ function QuestionAnswerPerStudent(props) {
           <Grid item>
             <FormGroup>
               {questionOptions.map((option, i) => (
-                <div style={{ display: "flex" }}>
+                <div style={{ display: "flex", justifyContent:"flex-start",alignItems: "center"}}>
                   <FormControlLabel
                     disabled
-                    style={{ width: "100%" }}
+                    // style={{ width: "100%" }}
                     value={String.fromCharCode(97 + i).toUpperCase()}
                     label={option}
                     control={
                       <Checkbox
-                        checked={studentAnswer.includes(
-                          String.fromCharCode(97 + i).toUpperCase()
-                        )}
-                        color="primary"
-                      />
+                          checked={studentAnswer.includes(
+                            String.fromCharCode(97 + i).toUpperCase()
+                          )}
+                          color="primary"
+                        />
                     }
                   />
+                  {
+                    questionAnswer.includes(String.fromCharCode(97 + i).toUpperCase()) ? 
+                    <CheckCircleIcon className={classes.checkIcon}/> 
+                      : 
+                    null
+                  }
                 </div>
               ))}
             </FormGroup>

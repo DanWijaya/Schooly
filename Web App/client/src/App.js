@@ -139,19 +139,8 @@ class App extends Component {
     };
 }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   // Function static ini belongs to the class secara keseluruhan, bukan instance of the class.
-  //   //  Makanya gak ada this keyword.
-  //   console.log(prevProps.location, this.props.location)
-  //   if (prevProps.location !== this.props.location){
-  //     // nextProps.auth.isAuthenticated = kalau true,
-  //     this.setState({problemEncountered: false });
-  //   }
-  // }
-
   componentDidCatch(){
-    // this.props.handleProblemEncountered(true)
-    this.setState({ problemEncountered: true })
+      this.setState({ problemEncountered: true })
   }
 
 
@@ -225,11 +214,10 @@ class App extends Component {
                     marginTop: `${this.state.marginTopValue}px`,
                   }}
                 >
-                  {this.state.showNavBar ? <Toolbar /> : null}
-                  {this.state.problemEncountered ?  <ProblemEncountered 
-                    problemEncountered={this.state.problemEncountered}
-                    handleProblemEncountered={this.handleProblemEncountered}/> : 
-                 
+                  {this.state.showNavBar ? <Toolbar /> : null} 
+                  {this.state.problemEncountered ? 
+                  <ProblemEncountered handleProblemEncountered={this.handleProblemEncountered}/> 
+                  : 
                   <Switch>
                     <Route
                       exact

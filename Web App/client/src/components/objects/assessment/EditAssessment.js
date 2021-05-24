@@ -545,6 +545,8 @@ class EditAssessment extends Component {
           return weight;
         });
       } else {
+        // Untuk kasus dimana tidak ada longtext, tetap perlu diassign value supaya tidak undefined
+        newLongtextWeight = [...this.state.longtextWeight]
         if (this.state.weights[type] === undefined) {
           newWeights[type] = null;
         }
