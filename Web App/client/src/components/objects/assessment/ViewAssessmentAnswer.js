@@ -534,7 +534,8 @@ function ViewAssessmentTeacher(props) {
           </Grid>
         </Grid>
       );
-    } else if (questionType === "shorttext") {
+    }
+    else if (questionType === "shorttext") {
       let splitQnsResult = questionName.split("`");
       let iterator = 0;
       for (let i = 0; i <= splitQnsResult.length - 2; i += 1) {

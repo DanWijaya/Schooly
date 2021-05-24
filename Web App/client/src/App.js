@@ -34,6 +34,7 @@ import ReportView from "./components/layout/profile/ReportView";
 import Help from "./components/layout/help/Help";
 import Policy from "./components/layout/policy/Policy";
 import NotFound from "./components/layout/not-found/NotFound";
+import ProblemEncountered from "./components/layout/problem-encountered/ProblemEncountered";
 //Misc
 import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import NavBar from "./components/misc/nav-bar/NavBar";
@@ -293,13 +294,6 @@ class App extends Component {
                       path="/akun/ubah-katasandi/:hash"
                       component={ResetPassword}
                     />
-                    <Route exact path="/tester" component={Tester} />{" "}
-                    {/*prototype*/}
-                    <Route exact path="/csv" component={CSV} />
-                    <Route exact path="/timer" component={Timer} />{" "}
-                    {/*prototype*/}
-                    <Route exact path="/graph" component={Graph} />{" "}
-                    {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
                     <PrivateRoute
@@ -539,7 +533,18 @@ class App extends Component {
                       path="/atur-walikelas"
                       component={EditClassTeacher}
                     />
-                    {/* Not Found */}
+                    <Route
+                      exact
+                      path="/terdapat-masalah"
+                      render={(props) => (
+                        <ProblemEncountered
+                          {...props}
+                          handleMarginTopValue={(data) =>
+                            this.handleMarginTopValue(data)
+                          }
+                        />
+                      )}
+                    />
                     <Route
                       exact
                       path="/tidak-ditemukan"
