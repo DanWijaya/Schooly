@@ -226,7 +226,7 @@ class App extends Component {
                   }}
                 >
                   {this.state.showNavBar ? <Toolbar /> : null}
-                  {this.state.problemEncountered ?  <Error 
+                  {this.state.problemEncountered ?  <ProblemEncountered 
                     problemEncountered={this.state.problemEncountered}
                     handleProblemEncountered={this.handleProblemEncountered}/> : 
                  
@@ -561,7 +561,7 @@ class App extends Component {
                       path="/atur-walikelas"
                       component={EditClassTeacher}
                     />
-                    <Route
+                    {/* <Route
                       exact
                       path="/terdapat-masalah"
                       render={(props) => (
@@ -572,7 +572,7 @@ class App extends Component {
                           }
                         />
                       )}
-                    />
+                    /> */}
                     <Route
                       exact
                       path="/tidak-ditemukan"

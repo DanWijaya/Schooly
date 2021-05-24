@@ -5,7 +5,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { stopReportingRuntimeErrors } from "react-error-overlay"
 
-// stopReportingRuntimeErrors()
+stopReportingRuntimeErrors()
 
 ReactDOM.render(
 <React.StrictMode>
