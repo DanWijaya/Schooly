@@ -9,7 +9,7 @@ import { Provider } from "react-redux"; //provide state from Store to the compon
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import store from "./Store";
-
+import Error from "./prototypes/Error";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 //Routing and Actions
@@ -123,16 +123,36 @@ if (localStorage.jwtToken) {
 // }
 
 class App extends Component {
-  state = {
-    mobileOpen: false,
-    desktopOpen: false,
-    loggedIn: false,
-    showNavBar: true,
-    marginTopValue: 20,
-    posts: [],
-    sideDrawerExist: true,
-    showProgressIndicator: false,
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+      mobileOpen: false,
+      desktopOpen: false,
+      loggedIn: false,
+      showNavBar: true,
+      marginTopValue: 20,
+      posts: [],
+      sideDrawerExist: true,
+      showProgressIndicator: false,
+      problemEncountered: false
+    };
+}
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   // Function static ini belongs to the class secara keseluruhan, bukan instance of the class.
+  //   //  Makanya gak ada this keyword.
+  //   console.log(prevProps.location, this.props.location)
+  //   if (prevProps.location !== this.props.location){
+  //     // nextProps.auth.isAuthenticated = kalau true,
+  //     this.setState({problemEncountered: false });
+  //   }
+  // }
+
+  componentDidCatch(){
+    // this.props.handleProblemEncountered(true)
+    this.setState({ problemEncountered: true })
+  }
+
 
   handleLoading = (value) => {
     this.setState({ showProgressIndicator: value });
@@ -164,6 +184,10 @@ class App extends Component {
   handleNavbar = (showBool) => {
     this.setState({ showNavBar: showBool });
   };
+
+  handleProblemEncountered = (dataFromChild) => {
+    this.setState({ problemEncountered: dataFromChild })
+  }
 
   render() {
     console.log(localStorage.getItem(`status`));
@@ -201,6 +225,10 @@ class App extends Component {
                   }}
                 >
                   {this.state.showNavBar ? <Toolbar /> : null}
+                  {this.state.problemEncountered ?  <Error 
+                    problemEncountered={this.state.problemEncountered}
+                    handleProblemEncountered={this.handleProblemEncountered}/> : 
+                 
                   <Switch>
                     <Route
                       exact
@@ -554,12 +582,14 @@ class App extends Component {
                     />
                     <Redirect to="/tidak-ditemukan" />
                   </Switch>
+                  }
                   <Footer assessmentState={localStorage.getItem(`status`)} />
                 </div>
               </div>
             </Router>
           </ThemeProvider>
         </Provider>
+        
       </div>
     );
   }
