@@ -195,7 +195,7 @@ const useStyles = makeStyles((theme) => ({
   shortAnswerText: {
     color: theme.palette.text.secondary,
   },
-  shortTextKeyAns: {
+  shortTextKeyAnswer: {
     color: theme.palette.success.main
   }
 }));
@@ -502,7 +502,7 @@ function ViewAssessmentTeacher(props) {
     let content;
     if (questionType === "longtext") {
       content = (
-        <Grid container direction="column" spacing={1}>
+        <Grid container direction="column" spacing={2}>
           <Grid item>
             <Typography align="justify">{`${questionName}`}</Typography>
           </Grid>
@@ -542,7 +542,7 @@ function ViewAssessmentTeacher(props) {
     }
     else if (questionType === "radio") {
       content = (
-        <Grid container direction="column" spacing={1}>
+        <Grid container direction="column" spacing={2}>
           <Grid item>
             <Typography align="justify">{`${questionName}`}</Typography>
           </Grid>
@@ -566,7 +566,7 @@ function ViewAssessmentTeacher(props) {
     }
     else {
       content = (
-        <Grid container direction="column" spacing={1}>
+        <Grid container direction="column" spacing={2}>
           <Grid item>
             <Typography align="justify">{`${questionName}`}</Typography>
           </Grid>
@@ -1149,108 +1149,62 @@ function ViewAssessmentTeacher(props) {
 
           {/* Tab Panel Per Soal */}
           <div hidden={value === 1} style={{ padding: "24px" }}>
-            <Hidden xsDown>
-              <Paper style={{ padding: "15px", marginBottom: "20px" }}>
-                <Grid
-                  item
-                  xs={12}
-                  md={2}
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginTop: "10px",
+            <Paper style={{ padding: "15px", marginBottom: "20px" }}>
+              <Grid
+                item
+                xs={12}
+                md={2}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: "10px",
+                }}
+              >
+                <Typography>Navigasi Soal:</Typography>
+                <LightTooltip title="Soal yang sudah diberi bobot dan nilai untuk semua murid akan diberi badge hijau. Soal akan diberi badge merah jika bobot atau nilai belum lengkap.">
+                  <Badge
+                    badgeContent={
+                      <HelpOutlineIcon
+                        className={classes.navigationHelpIcon}
+                      />
+                    }
+                    variant="standard"
+                    style={{ marginLeft: "4px" }}
+                  >
+                    {/* Hanya Sebagai Anchor */}
+                    <Typography style={{ display: "none" }}>:</Typography>
+                  </Badge>
+                </LightTooltip>
+              </Grid>
+              <Grid container item>
+                <ToggleButtonGroup
+                  value={qnsIndex}
+                  exclusive
+                  onChange={(e, newIndex) => {
+                    handleChangeToggleButton(e, newIndex);
+                  }}
+                  aria-label="question index"
+                  classes={{
+                    root: classes.toggleGroupRoot,
+                    grouped: classes.toggleGroupChildren,
                   }}
                 >
-                  <Typography>Navigasi Soal:</Typography>
-                  <LightTooltip title="Soal yang sudah diberi bobot dan nilai untuk semua murid akan diberi badge hijau. Soal akan diberi badge merah jika bobot atau nilai belum lengkap.">
-                    <Badge
-                      badgeContent={
-                        <HelpOutlineIcon
-                          className={classes.navigationHelpIcon}
-                        />
-                      }
-                      variant="standard"
-                      style={{ marginLeft: "4px" }}
-                    >
-                      {/* Hanya Sebagai Anchor */}
-                      <Typography style={{ display: "none" }}>:</Typography>
-                    </Badge>
-                  </LightTooltip>
-                </Grid>
-                <Grid container item>
-                  <ToggleButtonGroup
-                    value={qnsIndex}
-                    exclusive
-                    onChange={(e, newIndex) => {
-                      handleChangeToggleButton(e, newIndex);
-                    }}
-                    aria-label="question index"
-                    classes={{
-                      root: classes.toggleGroupRoot,
-                      grouped: classes.toggleGroupChildren,
-                    }}
-                  >
-                    {hasLongtextQst.current === true
-                      ? isAssessmentLoaded() && longtextGrades
-                        ? selectedAssessments.questions.map((qns, i) => {
-                            return questionPage(classes, i + 1, qns.type);
-                          })
-                        : null
-                      : hasLongtextQst.current === false
-                      ? isAssessmentLoaded()
-                        ? selectedAssessments.questions.map((qns, i) => {
-                            return questionPage(classes, i + 1, qns.type);
-                          })
-                        : null
-                      : null}
-                  </ToggleButtonGroup>
-                </Grid>
-              </Paper>
-            </Hidden>
-            <Hidden smUp>
-              <Paper>
-                <Grid
-                  item
-                  xs={12}
-                  md={2}
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginBottom: "20px",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Button
-                    onClick={() => {
-                      handleChangeQuestion(qnsIndex - 1);
-                    }}
-                  >
-                    <div className={classes.mobileNav}>
-                      <NavigateBeforeIcon className={classes.mobileNavButton} />
-                      <Typography variant="subtitle-2">Sebelum</Typography>
-                    </div>
-                  </Button>
-                  <Button onClick={handleOpenNavDialog}>
-                    <div className={classes.mobileNav}>
-                      <ExploreIcon className={classes.mobileNavButton} />
-                      <Typography variant="subtitle-2">
-                        Navigasi Soal
-                      </Typography>
-                    </div>
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleChangeQuestion(qnsIndex + 1);
-                    }}
-                  >
-                    <div className={classes.mobileNav}>
-                      <NavigateNextIcon className={classes.mobileNavButton} />
-                      <Typography variant="subtitle-2">Sesudah</Typography>
-                    </div>
-                  </Button>
-                </Grid>
-              </Paper>
-            </Hidden>
+                  {hasLongtextQst.current === true
+                    ? isAssessmentLoaded() && longtextGrades
+                      ? selectedAssessments.questions.map((qns, i) => {
+                          return questionPage(classes, i + 1, qns.type);
+                        })
+                      : null
+                    : hasLongtextQst.current === false
+                    ? isAssessmentLoaded()
+                      ? selectedAssessments.questions.map((qns, i) => {
+                          return questionPage(classes, i + 1, qns.type);
+                        })
+                      : null
+                    : null}
+                </ToggleButtonGroup>
+              </Grid>
+            </Paper>
             {isAssessmentLoaded()
               ? selectedAssessments.questions[qnsIndex].type === "longtext"
                 ? generateQuestion(
@@ -1515,7 +1469,7 @@ function QuestionPerQuestion(props) {
               </Grid>
             </Grid>
             <Grid item>
-              <Typography align="justify" color="error">
+              <Typography align="justify" color="textSecondary">
                 {studentAnswer[0] ? `${studentAnswer[0]}` : "Tidak menjawab"}
               </Typography>
             </Grid>
@@ -1611,16 +1565,16 @@ function QuestionPerQuestion(props) {
       let iterator = 0;
 
       for (let i = 1; i <= splitQnsResult.length - 2; i += 2) {
-          splitQnsResult[i] = (
-            <Typography key={`${questionNumber}-${iterator}`} display="inline" color="textSecondary">
-              <u>{studentAnswer[iterator]}</u>
-            </Typography>
-         )
-          iterator++;
+        splitQnsResult[i] = (
+          <Typography key={`${questionNumber}-${iterator}`} display="inline" color="textSecondary">
+            <u>{studentAnswer[iterator]}</u>
+          </Typography>
+       )
+      iterator++;
     }
 
       answer = (
-          <form>{splitQnsResult}</form>
+        <form>{splitQnsResult}</form>
       );
     }
 
@@ -1691,34 +1645,26 @@ function QuestionAnswerPerStudent(props) {
           )
         }
       >
-        <Grid container item xs={12} style={{ padding: "20px" }}>
-          <Grid item xs={12}>
-            <Typography
-              align="left"
-              variant="h6"
-              color="primary"
-              style={{ marginBottom: "10px" }}
-            >
+        <Grid container direction="column" spacing={2} style={{ padding: "20px" }}>
+          <Grid item>
+            <Typography variant="h6" color="primary" align="left">
               {`Soal ${questionNumber}`}
             </Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item>
             <Typography align="justify">{`${questionName}`}</Typography>
           </Grid>
-
-          <Grid item xs={12}>
-            <Typography color="error" align="justify">
+          <Grid item>
+            <Typography color="textSecondary" align="justify">
               {studentAnswer[0] ? `${studentAnswer[0]}` : "Tidak menjawab"}
             </Typography>
           </Grid>
-
-          <Grid
-            container
-            item
-            justify="flex-end"
-            alignItems="center"
-            style={{ marginTop: "25px" }}
-          >
+          <Grid item>
+            <Typography align="justify" className={classes.shortTextKeyAnswer}>
+              {questionAnswer}
+            </Typography>
+          </Grid>
+          <Grid item container justify="flex-end" alignItems="center">
             <Typography
               style={{ marginTop: "5px", marginRight: "10px" }}
               color="textSecondary"
@@ -1763,209 +1709,118 @@ function QuestionAnswerPerStudent(props) {
         </Grid>
       </Badge>
     );
-  } else {
+  }
+  else {
     let answer;
 
     if (questionType === "radio") {
       answer = (
-        <Grid item>
-          <Typography
-            align="left"
-            variant="h6"
-            color="primary"
-            style={{ marginBottom: "10px" }}
-          >
-            {`Soal ${questionNumber}`}
-          </Typography>
-          <Typography align="justify">{`${questionName}`}</Typography>
-
-          <Hidden mdUp>
-            <Typography
-              align="center"
-              color="primary"
-              style={{ marginTop: "15px" }}
-            >
-              Kunci Jawaban: {questionAnswer[0]}
-            </Typography>
-            <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
-          </Hidden>
-
-          <RadioGroup value={studentAnswer[0]}>
-            {questionOptions.map((option, i) => (
-              <div style={{ display: "flex" }}>
-                <FormControlLabel
-                  disabled
-                  style={{ width: "100%" }}
-                  value={String.fromCharCode(97 + i).toUpperCase()}
-                  control={<Radio color="primary" />}
-                  label={option}
-                />
-              </div>
-            ))}
-          </RadioGroup>
+        <Grid container direction="column" spacing={2}>
+          <Grid item>
+            <Typography align="justify">{`${questionName}`}</Typography>
+          </Grid>
+          <Grid item>
+            <RadioGroup value={studentAnswer[0]}>
+              {questionOptions.map((option, i) => (
+                <div style={{ display: "flex" }}>
+                  <FormControlLabel
+                    disabled
+                    style={{ width: "100%" }}
+                    value={String.fromCharCode(97 + i).toUpperCase()}
+                    control={<Radio color="primary" />}
+                    label={option}
+                  />
+                </div>
+              ))}
+            </RadioGroup>
+          </Grid>
         </Grid>
       );
     } else if (questionType === "checkbox") {
       answer = (
-        <Grid item>
-          <Typography
-            align="left"
-            variant="h6"
-            color="primary"
-            style={{ marginBottom: "10px" }}
-          >
-            {`Soal ${questionNumber}`}
-          </Typography>
-          <Typography align="justify">{`${questionName}`}</Typography>
-
-          <Hidden mdUp>
-            <Typography
-              align="center"
-              color="primary"
-              style={{ marginTop: "15px" }}
-            >
-              Kunci Jawaban: {questionAnswer[0]}
-            </Typography>
-            <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
-          </Hidden>
-
-          <FormGroup>
-            {questionOptions.map((option, i) => (
-              <div style={{ display: "flex" }}>
-                <FormControlLabel
-                  disabled
-                  style={{ width: "100%" }}
-                  value={String.fromCharCode(97 + i).toUpperCase()}
-                  label={option}
-                  control={
-                    <Checkbox
-                      checked={studentAnswer.includes(
-                        String.fromCharCode(97 + i).toUpperCase()
-                      )}
-                      color="primary"
-                    />
-                  }
-                />
-              </div>
-            ))}
-          </FormGroup>
+        <Grid container direction="column" spacing={2}>
+          <Grid item>
+            <Typography align="justify">{`${questionName}`}</Typography>
+          </Grid>
+          <Grid item>
+            <FormGroup>
+              {questionOptions.map((option, i) => (
+                <div style={{ display: "flex" }}>
+                  <FormControlLabel
+                    disabled
+                    style={{ width: "100%" }}
+                    value={String.fromCharCode(97 + i).toUpperCase()}
+                    label={option}
+                    control={
+                      <Checkbox
+                        checked={studentAnswer.includes(
+                          String.fromCharCode(97 + i).toUpperCase()
+                        )}
+                        color="primary"
+                      />
+                    }
+                  />
+                </div>
+              ))}
+            </FormGroup>
+          </Grid>
         </Grid>
       );
     } else {
-      //type = shorttext
       let splitQnsResult = questionName.split("`");
       let iterator = 0;
 
       for (let i = 1; i <= splitQnsResult.length - 2; i += 2) {
         splitQnsResult[i] = (
-          <span
-            className={classes.shortTextAnswer}
-            key={`${questionNumber}-${iterator}`}
-          >
-            {studentAnswer[iterator]}
-            <b className={classes.shortTextKeyAns}> ({questionAnswer[iterator]})</b>
+          <span key={`${questionNumber}-${iterator}`}>
+            <Typography display="inline" color="textSecondary">
+              <u>{studentAnswer[iterator]}</u>
+            </Typography>
+            <Typography display="inline" className={classes.shortTextKeyAnswer}> ({questionAnswer[iterator]})</Typography>
           </span>
         );
         iterator++;
       }
 
       answer = (
-        <Grid item>
-          <Typography
-            align="left"
-            variant="h6"
-            color="primary"
-            style={{ marginBottom: "10px" }}
-          >
-            {`Soal ${questionNumber}`}
-          </Typography>
-          <Typography align="justify">
-            <form>{splitQnsResult}</form>
-          </Typography>
-        </Grid>
+        <Typography align="justify">
+          <form>{splitQnsResult}</form>
+        </Typography>
       );
     }
 
-    content = [
-      <Hidden smDown>
-        <Grid container style={{ padding: "20px" }}>
-          <Grid item xs={9}>
-            {answer}
-          </Grid>
-
+    content = (
+      <div style={{ padding: "20px" }}>
+        <Grid container direction="column" spacing={2}>
           <Grid item>
-            <Divider
-              orientation="vertical"
-              style={{ marginLeft: "10px", marginRight: "10px" }}
-            />
+            <Typography
+              variant="h6"
+              color="primary"
+              align="left"
+            >
+              {`Soal ${questionNumber}`}
+            </Typography>
           </Grid>
-
-          <Grid
-            item
-            wrap="nowrap"
-            direction="column"
-            justify="center"
-            alignItems="center"
-            style={{ display: "flex", flexGrow: "1" }}
-          >
-            <Grid item>
-              <Typography align="center" color="primary">
-                Kunci Jawaban: {questionAnswer.join(", ")}
-              </Typography>
-            </Grid>
-            <Grid container item justify="center" alignItems="center">
-              <Typography
-                key={questionNumber}
-                color="textSecondary"
-              >
-                Poin: {studentMark} / {questionWeight}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Hidden>,
-      <Hidden mdUp>
-        <Grid container style={{ padding: "20px" }}>
-          <Grid item xs={12}>
+          <Grid item>
             {answer}
           </Grid>
-
-          <Grid
-            item
-            xs={12}
-            wrap="nowrap"
-            direction="column"
-            justify="center"
-            alignItems="center"
-          >
-            {questionType === "shorttext" ? (
-              <Grid item>
-                <Typography
-                  align="center"
-                  color="primary"
-                  style={{ marginTop: "15px" }}
-                >
-                  Kunci Jawaban: {questionAnswer.join(", ")}
-                </Typography>
-              </Grid>
-            ) : null}
-
-            <Grid item container justify="center" alignItems="center">
-              <Typography
-                key={questionNumber}
-                color="textSecondary"
-              >
-                Poin: {studentMark} / {questionWeight}
-              </Typography>
-            </Grid>
+          <Grid item container justify="flex-end">
+            <Typography
+              key={questionNumber}
+              color="textSecondary"
+            >
+              Poin: {studentMark} / {questionWeight}
+            </Typography>
           </Grid>
         </Grid>
-      </Hidden>,
-    ];
+      </div>
+    );
   }
 
   return (
-    <Paper style={{ width: "100%", marginBottom: "30px" }}>{content}</Paper>
+    <Paper style={{ width: "100%", marginBottom: "30px" }}>
+      {content}
+    </Paper>
   );
 }
 
