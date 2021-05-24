@@ -305,7 +305,7 @@ class EditAssessment extends Component {
       errors: {},
       // classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       // subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
-      // allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      // allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
       // allSubjectObject: null // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
     };
   }
@@ -498,7 +498,7 @@ class EditAssessment extends Component {
             // );
 
             for (let weight of newLongtextWeight) {
-            // for (let i = 0; i <= longtextCount.length - 1; i++) {
+              // for (let i = 0; i <= longtextCount.length - 1; i++) {
               // let weight = longtextCount[i];
 
               // agar error di textfield bobot muncul ketika textfield masih kosong saat create assessment
@@ -507,7 +507,10 @@ class EditAssessment extends Component {
               // }
 
               // agar data assessment tidak disubmit ketika ada bobot yang tidak valid
-              if (weight !== -1 && (isNaN(Number(weight)) || Number(weight) <= 0)) {
+              if (
+                weight !== -1 &&
+                (isNaN(Number(weight)) || Number(weight) <= 0)
+              ) {
                 completeWeight = false;
               }
             }
@@ -546,12 +549,11 @@ class EditAssessment extends Component {
         });
       } else {
         // Untuk kasus dimana tidak ada longtext, tetap perlu diassign value supaya tidak undefined
-        newLongtextWeight = [...this.state.longtextWeight]
+        newLongtextWeight = [...this.state.longtextWeight];
         if (this.state.weights[type] === undefined) {
           newWeights[type] = null;
         }
       }
-
     }
 
     this.setState({
@@ -693,7 +695,7 @@ class EditAssessment extends Component {
     //           return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
     //         });
     //       }
-          
+
     //       // menambahkan matpel tersebut ke opsi matpel
     //       let newSubjectOptions = [];
     //       subjects.forEach((subjectId) => {
@@ -1153,18 +1155,14 @@ class EditAssessment extends Component {
     // if (!this.props.errors && this.props.errors !== prevProps.errors) {
     //   this.handleOpenUploadDialog();
     // }
-
     // if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
     //   const selectedAssessmentProps = this.props.assessmentsCollection.selectedAssessments;
-
-    //   if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
+    //   if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) &&
     //   selectedAssessmentProps && selectedAssessmentProps.constructor === Object && (Object.keys(selectedAssessmentProps).length !== 0)) {
-        
     //     let all_classes_obj = {};
     //     this.props.classesCollection.all_classes.forEach((classInfo) => {
-    //       all_classes_obj[classInfo._id] = classInfo.name; 
+    //       all_classes_obj[classInfo._id] = classInfo.name;
     //     });
-
     //     // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
     //     let newClassOptions = [];
     //     if (this.props.auth.user.class_to_subject) {
@@ -1174,22 +1172,17 @@ class EditAssessment extends Component {
     //         }
     //       }
     //     }
-
     //     this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
     //   }
     // }
-
     // if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
     //   const selectedAssessmentProps = this.props.assessmentsCollection.selectedAssessments;
-
     //   if ( this.props.subjectsCollection.all_subjects && ( this.props.subjectsCollection.all_subjects.length !== 0) &&
     //   selectedAssessmentProps && selectedAssessmentProps.constructor === Object && (Object.keys(selectedAssessmentProps).length !== 0)) {
-        
     //     let all_subjects_obj = {};
     //      this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
-    //       all_subjects_obj[subjectInfo._id] = subjectInfo.name; 
+    //       all_subjects_obj[subjectInfo._id] = subjectInfo.name;
     //     });
-  
     //     // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
     //     let subjectMatrix = [];
     //     if (this.props.auth.user.class_to_subject) {
@@ -1205,13 +1198,11 @@ class EditAssessment extends Component {
     //         return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
     //       });
     //     }
-
     //     // menambahkan matpel tersebut ke opsi matpel
     //     let newSubjectOptions = [];
     //     subjects.forEach((subjectId) => {
     //       newSubjectOptions.push({ _id: subjectId, name: all_subjects_obj[subjectId] });
     //     })
-
     //     this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
     //   }
     // }
@@ -1875,7 +1866,7 @@ class EditAssessment extends Component {
                             ))}
                           </Select>
                           <FormHelperText>
-                          {Boolean(errors.class_assigned)
+                            {Boolean(errors.class_assigned)
                               ? errors.class_assigned
                               : null}
                           </FormHelperText>
@@ -2125,7 +2116,7 @@ EditAssessment.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({

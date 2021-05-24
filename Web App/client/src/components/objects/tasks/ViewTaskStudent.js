@@ -815,7 +815,10 @@ function ViewTaskStudent(props) {
                   <Typography color="textSecondary" gutterBottom>
                     Deskripsi Tugas:
                   </Typography>
-                  <Typography align="justify" style={{wordBreak: "break-word", whiteSpace: "pre-wrap"}}>
+                  <Typography
+                    align="justify"
+                    style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                  >
                     <CustomLinkify text={tasksCollection.description} />
                   </Typography>
                 </Grid>
@@ -827,14 +830,14 @@ function ViewTaskStudent(props) {
                   </Typography>
                   <Grid container spacing={1}>
                     {fileLampiran.map((lampiran) => (
-                        <LampiranFile
-                          file_id={lampiran._id}
-                          onPreviewFile={viewFileTasks}
-                          onDownloadFile={downloadFileTasks}
-                          filename={lampiran.filename}
-                          filetype={fileType(lampiran.filename)}
-                        />
-                      ))}
+                      <LampiranFile
+                        file_id={lampiran._id}
+                        onPreviewFile={viewFileTasks}
+                        onDownloadFile={downloadFileTasks}
+                        filename={lampiran.filename}
+                        filetype={fileType(lampiran.filename)}
+                      />
+                    ))}
                   </Grid>
                 </Grid>
               )}

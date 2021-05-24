@@ -579,7 +579,7 @@ function SubmittedAssessmentList(props) {
             scores = JSON.parse(JSON.stringify(scoresTemplate));
 
             if (hasLongtextQuestion) {
-              console.log("ADA Long text")
+              console.log("ADA Long text");
               if (
                 selectedAssessments.grades &&
                 selectedAssessments.grades[student._id]
@@ -1171,7 +1171,7 @@ function SubmittedAssessmentList(props) {
               </IconButton>
             </LightTooltip>
           </Grid>
-          <Grid item style={{ width:"100%", paddingBottom: "0" }}>
+          <Grid item style={{ width: "100%", paddingBottom: "0" }}>
             {listClassTab()}
           </Grid>
         </Grid>

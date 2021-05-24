@@ -1,5 +1,5 @@
-import React from 'react'
-import { Component } from 'react'
+import React from "react";
+import { Component } from "react";
 import notFoundBackground from "./NotFoundBackground.png";
 import { Button, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
@@ -50,53 +50,55 @@ const styles = (theme) => ({
 });
 
 class Error extends Component {
-        constructor(props){
-        super(props)
+  constructor(props) {
+    super(props);
+  }
 
+  //   document.title = "Schooly | Error 404";
+  // static getDerivedStateFromError(error){
+  //     this.props.handleProblemEncountered(true)
+  // }
+  componentDidUpdate(prevProps) {
+    if (prevProps.location != this.props.location) {
+      this.props.handleProblemEncountered(false);
     }
+  }
 
-//   document.title = "Schooly | Error 404";
-    // static getDerivedStateFromError(error){
-    //     this.props.handleProblemEncountered(true)
-    // }
-    componentDidUpdate(prevProps){
-        if(prevProps.location != this.props.location){
-            this.props.handleProblemEncountered(false)
-        }
-    }
-
-    componentWillUnmount(){
-        this.props.handleProblemEncountered(false)
-    }
-render(){
-    
-const { classes, problemEncountered, handleProblemEncountered } = this.props
+  componentWillUnmount() {
+    this.props.handleProblemEncountered(false);
+  }
+  render() {
+    const {
+      classes,
+      problemEncountered,
+      handleProblemEncountered,
+    } = this.props;
     return (
-        <div className={classes.root}>
+      <div className={classes.root}>
         <div className={classes.notFoundBackground}>
-            <div className={classes.notFoundContainer}>
+          <div className={classes.notFoundContainer}>
             <Typography variant="h4" className={classes.notFoundText}>
-                <b>Terjadi Kesalahan dengan sistem</b>
+              <b>Terjadi Kesalahan dengan sistem</b>
             </Typography>
             <Typography variant="h5" className={classes.notFoundText}>
-                Maaf, halaman ini tidak ditemukan
+              Maaf, halaman ini tidak ditemukan
             </Typography>
-            </div>
+          </div>
         </div>
         <div className={classes.buttonContainer}>
-            <Link to="/beranda">
+          <Link to="/beranda">
             <Button
-                variant="contained"
-                size="large"
-                className={classes.backButton}
+              variant="contained"
+              size="large"
+              className={classes.backButton}
             >
-                Kembali ke Beranda
+              Kembali ke Beranda
             </Button>
-            </Link>
+          </Link>
         </div>
-        </div>
-    )
-    }
+      </div>
+    );
+  }
 }
 
 export default withRouter(withStyles(styles)(React.memo(Error)));

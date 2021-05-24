@@ -207,8 +207,13 @@ function ViewAssessmentTeacher(props) {
     }
 
     return (
-      <Typography>
-        <form>{splitResult}</form>
+      <Typography
+        align="justify"
+        style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+      >
+        <form>
+          <CustomLinkify text={splitResult} />
+        </form>
       </Typography>
     );
   };
@@ -362,7 +367,11 @@ function ViewAssessmentTeacher(props) {
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Kuis/Ujian:
                 </Typography>
-                <Typography variant="body1" align="justify" style={{wordBreak: "break-word", whiteSpace: "pre-wrap"}}>
+                <Typography
+                  variant="body1"
+                  align="justify"
+                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                >
                   <CustomLinkify text={selectedAssessments.description} />
                 </Typography>
               </Grid>
@@ -416,18 +425,37 @@ function ViewAssessmentTeacher(props) {
                       ) : question.type === "longtext" ? (
                         <Grid container direction="column" spacing={2}>
                           <Grid item>
-                            <Typography>
+                            <Typography
+                              align="justify"
+                              style={{
+                                wordBreak: "break-word",
+                                whiteSpace: "pre-wrap",
+                              }}
+                            >
                               <CustomLinkify text={question.name} />
                             </Typography>
                           </Grid>
                           <Grid item>
-                            <Typography color="textSecondary">
-                              {question.answer}
+                            <Typography
+                              color="textSecondary"
+                              align="justify"
+                              style={{
+                                wordBreak: "break-word",
+                                whiteSpace: "pre-wrap",
+                              }}
+                            >
+                              <CustomLinkify text={question.answer} />
                             </Typography>
                           </Grid>
                         </Grid>
                       ) : (
-                        <Typography>
+                        <Typography
+                          align="justify"
+                          style={{
+                            wordBreak: "break-word",
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
                           <CustomLinkify text={question.name} />
                         </Typography>
                       )}

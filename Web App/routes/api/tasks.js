@@ -82,11 +82,11 @@ router.get("/view/:id", (req, res) => {
   });
 });
 
-router.post("/grade/:id", (req,res) => {
+router.post("/grade/:id", (req, res) => {
   let { id } = req.params;
   console.log(req.body);
-  const {errorsGrade, isValidGrade} = validateTaskGrade(req.body);
-  if(!isValidGrade){
+  const { errorsGrade, isValidGrade } = validateTaskGrade(req.body);
+  if (!isValidGrade) {
     return res.status(400).json(errorsGrade);
   }
   let grade = req.body.grade;
@@ -97,11 +97,11 @@ router.post("/grade/:id", (req,res) => {
     taskData.grades.set(req.body.studentId, grade);
 
     taskData
-        .save()
-        .then((taskData) => res.json("Grade Task complete"))
-        .catch((err) => res.status(400).send("Unable to find task in database"));
-  })
-})
+      .save()
+      .then((taskData) => res.json("Grade Task complete"))
+      .catch((err) => res.status(400).send("Unable to find task in database"));
+  });
+});
 
 //Define update routes
 router.post("/update/:id", (req, res) => {
@@ -126,7 +126,7 @@ router.post("/update/:id", (req, res) => {
       taskData.class_assigned = req.body.class_assigned;
       taskData.description = req.body.description;
       taskData.deadline = req.body.deadline;
-      
+
       // else {
       //   const { errorsGrade, isValidGrade } = validateTaskGrade(req.body);
       //   if (!isValidGrade) {

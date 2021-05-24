@@ -1,7 +1,7 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import problemEncounteredBackground from "./ProblemEncounteredBackground.png";
 import { Button, Typography } from "@material-ui/core";
-import { makeStyles, withStyles  } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { Link, withRouter } from "react-router-dom";
 import EmailIcon from "@material-ui/icons/Email";
 
@@ -49,48 +49,54 @@ const styles = (theme) => ({
 });
 
 class ProblemEncountered extends Component {
-  constructor(props){
-    super(props)
+  constructor(props) {
+    super(props);
   }
 
-  componentDidUpdate(prevProps){
-    if(prevProps.location != this.props.location){
-        this.props.handleProblemEncountered(false)
+  componentDidUpdate(prevProps) {
+    if (prevProps.location != this.props.location) {
+      this.props.handleProblemEncountered(false);
     }
-}
+  }
 
-  render(){
+  render() {
+    const {
+      classes,
+      problemEncountered,
+      handleProblemEncountered,
+    } = this.props;
 
-  const { classes, problemEncountered, handleProblemEncountered } = this.props;
-  
+    document.title = "Schooly | Problem Encountered";
 
-  document.title = "Schooly | Problem Encountered";
-
-  return (
-    <div className={classes.root}>
-      <div className={classes.problemEncounteredBackground}>
-        <div className={classes.problemEncounteredContainer}>
-          <Typography variant="h2" gutterBottom className={classes.problemEncounteredText}>
-            <b>:(</b>
-          </Typography>
-          <Typography variant="h6" className={classes.problemEncounteredText}>
-            Maaf, terdapat masalah dalam memproses permintaan Anda.
-          </Typography>
+    return (
+      <div className={classes.root}>
+        <div className={classes.problemEncounteredBackground}>
+          <div className={classes.problemEncounteredContainer}>
+            <Typography
+              variant="h2"
+              gutterBottom
+              className={classes.problemEncounteredText}
+            >
+              <b>:(</b>
+            </Typography>
+            <Typography variant="h6" className={classes.problemEncounteredText}>
+              Maaf, terdapat masalah dalam memproses permintaan Anda.
+            </Typography>
+          </div>
+        </div>
+        <div className={classes.buttonContainer}>
+          <Button
+            variant="contained"
+            size="large"
+            href="mailto:schoolysystem@gmail.com"
+            startIcon={<EmailIcon />}
+            className={classes.backButton}
+          >
+            Laporkan Masalah
+          </Button>
         </div>
       </div>
-      <div className={classes.buttonContainer}>
-        <Button
-          variant="contained"
-          size="large"
-          href="mailto:schoolysystem@gmail.com"
-          startIcon={<EmailIcon />}
-          className={classes.backButton}
-        >
-          Laporkan Masalah
-        </Button>
-      </div>
-    </div>
-  );
+    );
   }
 }
 

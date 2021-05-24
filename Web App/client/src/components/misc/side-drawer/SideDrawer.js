@@ -303,7 +303,7 @@ function SideDrawer(props) {
             }}
           >
             <Toolbar />
-            <DrawerContent user={user}/>
+            <DrawerContent user={user} />
           </Drawer>
         </Hidden>
       </div>

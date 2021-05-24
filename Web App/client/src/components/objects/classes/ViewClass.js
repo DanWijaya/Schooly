@@ -592,9 +592,7 @@ function ViewClass(props) {
 
   function showTasks(data) {
     if (data.length === 0) {
-      return (
-        <Empty />
-      );
+      return <Empty />;
     } else {
       return sortAscByCreatedAt(data).map((row) => (
         <AssignmentListItem
@@ -615,9 +613,7 @@ function ViewClass(props) {
 
   function showAssessments(data) {
     if (data.length === 0) {
-      return (
-        <Empty />
-      );
+      return <Empty />;
     } else {
       return sortAscByCreatedAt(data).map((row) => (
         <AssessmentListItem
@@ -643,9 +639,7 @@ function ViewClass(props) {
 
   function showMaterials(data) {
     if (data.length === 0) {
-      return (
-        <Empty />
-      );
+      return <Empty />;
     } else {
       return sortAscByCreatedAt(data).map((row) => (
         <MaterialListitem
@@ -661,9 +655,7 @@ function ViewClass(props) {
 
   function showAllbySubject(data) {
     if (data.length === 0) {
-      return (
-        <Empty />
-      );
+      return <Empty />;
     } else {
       return sortAscByCreatedAt(data).map((row) => {
         if (row.objectType === "Tugas") {

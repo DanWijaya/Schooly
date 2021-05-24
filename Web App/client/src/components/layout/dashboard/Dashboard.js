@@ -605,9 +605,7 @@ function ListAssessments(props) {
     }
   }
   if (result.length === 0) {
-    return (
-      <Empty />
-    );
+    return <Empty />;
   } else {
     return sortAscByCreatedAt(result).map((row) => (
       <AssessmentListItem
@@ -986,9 +984,7 @@ class Dashboard extends Component {
         }
       });
       if (result.length === 0) {
-        return (
-          <Empty />
-        );
+        return <Empty />;
       } else {
         return sortAscByCreatedAt(result).map((row) => (
           <TaskListItem
@@ -1037,9 +1033,7 @@ class Dashboard extends Component {
         }
       }
       if (result.length === 0) {
-        return (
-          <Empty />
-        );
+        return <Empty />;
       } else {
         return sortAscByCreatedAt(result).map((row) => {
           return (
@@ -1116,9 +1110,7 @@ class Dashboard extends Component {
       }
 
       if (result.length === 0) {
-        return (
-          <Empty />
-        );
+        return <Empty />;
       } else {
         return sortAscByCreatedAt(result).map((row) => {
           return (

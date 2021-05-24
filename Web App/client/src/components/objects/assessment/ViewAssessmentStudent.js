@@ -483,8 +483,13 @@ function ViewAssessmentStudent(props) {
     }
 
     return (
-      <Typography gutterButtom>
-        <form>{splitResult}</form>
+      <Typography
+        align="justify"
+        style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+      >
+        <form>
+          <CustomLinkify text={splitResult} />
+        </form>
       </Typography>
     );
   };
@@ -685,7 +690,14 @@ function ViewAssessmentStudent(props) {
                       "shorttext" ? (
                       generateSoalShortTextStudent()
                     ) : (
-                      <Typography gutterButtom>
+                      <Typography
+                        align="justify"
+                        style={{
+                          wordBreak: "break-word",
+                          whiteSpace: "pre-wrap",
+                        }}
+                        gutterButtom
+                      >
                         <CustomLinkify text={questions[qnsIndex].name} />
                       </Typography>
                     )}
@@ -746,8 +758,9 @@ function ViewAssessmentStudent(props) {
                             );
                           })}
                         </FormGroup>
-                      ) : questions[qnsIndex].type === "shorttext" ? null
-                      : questions[qnsIndex].type === "longtext" ? (
+                      ) : questions[qnsIndex].type ===
+                        "shorttext" ? null : questions[qnsIndex].type ===
+                        "longtext" ? (
                         <TextField
                           key={`${user._id}-${qnsIndex}`}
                           id="answer"

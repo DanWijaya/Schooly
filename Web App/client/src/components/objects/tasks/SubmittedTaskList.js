@@ -50,7 +50,10 @@ import {
   FaFileWord,
 } from "react-icons/fa";
 import MuiAlert from "@material-ui/lab/Alert";
-import { getFileSubmitTasks_T, viewFileSubmitTasks } from "../../../actions/files/FileSubmitTaskActions";
+import {
+  getFileSubmitTasks_T,
+  viewFileSubmitTasks,
+} from "../../../actions/files/FileSubmitTaskActions";
 
 const path = require("path");
 
@@ -154,7 +157,11 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div hidden={value !== index} id={`scrollable-force-tabpanel-${index}`} {...other}>
+    <div
+      hidden={value !== index}
+      id={`scrollable-force-tabpanel-${index}`}
+      {...other}
+    >
       {value === index && (
         <Box p={3}>
           <Typography>{children}</Typography>
@@ -318,7 +325,7 @@ function SubmittedTaskList(props) {
     gradeTask,
     success,
     getFileSubmitTasks_T,
-    viewFileSubmitTasks
+    viewFileSubmitTasks,
   } = props;
   const { all_classes } = props.classesCollection;
   const {
@@ -485,7 +492,7 @@ function SubmittedTaskList(props) {
     console.log(gradeValues);
     gradeKeys.forEach((student_id, i) => {
       let studentData = all_students.find((std) => std._id === student_id);
-      if(studentData){
+      if (studentData) {
         let studentName = studentData.name;
         let studentClass = studentData.kelas;
         for (let j = 0; j < classArray.length; j++) {
@@ -570,7 +577,7 @@ function SubmittedTaskList(props) {
   const listClassTabPanel = () => {
     let TabPanelList = [];
     if (!tasksCollection.class_assigned || !all_students) {
-      return
+      return;
     } else {
       let { class_assigned } = tasksCollection;
       // let student_task_files_id; // to handle the download all, this is needed.
@@ -581,12 +588,12 @@ function SubmittedTaskList(props) {
         .filter((s) => tasksCollection.class_assigned[value] === s.kelas)
         .map((student, idx) => {
           // untuk setiap file yang pernah dikumpulkan murid ini.
-          console.log(submittedFiles)
-          let students_files = submittedFiles.filter(
-            (f) => {return f.author_id == student._id}
-          );
-          console.log(student._id)
-          console.log(students_files)
+          console.log(submittedFiles);
+          let students_files = submittedFiles.filter((f) => {
+            return f.author_id == student._id;
+          });
+          console.log(student._id);
+          console.log(students_files);
           let task_list_on_panel;
 
           if (students_files.length > 0) {
@@ -646,83 +653,83 @@ function SubmittedTaskList(props) {
               <div className={classes.studentFileListContainer}>
                 <List>{task_list_on_panel}</List>
                 {students_files.length > 0 ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                    }}
+                  >
                     <div
                       style={{
+                        marginRight: "20px",
                         display: "flex",
-                        justifyContent: "flex-end",
                         alignItems: "center",
                       }}
                     >
-                      <div
-                        style={{
-                          marginRight: "20px",
-                          display: "flex",
-                          alignItems: "center",
+                      <TextField
+                        defaultValue={
+                          grade.has(student._id) ||
+                          tasksCollection.grades === null
+                            ? grade.get(student._id)
+                            : tasksCollection.grades[student._id]
+                        }
+                        onChange={(e) => {
+                          handleChangeGrade(e, student._id);
                         }}
-                      >
-                        <TextField
-                          defaultValue={
-                            grade.has(student._id) ||
-                            tasksCollection.grades === null
-                              ? grade.get(student._id)
-                              : tasksCollection.grades[student._id]
-                          }
-                          onChange={(e) => {
-                            handleChangeGrade(e, student._id);
-                          }}
-                          inputProps={{
-                            style: {
-                              borderBottom: "none",
-                              boxShadow: "none",
-                              margin: "0px",
-                              width: "35px",
-                            },
-                          }}
-                          InputProps={{
-                            endAdornment: "/ 100",
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <GradeButton
-                          onGradeTugas={onGradeTugas}
-                          // student_task_files_id={student_task_files_id}
-                          task_id={task_id}
-                          student_id={student._id}
-                          student_name={student.name}
-                          grade={grade}
-                        />
-                        {/* <UnduhSemuaButton
+                        inputProps={{
+                          style: {
+                            borderBottom: "none",
+                            boxShadow: "none",
+                            margin: "0px",
+                            width: "35px",
+                          },
+                        }}
+                        InputProps={{
+                          endAdornment: "/ 100",
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <GradeButton
+                        onGradeTugas={onGradeTugas}
+                        // student_task_files_id={student_task_files_id}
+                        task_id={task_id}
+                        student_id={student._id}
+                        student_name={student.name}
+                        grade={grade}
+                      />
+                      {/* <UnduhSemuaButton
                           onDownloadFile={onDownloadFile}
                           // student_task_files_id={student_task_files_id}
                         /> */}
-                      </div>
                     </div>
-                  ) : null}
+                  </div>
+                ) : null}
               </div>
             </ExpansionPanel>
           );
         });
-        TabPanelList.push(
-          <TabPanel value={value} index={value}>
-            {isClassSubmissionEmpty ? (
-              <Grid
-                container
-                alignItems="center"
-                justify="center"
-                style={{ height: "20vh" }}
-              >
-                <Typography variant="h5" color="textSecondary" align="center">
-                  Belum ada murid yang mengumpulkan tugas
-                </Typography>
-              </Grid>
-            ) : (
-              students_in_class
-            )}
-          </TabPanel>
-        );
-        return TabPanelList;
-      }
+      TabPanelList.push(
+        <TabPanel value={value} index={value}>
+          {isClassSubmissionEmpty ? (
+            <Grid
+              container
+              alignItems="center"
+              justify="center"
+              style={{ height: "20vh" }}
+            >
+              <Typography variant="h5" color="textSecondary" align="center">
+                Belum ada murid yang mengumpulkan tugas
+              </Typography>
+            </Grid>
+          ) : (
+            students_in_class
+          )}
+        </TabPanel>
+      );
+      return TabPanelList;
+    }
 
     // return tasksCollection.class_assigned.length > 0 ? TabPanelList : null;
   };
@@ -851,5 +858,5 @@ export default connect(mapStateToProps, {
   // moveToDropbox,
   getAllSubjects,
   getFileSubmitTasks_T,
-  viewFileSubmitTasks
+  viewFileSubmitTasks,
 })(SubmittedTaskList);

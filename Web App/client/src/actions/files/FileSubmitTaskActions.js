@@ -73,7 +73,7 @@ export const downloadFileSubmitTasks = (id) => (dispatch) => {
 };
 
 export const viewFileSubmitTasks = (id) => (dispatch) => {
-  console.log(id)
+  console.log(id);
   axios
     .get(`/api/files/submit_tasks/${id}`)
     .then((res) => {

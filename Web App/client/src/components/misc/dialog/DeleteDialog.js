@@ -97,25 +97,19 @@ function DeleteDialog(props) {
         <Grid item container direction="column" alignItems="center">
           <Grid item>
             {itemName ? (
-                <Typography
-                  align="center"
-                  gutterBottom
-                >
-                  <b>{itemName}</b>
-                </Typography>
+              <Typography align="center" gutterBottom>
+                <b>{itemName}</b>
+              </Typography>
             ) : null}
           </Grid>
           <Grid item>
             {isWarning ? (
-                <div className={classes.warning}>
-                  <ErrorOutlineIcon className={classes.warningIcon} />
-                  <Typography
-                    align="center"
-                    className={classes.warningText}
-                  >
-                    Nilai Murid pada {itemType} ini juga akan dihapus
-                  </Typography>
-                </div>
+              <div className={classes.warning}>
+                <ErrorOutlineIcon className={classes.warningIcon} />
+                <Typography align="center" className={classes.warningText}>
+                  Nilai Murid pada {itemType} ini juga akan dihapus
+                </Typography>
+              </div>
             ) : null}
           </Grid>
         </Grid>

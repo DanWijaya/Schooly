@@ -289,7 +289,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { loginUser,clearErrors })(
+  connect(mapStateToProps, { loginUser, clearErrors })(
     withStyles(styles)(Login)
   )
 );

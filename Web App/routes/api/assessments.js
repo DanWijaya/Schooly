@@ -244,7 +244,7 @@ router.post("/update/:id", (req, res) => {
             if (!isLongtextQuestionAdded) {
               // weight_accumulator sudah dipastikan tidak 0
               let score = (100 * point_accumulator) / weight_accumulator;
-              if(assessmentData.grades){
+              if (assessmentData.grades) {
                 assessmentData.grades.set(key, {
                   total_grade: parseFloat(score.toFixed(1)),
                   longtext_grades: longtextGrade,

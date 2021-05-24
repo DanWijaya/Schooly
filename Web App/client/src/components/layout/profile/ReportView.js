@@ -1442,12 +1442,7 @@ function ReportView(props) {
             </Typography>
             <Divider className={classes.profileDivider} />
           </Grid>
-          <Grid
-            item
-            container
-            justify="space-between"
-            alignItems="center"
-          >
+          <Grid item container justify="space-between" alignItems="center">
             <Grid item md={7} className={classes.customMargin}>
               <Typography>
                 Berikut adalah rapor seluruh murid sesuai kelas dan mata
@@ -1485,9 +1480,7 @@ function ReportView(props) {
                     }}
                     label="Mata Pelajaran"
                   >
-                    {kontenMatpel.size !== 0
-                      ? generateMatPelMenuItem()
-                      : null}
+                    {kontenMatpel.size !== 0 ? generateMatPelMenuItem() : null}
                   </Select>
                 </FormControl>
               </Grid>

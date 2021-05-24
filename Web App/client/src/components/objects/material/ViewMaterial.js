@@ -366,7 +366,11 @@ function ViewMaterial(props) {
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Materi:
                 </Typography>
-                <Typography variant="body1" align="justify" style={{wordBreak: "break-word", whiteSpace: "pre-wrap"}}>
+                <Typography
+                  variant="body1"
+                  align="justify"
+                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                >
                   <CustomLinkify text={selectedMaterials.description} />
                 </Typography>
               </Grid>
