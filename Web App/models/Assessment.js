@@ -91,6 +91,8 @@ const AssessmentSchema = new Schema(
     submissions: {
       type: Map,
     },
+    // ketika assessment pertama kali dibuat, atribut ini tidak ada
+
     type: {
       type: String,
       required: true,
@@ -116,7 +118,9 @@ const AssessmentSchema = new Schema(
         2: 20
       }
     }
-    - value "longtext" adalah Object yg memiliki pasangan-pasangan key-value: <index soal uraian>-<bobot> 
+    - value "longtext" adalah Object yg memiliki pasangan-pasangan key-value: <index soal uraian>-<bobot>. 
+    pasangan <index soal non uraian>-<bobot> tidak akan dimasukan di "longtext". 
+    <bobot> bisa bernilai null. <bobot> bernilai null ketika assessment disimpan dengan kondisi nilai bobot kosong untuk soal uraian tersebut.
     - "<tipe soal>: null" jika dan hanya jika assessment tidak memiliki soal bertipe <tipe soal>. 
     contoh: assessment A cuma punya soal pg, maka isi question_weight: {
       radio: <nilai bobot pg>,

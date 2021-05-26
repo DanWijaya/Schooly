@@ -511,13 +511,13 @@ class EditAssessment extends Component {
     }
 
     let newWeights = { ...this.state.weights };
-    let newLongtextWeight;
+    let newLongtextWeight = [...this.state.longtextWeight];
     for (let [type, count] of Object.entries(typeCount)) {
       if (count === 0) {
         continue;
       }
       if (type === "longtext") {
-        newLongtextWeight = [...this.state.longtextWeight].map((weight) => {
+        newLongtextWeight = newLongtextWeight.map((weight) => {
           if (weight === undefined) {
             return null;
           }
