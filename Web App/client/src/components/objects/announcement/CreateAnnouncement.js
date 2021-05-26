@@ -225,7 +225,7 @@ class CreateAnnouncement extends Component {
     if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
 
-        let newClassOptions;
+        let newClassOptions = [];
         let all_classes_obj = {};
 
         if (this.props.auth.user.role === "Teacher") {
@@ -235,7 +235,6 @@ class CreateAnnouncement extends Component {
             all_classes_obj[classInfo._id] = classInfo.name; 
           });
 
-          let newClassOptions = [];
           if (this.props.auth.user.class_teached) {
             // NOTE dengan ini, jika guru tidak mengajar kelas yang diwalikannya, 
             // guru tidak dapat membuat pengumuman untuk kelas walinya tersebut
@@ -243,9 +242,7 @@ class CreateAnnouncement extends Component {
               return { _id: classId, name: all_classes_obj[classId] };
             });
           }
-          } else {
-          newClassOptions = [];
-
+        } else {
           this.props.classesCollection.all_classes.forEach((classInfo) => {
             all_classes_obj[classInfo._id] = classInfo.name; 
             newClassOptions.push({ _id: classInfo._id, name: classInfo.name });

@@ -288,7 +288,7 @@ class EditAnnouncement extends Component {
       if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
       selectedAnnouncementProps && selectedAnnouncementProps.constructor === Object && (Object.keys(selectedAnnouncementProps).length !== 0)) {
         
-        let newClassOptions;
+        let newClassOptions = [];
         let all_classes_obj = {};
 
         if (this.props.auth.user.role === "Teacher") {
@@ -298,15 +298,12 @@ class EditAnnouncement extends Component {
             all_classes_obj[classInfo._id] = classInfo.name;
           });
 
-          let newClassOptions = [];
           if (this.props.auth.user.class_teached) {
             newClassOptions = this.props.auth.user.class_teached.map((classId) => {
               return { _id: classId, name: all_classes_obj[classId] };
             });
           }
         } else {
-          newClassOptions = [];
-
           this.props.classesCollection.all_classes.forEach((classInfo) => {
             all_classes_obj[classInfo._id] = classInfo.name;
             newClassOptions.push({ _id: classInfo._id, name: classInfo.name });
