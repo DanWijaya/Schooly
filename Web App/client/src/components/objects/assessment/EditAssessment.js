@@ -533,7 +533,8 @@ class EditAssessment extends Component {
     }
 
     let newWeights = { ...this.state.weights };
-    let newLongtextWeight;
+    // Untuk kasus dimana tidak ada longtext, tetap perlu diassign value supaya tidak undefined
+    let newLongtextWeight = [...this.state.longtextWeight];
 
     for (let [type, count] of Object.entries(typeCount)) {
       if (count === 0) {
@@ -541,15 +542,13 @@ class EditAssessment extends Component {
       }
 
       if (type === "longtext") {
-        newLongtextWeight = [...this.state.longtextWeight].map((weight) => {
+        newLongtextWeight = newLongtextWeight.map((weight) => {
           if (weight === undefined) {
             return null;
           }
           return weight;
         });
       } else {
-        // Untuk kasus dimana tidak ada longtext, tetap perlu diassign value supaya tidak undefined
-        newLongtextWeight = [...this.state.longtextWeight];
         if (this.state.weights[type] === undefined) {
           newWeights[type] = null;
         }

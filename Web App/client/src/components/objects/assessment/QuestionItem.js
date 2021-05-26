@@ -117,6 +117,7 @@ function QuestionItem(props) {
   const [longtextAnswer, setLongtextAnswer] = React.useState("");
   const [localBtError, setLocalBtError] = React.useState(false);
   const [lampiranToPreview, setLampiranToPreview] = React.useState([]);
+  const weightInput = React.useRef(null);
   // dipakai untuk edit assessment
   // const [currentLampiran, setCurrentLampiran] = React.useState([])
 
@@ -201,7 +202,11 @@ function QuestionItem(props) {
     // setLongtextValue("1");
     setLongtextValue(longtextWeight);
   }, [longtextWeight]);
-
+  React.useEffect(() => {
+    if (weightInput.current && weightInput.current.value !== longtextValue && (longtextValue === undefined || longtextValue === null)) {
+      weightInput.current.value = "";
+    }
+  }, [longtextValue]);
   React.useEffect(() => {
     console.log("Lampiran to preview set to empty");
     setLampiranToPreview([]);
@@ -726,6 +731,7 @@ function QuestionItem(props) {
               <Grid item style={{ height: "3rem" }}>
                 <TextField
                   value={longtextValue}
+                  inputRef={weightInput}
                   onChange={(e) => {
                     handleLongtextWeight(e, index);
                   }}
