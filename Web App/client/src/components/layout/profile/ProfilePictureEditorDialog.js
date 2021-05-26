@@ -129,13 +129,13 @@ function ProfilePictureEditorDialog(props) {
     formData.append("avatar", profileImg);
 
     let userId = user._id;
-    uploadFileAvatar(userId, formData);
-
+    uploadFileAvatar(userId, formData).then((res) => {
+      props.handleOpenAlert();
+      handleCloseDialog();
+    });
     // Fitur_4 punya:
     // updateAvatar(userData, userId, formData);
-    props.handleOpenAlert();
-
-    handleCloseDialog();
+    
   };
 
   function onImgLoad({ target: img }) {

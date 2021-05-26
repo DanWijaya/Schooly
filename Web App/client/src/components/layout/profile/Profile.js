@@ -207,7 +207,6 @@ function Profile(props) {
     }
     setOpenAlert(false);
   };
-  console.log(avatar);
   // Alert control for ProfileDataEditorDialog
   const [openDataEditorAlert, setOpenDataEditorAlert] = React.useState(false);
   const handleOpenDataEditorAlert = () => {
@@ -247,8 +246,6 @@ function Profile(props) {
   if (user.role === "Student" && !classesCollection.kelas.name) {
     setCurrentClass(user.kelas);
   }
-
-  React.useEffect(() => {}, []);
 
   document.title = "Schooly | Profil Saya";
   return (

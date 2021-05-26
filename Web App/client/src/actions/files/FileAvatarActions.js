@@ -3,12 +3,15 @@ import { setCurrentUser } from "../UserActions";
 
 export const uploadFileAvatar = (id, formData) => (dispatch) => {
   console.log("uploading file avatar actions");
-  axios
+  return axios
     .post(`/api/files/avatar/upload/${id}`, formData)
     .then((res) => {
       dispatch(setCurrentUser(res.data.user));
+      return true
     })
-    .catch((err) => new Error(err));
+    .catch((err) => {
+      throw new Error(err)
+    });
 };
 
 export const getFileAvatar = (id) => (dispatch) => {

@@ -1260,6 +1260,7 @@ function Help(props) {
                 variant="contained"
                 startIcon={<InstagramIcon />}
                 className={classes.moreHelpMobileButton}
+                target="blank_"
                 href="https://instagram.com/schoolysystem"
               >
                 schoolysystem
@@ -1271,6 +1272,7 @@ function Help(props) {
                 button
                 component="a"
                 className={classes.paperIcon}
+                target="blank_"
                 href="https://instagram.com/schoolysystem"
               >
                 <Avatar className={classes.iconAvatar}>
