@@ -71,11 +71,11 @@ export const createSubject = (subjectData) => (dispatch) => {
 };
 
 export const deleteSubject = (subjectId) => (dispatch) => {
-  axios
+  return axios
     .delete(`/api/subjects/delete/${subjectId}`)
     .then((res) => {
-      console.log("Deleted subject", res.data);
-      window.location.reload();
+      return "Subject is successfully deleted"
+      // window.location.reload();
     })
     .catch((err) => {
       console.log(err, "Error in deleting the subject");

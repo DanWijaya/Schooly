@@ -24,6 +24,7 @@ import {
   Paper,
   Menu,
   MenuItem,
+  Snackbar,
   TableSortLabel,
   TextField,
   Typography,
@@ -33,6 +34,7 @@ import {
   Avatar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
+import MuiAlert from "@material-ui/lab/Alert";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -521,6 +523,7 @@ function TaskList(props) {
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
+  const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
   const {
     tasksCollection,
@@ -551,12 +554,22 @@ function TaskList(props) {
       getAllTask();
       getAllClass("map");
       getAllSubjects("map");
+      
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
+  React.useEffect(() => {
+    // Untuk muculin delete snackbar pas didelete dari view page
+    if(props.location.openDeleteSnackbar){
+      handleOpenDeleteSnackbar()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const retrieveTasks = () => {
+    console.log("Hello");
     // If tasksCollection is not undefined or an empty array
     if (tasksCollection.length) {
       rows = [];
@@ -600,12 +613,27 @@ function TaskList(props) {
     setOrderBy(property);
   };
 
+  const handleOpenDeleteSnackbar = () => {
+    setOpenDeleteSnackbar(true);
+  }
+
+  const handleCloseDeleteSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenDeleteSnackbar(false);
+  };
+
   // Call the function to view the tasks on tablerows.
   // This function is defined above.
   retrieveTasks();
 
   const onDeleteTask = (id) => {
-    deleteTask(id);
+    deleteTask(id).then((res) => {
+      handleOpenDeleteSnackbar()
+      handleCloseDeleteDialog()
+      getAllTask();
+    });
   };
 
   // Delete Dialog
@@ -895,6 +923,23 @@ function TaskList(props) {
           })
         )}
       </Grid>
+      <Snackbar
+        open={openDeleteSnackbar}
+        autoHideDuration={4000}
+        onClose={(event, reason) => {
+          handleCloseDeleteSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseDeleteSnackbar(event, reason);
+          }}
+        >
+          Tugas berhasil dihapus
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

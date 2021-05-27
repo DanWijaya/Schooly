@@ -12,8 +12,6 @@ import {
   deleteClass,
   updateClassAdmin,
 } from "../../../actions/ClassActions";
-import { getAllAssessments } from "../../../actions/AssessmentActions";
-import { getAllTask } from "../../../actions/TaskActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -85,6 +83,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+
 function ClassListToolbar(props) {
   const {
     classes,
@@ -101,6 +100,7 @@ function ClassListToolbar(props) {
   const { getStudents, handleOpenSnackbar } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
 
+  
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -886,6 +886,7 @@ function ClassList(props) {
   const [selectedClassName, setSelectedClassName] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
+  const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
   const { classesCollection, tasksCollection } = props;
   const {
     clearErrors,
@@ -893,12 +894,9 @@ function ClassList(props) {
     getTeachers,
     deleteClass,
     getAllClass,
-    getAllTask,
-    getAllAssessments,
   } = props;
 
   const { user, all_teachers_map, all_students } = props.auth;
-  const { all_assessments } = props.assessmentsCollection;
 
   console.log(classesCollection);
 
@@ -931,8 +929,6 @@ function ClassList(props) {
     getAllClass("map");
     getTeachers("map");
     getStudents();
-    getAllTask();
-    getAllAssessments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -968,7 +964,15 @@ function ClassList(props) {
   retrieveClasses();
 
   const onDeleteClass = (id) => {
-    deleteClass(id);
+    deleteClass(id).then((res) => {
+      console.log(res);
+
+      getAllClass();
+      getAllClass("map");
+      getTeachers("map");
+      handleOpenDeleteSnackbar();
+      handleCloseDeleteDialog();
+    });
   };
 
   // Delete Dialog box
@@ -982,6 +986,17 @@ function ClassList(props) {
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
     clearErrors();
+  };
+
+  const handleOpenDeleteSnackbar = () => {
+    setOpenDeleteSnackbar(true);
+  }
+
+  const handleCloseDeleteSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenDeleteSnackbar(false);
   };
 
   // Snackbar
@@ -1040,8 +1055,6 @@ function ClassList(props) {
         handleOpenSnackbar={handleOpenSnackbar}
         // updateClassAdmin={updateClassAdmin}
         // updateStudentsClass={updateStudentsClass}
-        tasksCollection={tasksCollection}
-        all_assessments={all_assessments}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
         //Two props added for search filter.
@@ -1269,6 +1282,23 @@ function ClassList(props) {
           {snackbarContent}
         </MuiAlert>
       </Snackbar>
+      <Snackbar
+        open={openDeleteSnackbar}
+        autoHideDuration={4000}
+        onClose={(event, reason) => {
+          handleCloseDeleteSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseDeleteSnackbar(event, reason);
+          }}
+        >
+          Kelas berhasil dihapus
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }
@@ -1281,22 +1311,15 @@ ClassList.propTypes = {
   errors: PropTypes.object.isRequired,
   deleteClass: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-
-  assessmentsCollection: PropTypes.object.isRequired,
   getStudents: PropTypes.func.isRequired,
-  getAllTask: PropTypes.func.isRequired,
   // updateClassAdmin: PropTypes.func.isRequired,
   // updateStudentsClass: PropTypes.func.isRequired,
-  getAllAssessments: PropTypes.func.isRequired,
-  tasksCollection: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
   classesCollection: state.classesCollection,
-  assessmentsCollection: state.assessmentsCollection,
-  tasksCollection: state.tasksCollection,
 });
 
 export default connect(
@@ -1308,7 +1331,5 @@ export default connect(
     getStudents,
     getAllClass,
     deleteClass,
-    getAllTask,
-    getAllAssessments,
   }
 )(ClassList);

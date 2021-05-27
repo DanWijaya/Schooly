@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -214,6 +214,8 @@ function ViewAnnouncement(props) {
   document.title = "Schooly | Lihat Pengumuman";
 
   const classes = useStyles();
+  const history = useHistory();
+
   const { selectedAnnouncements } = props.announcements;
   const {
     getUsers,
@@ -250,6 +252,7 @@ function ViewAnnouncement(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAnnouncements._id]); // beacause only receive one announcement.
 
+
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
     switch (ext_file) {
@@ -281,7 +284,9 @@ function ViewAnnouncement(props) {
   };
 
   const onDeleteAnnouncement = (announcement_id) => {
-    deleteAnnouncement(announcement_id);
+    deleteAnnouncement(announcement_id, history).then((res) => {
+      console.log(res);
+    });
     // setFileTugas(null)
   };
 

@@ -27,6 +27,7 @@ import {
   Menu,
   MenuItem,
   Paper,
+  Snackbar,
   TableSortLabel,
   TextField,
   Typography,
@@ -36,6 +37,7 @@ import {
   Avatar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
+import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
@@ -518,6 +520,18 @@ function MaterialList(props) {
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
+  const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
+
+  const handleOpenDeleteSnackbar = () => {
+    setOpenDeleteSnackbar(true);
+  }
+
+  const handleCloseDeleteSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenDeleteSnackbar(false);
+  };
 
   const {
     getAllSubjects,
@@ -558,8 +572,17 @@ function MaterialList(props) {
       // for student
       getMaterial(user.kelas, "by_class");
     }
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  React.useEffect(() => {
+    // Untuk muculin delete snackbar pas didelete dari view page
+    if(props.location.openDeleteSnackbar){
+      handleOpenDeleteSnackbar()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   console.log(all_teachers_map);
   const retrieveMaterials = () => {
@@ -596,7 +619,16 @@ function MaterialList(props) {
   retrieveMaterials();
 
   const onDeleteMaterial = (id) => {
-    deleteMaterial(id);
+    deleteMaterial(id).then((res) => {
+      handleOpenDeleteSnackbar();
+      handleCloseDeleteDialog();
+      if (user.role === "Teacher") {
+        getMaterial(user._id, "by_author");
+      } else {
+        // for student
+        getMaterial(user.kelas, "by_class");
+      }
+    });
   };
 
   // Delete Dialog
@@ -857,6 +889,23 @@ function MaterialList(props) {
           })
         )}
       </Grid>
+      <Snackbar
+        open={openDeleteSnackbar}
+        autoHideDuration={4000}
+        onClose={(event, reason) => {
+          handleCloseDeleteSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseDeleteSnackbar(event, reason);
+          }}
+        >
+          Materi berhasil dihapus
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

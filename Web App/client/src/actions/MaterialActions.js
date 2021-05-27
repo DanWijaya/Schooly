@@ -130,8 +130,8 @@ export const getOneMaterial = (materialId) => (dispatch) => {
     });
 };
 
-export const deleteMaterial = (materialId, history) => (dispatch) => {
-  axios
+export const deleteMaterial = (materialId, history=null) => (dispatch) => {
+  return axios
     .delete(`/api/materials/delete/${materialId}`)
     .then((res) => {
       // let lampiran_to_delete = Array.from(res.data.lampiran)
@@ -139,8 +139,15 @@ export const deleteMaterial = (materialId, history) => (dispatch) => {
       return axios.delete(`/api/files/materials/${materialId}`);
     })
     .then((res) => {
+      if(history){
+        history.push({
+          pathname: "/daftar-materi",
+          openDeleteSnackbar: true 
+        })
+      }
       console.log(res);
-      window.location.href = "/daftar-materi";
+      return true
+      // window.location.href = "/daftar-materi";
     })
     .catch((err) => {
       console.log(err);
@@ -148,6 +155,7 @@ export const deleteMaterial = (materialId, history) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err;
     });
 };
 

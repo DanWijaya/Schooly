@@ -200,8 +200,8 @@ export const getOneAssessment = (id, rslv = null) => (dispatch) => {
     });
 };
 
-export const deleteAssessment = (id, type = "Kuis") => (dispatch) => {
-  axios
+export const deleteAssessment = (id, type = "Kuis", history=null) => (dispatch) => {
+  return axios
     .delete(`/api/assessments/delete/${id}`)
     .then((res) => {
       console.log(res.data);
@@ -223,11 +223,22 @@ export const deleteAssessment = (id, type = "Kuis") => (dispatch) => {
     })
     .then((res) => {
       console.log(res);
-      if (type === "Kuis") {
-        window.location.href = "/daftar-kuis";
-      } else {
-        window.location.href = "/daftar-ujian";
-      }
+      if(history){
+        if (type === "Kuis") {
+          history.push({
+            pathname: "/daftar-kuis",
+            openDeleteSnackbar: true 
+          })
+          // window.location.href = "/daftar-kuis";
+        } else {
+          history.push({
+            pathname: "/daftar-ujian",
+            openDeleteSnackbar: true 
+          })
+          // window.location.href = "/daftar-ujian";
+        }
+    }
+    return "Succesfully deleted Assessment"
     })
     .catch((err) => {
       console.log(err);
@@ -235,6 +246,7 @@ export const deleteAssessment = (id, type = "Kuis") => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err;
     });
 };
 

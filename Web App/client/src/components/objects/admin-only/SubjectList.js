@@ -26,6 +26,7 @@ import {
   Menu,
   MenuItem,
   Paper,
+  Snackbar,
   TableSortLabel,
   TextField,
   Typography,
@@ -36,6 +37,7 @@ import {
   Avatar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
+import MuiAlert from "@material-ui/lab/Alert";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
@@ -515,18 +517,19 @@ function SubjectList(props) {
   const [orderBy, setOrderBy] = React.useState("subject");
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [openCreateDialog, setOpenCreateDialog] = React.useState(null);
-  const [openEditDialog, setOpenEditDialog] = React.useState(null);
 
   const [openFormDialog, setOpenFormDialog] = React.useState(null);
   const [selectedSubjectId, setSelectedSubjectId] = React.useState(null);
   const [selectedSubjectName, setSelectedSubjectName] = React.useState(null);
   const [action, setAction] = React.useState("");
   const [errors, setErrors] = React.useState({});
-  // const [forceSuccess, setForceSuccess] = React.useState(false);
+
   const [subject, setSubject] = React.useState({});
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [snackbarContent, setSnackbarContent] = React.useState(null);
+
   const {
     subjectsCollection,
     getAllSubjects,
@@ -534,8 +537,6 @@ function SubjectList(props) {
     clearErrors,
     createSubject,
     deleteSubject,
-    // errors,
-    success,
   } = props;
   const { all_subjects } = props.subjectsCollection;
   const { user, retrieved_users } = props.auth;
@@ -549,38 +550,6 @@ function SubjectList(props) {
     getAllSubjects();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // React.useEffect(() => {
-  //   console.log(success);
-  //   if (success && forceSuccess) {
-  //     if (action === "Edit") {
-  //       handleOpenEditDialog();
-  //     }
-  //     //  else if (action === "Create") {
-  //     //   handleOpenCreateDialog();
-  //     // }
-  //     clearSuccess();
-  //     setAction("");
-  //     setForceSuccess(false);
-  //   }
-  //   // jika clearSuccess sudah dijalankan, success akan bernilai null
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [forceSuccess, success]);
-
-  React.useEffect(() => {
-    if (openCreateDialog === false) {
-      getAllSubjects();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openCreateDialog]);
-
-  React.useEffect(() => {
-    if (openEditDialog === false) {
-      getAllSubjects();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openEditDialog]);
 
   const retrieveSubjects = () => {
     console.log(retrieved_users);
@@ -604,24 +573,11 @@ function SubjectList(props) {
   retrieveSubjects();
 
   const onDeleteSubject = (id) => {
-    deleteSubject(id);
-  };
-
-  // Upload Dialogs
-  const handleOpenCreateDialog = () => {
-    setOpenCreateDialog(true);
-  };
-
-  const handleCloseCreateDialog = () => {
-    setOpenCreateDialog(false);
-  };
-
-  const handleOpenEditDialog = () => {
-    setOpenEditDialog(true);
-  };
-
-  const handleCloseEditDialog = () => {
-    setOpenEditDialog(false);
+    deleteSubject(id).then((res) => {
+      getAllSubjects();
+      handleOpenSnackbar("Delete")
+      handleCloseDeleteDialog()
+    });
   };
 
   // Delete Dialog
@@ -635,6 +591,32 @@ function SubjectList(props) {
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
+
+  const handleOpenSnackbar = (action) => {
+    let content = "Mata Pelajaran berhasil "
+    if(action == "Create"){
+      content += "dibuat"
+      setSnackbarContent(content);
+    } else if(action == "Edit"){
+      content += "disuntung"
+      setSnackbarContent(content);
+    } else if(action == "Delete"){
+      content += "dihapus"
+      setSnackbarContent(content)
+    } else{
+      return;
+    }
+
+    setOpenSnackbar(true);
+  }
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
 
   // Delete Dialog
   const handleOpenFormDialog = (e, id, name, isEdit = false) => {
@@ -654,7 +636,6 @@ function SubjectList(props) {
 
   const handleCloseFormDialog = () => {
     setOpenFormDialog(false);
-    setErrors({});
     setSubject({});
   };
 
@@ -672,20 +653,20 @@ function SubjectList(props) {
     if (action === "Edit") {
       editSubject(subject)
         .then(() => {
+          handleOpenSnackbar(action);
+          getAllSubjects();
           handleCloseFormDialog();
-          handleOpenEditDialog();
         })
         .catch((err) => setErrors(err));
     } else if (action === "Create") {
       createSubject(subject)
         .then(() => {
+          handleOpenSnackbar(action);
+          getAllSubjects();
           handleCloseFormDialog();
-          handleOpenCreateDialog();
         })
         .catch((err) => setErrors(err));
     }
-    // handleCloseFormDialog();
-    // setForceSuccess(true);
   };
 
   function FormDialog() {
@@ -762,20 +743,6 @@ function SubjectList(props) {
 
   return (
     <div className={classes.root}>
-      <UploadDialog
-        openUploadDialog={openCreateDialog}
-        handleCloseUploadDialog={handleCloseCreateDialog}
-        success={success}
-        messageUploading="Mata pelajaran sedang dibuat"
-        messageSuccess="Mata pelajaran telah dibuat"
-      />
-      <UploadDialog
-        openUploadDialog={openEditDialog}
-        handleCloseUploadDialog={handleCloseEditDialog}
-        success={success}
-        messageUploading="Mata pelajaran sedang disunting"
-        messageSuccess="Mata pelajaran telah disunting"
-      />
       {FormDialog()}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
@@ -813,8 +780,6 @@ function SubjectList(props) {
               <Grid item>
                 <Paper variant="outlined">
                   <ListItem
-                    // button
-                    // component="a"
                     className={classes.listItem}
                   >
                     <Hidden smUp implementation="css">
@@ -918,6 +883,23 @@ function SubjectList(props) {
           })
         )}
       </Grid>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={(event, reason) => {
+          handleCloseSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseSnackbar(event, reason);
+          }}
+        >
+          {snackbarContent}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

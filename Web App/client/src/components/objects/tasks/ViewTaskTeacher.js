@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -216,7 +216,7 @@ function LampiranFile(props) {
 // component ini akan view task yang teacher dia sendiri buat.
 function ViewTaskTeacher(props) {
   const classes = useStyles();
-
+  const history = useHistory();
   const { user, all_students } = props.auth;
   const {
     deleteTask,
@@ -331,8 +331,9 @@ function ViewTaskTeacher(props) {
   */
 
   const onDeleteTask = (id) => {
-    deleteTask(id);
-    // setFileTugas(null)
+    deleteTask(id, history).then((res) => {
+      console.log(res)
+    });
   };
 
   // Delete Dialog

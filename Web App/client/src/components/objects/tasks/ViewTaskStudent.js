@@ -541,11 +541,12 @@ function ViewTaskStudent(props) {
   const [fileLampiran, setFileLampiran] = React.useState([]);
   const [over_limit, setOverLimit] = React.useState([]);
   const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
-
+  
   // setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
+  const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
   let tugasId = props.match.params.id;
   // kalau misalnya parameter keduanya masukkin aja array kosong, dia acts like compomnentDidMount()
@@ -662,7 +663,24 @@ function ViewTaskStudent(props) {
     }
     handleOpenUploadDialog();
     // uploadTugas(formData, tugasId, user._id, new Date() < new Date(tasksCollection.deadline))
-    uploadFileSubmitTasks(formData, tugasId, user._id);
+    // deleteFileSubmitTasks(id).then((res) => {
+    //   getFileSubmitTasks_AT(tugasId, user._id).then((results) => {
+    //   setFileTugas(results)
+    //   handleCloseDeleteDialog()
+    //   handleOpenDeleteSnackbar()
+    //   });
+    // })
+
+    uploadFileSubmitTasks(formData, tugasId, user._id)
+
+    // uploadFileSubmitTasks(formData, tugasId, user._id).then((res) => {
+    //   console.log("HELLO1")
+    //   getFileSubmitTasks_AT(tugasId, user._id).then((results) => {
+    //     console.log("HELLO2")
+    //     console.log(results);
+    //   setFileTugas(results)
+    //   });
+    // });
     setFileToSubmit([]);
   };
 
@@ -672,6 +690,18 @@ function ViewTaskStudent(props) {
     }
     setFileLimitSnackbar(false);
   };
+
+  const handleOpenDeleteSnackbar = () => {
+    setOpenDeleteSnackbar(true);
+  }
+
+  const handleCloseDeleteSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenDeleteSnackbar(false);
+  };
+
   // Delete Dialog
   const handleOpenDeleteDialog = (fileid, filename) => {
     setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
@@ -694,6 +724,16 @@ function ViewTaskStudent(props) {
     clearSuccess();
   };
 
+  const onDeleteFileSubmitTasks = (id) => {
+    deleteFileSubmitTasks(id).then((res) => {
+      getFileSubmitTasks_AT(tugasId, user._id).then((results) => {
+      setFileTugas(results)
+      handleCloseDeleteDialog()
+      handleOpenDeleteSnackbar()
+      });
+    })
+  }
+
   document.title = !tasksCollection.name
     ? "Schooly | Lihat Tugas"
     : `Schooly | ${tasksCollection.name}`;
@@ -708,8 +748,8 @@ function ViewTaskStudent(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Berkas"
         itemName={selectedFileName}
-        deleteItem={() => {
-          deleteFileSubmitTasks(selectedFileId);
+        deleteItem={() => { 
+          onDeleteFileSubmitTasks(selectedFileId);
         }}
       />
       <UploadDialog
@@ -980,6 +1020,23 @@ function ViewTaskStudent(props) {
       >
         <MuiAlert elevation={6} variant="filled" severity="error">
           {over_limit.length} file melebihi batas 10MB!
+        </MuiAlert>
+      </Snackbar>
+      <Snackbar
+        open={openDeleteSnackbar}
+        autoHideDuration={3000}
+        onClose={(event, reason) => {
+          handleCloseDeleteSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseDeleteSnackbar(event, reason);
+          }}
+        >
+          Tugas File anda berhasil dihapus
         </MuiAlert>
       </Snackbar>
     </div>

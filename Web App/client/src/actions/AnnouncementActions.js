@@ -114,9 +114,10 @@ export const getAdminAnnouncements = () => (dispatch) => {
 
 export const deleteAnnouncement = (
   announcementId,
+  history=null,
   lampiran_to_delete = null
 ) => (dispatch) => {
-  axios
+  return axios
     .delete(`/api/announcements/delete/${announcementId}`)
     .then((res) => {
       console.log("Deleted: ", res.data);
@@ -129,7 +130,14 @@ export const deleteAnnouncement = (
     })
     .then((res) => {
       console.log(res);
-      window.location.href = "/daftar-pengumuman";
+      if(history){
+        history.push({
+          pathname: "/daftar-pengumuman",
+          openDeleteSnackbar: true 
+        })
+      }
+      return true
+      // window.location.href = "/daftar-pengumuman";
     })
     .catch((err) => {
       console.log(err);
@@ -137,6 +145,7 @@ export const deleteAnnouncement = (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err
     });
 };
 export const getOneAnnouncement = (annId) => (dispatch) => {
@@ -206,7 +215,6 @@ export const updateAnnouncement = (
         payload: true,
       });
       return true;
-      // alert("Announcement is created")
       // history.push("/daftar-pengumuman");
     })
 

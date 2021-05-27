@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -139,7 +139,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ViewAssessmentTeacher(props) {
   const classes = useStyles();
-
+  const history = useHistory();
   document.title = "Schooly | Buat Kuis";
   const assessment_id = props.match.params.id;
   const isMobileView = useMediaQuery("(max-width:780px)");
@@ -175,7 +175,9 @@ function ViewAssessmentTeacher(props) {
   console.log(lampiranUrls);
 
   const onDeleteAssessment = (id) => {
-    deleteAssessment(id);
+    deleteAssessment(id, type, history).then((res) => {
+      console.log(res);
+    });
   };
 
   // Delete Dialog

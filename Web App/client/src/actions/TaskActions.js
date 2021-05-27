@@ -5,6 +5,7 @@ import {
   GET_SUCCESS_RESPONSE,
   GET_TASKS_BY_CLASS,
 } from "./Types";
+import { BrowserRouter } from "react-router-dom"
 // import Dropbox from "dropbox";
 
 // Add Task
@@ -154,7 +155,6 @@ export const gradeTask = (taskId, gradingData, student_name) => (dispatch) => {
     .post(`/api/tasks/grade/${taskId}`, gradingData)
     .then((res) => {
       console.log("Grade task is added");
-      // alert(`Tugas ${student_name} berhasil dinilai `);
       dispatch({
         type: GET_SUCCESS_RESPONSE,
         payload: [true, gradingData.grade, student_name],
@@ -168,12 +168,18 @@ export const gradeTask = (taskId, gradingData, student_name) => (dispatch) => {
       });
     });
 };
-export const deleteTask = (taskId, history) => (dispatch) => {
-  axios
+export const deleteTask = (taskId, history=null) => (dispatch) => {
+  return axios
     .delete("/api/tasks/delete/" + taskId)
     .then((res) => {
-      console.log(res.data);
-      window.location.href = "/daftar-tugas";
+      if(history){
+        history.push({
+          pathname: "/daftar-tugas",
+          openDeleteSnackbar: true 
+        })
+      }
+      return true
+      // window.location.href = "/daftar-tugas";
     })
 
     .catch((err) => {
@@ -182,6 +188,7 @@ export const deleteTask = (taskId, history) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err;
     });
 };
 

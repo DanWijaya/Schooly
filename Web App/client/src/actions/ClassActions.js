@@ -15,7 +15,6 @@ export const createClass = (classData, history) => (dispatch) => {
     .post("/api/classes/create", classData)
     .then((res) => {
       console.log(res.data);
-      // alert("Kelas telah dibuat");
       // history.push("/daftar-kelas");
       dispatch({
         type: GET_SUCCESS_RESPONSE,
@@ -110,11 +109,11 @@ export const updateClass = (classData, classId, history) => (dispatch) => {
     });
 };
 
-export const deleteClass = (classId) => (dispatch) => {
-  axios
+export const deleteClass = (classId, history) => (dispatch) => {
+ return axios
     .delete("/api/classes/delete/" + classId)
     .then((res) => {
-      window.location.reload();
+      return "Class is successfully deleted"
     })
     .catch((err) => {
       console.log(err.response.data);
@@ -122,6 +121,7 @@ export const deleteClass = (classId) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err;
     });
 };
 

@@ -23,6 +23,7 @@ import {
   ListItemText,
   ListItemAvatar,
   Paper,
+  Snackbar,
   Typography,
   TextField,
   InputAdornment,
@@ -33,6 +34,7 @@ import {
   Avatar,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import MuiAlert from "@material-ui/lab/Alert";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import SortIcon from "@material-ui/icons/Sort";
@@ -969,9 +971,8 @@ function AnnouncementSubList(props) {
     */
 
     // If all_assessments is not undefined or an empty array
-    if (selectedAnnouncements.length && retrieved_users.size) {
+    if (selectedAnnouncements.length !== undefined && retrieved_users.size !== undefined) {
       let newRows = [];
-
       if (mine) {
         if (author_role === "Student") {
           // untuk pengumuman yg dibuat oleh saya sebagai ketua kelas
@@ -1222,7 +1223,7 @@ function AnnouncementList(props) {
   } = props;
   const { kelas } = props.classesCollection;
   const { user, retrieved_users } = props.auth;
-  const [annIsRetrieved, setAnnIsRetrieved] = React.useState(false);
+  // const [annIsRetrieved, setAnnIsRetrieved] = React.useState(false);
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
@@ -1238,7 +1239,9 @@ function AnnouncementList(props) {
 
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
+  const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
+  
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -1257,8 +1260,33 @@ function AnnouncementList(props) {
     setOpenDeleteDialog(false);
   };
 
+  const handleOpenDeleteSnackbar = () => {
+    setOpenDeleteSnackbar(true);
+  }
+
+  const handleCloseDeleteSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenDeleteSnackbar(false);
+  };
+
   const onDeleteAnnouncement = (id) => {
-    deleteAnnouncement(id);
+    deleteAnnouncement(id).then((res) => {
+      if (user.role === "Teacher") {
+        getAnnouncement(user._id, "by_author");
+        getAdminAnnouncements();
+      } else if (user.role === "Student") {
+        getAnnouncement(user.kelas, "by_class");
+        getAdminAnnouncements();
+        setCurrentClass(user.kelas);
+      } else if (user.role === "Admin") {
+        console.log("RUN II")
+        getAnnouncement(user._id, "by_author");
+      }
+      handleCloseDeleteDialog();
+      handleOpenDeleteSnackbar();
+    });
     console.log(id);
   };
 
@@ -1285,10 +1313,10 @@ function AnnouncementList(props) {
     );
   };
 
-  React.useEffect(() => {}, []);
-
   React.useEffect(() => {
-    if (selectedAnnouncements.length && retrieved_users.size) {
+    // selectedAnnouncements.length !== undefined untuk kasus pas didelete dari listnya dan jadi kosong 
+    // (perlu update kalau pas selectedAnnounccements.length itu 0)
+    if (selectedAnnouncements.length !== undefined && retrieved_users.size) {
       let newRows = [];
       selectedAnnouncements
         .filter((item) =>
@@ -1304,20 +1332,22 @@ function AnnouncementList(props) {
 
   // retrieved users ini bulk request, dapat data user"nya satu"
   React.useEffect(() => {
-    if (user.role === "Teacher" && !annIsRetrieved) {
+    if (user.role === "Teacher") {
       getAnnouncement(user._id, "by_author");
       getAdminAnnouncements();
-      setAnnIsRetrieved(true);
-    } else if (user.role === "Student" && !annIsRetrieved) {
+      // setAnnIsRetrieved(true);
+    } else if (user.role === "Student") {
       getAnnouncement(user.kelas, "by_class");
       getAdminAnnouncements();
       setCurrentClass(user.kelas);
-      setAnnIsRetrieved(true);
-    } else if (user.role === "Admin" && !annIsRetrieved) {
+      // setAnnIsRetrieved(true);
+    } else if (user.role === "Admin") {
       getAnnouncement(user._id, "by_author");
-      setAnnIsRetrieved(true);
+      // setAnnIsRetrieved(true);
     }
+  }, [])
 
+  React.useEffect(() => {
     let author_id_set = new Set();
     if (user.role === "Admin") {
       if (selectedAnnouncements.length) {
@@ -1327,18 +1357,67 @@ function AnnouncementList(props) {
         getUsers(Array.from(author_id_set));
       }
     } else {
-      if (selectedAnnouncements.length && adminAnnouncements.length) {
-        adminAnnouncements.forEach((ann) => {
-          author_id_set.add(ann.author_id);
-        });
+      if(selectedAnnouncements.length){
         selectedAnnouncements.forEach((ann) => {
           author_id_set.add(ann.author_id);
         });
-        getUsers(Array.from(author_id_set));
       }
+      if(adminAnnouncements.length){
+        adminAnnouncements.forEach((ann) => {
+          author_id_set.add(ann.author_id);
+        });
+      }
+      getUsers(Array.from(author_id_set));
+    }
+  }, [selectedAnnouncements.length, adminAnnouncements.length])
+
+  // React.useEffect(() => {
+  //   if (user.role === "Teacher" && !annIsRetrieved) {
+  //     getAnnouncement(user._id, "by_author");
+  //     getAdminAnnouncements();
+  //     setAnnIsRetrieved(true);
+  //   } else if (user.role === "Student" && !annIsRetrieved) {
+  //     getAnnouncement(user.kelas, "by_class");
+  //     getAdminAnnouncements();
+  //     setCurrentClass(user.kelas);
+  //     setAnnIsRetrieved(true);
+  //   } else if (user.role === "Admin" && !annIsRetrieved) {
+  //     getAnnouncement(user._id, "by_author");
+  //     setAnnIsRetrieved(true);
+  //   }
+
+  //   let author_id_set = new Set();
+  //   if (user.role === "Admin") {
+  //     if (selectedAnnouncements.length) {
+  //       selectedAnnouncements.forEach((ann) => {
+  //         author_id_set.add(ann.author_id);
+  //       });
+  //       getUsers(Array.from(author_id_set));
+  //     }
+  //   } else {
+
+  //     if(selectedAnnouncements.length){
+  //       selectedAnnouncements.forEach((ann) => {
+  //         author_id_set.add(ann.author_id);
+  //       });
+  //     }
+  //     if(adminAnnouncements.length){
+  //       adminAnnouncements.forEach((ann) => {
+  //         author_id_set.add(ann.author_id);
+  //       });
+  //     }
+  //     getUsers(Array.from(author_id_set));
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedAnnouncements.length, adminAnnouncements.length]);
+
+  React.useEffect(() => {
+    // Untuk muculin delete snackbar pas didelete dari view page
+    if(props.location.openDeleteSnackbar){
+      handleOpenDeleteSnackbar()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAnnouncements.length, adminAnnouncements.length]);
+  }, [])
 
   // ini ntah kenapa kalo masukkin selectedAnnouncements di parameter kedua ada error..
 
@@ -1432,6 +1511,23 @@ function AnnouncementList(props) {
           />
         </>
       ) : null}
+      <Snackbar
+        open={openDeleteSnackbar}
+        autoHideDuration={4000}
+        onClose={(event, reason) => {
+          handleCloseDeleteSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseDeleteSnackbar(event, reason);
+          }}
+        >
+          Pengumuman berhasil dihapus
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

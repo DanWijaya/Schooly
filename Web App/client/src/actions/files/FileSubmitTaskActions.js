@@ -5,7 +5,7 @@ export const uploadFileSubmitTasks = (formData, task_id, author_id) => (
   dispatch
 ) => {
   console.log("uploadFileSubmitTasks di run");
-  axios
+  return axios
     .post(`/api/files/submit_tasks/upload/${task_id}&${author_id}`, formData)
     .then((res) => {
       console.log(res.data);
@@ -13,7 +13,9 @@ export const uploadFileSubmitTasks = (formData, task_id, author_id) => (
         type: GET_SUCCESS_RESPONSE,
         payload: res.data,
       });
-    });
+      return "File Submit tasks is successfully uploaded"
+    })
+    .catch((err) => {throw err});
 };
 
 export const getFileSubmitTasks_T = (task_id) => (dispatch) => {
@@ -85,16 +87,17 @@ export const viewFileSubmitTasks = (id) => (dispatch) => {
 };
 
 export const deleteFileSubmitTasks = (id, delete_all = false) => (dispatch) => {
-  axios
+  return axios
     .delete(`/api/files/submit_tasks/${id}`, {
       data: { delete_all: delete_all },
     })
     .then((res) => {
       console.log(res.data);
-      dispatch({
-        type: GET_SUCCESS_RESPONSE,
-        payload: res.data,
-      });
-      window.location.reload();
+      // dispatch({
+      //   type: GET_SUCCESS_RESPONSE,
+      //   payload: res.data,
+      // });
+      return "File submmited is deleted successfully"
+      // window.location.reload();
     });
 };

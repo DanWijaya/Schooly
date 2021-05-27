@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -221,6 +221,7 @@ function LampiranFile(props) {
 
 function ViewMaterial(props) {
   const classes = useStyles();
+  const history = useHistory();
 
   const { user, selectedUser } = props.auth;
   const {
@@ -284,8 +285,10 @@ function ViewMaterial(props) {
     }
   };
 
-  const onDeleteTask = (id) => {
-    deleteMaterial(id);
+  const onDeleteMaterial = (id) => {
+    deleteMaterial(id, history).then((res) => {
+      console.log(res);
+    });
     // setFileMateri(null)
   };
 
@@ -309,7 +312,7 @@ function ViewMaterial(props) {
         itemType="Materi"
         itemName={selectedMaterials.name}
         deleteItem={() => {
-          onDeleteTask(materi_id);
+          onDeleteMaterial(materi_id);
         }}
       />
       <Grid container direction="column" spacing={2}>
