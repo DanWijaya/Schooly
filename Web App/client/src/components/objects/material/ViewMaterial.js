@@ -318,9 +318,9 @@ function ViewMaterial(props) {
     getFileMaterials,
     getTeachers, 
     getStudents,
-    createMaterialComment,
-    editMaterialComment,
-    deleteMaterialComment,
+    // createMaterialComment,
+    // editMaterialComment,
+    // deleteMaterialComment,
     clearErrors,
     clearSuccess,
     getFileAvatar,
@@ -330,8 +330,8 @@ function ViewMaterial(props) {
   const { all_classes_map } = props.classesCollection;
   const materi_id = props.match.params.id;
   const { all_subjects_map } = props.subjectsCollection;
-  const errors = props.errors;
-  const success = props.success;
+  // const errors = props.errors;
+  // const success = props.success;
   
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [fileLampiran, setFileLampiran] = React.useState([]);
@@ -395,9 +395,9 @@ function ViewMaterial(props) {
       }
       materialAuthorName.current = usernames[selectedMaterials.author_id];
 
-      // memindahkan textfield edit
       setCommentList(selectedMaterials.comments.map((comment) => ({ ...comment, name: usernames[comment.author_id] })));
       if (selectedCommentIdx !== null && deleteCommentIdx !== null && deleteCommentIdx < selectedCommentIdx) {
+        // memindahkan textfield edit
         setSelectedCommentIdx(selectedCommentIdx - 1);
       }
       setDeleteCommentIdx(null);
@@ -417,7 +417,7 @@ function ViewMaterial(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commentList]);
 
-  React.useEffect(() => {
+/*   React.useEffect(() => {
     if (
       errors &&
       errors.constructor === Object &&
@@ -460,7 +460,7 @@ function ViewMaterial(props) {
       clearSuccess();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success]);
+  }, [success]); */
 
   React.useEffect(() => {
     return () => {
@@ -495,6 +495,13 @@ function ViewMaterial(props) {
       createMaterialComment(materi_id, {
         author_id: user._id,
         content: commentValue
+      }).then(() => {
+        handleOpenCommentSnackbar("success", "Komentar berhasil dibuat");
+        setCommentValue("");
+        getOneMaterial(materi_id);
+      }).catch((err) => {
+        console.log(err.response.data);
+        handleOpenCommentSnackbar("error", "Komentar gagal dibuat");
       });
     }
   };
@@ -503,15 +510,25 @@ function ViewMaterial(props) {
     if (commentEditorValue.length === 0) {
       handleOpenDeleteCommentDialog(selectedCommentIdx);
     } else {
-      editMaterialComment( materi_id, commentEditorValue, commentList[selectedCommentIdx]._id);
+      editMaterialComment(materi_id, commentEditorValue, commentList[selectedCommentIdx]._id).then(() => {
+        handleOpenCommentSnackbar("success", "Komentar berhasil disunting");
+        getOneMaterial(materi_id);
+      }).catch((err) => {
+        console.log(err.response.data);
+        handleOpenCommentSnackbar("error", "Komentar gagal disunting");
+      });
       closeEditMode();
     }
   };
 
   const handleDeleteComment = (idx) => {
-    let newCommentList = [...commentList];
-    newCommentList.splice(idx, 1);
-    deleteMaterialComment(materi_id, commentList[idx]._id);
+    deleteMaterialComment(materi_id, commentList[idx]._id).then(() => {
+      handleOpenCommentSnackbar("success", "Komentar berhasil dihapus");
+      getOneMaterial(materi_id);
+    }).catch((err) => {
+      console.log(err.response.data);
+      handleOpenCommentSnackbar("error", "Komentar gagal dihapus");
+    });
     setDeleteCommentIdx(idx);
     handleCloseDeleteCommentDialog();
   };
@@ -921,8 +938,8 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
   materialsFiles: state.materialsFiles,
-  errors: state.errors,
-  success: state.success
+  // errors: state.errors,
+  // success: state.success
 });
 
 export default connect(mapStateToProps, {
@@ -935,9 +952,9 @@ export default connect(mapStateToProps, {
   getFileMaterials,
   viewFileMaterial,
   downloadFileMaterial,
-  createMaterialComment,
-  editMaterialComment,
-  deleteMaterialComment,
+  // createMaterialComment,
+  // editMaterialComment,
+  // deleteMaterialComment,
   getTeachers,
   getStudents,
   clearErrors,

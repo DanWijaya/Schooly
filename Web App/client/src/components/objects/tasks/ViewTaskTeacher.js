@@ -315,9 +315,9 @@ function ViewTaskTeacher(props) {
     clearSuccess,
     getTeachers,
     getStudents,
-    createTaskComment,
-    editTaskComment,
-    deleteTaskComment,
+    // createTaskComment,
+    // editTaskComment,
+    // deleteTaskComment,
     getMultipleFileAvatar
   } = props;
   const { all_classes_map } = props.classesCollection;
@@ -405,8 +405,8 @@ function ViewTaskTeacher(props) {
       }
       setCommentList(tasksCollection.comments.map((comment) => ({ ...comment, name: usernames[comment.author_id] })));
 
-      // memindahkan textfield edit
       if (selectedCommentIdx !== null && deleteCommentIdx !== null && deleteCommentIdx < selectedCommentIdx) {
+        // memindahkan textfield edit
         setSelectedCommentIdx(selectedCommentIdx - 1);
       }
       setDeleteCommentIdx(null);
@@ -426,7 +426,7 @@ function ViewTaskTeacher(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commentList]);
 
-  React.useEffect(() => {
+  /* React.useEffect(() => {
     if (
       errors &&
       errors.constructor === Object &&
@@ -469,7 +469,7 @@ function ViewTaskTeacher(props) {
       clearSuccess();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success]);
+  }, [success]); */
 
   React.useEffect(() => {
     return () => {
@@ -504,6 +504,13 @@ function ViewTaskTeacher(props) {
       createTaskComment(task_id, {
         author_id: user._id,
         content: commentValue
+      }).then(() => {
+        handleOpenCommentSnackbar("success", "Komentar berhasil dibuat");
+        setCommentValue("");
+        getOneTask(task_id);
+      }).catch((err) => {
+        console.log(err.response.data);
+        handleOpenCommentSnackbar("error", "Komentar gagal dibuat");
       });
     }
   };
@@ -512,15 +519,25 @@ function ViewTaskTeacher(props) {
     if (commentEditorValue.length === 0) {
       handleOpenDeleteCommentDialog(selectedCommentIdx);
     } else {
-      editTaskComment(task_id, commentEditorValue, commentList[selectedCommentIdx]._id);
+      editTaskComment(task_id, commentEditorValue, commentList[selectedCommentIdx]._id).then(() => {
+        handleOpenCommentSnackbar("success", "Komentar berhasil disunting");
+        getOneTask(task_id);
+      }).catch((err) => {
+        console.log(err.response.data);
+        handleOpenCommentSnackbar("error", "Komentar gagal disunting");
+      });
       closeEditMode();
     }
   };
 
   const handleDeleteComment = (idx) => {
-    let newCommentList = [...commentList];
-    newCommentList.splice(idx, 1);
-    deleteTaskComment(task_id, commentList[idx]._id);
+    deleteTaskComment(task_id, commentList[idx]._id).then(() => {
+      handleOpenCommentSnackbar("success", "Komentar berhasil dihapus");
+      getOneTask(task_id);
+    }).catch((err) => {
+      console.log(err.response.data);
+      handleOpenCommentSnackbar("error", "Komentar gagal dihapus");
+    });
     setDeleteCommentIdx(idx);
     handleCloseDeleteCommentDialog();
   };
@@ -990,9 +1007,9 @@ export default connect(mapStateToProps, {
   viewFileTasks,
   clearSuccess,
   clearErrors,
-  createTaskComment,
-  editTaskComment,
-  deleteTaskComment,
+  // createTaskComment,
+  // editTaskComment,
+  // deleteTaskComment,
   getTeachers,
   getStudents,
   getMultipleFileAvatar
