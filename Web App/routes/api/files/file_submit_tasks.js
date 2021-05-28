@@ -136,7 +136,7 @@ router.delete("/:id", (req, res) => {
       });
     });
   } else {
-    FileSubmitTask.find({ task_id: req.params.id }).then((tasks) => {
+    FileSubmitTask.find({ task_id: req.params.id}).then((tasks) => {
       let id_list = tasks.map((m) => Object(m._id));
       let file_to_delete = tasks;
 
