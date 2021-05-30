@@ -108,8 +108,16 @@ const styles = (theme) => ({
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: "white",
       },
+      color: "black"
     },
   },
+  menuItemText: {
+    "&:hover": {
+        color: "white",
+      },
+      color: "black"
+  },
+  
   manageTaskButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -1492,50 +1500,46 @@ class Dashboard extends Component {
                       horizontal: "center",
                     }}
                   >
-                    <MenuItem
-                      button
-                      component="a"
-                      href="/buat-pengumuman"
-                      className={classes.menuItem}
-                    >
+                    <Link to="/buat-pengumuman">
+                      <MenuItem
+                        className={classes.menuItem}
+                      >
                       <ListItemIcon>
                         <AnnouncementIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Pengumuman" />
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Pengumuman</Typography>}/>
                     </MenuItem>
+                    </Link>
+                    <Link to="/buat-materi">
                     <MenuItem
-                      button
-                      component="a"
-                      href="/buat-materi"
                       className={classes.menuItem}
                     >
                       <ListItemIcon>
                         <MenuBookIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Materi" />
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Materi</Typography>} />
                     </MenuItem>
+                    </Link>
+                    <Link to="/buat-tugas">
                     <MenuItem
-                      button
-                      component="a"
-                      href="/buat-tugas"
                       className={classes.menuItem}
                     >
                       <ListItemIcon>
                         <AssignmentIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Tugas" />
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Tugas</Typography>} />
                     </MenuItem>
+                    </Link>
+                    <Link to="/buat-kuis-ujian">
                     <MenuItem
-                      button
-                      component="a"
-                      href="/buat-kuis-ujian"
                       className={classes.menuItem}
                     >
                       <ListItemIcon>
                         <FaTasks />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Kuis/Ujian" />
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Kuis/Ujian</Typography>} />
                     </MenuItem>
+                    </Link>
                   </Menu>
                 </Grid>
               </Grid>

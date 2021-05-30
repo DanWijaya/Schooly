@@ -532,9 +532,7 @@ function PersonListItem(props) {
           primary={
             <Typography variant="subtitle1">{props.person_name}</Typography>
           }
-        />
-        <ListItemText
-          primary={
+          secondary={
             <Typography variant="caption" color="textSecondary">
               {props.person_role}
             </Typography>
@@ -544,9 +542,7 @@ function PersonListItem(props) {
       <Hidden xsDown implementation="css">
         <ListItemText
           primary={<Typography variant="h6">{props.person_name}</Typography>}
-        />
-        <ListItemText
-          primary={
+          secondary={
             <Typography variant="body2" color="textSecondary">
               {props.person_role}
             </Typography>

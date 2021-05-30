@@ -476,12 +476,12 @@ function Profile(props) {
                   profile_data_category="Jenis Kelamin"
                   profile_data_info={user.jenis_kelamin}
                 />
-                <Divider variant="inset" />
+                {/* <Divider variant="inset" />
                 <ProfileDataItem
                   profile_data_icon={<SchoolIcon />}
                   profile_data_category="Sekolah"
                   profile_data_info={user.sekolah}
-                />
+                /> */}
               </List>
             </Paper>
           </Grid>

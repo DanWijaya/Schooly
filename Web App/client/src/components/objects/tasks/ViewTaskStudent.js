@@ -983,7 +983,7 @@ function ViewTaskStudent(props) {
                     startIcon={<PublishIcon />}
                     className={classes.submitWorkButton}
                     type="submit"
-                    disabled={!fileTugas}
+                    disabled={fileToSubmit.length === 0}
                     // onClick={handleOpenUploadDialog}
                   >
                     Kumpul Tugas

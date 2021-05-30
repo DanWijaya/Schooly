@@ -69,7 +69,6 @@ app.use(passport.initialize());
 // Passport config
 require("./passport")(passport);
 console.log("Check routes");
-console.log(process.env)
 // Routes
 
 app.use("/api/users", users);

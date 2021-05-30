@@ -240,6 +240,7 @@ function ViewAnnouncement(props) {
   React.useEffect(() => {}, []);
 
   React.useEffect(() => {
+    console.log(announcement_id)
     getOneAnnouncement(announcement_id);
     getAllClass("map");
     getSelectedClasses(selectedAnnouncements.class_assigned);
@@ -310,7 +311,8 @@ function ViewAnnouncement(props) {
     // previewLampiranAnnouncement(id)
     else console.log("File Category is not specified");
   };
-
+  // console.log(user);
+  console.log(retrieved_users.get(selectedAnnouncements.author_id))
   return (
     <div className={classes.root}>
       <DeleteDialog
@@ -359,7 +361,7 @@ function ViewAnnouncement(props) {
               <Grid item xs={12}>
                 <Divider className={classes.dividerColor} />
               </Grid>
-              {user.role === "Teacher" &&
+              {retrieved_users.get(selectedAnnouncements.author_id) ? user.role === "Teacher" &&
               retrieved_users.size &&
               selectedAnnouncements.author_id &&
               retrieved_users.get(selectedAnnouncements.author_id).role ===
@@ -385,7 +387,7 @@ function ViewAnnouncement(props) {
                         })}
                   </Typography>
                 </Grid>
-              ) : null}
+              ) : null :null}
 
               <Grid item xs={12}>
                 <Typography color="textSecondary" gutterBottom>
