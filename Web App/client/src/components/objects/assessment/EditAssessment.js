@@ -1605,7 +1605,7 @@ class EditAssessment extends Component {
           customMessage="Hapus perubahan"
           // redirectLink="/daftar-kuis"
           redirectLink={
-            this.state.type === "Kuis" ? `/daftar-kuis` : `/daftar-ujian`
+            this.state.type === "Kuis" ? `/kuis-guru/${this.props.match.params.id}` : `/ujian-guru/${this.props.match.params.id}`
           }
           customDecline="Tidak"
           deleteItem=""

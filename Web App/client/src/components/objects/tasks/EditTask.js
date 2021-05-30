@@ -530,7 +530,7 @@ class EditTask extends Component {
             success={success}
             messageUploading="Tugas sedang disunting"
             messageSuccess="Tugas telah disunting"
-            redirectLink="/daftar-tugas"
+            redirectLink={`/tugas-guru/${this.props.match.params.id}`}
           />
           <DeleteDialog
             openDeleteDialog={this.state.openDeleteDialog}
