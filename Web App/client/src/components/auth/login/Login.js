@@ -267,7 +267,7 @@ class Login extends Component {
             </Grid>
             <Divider />
             <Grid item container justify="space-around">
-              <Link to="/akun/lupa-katasandi">Lupa Kata Sandi?</Link>|
+              <Link to="/akun/lupa-katasandi">Lupa Kata Sandi?</Link>·
               <Link to="/daftar">Belum ada Akun?</Link>
             </Grid>
           </Grid>
