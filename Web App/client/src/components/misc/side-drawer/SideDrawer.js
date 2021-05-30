@@ -21,6 +21,7 @@ import AssessmentIcon from "@material-ui/icons/Assessment";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import EventNoteIcon from '@material-ui/icons/EventNote';
 import { BsClipboardData } from "react-icons/bs";
 import {
   FaChalkboardTeacher,
@@ -145,6 +146,11 @@ function DrawerContent(props) {
         <AnnouncementIcon className={classes.drawerListItemIcon} />,
         "Pengumuman",
       ],
+      [
+        "/kalender",
+        <EventNoteIcon className={classes.drawerListItemIcon} />,
+        "Kalender",
+      ]
     ];
   else if (user.role === "Student") {
     ListItemContents = [
@@ -189,6 +195,11 @@ function DrawerContent(props) {
         <AssessmentIcon className={classes.drawerListItemIcon} />,
         "Rapor",
       ],
+      [
+        "/kalender",
+        <EventNoteIcon className={classes.drawerListItemIcon} />,
+        "Kalender",
+      ]
     ];
   } else {
     ListItemContents = [
@@ -228,14 +239,17 @@ function DrawerContent(props) {
         <BsClipboardData className={classes.drawerListItemIcon} />,
         "Ujian",
       ],
-    ];
-    if (user.role === "Teacher") {
-      ListItemContents.push([
-        { pathname: "/lihat-rapor/semua", state: { role: "Other" } },
+      [
+        "/lihat-rapor/semua",
         <AssessmentIcon className={classes.drawerListItemIcon} />,
         "Rapor",
-      ]);
-    }
+      ],
+      [
+        "/kalender",
+        <EventNoteIcon className={classes.drawerListItemIcon} />,
+        "Kalender",
+      ]
+    ];
   }
 
   return (

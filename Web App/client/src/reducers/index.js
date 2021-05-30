@@ -10,6 +10,7 @@ import AuthReducer from "./AuthReducer";
 import AnnouncementReducer from "./AnnouncementReducer";
 import SuccessReducer from "./SuccessReducer";
 import AssessmentReducer from "./AssessmentReducer";
+import EventReducer from "./EventReducer";
 import MockReducer from "../prototypes/mock-users/MockReducer";
 
 export default combineReducers({
@@ -25,4 +26,5 @@ export default combineReducers({
   subjectsCollection: SubjectReducer,
   success: SuccessReducer,
   tasksCollection: TasksReducer,
+  eventsCollection: EventReducer
 });

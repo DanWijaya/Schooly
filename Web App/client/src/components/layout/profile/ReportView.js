@@ -255,10 +255,6 @@ function ScoreGraph(props) {
 
 function ReportView(props) {
   const classes = useStyles();
-  // role = "Teacher" / "Student" / "Other" ("Other" kalau guru mengklik icon lihat rapor di side drawer)
-  // nama                                   (ini tidak ada kalau rolenya "Other". akan berisi nama murid)
-  // kelas = classesCollection.kelas        (ini tidak ada kalau rolenya "Other". ini akan berisi document Kelas yang ditempati murid)
-  // id                                     (ini tidak ada kalau rolenya "Other". akan berisi id murid)
 
   const {
     getTasksBySC,
@@ -298,12 +294,10 @@ function ReportView(props) {
   }, []);
 
   React.useEffect(() => {
-    console.log(selectedUser.kelas);
     setCurrentClass(selectedUser.kelas);
   }, [selectedUser]);
 
   React.useEffect(() => {
-    console.log(props.classesCollection);
     setKelas(props.classesCollection.kelas);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.classesCollection.kelas]);

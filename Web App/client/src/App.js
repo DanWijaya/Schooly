@@ -73,6 +73,11 @@ import ViewAssessmentTeacher from "./components/objects/assessment/ViewAssessmen
 import ViewAssessmentStudent from "./components/objects/assessment/ViewAssessmentStudent";
 import SubmittedAssessmentList from "./components/objects/assessment/SubmittedAssessmentList";
 import ViewAssessmentAnswer from "./components/objects/assessment/ViewAssessmentAnswer";
+//Event
+import Calendar from "./components/objects/events/Calendar";
+import ViewEvent from "./components/objects/events/ViewEvent";
+import CreateEvent from "./components/objects/events/CreateEvent";
+import EditEvent from "./components/objects/events/EditEvent";
 //Admin Only
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
@@ -86,6 +91,7 @@ import Graph from "./prototypes/Graph";
 import Timer from "./prototypes/Timer";
 import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
 import { Fragment } from "react";
+import ScheduleCalendar from "./prototypes/schedule-calendar/ScheduleCalendar";
 
 //Dropbox
 // import DropboxConnect from "./components/dropbox/DropboxConnect";
@@ -290,6 +296,7 @@ class App extends Component {
                     />
                     <Route exact path="/tester" component={Tester} />{" "}
                     {/*prototype*/}
+                    <Route exact path="/sc" component={ScheduleCalendar} />
                     <Route exact path="/csv" component={CSV} />
                     <Route exact path="/timer" component={Timer} />{" "}
                     {/*prototype*/}
@@ -508,6 +515,30 @@ class App extends Component {
                       access={["Teacher"]}
                       path="/lihat-jawaban-ujian/:id"
                       component={ViewAssessmentAnswer}
+                    />
+                    {/* Route Event */}
+                    <PrivateRoute
+                      exact
+                      path="/kalender"
+                      component={Calendar}
+                    />
+                    <PrivateRoute
+                      exact
+                      path="/kegiatan/:id"
+                      component={ViewEvent}
+                    />
+                    {/* Route Event Admin-Only*/}
+                    <PrivateRoute
+                      exact
+                      access={["Admin"]}
+                      path="/buat-kegiatan"
+                      component={CreateEvent}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={["Admin"]}
+                      path="/sunting-kegiatan/:id"
+                      component={EditEvent}
                     />
                     {/* Route Admin-Only */}
                     <PrivateRoute

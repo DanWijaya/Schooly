@@ -813,6 +813,8 @@ function SubjectList(props) {
                             <Typography variant="subtitle1" color="textPrimary">
                               {row.name}
                             </Typography>
+
+                            {/* bagian ini ditambahkan agar tinggi listitemnya sama seperti listitem yang ada props secondarynya */}
                             <Grid item style={{ visibility: "hidden" }}>
                               <Typography variant="subtitle1">
                                 {"\u200B"}
@@ -846,6 +848,8 @@ function SubjectList(props) {
                               <Typography variant="h6" color="textPrimary">
                                 {row.name}
                               </Typography>
+
+                              {/* bagian ini ditambahkan agar tinggi listitemnya sama seperti listitem yang ada props secondarynya */}
                               <Grid item style={{ visibility: "hidden" }}>
                                 <Grid container direction="column">
                                   <Typography variant="h6">
