@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
-    // maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
@@ -155,21 +154,21 @@ function Help(props) {
                 <ExpansionPanelDetails>
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>Ada jenis akun apa saja di Schooly?</b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Ada tiga jenis akun yaitu Murid, Guru, dan Pengelola.
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>
                           Bagaimana cara untuk melengkapi keterangan profil atau
                           mengubah keterangan profil?
                         </b>
                       </Typography>
-                      <Typography>
+                      <Typography  align="justify">
                         Keterangan akun dapat diubah dengan menekan tombol
                         "Sunting Profil" pada halaman profil, yang dapat diakses
                         dengan menekan foto profil pada bagian kanan atas
@@ -177,10 +176,10 @@ function Help(props) {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>Bagaimana cara mengubah foto akun?</b>
                       </Typography>
-                      <Typography>
+                      <Typography  align="justify">
                         Foto akun dapat diubah dengan menekan tombol dengan
                         gambar "Kamera" pada halaman profil, yang dapat diakses
                         dengan menekan foto profil pada bagian kanan atas
@@ -188,10 +187,10 @@ function Help(props) {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>Bagaimana cara mengubah kata sandi?</b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Kata sandi dapat diubah dengan menekan tombol "Ganti
                         Kata Sandi" pada halaman profil, yang dapat diakses
                         dengan menekan foto profil pada bagian kanan atas
@@ -199,37 +198,37 @@ function Help(props) {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>
                           Bagaimana cara untuk meregistrasi suatu akun Schooly?
                         </b>
                       </Typography>
-                      <Typography>
+                      <Typography  align="justify">
                         Silahkan hubungi pengelola Schooly pada sekolah Anda
                         untuk memberikan tautan untuk registrasi akun Anda
                         sesuai dengan kebutuhan Anda (Guru atau Murid).
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>
                           Apa yang perlu dilakukan jika saya lupa email akun
                           saya?
                         </b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Silahkan hubungi pengelola Schooly pada sekolah Anda
                         untuk mendapatkan email akun Anda.
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>
                           Apa yang perlu dilakukan jika saya lupa kata sandi
                           akun saya?
                         </b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Masuk ke halaman masuk schooly. Pada bagian bawah
                         formulir masuk, tekan tautan "Lupa Kata Sandi" yang akan
                         mengarah kepada halaman untuk mengganti kata sandi. Pada
@@ -240,26 +239,26 @@ function Help(props) {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>
                           Apa yang perlu dilakukan jika saya akun saya belum
                           aktif?
                         </b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Hubungi pengelola sekolah Anda untuk mengaktifkan akun
                         Anda.
                       </Typography>
                     </Grid>
                     {user.role === "Admin" ? (
                       <Grid item>
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant="h6" align="justify" gutterBottom>
                           <b>
                             Apakah yang perlu dilakukan untuk mempersiapkan
                             penggunaan Schooly dalam suatu sekolah?
                           </b>
                         </Typography>
-                        <Typography>
+                        <Typography align="justify">
                           <ol>
                             <li>Masuk dengan akun pengelola sekolah Anda.</li>
                             <li>
@@ -315,6 +314,53 @@ function Help(props) {
               <ExpansionPanel variant="outlined" defaultExpanded>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography variant="h5" color="primary">
+                    Mata Pelajaran
+                  </Typography>
+                </ExpansionPanelSummary>
+                <Divider />
+                <ExpansionPanelDetails>
+                  <Grid container direction="column" spacing={4}>
+                    <Grid item>
+                      <Typography variant="h6" align="justify" gutterBottom>
+                        <b>Apa itu mata pelajaran?</b>
+                      </Typography>
+                      <Typography align="justify">
+                        Mata pelajaran adalah jenis ilmu pengetahuan yang diajarkan.
+                      </Typography>
+                    </Grid>
+                    {user.role === "Admin" ? (
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>
+                            Bagaimana cara membuat suatu mata pelajaran?
+                          </b>
+                        </Typography>
+                        <Typography align="justify">
+                          <ol>
+                            <li>
+                              Buka halaman daftar mata pelajaran dengan menekan tombol
+                              "Mata Pelajaran" yang dapat ditemukan pada bagian kiri
+                              aplikasi.
+                            </li>
+                            <li>
+                              Klik tombol "Buat Mata Pelajaran" untuk membuat mata pelajaran.
+                            </li>
+                            <li>
+                              Masukkan nama mata pelajaran yang diinginkan, jika sudah klik tombol
+                              "Buat".
+                            </li>
+                          </ol>
+                        </Typography>
+                      </Grid>
+                    ) : null }
+                  </Grid>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </Grid>
+            <Grid item>
+              <ExpansionPanel variant="outlined" defaultExpanded>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h5" align="justify" color="primary">
                     Kelas
                   </Typography>
                 </ExpansionPanelSummary>
@@ -325,7 +371,7 @@ function Help(props) {
                       <Typography variant="h6" gutterBottom>
                         <b>Apa itu kelas?</b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Sama seperti pengertian kelas secara harafiah, di
                         Schooly suatu kelas berarti kelompok belajar yang
                         terdiri atas pelajar dan pengajar. Suatu kelas dapat
@@ -333,10 +379,10 @@ function Help(props) {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>Apa saja isi suatu kelas?</b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Suatu kelas terdiri dari pekerjaan kelas, mata
                         pelajaran, murid (pelajar), dan guru (pengajar).
                       </Typography>
@@ -344,19 +390,19 @@ function Help(props) {
                     {user.role === "Student" ? (
                       <Grid item container spacing={4}>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>Apa isi dari pekerjaan kelas?</b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Pekerjaan kelas berisi materi, tugas, kuis, dan
                             ujian yang diberikan oleh guru pada kelas tersebut.
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>Apa isi dari mata pelajaran?</b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Di Schooly, Mata pelajaran berisi materi, tugas,
                             kuis, dan ujian dari mata pelajaran tersebut yang
                             diberikan dalam suatu kelas dan diurutkan sesuai
@@ -364,13 +410,13 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Apakah mata pelajaran secara spesifik dapat
                               dilihat?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Dapat. Mata pelajaran secara spesifik dapat dilihat
                             dengan membuka panel mata pelajaran dalam suatu
                             kelas dan menekan tombol "Lihat Mata Pelajaran".
@@ -379,13 +425,13 @@ function Help(props) {
                       </Grid>
                     ) : user.role === "Teacher" ? (
                       <Grid item>
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant="h6" align="justify" gutterBottom>
                           <b>
                             Apakah guru dapat melihat kelas-kelas yang ada pada
                             lingkup sekolahnya?
                           </b>
                         </Typography>
-                        <Typography>
+                        <Typography align="justify">
                           Dapat. Guru dapat melihat kelas yang ada dengan
                           menekan tombol "Kelas" yang dapat ditemukan pada
                           bagian kiri aplikasi.
@@ -394,13 +440,13 @@ function Help(props) {
                     ) : user.role === "Admin" ? (
                       <Grid item container spacing={4}>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Apakah keterangan suatu kelas dapat disunting atau
                               dihapus?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Dapat. Masing-masing kelas yang telah dibuat dapat
                             disunting dan dihapus pada halaman daftar kelas yang
                             dapat ditemukan pada dengan menekan tombol "Kelas"
@@ -408,13 +454,13 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Apakah wali kelas dan murid-murid yang ada pada
                               suatu kelas dapat diatur?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Dapat. Murid-murid yang ada pada suatu kelas dapat
                             diatur dengan menekan tombol "Atur Kelas Murid",
                             sedangkan wali kelas yang ada dapat diatur dengan
@@ -424,13 +470,13 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Bagaimana mekanisme sistem pergantian alokasi
                               murid antar kelas?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             <ol>
                               <li>
                                 Buka halaman daftar kelas dengan menekan tombol
@@ -502,10 +548,10 @@ function Help(props) {
                 <ExpansionPanelDetails>
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>Apa itu pengumuman?</b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Pengumuman adalah informasi berupa teks yang disebarkan
                         oleh pengelola kepada guru dan/atau murid, guru kepada
                         murid, atau ketua kelas kepada murid-murid yang di
@@ -514,10 +560,10 @@ function Help(props) {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>Apa saja isi suatu pengumuman?</b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Suatu pengumuman terdiri dari judul pengumuman,
                         deskripsi pengumuman, pemberi pengumuman, dan lampiran
                         berkas.
@@ -525,10 +571,10 @@ function Help(props) {
                     </Grid>
                     {user.role === "Student" ? (
                       <Grid item>
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant="h6" align="justify" gutterBottom>
                           <b>Apakah seorang murid dapat membuat pengumuman?</b>
                         </Typography>
-                        <Typography>
+                        <Typography align="justify">
                           Hanya murid yang memiliki peran "Ketua Kelas" yang
                           dapat membuat pengumuman dan pengumuman yang dibuat
                           oleh ketua kelas hanya dapat disebarkan kepada
@@ -538,12 +584,12 @@ function Help(props) {
                     ) : user.role === "Teacher" ? (
                       <Grid item container spacing={4}>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Bagaimana cara untuk membuat suatu pengumuman?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             <ol>
                               <li>
                                 Buka halaman daftar pengumuman dengan menekan
@@ -562,13 +608,13 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Apakah pengumuman yang dibuat dapat disunting atau
                               dihapus?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Dapat. Pengumuman yang telah dibuat dapat disunting
                             atau dihapus pada halaman daftar pengumuman, dengan
                             cara menekan tombol "Hapus" untuk menghapus suatu
@@ -584,7 +630,7 @@ function Help(props) {
                       </Grid>
                     ) : user.role === "Admin" ? (
                       <Grid item>
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant="h6" align="justify" gutterBottom>
                           <b>Bagaimana cara untuk membuat suatu pengumuman?</b>
                         </Typography>
                         <Typography>
@@ -634,20 +680,20 @@ function Help(props) {
                 <ExpansionPanelDetails>
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>Apa itu Materi?</b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Materi adalah bahan pembelajaran yang diberikan oleh
                         guru kepada murid. Materi yang diberikan harus disertai
                         lampiran berkas.
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>Apa saja isi suatu materi?</b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Suatu materi terdiri dari judul materi, deskripsi
                         materi, mata pelajaran, dan lampiran berkas.
                       </Typography>
@@ -656,10 +702,10 @@ function Help(props) {
                       "Teacher" ? (
                       <Grid item container spacing={4}>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>Bagaimana cara untuk membuat suatu materi?</b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             <ol>
                               <li>
                                 Buka halaman daftar materi dengan menekan tombol
@@ -677,13 +723,13 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Apakah materi yang dibuat dapat disunting atau
                               dihapus?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Dapat. Materi yang telah dibuat dapat disunting atau
                             dihapus pada halaman daftar materi, dengan cara
                             menekan tombol "Hapus" untuk menghapus suatu
@@ -697,13 +743,13 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Siapa saja yang dapat menyunting atau menghapus
                               suatu materi?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Suatu materi hanya dapat disunting atau dihapus oleh
                             guru yang membuat materi tersebut.
                           </Typography>
@@ -711,13 +757,13 @@ function Help(props) {
                       </Grid>
                     ) : user.role === "Admin" ? (
                       <Grid item>
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant="h6" align="justify" gutterBottom>
                           <b>
                             Apakah akun pengelola memiliki wewenang akan materi
                             yang telah dibuat?
                           </b>
                         </Typography>
-                        <Typography>
+                        <Typography align="justify">
                           Tidak, akun pengelola tidak memiliki wewenang akan
                           materi apapun. Suatu materi hanya dapat diubah oleh
                           guru yang membuat materi tersebut.
@@ -748,20 +794,20 @@ function Help(props) {
                 <ExpansionPanelDetails>
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>Apa itu tugas?</b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Tugas adalah suatu pekerjaan yang diberikan kepada murid
                         untuk meningkatkan pemamahan mengenai sebuah materi.
                         File dapat dilampirkan pada suatu tugas.
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>Apa saja isi suatu tugas?</b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Suatu tugas terdiri dari judul tugas, deskripsi tugas,
                         lampiran berkas, dan batas waktu. Tugas yang dikumpulkan
                         adalah dalam bentuk file dengan jenis apa saja.
@@ -770,10 +816,10 @@ function Help(props) {
                     {user.role === "Student" ? (
                       <Grid item container spacing={4}>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>Bagaimana cara untuk mengumpulkan tugas?</b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             <ol>
                               <li>
                                 Tekan tombol "Pilih File" pada halaman tugas
@@ -799,13 +845,13 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Apakah file yang sudah dikumpulkan dapat diunduh
                               atau diganti?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Dapat. File yang sudah dikumpulkan dapat diunduh
                             dengan menekan tombol unduh pada file tersebut dan
                             dapat dihapus dengan menekan tombol hapus pada file
@@ -818,10 +864,10 @@ function Help(props) {
                     ) : user.role === "Teacher" ? (
                       <Grid item container spacing={4}>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>Bagaimana cara untuk membuat suatu tugas?</b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             <ol>
                               <li>
                                 Buka halaman daftar tugas dengan menekan tombol
@@ -839,13 +885,13 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Apakah tugas yang dibuat dapat disunting atau
                               dihapus?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Dapat. Tugas yang telah dibuat dapat disunting atau
                             dihapus pada halaman daftar tugas, dengan cara
                             menekan tombol "Hapus" untuk menghapus suatu tugas
@@ -859,13 +905,13 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Siapa saja yang dapat menyunting atau menghapus
                               suatu tugas?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Suatu tugas hanya dapat disunting atau dihapus oleh
                             guru yang membuat tugas tersebut.
                           </Typography>
@@ -873,13 +919,13 @@ function Help(props) {
                       </Grid>
                     ) : user.role === "Admin" ? (
                       <Grid item>
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant="h6" align="justify" gutterBottom>
                           <b>
                             Apakah akun pengelola memiliki wewenang akan tugas
                             yang telah dibuat?
                           </b>
                         </Typography>
-                        <Typography>
+                        <Typography align="justify">
                           Tidak, akun pengelola tidak memiliki wewenang akan
                           tugas apapun. Suatu tugas hanya dapat diubah oleh guru
                           yang membuat tugas tersebut.
@@ -902,7 +948,7 @@ function Help(props) {
             <Grid item>
               <ExpansionPanel variant="outlined" defaultExpanded>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h5" color="primary">
+                  <Typography variant="h5" align="justify" color="primary">
                     Kuis/Ujian
                   </Typography>
                 </ExpansionPanelSummary>
@@ -910,7 +956,7 @@ function Help(props) {
                 <ExpansionPanelDetails>
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>Apa itu kuis/ujian?</b>
                       </Typography>
                       <Typography>
@@ -921,7 +967,7 @@ function Help(props) {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>Apa saja isi suatu kuis/ujian?</b>
                       </Typography>
                       <Typography>
@@ -934,7 +980,7 @@ function Help(props) {
                     {user.role === "Student" ? (
                       <Grid item container spacing={4}>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Bagaimana cara untuk mengerjakan suatu kuis/ujian?
                             </b>
@@ -958,12 +1004,12 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Apakah ujian yang sudah dikumpulkan dapat diubah?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Tidak. Ujian yang sudah dikumpulkan tidak akan bisa
                             diubah kembali, pastikan Anda sudah yakin akan
                             jawaban Anda ketika mengumpulkan ujian.
@@ -973,12 +1019,12 @@ function Help(props) {
                     ) : user.role === "Teacher" ? (
                       <Grid item container spacing={4}>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Bagaimana cara untuk membuat suatu kuis/ujian?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             <ol>
                               <li>
                                 Buka halaman daftar kuis atau daftar ujian
@@ -1006,13 +1052,13 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Apakah kuis/ujian yang dibuat dapat disunting atau
                               dihapus?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Dapat. Kuis/ujian yang telah dibuat dapat disunting
                             atau dihapus pada halaman daftar kuis atau daftar
                             ujian, dengan cara menekan tombol "Hapus" untuk
@@ -1027,19 +1073,19 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Siapa saja yang dapat menyunting atau menghapus
                               suatu kuis/ujian?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Suatu kuis/ujian hanya dapat disunting atau dihapus
                             oleh guru yang membuat kuis/ujian tersebut.
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>Bagaimana cara menambahkan soal baru?</b>
                           </Typography>
                           <Typography>
@@ -1050,25 +1096,25 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Jenis soal apa saja yang di nilai secara otomatis?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Jenis soal pilihan ganda, kotak centang, dan isilah
                             dinilai secara otomatis. Sedangkan untuk jenis soal
                             uraian harus diperiksa secara manual.
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Bagaimana sistem penilaian soal jenis kotak
                               centang?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Untuk setiap pilihan yang di jawab benar, murid
                             mendapat +1 poin per jumlah pilihan yang benar.
                             Untuk setiap pilihan yang di jawab salah, murid
@@ -1096,10 +1142,10 @@ function Help(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>Apakah suatu soal dapat dilampirkan gambar?</b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Dapat. Suatu soal dapat dilampirkan gambar dengan
                             menekan tombol "Tambahkan Gambar" pada bagian kanan
                             soal.
@@ -1108,13 +1154,13 @@ function Help(props) {
                       </Grid>
                     ) : user.role === "Admin" ? (
                       <Grid item>
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant="h6" align="justify" gutterBottom>
                           <b>
                             Apakah akun pengelola memiliki wewenang akan
                             kuis/ujian yang telah dibuat?
                           </b>
                         </Typography>
-                        <Typography>
+                        <Typography align="justify">
                           Tidak, akun pengelola tidak memiliki wewenang akan
                           kuis/ujian apapun. Suatu kuis/ujian hanya dapat diubah
                           oleh guru yang membuat kuis/ujian tersebut.
@@ -1137,7 +1183,7 @@ function Help(props) {
             <Grid item>
               <ExpansionPanel variant="outlined" defaultExpanded>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h5" color="primary">
+                  <Typography variant="h5" align="justify" color="primary">
                     Rapor
                   </Typography>
                 </ExpansionPanelSummary>
@@ -1145,20 +1191,20 @@ function Help(props) {
                 <ExpansionPanelDetails>
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" align="justify" gutterBottom>
                         <b>Apa itu rapor?</b>
                       </Typography>
-                      <Typography>
+                      <Typography align="justify">
                         Rapor adalah rangkuman dari nilai-nilai tugas, kuis, dan
                         ujian yang telah diperiksa.
                       </Typography>
                     </Grid>
                     {user.role === "Student" ? (
                       <Grid item>
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant="h6" align="justify" gutterBottom>
                           <b>Bagaimana cara untuk melihat rapor?</b>
                         </Typography>
-                        <Typography>
+                        <Typography align="justify">
                           <ol>
                             <li>
                               Buka halaman profil Anda, dengan menekan tombol
@@ -1174,26 +1220,26 @@ function Help(props) {
                     ) : user.role === "Teacher" ? (
                       <Grid item container spacing={4}>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Apakah guru dapat melihat rapor mata pelajaran di
                               luar subjek ajarnya?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Tidak. Guru hanya bisa melihat rapor dari mata
                             pelajaran yang diajarnya saja.
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" align="justify" gutterBottom>
                             <b>
                               Apakah guru dengan peran wali kelas dapat melihat
                               nilai semua mata pelajaran dari murid pada
                               kelasnya?
                             </b>
                           </Typography>
-                          <Typography>
+                          <Typography align="justify">
                             Dapat. Guru dengan peran wali kelas dapat melihat
                             semua nilai mata pelajaran dari murid pada kelasnya.
                           </Typography>
