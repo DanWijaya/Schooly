@@ -569,10 +569,9 @@ function TaskList(props) {
   }, [])
 
   const retrieveTasks = () => {
-    console.log("Hello");
+    rows = [];
     // If tasksCollection is not undefined or an empty array
-    if (tasksCollection.length) {
-      rows = [];
+    if (tasksCollection.length > 0) {
       if (user.role === "Teacher") {
         tasksCollection
           .filter((item) =>
