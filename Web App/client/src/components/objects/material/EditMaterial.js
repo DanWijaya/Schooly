@@ -521,7 +521,7 @@ class EditMaterial extends Component {
             success={success}
             messageUploading="Materi sedang disunting"
             messageSuccess="Materi telah disunting"
-            redirectLink="/daftar-materi"
+            redirectLink={`/materi/${this.props.match.params.id}`}
           />
           <DeleteDialog
             openDeleteDialog={this.state.openDeleteDialog}
