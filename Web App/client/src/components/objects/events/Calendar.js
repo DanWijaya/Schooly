@@ -14,20 +14,33 @@ import {
   ListItemAvatar,
   Avatar,
   Paper,
-  Divider
+  Divider,
+  Badge
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import AssignmentIcon from "@material-ui/icons/Assignment";
+import { FaClipboardList } from "react-icons/fa";
+import { BsClipboardData } from "react-icons/bs";
 import {
   getAllEvents,
   deleteEvent
 } from "../../../actions/EventActions";
+import { getStudents, getStudentsByClass, getTeachers } from "../../../actions/UserActions";
+import { getTasksBySC, getAllTask } from "../../../actions/TaskActions";
+import {
+  getKuisBySC,
+  getUjianBySC,
+  getAllAssessments,
+} from "../../../actions/AssessmentActions";
+import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
+import moment from "moment";
+import ErrorIcon from "@material-ui/icons/Error";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -83,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
   calendarContainer: {
     display: "flex",
     justifyContent: "center",
-    marginBottom: "20px"
+    marginBottom: "30px"
   },
   calendar: {
     width: "100%"
@@ -110,6 +123,18 @@ const useStyles = makeStyles((theme) => ({
   listItem: {
     padding: "6px 16px"
   },
+  errorIcon: {
+    color: theme.palette.error.main,
+  },
+  warningIcon: {
+    color: theme.palette.warning.main,
+  },
+  checkIcon: {
+    color: theme.palette.success.main,
+  },
+  listIcon: {
+    backgroundColor: theme.palette.primary.main,
+  },
 }));
 
 function CalendarListToolbar(props) {
@@ -123,8 +148,29 @@ function CalendarListToolbar(props) {
     updateSearchFilter,
     setSearchBarFocus,
     searchBarFocus,
-    role
+    role,
+    type
   } = props;
+
+  let toolbarTitle = "";
+  let toolbarIcon = null;
+
+  if(type === "Event") {
+    toolbarTitle = "Daftar Kegiatan";
+    toolbarIcon = <EventNoteIcon className={classes.titleIcon} fontSize="large" />;
+  }
+  else if(type === "Task") {
+    toolbarTitle = "Daftar Tugas";
+    toolbarIcon = <AssignmentIcon className={classes.titleIcon} fontSize="large" />;
+  }
+  else if(type === "Quiz") {
+    toolbarTitle = "Daftar Kuis";
+    toolbarIcon = <FaClipboardList className={classes.titleIcon} fontSize="large" />;
+  }
+  else {
+    toolbarTitle = "Daftar Ujian";
+    toolbarIcon = <BsClipboardData className={classes.titleIcon} fontSize="large" />;
+  }
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -169,11 +215,8 @@ function CalendarListToolbar(props) {
                 alignItems: "center",
               }}
             >
-              <LibraryBooksIcon
-                className={classes.titleIcon}
-                fontSize="large"
-              />
-              <Typography variant="h4">Daftar Agenda</Typography>
+              {toolbarIcon}
+              <Typography variant="h4">{toolbarTitle}</Typography>
             </div>
           )}
         </Hidden>
@@ -185,8 +228,8 @@ function CalendarListToolbar(props) {
               alignItems: "center",
             }}
           >
-            <LibraryBooksIcon className={classes.titleIcon} fontSize="large" />
-            <Typography variant="h4">Daftar Agenda</Typography>
+            {toolbarIcon}
+            <Typography variant="h4">{toolbarTitle}</Typography>
           </div>
         </Hidden>
         {/* <Hidden mdUp implementation="css">
@@ -388,15 +431,83 @@ function CalendarListToolbar(props) {
   );
 }
 
+function TaskListItem(props) {
+  const { classes } = props;
+
+  return (
+    <Grid item>
+      <Link to={props.work_link}>
+        <Paper variant="outlined" button className={classes.listItemPaper}>
+          <Badge
+            style={{ display: "flex", flexDirection: "row" }}
+            badgeContent={<ErrorIcon className={classes.errorIcon} />}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <ListItem button className={classes.listItem}>
+              <Hidden xsDown>
+                <ListItemAvatar>
+                  <Avatar className={classes.listIcon}>
+                    <AssignmentIcon />
+                  </Avatar>
+                </ListItemAvatar>
+              </Hidden>
+              <ListItemText
+                primary={
+                  <Typography variant="h6">
+                    {props.work_title}
+                  </Typography>
+                }
+                secondary={props.work_sender}
+              />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.work_dateposted)
+                      .locale("id")
+                      .format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("HH.mm")}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          </Badge>
+        </Paper>
+      </Link>
+    </Grid>
+  );
+}
+
 function Calendar(props) {
   document.title = "Schooly | Kalender";
 
   const classes = useStyles();
 
   const {
-    getAllEvents
+    getAllEvents,
+    getAllTask,
+    getAllTaskFilesByUser,
+    getAllSubjects,
+    getAllAssessments,
+    getStudentsByClass,
+    getStudents,
+    setCurrentClass,
+    getTeachers,
+    tasksCollection,
   } = props;
+
+  const { user, all_students, all_teachers } = props.auth;
   const role = props.auth.user.role;
+
+  const { all_user_files } = props.filesCollection;
+  const { all_subjects_map, all_subjects } = props.subjectsCollection;
 
   // state ini akan bernilai null jika dan hanya jika pengguna belum mengklik tile kalender (belum memilih tanggal)
   const [selectedDate, setSelectedDate] = React.useState(null);
@@ -404,6 +515,11 @@ function Calendar(props) {
 
   React.useEffect(() => {
     getAllEvents();
+    getAllTask();
+    getAllAssessments();
+    getStudents();
+    getTeachers();
+    getAllTaskFilesByUser(user._id);
   }, []);
 
   React.useEffect(() => {
@@ -418,6 +534,132 @@ function Calendar(props) {
     setRows(filteredEvents);
   }, [props.eventsCollection.allEvents, selectedDate]);
 
+  function listTasks() {
+    let result = [];
+    // tasksByClass.map((task) => {
+    let tasksByClass = [];
+    if (Boolean(tasksCollection.length)) {
+      if (user.role === "Student") {
+        tasksCollection.map((task) => {
+          let class_assigned = task.class_assigned;
+          for (var i = 0; i < class_assigned.length; i++) {
+            if (class_assigned[i] === user.kelas) tasksByClass.push(task);
+          }
+          return tasksByClass;
+        });
+      } else if (user.role === "Teacher") {
+        // For Teacher
+        console.log("Ini untuk guru");
+      }
+    }
+    tasksByClass.forEach((task) => {
+      let flag = true;
+      let teacher_name;
+      for (var i = 0; i < all_user_files.length; i++) {
+        if (all_user_files[i].for_task_object === task._id) {
+          flag = false;
+          break;
+        }
+      }
+      for (var i = 0; i < all_teachers.length; i++) {
+        if (all_teachers[i]._id == task.person_in_charge_id) {
+          teacher_name = all_teachers[i].name;
+        }
+      }
+      if (!all_subjects_map.get(task.subject)) {
+        flag = false;
+      }
+      if (flag) {
+        result.push({
+          _id: task._id,
+          name: task.name,
+          teacher_name: teacher_name,
+          subject: task.subject,
+          deadline: task.deadline,
+          createdAt: task.createdAt,
+        });
+      }
+    });
+    if (result.length === 0) {
+      return (
+        <Typography variant="subtitle1" align="center" color="textSecondary">
+          Kosong
+        </Typography>
+      );
+    } else {
+      return result.map((row) => (
+        <TaskListItem
+          classes={classes}
+          work_title={row.name}
+          work_sender={all_subjects_map.get(row.subject)}
+          work_deadline_mobile={moment(row.deadline)
+            .locale("id")
+            .format("DD MMM YYYY, HH:mm")}
+          work_deadline_desktop={moment(row.deadline)
+            .locale("id")
+            .format("DD MMM YYYY, HH:mm")}
+          work_link={`/tugas-murid/${row._id}`}
+          work_dateposted={row.createdAt}
+        />
+      ));
+    }
+  }
+
+  function listTasksTeacher() {
+    let result = [];
+    console.log(user);
+    for (let i = 0; i < tasksCollection.length; i++) {
+      if (tasksCollection[i].person_in_charge_id === user._id) {
+        let number_students_assigned = 0;
+        for (let j = 0; j < all_students.length; j++) {
+          if (
+            tasksCollection[i].class_assigned.includes(all_students[j].kelas)
+          ) {
+            number_students_assigned = number_students_assigned + 1;
+          }
+        }
+        if (
+          Object.values(tasksCollection[i].grades).length !==
+          number_students_assigned
+        ) {
+          let task = tasksCollection[i];
+          result.push({
+            _id: task._id,
+            name: task.name,
+            subject: task.subject,
+            deadline: task.deadline,
+            createdAt: task.createdAt,
+          });
+        }
+      }
+    }
+    if (result.length === 0) {
+      return (
+        <Typography variant="subtitle1" align="center" color="textSecondary">
+          Kosong
+        </Typography>
+      );
+    } else {
+      return result.map((row) => {
+        return (
+          <TaskListItem
+            classes={classes}
+            work_title={row.name}
+            work_sender={all_subjects_map.get(row.subject)}
+            work_deadline_mobile={moment(row.deadline)
+              .locale("id")
+              .format("DD MMM YYYY, HH:mm")}
+            work_deadline_desktop={moment(row.deadline)
+              .locale("id")
+              .format("DD MMM YYYY, HH:mm")}
+            work_link={`/tugas-guru/${row._id}`}
+            work_dateposted={row.createdAt}
+          />
+        );
+      });
+    }
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.calendarContainer}>
@@ -431,6 +673,7 @@ function Calendar(props) {
       <CalendarListToolbar
         classes={classes}
         role={role}
+        type="Event"
       />
       <Divider variant="inset" className={classes.titleDivider} />
       {/* <Hidden mdUp implementation="css">
@@ -459,7 +702,7 @@ function Calendar(props) {
         )}
       </Hidden> */}
 
-      <Grid container direction="column" spacing={2}>
+      <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
         {rows.length === 0 ? (
           <Typography variant="subtitle1" align="center" color="textSecondary">
             Kosong
@@ -505,7 +748,7 @@ function Calendar(props) {
                         }}
                       >
                         <ListItemAvatar>
-                          <Avatar className={classes.listAvatar}>
+                          <Avatar className={classes.listIcon}>
                             <EventNoteIcon />
                           </Avatar>
                         </ListItemAvatar>
@@ -595,15 +838,59 @@ function Calendar(props) {
         }
       </Grid>
 
+      {(role != "Admin") ?
+        <>
+          <CalendarListToolbar
+            classes={classes}
+            role={role}
+            type="Task"
+          />
+          <Divider variant="inset" className={classes.titleDivider} />
+          <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
+            {listTasks()}
+          </Grid>
+          <CalendarListToolbar
+            classes={classes}
+            role={role}
+            type="Quiz"
+          />
+          <Divider variant="inset" className={classes.titleDivider} />
+          <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
+            
+          </Grid>
+          <CalendarListToolbar
+            classes={classes}
+            role={role}
+            type="Exam"
+          />
+          <Divider variant="inset" className={classes.titleDivider} />
+          <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
+            
+          </Grid>
+        </>
+      : null}
     </div>
   );
 }
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  eventsCollection: state.eventsCollection
+  eventsCollection: state.eventsCollection,
+  tasksCollection: state.tasksCollection,
+  subjectsCollection: state.subjectsCollection,
+  classesCollection: state.classesCollection,
+  filesCollection: state.filesCollection,
+  assessmentsCollection: state.assessmentsCollection,
 });
 
 export default connect(mapStateToProps, {
-  getAllEvents
+  getAllEvents,
+  getAllTask,
+  getAllTaskFilesByUser,
+  getAllAssessments,
+  getTasksBySC,
+  getKuisBySC,
+  getUjianBySC,
+  getStudents,
+  getTeachers
 })(Calendar)
