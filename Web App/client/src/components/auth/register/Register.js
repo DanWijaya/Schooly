@@ -193,7 +193,7 @@ class Register extends Component {
     var newUser = {
       name: this.state.name,
       role: this.state.role,
-      email: this.state.email,
+      email: this.state.email.toLowerCase(),
       phone: this.state.phone,
       emergency_phone: this.state.emergency_phone,
       address: this.state.address,
@@ -201,8 +201,6 @@ class Register extends Component {
       password2: this.state.password2,
       tanggal_lahir: this.state.tanggal_lahir,
     };
-
-    const role = this.state.role;
 
     // if (role === "Teacher") {
     //   newUser.subject_teached = this.state.subject_teached;
