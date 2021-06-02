@@ -284,6 +284,7 @@ function ViewAssessmentTeacher(props) {
                   spacing={8}
                   style={{ paddingTop: "0" }}
                 >
+                  {/* h6 ditambahkan agar teks ini rata atas dengan teks mata pelajaran*/}
                   <h6 style={{ marginBottom: "0" }}>
                     <Typography
                       align="right"

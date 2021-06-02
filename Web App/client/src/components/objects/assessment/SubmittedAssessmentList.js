@@ -1107,6 +1107,7 @@ function SubmittedAssessmentList(props) {
             </Grid>
 
             <Grid item xs={12} md={5} spacing={8} style={{ paddingTop: "0" }}>
+              {/* h6 ditambahkan agar teks ini rata atas dengan teks nama mata pelajaran*/}
               <h6 style={{ marginBottom: "0" }}>
                 <Typography align="right" variant="body2" color="textSecondary">
                   Mulai:{" "}

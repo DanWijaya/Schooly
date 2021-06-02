@@ -326,6 +326,8 @@ function ViewAnnouncement(props) {
                 </Typography>
               </Grid>
               <Grid item xs={12} style={{ paddingTop: "0" }}>
+              {/* h6 ditambahkan agar margin teks ini dengan teks nama pengumuman 
+              memiliki margin yang sama seperti pada halaman-halaman view objek lainnya */}
                 <h6 style={{ marginBottom: "0" }}>
                   <Typography
                     variant="body2"
