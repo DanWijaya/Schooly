@@ -31,6 +31,7 @@ import {
   getAllEvents,
   deleteEvent
 } from "../../../actions/EventActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getStudents, getStudentsByClass, getTeachers } from "../../../actions/UserActions";
 import { getTasksBySC, getAllTask } from "../../../actions/TaskActions";
 import {
@@ -520,6 +521,7 @@ function Calendar(props) {
     getStudents();
     getTeachers();
     getAllTaskFilesByUser(user._id);
+    getAllSubjects("map");
   }, []);
 
   React.useEffect(() => {
@@ -553,33 +555,44 @@ function Calendar(props) {
       }
     }
     tasksByClass.forEach((task) => {
+      let tempSelectedDate = new Date(selectedDate);
+      let tempDeadlineDate = new Date(task.deadline.substring(0,10));
+      console.log(tempSelectedDate.getDate() === tempDeadlineDate.getDate());
       let flag = true;
       let teacher_name;
-      for (var i = 0; i < all_user_files.length; i++) {
-        if (all_user_files[i].for_task_object === task._id) {
+
+      // Untuk sekarang yang ditampilkan adalah tugas dengan deadline pada tanggal yang sama
+      // dengan selectedDate (tidak memperhitungkan jam, menit, detik)
+      if(tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+      tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+      tempSelectedDate.getYear() === tempDeadlineDate.getYear()) {
+        for (var i = 0; i < all_user_files.length; i++) {
+          if (all_user_files[i].for_task_object === task._id) {
+            flag = false;
+            break;
+          }
+        }
+        for (var i = 0; i < all_teachers.length; i++) {
+          if (all_teachers[i]._id == task.person_in_charge_id) {
+            teacher_name = all_teachers[i].name;
+          }
+        }
+        if (!all_subjects_map.get(task.subject)) {
           flag = false;
-          break;
         }
-      }
-      for (var i = 0; i < all_teachers.length; i++) {
-        if (all_teachers[i]._id == task.person_in_charge_id) {
-          teacher_name = all_teachers[i].name;
+        if (flag) {
+          result.push({
+            _id: task._id,
+            name: task.name,
+            teacher_name: teacher_name,
+            subject: task.subject,
+            deadline: task.deadline,
+            createdAt: task.createdAt,
+          });
         }
-      }
-      if (!all_subjects_map.get(task.subject)) {
-        flag = false;
-      }
-      if (flag) {
-        result.push({
-          _id: task._id,
-          name: task.name,
-          teacher_name: teacher_name,
-          subject: task.subject,
-          deadline: task.deadline,
-          createdAt: task.createdAt,
-        });
       }
     });
+  
     if (result.length === 0) {
       return (
         <Typography variant="subtitle1" align="center" color="textSecondary">
@@ -606,10 +619,15 @@ function Calendar(props) {
   }
 
   function listTasksTeacher() {
+    let tempSelectedDate = new Date(selectedDate);
     let result = [];
     console.log(user);
     for (let i = 0; i < tasksCollection.length; i++) {
-      if (tasksCollection[i].person_in_charge_id === user._id) {
+      let tempDeadlineDate = new Date(tasksCollection[i].deadline.substring(0,10));
+      if (tasksCollection[i].person_in_charge_id === user._id &&
+        tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+        tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+        tempSelectedDate.getYear() === tempDeadlineDate.getYear()) {
         let number_students_assigned = 0;
         for (let j = 0; j < all_students.length; j++) {
           if (
@@ -623,6 +641,7 @@ function Calendar(props) {
           number_students_assigned
         ) {
           let task = tasksCollection[i];
+          console.log(task)
           result.push({
             _id: task._id,
             name: task.name,
@@ -847,7 +866,7 @@ function Calendar(props) {
           />
           <Divider variant="inset" className={classes.titleDivider} />
           <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
-            {listTasks()}
+            {(role === "Student") ? listTasks() : listTasksTeacher()}
           </Grid>
           <CalendarListToolbar
             classes={classes}
@@ -886,6 +905,7 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   getAllEvents,
   getAllTask,
+  getAllSubjects,
   getAllTaskFilesByUser,
   getAllAssessments,
   getTasksBySC,
