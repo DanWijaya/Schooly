@@ -15,7 +15,8 @@ import {
   Avatar,
   Paper,
   Divider,
-  Badge
+  Badge,
+  Dialog
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -24,6 +25,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import WarningIcon from "@material-ui/icons/Warning";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
@@ -42,6 +44,7 @@ import {
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import moment from "moment";
 import ErrorIcon from "@material-ui/icons/Error";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -486,6 +489,335 @@ function TaskListItem(props) {
   );
 }
 
+function ListAssessments(props) {
+  const {
+    category,
+    subject,
+    type,
+    // tab,
+    all_assessments,
+    classId,
+    classes,
+    all_subjects_map,
+    all_teachers,
+    getSelectedDate
+  } = props;
+
+  console.log(all_assessments)
+
+  function AssessmentListItem(props) {
+    // Dialog Kuis dan Ujian
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
+
+    const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
+      setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
+      setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+      setOpenDialog(false);
+    };
+
+    return (
+      <Grid item>
+        <Paper
+          variant="outlined"
+          className={classes.listItemPaper}
+          onClick={() =>
+            handleOpenDialog(
+              props.work_title,
+              props.work_subject,
+              props.work_teacher_name,
+              props.work_starttime,
+              props.work_endtime
+            )
+          }
+        >
+          <Badge
+            style={{ display: "flex", flexDirection: "row" }}
+            badgeContent={(!props.work_finished) ? <WarningIcon className={classes.warningIcon} /> : <CheckCircleIcon className={classes.checkIcon} />}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <ListItem button className={classes.listItem}>
+              <Hidden xsDown>
+                <ListItemAvatar>{props.work_category_avatar}</ListItemAvatar>
+              </Hidden>
+              <ListItemText
+                primary={
+                  <Typography variant="h6">{props.work_title}</Typography>
+                }
+                secondary={props.work_subject}
+              />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.work_dateposted)
+                      .locale("id")
+                      .format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("HH.mm")}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          </Badge>
+        </Paper>
+        <Dialog
+          fullScreen={false}
+          open={openDialog}
+          onClose={handleCloseDialog}
+          fullWidth={true}
+          maxWidth="sm"
+        >
+          <div style={{ padding: "20px" }}>
+            <Typography variant="h4" align="center">
+              {currentDialogInfo.title}
+            </Typography>
+            <Typography variant="h5" align="center" color="primary">
+              {currentDialogInfo.subject}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              align="center"
+              style={{ marginTop: "25px" }}
+            >
+              Guru: {currentDialogInfo.teacher_name}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              align="center"
+            >
+              Mulai: {currentDialogInfo.start_date}
+            </Typography>
+            <Typography variant="subtitle1" align="center">
+              Selesai: {currentDialogInfo.end_date}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              align="center"
+              color="textSecondary"
+              style={{ marginTop: "10px", textAlign: "center" }}
+            >
+              Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
+              pelajaran terkait.
+            </Typography>
+          </div>
+        </Dialog>
+      </Grid>
+    );
+  }
+
+  let AssessmentsList = [];
+  let TeacherList = []
+  let result = [];
+
+  let tempSelectedDate = new Date(getSelectedDate());
+      
+  if (Boolean(all_assessments.length)) {
+    var i;
+    for (i = all_assessments.length - 1; i >= 0; i--) {
+      let assessment = all_assessments[i];
+      let tempDeadlineDate = new Date(assessment.start_date.substring(0,10));
+      let class_assigned = assessment.class_assigned;
+
+      if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+      tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+      tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+      class_assigned.indexOf(classId) !== -1) {
+        for (let j = 0; j < all_teachers.length; j++) {
+          if (all_teachers[j]._id === assessment.author_id) {
+            TeacherList.push(all_teachers[j].name);
+            break;
+          }
+        }
+        AssessmentsList.push(assessment);
+      }
+      // if(i === all_assessments.length - 5){ // item terakhir harus pas index ke 4.
+      //   break;
+      // }
+    }
+    console.log(AssessmentsList)
+    for (i = 0; i < AssessmentsList.length; i++) {
+      let assessment = AssessmentsList[i];
+      let teacher_name = TeacherList[i];
+      let workCategoryAvatar =
+        type === "Kuis" ? (
+          <Avatar className={classes.listIcon}>
+            <FaClipboardList />
+          </Avatar>
+        ) : (
+          <Avatar className={classes.listIcon}>
+            <BsClipboardData />
+          </Avatar>
+        );
+      // let workStatus = "Belum Ditempuh"
+      if (type === "Kuis") {
+        if (
+          (!category ||
+            (category === "subject" && assessment.subject === subject._id)) &&
+          
+          assessment.type === "Kuis" &&
+          assessment.posted
+        ) {
+          console.log(assessment.start_date)
+          result.push({
+            name: assessment.name,
+            workCategoryAvatar: workCategoryAvatar,
+            subject: assessment.subject,
+            teacher_name: teacher_name,
+            start_date: assessment.start_date,
+            end_date: assessment.end_date,
+            createdAt: assessment.createdAt,
+            finished: assessment.submissions
+          });
+          // result.push(
+          //   <AssessmentListItem
+          //     work_title={assessment.name}
+          //     work_category_avatar={workCategoryAvatar}
+          //     work_subject={
+          //       category === "subject"
+          //         ? null
+          //         : all_subjects_map.get(assessment.subject)
+          //     }
+          //     // work_status={workStatus}
+          //     work_starttime={moment(assessment.start_date)
+          //       .locale("id")
+          //       .format("DD MMM YYYY, HH:mm")}
+          //     work_endtime={moment(assessment.end_date)
+          //       .locale("id")
+          //       .format("DD MMM YYYY, HH:mm")}
+          //     work_dateposted={assessment.createdAt}
+          //   />
+          // );
+        }
+      }
+      if (type === "Ujian") {
+        if (
+          (!category ||
+            (category === "subject" && assessment.subject === subject._id)) &&
+          
+          assessment.type === "Ujian" &&
+          assessment.posted
+        ) {
+          result.push({
+            name: assessment.name,
+            workCategoryAvatar: workCategoryAvatar,
+            subject: assessment.subject,
+            teacher_name: teacher_name,
+            start_date: assessment.start_date,
+            end_date: assessment.end_date,
+            createdAt: assessment.createdAt,
+            finished: assessment.submissions
+          });
+          // result.push(
+          //   <AssessmentListItem
+          //     work_title={assessment.name}
+          //     work_category_avatar={workCategoryAvatar}
+          //     work_subject={
+          //       category === "subject"
+          //         ? null
+          //         : all_subjects_map.get(assessment.subject)
+          //     }
+          //     // work_status={workStatus}
+          //     work_starttime={moment(assessment.start_date)
+          //       .locale("id")
+          //       .format("DD MMM YYYY, HH:mm")}
+          //     work_endtime={moment(assessment.end_date)
+          //       .locale("id")
+          //       .format("DD MMM YYYY, HH:mm")}
+          //     work_dateposted={assessment.createdAt}
+          //   />
+          // );
+        }
+      }
+    }
+  }
+  if (result.length === 0) {
+    return (
+      <Typography variant="subtitle1" align="center" color="textSecondary">
+        Kosong
+      </Typography>
+    );
+  } else {
+    return result.map((row) => (
+      <AssessmentListItem
+        work_title={row.name}
+        work_category_avatar={row.workCategoryAvatar}
+        work_subject={
+          category === "subject" ? null : all_subjects_map.get(row.subject)
+        }
+        work_teacher_name={row.teacher_name}
+        // work_status={workStatus}
+        work_starttime={moment(row.start_date)
+          .locale("id")
+          .format("DD MMM YYYY, HH:mm")}
+        work_endtime={moment(row.end_date)
+          .locale("id")
+          .format("DD MMM YYYY, HH:mm")}
+        work_dateposted={row.createdAt}
+        work_finished={row.finished}
+      />
+    ));
+  }
+}
+
+function AssessmentListItemTeacher(props) {
+  const { classes } = props;
+
+  return (
+    <Grid item>
+      <Link to={props.link}>
+        <Paper variant="outlined" button className={classes.listItemPaper}>
+          <Badge
+            style={{ display: "flex", flexDirection: "row" }}
+            badgeContent={<WarningIcon className={classes.warningIcon} />}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <ListItem button className={classes.listItem}>
+              <Hidden xsDown>
+                <ListItemAvatar>
+                  <Avatar className={classes.assignmentLate}>
+                    {props.type === "Kuis" ? (
+                      <FaClipboardList />
+                    ) : (
+                      <BsClipboardData />
+                    )}
+                  </Avatar>
+                </ListItemAvatar>
+              </Hidden>
+              <ListItemText primary={props.title} secondary={props.subject} />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.createdAt).locale("id").format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.createdAt).locale("id").format("HH.mm")}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          </Badge>
+        </Paper>
+      </Link>
+    </Grid>
+  );
+}
+
 function Calendar(props) {
   document.title = "Schooly | Kalender";
 
@@ -506,9 +838,11 @@ function Calendar(props) {
 
   const { user, all_students, all_teachers } = props.auth;
   const role = props.auth.user.role;
+  const classId = user.kelas;
 
   const { all_user_files } = props.filesCollection;
   const { all_subjects_map, all_subjects } = props.subjectsCollection;
+  const { all_assessments } = props.assessmentsCollection;
 
   // state ini akan bernilai null jika dan hanya jika pengguna belum mengklik tile kalender (belum memilih tanggal)
   const [selectedDate, setSelectedDate] = React.useState(null);
@@ -536,6 +870,10 @@ function Calendar(props) {
     setRows(filteredEvents);
   }, [props.eventsCollection.allEvents, selectedDate]);
 
+  function getSelectedDate() {
+    return selectedDate;
+  }
+
   function listTasks() {
     let result = [];
     // tasksByClass.map((task) => {
@@ -557,7 +895,7 @@ function Calendar(props) {
     tasksByClass.forEach((task) => {
       let tempSelectedDate = new Date(selectedDate);
       let tempDeadlineDate = new Date(task.deadline.substring(0,10));
-      console.log(tempSelectedDate.getDate() === tempDeadlineDate.getDate());
+
       let flag = true;
       let teacher_name;
 
@@ -673,6 +1011,82 @@ function Calendar(props) {
               .format("DD MMM YYYY, HH:mm")}
             work_link={`/tugas-guru/${row._id}`}
             work_dateposted={row.createdAt}
+          />
+        );
+      });
+    }
+  }
+
+  function listAssessmentsTeacher(assessmentType) {
+    // menampilkan assessment jika ada submission yang belum selesai dinilai
+
+    let result = [];
+    let lowerCaseType = assessmentType === "Kuis" ? "kuis" : "ujian";
+
+    for (let i = 0; i < all_assessments.length; i++) {
+      let assessment = all_assessments[i];
+      if (assessment.type === assessmentType) {
+        // jika terdapat soal uraian pada kuis ini dan sudah ada 1 atau lebih murid yg mengumpulkan jawaban
+        if (
+          assessment.question_weight.longtext !== null &&
+          assessment.submissions &&
+          Object.keys(assessment.submissions).length > 0
+        ) {
+          // jika ada murid yang jawaban uraiannya sudah dinilai
+          if (
+            assessment.grades &&
+            Object.keys(assessment.grades).length > 0
+          ) {
+            // untuk setiap murid yang sudah mengumpulkan jawaban
+            for (const studentId of Object.keys(assessment.submissions)) {
+              // jika ada jawaban uraian yang belum dinilai
+              if (
+                !(
+                  Object.keys(assessment.grades).includes(studentId) &&
+                  assessment.grades[studentId].total_grade !== null
+                )
+              ) {
+                // tampilkan di list
+                result.push({
+                  _id: assessment._id,
+                  title: assessment.name,
+                  subject: assessment.subject,
+                  createdAt: assessment.createdAt,
+                  type: assessment.type,
+                });
+                break;
+              }
+            }
+          } else {
+            // jika belum ada satupun murid yang jawaban uraiannya sudah dinilai, tampilkan di list
+            result.push({
+              _id: assessment._id,
+              title: assessment.name,
+              subject: assessment.subject,
+              createdAt: assessment.createdAt,
+              type: assessment.type,
+            });
+          }
+        }
+      }
+    }
+
+    if (result.length === 0) {
+      return (
+        <Typography variant="subtitle1" align="center" color="textSecondary">
+          Kosong
+        </Typography>
+      );
+    } else {
+      return result.map((row) => {
+        return (
+          <AssessmentListItemTeacher
+            classes={classes}
+            title={row.title}
+            subject={all_subjects_map.get(row.subject)}
+            link={`/daftar-${lowerCaseType}-terkumpul/${row._id}`}
+            createdAt={row.createdAt}
+            type={row.type}
           />
         );
       });
@@ -875,7 +1289,20 @@ function Calendar(props) {
           />
           <Divider variant="inset" className={classes.titleDivider} />
           <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
-            
+            {(role === "Student") ?
+              <ListAssessments
+                category={null}
+                subject={{}}
+                type="Kuis"
+                tab="pekerjaan-kelas"
+                all_assessments={all_assessments}
+                classId={classId}
+                classes={classes}
+                all_subjects_map={all_subjects_map}
+                all_teachers={all_teachers}
+                getSelectedDate={getSelectedDate}
+              />
+            : listAssessmentsTeacher("Kuis")}
           </Grid>
           <CalendarListToolbar
             classes={classes}
@@ -884,7 +1311,20 @@ function Calendar(props) {
           />
           <Divider variant="inset" className={classes.titleDivider} />
           <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
-            
+            {(role === "Student") ?
+              <ListAssessments
+                category={null}
+                subject={{}}
+                type="Ujian"
+                tab="pekerjaan-kelas"
+                all_assessments={all_assessments}
+                classId={classId}
+                classes={classes}
+                all_subjects_map={all_subjects_map}
+                all_teachers={all_teachers}
+                getSelectedDate={getSelectedDate}
+              />
+            : listAssessmentsTeacher("Ujian")}
           </Grid>
         </>
       : null}
