@@ -824,7 +824,8 @@ function AssessmentList(props) {
               user.role === "Student"
                 ? `/ujian-murid/${row._id}`
                 : `/ujian-guru/${row._id}`;
-            let linkToShare = `http://localhost:3000/ujian-murid/${row._id}`;
+                
+            let linkToShare = `http://${window.location.hostname}:3000/ujian-murid/${row._id}`;
             return (
               <Grid item>
                 {user.role === "Teacher" ? (

@@ -37,7 +37,6 @@ router.post(
   (req, res) => {
     const { files } = req;
     let s3bucket = new AWS.S3();
-    console.log("Ann files: ", files);
     var numsFileUploaded = 0;
     files.map((file) => {
       var params = {
@@ -75,6 +74,7 @@ router.post(
               return res.json({
                 _id: req.params.id,
                 success: "Successfully uploaded the lampiran file",
+                numsFileUploaded: numsFileUploaded
               });
             }
           }
