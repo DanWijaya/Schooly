@@ -214,6 +214,7 @@ class CreateTask extends Component {
       class_assigned: [],
       description: "",
       errors: {},
+      success: null,
       fileLampiran: [],
       openUploadDialog: null,
       openDeleteDialog: null,
@@ -282,9 +283,10 @@ class CreateTask extends Component {
       }
     console.log(formData.getAll("lampiran_tugas"), this.state.fileLampiran);
     console.log(taskData);
+    this.handleOpenUploadDialog();
     this.props
       .createTask(formData, taskData, this.props.history)
-      .then((res) => this.handleOpenUploadDialog())
+      .then((res) => this.setState({success: res}))
       .catch((err) => this.setState({ errors: err }));
   };
 
@@ -343,8 +345,8 @@ class CreateTask extends Component {
   };
 
   render() {
-    const { classes, success } = this.props;
-    const { class_assigned, fileLampiran, errors } = this.state;
+    const { classes } = this.props;
+    const { class_assigned, fileLampiran, errors, success } = this.state;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;

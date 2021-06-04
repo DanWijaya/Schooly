@@ -28,7 +28,7 @@ router.post("/create", (req, res) => {
       if (task) {
         return res
           .status(400)
-          .json({ name: "tasks with same name and subject already exist" });
+          .json({ name: "Tugas dengan nama dan mata pelajaran yang sama sudah ada" });
       } else {
         const newTask = new Task(req.body);
         // const newTask = new Task({

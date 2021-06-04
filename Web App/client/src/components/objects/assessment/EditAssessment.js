@@ -303,6 +303,7 @@ class EditAssessment extends Component {
       lampiranUrls: new Map(),
       over_limit: [],
       errors: {},
+      success: null
       // classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       // subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
       // allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
@@ -610,7 +611,7 @@ class EditAssessment extends Component {
       };
       const assessmentId = this.props.match.params.id;
       console.log(assessmentData);
-
+      this.handleOpenUploadDialog();
       updateAssessment(
         formData,
         assessmentData,
@@ -619,7 +620,8 @@ class EditAssessment extends Component {
         history
       )
         .then((res) => {
-          this.handleOpenUploadDialog();
+          this.setState({ success: res});
+          // this.handleOpenUploadDialog();
           // console.log("Assessment is updated successfully");
         })
         .catch((err) => {
@@ -1529,8 +1531,8 @@ class EditAssessment extends Component {
   };
 
   render() {
-    const { class_assigned, errors } = this.state;
-    const { classes, success } = this.props;
+    const { class_assigned, errors, success } = this.state;
+    const { classes } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
 

@@ -204,6 +204,7 @@ class CreateMaterial extends Component {
       class_assigned: [],
       description: "",
       errors: {},
+      success: null,
       fileLampiran: [],
       openUploadDialog: null,
       openDeleteDialog: null,
@@ -274,9 +275,13 @@ class CreateMaterial extends Component {
 
     console.log(this.state.fileLampiran);
     // this.props.createMaterial(formData, materialData, this.props.history)
+    this.handleOpenUploadDialog()
     this.props
       .createMaterial(formData, materialData, this.props.history)
-      .then((res) => this.handleOpenUploadDialog())
+      .then((res) => {
+      this.setState({ success: res});
+      // this.handleOpenUploadDialog();
+    })
       .catch((err) => {
         this.setState({ errors: err });
       });
@@ -339,10 +344,10 @@ class CreateMaterial extends Component {
   };
 
   render() {
-    const { classes, success } = this.props; // originally have errors
+    const { classes } = this.props; // originally have errors
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
-    const { class_assigned, fileLampiran, errors } = this.state;
+    const { class_assigned, fileLampiran, errors, success } = this.state;
     const { user } = this.props.auth;
 
     console.log(class_assigned);

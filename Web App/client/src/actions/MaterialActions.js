@@ -39,13 +39,11 @@ export const createMaterial = (formData, materialData, history) => (
     .then((res) => {
       console.log("Successfully created material.");
       let success_res = res.data ? res.data._id : res._id;
-      dispatch({
-        type: GET_SUCCESS_RESPONSE,
-        payload: success_res,
-      });
+      // dispatch({
+      //   type: GET_SUCCESS_RESPONSE,
+      //   payload: success_res,
+      // });
       return success_res;
-      //   window.location.href="/daftar-materi"
-      //   history.push("/daftar-materi")
     })
     .catch((err) => {
       console.log("error happened");
@@ -200,15 +198,15 @@ export const updateMaterial = (
       else
         return {
           _id: materialId,
-          message: "Successfully updated task with no lampiran",
+          message: "Successfully updated material with no lampiran",
         };
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");
-      dispatch({
-        type: GET_SUCCESS_RESPONSE,
-        payload: true,
-      });
+      // dispatch({
+      //   type: GET_SUCCESS_RESPONSE,
+      //   payload: true,
+      // });
       return true;
     })
 

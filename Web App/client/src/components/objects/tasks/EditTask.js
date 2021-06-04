@@ -227,6 +227,7 @@ class EditTask extends Component {
       openUploadDialog: null,
       openDeleteDialog: null,
       errors: {},
+      success: null
     };
   }
 
@@ -308,6 +309,7 @@ class EditTask extends Component {
       formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i]);
     }
     console.log(taskObject);
+    this.handleOpenUploadDialog()
     this.props
       .updateTask(
         formData,
@@ -317,7 +319,7 @@ class EditTask extends Component {
         id,
         this.props.history
       )
-      .then((res) => this.handleOpenUploadDialog())
+      .then((res) => this.setState({ success: res }))
       .catch((err) =>
         this.setState({
           errors: err,
@@ -438,8 +440,8 @@ class EditTask extends Component {
   };
 
   render() {
-    const { fileLampiran, class_assigned, errors } = this.state;
-    const { classes, success } = this.props;
+    const { fileLampiran, class_assigned, errors, success } = this.state;
+    const { classes } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;

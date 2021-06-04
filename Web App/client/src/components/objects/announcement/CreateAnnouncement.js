@@ -203,6 +203,7 @@ class CreateAnnouncement extends Component {
       fileLampiran: [],
       class_assigned: [],
       errors: {},
+      success: null,
       openUploadDialog: null,
       openDeleteDialog: null,
       target_role: "",
@@ -326,10 +327,12 @@ class CreateAnnouncement extends Component {
       formData.getAll("lampiran_announcement"),
       this.state.fileLampiran
     );
+    this.handleOpenUploadDialog();
     this.props
       .createAnnouncement(formData, announcementData, this.props.history)
-      .then(() => {
-        this.handleOpenUploadDialog();
+      .then((res) => {
+        this.setState({ success: res});
+        // this.handleOpenUploadDialog();
       })
       .catch((err) => {
         this.setState({ errors: err });
@@ -350,9 +353,9 @@ class CreateAnnouncement extends Component {
       },
     };
 
-    const { classes, success } = this.props;
+    const { classes } = this.props;
     const { all_classes, kelas } = this.props.classesCollection;
-    const { class_assigned, fileLampiran, target_role, errors } = this.state;
+    const { class_assigned, fileLampiran, target_role, errors, success } = this.state;
     // const { errors } = this.props;
     const { user } = this.props.auth;
 

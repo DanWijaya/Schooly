@@ -212,6 +212,7 @@ class EditMaterial extends Component {
       class_assigned: [],
       description: "",
       errors: {},
+      success: null,
       anchorEl: null,
       classChanged: false,
       originalFileLampiran: [],
@@ -296,6 +297,7 @@ class EditMaterial extends Component {
     }
 
     const { selectedMaterials } = this.props.materialsCollection;
+    this.handleOpenUploadDialog();
     this.props
       .updateMaterial(
         formData,
@@ -305,7 +307,7 @@ class EditMaterial extends Component {
         id,
         this.props.history
       )
-      .then((res) => this.handleOpenUploadDialog())
+      .then((res) => this.setState({ success: res }))
       .catch((err) =>
         this.setState({
           errors: err,
@@ -421,11 +423,11 @@ class EditMaterial extends Component {
   };
 
   render() {
-    const { classes, success } = this.props;
+    const { classes } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { selectedMaterials } = this.props.materialsCollection;
-    const { class_assigned, fileLampiran, errors } = this.state;
+    const { class_assigned, fileLampiran, errors, success } = this.state;
     const { user } = this.props.auth;
 
     // console.log("FileLampiran:", this.state.fileLampiran)

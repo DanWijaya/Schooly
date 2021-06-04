@@ -42,6 +42,7 @@ export const createAnnouncement = (formData, announcementData, history) => (
         type: GET_SUCCESS_RESPONSE,
         payload: success_res,
       });
+      return success_res;
       //   history.push("/daftar-pengumuman")
     })
     .catch((err) => {

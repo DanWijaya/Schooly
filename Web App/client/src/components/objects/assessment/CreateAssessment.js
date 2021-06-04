@@ -266,6 +266,7 @@ class CreateAssessment extends Component {
       renderbtErrors: false, // abaikan nilainya, ini hanya dipakai agar QuestionItem dirender ulang saat submit dan ada soal yang dihapus
       over_limit: [],
       errors: {},
+      success: null,
       // classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       // subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
       // allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
@@ -540,9 +541,12 @@ class CreateAssessment extends Component {
         type: this.state.type,
         question_weight: question_weight,
       };
+
+      this.handleOpenUploadDialog();
       createAssessment(formData, assessmentData, history)
         .then((res) => {
-          this.handleOpenUploadDialog();
+          this.setState({ success: res});
+          // this.handleOpenUploadDialog();
           console.log("Assessment is created successfully");
         })
         .catch((err) => {
@@ -1401,8 +1405,8 @@ class CreateAssessment extends Component {
 
   render() {
     console.log(this.state.questions);
-    const { class_assigned, errors } = this.state;
-    const { classes, success } = this.props;
+    const { class_assigned, errors, success } = this.state;
+    const { classes } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;

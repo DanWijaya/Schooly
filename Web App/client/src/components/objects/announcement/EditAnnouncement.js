@@ -46,6 +46,7 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import { truncate } from "fs";
 
 const path = require("path");
 
@@ -215,6 +216,7 @@ class EditAnnouncement extends Component {
       openUploadDialog: null,
       openDeleteDialog: null,
       errors: {},
+      success: null,
       target_role: "",
     };
   }
@@ -248,12 +250,6 @@ class EditAnnouncement extends Component {
   // kurang tau gimana cara ubah.
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { selectedAnnouncements } = nextProps.announcements;
-
-    // console.log(nextProps.tasksCollection.deadline);
-
-    // if (!nextProps.errors) {
-    //   this.handleOpenUploadDialog();
-    // }
 
     // if edited, nextProps.errors is false, supaya ndak run ini..
     this.setState({
@@ -381,7 +377,6 @@ class EditAnnouncement extends Component {
     const { user } = this.props.auth;
     const { kelas } = this.props.classesCollection;
     const { selectedAnnouncements } = this.props.announcements;
-
     const announcementObject = {
       title: this.state.title,
       description: this.state.description,
@@ -399,6 +394,8 @@ class EditAnnouncement extends Component {
     for (var i = 0; i < fileLampiranToAdd.length; i++) {
       formData.append("lampiran_announcement", fileLampiranToAdd[i]);
     }
+    
+    this.handleOpenUploadDialog();
 
     this.props
       .updateAnnouncement(
@@ -410,7 +407,8 @@ class EditAnnouncement extends Component {
         this.props.history
       )
       .then((res) => {
-        this.handleOpenUploadDialog();
+        this.setState({success: res});
+        // this.handleOpenUploadDialog();
       })
       .catch((err) =>
         this.setState({
@@ -441,7 +439,8 @@ class EditAnnouncement extends Component {
 
     const { classes } = this.props;
     const { fileLampiran, class_assigned, target_role, errors } = this.state;
-    const { success } = this.props;
+    // const { success } = this.props;
+    const { success } = this.state;
     const { user } = this.props.auth;
     const { all_classes, kelas } = this.props.classesCollection;
 

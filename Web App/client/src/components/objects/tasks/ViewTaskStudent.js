@@ -540,6 +540,7 @@ function ViewTaskStudent(props) {
   // const [tasksContents, setTaskContents] = React.useState([]);
   const [fileLampiran, setFileLampiran] = React.useState([]);
   const [over_limit, setOverLimit] = React.useState([]);
+  // const [success, setSuccess] = React.useState(null);
   const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
   
   // setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
@@ -672,15 +673,9 @@ function ViewTaskStudent(props) {
     // })
 
     uploadFileSubmitTasks(formData, tugasId, user._id)
-
-    // uploadFileSubmitTasks(formData, tugasId, user._id).then((res) => {
-    //   console.log("HELLO1")
-    //   getFileSubmitTasks_AT(tugasId, user._id).then((results) => {
-    //     console.log("HELLO2")
-    //     console.log(results);
-    //   setFileTugas(results)
-    //   });
-    // });
+      // .then((res) => {
+      //   setSuccess(res);
+      // })
     setFileToSubmit([]);
   };
 
