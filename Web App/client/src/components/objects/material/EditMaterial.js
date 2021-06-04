@@ -297,7 +297,9 @@ class EditMaterial extends Component {
     }
 
     const { selectedMaterials } = this.props.materialsCollection;
-    this.handleOpenUploadDialog();
+    if(formData.has("lampiran_materi")){
+      this.handleOpenUploadDialog();
+    }
     this.props
       .updateMaterial(
         formData,

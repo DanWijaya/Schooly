@@ -275,7 +275,10 @@ class CreateMaterial extends Component {
 
     console.log(this.state.fileLampiran);
     // this.props.createMaterial(formData, materialData, this.props.history)
-    this.handleOpenUploadDialog()
+    if(formData.has("lampiran_materi")){
+      this.handleOpenUploadDialog();
+    }
+    
     this.props
       .createMaterial(formData, materialData, this.props.history)
       .then((res) => {
