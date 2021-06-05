@@ -956,21 +956,8 @@ function AnnouncementSubList(props) {
   };
 
   React.useEffect(() => {
-    /*
-    layout isi halaman announcementlist untuk akun:
-      admin:
-      1. pengumuman yg saya buat
-      guru:
-      1. pengumuman yg saya buat
-      2. pengumuman yg diberi oleh admin
-      murid:
-      1. pengumuman yg ketua kelas buat
-      2. pengumuman yg diberi oleh guru
-      3. pengumuman yg diberi oleh admin
-    */
-
     // If all_assessments is not undefined or an empty array
-    if (selectedAnnouncements.length && retrieved_users.size) {
+    if (Array.isArray(selectedAnnouncements) && retrieved_users && adminAnnouncements) {
       let newRows = [];
 
       if (mine) {
@@ -1057,7 +1044,7 @@ function AnnouncementSubList(props) {
     adminAnnouncements,
     retrieved_users,
     selectedAnnouncements,
-    searchFilter,
+    searchFilter
   ]);
 
   return (
@@ -1283,10 +1270,11 @@ function AnnouncementList(props) {
     );
   };
 
-  React.useEffect(() => {}, []);
-
   React.useEffect(() => {
-    if (selectedAnnouncements.length && retrieved_users.size) {
+    // ini diperlukan untuk user role admin karena pada user role admin, 
+    // AnnouncementListItems akan langsung ditampilkan tanpa AnnouncementSubList,
+    // sedangkan AnnouncementListItems tidak memfilter announcement dengan searchFilter.
+    if (user.role === "Admin" && Array.isArray(selectedAnnouncements) && retrieved_users) {
       let newRows = [];
       selectedAnnouncements
         .filter((item) =>
@@ -1315,34 +1303,36 @@ function AnnouncementList(props) {
       getAnnouncement(user._id, "by_author");
       setAnnIsRetrieved(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  React.useEffect(() => {
     let author_id_set = new Set();
     if (user.role === "Admin") {
-      if (selectedAnnouncements.length) {
+      if (Array.isArray(selectedAnnouncements)) {
         selectedAnnouncements.forEach((ann) => {
           author_id_set.add(ann.author_id);
         });
         getUsers(Array.from(author_id_set));
       }
     } else {
-      if (selectedAnnouncements.length && adminAnnouncements.length) {
-        adminAnnouncements.forEach((ann) => {
-          author_id_set.add(ann.author_id);
-        });
+      if (Array.isArray(selectedAnnouncements)) {
         selectedAnnouncements.forEach((ann) => {
           author_id_set.add(ann.author_id);
         });
-        getUsers(Array.from(author_id_set));
       }
+      if (Array.isArray(adminAnnouncements)) {
+        adminAnnouncements.forEach((ann) => {
+          author_id_set.add(ann.author_id);
+        });
+      }
+      getUsers(Array.from(author_id_set));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAnnouncements.length, adminAnnouncements.length]);
-
-  // ini ntah kenapa kalo masukkin selectedAnnouncements di parameter kedua ada error..
-
-  // console.log(selectedAnnouncements);
+  }, [selectedAnnouncements, adminAnnouncements]);
 
   document.title = "Schooly | Daftar Pengumuman";
+
   let propsToPass = {
     retrieved_users,
     selectedAnnouncements,
@@ -1351,6 +1341,19 @@ function AnnouncementList(props) {
     classes,
     user,
   };
+
+  /*
+    layout isi halaman announcementlist untuk akun:
+      admin:
+      1. pengumuman yg saya buat
+      guru:
+      1. pengumuman yg saya buat
+      2. pengumuman yg diberi oleh admin
+      murid:
+      1. pengumuman yg ketua kelas buat
+      2. pengumuman yg diberi oleh guru
+      3. pengumuman yg diberi oleh admin
+  */
   return (
     <div className={classes.root}>
       <DeleteDialog
@@ -1396,7 +1399,7 @@ function AnnouncementList(props) {
           <AnnouncementSubList
             {...propsToPass}
             mine={true}
-            author_role={"Teacher"}
+            author_role="Teacher"
             addBottomMargin={true}
             handleOpenDeleteDialog={handleOpenDeleteDialog}
           />
