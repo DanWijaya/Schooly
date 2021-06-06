@@ -309,3 +309,7 @@ export const updateAssessmentGrades = (
       throw new Error(err.response.data);
     });
 };
+
+export const getStatus = (assessmentId) => {
+  return axios.get(`/api/assessments/status/${assessmentId}`);
+};

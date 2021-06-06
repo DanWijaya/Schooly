@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { getAllTask, deleteTask } from "../../../actions/TaskActions";
+import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -49,9 +50,10 @@ function createData(
   subject,
   deadline,
   class_assigned,
-  createdAt
+  createdAt,
+  submissionStatus
 ) {
-  return { _id, tasktitle, subject, deadline, class_assigned, createdAt };
+  return { _id, tasktitle, subject, deadline, class_assigned, createdAt, submissionStatus };
 }
 
 var rows = [];
@@ -518,6 +520,7 @@ function TaskList(props) {
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
+  const [submittedTaskIds, setSubmittedTaskIds] = React.useState(null);
 
   const {
     tasksCollection,
@@ -538,7 +541,8 @@ function TaskList(props) {
         data.subject,
         data.deadline,
         data.class_assigned,
-        data.createdAt
+        data.createdAt,
+        data.submissionStatus
       )
     );
   };
@@ -548,6 +552,18 @@ function TaskList(props) {
       getAllTask();
       getAllClass("map");
       getAllSubjects("map");
+
+      if (user.role === "Student") {
+        let submittedTaskIdSet = new Set();
+        getFileSubmitTasksByAuthor(user._id).then((response) => {
+          for (let file of response.data) {
+            submittedTaskIdSet.add(file.task_id);
+          }
+        }).finally(() => {
+          // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
+          setSubmittedTaskIds(submittedTaskIdSet);
+        });
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -562,31 +578,31 @@ function TaskList(props) {
           .filter((item) =>
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )
-          .map((data) => {
+          .forEach((data) => {
             if (data.person_in_charge_id === user._id) {
-              return taskRowItem(data);
+              taskRowItem(data);
             }
-            return null;
           });
       } else if (user.role === "Student") {
-        tasksCollection
-          .filter((item) =>
-            item.name.toLowerCase().includes(searchFilter.toLowerCase())
-          )
-          .map((data) => {
-            let class_assigned = data.class_assigned;
-            if (class_assigned.indexOf(user.kelas) !== -1) {
-              return taskRowItem(data);
-            }
-            return null;
-          });
+        if (submittedTaskIds) { 
+          tasksCollection
+            .filter((item) =>
+              item.name.toLowerCase().includes(searchFilter.toLowerCase())
+            )
+            .forEach((data) => {
+              let class_assigned = data.class_assigned;
+              if (class_assigned.indexOf(user.kelas) !== -1) {
+                taskRowItem({ ...data, submissionStatus: submittedTaskIds.has(data._id) });
+              }
+            });
+        }
       } else {
         //Admin
         tasksCollection
           .filter((item) =>
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )
-          .map((data) => taskRowItem(data));
+          .forEach((data) => taskRowItem(data));
       }
     }
   };
@@ -812,7 +828,8 @@ function TaskList(props) {
                       <Badge
                         style={{ display: "flex", flexDirection: "row" }}
                         badgeContent={
-                          workStatus(row) === "Belum Dikumpulkan" ? (
+                          row.submissionStatus === false ? (
+                          // workStatus(row) === "Belum Dikumpulkan" ? (
                             <ErrorIcon className={classes.errorIcon} />
                           ) : (
                             <CheckCircleIcon className={classes.checkIcon} />

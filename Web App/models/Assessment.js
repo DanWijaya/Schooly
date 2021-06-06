@@ -44,7 +44,18 @@ const AssessmentSchema = new Schema(
         type: { type: String, required: true },
       },
     ],
-    posted: { type: Boolean, required: true, default: false },
+    posted: { 
+      type: Boolean, 
+      // required: true,
+      // default: false 
+    },
+
+    // jika atribut "posted" bernilai null, atribut ini berisi tanggal posting.
+    // jika atribut "posted" berisi true atau false, atribut ini bernilai null.
+    post_date: {
+      type: Date,
+      // required: true 
+    },
     grades: {
       type: Map,
       // of: Object

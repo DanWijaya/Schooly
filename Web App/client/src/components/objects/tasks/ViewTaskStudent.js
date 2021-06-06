@@ -715,51 +715,6 @@ function ViewTaskStudent(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commentList]);
 
-  /* useEffect(() => {
-    if (
-      errors &&
-      errors.constructor === Object &&
-      Object.keys(errors).length !== 0
-    ) {
-      let content = "Komentar gagal ";
-      if (errors.action === "createTaskComment") {
-        content += "dibuat";
-      } else if (errors.action === "editTaskComment") {
-        content += "disunting";
-      } else if (errors.action === "deleteTaskComment") {
-        content += "dihapus";
-      } else {
-        return;
-      }
-      handleOpenCommentSnackbar("error", content);
-      clearErrors();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [errors]);
-
-  useEffect(() => {
-    if (
-      success &&
-      success.constructor === Object
-    ) {
-      let content = "Komentar berhasil ";
-      if (success.action === "createTaskComment") {
-        content += "dibuat";
-        setCommentValue("");
-      } else if (success.action === "editTaskComment") {
-        content += "disunting";
-      } else if (success.action === "deleteTaskComment") {
-        content += "dihapus";
-      } else {
-        return;
-      }
-      handleOpenCommentSnackbar("success", content);
-      getOneTask(tugasId);
-      clearSuccess();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success]); */
-
   useEffect(() => {
     return () => {
       clearErrors();
@@ -937,7 +892,7 @@ function ViewTaskStudent(props) {
     }
     handleOpenUploadDialog();
     // uploadTugas(formData, tugasId, user._id, new Date() < new Date(tasksCollection.deadline))
-    uploadFileSubmitTasks(formData, tugasId, user._id);
+    uploadFileSubmitTasks(formData, tugasId, user._id, tasksCollection.deadline);
     setFileToSubmit([]);
   };
 
@@ -1165,32 +1120,6 @@ function ViewTaskStudent(props) {
   //     </Grid>
   //   )
   // }
-
-  // Dummy Komentar
-  // isSelfMade = true -> artinya komentar tersebut dibuat oleh user yang sedang login; false sebaliknya
-  const dummyComments = [
-    {
-      avatar: false,
-      name: "Nama Murid",
-      date: "1 Jan 2021, 18:35",
-      comment: "Jadi ceritanya pada interface tersebut dirancang sudah dipikirkan bahwa akan ada banyak sekali ragam Collections yang akan mengimplementasikan interface tersebut di class yang dibuat. Perancang interface menganggap bahwa bisa jadi ada collections jenis tertentu yang bisa jadi tidak membutuhkan methode tersebut, karenanya dia ditandai optional. Memang di Java bagaimanapun yang namanya methode di suatu interface tetap harus diimplementasikan di class yang menggunakannya namun bisa saja isinya \"kosong\" yaitu cuman mengirimkan UnsupportedOperationException.",
-      isSelfMade: true
-    },
-    {
-      avatar: false,
-      name: "Gibran",
-      date: "15 Feb 2021, 02:24",
-      comment: "Jadi ceritanya pada interface tersebut dirancang sudah dipikirkan bahwa akan ada banyak sekali ragam Collections yang akan mengimplementasikan interface tersebut di class yang dibuat.",
-      isSelfMade: false
-    },
-    {
-      avatar: false,
-      name: "Nama Murid",
-      date: "29 Mar 2022, 20:08",
-      comment: "Interface tersebut dapat dibuat dengan JavaFX",
-      isSelfMade: true
-    },
-  ]
 
   document.title = !tasksCollection.name
     ? "Schooly | Lihat Tugas"

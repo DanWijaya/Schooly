@@ -1,12 +1,12 @@
 import axios from "axios";
 import { GET_ERRORS, GET_SUCCESS_RESPONSE } from "../Types";
 
-export const uploadFileSubmitTasks = (formData, task_id, author_id) => (
+export const uploadFileSubmitTasks = (formData, task_id, author_id, task_deadline) => (
   dispatch
 ) => {
   console.log("uploadFileSubmitTasks di run");
   axios
-    .post(`/api/files/submit_tasks/upload/${task_id}&${author_id}`, formData)
+    .post(`/api/files/submit_tasks/upload/${task_id}&${author_id}&${task_deadline}`, formData)
     .then((res) => {
       console.log(res.data);
       dispatch({
@@ -34,6 +34,10 @@ export const getFileSubmitTasks = (task_id, author_id) => (dispatch) => {
       });
       return new Error(err);
     });
+};
+
+export const getFileSubmitTasksByAuthor = (author_id) => {
+  return axios.get(`/api/files/submit_tasks/by_author/${author_id}`);
 };
 
 export const downloadFileSubmitTasks = (id) => (dispatch) => {

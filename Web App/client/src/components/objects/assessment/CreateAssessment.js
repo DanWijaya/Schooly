@@ -36,6 +36,8 @@ import {
   Fab,
   ListItemIcon,
   ListItemText,
+  FormGroup,
+  Checkbox
 } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
@@ -233,6 +235,9 @@ class CreateAssessment extends Component {
       class_assigned: [],
       start_date: new Date(),
       end_date: new Date(),
+      post_date: new Date(),
+      posted: false,
+      isScheduled: false,
       type: "",
       openDeleteDialog: false,
       openUploadDialog: false,
@@ -240,7 +245,6 @@ class CreateAssessment extends Component {
       page: 0,
       rowsPerPage: 10,
       qnsListitem: [],
-      posted: false,
       snackbarOpen: false,
       snackbarMessage: "",
       anchorEl: null,
@@ -337,7 +341,7 @@ class CreateAssessment extends Component {
       typeCount[question.type]++;
     }
 
-    if (this.state.posted) {
+    if (this.state.posted || this.state.isScheduled) {
       // pengecekan isi soal
       for (var i = 0; i < questions.length; i++) {
         let qns = questions[i];
@@ -467,7 +471,8 @@ class CreateAssessment extends Component {
         description: this.state.description,
         questions: this.state.questions,
         author_id: id,
-        posted: this.state.posted,
+        posted: this.state.isScheduled ? null: this.state.posted,
+        post_date: this.state.isScheduled ? this.state.post_date: null,
         type: this.state.type,
         question_weight: question_weight,
       };
@@ -495,7 +500,7 @@ class CreateAssessment extends Component {
 
   onChange = (e, otherfield = null) => {
     if (otherfield) {
-      if (otherfield === "end_date" || otherfield === "start_date") {
+      if (otherfield === "end_date" || otherfield === "start_date" || otherfield === "post_date") {
         this.setState({ [otherfield]: e });
       } else if (otherfield === "subject") { // jika guru memilih mata pelajaran
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
@@ -998,6 +1003,12 @@ class CreateAssessment extends Component {
     }));
   };
 
+  handleCheckScheduleMode = () => {
+    this.setState((prevState) => ({
+      isScheduled: !prevState.isScheduled,
+    }));
+  };
+
   handleMenuOpen = (event) => {
     this.setState({ anchorEl: event.currentTarget });
   };
@@ -1468,25 +1479,6 @@ class CreateAssessment extends Component {
                       <Grid item>
                         <Typography
                           component="label"
-                          for="description"
-                          color="primary"
-                        >
-                          Deskripsi
-                        </Typography>
-                        <TextField
-                          multiline
-                          rowsMax={10}
-                          fullWidth
-                          error={errors.description}
-                          helperText={errors.description}
-                          onChange={this.onChange}
-                          variant="outlined"
-                          id="description"
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Typography
-                          component="label"
                           for="class_assigned"
                           color="primary"
                         >
@@ -1512,6 +1504,26 @@ class CreateAssessment extends Component {
                             {Boolean(errors.type) ? errors.type : null}
                           </FormHelperText>
                         </FormControl>
+                      </Grid>
+                      <Grid item>
+                        <Typography
+                          component="label"
+                          for="description"
+                          color="primary"
+                        >
+                          Deskripsi
+                        </Typography>
+                        <TextField
+                          multiline
+                          rows="5"
+                          rowsMax="25"
+                          fullWidth
+                          error={errors.description}
+                          helperText={errors.description}
+                          onChange={this.onChange}
+                          variant="outlined"
+                          id="description"
+                        />
                       </Grid>
                     </Grid>
                   </Grid>
@@ -1584,6 +1596,57 @@ class CreateAssessment extends Component {
                             />
                           </MuiPickersUtilsProvider>
                         </Grid>
+                      </Grid>
+                      <Grid item>
+                        <Typography
+                          component="label"
+                          for="postDate"
+                          color="primary"
+                        >
+                          Waktu Rilis
+                        </Typography>
+                        <MuiPickersUtilsProvider
+                          locale={lokal}
+                          utils={DateFnsUtils}
+                        >
+                          <KeyboardDateTimePicker
+                            disabled={!this.state.isScheduled}
+                            fullWidth
+                            inputVariant="outlined"
+                            format="dd/MM/yyyy - HH:mm"
+                            ampm={false}
+                            okLabel="Simpan"
+                            cancelLabel="Batal"
+                            invalidDateMessage="Format tanggal tidak benar"
+                            id="postDate"
+                            value={this.state.post_date}
+                            onChange={(date) =>
+                              this.onChange(date, "post_date")
+                            }
+                          />
+                        </MuiPickersUtilsProvider>
+                      </Grid>
+                      {/* FIXME checkbox */}
+                      <Grid item>
+                        <FormGroup>
+                          <FormControlLabel
+                            label={
+                              <Typography color="textPrimary">
+                                Rilis Otomatis
+                              </Typography>
+                            }
+                            control={
+                              <Checkbox
+                                onChange={() => {
+                                  this.handleCheckScheduleMode();
+                                }}
+                                color="primary"
+                                size="small"
+                                checked={this.state.isScheduled}
+                              />
+                            }
+                          />
+                        </FormGroup>
                       </Grid>
                       <Grid item>
                         <Typography
@@ -1784,7 +1847,7 @@ class CreateAssessment extends Component {
                       >
                         <MenuItem
                           button
-                          component="a"
+                          disabled={this.state.isScheduled}
                           className={classes.menuVisible}
                           onClick={this.handlePostToggle}
                         >

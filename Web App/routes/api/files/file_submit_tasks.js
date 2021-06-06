@@ -40,11 +40,13 @@ router.get("/", (req, res, next) => {
 // route to upload a pdf document file
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
 router.post(
-  "/upload/:task_id&:author_id",
+  "/upload/:task_id&:author_id&:task_deadline",
   upload.array("tugas"),
   (req, res) => {
     const { files } = req;
-    const { task_id, author_id } = req.params;
+    const { task_id, author_id, task_deadline } = req.params;
+    const on_time = new Date() <= new Date(task_deadline);
+
     let s3bucket = new AWS.S3({
       accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
       secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
@@ -73,6 +75,7 @@ router.post(
               s3_directory: "submittask/",
               task_id: task_id,
               author_id: author_id,
+              on_time: on_time
             };
             var document = new FileSubmitTask(newFileUploaded);
             document.save(function (error, newFile) {
@@ -204,6 +207,18 @@ router.get("/by_task/:task_id&:author_id", (req, res) => {
       else {
         results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
         return res.status(200).json(results);
+      }
+    }
+  );
+});
+
+router.get("/by_author/:author_id", (req, res) => {
+  FileSubmitTask.find({ author_id: req.params.author_id }).lean().then(
+    (results) => {
+      if (results.length === 0) {
+        res.status(404).json("Files not found");
+      } else {
+        res.json(results);
       }
     }
   );

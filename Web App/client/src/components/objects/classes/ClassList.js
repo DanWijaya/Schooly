@@ -283,9 +283,7 @@ function ClassListToolbar(props) {
         let classNames = dataMatrix[0];
         if (classNames.includes("")) {
           throw new Error(
-            `Masih ada nama kelas yang kosong pada kolom ${
-              classNames.findIndex((name) => name === "") + 1
-            }, mohon periksa kembali`
+            "Masih ada nama kelas yang kosong pada kolom" + (classNames.findIndex((name) => name === "") + 1) + "mohon periksa kembali"
           );
         }
         let classId = [];

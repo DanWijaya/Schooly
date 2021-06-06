@@ -101,6 +101,7 @@ router.post("/update/:id", (req, res) => {
       assessmentData.start_date = req.body.start_date;
       assessmentData.end_date = req.body.end_date;
       assessmentData.posted = req.body.posted;
+      assessmentData.post_date = req.body.post_date;
       assessmentData.type = req.body.type;
 
       let questions = req.body.questions;
@@ -284,8 +285,11 @@ router.post("/submit/:id", (req, res) => {
     if (!assessmentData) {
       return res.status(404).send("Assessment cannot be found");
     } else {
-      if (!assessmentData.posted) {
+      if (new Date() < new Date(assessmentData.post_date)) {
         return res.json("Assessment not posted");
+      }
+      if (new Date() > new Date(assessmentData.end_date)) {
+        return res.json("Late submission");
       }
       console.log(answers, classId, userId);
       let { submissions, grades, questions } = assessmentData;
@@ -382,19 +386,34 @@ router.post("/submit/:id", (req, res) => {
 });
 
 router.get("/viewall", (req, res) => {
-  Assessment.find({}).then((assessments) => {
-    if (!assessments) res.status(400).json("Assessments are not found");
-    else res.json(assessments);
+  Assessment.find({}).lean().then((assessments) => {
+    if (!assessments) {
+      res.status(404).json("Assessments are not found");
+    } else {
+      res.json(assessments.map((assessment) => {
+        if (assessment.posted === null) {
+          return { ...assessment, posted: new Date() >= new Date(assessment.post_date) };
+        } else {
+          return assessment;
+        }
+      }));
+    }
   });
 });
 
 router.get("/view/:id", (req, res) => {
   let id = req.params.id;
   Assessment.findById(id, (err, assessment) => {
-    if (!assessment) return res.status(404).json("Quiz is not found");
-
-    return res.json(assessment);
-  });
+    if (!assessment) {
+      res.status(404).json("Assessment is not found");
+    } else {
+      if (assessment.posted === null) {
+        res.json({ ...assessment, posted: new Date() >= new Date(assessment.post_date) });
+      } else {
+        res.json(assessment);
+      }
+    }
+  }).lean();
 });
 
 router.delete("/delete/:id", (req, res) => {
@@ -413,11 +432,17 @@ router.get("/getkuisbysc/:subjectId&:classId", (req, res) => {
     subject: req.params.subjectId,
     class_assigned: { $elemMatch: { $eq: req.params.classId } },
     type: "Kuis",
-  }).then((kuis) => {
-    if (!kuis) {
-      return res.status(200).json("Belum ada kuis");
+  }).lean().then((daftarKuis) => {
+    if (daftarKuis.length === 0) {
+      res.status(404).json("Belum ada kuis");
     } else {
-      return res.json(kuis);
+      res.json(daftarKuis.map((kuis) => {
+        if (kuis.posted === null) {
+          return { ...kuis, posted: new Date() >= new Date(kuis.post_date) };
+        } else {
+          return kuis;
+        }
+      }));
     }
   });
 });
@@ -427,11 +452,17 @@ router.get("/getujianbysc/:subjectId&:classId", (req, res) => {
     subject: req.params.subjectId,
     class_assigned: { $elemMatch: { $eq: req.params.classId } },
     type: "Ujian",
-  }).then((ujian) => {
-    if (!ujian) {
-      return res.status(200).json("Belum ada ujian");
+  }).lean().then((daftarUjian) => {
+    if (daftarUjian.length === 0) {
+      res.status(404).json("Belum ada ujian");
     } else {
-      return res.json(ujian);
+      res.json(daftarUjian.map((ujian) => {
+        if (ujian.posted === null) {
+          return { ...ujian, posted: new Date() >= new Date(ujian.post_date) };
+        } else {
+          return ujian;
+        }
+      }));
     }
   });
 });
@@ -447,7 +478,7 @@ router.post("/updateSuspects/:id", (req, res) => {
         .then(() => res.json(req.body))
         .catch(() =>
           res
-            .status(400)
+            .status(500)
             .send(`Unable to update suspects attribute for assessment ${id}`)
         );
     }
@@ -566,8 +597,28 @@ router.post("/updateGrades", (req, res) => {
         .then((ass) => {
           res.json(ass);
         })
-        .catch(() => res.status(400).send(`Unable to update grades attribute`));
+        .catch(() => res.status(500).send(`Unable to update grades attribute`));
     }
+  });
+});
+
+router.get("/status/:id", (req, res) => {
+  Assessment.findById(req.params.id, (err, assessment) => {
+    if (!assessment) {
+      return res.status(404).json("Assessment not found");
+    }
+    let now = new Date();
+    let startDate = new Date(assessment.start_date);
+    let endDate = new Date(assessment.end_date);
+    let status;
+    if (now < startDate) {
+      status = -1;
+    } else if (now >= startDate && now <= endDate) {
+      status = 0;
+    } else { // (now > endDate)
+      status = 1;
+    }
+    res.json({ status, now });
   });
 });
 

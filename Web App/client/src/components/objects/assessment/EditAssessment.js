@@ -39,6 +39,8 @@ import {
   ListItemIcon,
   ListItemText,
   Menu,
+  FormGroup,
+  Checkbox
 } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
@@ -267,10 +269,12 @@ class EditAssessment extends Component {
       class_assigned: [],
       start_date: new Date(),
       end_date: new Date(),
+      post_date: new Date(),
+      posted: null,
+      isScheduled: null,
       type: "",
       openDeleteDialog: false,
       openUploadDialog: false,
-      posted: null,
       success: false,
       page: 0,
       rowsPerPage: 10,
@@ -383,7 +387,6 @@ class EditAssessment extends Component {
           class_assigned: Boolean(selectedAssessments.class_assigned)
             ? selectedAssessments.class_assigned
             : [],
-          posted: selectedAssessments.posted,
           type: selectedAssessments.type,
           weights: weights,
           longtextWeight: longtextWeight,
@@ -391,6 +394,20 @@ class EditAssessment extends Component {
           // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
           // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
         });
+        if (selectedAssessments.post_date === null) {
+          this.setState({
+            posted: selectedAssessments.posted,
+            isScheduled: false
+          });
+        } else {
+          console.log("selectedAssessments.posted " + selectedAssessments.posted);
+          console.log("selectedAssessments.post_date " + selectedAssessments.post_date);
+          this.setState({
+            posted: false,
+            post_date: selectedAssessments.post_date,
+            isScheduled: true
+          });
+        }
       }
     }
   }
@@ -451,7 +468,7 @@ class EditAssessment extends Component {
       typeCount[question.type]++;
     }
 
-    if (this.state.posted) {
+    if (this.state.posted || this.state.isScheduled) {
       // pengecekan isi soal
       for (var i = 0; i < questions.length; i++) {
         let qns = questions[i];
@@ -579,7 +596,8 @@ class EditAssessment extends Component {
         class_assigned: this.state.class_assigned,
         description: this.state.description,
         questions: this.state.questions,
-        posted: this.state.posted,
+        posted: this.state.isScheduled ? null: this.state.posted,
+        post_date: this.state.isScheduled ? this.state.post_date: null,
         type: this.state.type,
         question_weight: question_weight,
       };
@@ -616,7 +634,7 @@ class EditAssessment extends Component {
 
   onChange = (e, otherfield = null) => {
     if (otherfield) {
-      if (otherfield === "end_date" || otherfield === "start_date") {
+      if (otherfield === "end_date" || otherfield === "start_date" || otherfield === "post_date") {
         this.setState({ [otherfield]: e });
       } else if (otherfield === "subject") { // jika guru memilih mata pelajaran
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
@@ -1032,6 +1050,12 @@ class EditAssessment extends Component {
   handlePostToggle = () => {
     this.setState((prevState) => ({
       posted: !prevState.posted,
+    }));
+  };
+
+  handleCheckScheduleMode = () => {
+    this.setState((prevState) => ({
+      isScheduled: !prevState.isScheduled,
     }));
   };
 
@@ -1636,26 +1660,6 @@ class EditAssessment extends Component {
                       <Grid item>
                         <Typography
                           component="label"
-                          for="description"
-                          color="primary"
-                        >
-                          Deskripsi
-                        </Typography>
-                        <TextField
-                          value={this.state.description}
-                          multiline
-                          rowsMax={10}
-                          fullWidth
-                          error={errors.description}
-                          helperText={errors.description}
-                          onChange={this.onChange}
-                          variant="outlined"
-                          id="description"
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Typography
-                          component="label"
                           for="class_assigned"
                           color="primary"
                         >
@@ -1681,6 +1685,26 @@ class EditAssessment extends Component {
                             {Boolean(errors.type) ? errors.type : null}
                           </FormHelperText>
                         </FormControl>
+                      </Grid>
+                      <Grid item>
+                        <Typography
+                          component="label"
+                          for="description"
+                          color="primary"
+                        >
+                          Deskripsi
+                        </Typography>
+                        <TextField
+                          value={this.state.description}
+                          multiline
+                          rowsMax={10}
+                          fullWidth
+                          error={errors.description}
+                          helperText={errors.description}
+                          onChange={this.onChange}
+                          variant="outlined"
+                          id="description"
+                        />
                       </Grid>
                     </Grid>
                   </Grid>
@@ -1753,6 +1777,56 @@ class EditAssessment extends Component {
                             />
                           </MuiPickersUtilsProvider>
                         </Grid>
+                      </Grid>
+                      <Grid item>
+                        <Typography
+                          component="label"
+                          for="postDate"
+                          color="primary"
+                        >
+                          Waktu Rilis
+                        </Typography>
+                        <MuiPickersUtilsProvider
+                          locale={lokal}
+                          utils={DateFnsUtils}
+                        >
+                          <KeyboardDateTimePicker
+                            disabled={!this.state.isScheduled}
+                            fullWidth
+                            inputVariant="outlined"
+                            format="dd/MM/yyyy - HH:mm"
+                            ampm={false}
+                            okLabel="Simpan"
+                            cancelLabel="Batal"
+                            invalidDateMessage="Format tanggal tidak benar"
+                            id="postDate"
+                            value={this.state.post_date}
+                            onChange={(date) =>
+                              this.onChange(date, "post_date")
+                            }
+                          />
+                        </MuiPickersUtilsProvider>
+                      </Grid>
+                      <Grid item>
+                        <FormGroup>
+                          <FormControlLabel
+                            label={
+                              <Typography color="textPrimary">
+                                Rilis Otomatis
+                              </Typography>
+                            }
+                            control={
+                              <Checkbox
+                                onChange={() => {
+                                  this.handleCheckScheduleMode();
+                                }}
+                                color="primary"
+                                size="small"
+                                checked={this.state.isScheduled}
+                              />
+                            }
+                          />
+                        </FormGroup>
                       </Grid>
                       <Grid item>
                         <Typography
@@ -1955,7 +2029,7 @@ class EditAssessment extends Component {
                       >
                         <MenuItem
                           button
-                          component="a"
+                          disabled={this.state.isScheduled}
                           className={classes.menuVisible}
                           onClick={this.handlePostToggle}
                         >
