@@ -11,6 +11,7 @@ const FileSubmitTaskSchema = new Schema(
     s3_directory: { type: String },
     task_id: { type: ObjectId },
     author_id: { type: ObjectId },
+    
   },
   {
     // createdAt,updatedAt fields are automatically added into records

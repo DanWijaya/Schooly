@@ -241,6 +241,10 @@ class CreateTask extends Component {
     this.setState({ openUploadDialog: true });
   };
 
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  }
+
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
   };
@@ -287,7 +291,10 @@ class CreateTask extends Component {
     this.props
       .createTask(formData, taskData, this.props.history)
       .then((res) => this.setState({success: res}))
-      .catch((err) => this.setState({ errors: err }));
+      .catch((err) => {
+        this.handleCloseUploadDialog();
+        this.setState({ errors: err })
+      });
   };
 
   componentDidMount() {

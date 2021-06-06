@@ -275,10 +275,8 @@ class CreateMaterial extends Component {
 
     console.log(this.state.fileLampiran);
     // this.props.createMaterial(formData, materialData, this.props.history)
-    if(formData.has("lampiran_materi")){
-      this.handleOpenUploadDialog();
-    }
     
+    this.handleOpenUploadDialog();
     this.props
       .createMaterial(formData, materialData, this.props.history)
       .then((res) => {
@@ -286,6 +284,7 @@ class CreateMaterial extends Component {
       // this.handleOpenUploadDialog();
     })
       .catch((err) => {
+        this.handleCloseUploadDialog()
         this.setState({ errors: err });
       });
   };

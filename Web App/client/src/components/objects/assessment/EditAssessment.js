@@ -626,6 +626,7 @@ class EditAssessment extends Component {
         })
         .catch((err) => {
           this.setState({ errors: err });
+          this.handleCloseUploadDialog();
           this.handleOpenErrorSnackbar();
         });
     } else {
@@ -636,6 +637,10 @@ class EditAssessment extends Component {
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
   };
+
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false})
+  }
 
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });

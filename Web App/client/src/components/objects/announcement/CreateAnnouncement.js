@@ -335,6 +335,7 @@ class CreateAnnouncement extends Component {
         // this.handleOpenUploadDialog();
       })
       .catch((err) => {
+        this.handleCloseUploadDialog();
         this.setState({ errors: err });
       });
   };

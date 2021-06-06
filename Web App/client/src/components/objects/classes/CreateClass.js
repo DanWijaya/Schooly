@@ -58,19 +58,14 @@ class CreateClass extends Component {
     };
   }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.props.success && !prevProps.success) {
-  //     this.handleOpenUploadDialog();
-  //   }
-  // }
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
   };
 
-  // handleCloseUploadDialog = () => {
-  //   this.setState({ openUploadDialog: false });
-  // };
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  };
 
   onChange = (e, otherfield = null) => {
     let field = e.target.id ? e.target.id : otherfield;
@@ -92,6 +87,7 @@ class CreateClass extends Component {
       bendahara: this.state.bendahara,
       errors: {},
     };
+
     this.props
       .createClass(classObject, this.props.history)
       .then((res) => this.handleOpenUploadDialog())

@@ -85,12 +85,6 @@ class EditClass extends Component {
     this.setState({ [field]: e.target.value });
   };
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.props.success && !prevProps.success) {
-  //     this.handleOpenUploadDialog();
-  //   }
-  // }
-
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
   };

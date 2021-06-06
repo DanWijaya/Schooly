@@ -342,9 +342,14 @@ class EditAnnouncement extends Component {
     this.setState({ openUploadDialog: true });
   };
 
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false});
+  }
+
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
   };
+
 
   handleCloseDeleteDialog = () => {
     this.setState({ openDeleteDialog: false });
@@ -410,7 +415,8 @@ class EditAnnouncement extends Component {
         this.setState({success: res});
         // this.handleOpenUploadDialog();
       })
-      .catch((err) =>
+      .catch((err) => {
+        this.handleCloseUploadDialog()
         this.setState({
           errors: err,
           fileLampiran: [
@@ -419,6 +425,7 @@ class EditAnnouncement extends Component {
           ],
           fileLampiranToDelete: [],
         })
+      }
       );
     // this.setState({ fileLampiranToDelete: [] });
   };

@@ -297,9 +297,7 @@ class EditMaterial extends Component {
     }
 
     const { selectedMaterials } = this.props.materialsCollection;
-    if(formData.has("lampiran_materi")){
-      this.handleOpenUploadDialog();
-    }
+    this.handleOpenUploadDialog();
     this.props
       .updateMaterial(
         formData,
@@ -310,7 +308,8 @@ class EditMaterial extends Component {
         this.props.history
       )
       .then((res) => this.setState({ success: res }))
-      .catch((err) =>
+      .catch((err) => {
+        this.handleCloseUploadDialog()
         this.setState({
           errors: err,
           fileLampiran: [
@@ -319,6 +318,7 @@ class EditMaterial extends Component {
           ],
           fileLampiranToDelete: [],
         })
+      }
       );
     // this.setState({ fileLampiranToDelete: [] });
   };
@@ -400,6 +400,10 @@ class EditMaterial extends Component {
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
   };
+
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  }
 
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });

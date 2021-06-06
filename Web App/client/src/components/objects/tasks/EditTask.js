@@ -320,7 +320,8 @@ class EditTask extends Component {
         this.props.history
       )
       .then((res) => this.setState({ success: res }))
-      .catch((err) =>
+      .catch((err) => {
+        this.handleCloseUploadDialog()
         this.setState({
           errors: err,
           fileLampiran: [
@@ -329,6 +330,7 @@ class EditTask extends Component {
           ],
           fileLampiranToDelete: [],
         })
+      }
       );
   };
 
@@ -417,6 +419,10 @@ class EditTask extends Component {
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
   };
+
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  }
 
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });

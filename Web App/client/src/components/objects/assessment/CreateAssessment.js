@@ -546,11 +546,11 @@ class CreateAssessment extends Component {
       createAssessment(formData, assessmentData, history)
         .then((res) => {
           this.setState({ success: res});
-          // this.handleOpenUploadDialog();
           console.log("Assessment is created successfully");
         })
         .catch((err) => {
           this.setState({ errors: err });
+          this.handleCloseUploadDialog();
           this.handleOpenErrorSnackbar();
         });
     } else {
@@ -561,6 +561,10 @@ class CreateAssessment extends Component {
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
   };
+
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false})
+  }
 
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
