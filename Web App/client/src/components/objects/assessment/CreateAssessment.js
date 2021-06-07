@@ -1064,6 +1064,16 @@ class CreateAssessment extends Component {
 
   componentDidMount() {
     const { getAllClass, getAllSubjects, handleSideDrawerExist } = this.props;
+    const { pathname } = this.props.location;
+
+    if(pathname === "/buat-kuis"){
+      this.setState({ type: "Kuis"})
+    } else if (pathname === "/buat-ujian"){
+      this.setState({ type: "Ujian"})
+    } else {
+      console.log("Kuis atau ujian tidak dispecify");
+    }
+
     handleSideDrawerExist(false);
     getAllClass();
     getAllSubjects();
@@ -1414,6 +1424,7 @@ class CreateAssessment extends Component {
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
+    const { pathname } = this.props.location;
 
     const ToggleViewQuiz = withStyles((theme) => ({
       root: {
@@ -1453,19 +1464,7 @@ class CreateAssessment extends Component {
       checked: {},
     }))(Switch);
 
-    // const ToggleViewQuizMobile = withStyles((theme) => ({
-    //   root: {
-    //     width: 0,
-    //     height: 0,
-    //     padding: 0,
-    //     margin: theme.spacing(1),
-    //   },
-    //   checked: {},
-    // }))(Switch);
-
-    document.title = "Schooly | Buat Kuis/Ujian";
-
-    console.log(this.state.questions);
+    document.title = this.state.type === "Kuis" ? "Schooly | Buat Kuis" : "Schooly | Buat Ujian";
 
     return (
       <div className={classes.root}>
@@ -1502,21 +1501,15 @@ class CreateAssessment extends Component {
           // itemName={this.state.name}
           // isLink={true}
           // redirectLink="/daftar-kuis"
-          redirectLink={
-            this.state.type === "Kuis" ? `/daftar-kuis` : `/daftar-ujian`
-          }
+          redirectLink={`daftar-${this.state.type.toLowerCase()}`}
           isWarning={false}
         />
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
           success={success}
-          messageUploading="Kuis/Ujian sedang dibuat"
-          messageSuccess="Kuis/Ujian telah dibuat"
-          redirectLink={
-            this.state.type === "Kuis"
-              ? `/kuis-guru/${success}`
-              : `/ujian-guru/${success}`
-          }
+          messageUploading={`${this.state.type} sedang dibuat`}
+          messageSuccess={`${this.state.type} telah dibuat`}
+          redirectLink={`/${this.state.type.toLowerCase()}-guru/${success}`}
         />
         <form onSubmit={(e) => this.onSubmit(e, user._id)} id="submitForm">
           <Grid container direction="column" spacing={3}>
@@ -1524,10 +1517,10 @@ class CreateAssessment extends Component {
               <Paper>
                 <div className={classes.content}>
                   <Typography variant="h5" gutterBottom>
-                    <b>Buat Kuis/Ujian</b>
+                    <b>Buat {this.state.type}</b>
                   </Typography>
                   <Typography color="textSecondary">
-                    Tambahkan keterangan untuk membuat kuis/ujian.
+                    Tambahkan keterangan untuk membuat {this.state.type.toLowerCase()}.
                   </Typography>
                 </div>
                 <Divider />
@@ -1561,6 +1554,7 @@ class CreateAssessment extends Component {
                         </Typography>
                         <TextField
                           multiline
+                          rows="6"
                           rowsMax={10}
                           fullWidth
                           error={errors.description}
@@ -1570,7 +1564,7 @@ class CreateAssessment extends Component {
                           id="description"
                         />
                       </Grid>
-                      <Grid item>
+                      {/* <Grid item>
                         <Typography
                           component="label"
                           for="class_assigned"
@@ -1598,7 +1592,7 @@ class CreateAssessment extends Component {
                             {Boolean(errors.type) ? errors.type : null}
                           </FormHelperText>
                         </FormControl>
-                      </Grid>
+                      </Grid> */}
                     </Grid>
                   </Grid>
                   <Divider
@@ -1904,7 +1898,7 @@ class CreateAssessment extends Component {
                           type="submit"
                           className={classes.createAssessmentButton}
                         >
-                          Buat Kuis/Ujian
+                          Buat {this.state.type}
                         </Button>
                       </Grid>
                     </Grid>

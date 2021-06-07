@@ -449,10 +449,24 @@ class App extends Component {
                       <PrivateRoute
                         exact
                         access={["Student", "Teacher"]}
-                        path="/buat-kuis-ujian"
+                        path="/buat-ujian"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={CreateAssessment}
                       />
+                      <PrivateRoute
+                        exact
+                        access={["Student", "Teacher"]}
+                        path="/buat-kuis"
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        component={CreateAssessment}
+                      />
+                      {/* <PrivateRoute
+                        exact
+                        access={["Student", "Teacher"]}
+                        path="/buat-kuis-ujian"
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        component={CreateAssessment}
+                      /> */}
                       <PrivateRoute
                         exact
                         access={["Student", "Teacher"]}

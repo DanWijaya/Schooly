@@ -216,6 +216,7 @@ function ViewAssessmentTeacher(props) {
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
+  const { type } = selectedAssessments;
   const { all_students } = props.auth;
 
   // cek note di model assessment (Assessment.js) untuk melihat aturan-aturan tambahan yang digunakan
@@ -1045,7 +1046,7 @@ function ViewAssessmentTeacher(props) {
 
               <Grid item xs={12} style={{ marginTop: "15px" }}>
                 <Typography color="textSecondary" gutterBottom>
-                  Deskripsi Kuis/Ujian:
+                  Deskripsi {type}:
                 </Typography>
                 <Typography
                   variant="body1"

@@ -1117,7 +1117,7 @@ function SubmittedAssessmentList(props) {
               </Fab>
             </Link>
 
-            <LightTooltip title="Urutkan Kuis/Ujian">
+            <LightTooltip title={`Urutkan ${selectedAssessments.type}`}>
               <IconButton
                 onClick={handleOpenSortMenu}
                 className={classes.sortButton}
@@ -1162,7 +1162,7 @@ function SubmittedAssessmentList(props) {
                 </MenuItem>
               ))}
             </Menu>
-            <LightTooltip title="Export Hasil Kuis/Ujian">
+            <LightTooltip title={`Export Hasil ${selectedAssessments.type}`}>
               <IconButton
                 onClick={handleExportAssessment}
                 className={classes.sortButton}

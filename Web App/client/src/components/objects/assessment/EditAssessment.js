@@ -321,7 +321,16 @@ class EditAssessment extends Component {
       handleSideDrawerExist,
       getFileAssessment,
     } = this.props;
+    const { pathname } = this.props.location;
     const assessment_id = this.props.match.params.id;
+    if(pathname === `/sunting-kuis/${assessment_id}`){
+      this.setState({ type: "Kuis"})
+    } else if(pathname === `/sunting-ujian/${assessment_id}`){
+      this.setState({ type: "Ujian"})
+    } else {
+      console.log("Kuis atau Ujian tidak dispecify");
+    }
+    
     handleSideDrawerExist(false);
     getAllClass();
     getOneAssessment(assessment_id);
@@ -610,7 +619,6 @@ class EditAssessment extends Component {
         question_weight: question_weight,
       };
       const assessmentId = this.props.match.params.id;
-      console.log(assessmentData);
       this.handleOpenUploadDialog();
       updateAssessment(
         formData,
@@ -1594,7 +1602,7 @@ class EditAssessment extends Component {
     // }))(Switch);
 
     // console.log("QUESTIONS : ", this.state.questions);
-    document.title = "Schooly | Sunting Kuis/Ujian";
+    document.title = `Schooly | Sunting ${this.state.type} `;
 
     return (
       <div className={classes.root}>
@@ -1622,9 +1630,7 @@ class EditAssessment extends Component {
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
           success={success}
-          // messageUploading="Kuis/Ujian sedang disunting"
           messageUploading={`${this.state.type} sedang disunting`}
-          // messageSuccess="Kuis/Ujian telah disunting"
           messageSuccess={`${this.state.type} telah disunting`}
           redirectLink={
             this.state.type === "Kuis"
@@ -1638,10 +1644,10 @@ class EditAssessment extends Component {
               <Paper>
                 <div className={classes.content}>
                   <Typography variant="h5" gutterBottom>
-                    <b>Sunting Kuis/Ujian</b>
+                    <b>Sunting {this.state.type} </b>
                   </Typography>
                   <Typography color="textSecondary">
-                    Tambahkan keterangan untuk menyunting Kuis/Ujian.
+                    Tambahkan keterangan untuk menyunting {this.state.type}.
                   </Typography>
                 </div>
                 <Divider />
@@ -1677,6 +1683,7 @@ class EditAssessment extends Component {
                         <TextField
                           value={this.state.description}
                           multiline
+                          rows={6}
                           rowsMax={10}
                           fullWidth
                           error={errors.description}
@@ -1686,7 +1693,7 @@ class EditAssessment extends Component {
                           id="description"
                         />
                       </Grid>
-                      <Grid item>
+                      {/* <Grid item>
                         <Typography
                           component="label"
                           for="class_assigned"
@@ -1714,7 +1721,7 @@ class EditAssessment extends Component {
                             {Boolean(errors.type) ? errors.type : null}
                           </FormHelperText>
                         </FormControl>
-                      </Grid>
+                      </Grid> */}
                     </Grid>
                   </Grid>
                   <Divider
@@ -2038,7 +2045,7 @@ class EditAssessment extends Component {
                           type="submit"
                           className={classes.editAssessmentButton}
                         >
-                          Sunting Kuis/Ujian
+                          Sunting {this.state.type}
                         </Button>
                       </Grid>
                     </Grid>

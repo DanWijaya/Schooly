@@ -254,7 +254,6 @@ function Timer(props) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time]);
-
   return (
     <div className={classes.root}>
       <Box position="relative" display="inline-flex">
@@ -826,7 +825,7 @@ function ViewAssessmentStudent(props) {
       return <Redirect to="/tidak-ditemukan" />;
     }
   }
-
+ console.log(window.innerHeight)
   return (
     <div className={classes.root}>
       <SubmitDialog

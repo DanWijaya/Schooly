@@ -326,10 +326,11 @@ function AssessmentListToolbar(props) {
         </Hidden>
         <Hidden mdUp implementation="css">
           {role === "Student" ? null : (
-            <LightTooltip title="Buat Kuis/Ujian">
-              <Link to="/buat-kuis-ujian">
+            <LightTooltip title="Buat Kuis">
+              <Link to="/buat-kuis">
                 <Fab size="small" className={classes.newAssessmentButton}>
-                  <FaTasks className={classes.newAssessmentIconMobile} />
+                  <FaClipboardList className={classes.newAssessmentIconMobile}/>
+                  {/* <FaTasks className={classes.newAssessmentIconMobile} /> */}
                 </Fab>
               </Link>
             </LightTooltip>
@@ -337,14 +338,15 @@ function AssessmentListToolbar(props) {
         </Hidden>
         <Hidden smDown implementation="css">
           {role === "Student" ? null : (
-            <Link to="/buat-kuis-ujian">
+            <Link to="/buat-kuis">
               <Fab
                 size="medium"
                 variant="extended"
                 className={classes.newAssessmentButton}
               >
-                <FaTasks className={classes.newAssessmentIconDesktop} />
-                Buat Kuis/Ujian
+                {/* <FaTasks className={classes.newAssessmentIconDesktop} /> */}
+                <FaClipboardList className={classes.newAssessmentIconDesktop}/>
+                Buat Kuis
               </Fab>
             </Link>
           )}
@@ -451,13 +453,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   newAssessmentIconDesktop: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
+    width: theme.spacing(2.8),
+    height: theme.spacing(2.8),
     marginRight: "7.5px",
   },
   newAssessmentIconMobile: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
+    width: theme.spacing(2.8),
+    height: theme.spacing(2.8),
   },
   goSearchIconMobile: {
     width: theme.spacing(2.5),

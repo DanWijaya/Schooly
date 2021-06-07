@@ -367,7 +367,7 @@ function ViewAssessmentTeacher(props) {
 
               <Grid item xs={12} style={{ marginTop: "15px" }}>
                 <Typography color="textSecondary" gutterBottom>
-                  Deskripsi Kuis/Ujian:
+                  Deskripsi {type}:
                 </Typography>
                 <Typography
                   variant="body1"
@@ -562,7 +562,7 @@ function ViewAssessmentTeacher(props) {
             </LightTooltip>
           </Grid>
           <Grid item style={{ paddingRight: "10px" }}>
-            <Link to={`/sunting-kuis/${assessment_id}`}>
+            <Link to={ type === "Kuis" ? `/sunting-kuis/${assessment_id}` : `/sunting-ujian/${assessment_id}`}>
               <LightTooltip title="Sunting" placement="bottom">
                 <Fab className={classes.editAssessmentButton}>
                   <EditIcon />

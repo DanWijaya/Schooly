@@ -1530,7 +1530,27 @@ class Dashboard extends Component {
                       <ListItemText primary={<Typography className={classes.menuItemText}>Buat Tugas</Typography>} />
                     </MenuItem>
                     </Link>
-                    <Link to="/buat-kuis-ujian">
+                    <Link to="/buat-kuis">
+                    <MenuItem
+                      className={classes.menuItem}
+                    >
+                      <ListItemIcon>
+                        <FaTasks />
+                      </ListItemIcon>
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Kuis</Typography>} />
+                    </MenuItem>
+                    </Link>
+                    <Link to="/buat-ujian">
+                    <MenuItem
+                      className={classes.menuItem}
+                    >
+                      <ListItemIcon>
+                        <FaTasks />
+                      </ListItemIcon>
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Ujian</Typography>} />
+                    </MenuItem>
+                    </Link>
+                    {/* <Link to="/buat-kuis-ujian">
                     <MenuItem
                       className={classes.menuItem}
                     >
@@ -1539,7 +1559,7 @@ class Dashboard extends Component {
                       </ListItemIcon>
                       <ListItemText primary={<Typography className={classes.menuItemText}>Buat Kuis/Ujian</Typography>} />
                     </MenuItem>
-                    </Link>
+                    </Link> */}
                   </Menu>
                 </Grid>
               </Grid>

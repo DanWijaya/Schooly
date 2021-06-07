@@ -105,10 +105,6 @@ class CreateClass extends Component {
     this.setState({ class_assigned: selectedList[0] });
   };
 
-  // UNSAFE_componentWillReceiveProps(nextProps) {
-  //   if (nextProps.errors) {this.setState({errors: nextProps.errors});}
-  // }
-
   componentDidMount() {
     this.props.getTeachers();
   }
