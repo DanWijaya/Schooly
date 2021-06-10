@@ -151,7 +151,7 @@ function LampiranFile(props) {
     ? (displayedName = `${filename.slice(0, 30)}..${path.extname(filename)}`)
     : (displayedName = filename);
   return (
-    <Grid item xs={6}>
+    <Grid item xs={12} md={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
         <ListItem
           button
@@ -377,15 +377,24 @@ function ViewMaterial(props) {
                   <CustomLinkify text={selectedMaterials.description} />
                 </Typography>
               </Grid>
-              {fileLampiran.map((lampiran) => (
-                <LampiranFile
-                  file_id={lampiran._id}
-                  onPreviewFile={viewFileMaterial}
-                  onDownloadFile={downloadFileMaterial}
-                  filename={lampiran.filename}
-                  filetype={fileType(lampiran.filename)}
-                />
-              ))}
+              {fileLampiran.length === 0 ? null : (
+                <Grid item xs={12} style={{ marginTop: "15px" }}>
+                  <Typography color="textSecondary" gutterBottom>
+                    Lampiran Berkas:
+                  </Typography>
+                  <Grid container spacing={1}>
+                    {fileLampiran.map((lampiran) => (
+                      <LampiranFile
+                        file_id={lampiran._id}
+                        onPreviewFile={viewFileMaterial}
+                        onDownloadFile={downloadFileMaterial}
+                        filename={lampiran.filename}
+                        filetype={fileType(lampiran.filename)}
+                      />
+                    ))}
+                  </Grid>
+                </Grid>
+              )}
             </Grid>
           </Paper>
         </Grid>
