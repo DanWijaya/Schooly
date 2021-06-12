@@ -7,6 +7,7 @@ import "date-fns";
 import {
   getOneAssessment,
   updateAssessment,
+  validateAssessment
 } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -244,6 +245,11 @@ const styles = (theme) => ({
       margin: "18px 0",
     },
   },
+  customSpacing: {
+    [theme.breakpoints.down("sm")]: {
+      marginTop: theme.spacing(2),
+    }
+  }
 });
 
 class EditAssessment extends Component {
@@ -310,8 +316,12 @@ class EditAssessment extends Component {
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
       allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
-      allSubjectObject: null // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
+      allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
+      inputHeight: null, // menyimpan tinggi textfield
+      customHeight: null // menyimpan tinggi label + textfield
     };
+    this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
+    this.customHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi label "Judul" dan textfield
   }
 
   imageUploader = React.createRef(null); // untuk ngerefer html object yang lain
@@ -336,6 +346,13 @@ class EditAssessment extends Component {
         this.setState({ lampiranUrls: result });
       })
       .catch((err) => this.setState({ lampiranUrls: new Map() }));
+    if (this.inputHeightRef.current && this.customHeightRef.current) {
+      this.setState({
+        inputHeight: this.inputHeightRef.current.offsetHeight,
+        customHeight: this.customHeightRef.current.offsetHeight + this.inputHeightRef.current.offsetHeight + 32 // tinggi (label + textfield) + (textfield) + (space antara textfield dan label di bawahnya)  
+        // customHeight: document.getElementById("top").getBoundingClientRect().top - document.getElementById("bottom").getBoundingClientRect().bottom // hasilnya salah
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -455,7 +472,7 @@ class EditAssessment extends Component {
     let newBtErrors = [];
 
     const { questions, lampiranToDelete } = this.state;
-    const { updateAssessment, history } = this.props;
+    const { updateAssessment, validateAssessment, history } = this.props;
 
     // mencatat jumlah soal untuk tiap jenis soal
     let typeCount = {
@@ -616,7 +633,15 @@ class EditAssessment extends Component {
         })
         .catch(() => this.handleOpenErrorSnackbar());
     } else {
-      this.handleOpenErrorSnackbar();
+      const assessmentData = {
+        name: this.state.name,
+        subject: this.state.subject,
+        class_assigned: this.state.class_assigned,
+        description: this.state.description,
+        questions: this.state.questions,
+        type: this.state.type,
+      };
+      validateAssessment(assessmentData).then(() => this.handleOpenErrorSnackbar());
     }
   };
 
@@ -1640,24 +1665,28 @@ class EditAssessment extends Component {
                   <Grid item xs={12} md className={classes.content}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <Typography
-                          component="label"
-                          for="name"
-                          color="primary"
-                        >
-                          Judul
-                        </Typography>
-                        <TextField
-                          value={this.state.name}
-                          fullWidth
-                          variant="outlined"
-                          id="name"
-                          error={errors.name}
-                          helperText={errors.name}
-                          onChange={this.onChange}
-                        />
+                        <div ref={this.customHeightRef}>
+                          <Typography
+                            component="label"
+                            for="name"
+                            color="primary"
+                          >
+                            Judul
+                          </Typography>
+                          <div ref={this.inputHeightRef} style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}>
+                            <TextField
+                              value={this.state.name}
+                              fullWidth
+                              variant="outlined"
+                              id="name"
+                              error={errors.name}
+                              helperText={errors.name}
+                              onChange={this.onChange}
+                            />
+                          </div>
+                        </div>
                       </Grid>
-                      <Grid item>
+                      <Grid item style={{ paddingBottom: "0" }}>
                         <Typography
                           component="label"
                           for="class_assigned"
@@ -1671,6 +1700,7 @@ class EditAssessment extends Component {
                           color="primary"
                           fullWidth
                           error={Boolean(errors.type)}
+                          style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                         >
                           <Select
                             value={this.state.type}
@@ -1686,6 +1716,16 @@ class EditAssessment extends Component {
                           </FormHelperText>
                         </FormControl>
                       </Grid>
+                      <Hidden smDown>
+                        {/* dummy checkbox agar kedua kolom form keterangan assessment simetris */}
+                        <Grid item style={{ paddingTop: 0, paddingBottom: 0 }}>
+                          <FormGroup style={{ visibility: "hidden" }}>
+                            <FormControlLabel
+                              control={<Checkbox size="small" disabled/>}
+                            />
+                          </FormGroup>
+                        </Grid>                 
+                      </Hidden>
                       <Grid item>
                         <Typography
                           component="label"
@@ -1697,6 +1737,8 @@ class EditAssessment extends Component {
                         <TextField
                           value={this.state.description}
                           multiline
+                          // 1 row = 17px. ukuran padding (cek dengan devtool) = 37px
+                          rows={(this.state.customHeight - 37) / 17}
                           rowsMax={10}
                           fullWidth
                           error={errors.description}
@@ -1719,7 +1761,7 @@ class EditAssessment extends Component {
                         <Grid item xs={12} md={6}>
                           <Typography
                             component="label"
-                            for="workTime"
+                            for="workTimeStart"
                             color="primary"
                           >
                             Waktu Mulai Pengerjaan
@@ -1738,18 +1780,19 @@ class EditAssessment extends Component {
                               cancelLabel="Batal"
                               minDateMessage="Batas waktu harus waktu yang akan datang"
                               invalidDateMessage="Format tanggal tidak benar"
-                              id="workTime"
+                              id="workTimeStart"
                               value={this.state.start_date}
                               onChange={(date) =>
                                 this.onChange(date, "start_date")
                               }
+                              style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                             />
                           </MuiPickersUtilsProvider>
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} md={6} className={classes.customSpacing}>
                           <Typography
                             component="label"
-                            for="workTime"
+                            for="workTimeEnd"
                             color="primary"
                           >
                             Waktu Selesai Pengerjaan
@@ -1767,18 +1810,19 @@ class EditAssessment extends Component {
                               okLabel="Simpan"
                               cancelLabel="Batal"
                               invalidDateMessage="Format tanggal tidak benar"
-                              id="workTime"
+                              id="workTimeEnd"
                               value={this.state.end_date}
                               minDate={this.state.start_date}
                               minDateMessage="Batas waktu harus setelah Waktu Mulai Pengerjaan"
                               onChange={(date) =>
                                 this.onChange(date, "end_date")
                               }
+                              style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                             />
                           </MuiPickersUtilsProvider>
                         </Grid>
                       </Grid>
-                      <Grid item>
+                      <Grid item style={{ paddingBottom: "0" }}>
                         <Typography
                           component="label"
                           for="postDate"
@@ -1804,10 +1848,11 @@ class EditAssessment extends Component {
                             onChange={(date) =>
                               this.onChange(date, "post_date")
                             }
+                            style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                           />
                         </MuiPickersUtilsProvider>
                       </Grid>
-                      <Grid item>
+                      <Grid item style={{ paddingTop: 0, paddingBottom: 0 }}>
                         <FormGroup>
                           <FormControlLabel
                             label={
@@ -1842,6 +1887,7 @@ class EditAssessment extends Component {
                           color="primary"
                           fullWidth
                           error={Boolean(errors.subject) && !this.state.subject}
+                          style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                         >
                           <Select
                             value={this.state.subject}
@@ -1881,6 +1927,7 @@ class EditAssessment extends Component {
                             Boolean(errors.class_assigned) &&
                             class_assigned.length === 0
                           }
+                          style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                         >
                           <Select
                             multiple
@@ -2185,6 +2232,7 @@ export default connect(mapStateToProps, {
   getAllClass,
   getAllSubjects,
   updateAssessment,
+  validateAssessment,
   clearErrors,
   getFileAssessment,
   refreshTeacher

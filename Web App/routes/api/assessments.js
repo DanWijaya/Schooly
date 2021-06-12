@@ -622,4 +622,13 @@ router.get("/status/:id", (req, res) => {
   });
 });
 
+router.post("/validate", (req, res) => {
+  const { errors, isValid } = validateAssessmentInput(req.body);
+  if (isValid) {
+    res.status(200);
+  } else {
+    res.status(400).json(errors);
+  }
+});
+
 module.exports = router;

@@ -4,7 +4,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import PropTypes from "prop-types";
 import lokal from "date-fns/locale/id";
 import "date-fns";
-import { createAssessment } from "../../../actions/AssessmentActions";
+import { createAssessment, validateAssessment } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { refreshTeacher } from "../../../actions/UserActions";
@@ -211,6 +211,11 @@ const styles = (theme) => ({
       margin: "18px 0",
     },
   },
+  customSpacing: {
+    [theme.breakpoints.down("sm")]: {
+      marginTop: theme.spacing(2),
+    }
+  }
 });
 
 class CreateAssessment extends Component {
@@ -273,8 +278,12 @@ class CreateAssessment extends Component {
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
       allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
-      allSubjectObject: null // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
+      allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
+      inputHeight: null, // menyimpan tinggi textfield
+      customHeight: null // menyimpan tinggi label + textfield
     };
+    this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
+    this.customHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi label "Judul" dan textfield
   }
 
   // ref itu untuk ngerefer html yang ada di render.
@@ -328,7 +337,7 @@ class CreateAssessment extends Component {
     let newBtErrors = [];
 
     const { questions } = this.state;
-    const { createAssessment, history } = this.props;
+    const { createAssessment, validateAssessment, history } = this.props;
 
     // mencatat jumlah soal untuk tiap jenis soal
     let typeCount = {
@@ -400,7 +409,6 @@ class CreateAssessment extends Component {
       }
     }
 
-    
     let newWeights = { ...this.state.weights };
     let newLongtextWeight = [...this.state.longtextWeight];
     for (let [type, count] of Object.entries(typeCount)) {
@@ -482,7 +490,15 @@ class CreateAssessment extends Component {
         })
         .catch(() => this.handleOpenErrorSnackbar());
     } else {
-      this.handleOpenErrorSnackbar();
+      const assessmentData = {
+        name: this.state.name,
+        subject: this.state.subject,
+        class_assigned: this.state.class_assigned,
+        description: this.state.description,
+        questions: this.state.questions,
+        type: this.state.type,
+      };
+      validateAssessment(assessmentData).then(() => this.handleOpenErrorSnackbar());
     }
   };
 
@@ -892,7 +908,7 @@ class CreateAssessment extends Component {
               tempArray.push(Number(value.charCodeAt(0)) - 65);
             });
           }
-          // console.log(tempArray)
+
           for (let j = 0; j < this.state.questions[i].options.length; j++) {
             if (tempArray.includes(j)) {
               booleanArray[j] = true;
@@ -900,9 +916,7 @@ class CreateAssessment extends Component {
               booleanArray[j] = false;
             }
           }
-          // console.log(booleanArray)
         }
-        // console.log(booleanArray)
 
         let questionIdx = i + page * rowsPerPage;
         return (
@@ -986,6 +1000,13 @@ class CreateAssessment extends Component {
     getAllClass();
     getAllSubjects();
     refreshTeacher(this.props.auth.user._id);
+    if (this.inputHeightRef.current && this.customHeightRef.current) {
+      this.setState({
+        inputHeight: this.inputHeightRef.current.offsetHeight,
+        customHeight: this.customHeightRef.current.offsetHeight + this.inputHeightRef.current.offsetHeight + 32 // tinggi (label + textfield) + (textfield) + (space antara textfield dan label di bawahnya)  
+        // customHeight: document.getElementById("top").getBoundingClientRect().top - document.getElementById("bottom").getBoundingClientRect().bottom // hasilnya salah
+      });
+    }
   }
 
   handleChangePage = (event, newPage) => {
@@ -1333,7 +1354,6 @@ class CreateAssessment extends Component {
   };
 
   render() {
-    console.log(this.state.questions);
     const { class_assigned } = this.state;
     const { classes, errors, success } = this.props;
     const { all_classes } = this.props.classesCollection;
@@ -1389,8 +1409,6 @@ class CreateAssessment extends Component {
     // }))(Switch);
 
     document.title = "Schooly | Buat Kuis/Ujian";
-
-    console.log(this.state.questions);
 
     return (
       <div className={classes.root}>
@@ -1460,23 +1478,27 @@ class CreateAssessment extends Component {
                   <Grid item xs={12} md className={classes.content}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <Typography
-                          component="label"
-                          for="name"
-                          color="primary"
-                        >
-                          Judul
-                        </Typography>
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          id="name"
-                          error={errors.name}
-                          helperText={errors.name}
-                          onChange={this.onChange}
-                        />
+                        <div ref={this.customHeightRef}>
+                          <Typography
+                            component="label"
+                            for="name"
+                            color="primary"
+                          >
+                            Judul
+                          </Typography>
+                          <div ref={this.inputHeightRef} style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}>
+                            <TextField
+                              fullWidth
+                              variant="outlined"
+                              id="name"
+                              error={errors.name}
+                              helperText={errors.name}
+                              onChange={this.onChange}
+                            />
+                          </div>
+                        </div>
                       </Grid>
-                      <Grid item>
+                      <Grid item style={{ paddingBottom: "0" }}>
                         <Typography
                           component="label"
                           for="class_assigned"
@@ -1490,6 +1512,7 @@ class CreateAssessment extends Component {
                           color="primary"
                           fullWidth
                           error={Boolean(errors.type)}
+                          style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                         >
                           <Select
                             value={this.state.type}
@@ -1505,6 +1528,16 @@ class CreateAssessment extends Component {
                           </FormHelperText>
                         </FormControl>
                       </Grid>
+                      <Hidden smDown>
+                        {/* dummy checkbox agar kedua kolom form keterangan assessment simetris */}
+                        <Grid item style={{ paddingTop: 0, paddingBottom: 0 }}>
+                          <FormGroup style={{ visibility: "hidden" }}>
+                            <FormControlLabel
+                              control={<Checkbox size="small" disabled/>}
+                            />
+                          </FormGroup>
+                        </Grid>                 
+                      </Hidden>
                       <Grid item>
                         <Typography
                           component="label"
@@ -1515,7 +1548,8 @@ class CreateAssessment extends Component {
                         </Typography>
                         <TextField
                           multiline
-                          rows="5"
+                          // 1 row = 17px. ukuran padding (cek dengan devtool) = 37px
+                          rows={(this.state.customHeight - 37) / 17}
                           rowsMax="25"
                           fullWidth
                           error={errors.description}
@@ -1538,7 +1572,7 @@ class CreateAssessment extends Component {
                         <Grid item xs={12} md={6}>
                           <Typography
                             component="label"
-                            for="workTime"
+                            for="workTimeStart"
                             color="primary"
                           >
                             Waktu Mulai Pengerjaan
@@ -1557,18 +1591,19 @@ class CreateAssessment extends Component {
                               cancelLabel="Batal"
                               minDateMessage="Batas waktu harus waktu yang akan datang"
                               invalidDateMessage="Format tanggal tidak benar"
-                              id="workTime"
+                              id="workTimeStart"
                               value={this.state.start_date}
                               onChange={(date) =>
                                 this.onChange(date, "start_date")
                               }
+                              style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                             />
                           </MuiPickersUtilsProvider>
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} md={6} className={classes.customSpacing}>
                           <Typography
                             component="label"
-                            for="workTime"
+                            for="workTimeEnd"
                             color="primary"
                           >
                             Waktu Selesai Pengerjaan
@@ -1586,18 +1621,19 @@ class CreateAssessment extends Component {
                               okLabel="Simpan"
                               cancelLabel="Batal"
                               invalidDateMessage="Format tanggal tidak benar"
-                              id="workTime"
+                              id="workTimeEnd"
                               value={this.state.end_date}
                               minDate={this.state.start_date}
                               minDateMessage="Batas waktu harus setelah Waktu Mulai Pengerjaan"
                               onChange={(date) =>
                                 this.onChange(date, "end_date")
                               }
+                              style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                             />
                           </MuiPickersUtilsProvider>
                         </Grid>
                       </Grid>
-                      <Grid item>
+                      <Grid item style={{ paddingBottom: "0" }}>
                         <Typography
                           component="label"
                           for="postDate"
@@ -1623,11 +1659,11 @@ class CreateAssessment extends Component {
                             onChange={(date) =>
                               this.onChange(date, "post_date")
                             }
+                            style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                           />
                         </MuiPickersUtilsProvider>
                       </Grid>
-                      {/* FIXME checkbox */}
-                      <Grid item>
+                      <Grid item style={{ paddingTop: 0, paddingBottom: 0 }}>
                         <FormGroup>
                           <FormControlLabel
                             label={
@@ -1662,6 +1698,7 @@ class CreateAssessment extends Component {
                           color="primary"
                           fullWidth
                           error={Boolean(errors.subject) && !this.state.subject}
+                          style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                         >
                           <Select
                             value={this.state.subject}
@@ -1701,6 +1738,7 @@ class CreateAssessment extends Component {
                             Boolean(errors.class_assigned) &&
                             class_assigned.length === 0
                           }
+                          style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                         >
                           <Select
                             multiple
@@ -1950,6 +1988,7 @@ export default connect(mapStateToProps, {
   getAllClass,
   getAllSubjects,
   createAssessment,
+  validateAssessment,
   clearErrors,
   clearSuccess,
   refreshTeacher

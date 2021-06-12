@@ -313,3 +313,23 @@ export const updateAssessmentGrades = (
 export const getStatus = (assessmentId) => {
   return axios.get(`/api/assessments/status/${assessmentId}`);
 };
+
+export const validateAssessment = (assessmentData) => (
+  dispatch
+) => {
+  return axios.post(`/api/assessments/validate`, assessmentData)
+  .then(() => {
+    dispatch({
+      type: GET_ERRORS,
+      payload: false,
+    });
+  })
+  .catch((err) => {
+    if (err.response) {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    }
+  });
+};

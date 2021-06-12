@@ -151,7 +151,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "5px",
     paddingLeft: "10px",
     paddingRight: "10px",
-    backgroundColor: theme.palette.warning.main,
+    backgroundColor: theme.palette.primary.main,
     color: "white",
   },
   toggleGroupRoot: {
@@ -690,13 +690,11 @@ function ViewAssessmentStudent(props) {
         );
       } else if (currentTime !== null) {
         return (
-          // <Grid item>
           <StartTimer
             start_date={currentTime}
             end_date={selectedAssessments.start_date}
             setShowStartButton={setShowStartButton}
           />
-          // </Grid>
         );
       } else {
         return null;

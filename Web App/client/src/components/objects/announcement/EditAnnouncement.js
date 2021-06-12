@@ -218,7 +218,9 @@ class EditAnnouncement extends Component {
       target_role: "",
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      inputHeight: null, // menyimpan tinggi textfield
     };
+    this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
   }
 
   lampiranUploader = React.createRef(null);
@@ -247,6 +249,11 @@ class EditAnnouncement extends Component {
       refreshTeacher(user._id);
     }
 
+    if (this.inputHeightRef.current) {
+      this.setState({
+        inputHeight: this.inputHeightRef.current.offsetHeight
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -575,19 +582,21 @@ class EditAnnouncement extends Component {
                     <Typography component="label" for="title" color="primary">
                       Judul
                     </Typography>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      id="title"
-                      onChange={this.onChange}
-                      value={this.state.title}
-                      error={errors.title}
-                      type="text"
-                      helperText={errors.title}
-                      className={classnames("", {
-                        invalid: errors.title,
-                      })}
-                    />
+                    <div ref={this.inputHeightRef} style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        id="title"
+                        onChange={this.onChange}
+                        value={this.state.title}
+                        error={errors.title}
+                        type="text"
+                        helperText={errors.title}
+                        className={classnames("", {
+                          invalid: errors.title,
+                        })}
+                      />
+                    </div>
                   </Grid>
                   <Grid item>
                     <Typography
@@ -677,6 +686,7 @@ class EditAnnouncement extends Component {
                         variant="outlined"
                         fullWidth
                         error={Boolean(errors.class_assigned)}
+                        style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                       >
                         <Select
                           multiple
@@ -739,6 +749,7 @@ class EditAnnouncement extends Component {
                       ref={this.uploadedLampiran}
                       style={{ display: "none" }}
                     />
+                    <Typography variant="body1">{"\u200B"}</Typography>
                     <Button
                       variant="contained"
                       startIcon={<AttachFileIcon />}

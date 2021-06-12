@@ -211,7 +211,9 @@ class CreateAnnouncement extends Component {
       over_limit: [],
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      inputHeight: null, // menyimpan tinggi textfield
     };
+    this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
   }
 
   lampiranUploader = React.createRef(null);
@@ -258,10 +260,17 @@ class CreateAnnouncement extends Component {
     const { user } = this.props.auth;
     const { getAllClass, setCurrentClass, refreshTeacher } = this.props;
     getAllClass();
+
     if (user.role === "Student") {
       setCurrentClass(user.kelas);
     } else if (user.role === "Teacher") {
       refreshTeacher(user._id);
+    }
+
+    if (this.inputHeightRef.current) {
+      this.setState({
+        inputHeight: this.inputHeightRef.current.offsetHeight
+      });
     }
   }
 
@@ -491,19 +500,21 @@ class CreateAnnouncement extends Component {
                     <Typography component="label" for="title" color="primary">
                       Judul
                     </Typography>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      id="title"
-                      onChange={this.onChange}
-                      value={this.state.title}
-                      error={errors.title}
-                      type="text"
-                      helperText={errors.title}
-                      className={classnames("", {
-                        invalid: errors.title,
-                      })}
-                    />
+                    <div ref={this.inputHeightRef} style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        id="title"
+                        onChange={this.onChange}
+                        value={this.state.title}
+                        error={errors.title}
+                        type="text"
+                        helperText={errors.title}
+                        className={classnames("", {
+                          invalid: errors.title,
+                        })}
+                      />
+                    </div>
                   </Grid>
                   <Grid item>
                     <Typography
@@ -596,6 +607,7 @@ class CreateAnnouncement extends Component {
                           Boolean(errors.class_assigned) &&
                           class_assigned.length === 0
                         }
+                        style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                       >
                         <Select
                           multiple
@@ -649,6 +661,7 @@ class CreateAnnouncement extends Component {
                       accept="file/*"
                       style={{ display: "none" }}
                     />
+                    <Typography variant="body1">{"\u200B"}</Typography>
                     <Button
                       variant="contained"
                       startIcon={<AttachFileIcon />}

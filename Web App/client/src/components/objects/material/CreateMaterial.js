@@ -215,8 +215,10 @@ class CreateMaterial extends Component {
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
       allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
-      allSubjectObject: null // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
+      allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
+      inputHeight: null // menyimpan tinggi textfield
     };
+    this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
   }
 
   lampiranUploader = React.createRef(null);
@@ -385,6 +387,12 @@ class CreateMaterial extends Component {
     this.props.getAllClass();
     this.props.getAllSubjects();
     this.props.refreshTeacher(this.props.auth.user._id);
+
+    if (this.inputHeightRef.current) {
+      this.setState({
+        inputHeight: this.inputHeightRef.current.offsetHeight
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -535,19 +543,21 @@ class CreateMaterial extends Component {
                       <Typography component="label" for="name" color="primary">
                         Judul
                       </Typography>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        id="name"
-                        onChange={this.onChange}
-                        value={this.state.name}
-                        error={errors.name}
-                        type="text"
-                        helperText={errors.name}
-                        className={classnames("", {
-                          invalid: errors.name,
-                        })}
-                      />
+                      <div ref={this.inputHeightRef} style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          id="name"
+                          onChange={this.onChange}
+                          value={this.state.name}
+                          error={errors.name}
+                          type="text"
+                          helperText={errors.name}
+                          className={classnames("", {
+                            invalid: errors.name,
+                          })}
+                        />
+                      </div>
                     </Grid>
                     <Grid item>
                       <Typography
@@ -597,6 +607,7 @@ class CreateMaterial extends Component {
                         color="primary"
                         fullWidth
                         error={Boolean(errors.subject) && !this.state.subject}
+                        style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                       >
                         <Select
                           value={this.state.subject}
@@ -633,6 +644,7 @@ class CreateMaterial extends Component {
                         variant="outlined"
                         fullWidth
                         error={Boolean(errors.class_assigned)}
+                        style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                       >
                         <Select
                           multiple
@@ -685,6 +697,7 @@ class CreateMaterial extends Component {
                         accept="file/*"
                         style={{ display: "none" }}
                       />
+                      <Typography variant="body1">{"\u200B"}</Typography>
                       <Button
                         variant="contained"
                         startIcon={<AttachFileIcon />}
