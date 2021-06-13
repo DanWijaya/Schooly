@@ -214,25 +214,10 @@ export const createMaterialComment = (
   comment
 ) => {
   return axios
-    .post(`/api/materials/createcomment/${materialId}`, comment)
-    // .then(() => {
-    //   dispatch({
-    //     type: GET_SUCCESS_RESPONSE,
-    //     payload: {
-    //       action: "createMaterialComment",
-    //       response: true
-    //     }
-    //   });
-    // })
-    // .catch((err) => {
-    //   dispatch({
-    //     type: GET_ERRORS,
-    //     payload: {
-    //       action: "createMaterialComment",
-    //       response: err.response.data
-    //     }
-    //   });
-    // });
+    .post(`/api/materials/comment/${materialId}`, comment)
+    .catch(() => {
+      throw new Error("createMaterialComment error has occured");
+    });
 };
 
 export const editMaterialComment = (
@@ -241,25 +226,10 @@ export const editMaterialComment = (
   commentId
 ) => {
   return axios
-    .post(`/api/materials/editcomment/${materialId}`, { updatedContent, commentId })
-    // .then(() => {
-      // dispatch({
-      //   type: GET_SUCCESS_RESPONSE,
-      //   payload: {
-      //     action: "editMaterialComment",
-      //     response: true
-      //   }
-      // });
-    // })
-    // .catch((err) => {
-    //   dispatch({
-    //     type: GET_ERRORS,
-    //     payload: {
-    //       action: "editMaterialComment",
-    //       response: err.response.data
-    //     }
-    //   });
-    // });
+    .put(`/api/materials/comment/${materialId}`, { updatedContent, commentId })
+    .catch(() => {
+      throw new Error("editMaterialComment error has occured");
+    });
 };
 
 export const deleteMaterialComment = (
@@ -267,23 +237,8 @@ export const deleteMaterialComment = (
   commentId
 ) => {
   return axios
-    .delete(`/api/materials/deletecomment/${materialId}`, { data: { commentId } })
-    // .then(() => {
-    //   dispatch({
-    //     type: GET_SUCCESS_RESPONSE,
-    //     payload: {
-    //       action: "deleteMaterialComment",
-    //       response: true
-    //     }
-    //   });
-    // })
-    // .catch((err) => {
-    //   dispatch({
-    //     type: GET_ERRORS,
-    //     payload: {
-    //       action: "deleteMaterialComment",
-    //       response: err.response.data
-    //     }
-    //   });
-    // });
+    .delete(`/api/materials/comment/${materialId}&${commentId}`)
+    .catch(() => {
+      throw new Error("deleteMaterialComment error has occured");
+    });
 };

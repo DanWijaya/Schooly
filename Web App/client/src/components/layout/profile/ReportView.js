@@ -25,11 +25,10 @@ import TableRow from "@material-ui/core/TableRow";
 import FormControl from "@material-ui/core/FormControl";
 import { Bar } from "react-chartjs-2";
 import { getStudentsByClass, getOneUser, refreshTeacher } from "../../../actions/UserActions";
-import { getTasksBySC, getAllTask } from "../../../actions/TaskActions";
+import { getTasks, getAllTask } from "../../../actions/TaskActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import {
-  getKuisBySC,
-  getUjianBySC,
+  getAssessments,
   getAllAssessments,
 } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
@@ -257,9 +256,8 @@ function ReportView(props) {
   const classes = useStyles();
 
   const {
-    getTasksBySC,
-    getKuisBySC,
-    getUjianBySC,
+    getTasks,
+    getAssessments,
     getAllAssessments,
     getAllClass,
     getAllSubjects,
@@ -1299,17 +1297,17 @@ function ReportView(props) {
         } // jika items kosong, hasGrade akan tetap bernilai false
       };
 
-      getTasksBySC(valueMatpel, valueKelas)
+      getTasks(valueMatpel, valueKelas)
         .then((taskArray) => {
           addScore(taskArray, "tugas");
         })
         .then(() => {
-          return getKuisBySC(valueMatpel, valueKelas).then((kuisArray) => {
+          return getAssessments("Kuis", valueMatpel, valueKelas).then((kuisArray) => {
             addScore(kuisArray, "kuis");
           });
         })
         .then(() => {
-          return getUjianBySC(valueMatpel, valueKelas).then((ujianArray) => {
+          return getAssessments("Ujian", valueMatpel, valueKelas).then((ujianArray) => {
             addScore(ujianArray, "ujian");
           });
         })
@@ -1833,9 +1831,8 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getStudentsByClass,
-  getTasksBySC,
-  getKuisBySC,
-  getUjianBySC,
+  getTasks,
+  getAssessments,
   getAllAssessments,
   getAllClass,
   getAllSubjects,

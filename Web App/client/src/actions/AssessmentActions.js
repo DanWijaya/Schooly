@@ -61,7 +61,7 @@ export const createAssessment = (formData, assessment, history) => (
     });
 };
 
-export const gradeAssessment = (assessment_id, gradingData, rslv) => (
+/* export const gradeAssessment = (assessment_id, gradingData, rslv) => (
   dispatch
 ) => {
   axios
@@ -82,7 +82,7 @@ export const gradeAssessment = (assessment_id, gradingData, rslv) => (
         payload: err.response.data,
       });
     });
-};
+}; */
 
 export const updateAssessment = (
   formData,
@@ -146,14 +146,6 @@ export const updateAssessment = (
       throw new Error("Assessment is not updated successfully");
     });
 };
-
-// export const updateAssessmentGrades = (assessmentId, ans_list) => dispatch => {
-//   return (
-//     axios.post(`/api/assessments/updategrades/${assessmentId}`, ans_list)
-//         .then(res => { return res;})
-//         .catch(err => { throw new Error("Assessment grades are not updated successfully")})
-//   )
-// }
 
 // View All Assessment
 export const getAllAssessments = () => (dispatch) => {
@@ -259,33 +251,21 @@ export const submitAssessment = (assessmentId, data) => (dispatch) => {
     });
 };
 
-export const getKuisBySC = (subjectId, classId) => () => {
+export const getAssessments = (type, subjectId, classId) => {
   return axios
-    .get(`/api/assessments/getkuisbysc/${subjectId}&${classId}`)
+    .get(`/api/assessments/view`, { params: { type, subjectId, classId } })
     .then((res) => {
-      console.log("getKuisBySC completed");
+      console.log("getAssessments completed");
       return res.data;
     })
     .catch(() => {
-      throw new Error("getKuisBySC error has occured");
-    });
-};
-
-export const getUjianBySC = (subjectId, classId) => () => {
-  return axios
-    .get(`/api/assessments/getujianbysc/${subjectId}&${classId}`)
-    .then((res) => {
-      console.log("getUjianBySC completed");
-      return res.data;
-    })
-    .catch(() => {
-      throw new Error("getUjianBySC error has occured");
+      throw new Error("getAssessments error has occured");
     });
 };
 
 export const updateAssessmentSuspects = (assessmentId, suspects) => {
   return axios
-    .post(`/api/assessments/updateSuspects/${assessmentId}`, suspects)
+    .put(`/api/assessments/suspects/${assessmentId}`, suspects)
     .catch(() => {
       throw new Error("updateAssessmentSuspects error has occured");
     });
@@ -298,14 +278,14 @@ export const updateAssessmentGrades = (
   longtextGrade
 ) => {
   return axios
-    .post(`/api/assessments/updateGrades`, {
+    .put(`/api/assessments/grades`, {
       assessmentId,
       studentId,
       questionIdx,
       longtextGrade,
     })
     .catch((err) => {
-      // throw new Error("updateGrades error has occured");
+      // throw new Error("updateAssessmentGrades error has occured");
       throw new Error(err.response.data);
     });
 };
@@ -317,7 +297,7 @@ export const getStatus = (assessmentId) => {
 export const validateAssessment = (assessmentData) => (
   dispatch
 ) => {
-  return axios.post(`/api/assessments/validate`, assessmentData)
+  return axios.post(`/api/assessments/validity`, assessmentData)
   .then(() => {
     dispatch({
       type: GET_ERRORS,

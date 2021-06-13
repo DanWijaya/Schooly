@@ -120,11 +120,17 @@ router.post("/update/:id", (req, res) => {
   });
 });
 
-router.get("/gettasksbysc/:subjectId&:classId", (req, res) => {
-  Task.find({
-    subject: req.params.subjectId,
-    class_assigned: { $elemMatch: { $eq: req.params.classId } },
-  }).then((tasks) => {
+router.get("/view", (req, res) => {
+  const { subjectId, classId } = req.query;
+  let query = {};
+  if (subjectId) {
+    query.subject = subjectId;
+  }
+  if (classId) {
+    query.class_assigned = { $elemMatch: { $eq: classId } };
+  }
+
+  Task.find(query).then((tasks) => {
     if (!tasks) {
       return res.status(200).json("Belum ada tugas");
     } else {
@@ -133,7 +139,7 @@ router.get("/gettasksbysc/:subjectId&:classId", (req, res) => {
   });
 });
 
-router.get("/byclass/:classId", (req, res) => {
+/* router.get("/byclass/:classId", (req, res) => {
   Task.find({
     class_assigned: { $elemMatch: { $eq: req.params.classId } },
   }).then((tasks) => {
@@ -143,12 +149,12 @@ router.get("/byclass/:classId", (req, res) => {
       return res.status(200).json(tasks);
     }
   });
-});
+}); */
 
-router.post("/createcomment/:id", (req, res) => {
+router.post("/comment/:taskId", (req, res) => {
   let comment = req.body;
 
-  Task.findById(req.params.id, (err, taskData) => {
+  Task.findById(req.params.taskId, (err, taskData) => {
     if (!taskData) {
       return res.status(404).send("Task data is not found");
     } else {
@@ -174,10 +180,10 @@ router.post("/createcomment/:id", (req, res) => {
   });
 });
 
-router.post("/editcomment/:id", (req, res) => {
+router.put("/comment/:taskId", (req, res) => {
   let { updatedContent, commentId } = req.body;
 
-  Task.findById(req.params.id, (err, taskData) => {
+  Task.findById(req.params.taskId, (err, taskData) => {
     if (!taskData) {
       return res.status(404).send("Task data is not found");
     } else {
@@ -208,10 +214,10 @@ router.post("/editcomment/:id", (req, res) => {
   });
 });
 
-router.delete("/deletecomment/:id", (req, res) => {
-  let { commentId } = req.body;
+router.delete("/comment/:taskId&:commentId", (req, res) => {
+  const { taskId, commentId } = req.params;
   
-  Task.findById(req.params.id, (err, taskData) => {
+  Task.findById(taskId, (err, taskData) => {
     if (!taskData) {
       return res.status(404).send("Task data is not found");
     } else {

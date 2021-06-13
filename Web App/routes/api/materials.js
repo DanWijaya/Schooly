@@ -138,10 +138,10 @@ router.delete("/delete/:id", (req, res) => {
   });
 });
 
-router.post("/createcomment/:id", (req, res) => {
+router.post("/comment/:materialId", (req, res) => {
   let comment = req.body;
 
-  Material.findById(req.params.id, (err, materialData) => {
+  Material.findById(req.params.materialId, (err, materialData) => {
     if (!materialData) {
       return res.status(404).send("Material data is not found");
     } else {
@@ -167,10 +167,10 @@ router.post("/createcomment/:id", (req, res) => {
   });
 });
 
-router.post("/editcomment/:id", (req, res) => {
+router.put("/comment/:materialId", (req, res) => {
   let { updatedContent, commentId } = req.body;
 
-  Material.findById(req.params.id, (err, materialData) => {
+  Material.findById(req.params.materialId, (err, materialData) => {
     if (!materialData) {
       return res.status(404).send("Material data is not found");
     } else {
@@ -201,10 +201,10 @@ router.post("/editcomment/:id", (req, res) => {
   });
 });
 
-router.delete("/deletecomment/:id", (req, res) => {
-  let { commentId } = req.body;
+router.delete("/comment/:materialId&:commentId", (req, res) => {
+  const { materialId, commentId } = req.params;
 
-  Material.findById(req.params.id, (err, materialData) => {
+  Material.findById(materialId, (err, materialData) => {
     if (!materialData) {
       return res.status(404).send("Material data is not found");
     } else {

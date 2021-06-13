@@ -318,9 +318,6 @@ function ViewMaterial(props) {
     getFileMaterials,
     getTeachers, 
     getStudents,
-    // createMaterialComment,
-    // editMaterialComment,
-    // deleteMaterialComment,
     clearErrors,
     clearSuccess,
     getFileAvatar,
@@ -417,51 +414,6 @@ function ViewMaterial(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commentList]);
 
-/*   React.useEffect(() => {
-    if (
-      errors &&
-      errors.constructor === Object &&
-      Object.keys(errors).length !== 0
-    ) {
-      let content = "Komentar gagal ";
-      if (errors.action === "createMaterialComment") {
-        content += "dibuat";
-      } else if (errors.action === "editMaterialComment") {
-        content += "disunting";
-      } else if (errors.action === "deleteMaterialComment") {
-        content += "dihapus";
-      } else {
-        return;
-      }
-      handleOpenCommentSnackbar("error", content);
-      clearErrors();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [errors]);
-
-  React.useEffect(() => {
-    if (
-      success &&
-      success.constructor === Object
-    ) {
-      let content = "Komentar berhasil ";
-      if (success.action === "createMaterialComment") {
-        content += "dibuat";
-        setCommentValue("");
-      } else if (success.action === "editMaterialComment") {
-        content += "disunting";
-      } else if (success.action === "deleteMaterialComment") {
-        content += "dihapus";
-      } else {
-        return;
-      }
-      handleOpenCommentSnackbar("success", content);
-      getOneMaterial(materi_id);
-      clearSuccess();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success]); */
-
   React.useEffect(() => {
     return () => {
       clearErrors();
@@ -499,8 +451,7 @@ function ViewMaterial(props) {
         handleOpenCommentSnackbar("success", "Komentar berhasil dibuat");
         setCommentValue("");
         getOneMaterial(materi_id);
-      }).catch((err) => {
-        console.log(err.response.data);
+      }).catch(() => {
         handleOpenCommentSnackbar("error", "Komentar gagal dibuat");
       });
     }
@@ -513,8 +464,7 @@ function ViewMaterial(props) {
       editMaterialComment(materi_id, commentEditorValue, commentList[selectedCommentIdx]._id).then(() => {
         handleOpenCommentSnackbar("success", "Komentar berhasil disunting");
         getOneMaterial(materi_id);
-      }).catch((err) => {
-        console.log(err.response.data);
+      }).catch(() => {
         handleOpenCommentSnackbar("error", "Komentar gagal disunting");
       });
       closeEditMode();
@@ -525,8 +475,7 @@ function ViewMaterial(props) {
     deleteMaterialComment(materi_id, commentList[idx]._id).then(() => {
       handleOpenCommentSnackbar("success", "Komentar berhasil dihapus");
       getOneMaterial(materi_id);
-    }).catch((err) => {
-      console.log(err.response.data);
+    }).catch(() => {
       handleOpenCommentSnackbar("error", "Komentar gagal dihapus");
     });
     setDeleteCommentIdx(idx);
@@ -952,9 +901,6 @@ export default connect(mapStateToProps, {
   getFileMaterials,
   viewFileMaterial,
   downloadFileMaterial,
-  // createMaterialComment,
-  // editMaterialComment,
-  // deleteMaterialComment,
   getTeachers,
   getStudents,
   clearErrors,

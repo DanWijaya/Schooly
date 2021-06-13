@@ -12,9 +12,9 @@ export default function (state = initialState, action) {
     case GET_ALL_TASKS: {
       return action.payload;
     }
-    case GET_TASKS_BY_CLASS: {
-      return action.payload;
-    }
+    // case GET_TASKS_BY_CLASS: {
+    //   return action.payload;
+    // }
     case GET_TASKS_BY_SUBJECTS: {
       return action.payload;
     }

@@ -5,12 +5,12 @@ import PropTypes from "prop-types";
 import {
   getTeachers,
   getStudents,
-  updateStudentsClass,
+  moveStudents,
 } from "../../../actions/UserActions";
 import {
   getAllClass,
   deleteClass,
-  updateClassAdmin,
+  unassignClassOfficers,
 } from "../../../actions/ClassActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import { getAllTask } from "../../../actions/TaskActions";
@@ -403,7 +403,7 @@ function ClassListToolbar(props) {
         }
 
         if (Object.keys(classesToUpdate).length !== 0) {
-          updateClassAdmin(classesToUpdate)
+          unassignClassOfficers(classesToUpdate)
             .then(() => {
               console.log("Penghapusan pengurus kelas berhasil dilakukan");
             })
@@ -413,7 +413,7 @@ function ClassListToolbar(props) {
         }
 
         if (Object.keys(newClassParticipant).length !== 0) {
-          updateStudentsClass(newClassParticipant, dummyClassId)
+          moveStudents(newClassParticipant, dummyClassId)
             .then(() => {
               // agar text jumlah murid di halaman ini diperbarui, panggil ulang getStudents
               getStudents();
@@ -1039,8 +1039,6 @@ function ClassList(props) {
         all_students={all_students}
         getStudents={getStudents}
         handleOpenSnackbar={handleOpenSnackbar}
-        // updateClassAdmin={updateClassAdmin}
-        // updateStudentsClass={updateStudentsClass}
         tasksCollection={tasksCollection}
         all_assessments={all_assessments}
         setSearchBarFocus={setSearchBarFocus}
@@ -1286,8 +1284,6 @@ ClassList.propTypes = {
   assessmentsCollection: PropTypes.object.isRequired,
   getStudents: PropTypes.func.isRequired,
   getAllTask: PropTypes.func.isRequired,
-  // updateClassAdmin: PropTypes.func.isRequired,
-  // updateStudentsClass: PropTypes.func.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
   tasksCollection: PropTypes.object.isRequired,
 };
@@ -1301,7 +1297,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-  // mapStateToProps, { clearErrors, getTeachers, getStudents, getAllClass, deleteClass, updateClassAdmin, updateStudentsClass, getAllTask, getAllAssessments}
   mapStateToProps,
   {
     clearErrors,

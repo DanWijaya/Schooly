@@ -5,14 +5,10 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
-import { getTasksBySC, getAllTask } from "../../../actions/TaskActions";
+import { getAllTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import {
-  getKuisBySC,
-  getUjianBySC,
-  getAllAssessments,
-} from "../../../actions/AssessmentActions";
+import { getAllAssessments } from "../../../actions/AssessmentActions";
 import { getStudents, getStudentsByClass, getTeachers } from "../../../actions/UserActions";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
@@ -710,9 +706,6 @@ class Dashboard extends Component {
 
     if (user.role === "Student") {
       getStudentsByClass(user.kelas);
-      // getTasksBySC
-      // getKuisBySC
-      // getUjianBySC
     }
     getAllAssessments();
     getAllTaskFilesByUser(user._id); // yang dapatin takfiles cuma berlaku untuk student soalnya
@@ -1783,9 +1776,6 @@ Dashboard.propTypes = {
   getAllAssessments: PropTypes.func.isRequired,
   getStudentsByClass: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
-  getTasksBySC: PropTypes.func.isRequired,
-  getKuisBySC: PropTypes.func.isRequired,
-  getUjianBySC: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired
 };
@@ -1807,9 +1797,6 @@ export default withRouter(
     getAllAssessments,
     getStudentsByClass,
     getStudents,
-    getTasksBySC,
-    getKuisBySC,
-    getUjianBySC,
     setCurrentClass,
     getTeachers
   })(withStyles(styles)(Dashboard))

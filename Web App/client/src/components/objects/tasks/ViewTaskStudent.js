@@ -607,9 +607,6 @@ function ViewTaskStudent(props) {
     downloadFileTasks,
     getTeachers, 
     getStudents,
-    // createTaskComment,
-    // editTaskComment,
-    // deleteTaskComment,
     getMultipleFileAvatar
   } = props;
   const { all_subjects_map } = props.subjectsCollection;
@@ -752,8 +749,7 @@ function ViewTaskStudent(props) {
         handleOpenCommentSnackbar("success", "Komentar berhasil dibuat");
         setCommentValue("");
         getOneTask(tugasId);
-      }).catch((err) => {
-        console.log(err.response.data);
+      }).catch(() => {
         handleOpenCommentSnackbar("error", "Komentar gagal dibuat");
       });
     }
@@ -766,8 +762,7 @@ function ViewTaskStudent(props) {
       editTaskComment(tugasId, commentEditorValue, commentList[selectedCommentIdx]._id).then(() => {
         handleOpenCommentSnackbar("success", "Komentar berhasil disunting");
         getOneTask(tugasId);
-      }).catch((err) => {
-        console.log(err.response.data);
+      }).catch(() => {
         handleOpenCommentSnackbar("error", "Komentar gagal disunting");
       });
       closeEditMode();
@@ -778,8 +773,7 @@ function ViewTaskStudent(props) {
     deleteTaskComment(tugasId, commentList[idx]._id).then(() => {
       handleOpenCommentSnackbar("success", "Komentar berhasil dihapus");
       getOneTask(tugasId);
-    }).catch((err) => {
-      console.log(err.response.data);
+    }).catch(() => {
       handleOpenCommentSnackbar("error", "Komentar gagal dihapus");
     });
     setDeleteCommentIdx(idx);
@@ -1649,9 +1643,6 @@ export default connect(mapStateToProps, {
   viewFileSubmitTasks,
   downloadFileSubmitTasks,
   deleteFileSubmitTasks,
-  // createTaskComment,
-  // editTaskComment,
-  // deleteTaskComment,
   getTeachers,
   getStudents,
   getMultipleFileAvatar

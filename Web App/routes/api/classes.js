@@ -178,12 +178,9 @@ router.post("/update/:id", (req, res) => {
   });
 });
 
-router.post("/bulkupdateclass", (req, res) => {
+router.put("/class-officers", (req, res) => {
   let operations = [];
-
-  for (let entries of Object.entries(req.body)) {
-    let classId = entries[0];
-    let rolesToDelete = entries[1];
+  for (let [classId, rolesToDelete] of Object.entries(req.body)) {
     let fieldToUnset = {};
 
     for (let role of rolesToDelete) {
@@ -201,7 +198,7 @@ router.post("/bulkupdateclass", (req, res) => {
 
   Class.bulkWrite(operations, { ordered: false })
     .then(() => {
-      res.json("Bulkupdate pengurus kelas completed");
+      res.json("Unassign class officers complete");
     })
     .catch((err) => {
       console.log(err);
@@ -209,12 +206,9 @@ router.post("/bulkupdateclass", (req, res) => {
     });
 });
 
-router.post("/bulkupdatewali", (req, res) => {
+router.put("/homeroom-teachers", (req, res) => {
   let operations = [];
-
-  for (let entries of Object.entries(req.body)) {
-    let classId = entries[0];
-    let teacherId = entries[1];
+  for (let [classId, teacherId] of Object.entries(req.body)) {
     let updateArgument = {};
 
     if (teacherId) {
@@ -234,7 +228,7 @@ router.post("/bulkupdatewali", (req, res) => {
 
   Class.bulkWrite(operations, { ordered: false })
     .then(() => {
-      res.json("Bulkupdate wali kelas completed");
+      res.json("Set homeroom teachers complete");
     })
     .catch((err) => {
       console.log(err);

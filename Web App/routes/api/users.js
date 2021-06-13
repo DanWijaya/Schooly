@@ -459,19 +459,14 @@ router.delete("/delete/:id", (req, res) => {
   });
 });
 
-router.post("/bulkupdateclass/:dummyClassId", (req, res) => {
+router.put("/class-assignment/:dummyClassId", (req, res) => {
   let operations = [];
-  let dummyClassId = req.params.dummyClassId;
-
-  for (let entries of Object.entries(req.body)) {
-    let classId = entries[0];
-    let studentIdArray = entries[1];
-
+  for (let [classId, studentIdArray] of Object.entries(req.body)) {
     operations.push({
       updateMany: {
         filter: { _id: { $in: studentIdArray } },
         update:
-          classId === dummyClassId
+          classId === req.params.dummyClassId
             ? { $unset: { kelas: "" } }
             : { kelas: classId },
       },
@@ -488,10 +483,8 @@ router.post("/bulkupdateclass/:dummyClassId", (req, res) => {
     });
 });
 
-router.post("/updateTeacher/:id", (req, res) => {
-  let id = req.params.id;
-
-  User.findById(id, (err, user) => {
+router.put("/teacher/:teacherId", (req, res) => {
+  User.findById(req.params.teacherId, (err, user) => {
     if (!user) {
       return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan" });
     } else {
@@ -506,7 +499,7 @@ router.post("/updateTeacher/:id", (req, res) => {
         })
         .catch((err) => {
           console.log(err);
-          res.status(500).json(err);
+          res.status(400).json(err);
         });
     }
   });

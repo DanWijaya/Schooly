@@ -315,9 +315,6 @@ function ViewTaskTeacher(props) {
     clearSuccess,
     getTeachers,
     getStudents,
-    // createTaskComment,
-    // editTaskComment,
-    // deleteTaskComment,
     getMultipleFileAvatar
   } = props;
   const { all_classes_map } = props.classesCollection;
@@ -426,51 +423,6 @@ function ViewTaskTeacher(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commentList]);
 
-  /* React.useEffect(() => {
-    if (
-      errors &&
-      errors.constructor === Object &&
-      Object.keys(errors).length !== 0
-    ) {
-      let content = "Komentar gagal ";
-      if (errors.action === "createTaskComment") {
-        content += "dibuat";
-      } else if (errors.action === "editTaskComment") {
-        content += "disunting";
-      } else if (errors.action === "deleteTaskComment") {
-        content += "dihapus";
-      } else {
-        return;
-      }
-      handleOpenCommentSnackbar("error", content);
-      clearErrors();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [errors]);
-
-  React.useEffect(() => {
-    if (
-      success &&
-      success.constructor === Object
-    ) {
-      let content = "Komentar berhasil ";
-      if (success.action === "createTaskComment") {
-        content += "dibuat";
-        setCommentValue("");
-      } else if (success.action === "editTaskComment") {
-        content += "disunting";
-      } else if (success.action === "deleteTaskComment") {
-        content += "dihapus";
-      } else {
-        return;
-      }
-      handleOpenCommentSnackbar("success", content);
-      getOneTask(task_id);
-      clearSuccess();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success]); */
-
   React.useEffect(() => {
     return () => {
       clearErrors();
@@ -508,8 +460,7 @@ function ViewTaskTeacher(props) {
         handleOpenCommentSnackbar("success", "Komentar berhasil dibuat");
         setCommentValue("");
         getOneTask(task_id);
-      }).catch((err) => {
-        console.log(err.response.data);
+      }).catch(() => {
         handleOpenCommentSnackbar("error", "Komentar gagal dibuat");
       });
     }
@@ -522,8 +473,7 @@ function ViewTaskTeacher(props) {
       editTaskComment(task_id, commentEditorValue, commentList[selectedCommentIdx]._id).then(() => {
         handleOpenCommentSnackbar("success", "Komentar berhasil disunting");
         getOneTask(task_id);
-      }).catch((err) => {
-        console.log(err.response.data);
+      }).catch(() => {
         handleOpenCommentSnackbar("error", "Komentar gagal disunting");
       });
       closeEditMode();
@@ -534,8 +484,7 @@ function ViewTaskTeacher(props) {
     deleteTaskComment(task_id, commentList[idx]._id).then(() => {
       handleOpenCommentSnackbar("success", "Komentar berhasil dihapus");
       getOneTask(task_id);
-    }).catch((err) => {
-      console.log(err.response.data);
+    }).catch(() => {
       handleOpenCommentSnackbar("error", "Komentar gagal dihapus");
     });
     setDeleteCommentIdx(idx);
@@ -1007,9 +956,6 @@ export default connect(mapStateToProps, {
   viewFileTasks,
   clearSuccess,
   clearErrors,
-  // createTaskComment,
-  // editTaskComment,
-  // deleteTaskComment,
   getTeachers,
   getStudents,
   getMultipleFileAvatar

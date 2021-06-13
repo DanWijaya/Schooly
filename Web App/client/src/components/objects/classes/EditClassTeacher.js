@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getAllClass, updateWaliAdmin } from "../../../actions/ClassActions";
+import { getAllClass, setHomeroomTeachers } from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -232,7 +232,7 @@ function EditClassTeacher(props) {
 
     if (Object.keys(classToUpdate).length !== 0) {
       setOpenUploadDialog(true);
-      updateWaliAdmin(classToUpdate)
+      setHomeroomTeachers(classToUpdate)
         .then(() => {
           setSuccess(true);
           // handleOpenSnackbar("success", "Pengubahan wali kelas berhasil dilakukan");

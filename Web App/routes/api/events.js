@@ -20,7 +20,7 @@ router.post("/create", (req, res) => {
 	newEvent
 		.save()
 		.then((event) => res.json(event._id))
-		.catch(() => res.status(500).json("Unable to create event"));
+		.catch(() => res.status(400).json("Unable to create event"));
 });
 
 router.get("/viewAll", (req, res) => {
@@ -66,7 +66,7 @@ router.post("/update/:id", (req, res) => {
 		eventData
 			.save()
 			.then(() => res.json("Update event completed"))
-			.catch(() => res.status(500).json("Unable to update event"));
+			.catch(() => res.status(400).json("Unable to update event"));
 	});
 });
 

@@ -52,7 +52,7 @@ router.post("/create", (req, res) => {
   );
 });
 
-router.post("/grade/:id", (req, res) => {
+/* router.post("/grade/:id", (req, res) => {
   let { id } = req.params;
 
   Assessment.findById(id, (err, assessmentData) => {
@@ -80,7 +80,7 @@ router.post("/grade/:id", (req, res) => {
         .catch((err) => res.status(400).send("Unable to update task database"));
     }
   });
-});
+}); */
 
 router.post("/update/:id", (req, res) => {
   const { errors, isValid } = validateAssessmentInput(req.body);
@@ -427,48 +427,36 @@ router.delete("/delete/:id", (req, res) => {
   });
 });
 
-router.get("/getkuisbysc/:subjectId&:classId", (req, res) => {
-  Assessment.find({
-    subject: req.params.subjectId,
-    class_assigned: { $elemMatch: { $eq: req.params.classId } },
-    type: "Kuis",
-  }).lean().then((daftarKuis) => {
-    if (daftarKuis.length === 0) {
-      res.status(404).json("Belum ada kuis");
+router.get("/view", (req, res) => {
+  const { subjectId, classId, type } = req.query;
+  let query = {};
+  if (subjectId) {
+    query.subject = subjectId;
+  }
+  if (classId) {
+    query.class_assigned = { $elemMatch: { $eq: classId } };
+  }
+  if (type === "Kuis" || type === "Ujian") {
+    query.type = type;
+  }
+
+  Assessment.find(query).lean().then((assessments) => {
+    if (assessments.length === 0) {
+      res.status(404).json(`Belum ada ${type}`);
     } else {
-      res.json(daftarKuis.map((kuis) => {
-        if (kuis.posted === null) {
-          return { ...kuis, posted: new Date() >= new Date(kuis.post_date) };
+      res.json(assessments.map((assessment) => {
+        if (assessment.posted === null) {
+          return { ...assessment, posted: new Date() >= new Date(assessment.post_date) };
         } else {
-          return kuis;
+          return assessment;
         }
       }));
     }
   });
 });
 
-router.get("/getujianbysc/:subjectId&:classId", (req, res) => {
-  Assessment.find({
-    subject: req.params.subjectId,
-    class_assigned: { $elemMatch: { $eq: req.params.classId } },
-    type: "Ujian",
-  }).lean().then((daftarUjian) => {
-    if (daftarUjian.length === 0) {
-      res.status(404).json("Belum ada ujian");
-    } else {
-      res.json(daftarUjian.map((ujian) => {
-        if (ujian.posted === null) {
-          return { ...ujian, posted: new Date() >= new Date(ujian.post_date) };
-        } else {
-          return ujian;
-        }
-      }));
-    }
-  });
-});
-
-router.post("/updateSuspects/:id", (req, res) => {
-  Assessment.findById(req.params.id, (err, assessmentData) => {
+router.put("/suspects/:assessmentId", (req, res) => {
+  Assessment.findById(req.params.assessmentId, (err, assessmentData) => {
     if (!assessmentData) {
       return res.status(404).send("Assessment data is not found");
     } else {
@@ -478,14 +466,14 @@ router.post("/updateSuspects/:id", (req, res) => {
         .then(() => res.json(req.body))
         .catch(() =>
           res
-            .status(500)
-            .send(`Unable to update suspects attribute for assessment ${id}`)
+            .status(400)
+            .send(`Unable to update assessment suspects`)
         );
     }
   });
 });
 
-router.post("/updateGrades", (req, res) => {
+router.put("/grades", (req, res) => {
   Assessment.findById(req.body.assessmentId, (err, assessmentData) => {
     if (!assessmentData) {
       return res.status(404).send("Assessment data is not found");
@@ -597,7 +585,7 @@ router.post("/updateGrades", (req, res) => {
         .then((ass) => {
           res.json(ass);
         })
-        .catch(() => res.status(500).send(`Unable to update grades attribute`));
+        .catch(() => res.status(400).send(`Unable to update grades attribute`));
     }
   });
 });
@@ -622,7 +610,7 @@ router.get("/status/:id", (req, res) => {
   });
 });
 
-router.post("/validate", (req, res) => {
+router.post("/validity", (req, res) => {
   const { errors, isValid } = validateAssessmentInput(req.body);
   if (isValid) {
     res.status(200);

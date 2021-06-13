@@ -338,11 +338,11 @@ export const deleteUser = (userId) => (dispatch) => {
 //   }
 // };
 
-export const updateStudentsClass = (data, dummyClassId) => {
+export const moveStudents = (data, dummyClassId) => {
   return axios
-    .post(`/api/users/bulkupdateclass/${dummyClassId}`, data)
+    .put(`/api/users/class-assignment/${dummyClassId}`, data)
     .then(() => {
-      console.log("updateStudentsClass completed");
+      console.log("moveStudents completed");
     })
     .catch((err) => {
       throw new Error(err.response.data);
@@ -351,7 +351,7 @@ export const updateStudentsClass = (data, dummyClassId) => {
 
 export const updateTeacher = (data, teacherId) => (dispatch) => {
   axios
-    .post(`/api/users/updateTeacher/${teacherId}`, data)
+    .put(`/api/users/teacher/${teacherId}`, data)
     .then(() => {
       dispatch({
         type: GET_SUCCESS_RESPONSE,

@@ -158,22 +158,22 @@ export const setCurrentClass = (classId) => (dispatch) => {
   // }
 };
 
-export const updateClassAdmin = (classesData) => {
+export const unassignClassOfficers = (classesData) => {
   return axios
-    .post("/api/classes/bulkupdateclass", classesData)
+    .put("/api/classes/class-officers", classesData)
     .then(() => {
-      console.log("updateClassAdmin completed");
+      console.log("unassignClassOfficers completed");
     })
     .catch((err) => {
       throw new Error(err.response.data);
     });
 };
 
-export const updateWaliAdmin = (classesData) => {
+export const setHomeroomTeachers = (classesData) => {
   return axios
-    .post("/api/classes/bulkupdatewali", classesData)
+    .put("/api/classes/homeroom-teachers", classesData)
     .then(() => {
-      console.log("updateWaliAdmin completed");
+      console.log("setHomeroomTeachers completed");
     })
     .catch((err) => {
       throw new Error(err.response.data);

@@ -191,15 +191,15 @@ export const deleteTask = (taskId, history) => (dispatch) => {
     });
 };
 
-export const getTasksBySC = (subjectId, classId) => () => {
+export const getTasks = (subjectId, classId) => {
   return axios
-    .get(`/api/tasks/gettasksbysc/${subjectId}&${classId}`)
+    .get(`/api/tasks/view`, { params: { subjectId, classId } })
     .then((res) => {
-      console.log("getTasksBySC completed");
+      console.log("getTasks completed");
       return res.data;
     })
     .catch(() => {
-      throw new Error("getTasksBySC error has occured");
+      throw new Error("getTasks error has occured");
     });
 };
 
@@ -216,7 +216,7 @@ export const getTaskAtmpt = (user_id) => (dispatch) => {
     });
 };
 
-export const getTaskByClass = (classId) => (dispatch) => {
+/* export const getTaskByClass = (classId) => (dispatch) => {
   axios.get(`/api/tasks/byclass/${classId}`).then((res) => {
     console.log(res.data);
     dispatch({
@@ -225,32 +225,17 @@ export const getTaskByClass = (classId) => (dispatch) => {
     });
     return res.data;
   });
-};
+}; */
 
 export const createTaskComment = (
   taskId,
   comment
 ) => {
   return axios
-    .post(`/api/tasks/createcomment/${taskId}`, comment)
-    // .then(() => {
-    //   dispatch({
-    //     type: GET_SUCCESS_RESPONSE,
-    //     payload: {
-    //       action: "createTaskComment",
-    //       response: true
-    //     }
-    //   });
-    // })
-    // .catch((err) => {
-    //   dispatch({
-    //     type: GET_ERRORS,
-    //     payload: {
-    //       action: "createTaskComment",
-    //       response: err.response.data
-    //     }
-    //   });
-    // });
+    .post(`/api/tasks/comment/${taskId}`, comment)
+    .catch(() => {
+      throw new Error("createTaskComment error has occured");
+    });
 };
 
 export const editTaskComment = (
@@ -259,25 +244,10 @@ export const editTaskComment = (
   commentId
 ) => {
   return axios
-    .post(`/api/tasks/editcomment/${taskId}`, { updatedContent, commentId })
-    // .then(() => {
-    //   dispatch({
-    //     type: GET_SUCCESS_RESPONSE,
-    //     payload: {
-    //       action: "editTaskComment",
-    //       response: true
-    //     }
-    //   });
-    // })
-    // .catch((err) => {
-    //   dispatch({
-    //     type: GET_ERRORS,
-    //     payload: {
-    //       action: "editTaskComment",
-    //       response: err.response.data
-    //     }
-    //   });
-    // });
+    .put(`/api/tasks/comment/${taskId}`, { updatedContent, commentId })
+    .catch(() => {
+      throw new Error("editTaskComment error has occured");
+    });
 };
 
 export const deleteTaskComment = (
@@ -285,23 +255,8 @@ export const deleteTaskComment = (
   commentId
 ) => {
   return axios
-    .delete(`/api/tasks/deletecomment/${taskId}`, { data: { commentId } })
-    // .then(() => {
-    //   dispatch({
-    //     type: GET_SUCCESS_RESPONSE,
-    //     payload: {
-    //       action: "deleteTaskComment",
-    //       response: true
-    //     }
-    //   });
-    // })
-    // .catch((err) => {
-    //   dispatch({
-    //     type: GET_ERRORS,
-    //     payload: {
-    //       action: "deleteTaskComment",
-    //       response: err.response.data
-    //     }
-    //   });
-    // });
+    .delete(`/api/tasks/comment/${taskId}&${commentId}`)
+    .catch(() => {
+      throw new Error("deleteTaskComment error has occured");
+    });
 };
