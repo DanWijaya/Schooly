@@ -133,6 +133,11 @@ const styles = (theme) => ({
     },
     marginRight: "7.5px",
   },
+  customSpacing: {
+    [theme.breakpoints.down("sm")]: {
+      marginTop: theme.spacing(2),
+    }
+  }
 });
 
 // name = fileLampiran[i].name
@@ -643,7 +648,7 @@ class CreateTask extends Component {
                           </FormHelperText>
                         </FormControl>
                       </Grid>
-                      <Grid item xs={12} md={6}>
+                      <Grid item xs={12} md={6} className={classes.customSpacing}>
                         <Typography
                           component="label"
                           for="deadline"

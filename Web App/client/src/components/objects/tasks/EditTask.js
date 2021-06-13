@@ -137,6 +137,11 @@ const styles = (theme) => ({
     },
     marginRight: "7.5px",
   },
+  customSpacing: {
+    [theme.breakpoints.down("sm")]: {
+      marginTop: theme.spacing(2),
+    }
+  }
 });
 
 function LampiranFile(props) {
@@ -350,6 +355,10 @@ class EditTask extends Component {
       }
     }
   }
+
+  onDateChange = (date) => {
+    this.setState({ deadline: date });
+  };
 
   onSubmit = (e, classesOptions) => {
     e.preventDefault();
@@ -770,7 +779,7 @@ class EditTask extends Component {
                           </FormHelperText>
                         </FormControl>
                       </Grid>
-                      <Grid item xs={12} md={6}>
+                      <Grid item xs={12} md={6} className={classes.customSpacing}>
                         <Typography
                           component="label"
                           for="deadline"
