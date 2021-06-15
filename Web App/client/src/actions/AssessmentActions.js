@@ -291,7 +291,11 @@ export const updateAssessmentGrades = (
 };
 
 export const getStatus = (assessmentId) => {
-  return axios.get(`/api/assessments/status/${assessmentId}`);
+  return axios
+  .get(`/api/assessments/status/${assessmentId}`)
+  .catch((err) => {
+    throw new Error(err.response.data);
+  });
 };
 
 export const validateAssessment = (assessmentData) => (

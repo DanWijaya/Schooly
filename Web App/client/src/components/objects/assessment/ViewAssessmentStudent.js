@@ -656,17 +656,15 @@ function ViewAssessmentStudent(props) {
 
   const showTestStatus = () => {
     if (!start) {
-      if (submissions) {
-        if (submissions[user._id]) {
-          return (
-            <Paper className={classes.submittedPaper}>
-              <CheckCircleOutlineIcon />
-              <Typography variant="button" style={{ marginLeft: "5px" }}>
-                TELAH DIKUMPULKAN
-              </Typography>
-            </Paper>
-          );
-        }
+      if (submissions && submissions[user._id]) {
+        return (
+          <Paper className={classes.submittedPaper}>
+            <CheckCircleOutlineIcon />
+            <Typography variant="button" style={{ marginLeft: "5px" }}>
+              TELAH DIKUMPULKAN
+            </Typography>
+          </Paper>
+        );
       } else if (showStartButton) {
         return (
           <Grid item>

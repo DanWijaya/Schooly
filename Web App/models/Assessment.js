@@ -61,8 +61,7 @@ const AssessmentSchema = new Schema(
       // of: Object
     },
     /*
-    isi grades adalah pasangan <id murid> - <value>.
-    <value> adalah Object yang memiliki 2 pasangan key-value:
+    isi grades adalah pasangan <id murid> - <value> dengan <value> adalah Object yang memiliki 2 pasangan key - value berikut:
     1) "total_grade" - <nilai dengan range 0-100>
     2) "longtext_grades" - < Object yg memiliki pasangan-pasangan key-value = <idx soal uraian>-<nilai dengan range 0-bobot soal> >
 
@@ -73,7 +72,7 @@ const AssessmentSchema = new Schema(
         longtext_grades: {
           0: 10,
           1: 10,
-          2: 10,
+          2: 10
         }
       },
       5ed4ee415caa50389efaf014: {
@@ -81,12 +80,12 @@ const AssessmentSchema = new Schema(
         longtext_grades: {
           0: 0,
           1: 0,
-          2: 10,
+          2: 10
         }
-      },
+      }
     }
 
-    - jika suatu soal uraian sudah dinilai, pasangan <idx soal uraian>-<nilai dengan range 0-bobot soal> > ditambahkan ke dalam longtext_grades.
+    - jika suatu soal uraian sudah dinilai, pasangan <idx soal uraian> - <nilai dengan range 0-bobot soal> akan ditambahkan ke dalam longtext_grades.
       jika belum dinilai, pasangan tidak ditambahkan.
     - ketika assessment pertama kali dibuat, atribut grades tidak ada. 
       atribut grades hanya ada jika:
@@ -99,10 +98,38 @@ const AssessmentSchema = new Schema(
       jika longtext_grades belum lengkap, total_grade bernilai null. 
     */
 
+    submissions_timestamp: {
+      type: Map
+    },
+    /* 
+    - ketika assessment pertama kali dibuat, atribut ini tidak ada
+    - isi atribut ini adalah pasangan <id murid> - <timestamp ketika submission diterima oleh server>
+    */ 
+    
     submissions: {
       type: Map,
     },
-    // ketika assessment pertama kali dibuat, atribut ini tidak ada
+    /* 
+    - ketika assessment pertama kali dibuat, atribut ini tidak ada
+    - isi atribut ini adalah pasangan <id murid> - <array jawaban>. berikut adalah contoh submission untuk assessment dengan 
+    tipe soal nomor 1 sampai 4: radio, checkbox, isian, esai.
+    Map {
+      5f44d55155cedc284824f5c1: [
+        ["B"], ["A", "C"], [null, "jawaban isian"], ["jawaban esai"]
+      ],
+      5f5d8ffc6dd1f432b4f45ebb: [
+        [], ["A"], [], []
+      ]
+    }
+    - jumlah elemen <array jawaban> sama dengan jumlah pertanyaan (questions.length) pada assessment
+    - <array jawaban>[i] adalah jawaban murid untuk pertanyaan di index i (questions[i])
+    - semua elemen <array jawaban> adalah array yang memiliki jumlah elemen >= 0
+
+    - NOTE misal ada satu soal isian yang ada 3 kotak isian (answer.length untuk soal ini = 3) dan 
+    misal murid hanya menulis jawaban pada kotak isian ke-2. setelah disubmit, array jawaban untuk soal ini = [null, "jawaban 2"].
+    gatau kenapa elemen "undefined" di index 0 bisa otomatis dikonversi menjadi null. tapi sampai sekarang, 
+    hal ini tampak belum menimbulkan masalah
+    */
 
     type: {
       type: String,

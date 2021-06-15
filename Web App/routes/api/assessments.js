@@ -152,7 +152,7 @@ router.post("/update/:id", (req, res) => {
             let longtextGrade = {};
             let isLongtextQuestionAdded = false;
             for (let i = 0; i < questions.length; i++) {
-              // 1. jika soal dihapus, semua jawaban murid akan diabaikan dan soal ini tidak masuk dalam penilaian
+              // 1. jika soal ini dihapus, semua jawaban murid akan diabaikan dan soal ini tidak masuk dalam penilaian
 
               // 2. jika soal ini sudah ada sebelum perubahan assessment dilakukan, (baik mengalami perubahan maupun tidak),
               if (transformIdx[i] !== -1) {
@@ -285,22 +285,28 @@ router.post("/submit/:id", (req, res) => {
     if (!assessmentData) {
       return res.status(404).send("Assessment cannot be found");
     } else {
-      if (new Date() < new Date(assessmentData.post_date)) {
+      let now = new Date();
+      if (now < new Date(assessmentData.post_date)) {
         return res.json("Assessment not posted");
       }
-      if (new Date() > new Date(assessmentData.end_date)) {
-        return res.json("Late submission");
-      }
+
       console.log(answers, classId, userId);
-      let { submissions, grades, questions } = assessmentData;
+      let { submissions, grades, questions, submissions_timestamp } = assessmentData;
       if (submissions) {
         if (!submissions.has(userId)) {
           submissions.set(userId, answers);
+          submissions_timestamp.set(userId, now);
+        } else {
+          return res.send("Assessment has already answered");
         }
       } else {
-        let map = new Map();
-        map.set(userId, answers);
-        submissions = map;
+        let map1 = new Map();
+        map1.set(userId, answers);
+        submissions = map1;
+
+        let map2 = new Map();
+        map2.set(userId, now);
+        submissions_timestamp = map2;
       }
 
       let hasLongtextQuestion = false;
@@ -376,6 +382,7 @@ router.post("/submit/:id", (req, res) => {
         assessmentData.grades = grades;
       } // jika ada soal uraian, penghitungan nilai akan ditunda hingga semua jawaban uraian untuk suatu murid sudah dinilai
       assessmentData.submissions = submissions;
+      assessmentData.submissions_timestamp = submissions_timestamp;
 
       assessmentData
         .save()
