@@ -273,11 +273,9 @@ function ViewAssessmentTeacher(props) {
 
   // berisi id kelas yang sedang dipilih pada menu kelas
   const [selectedClass, setSelectedClass] = React.useState(null);
-  // const [selectedClass, setSelectedClass] = React.useState("5f4760f98dccb3468ccc0ffc"); //dev
 
   // berisi id murid yang sedang dipilih pada menu murid
   const [selectedStudent, setSelectedStudent] = React.useState(null);
-  // const [selectedStudent, setSelectedStudent] = React.useState("5f44d55155cedc284824f5c1"); //dev
 
   // jika belum diload, bernilai null. jika sudah diproses, nilainya pasti false atau true.
   const hasLongtextQst = React.useRef(null);
@@ -286,7 +284,6 @@ function ViewAssessmentTeacher(props) {
 
   // Tabs
   const [value, setValue] = React.useState(0);
-  // const [value, setValue] = React.useState(1); //dev
 
   React.useEffect(() => {
     getOneAssessment(assessment_id);
@@ -1546,6 +1543,33 @@ function ViewAssessmentTeacher(props) {
                   <Grid item xs={1} sm={5}></Grid>
                 </Grid>
               </div>
+              {isAssessmentLoaded() &&
+              selectedAssessments.submissions_timestamp &&
+              selectedStudent 
+                ? <div className={classes.selectDiv} style={{ marginTop: "10px" }}>
+                    <Grid container>
+                      <Grid item xs={1} sm={3}></Grid>
+                      <Grid
+                        item
+                        xs={5}
+                        sm={2}
+                        className={classes.selectDescription}
+                      >
+                        <Typography>Waktu Pengumpulan:</Typography>
+                      </Grid>
+                      <Grid item xs={5} sm={2}>
+                        <Typography
+                          style={{ marginLeft: "10px" }}
+                        >
+                        {moment(selectedAssessments.submissions_timestamp[selectedStudent])
+                          .locale("id")
+                          .format("DD MMM YYYY, HH:mm")}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={1} sm={5}></Grid>
+                    </Grid>
+                  </div>
+                : null}
             </Paper>
 
             {isAssessmentLoaded() && selectedAssessments.submissions
