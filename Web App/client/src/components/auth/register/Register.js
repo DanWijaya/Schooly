@@ -193,7 +193,7 @@ class Register extends Component {
     var newUser = {
       name: this.state.name,
       role: this.state.role,
-      email: this.state.email,
+      email: this.state.email.toLowerCase(),
       phone: this.state.phone,
       emergency_phone: this.state.emergency_phone,
       address: this.state.address,
@@ -202,11 +202,6 @@ class Register extends Component {
       tanggal_lahir: this.state.tanggal_lahir,
     };
 
-    const role = this.state.role;
-
-    // if (role === "Student") {
-    //   newUser.kelas = this.state.kelas;
-    // } else if (role === "Teacher") {
     // if (role === "Teacher") {
     //   newUser.subject_teached = this.state.subject_teached;
     // }
@@ -345,65 +340,36 @@ class Register extends Component {
                   })}
                 />
               </Grid>
-              {/* {
-              // this.state.role === "Student" ? (
-              //   <Grid item>
-              //     <FormControl
-              //       id="kelas"
-              //       variant="outlined"
-              //       color="primary"
-              //       fullWidth
-              //       error={Boolean(errors.kelas)}
-              //     >
-              //       <InputLabel id="kelas-label">Kelas</InputLabel>
-              //       <Select
-              //         labelId="kelas-label"
-              //         label="Kelas"
-              //         value={this.state.kelas}
-              //         onChange={(event) => {
-              //           this.onChange(event, "kelas");
-              //         }}
-              //       >
-              //         {all_classes.map((kelas) => (
-              //           <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
-              //         ))}
-              //       </Select>
-              //       <FormHelperText>
-              //         {Boolean(errors.kelas) ? errors.kelas : null}
-              //       </FormHelperText>
-              //     </FormControl>
-              //   </Grid>
-              // ) : 
-              this.state.role === "Teacher" ? (
-                <Grid item>
-                  <FormControl
-                    id="subject"
-                    variant="outlined"
-                    color="primary"
-                    fullWidth
-                    error={Boolean(errors.subject_teached)}
-                  >
-                    <InputLabel id="subject-label">Mata Pelajaran</InputLabel>
-                    <Select
-                      labelId="subject-label"
-                      label="Mata Pelajaran"
-                      value={this.state.subject_teached}
-                      onChange={(event) => {
-                        this.onChange(event, "subject");
-                      }}
-                    >
-                      {all_subjects.map((subject) => (
-                        <MenuItem value={subject._id}>{subject.name}</MenuItem>
-                      ))}
-                    </Select>
-                    <FormHelperText>
-                      {Boolean(errors.subject_teached)
-                        ? errors.subject_teached
-                        : null}
-                    </FormHelperText>
-                  </FormControl>
-                </Grid>
-              ) : null} */}
+              {
+                // this.state.role === "Student" ? (
+                //   <Grid item>
+                //     <FormControl
+                //       id="kelas"
+                //       variant="outlined"
+                //       color="primary"
+                //       fullWidth
+                //       error={Boolean(errors.kelas)}
+                //     >
+                //       <InputLabel id="kelas-label">Kelas</InputLabel>
+                //       <Select
+                //         labelId="kelas-label"
+                //         label="Kelas"
+                //         value={this.state.kelas}
+                //         onChange={(event) => {
+                //           this.onChange(event, "kelas");
+                //         }}
+                //       >
+                //         {all_classes.map((kelas) => (
+                //           <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
+                //         ))}
+                //       </Select>
+                //       <FormHelperText>
+                //         {Boolean(errors.kelas) ? errors.kelas : null}
+                //       </FormHelperText>
+                //     </FormControl>
+                //   </Grid>
+                // ) :
+              }
               <Grid item>
                 <TextField
                   fullWidth

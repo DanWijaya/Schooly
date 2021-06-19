@@ -1,9 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import {
   getFileAnnouncements,
   downloadFileAnnouncements,
@@ -213,6 +214,8 @@ function ViewAnnouncement(props) {
   document.title = "Schooly | Lihat Pengumuman";
 
   const classes = useStyles();
+  const history = useHistory();
+
   const { selectedAnnouncements } = props.announcements;
   const {
     getUsers,
@@ -237,6 +240,7 @@ function ViewAnnouncement(props) {
   React.useEffect(() => {}, []);
 
   React.useEffect(() => {
+    console.log(announcement_id)
     getOneAnnouncement(announcement_id);
     getAllClass("map");
     getSelectedClasses(selectedAnnouncements.class_assigned);
@@ -248,6 +252,7 @@ function ViewAnnouncement(props) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAnnouncements._id]); // beacause only receive one announcement.
+
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
@@ -280,7 +285,9 @@ function ViewAnnouncement(props) {
   };
 
   const onDeleteAnnouncement = (announcement_id) => {
-    deleteAnnouncement(announcement_id);
+    deleteAnnouncement(announcement_id, history).then((res) => {
+      console.log(res);
+    });
     // setFileTugas(null)
   };
 
@@ -304,7 +311,8 @@ function ViewAnnouncement(props) {
     // previewLampiranAnnouncement(id)
     else console.log("File Category is not specified");
   };
-
+  // console.log(user);
+  console.log(retrieved_users.get(selectedAnnouncements.author_id))
   return (
     <div className={classes.root}>
       <DeleteDialog
@@ -355,12 +363,12 @@ function ViewAnnouncement(props) {
               <Grid item xs={12}>
                 <Divider className={classes.dividerColor} />
               </Grid>
-              {user.role === "Teacher" &&
+              {retrieved_users.get(selectedAnnouncements.author_id) ? user.role === "Teacher" &&
               retrieved_users.size &&
               selectedAnnouncements.author_id &&
               retrieved_users.get(selectedAnnouncements.author_id).role ===
                 "Teacher" ? (
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ marginBottom: "15px" }}>
                   <Typography color="textSecondary" gutterBottom>
                     Kelas yang Diberikan:
                   </Typography>
@@ -381,14 +389,18 @@ function ViewAnnouncement(props) {
                         })}
                   </Typography>
                 </Grid>
-              ) : null}
+              ) : null :null}
 
-              <Grid item xs={12} style={{ marginTop: "15px" }}>
+              <Grid item xs={12}>
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Pengumuman:
                 </Typography>
-                <Typography variant="body1">
-                  {selectedAnnouncements.description}
+                <Typography
+                  variant="body1"
+                  align="justify"
+                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                >
+                  <CustomLinkify text={selectedAnnouncements.description} />
                 </Typography>
               </Grid>
               {!fileLampiran.length === 0 ? null : (

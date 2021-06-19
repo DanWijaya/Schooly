@@ -108,7 +108,6 @@ router.post("/upload/:id", upload.array("lampiran_assessment"), (req, res) => {
                   })
                   .then(() => {
                     assessment.questions = questionsArray;
-                    console.log(assessment.questions);
                     assessment
                       .save() // kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client.
                       .then(() => {

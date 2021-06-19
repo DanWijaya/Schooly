@@ -13,6 +13,7 @@ import {
   ListItemText,
   Toolbar,
   Typography,
+  Tooltip,
 } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
@@ -91,14 +92,16 @@ function DrawerContent(props) {
 
   const generateList = (linkto, icon, itemText, subheader = false) => {
     return (
-      <Link to={linkto} onClick={handleDrawerMobile}>
-        <StyledListItem button>
-          <ListItemIcon>{icon}</ListItemIcon>
-          <ListItemText
-            primary={<Typography color="textPrimary">{itemText}</Typography>}
-          />
-        </StyledListItem>
-      </Link>
+        <Link to={linkto} onClick={handleDrawerMobile}>
+          <Tooltip title={itemText} placement="right" enterDelay={300}>
+            <StyledListItem button>
+              <ListItemIcon>{icon}</ListItemIcon>
+              <ListItemText
+                primary={<Typography color="textPrimary">{itemText}</Typography>}
+              />
+            </StyledListItem>
+          </Tooltip>
+        </Link>
     );
   };
 

@@ -12,6 +12,7 @@ import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers } from "../../../actions/UserActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Divider,
@@ -26,6 +27,7 @@ import {
   Menu,
   MenuItem,
   Paper,
+  Snackbar,
   TableSortLabel,
   TextField,
   Typography,
@@ -35,6 +37,7 @@ import {
   Avatar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
+import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
@@ -515,6 +518,18 @@ function MaterialList(props) {
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
+  const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
+
+  const handleOpenDeleteSnackbar = () => {
+    setOpenDeleteSnackbar(true);
+  }
+
+  const handleCloseDeleteSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenDeleteSnackbar(false);
+  };
 
   const {
     getAllSubjects,
@@ -555,8 +570,17 @@ function MaterialList(props) {
       // for student
       getMaterial(user.kelas, "by_class");
     }
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  React.useEffect(() => {
+    // Untuk muculin delete snackbar pas didelete dari view page
+    if(props.location.openDeleteSnackbar){
+      handleOpenDeleteSnackbar()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   console.log(all_teachers_map);
   const retrieveMaterials = () => {
@@ -593,7 +617,16 @@ function MaterialList(props) {
   retrieveMaterials();
 
   const onDeleteMaterial = (id) => {
-    deleteMaterial(id);
+    deleteMaterial(id).then((res) => {
+      handleOpenDeleteSnackbar();
+      handleCloseDeleteDialog();
+      if (user.role === "Teacher") {
+        getMaterial(user._id, "by_author");
+      } else {
+        // for student
+        getMaterial(user.kelas, "by_class");
+      }
+    });
   };
 
   // Delete Dialog
@@ -638,9 +671,7 @@ function MaterialList(props) {
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
         {rows.length === 0 ? (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
@@ -856,6 +887,23 @@ function MaterialList(props) {
           })
         )}
       </Grid>
+      <Snackbar
+        open={openDeleteSnackbar}
+        autoHideDuration={4000}
+        onClose={(event, reason) => {
+          handleCloseDeleteSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseDeleteSnackbar(event, reason);
+          }}
+        >
+          Materi berhasil dihapus
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

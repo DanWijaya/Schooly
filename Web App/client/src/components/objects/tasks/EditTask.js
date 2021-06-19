@@ -223,6 +223,7 @@ class EditTask extends Component {
       classChanged: false,
       focused: false,
       description: "",
+      originalFileLampiran: [],
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
@@ -236,7 +237,8 @@ class EditTask extends Component {
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
       allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
       allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
-      inputHeight: null // menyimpan tinggi textfield
+      inputHeight: null, // menyimpan tinggi textfield
+      success: null
     };
     this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
   }
@@ -251,6 +253,7 @@ class EditTask extends Component {
     this.props.getFileTasks(id).then((res) => {
       this.setState({
         fileLampiran: res,
+        originalFileLampiran: res,
       });
     });
     this.props.refreshTeacher(this.props.auth.user._id);
@@ -268,14 +271,9 @@ class EditTask extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { tasksCollection, errors } = nextProps;
+    const { tasksCollection } = nextProps;
 
-    // pass errorsnya false makanya berhasil
-    if (!nextProps.errors) {
-      this.handleOpenUploadDialog();
-    }
-
-    if (Boolean(tasksCollection) && errors) {
+    if (Boolean(tasksCollection)) {
       this.setState({
         name: tasksCollection.name,
         subject: tasksCollection.subject,
@@ -399,16 +397,29 @@ class EditTask extends Component {
       formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i]);
     }
     console.log(taskObject);
-    this.props.updateTask(
-      formData,
-      fileLampiranToDelete,
-      this.props.tasksCollection.lampiran,
-      taskObject,
-      id,
-      this.props.history
-    );
-
-    this.setState({ fileLampiranToDelete: [] });
+    this.handleOpenUploadDialog()
+    this.props
+      .updateTask(
+        formData,
+        fileLampiranToDelete,
+        this.props.tasksCollection.lampiran,
+        taskObject,
+        id,
+        this.props.history
+      )
+      .then((res) => this.setState({ success: res }))
+      .catch((err) => {
+        this.handleCloseUploadDialog()
+        this.setState({
+          errors: err,
+          fileLampiran: [
+            ...this.state.originalFileLampiran,
+            ...this.state.fileLampiranToAdd,
+          ],
+          fileLampiranToDelete: [],
+        })
+      }
+      );
   };
 
   handleLampiranUpload = (e) => {
@@ -497,6 +508,10 @@ class EditTask extends Component {
     this.setState({ openUploadDialog: true });
   };
 
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  }
+
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
   };
@@ -506,6 +521,11 @@ class EditTask extends Component {
   };
 
   onChange = (e, otherfield) => {
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+    
     if(otherfield){
       if (otherfield === "subject") { // jika guru memilih mata pelajaran
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
@@ -561,17 +581,22 @@ class EditTask extends Component {
         this.setState({ [otherfield]: e.target.value });
       }
     } else {
+      // let field = e.target.id ? e.target.id : otherfield;
+      // if (this.state.errors[field]) {
+      //   this.setState({ errors: { ...this.state.errors, [field]: null } });
+      // }
+      // this.setState({ [field]: e.target.value });
+
       this.setState({ [e.target.id]: e.target.value });
     }
   };
 
   render() {
-    const { fileLampiran, class_assigned } = this.state;
-    const { classes, errors, success } = this.props;
+    const { fileLampiran, class_assigned, errors, success } = this.state;
+    const { classes } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
-
     // const task_id = this.props.match.params.id;
 
     let classIds = [];
@@ -659,7 +684,7 @@ class EditTask extends Component {
             success={success}
             messageUploading="Tugas sedang disunting"
             messageSuccess="Tugas telah disunting"
-            redirectLink="/daftar-tugas"
+            redirectLink={`/tugas-guru/${this.props.match.params.id}`}
           />
           <DeleteDialog
             openDeleteDialog={this.state.openDeleteDialog}
@@ -856,8 +881,7 @@ class EditTask extends Component {
                           )}
                         </Select>
                         <FormHelperText>
-                          {Boolean(errors.class_assigned) &&
-                          class_assigned.length === 0
+                          {Boolean(errors.class_assigned)
                             ? errors.class_assigned
                             : null}
                         </FormHelperText>

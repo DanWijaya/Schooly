@@ -13,6 +13,7 @@ import { getStudents, getStudentsByClass, getTeachers } from "../../../actions/U
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Fab,
@@ -37,6 +38,7 @@ import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import { AiOutlineUserSwitch } from "react-icons/ai";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
@@ -103,8 +105,16 @@ const styles = (theme) => ({
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: "white",
       },
+      color: "black"
     },
   },
+  menuItemText: {
+    "&:hover": {
+        color: "white",
+      },
+      color: "black"
+  },
+  
   manageTaskButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -114,6 +124,19 @@ const styles = (theme) => ({
     },
   },
   manageTaskIcon: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+    marginRight: "7.5px",
+  },
+  manageHomeroomTeacherButton: {
+    backgroundColor: theme.palette.primary.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.dark,
+    },
+  },
+  manageHomeroomTeacherIcon: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
     marginRight: "7.5px",
@@ -605,11 +628,7 @@ function ListAssessments(props) {
     }
   }
   if (result.length === 0) {
-    return (
-      <Typography variant="subtitle1" align="center" color="textSecondary">
-        Kosong
-      </Typography>
-    );
+    return <Empty />;
   } else {
     return sortAscByCreatedAt(result).map((row) => (
       <AssessmentListItem
@@ -1052,11 +1071,7 @@ class Dashboard extends Component {
         }
       });
       if (result.length === 0) {
-        return (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
-        );
+        return <Empty />;
       } else {
         return sortAscByCreatedAt(result).map((row) => (
           <TaskListItem
@@ -1105,11 +1120,7 @@ class Dashboard extends Component {
         }
       }
       if (result.length === 0) {
-        return (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
-        );
+        return <Empty />;
       } else {
         return sortAscByCreatedAt(result).map((row) => {
           return (
@@ -1186,11 +1197,7 @@ class Dashboard extends Component {
       }
 
       if (result.length === 0) {
-        return (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
-        );
+        return <Empty />;
       } else {
         return sortAscByCreatedAt(result).map((row) => {
           return (
@@ -1551,17 +1558,6 @@ class Dashboard extends Component {
                 justify="flex-end"
                 alignItems="center"
               >
-                {/* <Grid item>
-                  <Link to="/daftar-tugas">
-                    <Fab
-                      variant="extended"
-                      className={classes.manageTaskButton}
-                    >
-                      <AssignmentIcon className={classes.manageTaskIcon} />
-                      Lihat Tugas
-                    </Fab>
-                  </Link>
-                </Grid> */}
                 <Grid item>
                   <Fab
                     className={classes.createButton}
@@ -1585,50 +1581,66 @@ class Dashboard extends Component {
                       horizontal: "center",
                     }}
                   >
-                    <MenuItem
-                      button
-                      component="a"
-                      href="/buat-pengumuman"
-                      className={classes.menuItem}
-                    >
+                    <Link to="/buat-pengumuman">
+                      <MenuItem
+                        className={classes.menuItem}
+                      >
                       <ListItemIcon>
                         <AnnouncementIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Pengumuman" />
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Pengumuman</Typography>}/>
                     </MenuItem>
+                    </Link>
+                    <Link to="/buat-materi">
                     <MenuItem
-                      button
-                      component="a"
-                      href="/buat-materi"
                       className={classes.menuItem}
                     >
                       <ListItemIcon>
                         <MenuBookIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Materi" />
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Materi</Typography>} />
                     </MenuItem>
+                    </Link>
+                    <Link to="/buat-tugas">
                     <MenuItem
-                      button
-                      component="a"
-                      href="/buat-tugas"
                       className={classes.menuItem}
                     >
                       <ListItemIcon>
                         <AssignmentIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Tugas" />
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Tugas</Typography>} />
                     </MenuItem>
+                    </Link>
+                    <Link to="/buat-kuis">
                     <MenuItem
-                      button
-                      component="a"
-                      href="/buat-kuis-ujian"
                       className={classes.menuItem}
                     >
                       <ListItemIcon>
                         <FaTasks />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Kuis/Ujian" />
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Kuis</Typography>} />
                     </MenuItem>
+                    </Link>
+                    <Link to="/buat-ujian">
+                    <MenuItem
+                      className={classes.menuItem}
+                    >
+                      <ListItemIcon>
+                        <FaTasks />
+                      </ListItemIcon>
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Ujian</Typography>} />
+                    </MenuItem>
+                    </Link>
+                    {/* <Link to="/buat-kuis-ujian">
+                    <MenuItem
+                      className={classes.menuItem}
+                    >
+                      <ListItemIcon>
+                        <FaTasks />
+                      </ListItemIcon>
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Kuis/Ujian</Typography>} />
+                    </MenuItem>
+                    </Link> */}
                   </Menu>
                 </Grid>
               </Grid>
@@ -1747,7 +1759,27 @@ class Dashboard extends Component {
               </Grid>
             </>
           ) : (
-            <Grid item container direction="row" justify="flex-end">
+            <Grid
+              item
+              container
+              direction="row"
+              justify="flex-end"
+              alignItems="center"
+              spacing={1}
+            >
+              <Grid item>
+                <Link to="/atur-walikelas">
+                  <Fab
+                    variant="extended"
+                    className={classes.manageHomeroomTeacherButton}
+                  >
+                    <AiOutlineUserSwitch
+                      className={classes.manageHomeroomTeacherIcon}
+                    />
+                    Atur Wali Kelas
+                  </Fab>
+                </Link>
+              </Grid>
               <Grid item>
                 <Link to="/daftar-kelas">
                   <Fab variant="extended" className={classes.manageClassButton}>
@@ -1755,6 +1787,55 @@ class Dashboard extends Component {
                     Atur Kelas
                   </Fab>
                 </Link>
+              </Grid>
+              <Grid item>
+                <Fab
+                  className={classes.createButton}
+                  onClick={(event) => this.handleMenuOpen(event)}
+                >
+                  <AddIcon />
+                </Fab>
+                <Menu
+                  keepMounted
+                  anchorEl={this.state.anchorEl}
+                  open={Boolean(this.state.anchorEl)}
+                  onClose={this.handleMenuClose}
+                  getContentAnchorEl={null}
+                  style={{ marginTop: "10px" }}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  <MenuItem
+                    button
+                    component="a"
+                    href="/buat-kelas"
+                    className={classes.menuItem}
+                  >
+                    <ListItemIcon>
+                      <FaChalkboardTeacher
+                        className={classes.manageClassIcon}
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Kelas" />
+                  </MenuItem>
+                  <MenuItem
+                    button
+                    component="a"
+                    href="/buat-pengumuman"
+                    className={classes.menuItem}
+                  >
+                    <ListItemIcon>
+                      <AnnouncementIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Pengumuman" />
+                  </MenuItem>
+                </Menu>
               </Grid>
             </Grid>
           )}

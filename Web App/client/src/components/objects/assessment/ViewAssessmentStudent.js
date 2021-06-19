@@ -41,6 +41,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import moment from "moment";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import "moment/locale/id";
 import SubmitDialog from "../../misc/dialog/SubmitDialog";
 import ToggleButton from "@material-ui/lab/ToggleButton";
@@ -184,7 +185,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.main,
       color: "white",
       cursor: "pointer",
-      "&:hover": {
+      "&:focus, &:hover": {
         backgroundColor: theme.palette.primary.main,
       },
     },
@@ -265,7 +266,6 @@ function Timer(props) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time]);
-
   return (
     <div className={classes.root}>
       <Box position="relative" display="inline-flex">
@@ -414,16 +414,8 @@ function questionPage(
           horizontal: "right",
         }}
       >
-        {/* <Paper
-          buttons
-          variant="outlined"
-          className={classes.questionPage}
-          onClick={() => handleChangeQuestion(question_number-1)}
-        > */}
         <Typography>{question_number}</Typography>
-        {/* </Paper> */}
       </Badge>
-      {/* </Grid> */}
     </ToggleButton>
   );
 }
@@ -576,8 +568,13 @@ function ViewAssessmentStudent(props) {
     }
 
     return (
-      <Typography variant="body1" gutterButtom>
-        <form>{splitResult}</form>
+      <Typography
+        align="justify"
+        style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+      >
+        <form>
+          <CustomLinkify text={splitResult} />
+        </form>
       </Typography>
     );
   };
@@ -750,13 +747,6 @@ function ViewAssessmentStudent(props) {
                           i + 1,
                           answer
                         );
-                        // return (
-                        // <QuestionPage
-                        //   classes={classes}
-                        //   question_number={i + 1}
-                        //   handleChangeQuestion={handleChangeQuestion}
-                        //   answer={answer}/>
-                        // )
                       })}
                 </ToggleButtonGroup>
               </Grid>
@@ -769,7 +759,7 @@ function ViewAssessmentStudent(props) {
               <Grid item xs sm className={classes.content}>
                 <Grid container direction="column" spacing={2}>
                   <Grid item>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6" color="primary" gutterBottom>
                       Soal {qnsIndex + 1}
                     </Typography>
                     <GridList
@@ -783,7 +773,6 @@ function ViewAssessmentStudent(props) {
                             <GridListTile key={image} cols={1}>
                               <img
                                 alt="current img"
-                                // src={`/api/upload/att_assessment/${image}`}
                                 src={lampiranUrls.get(image)}
                               />
                               <GridListTileBar
@@ -798,8 +787,15 @@ function ViewAssessmentStudent(props) {
                       "shorttext" ? (
                       generateSoalShortTextStudent()
                     ) : (
-                      <Typography variant="h6" gutterButtom>
-                        {questions[qnsIndex].name}
+                      <Typography
+                        align="justify"
+                        style={{
+                          wordBreak: "break-word",
+                          whiteSpace: "pre-wrap",
+                        }}
+                        gutterButtom
+                      >
+                        <CustomLinkify text={questions[qnsIndex].name} />
                       </Typography>
                     )}
                   </Grid>
@@ -927,7 +923,7 @@ function ViewAssessmentStudent(props) {
       return <Redirect to="/tidak-ditemukan" />;
     }
   }
-
+ console.log(window.innerHeight)
   return (
     <div className={classes.root}>
       <SubmitDialog

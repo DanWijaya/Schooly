@@ -199,6 +199,7 @@ function QuestionItem(props) {
     }
   }, [answer, type]);
   React.useEffect(() => {
+    // setLongtextValue("1");
     setLongtextValue(longtextWeight);
   }, [longtextWeight]);
   React.useEffect(() => {

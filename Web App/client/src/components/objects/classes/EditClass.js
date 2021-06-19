@@ -111,15 +111,15 @@ class EditClass extends Component {
   }
 
   onChange = (e, otherfield = null) => {
-    // console.log(this.state.walikelas);
-    if (otherfield) {
-      if (otherfield === "mata_pelajaran") {
-        this.setState({ [otherfield]: e });
-      } else {
-        this.setState({ [otherfield]: e.target.value });
-      }
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+    
+    if (field === "mata_pelajaran") {
+      this.setState({ [field]: e });
     } else {
-      this.setState({ [e.target.id]: e.target.value });
+      this.setState({ [field]: e.target.value });
     }
   };
 
@@ -197,7 +197,12 @@ class EditClass extends Component {
       errors: {},
       mata_pelajaran: this.state.mata_pelajaran.map((matpel) => (matpel._id))
     };
-    this.props.updateClass(classObject, id, this.props.history);
+    this.props
+      .updateClass(classObject, id, this.props.history)
+      .then(() => this.handleOpenUploadDialog())
+      .catch((err) => {
+        this.setState({ errors: err });
+      });
   };
 
   componentDidMount() {
@@ -215,16 +220,16 @@ class EditClass extends Component {
   }
 
   render() {
-    const { classes, errors, success } = this.props;
-    const { user } = this.props.auth;
+    const { classes, success } = this.props;
+    const { user, students_by_class } = this.props.auth;
     // const { all_teachers} = this.props.auth;
-    const { students_by_class } = this.props.auth;
     const {
       sekretaris,
       bendahara,
       ketua_kelas,
       walikelas,
       teacher_options,
+      errors,
     } = this.state;
 
     // var teacher_options = all_teachers

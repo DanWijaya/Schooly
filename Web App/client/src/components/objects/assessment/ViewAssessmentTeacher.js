@@ -1,8 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import {
   getOneAssessment,
   deleteAssessment,
@@ -48,9 +49,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     padding: "10px",
   },
-  // content: {
-  //   padding: "20px",
-  // },
   seeAllAssessmentButton: {
     backgroundColor: theme.palette.success.main,
     color: "white",
@@ -134,14 +132,14 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     width: "1rem",
   },
-  questionName: {
-    fontSize: "1.1rem",
+  shortAnswerText: {
+    color: theme.palette.text.secondary,
   },
 }));
 
 function ViewAssessmentTeacher(props) {
   const classes = useStyles();
-
+  const history = useHistory();
   document.title = "Schooly | Buat Kuis";
   const assessment_id = props.match.params.id;
   const isMobileView = useMediaQuery("(max-width:780px)");
@@ -177,7 +175,9 @@ function ViewAssessmentTeacher(props) {
   console.log(lampiranUrls);
 
   const onDeleteAssessment = (id) => {
-    deleteAssessment(id);
+    deleteAssessment(id, type, history).then((res) => {
+      console.log(res);
+    });
   };
 
   // Delete Dialog
@@ -198,19 +198,24 @@ function ViewAssessmentTeacher(props) {
 
     for (let i = 1; i <= splitResult.length - 2; i += 2) {
       splitResult[i] = (
-        <Input
-          type="text"
+        <span
+          className={classes.shortAnswerText}
           key={`${qstIndex}-${iterator}`}
-          disabled={true}
-          value={qst.answer[iterator]}
-        />
+        >
+          <u>{qst.answer[iterator]}</u>
+        </span>
       );
       iterator++;
     }
 
     return (
-      <Typography className={classes.questionName}>
-        <form>{splitResult}</form>
+      <Typography
+        align="justify"
+        style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+      >
+        <form>
+          <CustomLinkify text={splitResult} />
+        </form>
       </Typography>
     );
   };
@@ -363,9 +368,15 @@ function ViewAssessmentTeacher(props) {
 
               <Grid item xs={12} style={{ marginTop: "15px" }}>
                 <Typography color="textSecondary" gutterBottom>
-                  Deskripsi Kuis/Ujian:
+                  Deskripsi {type}:
                 </Typography>
-                <Typography>{selectedAssessments.description}</Typography>
+                <Typography
+                  variant="body1"
+                  align="justify"
+                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                >
+                  <CustomLinkify text={selectedAssessments.description} />
+                </Typography>
               </Grid>
             </Grid>
           </Paper>
@@ -383,7 +394,7 @@ function ViewAssessmentTeacher(props) {
                     className={classes.content}
                   >
                     <Grid item>
-                      <Typography variant="h6" gutterBottom color="primary">
+                      <Typography variant="h6" color="primary" gutterBottom>
                         Soal {i + 1}
                       </Typography>
                       <GridList
@@ -398,7 +409,6 @@ function ViewAssessmentTeacher(props) {
                               <GridListTile key={image} cols={1}>
                                 <img
                                   alt="current img"
-                                  // src={`/api/upload/att_assessment/${image}`}
                                   src={lampiranUrls.get(image.toString())}
                                 />
                                 <GridListTileBar
@@ -416,23 +426,40 @@ function ViewAssessmentTeacher(props) {
                       {question.type === "shorttext" ? (
                         generateSoalShortTextTeacher(question, i)
                       ) : question.type === "longtext" ? (
-                        <>
-                          <Typography
-                            className={classes.questionName}
-                            style={{ paddingBottom: "16px" }}
-                          >
-                            {question.name}
-                          </Typography>
-                          <Typography
-                            className={classes.questionName}
-                            color="textSecondary"
-                          >
-                            {question.answer}
-                          </Typography>
-                        </>
+                        <Grid container direction="column" spacing={2}>
+                          <Grid item>
+                            <Typography
+                              align="justify"
+                              style={{
+                                wordBreak: "break-word",
+                                whiteSpace: "pre-wrap",
+                              }}
+                            >
+                              <CustomLinkify text={question.name} />
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography
+                              color="textSecondary"
+                              align="justify"
+                              style={{
+                                wordBreak: "break-word",
+                                whiteSpace: "pre-wrap",
+                              }}
+                            >
+                              <CustomLinkify text={question.answer} />
+                            </Typography>
+                          </Grid>
+                        </Grid>
                       ) : (
-                        <Typography className={classes.questionName}>
-                          {question.name}
+                        <Typography
+                          align="justify"
+                          style={{
+                            wordBreak: "break-word",
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          <CustomLinkify text={question.name} />
                         </Typography>
                       )}
                       {/* </Typography> */}
@@ -536,7 +563,7 @@ function ViewAssessmentTeacher(props) {
             </LightTooltip>
           </Grid>
           <Grid item style={{ paddingRight: "10px" }}>
-            <Link to={`/sunting-kuis/${assessment_id}`}>
+            <Link to={ type === "Kuis" ? `/sunting-kuis/${assessment_id}` : `/sunting-ujian/${assessment_id}`}>
               <LightTooltip title="Sunting" placement="bottom">
                 <Fab className={classes.editAssessmentButton}>
                   <EditIcon />
@@ -564,7 +591,7 @@ function ViewAssessmentTeacher(props) {
         onClose={handleCloseCopySnackBar}
       >
         <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
-          Link {type} berhasil disalin ke Clipboard Anda!
+          Tautan {type} berhasil disalin ke Clipboard Anda!
         </MuiAlert>
       </Snackbar>
     </div>

@@ -98,6 +98,11 @@ export const globalStyles = responsiveFontSizes(
           maxWidth: "none",
         },
       },
+      MuiFilledInput: {
+        multiline: {
+          padding: "18.5px 0px",
+        },
+      },
       MuiOutlinedInput: {
         multiline: {
           padding: "18.5px 0px"

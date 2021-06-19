@@ -15,7 +15,6 @@ const att_material = require("./routes/api/upload/att_material");
 const att_task = require("./routes/api/upload/att_task");
 const file_tugas = require("./routes/api/upload/file_tugas");
 const avatar = require("./routes/api/upload/avatar");
-// const s3upload = require("./routes/s3_upload/s3_uploads");
 
 // untuk files punya
 const file_materials = require("./routes/api/files/file_materials");
@@ -71,7 +70,6 @@ app.use(passport.initialize());
 // Passport config
 require("./passport")(passport);
 console.log("Check routes");
-
 // Routes
 
 app.use("/api/users", users);

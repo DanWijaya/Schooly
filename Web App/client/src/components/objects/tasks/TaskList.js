@@ -9,6 +9,7 @@ import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTas
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   IconButton,
@@ -24,6 +25,7 @@ import {
   Paper,
   Menu,
   MenuItem,
+  Snackbar,
   TableSortLabel,
   TextField,
   Typography,
@@ -33,6 +35,7 @@ import {
   Avatar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
+import MuiAlert from "@material-ui/lab/Alert";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -521,6 +524,7 @@ function TaskList(props) {
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [submittedTaskIds, setSubmittedTaskIds] = React.useState(null);
+  const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
   const {
     tasksCollection,
@@ -553,26 +557,35 @@ function TaskList(props) {
       getAllClass("map");
       getAllSubjects("map");
 
-      if (user.role === "Student") {
-        let submittedTaskIdSet = new Set();
-        getFileSubmitTasksByAuthor(user._id).then((response) => {
-          for (let file of response.data) {
-            submittedTaskIdSet.add(file.task_id);
-          }
-        }).finally(() => {
-          // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
-          setSubmittedTaskIds(submittedTaskIdSet);
-        });
-      }
+      // if (user.role === "Student") {
+      //   let submittedTaskIdSet = new Set();
+      //   getFileSubmitTasksByAuthor(user._id).then((response) => {
+      //     for (let file of response.data) {
+      //       submittedTaskIdSet.add(file.task_id);
+      //     }
+      //   }).finally(() => {
+      //     // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
+      //     setSubmittedTaskIds(submittedTaskIdSet);
+      //   });
+      // }
+      
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
+  React.useEffect(() => {
+    // Untuk muculin delete snackbar pas didelete dari view page
+    if(props.location.openDeleteSnackbar){
+      handleOpenDeleteSnackbar()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const retrieveTasks = () => {
+    rows = [];
     // If tasksCollection is not undefined or an empty array
-    if (tasksCollection.length) {
-      rows = [];
+    if (tasksCollection.length > 0) {
       if (user.role === "Teacher") {
         tasksCollection
           .filter((item) =>
@@ -613,12 +626,27 @@ function TaskList(props) {
     setOrderBy(property);
   };
 
+  const handleOpenDeleteSnackbar = () => {
+    setOpenDeleteSnackbar(true);
+  }
+
+  const handleCloseDeleteSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenDeleteSnackbar(false);
+  };
+
   // Call the function to view the tasks on tablerows.
   // This function is defined above.
   retrieveTasks();
 
   const onDeleteTask = (id) => {
-    deleteTask(id);
+    deleteTask(id).then((res) => {
+      handleOpenDeleteSnackbar()
+      handleCloseDeleteDialog()
+      getAllTask();
+    });
   };
 
   // Delete Dialog
@@ -674,9 +702,7 @@ function TaskList(props) {
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
         {rows.length === 0 ? (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
@@ -911,6 +937,23 @@ function TaskList(props) {
           })
         )}
       </Grid>
+      <Snackbar
+        open={openDeleteSnackbar}
+        autoHideDuration={4000}
+        onClose={(event, reason) => {
+          handleCloseDeleteSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseDeleteSnackbar(event, reason);
+          }}
+        >
+          Tugas berhasil dihapus
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

@@ -280,7 +280,9 @@ class CreateAssessment extends Component {
       allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
       allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
       inputHeight: null, // menyimpan tinggi textfield
-      customHeight: null // menyimpan tinggi label + textfield
+      customHeight: null, // menyimpan tinggi label + textfield
+      errors: {},
+      success: null    
     };
     this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
     this.customHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi label "Judul" dan textfield
@@ -410,7 +412,9 @@ class CreateAssessment extends Component {
     }
 
     let newWeights = { ...this.state.weights };
+    // Untuk kasus dimana tidak ada longtext, tetap perlu diassign value supaya tidak undefined
     let newLongtextWeight = [...this.state.longtextWeight];
+
     for (let [type, count] of Object.entries(typeCount)) {
       if (count === 0) {
         continue;
@@ -484,11 +488,18 @@ class CreateAssessment extends Component {
         type: this.state.type,
         question_weight: question_weight,
       };
+
+      this.handleOpenUploadDialog();
       createAssessment(formData, assessmentData, history)
         .then((res) => {
+          this.setState({ success: res});
           console.log("Assessment is created successfully");
         })
-        .catch(() => this.handleOpenErrorSnackbar());
+        .catch((err) => {
+          this.setState({ errors: err });
+          this.handleCloseUploadDialog();
+          this.handleOpenErrorSnackbar();
+        });
     } else {
       const assessmentData = {
         name: this.state.name,
@@ -505,6 +516,10 @@ class CreateAssessment extends Component {
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
   };
+
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false})
+  }
 
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
@@ -571,8 +586,71 @@ class CreateAssessment extends Component {
         this.setState({ [otherfield]: e.target.value });
       }
     } else {
-      this.setState({ [e.target.id]: e.target.value });
+      let field = e.target.id ? e.target.id : otherfield;
+      if (this.state.errors[field]) {
+        this.setState({ errors: { ...this.state.errors, [field]: null } });
+      }
+      this.setState({ [field]: e.target.value });
     }
+    // if (otherfield) {
+    //   if (otherfield === "end_date" || otherfield === "start_date") {
+    //     this.setState({ [otherfield]: e });
+    //   }
+    // else if (otherfield === "subject") { // jika guru memilih mata pelajaran
+    //   // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
+    //   let newClassOptions = [];
+    //   if (this.props.auth.user.class_to_subject) {
+    //     for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+    //       if (subjectIdArray.includes(e.target.value)) {
+    //         newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+    //       }
+    //     }
+    //   }
+
+    //   this.setState({ subject: e.target.value, classOptions: newClassOptions });
+
+    // } else if (otherfield === "class_assigned") { // jika guru memilih kelas
+    //   let selectedClasses = e.target.value;
+
+    //   if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
+    //     this.setState((prevState, props) => {
+    //       return {
+    //         class_assigned: selectedClasses,
+    //         // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
+    //         subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
+    //       }
+    //     });
+    //   } else { // jika guru menambahkan atau mengurangi pilihan kelas
+    //     // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
+    //     let subjectMatrix = [];
+    //     if (this.props.auth.user.class_to_subject) {
+    //       for (let classId of selectedClasses) {
+    //         if (this.props.auth.user.class_to_subject[classId]) {
+    //           subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+    //         }
+    //       }
+    //     }
+    //     let subjects = [];
+    //     if (subjectMatrix.length !== 0) {
+    //       subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+    //         return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
+    //       });
+    //     }
+
+    //     // menambahkan matpel tersebut ke opsi matpel
+    //     let newSubjectOptions = [];
+    //     subjects.forEach((subjectId) => {
+    //       newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
+    //     })
+
+    //     this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
+    //   }
+    //    else {
+    //     this.setState({ [otherfield]: e.target.value });
+    //   }
+    // } else {
+    //   this.setState({ [e.target.id]: e.target.value });
+    // }
   };
 
   onDateChange = (date) => {
@@ -919,6 +997,7 @@ class CreateAssessment extends Component {
         }
 
         let questionIdx = i + page * rowsPerPage;
+        console.log(this.state.longtextWeight);
         return (
           <QuestionItem
             isEdit={false}
@@ -996,6 +1075,16 @@ class CreateAssessment extends Component {
 
   componentDidMount() {
     const { getAllClass, getAllSubjects, handleSideDrawerExist, refreshTeacher } = this.props;
+    const { pathname } = this.props.location;
+
+    if(pathname === "/buat-kuis"){
+      this.setState({ type: "Kuis"})
+    } else if (pathname === "/buat-ujian"){
+      this.setState({ type: "Ujian"})
+    } else {
+      console.log("Kuis atau ujian tidak dispecify");
+    }
+
     handleSideDrawerExist(false);
     getAllClass();
     getAllSubjects();
@@ -1354,11 +1443,15 @@ class CreateAssessment extends Component {
   };
 
   render() {
-    const { class_assigned } = this.state;
-    const { classes, errors, success } = this.props;
+    // const { class_assigned } = this.state;
+    // const { classes, errors, success } = this.props;
+
+    const { class_assigned, errors, success } = this.state;
+    const { classes } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
+    const { pathname } = this.props.location;
 
     const ToggleViewQuiz = withStyles((theme) => ({
       root: {
@@ -1398,17 +1491,7 @@ class CreateAssessment extends Component {
       checked: {},
     }))(Switch);
 
-    // const ToggleViewQuizMobile = withStyles((theme) => ({
-    //   root: {
-    //     width: 0,
-    //     height: 0,
-    //     padding: 0,
-    //     margin: theme.spacing(1),
-    //   },
-    //   checked: {},
-    // }))(Switch);
-
-    document.title = "Schooly | Buat Kuis/Ujian";
+    document.title = this.state.type === "Kuis" ? "Schooly | Buat Kuis" : "Schooly | Buat Ujian";
 
     return (
       <div className={classes.root}>
@@ -1445,21 +1528,15 @@ class CreateAssessment extends Component {
           // itemName={this.state.name}
           // isLink={true}
           // redirectLink="/daftar-kuis"
-          redirectLink={
-            this.state.type === "Kuis" ? `/daftar-kuis` : `/daftar-ujian`
-          }
+          redirectLink={`daftar-${this.state.type.toLowerCase()}`}
           isWarning={false}
         />
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
           success={success}
-          messageUploading="Kuis/Ujian sedang dibuat"
-          messageSuccess="Kuis/Ujian telah dibuat"
-          redirectLink={
-            this.state.type === "Kuis"
-              ? `/kuis-guru/${success}`
-              : `/ujian-guru/${success}`
-          }
+          messageUploading={`${this.state.type} sedang dibuat`}
+          messageSuccess={`${this.state.type} telah dibuat`}
+          redirectLink={`/${this.state.type.toLowerCase()}-guru/${success}`}
         />
         <form onSubmit={(e) => this.onSubmit(e, user._id)} id="submitForm">
           <Grid container direction="column" spacing={3}>
@@ -1467,10 +1544,10 @@ class CreateAssessment extends Component {
               <Paper>
                 <div className={classes.content}>
                   <Typography variant="h5" gutterBottom>
-                    <b>Buat Kuis/Ujian</b>
+                    <b>Buat {this.state.type}</b>
                   </Typography>
                   <Typography color="textSecondary">
-                    Tambahkan keterangan untuk membuat kuis/ujian.
+                    Tambahkan keterangan untuk membuat {this.state.type.toLowerCase()}.
                   </Typography>
                 </div>
                 <Divider />
@@ -1775,8 +1852,7 @@ class CreateAssessment extends Component {
                             )}
                           </Select>
                           <FormHelperText>
-                            {Boolean(errors.class_assigned) &&
-                            class_assigned.length === 0
+                            {Boolean(errors.class_assigned)
                               ? errors.class_assigned
                               : null}
                           </FormHelperText>
@@ -1924,7 +2000,7 @@ class CreateAssessment extends Component {
                           type="submit"
                           className={classes.createAssessmentButton}
                         >
-                          Buat Kuis/Ujian
+                          Buat {this.state.type}
                         </Button>
                       </Grid>
                     </Grid>

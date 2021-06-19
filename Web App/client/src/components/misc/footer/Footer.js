@@ -130,7 +130,7 @@ function Footer(props) {
                   <a href="mailto:schoolysystem@gmail.com">Hubungi Kami</a>
                 </Grid>
                 <Grid item>
-                  <a href="https://instagram.com/schoolysystem">Media Sosial</a>
+                  <a href="https://instagram.com/schoolysystem" target="blank_">Media Sosial</a>
                 </Grid>
               </Grid>
             </div>

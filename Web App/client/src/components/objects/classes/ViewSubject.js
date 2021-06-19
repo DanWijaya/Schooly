@@ -12,6 +12,7 @@ import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import subjectBackground from "./subject-background/SubjectBackground";
+import Empty from "../../misc/empty/Empty";
 import {
   Avatar,
   Divider,
@@ -926,13 +927,7 @@ function ViewSubject(props) {
           <Divider />
           <List className={classes.expansionPanelList}>
             {listMaterials("subject", id, "mata_pelajaran").length === 0 ? (
-              <Typography
-                variant="subtitle1"
-                align="center"
-                color="textSecondary"
-              >
-                Kosong
-              </Typography>
+              <Empty />
             ) : (
               <>{listMaterials("subject", id, "mata_pelajaran")}</>
             )}
@@ -955,13 +950,7 @@ function ViewSubject(props) {
           <Divider />
           <List className={classes.expansionPanelList}>
             {listTasks("subject", id, "mata_pelajaran").length === 0 ? (
-              <Typography
-                variant="subtitle1"
-                align="center"
-                color="textSecondary"
-              >
-                Kosong
-              </Typography>
+              <Empty />
             ) : (
               <>{listTasks("subject", id, "mata_pelajaran")}</>
             )}
@@ -985,13 +974,7 @@ function ViewSubject(props) {
           <List className={classes.expansionPanelList}>
             {listAssessments("subject", id, "Kuis", "mata_pelajaran").length ===
             0 ? (
-              <Typography
-                variant="subtitle1"
-                align="center"
-                color="textSecondary"
-              >
-                Kosong
-              </Typography>
+              <Empty />
             ) : (
               <>{listAssessments("subject", id, "Kuis", "mata_pelajaran")}</>
             )}
@@ -1015,13 +998,7 @@ function ViewSubject(props) {
           <List className={classes.expansionPanelList}>
             {listAssessments("subject", id, "Ujian", "mata_pelajaran")
               .length === 0 ? (
-              <Typography
-                variant="subtitle1"
-                align="center"
-                color="textSecondary"
-              >
-                Kosong
-              </Typography>
+              <Empty />
             ) : (
               <>{listAssessments("subject", id, "Ujian", "mata_pelajaran")}</>
             )}

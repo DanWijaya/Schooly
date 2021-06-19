@@ -47,6 +47,7 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import { truncate } from "fs";
 
 const path = require("path");
 
@@ -205,6 +206,7 @@ class EditAnnouncement extends Component {
     this.state = {
       title: "",
       description: "",
+      originalFileLampiran: [],
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
@@ -215,6 +217,7 @@ class EditAnnouncement extends Component {
       openUploadDialog: null,
       openDeleteDialog: null,
       errors: {},
+      success: null,
       target_role: "",
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
@@ -240,7 +243,7 @@ class EditAnnouncement extends Component {
     getOneAnnouncement(id);
     getAllClass();
     getFileAnnouncements(id).then((result) => {
-      this.setState({ fileLampiran: result });
+      this.setState({ fileLampiran: result, originalFileLampiran: result });
     });
 
     if (user.role === "Student") {
@@ -257,7 +260,7 @@ class EditAnnouncement extends Component {
   }
 
   componentWillUnmount() {
-    this.props.clearErrors();
+    // this.props.clearErrors();
     this.props.clearSuccess();
   }
 
@@ -265,26 +268,18 @@ class EditAnnouncement extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { selectedAnnouncements } = nextProps.announcements;
 
-    // console.log(nextProps.tasksCollection.deadline);
-
-    if (!nextProps.errors) {
-      this.handleOpenUploadDialog();
-    }
-
-    if (nextProps.errors) {
-      // if edited, nextProps.errors is false, supaya ndak run ini..
-      this.setState({
-        title: selectedAnnouncements.title,
-        description: selectedAnnouncements.description,
-        // fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : [],
-        class_assigned: Boolean(selectedAnnouncements.class_assigned)
-          ? selectedAnnouncements.class_assigned
-          : [],
-        target_role: selectedAnnouncements.to,
-        // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
-        // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
-      });
-    }
+    // if edited, nextProps.errors is false, supaya ndak run ini..
+    this.setState({
+      title: selectedAnnouncements.title,
+      description: selectedAnnouncements.description,
+      // fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : [],
+      class_assigned: Boolean(selectedAnnouncements.class_assigned)
+        ? selectedAnnouncements.class_assigned
+        : [],
+      target_role: selectedAnnouncements.to,
+      // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
+      // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -399,9 +394,14 @@ class EditAnnouncement extends Component {
     this.setState({ openUploadDialog: true });
   };
 
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false});
+  }
+
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
   };
+
 
   handleCloseDeleteDialog = () => {
     this.setState({ openDeleteDialog: false });
@@ -415,11 +415,11 @@ class EditAnnouncement extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-    if (otherfield) {
-      this.setState({ [otherfield]: e.target.value });
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
+    this.setState({ [field]: e.target.value });
   };
 
   onSubmit = (e) => {
@@ -434,7 +434,6 @@ class EditAnnouncement extends Component {
     const { user } = this.props.auth;
     const { kelas } = this.props.classesCollection;
     const { selectedAnnouncements } = this.props.announcements;
-
     const announcementObject = {
       title: this.state.title,
       description: this.state.description,
@@ -452,16 +451,35 @@ class EditAnnouncement extends Component {
     for (var i = 0; i < fileLampiranToAdd.length; i++) {
       formData.append("lampiran_announcement", fileLampiranToAdd[i]);
     }
+    
+    this.handleOpenUploadDialog();
 
-    this.props.updateAnnouncement(
-      formData,
-      fileLampiranToDelete,
-      selectedAnnouncements.lampiran,
-      announcementObject,
-      id,
-      this.props.history
-    );
-    this.setState({ fileLampiranToDelete: [] });
+    this.props
+      .updateAnnouncement(
+        formData,
+        fileLampiranToDelete,
+        selectedAnnouncements.lampiran,
+        announcementObject,
+        id,
+        this.props.history
+      )
+      .then((res) => {
+        this.setState({success: res});
+        // this.handleOpenUploadDialog();
+      })
+      .catch((err) => {
+        this.handleCloseUploadDialog()
+        this.setState({
+          errors: err,
+          fileLampiran: [
+            ...this.state.originalFileLampiran,
+            ...this.state.fileLampiranToAdd,
+          ],
+          fileLampiranToDelete: [],
+        })
+      }
+      );
+    // this.setState({ fileLampiranToDelete: [] });
   };
 
   render() {
@@ -479,8 +497,9 @@ class EditAnnouncement extends Component {
     };
 
     const { classes } = this.props;
-    const { fileLampiran, class_assigned, target_role } = this.state;
-    const { errors, success } = this.props;
+    const { fileLampiran, class_assigned, target_role, errors } = this.state;
+    // const { success } = this.props;
+    const { success } = this.state;
     const { user } = this.props.auth;
     const { all_classes, kelas } = this.props.classesCollection;
 

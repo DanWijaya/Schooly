@@ -1,10 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-
+import CustomLinkify from "../../misc/linkify/Linkify";
 //Actions
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
@@ -74,6 +74,8 @@ import SendIcon from '@material-ui/icons/Send';
 import CreateIcon from '@material-ui/icons/Create';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
+import axios from "axios";
+import { getFileSubmitTasks_T } from "../../../actions/files/FileSubmitTaskActions";
 
 const path = require("path");
 
@@ -292,7 +294,7 @@ function LampiranFile(props) {
 // component ini akan view task yang teacher dia sendiri buat.
 function ViewTaskTeacher(props) {
   const classes = useStyles();
-
+  const history = useHistory();
   const {
     user,
     all_students,
@@ -315,7 +317,8 @@ function ViewTaskTeacher(props) {
     clearSuccess,
     getTeachers,
     getStudents,
-    getMultipleFileAvatar
+    getMultipleFileAvatar,
+    getFileSubmitTasks_T
   } = props;
   const { all_classes_map } = props.classesCollection;
   const task_id = props.match.params.id;
@@ -357,32 +360,40 @@ function ViewTaskTeacher(props) {
   // [tasksCollection._id, all_classes_map.size, all_subjects_map.size]
 
   React.useEffect(() => {
-    if (
-      tasksCollection &&
-      Object.keys(tasksCollection).length !== 0 &&
-      all_students &&
-      all_students.length !== 0
-    ) {
-      // untuk setiap murid yang ada,
-      for (let j = 0; j < all_students.length; j++) {
-        // jika murid ini mendapatkan tugas ini
-        if (
-          tasksCollection.class_assigned &&
-          tasksCollection.class_assigned.includes(all_students[j].kelas)
-        ) {
-          // untuk setiap file yang pernah dikumpulkan murid ini,
-          for (const studentTask of all_students[j].tugas) {
-            // jika file ditujukan untuk tugas ini,
-            if (studentTask.for_task_object === task_id) {
-              setDisableButton(false);
-              return;
-            }
-          }
-        }
+    getFileSubmitTasks_T(task_id).then((res) => {
+      if (res.length) {
+        setDisableButton(false);
       }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasksCollection, all_students]);
+    });
+  });
+  // React.useEffect(() => {
+  // if (
+  //   tasksCollection &&
+  //   Object.keys(tasksCollection).length !== 0 &&
+  //   all_students &&
+  //   all_students.length !== 0
+  // ) {
+  //   // untuk setiap murid yang ada,
+  //   for (let j = 0; j < all_students.length; j++) {
+  //     console.log(all_students[j].kelas)
+  //     // jika murid ini mendapatkan tugas ini
+  //     if (
+  //       tasksCollection.class_assigned &&
+  //       tasksCollection.class_assigned.includes(all_students[j].kelas)
+  //     ) {
+  //       // untuk setiap file yang pernah dikumpulkan murid ini,
+  //       for (const studentTask of all_students[j].tugas) {
+  //         // jika file ditujukan untuk tugas ini,
+  //         if (studentTask.for_task_object === task_id) {
+  //           // setDisableButton(false);
+  //           return;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []); //[tasksCollection, all_students]
 
   React.useEffect(() => {
     if (
@@ -546,8 +557,9 @@ function ViewTaskTeacher(props) {
   */
 
   const onDeleteTask = (id) => {
-    deleteTask(id);
-    // setFileTugas(null)
+    deleteTask(id, history).then((res) => {
+      console.log(res)
+    });
   };
 
   // Delete Dialog
@@ -778,10 +790,21 @@ function ViewTaskTeacher(props) {
               </Grid>
               {!tasksCollection.description ? null : (
                 <Grid item xs={12} style={{ marginTop: "15px" }}>
-                  <Typography color="textSecondary" gutterBottom>
+                  <Typography
+                    color="textSecondary"
+                    gutterBottom
+                    style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                  >
                     Deskripsi Tugas:
                   </Typography>
-                  <Typography>{tasksCollection.description}</Typography>
+                  <Typography
+                    align="justify"
+                    style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                  >
+                    <CustomLinkify text={tasksCollection.description} />
+                  </Typography>
+                  {/* <Link href="https://www.google.com">{tasksCollection.description}</Link> */}
+                  {/* <Typography>{tasksCollection.description}</Typography> */}
                 </Grid>
               )}
               {fileLampiran.length === 0 ? null : (
@@ -958,5 +981,7 @@ export default connect(mapStateToProps, {
   clearErrors,
   getTeachers,
   getStudents,
-  getMultipleFileAvatar
+  getMultipleFileAvatar,
+  getStudents,
+  getFileSubmitTasks_T
 })(ViewTaskTeacher);

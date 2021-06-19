@@ -16,6 +16,8 @@ const Teacher = User.discriminator(
     class_to_subject: {
       type: Object
     }
+    // subject_teached: { type: [ObjectId], required: false },
+    // class_teached: [{ type: Object, ref: "classes"}],
   })
 );
 

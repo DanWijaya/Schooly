@@ -147,10 +147,10 @@ function ProfileDataItemEdit(props) {
 
 function ProfileDataEditorDialog(props) {
   const classes = useStyles();
-
+  
   const { user } = props.auth;
-  const { updateUserData, clearErrors, errors } = props;
-
+  const { updateUserData, clearErrors, errors, handleOpenAlert } = props;
+  // handleOpenAlert()
   //Dialog
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -197,10 +197,12 @@ function ProfileDataEditorDialog(props) {
   const onSubmit = (e) => {
     e.preventDefault();
     let userId = user._id;
-    if (isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
-      props.handleOpenAlert();
+    handleOpenAlert()
+    // if (isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
+    //   handleOpenAlert();
 
-    updateUserData(dataProfil, userId, props.history);
+    updateUserData(dataProfil, userId, props.history)
+        .then((res) => props.handleOpenAlert());
   };
 
   const handleChangeDataProfil = (e, otherfield) => {

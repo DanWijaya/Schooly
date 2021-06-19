@@ -56,8 +56,8 @@ class CreateClass extends Component {
       walikelas: {},
       ukuran: 0,
       openUploadDialog: null,
-      teacherOptions: null
-      // errors: {},
+      teacherOptions: null,
+      errors: {}
     };
   }
 
@@ -86,19 +86,21 @@ class CreateClass extends Component {
     this.setState({ openUploadDialog: true });
   };
 
-  // handleCloseUploadDialog = () => {
-  //   this.setState({ openUploadDialog: false });
-  // };
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  };
 
   onChange = (e, otherfield = null) => {
-    if (otherfield) {
-      if (otherfield === "mata_pelajaran") {
-        this.setState({ [otherfield]: e });
-      } else {
-        this.setState({ [otherfield]: e.target.value });
-      }
+    
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+
+    if (field === "mata_pelajaran") {
+      this.setState({ [field]: e });
     } else {
-      this.setState({ [e.target.id]: e.target.value });
+      this.setState({ [field]: e.target.value });
     }
   };
 
@@ -115,7 +117,13 @@ class CreateClass extends Component {
       errors: {},
       mata_pelajaran: this.state.mata_pelajaran.map((matpel) => (matpel._id))
     };
-    this.props.createClass(classObject, this.props.history);
+
+    this.props
+      .createClass(classObject, this.props.history)
+      .then((res) => this.handleOpenUploadDialog())
+      .catch((err) => {
+        this.setState({ errors: err });
+      });
   };
 
   onSelect = (selectedList, selectedItem) => {
@@ -126,10 +134,6 @@ class CreateClass extends Component {
   onRemove = (selectedList, selectedItem) => {
     this.setState({ class_assigned: selectedList[0] });
   };
-
-  // UNSAFE_componentWillReceiveProps(nextProps) {
-  //   if (nextProps.errors) {this.setState({errors: nextProps.errors});}
-  // }
 
   componentDidMount() {
     this.props.getTeachers();
@@ -143,8 +147,8 @@ class CreateClass extends Component {
   }
 
   render() {
-    const { classes, success, errors } = this.props;
-
+    const { classes, success } = this.props;
+    const { errors } = this.state;
     const { all_teachers, user } = this.props.auth;
 
     // console.log(errors);

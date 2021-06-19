@@ -24,8 +24,8 @@ import {
 import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import viewClassPicture from "./ViewClassPicture.png";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-
 import {
   Avatar,
   Box,
@@ -539,9 +539,7 @@ function PersonListItem(props) {
           primary={
             <Typography variant="subtitle1">{props.person_name}</Typography>
           }
-        />
-        <ListItemText
-          primary={
+          secondary={
             <Typography variant="caption" color="textSecondary">
               {props.person_role}
             </Typography>
@@ -551,9 +549,7 @@ function PersonListItem(props) {
       <Hidden xsDown implementation="css">
         <ListItemText
           primary={<Typography variant="h6">{props.person_name}</Typography>}
-        />
-        <ListItemText
-          primary={
+          secondary={
             <Typography variant="body2" color="textSecondary">
               {props.person_role}
             </Typography>
@@ -599,11 +595,7 @@ function ViewClass(props) {
 
   function showTasks(data) {
     if (data.length === 0) {
-      return (
-        <Typography variant="subtitle1" align="center" color="textSecondary">
-          Kosong
-        </Typography>
-      );
+      return <Empty />;
     } else {
       return sortAscByCreatedAt(data).map((row) => (
         <AssignmentListItem
@@ -624,11 +616,7 @@ function ViewClass(props) {
 
   function showAssessments(data) {
     if (data.length === 0) {
-      return (
-        <Typography variant="subtitle1" align="center" color="textSecondary">
-          Kosong
-        </Typography>
-      );
+      return <Empty />;
     } else {
       return sortAscByCreatedAt(data).map((row) => (
         <AssessmentListItem
@@ -655,11 +643,7 @@ function ViewClass(props) {
 
   function showMaterials(data) {
     if (data.length === 0) {
-      return (
-        <Typography variant="subtitle1" align="center" color="textSecondary">
-          Kosong
-        </Typography>
-      );
+      return <Empty />;
     } else {
       return sortAscByCreatedAt(data).map((row) => (
         <MaterialListitem
@@ -675,11 +659,7 @@ function ViewClass(props) {
 
   function showAllbySubject(data) {
     if (data.length === 0) {
-      return (
-        <Typography variant="subtitle1" align="center" color="textSecondary">
-          Kosong
-        </Typography>
-      );
+      return <Empty />;
     } else {
       return sortAscByCreatedAt(data).map((row) => {
         if (row.objectType === "Tugas") {
@@ -1122,16 +1102,18 @@ function ViewClass(props) {
     // -> pindahkan getTeachers("map") di sini karena mau execute setWalikelas hanya setelah itu selesai.
     var id_list;
     setCurrentClass(classId).then((kelas) => {
-      id_list = [kelas.walikelas];
-      console.log("ID LIST: ", id_list);
-      students_by_class.forEach((s) => id_list.push(s._id));
-      getMultipleFileAvatar(id_list).then((results) => {
-        console.log(results);
-        setAvatar(results);
-      });
-      getTeachers("map").then((results) =>
-        setWalikelas(results.get(kelas.walikelas))
-      );
+      if (kelas) {
+        id_list = [kelas.walikelas];
+        console.log("ID LIST: ", id_list);
+        students_by_class.forEach((s) => id_list.push(s._id));
+        getMultipleFileAvatar(id_list).then((results) => {
+          console.log(results);
+          setAvatar(results);
+        });
+        getTeachers("map").then((results) =>
+          setWalikelas(results.get(kelas.walikelas))
+        );
+      }
       // setWalikelas(all_teachers_map.get(kelas.walikelas));
     });
   }, [students_by_class.length, kelas.walikelas]);

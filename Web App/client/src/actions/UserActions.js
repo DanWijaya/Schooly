@@ -46,7 +46,7 @@ export const registerUser = (userData, history) => (dispatch) => {
 
 export const updateUserData = (userData, userId, history) => (dispatch) => {
   console.log("update user data is runned");
-  axios
+  return axios
     .post("/api/users/update/data/" + userId, userData)
     .then((res) => {
       const { token } = res.data;
@@ -60,14 +60,17 @@ export const updateUserData = (userData, userId, history) => (dispatch) => {
       const decoded = jwt_decode(token);
       // Set current user
       dispatch(setCurrentUser(decoded));
+      console.log("Successfully update user data")
+      return true
     })
     .catch((err) => {
-      console.log("jancuk la");
       console.log(err);
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
       });
+
+      throw err;
     });
 };
 

@@ -6,14 +6,14 @@ module.exports = function validateRegisterInput(data) {
   // Convert empty fields to an empty string so we can use validator functions
   // data keys: name
   //  email
-  //  role 
-  //  subject_teached 
-  //  phone 
-  //  emergency_phone 
+  //  role
+  //  subject_teached
+  //  phone
+  //  emergency_phone
   //  address
   //  password
   //  password2
-  //  tanggal_lahir 
+  //  tanggal_lahir
 
   for (let key in Object.keys(data)) {
     if (isEmpty(data[key])) {
@@ -36,14 +36,15 @@ module.exports = function validateRegisterInput(data) {
   //Role checks
   if (Validator.isEmpty(data.role)) {
     errors.role = "Peran belum diisi";
-  } else {
-    // Specific to Teacher
-    if (data.role === "Teacher") {
-      if (Validator.isEmpty(data.subject_teached)) {
-        errors.subject_teached = "Mata pelajaran belum dipilih";
-      }
-    }
   }
+  // else {
+  //   // Specific to Teacher
+  //   if (data.role === "Teacher") {
+  //     if (Validator.isEmpty(data.subject_teached)) {
+  //       errors.subject_teached = "Mata pelajaran belum dipilih";
+  //     }
+  //   }
+  // }
 
   // Phone checks
   if (Validator.isEmpty(data.phone)) {

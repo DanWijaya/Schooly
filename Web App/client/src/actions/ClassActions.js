@@ -11,11 +11,10 @@ import {
 // Add Class
 export const createClass = (classData, history) => (dispatch) => {
   console.log(classData);
-  axios
+  return axios
     .post("/api/classes/create", classData)
     .then((res) => {
       console.log(res.data);
-      // alert("Kelas telah dibuat");
       // history.push("/daftar-kelas");
       dispatch({
         type: GET_ERRORS,
@@ -25,13 +24,15 @@ export const createClass = (classData, history) => (dispatch) => {
         type: GET_SUCCESS_RESPONSE,
         payload: res.data._id,
       });
+      return res.data._id;
     })
-    .catch((err) =>
+    .catch((err) => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
-      })
-    );
+      });
+      throw err.response.data;
+    });
 };
 
 // View All Class
@@ -91,7 +92,7 @@ export const getSelectedClasses = (classes_ids) => (dispatch) => {
 };
 
 export const updateClass = (classData, classId, history) => (dispatch) => {
-  axios
+  return axios
     .post("/api/classes/update/" + classId, classData)
     .then((res) => {
       console.log("Class updated to be : ", res.data);
@@ -105,20 +106,22 @@ export const updateClass = (classData, classId, history) => (dispatch) => {
         type: GET_SUCCESS_RESPONSE,
         payload: classId,
       });
+      return classId;
     })
     .catch((err) => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };
 
-export const deleteClass = (classId) => (dispatch) => {
-  axios
+export const deleteClass = (classId, history) => (dispatch) => {
+ return axios
     .delete("/api/classes/delete/" + classId)
     .then((res) => {
-      window.location.reload();
+      return "Class is successfully deleted"
     })
     .catch((err) => {
       console.log(err.response.data);
@@ -126,6 +129,7 @@ export const deleteClass = (classId) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err;
     });
 };
 

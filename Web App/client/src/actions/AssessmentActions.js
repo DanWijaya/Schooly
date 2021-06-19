@@ -45,10 +45,11 @@ export const createAssessment = (formData, assessment, history) => (
     .then((res) => {
       console.log("Successfully created Assessment.");
       let success_res = res.data ? res.data._id : res._id;
-      dispatch({
-        type: GET_SUCCESS_RESPONSE,
-        payload: success_res,
-      });
+      // dispatch({
+      //   type: GET_SUCCESS_RESPONSE,
+      //   payload: success_res,
+      // });
+      return success_res;
     })
     .catch((err) => {
       if (err.response) {
@@ -56,7 +57,8 @@ export const createAssessment = (formData, assessment, history) => (
           type: GET_ERRORS,
           payload: err.response.data,
         });
-        throw new Error("Assessment is not created successfully");
+        throw err.response.data;
+        // throw new Error("Assessment is not created successfully");
       }
     });
 };
@@ -131,10 +133,11 @@ export const updateAssessment = (
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");
-      dispatch({
-        type: GET_SUCCESS_RESPONSE,
-        payload: true,
-      });
+      // dispatch({
+      //   type: GET_SUCCESS_RESPONSE,
+      //   payload: true,
+      // });
+      return true;
     })
 
     .catch((err) => {
@@ -143,7 +146,7 @@ export const updateAssessment = (
         type: GET_ERRORS,
         payload: err.response.data,
       });
-      throw new Error("Assessment is not updated successfully");
+      throw err.response.data;
     });
 };
 
@@ -191,8 +194,8 @@ export const getOneAssessment = (id, rslv = null) => (dispatch) => {
     });
 };
 
-export const deleteAssessment = (id, type = "Kuis") => (dispatch) => {
-  axios
+export const deleteAssessment = (id, type = "Kuis", history=null) => (dispatch) => {
+  return axios
     .delete(`/api/assessments/delete/${id}`)
     .then((res) => {
       console.log(res.data);
@@ -214,11 +217,22 @@ export const deleteAssessment = (id, type = "Kuis") => (dispatch) => {
     })
     .then((res) => {
       console.log(res);
-      if (type === "Kuis") {
-        window.location.href = "/daftar-kuis";
-      } else {
-        window.location.href = "/daftar-ujian";
-      }
+      if(history){
+        if (type === "Kuis") {
+          history.push({
+            pathname: "/daftar-kuis",
+            openDeleteSnackbar: true 
+          })
+          // window.location.href = "/daftar-kuis";
+        } else {
+          history.push({
+            pathname: "/daftar-ujian",
+            openDeleteSnackbar: true 
+          })
+          // window.location.href = "/daftar-ujian";
+        }
+    }
+    return "Succesfully deleted Assessment"
     })
     .catch((err) => {
       console.log(err);
@@ -226,6 +240,7 @@ export const deleteAssessment = (id, type = "Kuis") => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err;
     });
 };
 

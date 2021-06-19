@@ -12,6 +12,7 @@ import { getTeachers } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Divider,
@@ -328,10 +329,11 @@ function AssessmentListToolbar(props) {
         </Hidden>
         <Hidden mdUp implementation="css">
           {role === "Student" ? null : (
-            <LightTooltip title="Buat Kuis/Ujian">
-              <Link to="/buat-kuis-ujian">
+            <LightTooltip title="Buat Kuis">
+              <Link to="/buat-kuis">
                 <Fab size="small" className={classes.newAssessmentButton}>
-                  <FaTasks className={classes.newAssessmentIconMobile} />
+                  <FaClipboardList className={classes.newAssessmentIconMobile}/>
+                  {/* <FaTasks className={classes.newAssessmentIconMobile} /> */}
                 </Fab>
               </Link>
             </LightTooltip>
@@ -339,14 +341,15 @@ function AssessmentListToolbar(props) {
         </Hidden>
         <Hidden smDown implementation="css">
           {role === "Student" ? null : (
-            <Link to="/buat-kuis-ujian">
+            <Link to="/buat-kuis">
               <Fab
                 size="medium"
                 variant="extended"
                 className={classes.newAssessmentButton}
               >
-                <FaTasks className={classes.newAssessmentIconDesktop} />
-                Buat Kuis/Ujian
+                {/* <FaTasks className={classes.newAssessmentIconDesktop} /> */}
+                <FaClipboardList className={classes.newAssessmentIconDesktop}/>
+                Buat Kuis
               </Fab>
             </Link>
           )}
@@ -453,13 +456,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   newAssessmentIconDesktop: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
+    width: theme.spacing(2.8),
+    height: theme.spacing(2.8),
     marginRight: "7.5px",
   },
   newAssessmentIconMobile: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
+    width: theme.spacing(2.8),
+    height: theme.spacing(2.8),
   },
   goSearchIconMobile: {
     width: theme.spacing(2.5),
@@ -578,6 +581,7 @@ function AssessmentList(props) {
   // Fitur 2 -- Dialog
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
+  const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
   console.log(props.auth);
 
@@ -621,6 +625,15 @@ function AssessmentList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+
+  React.useEffect(() => {
+    // Untuk muculin delete snackbar pas didelete dari view page
+    if(props.location.openDeleteSnackbar){
+      handleOpenDeleteSnackbar()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
 
   const retrieveAssessments = () => {
     // If all_assessments is not undefined or an empty array
@@ -671,7 +684,12 @@ function AssessmentList(props) {
   retrieveAssessments();
 
   const onDeleteAssessment = (id, type) => {
-    deleteAssessment(id, type);
+    deleteAssessment(id, type).then((res) => {
+      console.log(res);
+      getAllAssessments();
+      handleOpenDeleteSnackbar();
+      handleCloseDeleteDialog();
+    });
   };
 
   // Delete Dialog
@@ -708,6 +726,18 @@ function AssessmentList(props) {
     document.body.removeChild(textArea);
     handleOpenCopySnackBar(type);
   };
+
+  const handleOpenDeleteSnackbar = () => {
+    setOpenDeleteSnackbar(true);
+  }
+
+  const handleCloseDeleteSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenDeleteSnackbar(false);
+  };
+
 
   const workStatus = (assessment) => {
     console.log(assessment);
@@ -789,13 +819,7 @@ function AssessmentList(props) {
         <Divider variant="inset" className={classes.titleDivider} />
         <Grid container direction="column" spacing={2}>
           {rows.length === 0 ? (
-            <Typography
-              variant="subtitle1"
-              align="center"
-              color="textSecondary"
-            >
-              Kosong
-            </Typography>
+            <Empty />
           ) : (
             stableSort(rows, getComparator(order, orderBy)).map(
               (row, index) => {
@@ -1093,9 +1117,27 @@ function AssessmentList(props) {
           onClose={handleCloseCopySnackBar}
         >
           <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
-            Link {type} berhasil disalin ke Clipboard Anda!
+            Tautan {type} berhasil disalin ke Clipboard Anda!
           </MuiAlert>
         </Snackbar>
+         {/* Snackbar untuk delete assessment */}
+      <Snackbar
+        open={openDeleteSnackbar}
+        autoHideDuration={4000}
+        onClose={(event, reason) => {
+          handleCloseDeleteSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseDeleteSnackbar(event, reason);
+          }}
+        >
+          Kuis berhasil dihapus
+        </MuiAlert>
+      </Snackbar>
       </div>
     </>
   );

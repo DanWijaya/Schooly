@@ -10,6 +10,7 @@ import {
   setUserActive,
 } from "../../../actions/UserActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -22,10 +23,12 @@ import {
   ExpansionPanelSummary,
   Grid,
   Hidden,
+  InputAdornment,
   ListItemAvatar,
   Menu,
   MenuItem,
   TableSortLabel,
+  TextField,
   Toolbar,
   Typography,
   FormGroup,
@@ -42,6 +45,9 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
 import RecentActorsIcon from "@material-ui/icons/RecentActors";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { GoSearch } from "react-icons/go";
+import ClearIcon from "@material-ui/icons/Clear";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(
@@ -107,18 +113,17 @@ const ManageUsersToolbar = (props) => {
     currentCheckboxMode,
     OpenDialogCheckboxDelete,
     OpenDialogCheckboxApprove,
-    // CloseDialogCheckboxDelete,
-    // CloseDialogCheckboxApprove,
     CheckboxDialog,
     listCheckbox,
     lengthListCheckbox,
-    // reloader,
     rowCount,
-    // listBooleanCheckbox,
-    // listBooleanCheckboxState,
-    // setListBooleanCheckboxState,
     selectAllData,
     deSelectAllData,
+    setSearchBarFocus,
+    searchBarFocus,
+    searchFilter,
+    searchFilterHint,
+    updateSearchFilter,
   } = props;
 
   console.log(listCheckbox);
@@ -161,8 +166,17 @@ const ManageUsersToolbar = (props) => {
   const handleOpenSortMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleCloseSortMenu = () => {
     setAnchorEl(null);
+  };
+
+  const onChange = (e) => {
+    updateSearchFilter(e.target.value);
+  };
+
+  const onClear = (e) => {
+    updateSearchFilter("");
   };
 
   React.useEffect(() => {
@@ -177,9 +191,103 @@ const ManageUsersToolbar = (props) => {
       <div
         style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
       >
-        <Typography variant="h5" style={{ marginRight: "8px" }}>
-          {heading}
-        </Typography>
+        <Hidden mdUp implementation="css">
+          {searchBarFocus ? null : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h4">{heading}</Typography>
+            </div>
+          )}
+        </Hidden>
+        <Hidden smDown implementation="css">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h4">{heading}</Typography>
+          </div>
+        </Hidden>
+        <Hidden mdUp implementation="css">
+          {searchBarFocus ? (
+            <div style={{ display: "flex" }}>
+              <IconButton
+                onClick={() => {
+                  setSearchBarFocus(false);
+                  updateSearchFilter("");
+                }}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+              <TextField
+                fullWidth
+                variant="outlined"
+                id="searchFilterMobile"
+                value={searchFilter}
+                onChange={onChange}
+                autoFocus
+                onClick={(e) => setSearchBarFocus(true)}
+                placeholder={searchFilterHint}
+                style={{
+                  maxWidth: "200px",
+                  marginLeft: "10px",
+                }}
+                InputProps={{
+                  startAdornment: searchBarFocus ? null : (
+                    <InputAdornment
+                      position="start"
+                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                    >
+                      <IconButton size="small">
+                        <GoSearch />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                    >
+                      <IconButton
+                        size="small"
+                        id="searchFilterMobile"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onClear(e);
+                        }}
+                        style={{
+                          opacity: 0.5,
+                          visibility: !searchFilter ? "hidden" : "visible",
+                        }}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  style: {
+                    borderRadius: "22.5px",
+                  },
+                }}
+              />
+            </div>
+          ) : (
+            <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
+              <IconButton
+                className={classes.goSearchButton}
+                onClick={() => setSearchBarFocus(true)}
+              >
+                <GoSearch className={classes.goSearchIconMobile} />
+              </IconButton>
+            </LightTooltip>
+          )}
+        </Hidden>
         {currentCheckboxMode && rowCount !== 0 ? (
           listCheckbox.length === 0 ? (
             <IconButton size="small" onClick={() => selectAllData(role)}>
@@ -200,7 +308,57 @@ const ManageUsersToolbar = (props) => {
           )
         ) : null}
       </div>
-      <div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Hidden smDown implementation="css">
+          <TextField
+            variant="outlined"
+            id="searchFilterDesktop"
+            value={searchFilter}
+            onChange={onChange}
+            onClick={() => setSearchBarFocus(true)}
+            onBlur={() => setSearchBarFocus(false)}
+            placeholder={searchFilterHint}
+            style={{
+              maxWidth: "250px",
+              marginRight: "10px",
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment
+                  position="start"
+                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                >
+                  <IconButton size="small">
+                    <GoSearch />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment
+                  position="end"
+                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                >
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClear(e);
+                    }}
+                    style={{
+                      opacity: 0.5,
+                      visibility: !searchFilter ? "hidden" : "visible",
+                    }}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "22.5px",
+              },
+            }}
+          />
+        </Hidden>
         {role === "Student" ? (
           <>
             {lengthListCheckbox === 0 ? (
@@ -544,6 +702,11 @@ function ManageUsers(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedUserId, setSelectedUserId] = React.useState(null);
   const [selectedUserName, setSelectedUserName] = React.useState(null);
+  const [searchFilterS, updateSearchFilterS] = React.useState("");
+  const [searchBarFocusS, setSearchBarFocusS] = React.useState(false);
+
+  const [searchFilterT, updateSearchFilterT] = React.useState("");
+  const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
 
   const {
     deleteUser,
@@ -805,17 +968,29 @@ function ManageUsers(props) {
     console.log("retrieve users");
     if (Array.isArray(pending_students)) {
       // pending_students.map((data) => {
-      pending_students.forEach((data) => {
-        userRowItem(data, "Student");
-        currentListBooleanStudent.push(false);
-      });
+      pending_students
+        .filter(
+          (item) =>
+            item.name.toLowerCase().includes(searchFilterS.toLowerCase()) ||
+            item.email.toLowerCase().includes(searchFilterS.toLowerCase())
+        )
+        .forEach((data) => {
+          userRowItem(data, "Student");
+          currentListBooleanStudent.push(false);
+        });
     }
     if (Array.isArray(pending_teachers)) {
       // pending_teachers.map((data) => {
-      pending_teachers.forEach((data) => {
-        userRowItem(data, "Teacher");
-        currentListBooleanTeacher.push(false);
-      });
+      pending_teachers
+        .filter(
+          (item) =>
+            item.name.toLowerCase().includes(searchFilterT.toLowerCase()) ||
+            item.email.toLowerCase().includes(searchFilterT.toLowerCase())
+        )
+        .forEach((data) => {
+          userRowItem(data, "Teacher");
+          currentListBooleanTeacher.push(false);
+        });
     }
   };
 
@@ -1131,13 +1306,14 @@ function ManageUsers(props) {
           minHeight: "46.5px",
         }}
       >
-        <Typography variant="h4" align="center">
+        <Typography variant="h4" align="left">
           Daftar Pengguna Tertunda
         </Typography>
       </div>
       <Divider className={classes.titleDivider} />
       <ManageUsersToolbar
         heading="Daftar Murid"
+        searchFilterHint="Cari Murid"
         role="Student"
         deleteUser={deleteUser}
         classes={classes}
@@ -1161,18 +1337,21 @@ function ManageUsers(props) {
         // setListBooleanCheckboxState={setBooleanCheckboxStudent}
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
+        setSearchBarFocus={setSearchBarFocusS}
+        searchBarFocus={searchBarFocusS}
+        //Two props added for search filter.
+        searchFilter={searchFilterS}
+        updateSearchFilter={updateSearchFilterS}
       />
       <Divider variant="inset" className={classes.subTitleDivider} />
       <Grid
         container
         direction="column"
         spacing={2}
-        style={{ marginBottom: "32px" }}
+        style={{ marginBottom: "100px" }}
       >
         {student_rows.length === 0 ? (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         ) : (
           stableSort(
             student_rows,
@@ -1309,6 +1488,7 @@ function ManageUsers(props) {
       </Grid>
       <ManageUsersToolbar
         heading="Daftar Guru"
+        searchFilterHint="Cari Guru"
         role="Teacher"
         deleteUser={deleteUser}
         classes={classes}
@@ -1332,13 +1512,16 @@ function ManageUsers(props) {
         // setListBooleanCheckboxState={setBooleanCheckboxTeacher}
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
+        setSearchBarFocus={setSearchBarFocusT}
+        searchBarFocus={searchBarFocusT}
+        //Two props added for search filter.
+        searchFilter={searchFilterT}
+        updateSearchFilter={updateSearchFilterT}
       />
       <Divider variant="inset" className={classes.subTitleDivider} />
       <Grid container direction="column" spacing={2}>
         {teacher_rows.length === 0 ? (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         ) : (
           stableSort(
             teacher_rows,

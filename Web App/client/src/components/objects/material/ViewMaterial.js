@@ -1,9 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import {
   getFileMaterials,
   downloadFileMaterial,
@@ -235,7 +236,7 @@ function LampiranFile(props) {
     ? (displayedName = `${filename.slice(0, 30)}..${path.extname(filename)}`)
     : (displayedName = filename);
   return (
-    <Grid item xs={6}>
+    <Grid item xs={12} md={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
         <ListItem
           button
@@ -305,6 +306,7 @@ function LampiranFile(props) {
 
 function ViewMaterial(props) {
   const classes = useStyles();
+  const history = useHistory();
 
   const { user, all_students, all_teachers } = props.auth;
   const {
@@ -525,8 +527,10 @@ function ViewMaterial(props) {
     }
   };
 
-  const onDeleteTask = (id) => {
-    deleteMaterial(id);
+  const onDeleteMaterial = (id) => {
+    deleteMaterial(id, history).then((res) => {
+      console.log(res);
+    });
     // setFileMateri(null)
   };
 
@@ -690,7 +694,7 @@ function ViewMaterial(props) {
         itemType="Materi"
         itemName={selectedMaterials.name}
         deleteItem={() => {
-          onDeleteTask(materi_id);
+          onDeleteMaterial(materi_id);
         }}
       />
       <DeleteDialog
@@ -754,17 +758,32 @@ function ViewMaterial(props) {
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Materi:
                 </Typography>
-                <Typography>{selectedMaterials.description}</Typography>
+                <Typography
+                  variant="body1"
+                  align="justify"
+                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                >
+                  <CustomLinkify text={selectedMaterials.description} />
+                </Typography>
               </Grid>
-              {fileLampiran.map((lampiran) => (
-                <LampiranFile
-                  file_id={lampiran._id}
-                  onPreviewFile={viewFileMaterial}
-                  onDownloadFile={downloadFileMaterial}
-                  filename={lampiran.filename}
-                  filetype={fileType(lampiran.filename)}
-                />
-              ))}
+              {fileLampiran.length === 0 ? null : (
+                <Grid item xs={12} style={{ marginTop: "15px" }}>
+                  <Typography color="textSecondary" gutterBottom>
+                    Lampiran Berkas:
+                  </Typography>
+                  <Grid container spacing={1}>
+                    {fileLampiran.map((lampiran) => (
+                      <LampiranFile
+                        file_id={lampiran._id}
+                        onPreviewFile={viewFileMaterial}
+                        onDownloadFile={downloadFileMaterial}
+                        filename={lampiran.filename}
+                        filetype={fileType(lampiran.filename)}
+                      />
+                    ))}
+                  </Grid>
+                </Grid>
+              )}
             </Grid>
           </Paper>
         </Grid>

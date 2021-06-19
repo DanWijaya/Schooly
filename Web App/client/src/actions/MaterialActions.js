@@ -11,7 +11,7 @@ export const createMaterial = (formData, materialData, history) => (
   dispatch
 ) => {
   console.log("RUNLAH!!", formData, materialData);
-  axios
+  return axios
     .post("/api/materials/create", materialData)
     .then((res) => {
       console.log(formData.getAll("lampiran_materi"));
@@ -21,10 +21,11 @@ export const createMaterial = (formData, materialData, history) => (
         type: GET_ERRORS,
         payload: false,
       });
+
       if (formData.has("lampiran_materi")) {
         console.log("Post lampiran material is running");
         return axios.post(
-          `/api/upload/att_material/lampiran/${res.data._id}`,
+          `/api/files/materials/upload/${res.data._id}`,
           formData
         );
       } else {
@@ -38,12 +39,11 @@ export const createMaterial = (formData, materialData, history) => (
     .then((res) => {
       console.log("Successfully created material.");
       let success_res = res.data ? res.data._id : res._id;
-      dispatch({
-        type: GET_SUCCESS_RESPONSE,
-        payload: success_res,
-      });
-      //   window.location.href="/daftar-materi"
-      //   history.push("/daftar-materi")
+      // dispatch({
+      //   type: GET_SUCCESS_RESPONSE,
+      //   payload: success_res,
+      // });
+      return success_res;
     })
     .catch((err) => {
       console.log("error happened");
@@ -51,6 +51,7 @@ export const createMaterial = (formData, materialData, history) => (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };
 
@@ -127,8 +128,8 @@ export const getOneMaterial = (materialId) => (dispatch) => {
     });
 };
 
-export const deleteMaterial = (materialId, history) => (dispatch) => {
-  axios
+export const deleteMaterial = (materialId, history=null) => (dispatch) => {
+  return axios
     .delete(`/api/materials/delete/${materialId}`)
     .then((res) => {
       // let lampiran_to_delete = Array.from(res.data.lampiran)
@@ -136,8 +137,15 @@ export const deleteMaterial = (materialId, history) => (dispatch) => {
       return axios.delete(`/api/files/materials/${materialId}`);
     })
     .then((res) => {
+      if(history){
+        history.push({
+          pathname: "/daftar-materi",
+          openDeleteSnackbar: true 
+        })
+      }
       console.log(res);
-      window.location.href = "/daftar-materi";
+      return true
+      // window.location.href = "/daftar-materi";
     })
     .catch((err) => {
       console.log(err);
@@ -145,6 +153,7 @@ export const deleteMaterial = (materialId, history) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err;
     });
 };
 
@@ -157,7 +166,7 @@ export const updateMaterial = (
   history
 ) => (dispatch) => {
   // formData is the lampiran files
-  axios
+  return axios
     .post(`/api/materials/update/${materialId}`, materialData)
     .then((res) => {
       console.log("Material updated to be :", res.data);
@@ -188,16 +197,17 @@ export const updateMaterial = (
       } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
       else
         return {
-          _id: res.data._id,
-          message: "Successfully updated task with no lampiran",
+          _id: materialId,
+          message: "Successfully updated material with no lampiran",
         };
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");
-      dispatch({
-        type: GET_SUCCESS_RESPONSE,
-        payload: true,
-      });
+      // dispatch({
+      //   type: GET_SUCCESS_RESPONSE,
+      //   payload: true,
+      // });
+      return true;
     })
 
     .catch((err) => {
@@ -206,6 +216,7 @@ export const updateMaterial = (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };
 

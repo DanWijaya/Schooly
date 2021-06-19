@@ -207,13 +207,16 @@ class EditMaterial extends Component {
     super(props);
     this.state = {
       name: "",
+      // name1: "",
       subject: "",
       focused: false,
       class_assigned: [],
       description: "",
       errors: {},
+      success: null,
       anchorEl: null,
       classChanged: false,
+      originalFileLampiran: [],
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
@@ -245,7 +248,7 @@ class EditMaterial extends Component {
     getOneMaterial(id);
     getAllSubjects();
     getFileMaterials(id).then((result) => {
-      this.setState({ fileLampiran: result });
+      this.setState({ fileLampiran: result, originalFileLampiran: result });
     });
     refreshTeacher(this.props.auth.user._id);
 
@@ -262,24 +265,20 @@ class EditMaterial extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    console.log("Tasks props is received");
+    console.log("Materials props is");
     const { selectedMaterials } = nextProps.materialsCollection;
     // console.log(selectedMaterials.deadline);
-    if (!nextProps.errors) {
-      this.handleOpenUploadDialog();
-    }
-    if (Boolean(selectedMaterials) && nextProps.errors) {
-      this.setState({
-        name: selectedMaterials.name,
-        subject: selectedMaterials.subject,
-        deadline: selectedMaterials.deadline,
-        class_assigned: Boolean(selectedMaterials.class_assigned)
-          ? selectedMaterials.class_assigned
-          : [],
-        description: selectedMaterials.description,
-        // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
-      });
-    }
+
+    this.setState({
+      name: selectedMaterials.name,
+      subject: selectedMaterials.subject,
+      deadline: selectedMaterials.deadline,
+      class_assigned: Boolean(selectedMaterials.class_assigned)
+        ? selectedMaterials.class_assigned
+        : [],
+      description: selectedMaterials.description,
+      // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -378,15 +377,30 @@ class EditMaterial extends Component {
     }
 
     const { selectedMaterials } = this.props.materialsCollection;
-    this.props.updateMaterial(
-      formData,
-      fileLampiranToDelete,
-      selectedMaterials.lampiran,
-      materialObject,
-      id,
-      this.props.history
-    );
-    this.setState({ fileLampiranToDelete: [] });
+    this.handleOpenUploadDialog();
+    this.props
+      .updateMaterial(
+        formData,
+        fileLampiranToDelete,
+        selectedMaterials.lampiran,
+        materialObject,
+        id,
+        this.props.history
+      )
+      .then((res) => this.setState({ success: res }))
+      .catch((err) => {
+        this.handleCloseUploadDialog()
+        this.setState({
+          errors: err,
+          fileLampiran: [
+            ...this.state.originalFileLampiran,
+            ...this.state.fileLampiranToAdd,
+          ],
+          fileLampiranToDelete: [],
+        })
+      }
+      );
+    // this.setState({ fileLampiranToDelete: [] });
   };
 
   handleLampiranUpload = (e) => {
@@ -467,6 +481,10 @@ class EditMaterial extends Component {
     this.setState({ openUploadDialog: true });
   };
 
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  }
+
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
   };
@@ -476,7 +494,13 @@ class EditMaterial extends Component {
   };
 
   onChange = (e, otherfield) => {
-    console.log(this.state.fileLampiran);
+    // dipindahkan (kode yg dari merge_fitur_4_cdn ada di bawah dan dikomen) 
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+    // this.setState({ [field]: e.target.value }); // di sini jadi dikomen
+
     if (otherfield) {
       if (otherfield === "deadline") {
         this.setState({ [otherfield]: e });
@@ -536,10 +560,17 @@ class EditMaterial extends Component {
     } else {
       this.setState({ [e.target.id]: e.target.value });
     }
+
+    // dari merge_fitur_4_cdn
+    // let field = e.target.id ? e.target.id : otherfield;
+    // if (this.state.errors[field]) {
+    //   this.setState({ errors: { ...this.state.errors, [field]: null } });
+    // }
+    // this.setState({ [field]: e.target.value });
   };
 
   onDateChange = (date) => {
-    console.log(date);
+    // console.log(date);
     this.setState({ deadline: date });
   };
 
@@ -551,11 +582,11 @@ class EditMaterial extends Component {
   };
 
   render() {
-    const { classes, errors, success } = this.props;
+    const { classes } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { selectedMaterials } = this.props.materialsCollection;
-    const { class_assigned, fileLampiran } = this.state;
+    const { class_assigned, fileLampiran, errors, success } = this.state;
     const { user } = this.props.auth;
 
     // console.log("FileLampiran:", this.state.fileLampiran)
@@ -651,7 +682,7 @@ class EditMaterial extends Component {
             success={success}
             messageUploading="Materi sedang disunting"
             messageSuccess="Materi telah disunting"
-            redirectLink="/daftar-materi"
+            redirectLink={`/materi/${this.props.match.params.id}`}
           />
           <DeleteDialog
             openDeleteDialog={this.state.openDeleteDialog}

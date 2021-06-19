@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter, Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
@@ -130,7 +130,7 @@ class Login extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     const userData = {
-      email: this.state.email,
+      email: this.state.email.toLowerCase(),
       password: this.state.password,
     };
     this.props.loginUser(userData).catch((err) => {
@@ -267,7 +267,7 @@ class Login extends Component {
             </Grid>
             <Divider />
             <Grid item container justify="space-around">
-              <Link to="/akun/lupa-katasandi">Lupa Kata Sandi?</Link>|
+              <Link to="/akun/lupa-katasandi">Lupa Kata Sandi?</Link>·
               <Link to="/daftar">Belum ada Akun?</Link>
             </Grid>
           </Grid>

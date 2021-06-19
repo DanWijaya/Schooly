@@ -3,6 +3,7 @@ import { Fraction, toTex } from "algebra.js";
 import { Node, Context } from "react-mathjax2";
 import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
+
 import {
   Button,
   Paper,
@@ -80,9 +81,10 @@ function Formula(props) {
 }
 
 export default function Tester() {
+  var inlineMath = InlineMath;
   //Latex
   const a = new Fraction(1, 5);
-  const b = new Fraction(2, 7);
+  const b = new Fraction(2, 5);
   const answer = a.multiply(b);
 
   const question = (
@@ -106,9 +108,10 @@ export default function Tester() {
   return (
     <div style={{ margin: "auto", maxWidth: "1000px" }}>
       <div>{question}</div>
+      {/* <Markdown math={"\\int_0^\\infty x^2 dx"}/> */}
       <InlineMath math="\\int_0^\\infty x^2 dx" />
       <BlockMath math="\\int_0^\\infty x^2 dx" />
-      <div className={classes.root}>
+      {/* <div className={classes.root}>
         <Paper elevation={11} className={classes.mainPaper}>
           <Grid container direction="column" spacing={5}>
             <Grid item>
@@ -144,7 +147,7 @@ export default function Tester() {
             </Grid>
           </Grid>
         </Paper>
-      </div>
+      </div> */}
     </div>
   );
 }

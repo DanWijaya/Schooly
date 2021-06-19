@@ -110,20 +110,6 @@ const useStyles = makeStyles((theme) => ({
   tableHeader: {
     backgroundColor: theme.palette.primary.main,
   },
-  select: {
-    minWidth: "200px",
-    maxWidth: "200px",
-    [theme.breakpoints.up("md")]: {
-      minWidth: "150px",
-      maxWidth: "150px",
-    },
-  },
-  selectposition: {
-    justifyContent: "flex-end",
-    [theme.breakpoints.down("sm")]: {
-      justifyContent: "flex-start",
-    },
-  },
   graph: {
     display: "flex",
     flexDirection: "row",
@@ -1637,60 +1623,47 @@ function ReportView(props) {
             </Typography>
             <Divider className={classes.profileDivider} />
           </Grid>
-          <Grid
-            item
-            justify="space-between"
-            alignItems="center"
-            style={{ display: "flex", flexWrap: "wrap" }}
-          >
-            <Grid item md={6} className={classes.customMargin}>
+          <Grid item container justify="space-between" alignItems="center">
+            <Grid item md={7} className={classes.customMargin}>
               <Typography>
                 Berikut adalah rapor seluruh murid sesuai kelas dan mata
                 pelajaran yang dipilih
               </Typography>
             </Grid>
             <Grid item container md={5} spacing={3}>
-              <Grid item md={6} container className={classes.selectposition}>
-                <Grid item>
-                  <FormControl variant="outlined">
-                    <InputLabel id="kelas-label">Kelas</InputLabel>
-                    <Select
-                      labelId="kelas-label"
-                      id="kelas"
-                      value={valueKelas}
-                      onChange={(event) => {
-                        handleKelasChange(event);
-                      }}
-                      className={classes.select}
-                      label="Kelas"
-                    >
-                      {kontenKelas.size !== 0 || kelasWali.size !== 0
-                        ? generateKelasMenuItem()
-                        : null}
-                    </Select>
-                  </FormControl>
-                </Grid>
+              <Grid item container md={6}>
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel id="kelas-label">Kelas</InputLabel>
+                  <Select
+                    labelId="kelas-label"
+                    id="kelas"
+                    value={valueKelas}
+                    onChange={(event) => {
+                      handleKelasChange(event);
+                    }}
+                    label="Kelas"
+                  >
+                    {kontenKelas.size !== 0 || kelasWali.size !== 0
+                      ? generateKelasMenuItem()
+                      : null}
+                  </Select>
+                </FormControl>
               </Grid>
-              <Grid item md={6} container className={classes.selectposition}>
-                <Grid item>
-                  <FormControl variant="outlined">
-                    <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
-                    <Select
-                      labelId="matpel-label"
-                      id="matpel"
-                      value={valueMatpel}
-                      onChange={(event) => {
-                        handleMatPelChange(event);
-                      }}
-                      className={classes.select}
-                      label="Mata Pelajaran"
-                    >
-                      {kontenMatpel.size !== 0
-                        ? generateMatPelMenuItem()
-                        : null}
-                    </Select>
-                  </FormControl>
-                </Grid>
+              <Grid item container md={6}>
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
+                  <Select
+                    labelId="matpel-label"
+                    id="matpel"
+                    value={valueMatpel}
+                    onChange={(event) => {
+                      handleMatPelChange(event);
+                    }}
+                    label="Mata Pelajaran"
+                  >
+                    {kontenMatpel.size !== 0 ? generateMatPelMenuItem() : null}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
           </Grid>

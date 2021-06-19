@@ -88,7 +88,7 @@ class LoginForgot extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     console.log("Submitted");
-    this.props.createHash(this.state.email);
+    this.props.createHash(this.state.email.toLowerCase());
   };
 
   componentDidMount() {

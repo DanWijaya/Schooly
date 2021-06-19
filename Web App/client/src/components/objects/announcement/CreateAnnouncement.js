@@ -204,6 +204,7 @@ class CreateAnnouncement extends Component {
       fileLampiran: [],
       class_assigned: [],
       errors: {},
+      success: null,
       openUploadDialog: null,
       openDeleteDialog: null,
       target_role: "",
@@ -274,9 +275,9 @@ class CreateAnnouncement extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this.props.clearErrors();
-  }
+  // componentWillUnmount() {
+  //   this.props.clearErrors();
+  // }
 
   handleClickMenu = (event) => {
     // Needed so it will not be run when filetugas = null or filetugas array is empty
@@ -305,12 +306,11 @@ class CreateAnnouncement extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-    if (otherfield) {
-      this.setState({ [otherfield]: e.target.value });
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
-    console.log(this.props.errors);
+    this.setState({ [field]: e.target.value });
   };
 
   handleLampiranDelete = (e, i) => {
@@ -375,11 +375,17 @@ class CreateAnnouncement extends Component {
       formData.getAll("lampiran_announcement"),
       this.state.fileLampiran
     );
-    this.props.createAnnouncement(
-      formData,
-      announcementData,
-      this.props.history
-    );
+    this.handleOpenUploadDialog();
+    this.props
+      .createAnnouncement(formData, announcementData, this.props.history)
+      .then((res) => {
+        this.setState({ success: res});
+        // this.handleOpenUploadDialog();
+      })
+      .catch((err) => {
+        this.handleCloseUploadDialog();
+        this.setState({ errors: err });
+      });
   };
 
   render() {
@@ -396,10 +402,10 @@ class CreateAnnouncement extends Component {
       },
     };
 
-    const { classes, success } = this.props;
+    const { classes } = this.props;
     const { all_classes, kelas } = this.props.classesCollection;
-    const { class_assigned, fileLampiran, target_role } = this.state;
-    const { errors } = this.props;
+    const { class_assigned, fileLampiran, target_role, errors, success } = this.state;
+    // const { errors } = this.props;
     const { user } = this.props.auth;
 
     const fileType = (filename) => {

@@ -3,13 +3,14 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { uploadTugas, deleteTugas } from "../../../actions/UploadActions";
 import {
   deleteFileSubmitTasks,
   uploadFileSubmitTasks,
-  getFileSubmitTasks,
+  getFileSubmitTasks_AT,
   viewFileSubmitTasks,
   downloadFileSubmitTasks,
 } from "../../../actions/files/FileSubmitTaskActions";
@@ -48,6 +49,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Link,
   Paper,
   Typography,
   TextField,
@@ -163,6 +165,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#808080",
   },
   submittedButton: {
+    margin: "auto",
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
@@ -590,7 +593,7 @@ function ViewTaskStudent(props) {
     uploadFileSubmitTasks,
     viewFileSubmitTasks,
     downloadFileSubmitTasks,
-    getFileSubmitTasks,
+    getFileSubmitTasks_AT,
     deleteFileSubmitTasks,
     deleteTugas,
     success,
@@ -621,12 +624,14 @@ function ViewTaskStudent(props) {
   // const [tasksContents, setTaskContents] = React.useState([]);
   const [fileLampiran, setFileLampiran] = React.useState([]);
   const [over_limit, setOverLimit] = React.useState([]);
+  // const [success, setSuccess] = React.useState(null);
   const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
-
+  
   // setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
+  const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
   // USER COMMENT
   const [commentValue, setCommentValue] = React.useState("");
@@ -659,7 +664,7 @@ function ViewTaskStudent(props) {
   // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
   useEffect(() => {
     // getTaskFilesByUser(user._id, tugasId)
-    getFileSubmitTasks(tugasId, user._id).then((results) =>
+    getFileSubmitTasks_AT(tugasId, user._id).then((results) =>
       setFileTugas(results)
     );
     getOneTask(tugasId);
@@ -896,12 +901,24 @@ function ViewTaskStudent(props) {
     }
     setFileLimitSnackbar(false);
   };
+
+  const handleOpenDeleteSnackbar = () => {
+    setOpenDeleteSnackbar(true);
+  }
+
+  const handleCloseDeleteSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenDeleteSnackbar(false);
+  };
+
   // Delete Dialog
   const handleOpenDeleteDialog = (fileid, filename) => {
     setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
     setSelectedFileId(fileid);
     setSelectedFileName(filename);
-    // getFileSubmitTasks(tugasId, user._id).then((items) => setTaskContents(items))
+    // getFileSubmitTasks_AT(tugasId, user._id).then((items) => setTaskContents(items))
   };
 
   const handleCloseDeleteDialog = () => {
@@ -1115,6 +1132,16 @@ function ViewTaskStudent(props) {
   //   )
   // }
 
+  const onDeleteFileSubmitTasks = (id) => {
+    deleteFileSubmitTasks(id).then((res) => {
+      getFileSubmitTasks_AT(tugasId, user._id).then((results) => {
+      setFileTugas(results)
+      handleCloseDeleteDialog()
+      handleOpenDeleteSnackbar()
+      });
+    })
+  }
+
   document.title = !tasksCollection.name
     ? "Schooly | Lihat Tugas"
     : `Schooly | ${tasksCollection.name}`;
@@ -1129,8 +1156,8 @@ function ViewTaskStudent(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Berkas"
         itemName={selectedFileName}
-        deleteItem={() => {
-          deleteFileSubmitTasks(selectedFileId);
+        deleteItem={() => { 
+          onDeleteFileSubmitTasks(selectedFileId);
         }}
       />
       <DeleteDialog
@@ -1243,21 +1270,25 @@ function ViewTaskStudent(props) {
                   <Typography color="textSecondary" gutterBottom>
                     Deskripsi Tugas:
                   </Typography>
-                  <Typography>{tasksCollection.description}</Typography>
+                  <Typography
+                    align="justify"
+                    style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                  >
+                    <CustomLinkify text={tasksCollection.description} />
+                  </Typography>
                 </Grid>
               )}
-              {!tasksCollection.lampiran ||
-              tasksCollection.lampiran.length === 0 ? null : (
+              {fileLampiran.length === 0 ? null : (
                 <Grid item xs={12} style={{ marginTop: "15px" }}>
                   <Typography color="textSecondary" gutterBottom>
                     Lampiran Berkas:
                   </Typography>
                   <Grid container spacing={1}>
-                    {tasksCollection.lampiran.map((lampiran) => (
+                    {fileLampiran.map((lampiran) => (
                       <LampiranFile
-                        file_id={lampiran.id}
-                        // onPreviewFile={onPreviewFile}
-                        // onDownloadFile={onDownloadFile}
+                        file_id={lampiran._id}
+                        onPreviewFile={viewFileTasks}
+                        onDownloadFile={downloadFileTasks}
                         filename={lampiran.filename}
                         filetype={fileType(lampiran.filename)}
                       />
@@ -1299,7 +1330,7 @@ function ViewTaskStudent(props) {
                     style={{
                       padding: "10px",
                       display: "flex",
-                      flexDirection: "row",
+                      flexDirection: "column",
                       justifyContent: "center",
                     }}
                   >
@@ -1366,7 +1397,7 @@ function ViewTaskStudent(props) {
                         startIcon={<PublishIcon />}
                         className={classes.submitWorkButton}
                         type="submit"
-                        disabled={!fileTugas}
+                        disabled={fileToSubmit.length === 0}
                         // onClick={handleOpenUploadDialog}
                       >
                         Kumpul Tugas
@@ -1546,7 +1577,7 @@ function ViewTaskStudent(props) {
                       startIcon={<PublishIcon />}
                       className={classes.submitWorkButton}
                       type="submit"
-                      disabled={!fileTugas}
+                      disabled={fileToSubmit.length === 0}
                       // onClick={handleOpenUploadDialog}
                     >
                       Kumpul Tugas
@@ -1605,6 +1636,23 @@ function ViewTaskStudent(props) {
           {snackbarContent}
         </MuiAlert>
       </Snackbar>
+      <Snackbar
+        open={openDeleteSnackbar}
+        autoHideDuration={3000}
+        onClose={(event, reason) => {
+          handleCloseDeleteSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseDeleteSnackbar(event, reason);
+          }}
+        >
+          Tugas File anda berhasil dihapus
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }
@@ -1639,7 +1687,7 @@ export default connect(mapStateToProps, {
   getOneTask,
   getAllSubjects,
   uploadFileSubmitTasks,
-  getFileSubmitTasks,
+  getFileSubmitTasks_AT,
   viewFileSubmitTasks,
   downloadFileSubmitTasks,
   deleteFileSubmitTasks,

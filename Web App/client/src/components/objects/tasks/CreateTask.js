@@ -219,6 +219,7 @@ class CreateTask extends Component {
       class_assigned: [],
       description: "",
       errors: {},
+      success: null,
       fileLampiran: [],
       openUploadDialog: null,
       openDeleteDialog: null,
@@ -251,6 +252,10 @@ class CreateTask extends Component {
     this.setState({ openUploadDialog: true });
   };
 
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  }
+
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
   };
@@ -260,6 +265,13 @@ class CreateTask extends Component {
   };
 
   onChange = (e, otherfield = null) => {
+    // dipindahkan (kode yg dari merge_fitur_4_cdn ada di bawah dan dikomen) 
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+    // this.setState({ [field]: e.target.value }); // di sini jadi dikomen
+
     // if (Object.keys(this.props.errors).length !== 0)
     if (otherfield) {
       if (otherfield === "subject") { // jika guru memilih mata pelajaran
@@ -318,6 +330,13 @@ class CreateTask extends Component {
     } else {
       this.setState({ [e.target.id]: e.target.value });
     }
+
+    // dari merge_fitur_4_cdn
+    // let field = e.target.id ? e.target.id : otherfield;
+    // if (this.state.errors[field]) {
+    //   this.setState({ errors: { ...this.state.errors, [field]: null } });
+    // }
+    // this.setState({ [field]: e.target.value });
   };
 
   onDateChange = (date) => {
@@ -346,7 +365,14 @@ class CreateTask extends Component {
       }
     console.log(formData.getAll("lampiran_tugas"), this.state.fileLampiran);
     console.log(taskData);
-    this.props.createTask(formData, taskData, this.props.history);
+    this.handleOpenUploadDialog();
+    this.props
+      .createTask(formData, taskData, this.props.history)
+      .then((res) => this.setState({success: res}))
+      .catch((err) => {
+        this.handleCloseUploadDialog();
+        this.setState({ errors: err })
+      });
   };
 
   componentDidMount() {
@@ -369,7 +395,7 @@ class CreateTask extends Component {
 
   // akan selalu dirun kalau ada terima state atau props yang berubah.
   componentDidUpdate(prevProps, prevState) {
-    console.log(this.props.errors);
+    // console.log(this.props.errors);
     // this.props.errors = false, ini berarti kan !this.props.erros itu true
 
     if (!this.props.errors && this.props.errors !== prevProps.errors) {
@@ -452,8 +478,8 @@ class CreateTask extends Component {
   };
 
   render() {
-    const { classes, errors, success } = this.props;
-    const { class_assigned, fileLampiran } = this.state;
+    const { classes } = this.props;
+    const { class_assigned, fileLampiran, errors, success } = this.state;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
@@ -724,12 +750,7 @@ class CreateTask extends Component {
                             null
                           )}
                         </Select>
-                        <FormHelperText>
-                          {Boolean(errors.class_assigned) &&
-                          class_assigned.length === 0
-                            ? errors.class_assigned
-                            : null}
-                        </FormHelperText>
+                        <FormHelperText>{errors.class_assigned}</FormHelperText>
                       </FormControl>
                     </Grid>
                     <Grid item>

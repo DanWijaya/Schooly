@@ -12,7 +12,7 @@ export const createAnnouncement = (formData, announcementData, history) => (
   dispatch
 ) => {
   console.log("RUNLAH!!", formData, announcementData);
-  axios
+  return axios
     .post("/api/announcements/create", announcementData)
     .then((res) => {
       console.log("this is the res", res.data);
@@ -42,6 +42,7 @@ export const createAnnouncement = (formData, announcementData, history) => (
         type: GET_SUCCESS_RESPONSE,
         payload: success_res,
       });
+      return success_res;
       //   history.push("/daftar-pengumuman")
     })
     .catch((err) => {
@@ -50,6 +51,7 @@ export const createAnnouncement = (formData, announcementData, history) => (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };
 
@@ -113,9 +115,10 @@ export const getAdminAnnouncements = () => (dispatch) => {
 
 export const deleteAnnouncement = (
   announcementId,
+  history=null,
   lampiran_to_delete = null
 ) => (dispatch) => {
-  axios
+  return axios
     .delete(`/api/announcements/delete/${announcementId}`)
     .then((res) => {
       console.log("Deleted: ", res.data);
@@ -128,7 +131,14 @@ export const deleteAnnouncement = (
     })
     .then((res) => {
       console.log(res);
-      window.location.href = "/daftar-pengumuman";
+      if(history){
+        history.push({
+          pathname: "/daftar-pengumuman",
+          openDeleteSnackbar: true 
+        })
+      }
+      return true
+      // window.location.href = "/daftar-pengumuman";
     })
     .catch((err) => {
       console.log(err);
@@ -136,6 +146,7 @@ export const deleteAnnouncement = (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err
     });
 };
 export const getOneAnnouncement = (annId) => (dispatch) => {
@@ -167,7 +178,7 @@ export const updateAnnouncement = (
   history
 ) => (dispatch) => {
   // formData is the lampiran files
-  axios
+  return axios
     .post(`/api/announcements/update/${annId}`, annData)
     .then((res) => {
       console.log("Task updated to be :", res.data);
@@ -204,7 +215,7 @@ export const updateAnnouncement = (
         type: GET_SUCCESS_RESPONSE,
         payload: true,
       });
-      // alert("Announcement is created")
+      return true;
       // history.push("/daftar-pengumuman");
     })
 
@@ -214,5 +225,6 @@ export const updateAnnouncement = (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };
