@@ -19,6 +19,7 @@ import {
   FormGroup,
   Hidden,
   InputAdornment,
+  FormHelperText
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -720,11 +721,10 @@ function QuestionItem(props) {
             <Divider />
             <Grid
               container
-              style={{ padding: "20px" }}
+              className={classes.content}
               justify="flex-end"
               alignItems="center"
             >
-              {/* <Grid item style={{ marginRight: "20px", height: "3rem", display: "flex", alignItems: "center"}}> */}
               <Grid item style={{ marginRight: "20px" }}>
                 <Typography color="primary">Bobot: </Typography>
               </Grid>
@@ -751,8 +751,9 @@ function QuestionItem(props) {
                   }
                   FormHelperTextProps={{
                     style: {
-                      margin: "0px",
-                    },
+                      marginLeft: "0",
+                      marginRight: "0"
+                    }
                   }}
                   InputProps={{
                     style: {

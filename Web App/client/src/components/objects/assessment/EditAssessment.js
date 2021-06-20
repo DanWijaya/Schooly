@@ -239,11 +239,8 @@ const styles = (theme) => ({
       },
     },
   },
-  customMargin: {
-    margin: "24px 0",
-    [theme.breakpoints.down("xs")]: {
-      margin: "18px 0",
-    },
+  dividerMargin: {
+    margin: "4px 0"
   },
   customSpacing: {
     [theme.breakpoints.down("sm")]: {
@@ -486,14 +483,14 @@ class EditAssessment extends Component {
     const { updateAssessment, validateAssessment, history } = this.props;
 
     // mencatat jumlah soal untuk tiap jenis soal
-    let typeCount = {
-      radio: 0,
-      checkbox: 0,
-      shorttext: 0,
-      longtext: 0,
-    };
+    let typeCount = new Map([
+      ["radio", 0],
+      ["checkbox", 0],
+      ["shorttext", 0],
+      ["longtext", 0],
+    ]);
     for (let question of this.state.questions) {
-      typeCount[question.type]++;
+      typeCount.set(question.type, typeCount.get(question.type) + 1);
     }
 
     if (this.state.posted || this.state.isScheduled) {
@@ -528,7 +525,7 @@ class EditAssessment extends Component {
       });
 
       // pengecekan bobot
-      let filteredtypeCount = Object.entries(typeCount).filter(
+      let filteredtypeCount = Array.from(typeCount).filter(
         (pair) => pair[1] > 0
       );
       if (filteredtypeCount.length === 0) {
@@ -559,7 +556,7 @@ class EditAssessment extends Component {
     // Untuk kasus dimana tidak ada longtext, tetap perlu diassign value supaya tidak undefined
     let newLongtextWeight = [...this.state.longtextWeight];
 
-    for (let [type, count] of Object.entries(typeCount)) {
+    for (let [type, count] of typeCount) {
       if (count === 0) {
         continue;
       }
@@ -585,7 +582,7 @@ class EditAssessment extends Component {
     // jika soal dan bobot sudah lengkap dan benar, submit
     if (invalidQuestionIndex.length === 0 && completeWeight) {
       let longtext;
-      if (typeCount.longtext === 0) {
+      if (typeCount.get("longtext") === 0) {
         longtext = null;
       } else {
         // mengonversi bobot soal uraian dari string menjadi bilangan
@@ -601,11 +598,11 @@ class EditAssessment extends Component {
         });
       }
       let question_weight = {
-        radio: typeCount.radio === 0 ? null : Number(this.state.weights.radio),
+        radio: typeCount.get("radio") === 0 ? null : Number(this.state.weights.radio),
         checkbox:
-          typeCount.checkbox === 0 ? null : Number(this.state.weights.checkbox),
+          typeCount.get("checkbox") === 0 ? null : Number(this.state.weights.checkbox),
         shorttext:
-          typeCount.shorttext === 0
+          typeCount.get("shorttext") === 0
             ? null
             : Number(this.state.weights.shorttext),
         longtext: longtext,
@@ -1307,77 +1304,68 @@ class EditAssessment extends Component {
       },
     };
 
-    let typeCount = {
-      radio: 0,
-      checkbox: 0,
-      shorttext: 0,
-      longtext: 0,
-    };
-
+    let typeCount = new Set();
     for (let question of this.state.questions) {
-      typeCount[question.type]++;
+      typeCount.add(question.type);
     }
-
-    let columnsDesktopView = [];
-    let gridItemMobileView = [];
-    let c = 0;
-    let filteredtypeCount = Object.entries(typeCount).filter(
-      (pair) => pair[1] > 0
+    let filteredtypeCount = ["radio", "checkbox", "shorttext", "longtext"].filter(
+      (type) => typeCount.has(type)
     );
 
     if (filteredtypeCount.length !== 0) {
-      // mobile view
-      gridItemMobileView.push(
-        <Typography variant="h6">Bobot Per Soal:</Typography>
-      );
-      gridItemMobileView.push(<Divider className={classes.customMargin} />);
+      let desktopView = [];
+      let mobileView = [
+        <>
+          <Typography variant="h6">Bobot Per Soal:</Typography>
+          <FormHelperText>{"\u200B"}</FormHelperText>
+          <Divider className={classes.dividerMargin} />
+        </>
+      ];
 
-      for (let pair of filteredtypeCount) {
-        let type = pair[0];
+      for (let i = 0; i < filteredtypeCount.length; i++) {
+        let type = filteredtypeCount[i];
         let weight = this.state.weights[type];
         let showError =
           weight === null || (weight !== undefined && Number(weight) <= 0);
 
-        gridItemMobileView.push(
+        mobileView.push(
           <Grid container>
-            <Grid
-              item
+            <Grid container>
+              {/* untuk menambahkan margin */}
+              <FormHelperText>{"\u200B"}</FormHelperText>
+            </Grid>
+            <div /* tidak pakai grid container agar widthnya tidak diset 100% */
               style={{
                 display: "flex",
                 flexDirection: "column",
-                marginRight: "20px",
+                flexGrow: "1"
               }}
-              justify="center"
             >
-              {columnTemplate[type].icon}
-            </Grid>
-            <Grid
-              item
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                flexGrow: "1",
-              }}
-              justify="center"
-            >
-              <Hidden xsDown>
-                <Typography align="left">
-                  {columnTemplate[type].text}
-                </Typography>
-              </Hidden>
-              <Hidden smUp>
-                <Typography align="left" style={{ fontSize: "0.8rem" }}>
-                  {columnTemplate[type].text}
-                </Typography>
-              </Hidden>
-            </Grid>
+              <Grid container alignItems="center" style={{ flexGrow: "1"}}>
+                <Grid item style={{ marginRight: "20px" }}>
+                  {columnTemplate[type].icon}
+                </Grid>
+                <Grid item>
+                  <Hidden xsDown>
+                    <Typography align="left">
+                      {columnTemplate[type].text}
+                    </Typography>
+                  </Hidden>
+                  <Hidden smUp>
+                    <Typography align="left" style={{ fontSize: "0.8rem" }}>
+                      {columnTemplate[type].text}
+                    </Typography>
+                  </Hidden>
+                </Grid>
+              </Grid>
+              {type !== "longtext" ? <FormHelperText>{"\u200B"}</FormHelperText> : null}
+            </div>
             {type !== "longtext" ? (
               <Grid
                 item
                 style={{
                   display: "flex",
-                  flexDirection: "column",
-                  height: "34px",
+                  flexDirection: "column"
                 }}
               >
                 <Hidden xsDown>
@@ -1390,11 +1378,12 @@ class EditAssessment extends Component {
                       this.handleWeight(e, type);
                     }}
                     error={showError}
-                    helperText={showError ? "Periksa Kembali!" : null}
+                    helperText={showError ? "Periksa Kembali!" : "\u200B"}
                     FormHelperTextProps={{
                       style: {
-                        margin: "0px",
-                      },
+                        marginLeft: "0",
+                        marginRight: "0"
+                      }
                     }}
                     InputProps={{
                       style: {
@@ -1416,16 +1405,16 @@ class EditAssessment extends Component {
                       this.handleWeight(e, type);
                     }}
                     error={showError}
-                    helperText={showError ? "Periksa Kembali!" : null}
+                    helperText={showError ? "Periksa Kembali!" : "\u200B"}
                     FormHelperTextProps={{
                       style: {
-                        margin: "0px",
-                      },
+                        marginLeft: "0",
+                        marginRight: "0"
+                      }
                     }}
                     InputProps={{
                       style: {
-                        height: "34px",
-                        width: "85px",
+                        width: "85px"
                       },
                       endAdornment: (
                         <Typography
@@ -1453,7 +1442,7 @@ class EditAssessment extends Component {
                 <Hidden xsDown>
                   <Grid
                     item
-                    style={{ display: "flex", width: "100px", height: "42px" }}
+                    style={{ display: "flex", width: "100px" }}
                     justify="center"
                     alignItems="center"
                   >
@@ -1467,7 +1456,7 @@ class EditAssessment extends Component {
                 <Hidden smUp>
                   <Grid
                     item
-                    style={{ display: "flex", width: "85px", height: "34px" }}
+                    style={{ display: "flex", width: "85px" }}
                     justify="center"
                     alignItems="center"
                   >
@@ -1483,7 +1472,7 @@ class EditAssessment extends Component {
           </Grid>
         );
 
-        columnsDesktopView.push(
+        desktopView.push(
           <Grid
             container
             item
@@ -1505,7 +1494,7 @@ class EditAssessment extends Component {
               </Typography>
             </Grid>
             {type !== "longtext" ? (
-              <Grid item style={{ height: "65px" }}>
+              <Grid item>
                 <TextField
                   defaultValue={this.state.weights[type]}
                   variant="outlined"
@@ -1515,10 +1504,11 @@ class EditAssessment extends Component {
                     this.handleWeight(e, type);
                   }}
                   error={showError}
-                  helperText={showError ? "Periksa Kembali!" : null}
+                  helperText={showError ? "Periksa Kembali!" : "\u200B"}
                   FormHelperTextProps={{
                     style: {
-                      margin: "0px",
+                      marginLeft: "0",
+                      marginRight: "0"
                     },
                   }}
                   InputProps={{
@@ -1532,23 +1522,24 @@ class EditAssessment extends Component {
                 />
               </Grid>
             ) : (
-              <Grid item style={{ height: "65px" }}>
+              <Grid item>
                 <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
                   <IconButton>
                     <InfoIcon />
                   </IconButton>
                 </LightTooltip>
+                <FormHelperText>{"\u200B"}</FormHelperText>
               </Grid>
             )}
           </Grid>
         );
         // jika elemen ini bukan elemen terakhir, tambahkan divider
-        if (c + 1 < filteredtypeCount.length) {
-          columnsDesktopView.push(<Divider orientation="vertical" flexItem />);
-          gridItemMobileView.push(<Divider className={classes.customMargin} />);
+        if (i !== filteredtypeCount.length - 1) {
+          desktopView.push(<Divider orientation="vertical" flexItem />);
+          mobileView.push(<Divider className={classes.dividerMargin} />);
         }
-        c++;
       }
+
       return (
         <Paper>
           <Hidden smDown>
@@ -1557,18 +1548,17 @@ class EditAssessment extends Component {
               style={{ padding: "20px", height: "240px" }}
               justify="center"
             >
-              {columnsDesktopView}
+              {desktopView}
             </Grid>
           </Hidden>
           <Hidden mdUp>
-            {/* {gridMobileView} */}
             <Grid
               container
               style={{ padding: "20px" }}
               wrap="nowrap"
               direction="column"
             >
-              {gridItemMobileView}
+              {mobileView}
             </Grid>
           </Hidden>
         </Paper>
