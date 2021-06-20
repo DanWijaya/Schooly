@@ -14,7 +14,7 @@ module.exports = function validateAnnouncementInput(data) {
 
   // Name checks
   if (Validator.isEmpty(data.title)) {
-    errors.title = "Name Pengumuman belum diisi";
+    errors.title = "Nama Pengumuman belum diisi";
   }
 
   if (Validator.isEmpty(data.description)) {

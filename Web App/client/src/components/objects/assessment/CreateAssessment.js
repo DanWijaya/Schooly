@@ -1968,7 +1968,7 @@ class CreateAssessment extends Component {
             onClose={this.handleCloseSnackbar}
             severity="error"
           >
-            Masih ada bagian yang belum diisi atau salah, silahkan diperiksa
+            Masih ada bagian yang belum diisi atau salah, silakan diperiksa
             kembali!
           </MuiAlert>
         </Snackbar>
