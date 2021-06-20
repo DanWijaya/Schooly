@@ -1055,7 +1055,7 @@ function ClassList(props) {
         getStudents={getStudents}
         handleOpenSnackbar={handleOpenSnackbar}
         tasksCollection={tasksCollection}
-        all_assessments={all_assessments}
+        // all_assessments={all_assessments}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
         //Two props added for search filter.

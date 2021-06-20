@@ -680,6 +680,11 @@ class EditAssessment extends Component {
   };
 
   onChange = (e, otherfield = null) => {
+    let field = e.target.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+
     if (otherfield) {
       if (otherfield === "end_date" || otherfield === "start_date" || otherfield === "post_date") {
         this.setState({ [otherfield]: e });
@@ -734,68 +739,8 @@ class EditAssessment extends Component {
         this.setState({ [otherfield]: e.target.value });
       }
     } else {
-      let field = e.target.id ? e.target.id : otherfield;
-      if (this.state.errors[field]) {
-        this.setState({ errors: { ...this.state.errors, [field]: null } });
-      }
-      this.setState({ [field]: e.target.value });
+      this.setState({ [e.target.id]: e.target.value });
     }
-    // if (otherfield) {
-    //   if (otherfield === "end_date" || otherfield === "start_date") {
-    //     this.setState({ [otherfield]: e });
-    //   } else if (otherfield === "subject") { // jika guru memilih mata pelajaran
-    //     // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
-    //     let newClassOptions = [];
-    //     if (this.props.auth.user.class_to_subject) {
-    //       for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
-    //         if (subjectIdArray.includes(e.target.value)) {
-    //           newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
-    //         }
-    //       }
-    //     }
-
-    //     this.setState({ subject: e.target.value, classOptions: newClassOptions });
-
-    //   } else if (otherfield === "class_assigned") { // jika guru memilih kelas
-    //     let selectedClasses = e.target.value;
-
-    //     if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
-    //       this.setState((prevState, props) => {
-    //         return {
-    //           class_assigned: selectedClasses,
-    //           // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
-    //           subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
-    //         }
-    //       });
-    //     } else { // jika guru menambahkan atau mengurangi pilihan kelas
-    //       // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
-    //       let subjectMatrix = [];
-    //       if (this.props.auth.user.class_to_subject) {
-    //         for (let classId of selectedClasses) {
-    //           subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
-    //         }
-    //       }
-    //       let subjects = [];
-    //       if (subjectMatrix.length !== 0) {
-    //         subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
-    //           return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
-    //         });
-    //       }
-
-    //       // menambahkan matpel tersebut ke opsi matpel
-    //       let newSubjectOptions = [];
-    //       subjects.forEach((subjectId) => {
-    //         newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
-    //       })
-
-    //       this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
-    //     }
-    //   } else {
-    //     this.setState({ [otherfield]: e.target.value });
-    //   }
-    // } else {
-    //   this.setState({ [e.target.id]: e.target.value });
-    // }
   };
 
   onDateChange = (date) => {

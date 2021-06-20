@@ -557,17 +557,17 @@ function TaskList(props) {
       getAllClass("map");
       getAllSubjects("map");
 
-      // if (user.role === "Student") {
-      //   let submittedTaskIdSet = new Set();
-      //   getFileSubmitTasksByAuthor(user._id).then((response) => {
-      //     for (let file of response.data) {
-      //       submittedTaskIdSet.add(file.task_id);
-      //     }
-      //   }).finally(() => {
-      //     // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
-      //     setSubmittedTaskIds(submittedTaskIdSet);
-      //   });
-      // }
+      if (user.role === "Student") {
+        let submittedTaskIdSet = new Set();
+        getFileSubmitTasksByAuthor(user._id).then((response) => {
+          for (let file of response.data) {
+            submittedTaskIdSet.add(file.task_id);
+          }
+        }).finally(() => {
+          // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
+          setSubmittedTaskIds(submittedTaskIdSet);
+        });
+      }
       
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },

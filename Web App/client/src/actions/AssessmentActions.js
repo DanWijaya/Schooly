@@ -329,6 +329,7 @@ export const validateAssessment = (assessmentData) => (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     }
   });
 };
