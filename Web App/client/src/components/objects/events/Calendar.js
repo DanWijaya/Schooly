@@ -2,6 +2,8 @@ import React from "react";
 import "./Calendar.css"
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import lokal from "date-fns/locale/id";
+import DateFnsUtils from "@date-io/date-fns";
 import { Calendar as ReactCalendar } from "react-calendar";
 import {
   Button,
@@ -34,10 +36,31 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  FormControl,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Select,
+  FormHelperText
 } from "@material-ui/core/";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDateTimePicker,
+} from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import AddIcon from "@material-ui/icons/Add";
+// FIXME ICONS 
 import EventNoteIcon from '@material-ui/icons/EventNote';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import TimerIcon from '@material-ui/icons/Timer';
+import TimerOffIcon from '@material-ui/icons/TimerOff';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import SubjectIcon from '@material-ui/icons/Subject';
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
@@ -65,6 +88,7 @@ import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import moment from "moment";
 import ErrorIcon from "@material-ui/icons/Error";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import Draggable from 'react-draggable';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -204,8 +228,26 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.dark,
     },
+  createEventButton: {
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+    }
+  }, 
+  formIcons: {
+    width: "1rem",
+    height: "1rem",
+    marginRight: "7.5px",
+    color: theme.palette.text.secondary
+  },
+  formLabels: {
+    display: "flex",
+    alignItems:"center"
   }
 }));
+// FIXME STYLE
 
 function CalendarListToolbar(props) {
   const {
@@ -431,7 +473,7 @@ function CalendarListToolbar(props) {
           {role !== "Admin" ? null : (
             <LightTooltip title="Buat Kegiatan">
               <Link to="/buat-kegiatan">
-                <Fab size="small" className={classes.newEventButton}>
+                <Fab size="small" className={classes.newEventButton} onClick={handleOpenCreateDialog}>
                   <EventNoteIcon className={classes.newEventIconMobile} />
                 </Fab>
               </Link>
@@ -445,6 +487,7 @@ function CalendarListToolbar(props) {
                 size="medium"
                 variant="extended"
                 className={classes.newEventButton}
+                onClick={handleOpenCreateDialog}
               >
                 <EventNoteIcon className={classes.newEventIconDesktop} />
                 Buat Kegiatan
@@ -505,7 +548,8 @@ function AgendaToolbar(props) {
   const {
     classes,
     mode,
-    handleChangeMode
+    handleChangeMode,
+    handleOpenCreateDialog
   } = props;
 
   return (
@@ -517,7 +561,7 @@ function AgendaToolbar(props) {
         <Typography>Juni 4, 2021</Typography>
       </div>
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-        <Fab className={classes.greenFab} aria-label="add" size="small">
+        <Fab className={classes.greenFab} aria-label="add" size="small" onClick={handleOpenCreateDialog}>
           <AddIcon fontSize="small"/>
         </Fab>
         <IconButton>
@@ -925,6 +969,78 @@ function AssessmentListItemTeacher(props) {
   );
 }
 
+// FIXME DUMMY
+function DummyForm(props) {
+  const [a, sa] = React.useState("");
+  const [b, sb] = React.useState("");
+  const [c, sc] = React.useState("");
+  const [d, sd] = React.useState("");
+  const [e, se] = React.useState("");
+
+  return (
+    <>
+      <TextField
+        id="name"
+        fullWidth
+        variant="outlined"
+        type="text"
+        placeholder="Isi A"
+        value={a}
+        onChange={(e) => { sa(e.target.value) }}
+        style={{margin: "24px 0"}}
+      />
+      <TextField
+        id="name"
+        fullWidth
+        variant="outlined"
+        type="text"
+        placeholder="Isi B"
+        value={b}
+        onChange={(e) => { sb(e.target.value) }}
+        style={{margin: "24px 0"}}
+      />
+      <TextField
+        id="name"
+        fullWidth
+        variant="outlined"
+        type="text"
+        placeholder="Isi C"
+        value={c}
+        onChange={(e) => { sc(e.target.value) }}
+        style={{margin: "24px 0"}}
+      />
+      <TextField
+        id="name"
+        fullWidth
+        variant="outlined"
+        type="text"
+        placeholder="Isi D"
+        value={d}
+        onChange={(e) => { sd(e.target.value) }}
+        style={{margin: "24px 0"}}
+      />
+      <TextField
+        id="name"
+        fullWidth
+        variant="outlined"
+        type="text"
+        placeholder="Isi E"
+        value={e}
+        onChange={(e) => { se(e.target.value) }}
+        style={{margin: "24px 0"}}
+      />
+    </>
+  );
+}
+
+function PaperComponent(props) {
+  return (
+    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+      <Paper {...props} />
+    </Draggable>
+  );
+}
+
 function Calendar(props) {
   document.title = "Schooly | Kalender";
 
@@ -951,6 +1067,22 @@ function Calendar(props) {
   const { all_subjects_map, all_subjects } = props.subjectsCollection;
   const { all_assessments } = props.assessmentsCollection;
 
+  // FIXME STATES
+  const [openCreateDialog, setOpenCreateDialog] = React.useState(true);
+
+  // form data
+  const [name, setName] = React.useState("");
+  const [location, setLocation] = React.useState("");
+  const [start_date, setStartDate] = React.useState(new Date());
+  const [end_date, setEndDate] = React.useState(new Date());
+  const [target_role, setTargetRole] = React.useState([]);
+  const [description, setDescription] = React.useState("");
+  const [isAllDay, setAllDay] = React.useState(false);
+  const inputHeightRef = React.useRef(null);
+  const [inputHeight, setInputHeight] = React.useState(null);
+
+  const [errors, setErrors] = React.useState({});
+  
   // state ini akan bernilai null jika dan hanya jika pengguna belum mengklik tile kalender (belum memilih tanggal)
   const [selectedDate, setSelectedDate] = React.useState(null);
   const [rows, setRows] = React.useState([]);
@@ -963,6 +1095,11 @@ function Calendar(props) {
     getTeachers();
     getAllTaskFilesByUser(user._id);
     getAllSubjects("map");
+
+    console.log(inputHeightRef.current)
+    if (inputHeightRef.current) {
+      setInputHeight(inputHeightRef.current.offsetHeight);
+    }
   }, []);
 
   React.useEffect(() => {
@@ -1205,6 +1342,19 @@ function Calendar(props) {
   const [currentMonthDates, setCurrentMonthDates] = React.useState([]);
   console.log(currentMonthDates)
 
+  const handleOpenCreateDialog = () => {
+    setOpenCreateDialog(true);
+  } 
+
+  const handleCloseCreateDialog = () => {
+    setOpenCreateDialog(false);
+  } 
+
+  const onSubmit = () => {
+    // create event
+    handleCloseCreateDialog();
+  }
+
   const handleChangeMode = (event) => {
     setMode(event.target.value);
   }
@@ -1342,11 +1492,254 @@ function Calendar(props) {
 
   return (
     <div className={classes.root}>
+      {/* create event dialog */}
+      <Dialog
+        open={openCreateDialog}
+        onClose={handleCloseCreateDialog}
+        PaperComponent={PaperComponent}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle disableTypography>
+          <Typography variant="h5" gutterBottom>
+            <b>Buat Kegiatan</b>
+          </Typography>
+          <Typography color="textSecondary">
+            Tambahkan keterangan untuk membuat kegiatan.
+          </Typography>
+        </DialogTitle>
+        <DialogContent dividers>
+
+          <DummyForm />
+        {/* FIXME START ---- */}
+          <Grid container style={{ padding: "20px 20px 30px 20px", display: "none" }} spacing={4}>
+
+            {/* FIXME dialog - 1. judul*/}
+            <Grid item xs={12}>
+              <Typography component="label" for="name" color="primary" className={classes.formLabels}>
+                <EventNoteIcon className={classes.formIcons}/>
+                Judul
+              </Typography>
+              <div>
+                <TextField
+                  id="name"
+                  fullWidth
+                  variant="outlined"
+                  type="text"
+                  placeholder="Isi Judul"
+                  value={name}
+                  error={errors.name}
+                  onChange={(e) => { setName(e.target.value) }}
+                />
+                <div style={{ height: "0" }}>
+                  <FormHelperText error={errors.name} >{errors.name}</FormHelperText>
+                </div>
+              </div>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button onClick={() => {
+                if (errors.name) {
+                  setErrors({...errors, name: undefined})
+                } else {
+                  setErrors({ ...errors, name: "hello" })
+                }
+              }}>hello</Button>
+            </Grid>
+
+            {/* FIXME dialog - 2. lokasi*/}
+            <Grid item xs={12}>
+              <Typography component="label" for="location" color="primary" className={classes.formLabels}>
+                <LocationOnIcon className={classes.formIcons}/>
+                Lokasi
+              </Typography>
+              <TextField
+                id="location"
+                fullWidth
+                variant="outlined"
+                type="text"
+                placeholder="Isi Lokasi"
+                value={location}
+                error={errors.location}
+                helperText={errors.location}
+                onChange={(e) => { setLocation(e.target.value) }}
+              />
+            </Grid>
+
+            <Grid item xs={12} container spacing={2}>
+            {/* FIXME dialog - 3. waktu mulai*/}
+              <Grid item xs={12} md={6}>
+                <Typography
+                  component="label"
+                  for="eventStart"
+                  color="primary"
+                  className={classes.formLabels}
+                >
+                  <TimerIcon className={classes.formIcons}/>
+                  Waktu Mulai
+                </Typography>
+                <div>
+                  <MuiPickersUtilsProvider
+                    locale={lokal}
+                    utils={DateFnsUtils}
+                  >
+                    <KeyboardDateTimePicker
+                      id="eventStart"
+                      fullWidth
+                      disablePast
+                      inputVariant="outlined"
+                      format="dd/MM/yyyy - HH:mm"
+                      ampm={false}
+                      okLabel="Simpan"
+                      cancelLabel="Batal"
+                      minDateMessage="Batas waktu harus waktu yang akan datang"
+                      invalidDateMessage="Format tanggal tidak benar"
+                      // value={start_date}
+                      // onChange={(date) => { setStartDate(date) }}
+                      // onError={(err) => {
+                      //   console.log(err);
+                      //   if (errors.start_date !== err) {
+                      //     setErrors({...errors, start_date: err});
+                      //   }
+                      // }}
+                      FormHelperTextProps={{
+                        style: {
+                          display: "none"
+                        }
+                      }}
+                    />
+                    <div style={{ height: "0" }}>
+                      <FormHelperText error={errors.start_date}>{errors.start_date}</FormHelperText>
+                    </div>
+                  </MuiPickersUtilsProvider>
+                </div>
+              </Grid>
+              {/* FIXME dialog - 4. waktu selesai*/}
+              <Grid item xs={12} md={6}>
+                <Typography
+                  component="label"
+                  for="eventEnd"
+                  color="primary"
+                  className={classes.formLabels}
+                >
+                  <TimerOffIcon className={classes.formIcons}/>
+                  Waktu Selesai
+                </Typography>
+                <MuiPickersUtilsProvider
+                  locale={lokal}
+                  utils={DateFnsUtils}
+                >
+                  <KeyboardDateTimePicker
+                    id="eventEnd"
+                    fullWidth
+                    disablePast
+                    inputVariant="outlined"
+                    format="dd/MM/yyyy - HH:mm"
+                    ampm={false}
+                    okLabel="Simpan"
+                    cancelLabel="Batal"
+                    minDate={start_date}
+                    minDateMessage="Batas waktu harus setelah Waktu Mulai Pengerjaan"
+                    invalidDateMessage="Format tanggal tidak benar"
+                    value={end_date}
+                    onChange={(date) => { setEndDate(date) }}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+            </Grid>
+
+            {/* FIXME dialog - 5. checkbox*/}
+            <Grid item xs={12} style={{ paddingTop: 0, paddingBottom: 0 }}>
+              <FormGroup>
+                <FormControlLabel
+                  label={
+                    <Typography color="textSecondary">
+                      Sepanjang Hari
+                    </Typography>
+                  }
+                  control={
+                    <Checkbox
+                      onChange={() => { setAllDay(!isAllDay) }}
+                      color="primary"
+                      size="small"
+                      checked={isAllDay}
+                    />
+                  }
+                />
+              </FormGroup>
+            </Grid>
+
+            {/* FIXME dialog - 6. pihak penerima*/}
+            <Grid item xs={12}>
+              <Typography
+                component="label"
+                for="target_role"
+                color="primary"
+                className={classes.formLabels}
+              >
+                <SupervisorAccountIcon className={classes.formIcons}/>
+                Pihak Penerima
+              </Typography>
+              <FormControl
+                variant="outlined"
+                fullWidth
+                error={errors.target_role}
+              >
+                <Select
+                  id="target_role"
+                  // MenuProps={MenuProps}
+                  value={target_role}
+                  onChange={(event) => {
+                    // this.onChange(event, "target_role");
+                  }}
+                >
+                </Select>
+                <FormHelperText>
+                  {errors.target_role ?? null}
+                </FormHelperText>
+              </FormControl>
+            </Grid>
+
+            {/* FIXME dialog - 7. deskripsi*/}
+            <Grid item xs={12}>
+              <Typography component="label" for="description" color="primary" className={classes.formLabels}>
+                <SubjectIcon className={classes.formIcons}/>
+                Deskripsi
+              </Typography>
+              <TextField
+                id="description"
+                fullWidth
+                variant="outlined"
+                type="text"
+                placeholder="Isi Deskripsi"
+                value={description}
+                error={errors.description}
+                helperText={errors.description}
+                onChange={(e) => { setDescription(e.target.value) }}
+              />
+            </Grid>
+
+          </Grid>
+        
+        
+        {/* FIXME END ---- */}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            className={classes.createEventButton}
+            onClick={onSubmit}
+          >
+            Buat
+          </Button>
+        </DialogActions>
+      </Dialog>
       <div className={classes.agendaContainer}>
         <AgendaToolbar
           classes={classes}
           mode={mode}
           handleChangeMode={handleChangeMode}
+          handleOpenCreateDialog={handleOpenCreateDialog}
         />
         <Divider style={{marginTop: "10px"}}/>
         {mode === "Day" ? generateDayModeCalendar() : generateMonthModeCalendar()}
