@@ -33,19 +33,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Checkbox,
-  FormControlLabel,
-  FormGroup
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
-  FormControl,
   FormGroup,
   FormControlLabel,
   Checkbox,
-  Select,
-  FormHelperText
 } from "@material-ui/core/";
 import {
   MuiPickersUtilsProvider,
@@ -53,7 +46,6 @@ import {
 } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import AddIcon from "@material-ui/icons/Add";
 // FIXME ICONS 
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
@@ -228,6 +220,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.dark,
     },
+  },
   createEventButton: {
     backgroundColor: theme.palette.success.main,
     color: "white",
@@ -473,7 +466,7 @@ function CalendarListToolbar(props) {
           {role !== "Admin" ? null : (
             <LightTooltip title="Buat Kegiatan">
               <Link to="/buat-kegiatan">
-                <Fab size="small" className={classes.newEventButton} onClick={handleOpenCreateDialog}>
+                <Fab size="small" className={classes.newEventButton}>
                   <EventNoteIcon className={classes.newEventIconMobile} />
                 </Fab>
               </Link>
@@ -487,7 +480,6 @@ function CalendarListToolbar(props) {
                 size="medium"
                 variant="extended"
                 className={classes.newEventButton}
-                onClick={handleOpenCreateDialog}
               >
                 <EventNoteIcon className={classes.newEventIconDesktop} />
                 Buat Kegiatan
@@ -1068,7 +1060,7 @@ function Calendar(props) {
   const { all_assessments } = props.assessmentsCollection;
 
   // FIXME STATES
-  const [openCreateDialog, setOpenCreateDialog] = React.useState(true);
+  const [openCreateDialog, setOpenCreateDialog] = React.useState(false);
 
   // form data
   const [name, setName] = React.useState("");
