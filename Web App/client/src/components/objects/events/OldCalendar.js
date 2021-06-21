@@ -1,5 +1,4 @@
 import React from "react";
-import "./Calendar.css"
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { Calendar as ReactCalendar } from "react-calendar";
@@ -17,23 +16,7 @@ import {
   Paper,
   Divider,
   Badge,
-  Dialog,
-  TextField,
-  Menu,
-  Select,
-  MenuItem,
-  FormHelperText,
-  FormControl,
-  InputLabel,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Checkbox,
-  FormControlLabel,
-  FormGroup
+  Dialog
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -44,10 +27,6 @@ import PageviewIcon from "@material-ui/icons/Pageview";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import WarningIcon from "@material-ui/icons/Warning";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import SearchIcon from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 import {
@@ -74,8 +53,6 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "100%"
     },
     padding: "10px",
-    display: "flex",
-    flexDirection: "row"
   },
   newEventButton: {
     marginRight: "10px",
@@ -119,45 +96,16 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.dark,
     },
   },
-  agendaContainer: {
-    width: "80%",
-    marginRight: "15px"
-  },
   calendarContainer: {
-    marginLeft: "15px",
-    width: "20%"
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: "30px"
   },
   calendar: {
-    border: "none",
-  },
-  todayTile: {
-    textAlign: "center!important",
-    borderRadius: "100%",
-    background: "#195DE5",
-    color: "white",
-    maxWidth: "12%!important",
-    margin: ".5% 1.14285%!important",
-    padding: "3% 0%",
-    "&:focus, &:hover, &:active": {
-      background: "#195DE5",
-      backgroundColor: "#195DE5",
-      color: "white",
-      opacity: 0.8
-    },
-  },
-  activeTile: {
-    textAlign: "center!important",
-    maxWidth: "12%!important",
-    margin: ".5% 1.14285%!important",
-    padding: "3% 0%",
-    "&:active": {
-      background: "#C9DCFD",
-      opacity: 0.8
-    },
+    width: "100%"
   },
   calendarTile: {
-    borderRadius: "100%",
-    backgroundColor: theme.palette.primary.light
+    // minWidth: "100px"
   },
   toolbar: {
     display: "flex",
@@ -190,21 +138,6 @@ const useStyles = makeStyles((theme) => ({
   listIcon: {
     backgroundColor: theme.palette.primary.main,
   },
-  blueChip: {
-    backgroundColor: theme.palette.primary.main,
-    height: "15px",
-    position: "absolute", 
-    transform: "translateY(10.5px)",
-    borderRadius: "3px",
-    maxWidth: "44%"
-  },
-  greenFab: {
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.dark,
-    },
-  }
 }));
 
 function CalendarListToolbar(props) {
@@ -496,47 +429,6 @@ function CalendarListToolbar(props) {
             </MenuItem>
           ))}
         </Menu> */}
-      </div>
-    </div>
-  );
-}
-
-function AgendaToolbar(props) {
-  const {
-    classes,
-    mode,
-    handleChangeMode
-  } = props;
-
-  return (
-    <div className={classes.toolbar}>
-      <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-        <Button variant="outlined">Hari ini</Button>
-        <ChevronLeftIcon/>
-        <ChevronRightIcon/>
-        <Typography>Juni 4, 2021</Typography>
-      </div>
-      <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-        <Fab className={classes.greenFab} aria-label="add" size="small">
-          <AddIcon fontSize="small"/>
-        </Fab>
-        <IconButton>
-          <SearchIcon/>
-        </IconButton>
-        <FormControl variant="outlined">
-          <Select
-            defaultValue="Day"
-            value={mode}
-            onChange={handleChangeMode}
-          >
-            <MenuItem value="Day">
-              Hari
-            </MenuItem>
-            <MenuItem value="Week">Minggu</MenuItem>
-            <MenuItem value="Month">Bulan</MenuItem>
-            <MenuItem value="Year">Tahun</MenuItem>
-          </Select>
-        </FormControl>
       </div>
     </div>
   );
@@ -1200,255 +1092,241 @@ function Calendar(props) {
     }
   }
 
-  // Calendar
-  const [mode, setMode] = React.useState("Day");
-  const [currentMonthDates, setCurrentMonthDates] = React.useState([]);
-  console.log(currentMonthDates)
-
-  const handleChangeMode = (event) => {
-    setMode(event.target.value);
-  }
-
-  const isSameDate = (date_1, date_2) => {
-    return date_1.getDate() === date_2.getDate() && date_1.getMonth() === date_2.getMonth() && date_1.getYear() === date_2.getYear()
-  }
-
-  const renderCalendarTile = ({ activeStartDate, date, view }) => {
-    let temp
-    var today = new Date()
-    if(isSameDate(today, date)) {
-      return classes.todayTile
-    }
-    return classes.activeTile
-  }
-
-  const timeRows = [
-    '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'
-  ]
-
-  const tableRows = [
-    '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
-  ];
-
-  const dayNames = [
-    'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'
-  ]
-
-  const dateRows = [
-    [
-      '1', '2', '3', '4', '5', '6', '7'
-    ],
-    [
-      '1', '2', '3', '4', '5', '6', '7'
-    ],
-    [
-      '1', '2', '3', '4', '5', '6', '7'
-    ],
-    [
-      '1', '2', '3', '4', '5', '6', '7'
-    ],
-    [
-      '1', '2', '3', '4', '5', '6', '7'
-    ],
-  ]
-
-  const [agendaCheckboxState, setAgendaCheckboxState] = React.useState({
-    checkedTask: true,
-    checkedQuiz: true,
-    checkedExam: true,
-    checkedEvent: true,
-  });
-
-  const handleChange = (event) => {
-    setAgendaCheckboxState({ ...agendaCheckboxState, [event.target.name]: event.target.checked });
-  };
-
-  const generateDayModeCalendar = () => {
-    return (
-      <div style={{ display: "flex", flexDirection: "row", marginTop: "10px" }}>
-        <div style={{marginTop: "16px"}}>
-          <TableContainer component={Grid}>
-            <Table className={classes.table} aria-label="simple table">
-              <TableBody>
-              {timeRows.map((row) => (
-                <TableRow style={{borderBottom: "none"}}>
-                  <TableCell style={{borderBottom: "none", padding: "7.3px"}}>
-                    <Typography color="textSecondary" variant="body2">{row}</Typography>
-                  </TableCell>
-                </TableRow>
-              ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
-        <TableContainer component={Grid}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableBody>
-              {tableRows.map((row) => (
-                <TableRow key={row.name}>
-                  <TableCell component="th" scope="row">
-                    <div className={classes.blueChip}></div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-    )
-  }
-
-  const generateMonthModeCalendar = () => {
-    return (
-      <div style={{ display: "flex", flexDirection: "row", marginTop: "10px" }}>
-        <TableContainer component={Grid}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableBody>
-            {dateRows.map((row, index) => (
-              generateDateAgenda(row, index)
-            ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-    )
-  }
-
-  const generateDateAgenda = (date, index) => {
-    if(index === 0) {
-      return (
-        <TableRow style={{height: "100px"}}>
-          {date.map((column, columnIndex) => (
-            <TableCell style={{width: "14.2875%", border: "1px solid rgba(224, 224, 224, 1)", verticalAlign: "top"}} align="center">
-              <Typography color="textSecondary" variant="body2">{dayNames[columnIndex]}</Typography>
-              <Typography color="textSecondary" variant="body2">{column}</Typography>
-            </TableCell>
-          ))}
-        </TableRow>
-      )
-    }
-    else {
-      return (
-        <TableRow style={{height: "100px"}}>
-          {date.map((column) => (
-            <TableCell style={{width: "14.2875%", border: "1px solid rgba(224, 224, 224, 1)", verticalAlign: "top"}} align="center">
-              <Typography color="textSecondary" variant="body2">{column}</Typography>
-            </TableCell>
-          ))}
-        </TableRow>
-      )
-    }
-  }
-
   return (
     <div className={classes.root}>
-      <div className={classes.agendaContainer}>
-        <AgendaToolbar
-          classes={classes}
-          mode={mode}
-          handleChangeMode={handleChangeMode}
-        />
-        <Divider style={{marginTop: "10px"}}/>
-        {mode === "Day" ? generateDayModeCalendar() : generateMonthModeCalendar()}
-      </div>
       <div className={classes.calendarContainer}>
         <ReactCalendar
           onChange={setSelectedDate}
           value={selectedDate}
-          tileClassName={renderCalendarTile}
+          tileClassName={classes.calendarTile}
           className={classes.calendar}
         />
-        <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
-          <Typography style={{marginTop: "15px"}}>Agenda</Typography>
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox checked={agendaCheckboxState.checkedTask}
-                  onChange={handleChange}
-                  name="checkedTask"
-                  color="primary"
-                />
-              }
-              label="Tugas"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={agendaCheckboxState.checkedQuiz}
-                  onChange={handleChange}
-                  name="checkedQuiz"
-                  color="primary"
-                />
-              }
-              label="Kuis"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={agendaCheckboxState.checkedExam}
-                  onChange={handleChange}
-                  name="checkedExam"
-                  color="primary"
-                />
-              }
-              label="Ujian"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={agendaCheckboxState.checkedEvent}
-                  onChange={handleChange}
-                  name="checkedEvent"
-                  color="primary"
-                />
-              }
-              label="Kegiatan"
-            />
-          </FormGroup>
-        </div>
-        <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
-          <Typography style={{marginTop: "15px"}}>Kelas</Typography>
-          <FormGroup>
-          <FormControlLabel
-              control={
-                <Checkbox checked={agendaCheckboxState.checkedTask}
-                  onChange={handleChange}
-                  name="checkedTask"
-                  color="primary"
-                />
-              }
-              label="Tugas"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={agendaCheckboxState.checkedQuiz}
-                  onChange={handleChange}
-                  name="checkedQuiz"
-                  color="primary"
-                />
-              }
-              label="Kuis"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={agendaCheckboxState.checkedExam}
-                  onChange={handleChange}
-                  name="checkedExam"
-                  color="primary"
-                />
-              }
-              label="Ujian"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={agendaCheckboxState.checkedEvent}
-                  onChange={handleChange}
-                  name="checkedEvent"
-                  color="primary"
-                />
-              }
-              label="Kegiatan"
-            />
-          </FormGroup>
-        </div>
       </div>
+      <CalendarListToolbar
+        classes={classes}
+        role={role}
+        type="Event"
+      />
+      <Divider variant="inset" className={classes.titleDivider} />
+      {/* <Hidden mdUp implementation="css">
+        {role !== "Admin" ? null : (
+          <LightTooltip title="Buat Kegiatan">
+            <Link to="/buat-kegiatan">
+              <Fab size="small" className={classes.newEventButton}>
+                <EventNoteIcon className={classes.newEventIconMobile} />
+              </Fab>
+            </Link>
+          </LightTooltip>
+        )}
+      </Hidden>
+      <Hidden smDown implementation="css">
+        {role !== "Admin" ? null : (
+          <Link to="/buat-kegiatan">
+            <Fab
+              size="medium"
+              variant="extended"
+              className={classes.newEventButton}
+            >
+              <EventNoteIcon className={classes.newEventIconDesktop} />
+              Buat Kegiatan
+          </Fab>
+          </Link>
+        )}
+      </Hidden> */}
+
+      <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
+        {rows.length === 0 ? (
+          <Typography variant="subtitle1" align="center" color="textSecondary">
+            Kosong
+          </Typography>
+        ) : 
+          rows.map((eventInfo) => {
+            return (
+              <Grid item>
+                <Paper variant="outlined">
+                  <ListItem className={classes.listItem}>
+                    {/* Isi ListItem Mobile = nama event*/}
+                    <Hidden smUp implementation="css">
+                      <ListItemText
+                        style={{ margin: "6px 0" }}
+                        primary={
+                          <Grid container alignItems="center">
+                            <Typography variant="subtitle1" color="textPrimary">
+                              {eventInfo.name}
+                            </Typography>
+
+                            {/* bagian ini ditambahkan agar tinggi listitemnya sama seperti listitem yang ada props secondarynya */}
+                            <Grid item style={{ visibility: "hidden" }}>
+                              <Typography variant="subtitle1">
+                                {"\u200B"}
+                              </Typography>
+                              <Typography variant="caption">
+                                {"\u200B"}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        }
+                      />
+                    </Hidden>
+
+                    {/* Isi ListItem Desktop = nama dan icon event*/}
+                    <Hidden xsDown implementation="css">
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <ListItemAvatar>
+                          <Avatar className={classes.listIcon}>
+                            <EventNoteIcon />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          style={{ margin: "6px 0" }}
+                          primary={
+                            <Grid container alignItems="center">
+                              <Typography variant="h6" color="textPrimary">
+                                {eventInfo.name}
+                              </Typography>
+
+                              {/* bagian ini ditambahkan agar tinggi listitemnya sama seperti listitem yang ada props secondarynya */}
+                              <Grid item style={{ visibility: "hidden" }}>
+                                <Grid container direction="column">
+                                  <Typography variant="h6">
+                                    {"\u200B"}
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    {"\u200B"}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                          }
+                        />
+                      </div>
+                    </Hidden>
+
+                    {/* IconButton lihat, sunting, hapus */}
+                    <ListItemText
+                      align="right"
+                      primary={
+                        <Grid container spacing={1} justify="flex-end">
+                          {/* IconButton - lihat */}
+                          <Grid item>
+                            <LightTooltip title="Lihat Lebih Lanjut">
+                              <Link to={`/kegiatan/${eventInfo._id}`}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.viewEventButton}
+                                >
+                                  <PageviewIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+
+                          {/* IconButton - sunting */}
+                          <Grid item>
+                            <LightTooltip title="Sunting">
+                              <Link to={`/sunting-kegiatan/${eventInfo._id}`}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.editEventButton}
+                                >
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+
+                          {/* IconButton - hapus */}
+                          <Grid item>
+                            <LightTooltip title="Hapus">
+                              <IconButton
+                                size="small"
+                                className={classes.deleteEventButton}
+                                onClick={() => {
+                                  deleteEvent(eventInfo._id).then(() => {
+                                    getAllEvents();
+                                  })
+                                }}
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </LightTooltip>
+                          </Grid>
+
+                        </Grid>
+                      }
+                    />
+                  </ListItem>
+                </Paper>
+              </Grid>
+            );
+          })
+        }
+      </Grid>
+
+      {(role != "Admin") ?
+        <>
+          <CalendarListToolbar
+            classes={classes}
+            role={role}
+            type="Task"
+          />
+          <Divider variant="inset" className={classes.titleDivider} />
+          <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
+            {(role === "Student") ? listTasks() : listTasksTeacher()}
+          </Grid>
+          <CalendarListToolbar
+            classes={classes}
+            role={role}
+            type="Quiz"
+          />
+          <Divider variant="inset" className={classes.titleDivider} />
+          <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
+            {(role === "Student") ?
+              <ListAssessments
+                category={null}
+                subject={{}}
+                type="Kuis"
+                tab="pekerjaan-kelas"
+                all_assessments={all_assessments}
+                classId={classId}
+                classes={classes}
+                all_subjects_map={all_subjects_map}
+                all_teachers={all_teachers}
+                getSelectedDate={getSelectedDate}
+              />
+            : listAssessmentsTeacher("Kuis")}
+          </Grid>
+          <CalendarListToolbar
+            classes={classes}
+            role={role}
+            type="Exam"
+          />
+          <Divider variant="inset" className={classes.titleDivider} />
+          <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
+            {(role === "Student") ?
+              <ListAssessments
+                category={null}
+                subject={{}}
+                type="Ujian"
+                tab="pekerjaan-kelas"
+                all_assessments={all_assessments}
+                classId={classId}
+                classes={classes}
+                all_subjects_map={all_subjects_map}
+                all_teachers={all_teachers}
+                getSelectedDate={getSelectedDate}
+              />
+            : listAssessmentsTeacher("Ujian")}
+          </Grid>
+        </>
+      : null}
     </div>
   );
 }
