@@ -126,6 +126,10 @@ const styles = (theme) => ({
     },
     marginRight: "7.5px",
   },
+  zeroHeightHelperText: {
+    height: "0",
+    display: "flex" // untuk men-disable "collapsing margin"
+  }
 });
 
 function LampiranFile(props) {
@@ -216,10 +220,8 @@ class CreateMaterial extends Component {
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
       allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
-      allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
-      inputHeight: null // menyimpan tinggi textfield
+      allSubjectObject: null // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
     };
-    this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
   }
 
   lampiranUploader = React.createRef(null);
@@ -413,12 +415,6 @@ class CreateMaterial extends Component {
     this.props.getAllClass();
     this.props.getAllSubjects();
     this.props.refreshTeacher(this.props.auth.user._id);
-
-    if (this.inputHeightRef.current) {
-      this.setState({
-        inputHeight: this.inputHeightRef.current.offsetHeight
-      });
-    }
   }
 
   componentWillUnmount() {
@@ -576,21 +572,25 @@ class CreateMaterial extends Component {
                       <Typography component="label" for="name" color="primary">
                         Judul
                       </Typography>
-                      <div ref={this.inputHeightRef} style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}>
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          id="name"
-                          onChange={this.onChange}
-                          value={this.state.name}
-                          error={errors.name}
-                          type="text"
-                          helperText={errors.name}
-                          className={classnames("", {
-                            invalid: errors.name,
-                          })}
-                        />
-                      </div>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        id="name"
+                        onChange={this.onChange}
+                        value={this.state.name}
+                        error={errors.name}
+                        type="text"
+                        // helperText={errors.name}
+                        className={classnames("", {
+                          invalid: errors.name,
+                        })}
+                      />
+                      {errors.name
+                        ?
+                        <div className={classes.zeroHeightHelperText}>
+                          <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
+                        </div>
+                        : null}
                     </Grid>
                     <Grid item>
                       <Typography
@@ -611,11 +611,17 @@ class CreateMaterial extends Component {
                         value={this.state.description}
                         error={errors.description}
                         type="text"
-                        helperText={errors.description}
+                        // helperText={errors.description}
                         className={classnames("", {
                           invalid: errors.description,
                         })}
                       />
+                      {errors.description
+                        ?
+                        <div className={classes.zeroHeightHelperText}>
+                          <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                        </div>
+                        : null}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -640,7 +646,6 @@ class CreateMaterial extends Component {
                         color="primary"
                         fullWidth
                         error={Boolean(errors.subject) && !this.state.subject}
-                        style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                       >
                         <Select
                           value={this.state.subject}
@@ -658,11 +663,12 @@ class CreateMaterial extends Component {
                             null
                           )}
                         </Select>
-                        <FormHelperText>
-                          {Boolean(errors.subject) && !this.state.subject
-                            ? errors.subject
-                            : null}
-                        </FormHelperText>
+                        {Boolean(errors.subject) && !this.state.subject
+                          ?
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>{errors.subject}</FormHelperText>
+                          </div>
+                          : null}
                       </FormControl>
                     </Grid>
                     <Grid item>
@@ -677,7 +683,6 @@ class CreateMaterial extends Component {
                         variant="outlined"
                         fullWidth
                         error={Boolean(errors.class_assigned)}
-                        style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                       >
                         <Select
                           multiple
@@ -686,6 +691,7 @@ class CreateMaterial extends Component {
                           value={class_assigned}
                           onChange={(event) => {
                             this.onChange(event, "class_assigned");
+                            console.log(event.target.value)
                           }}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
@@ -711,12 +717,12 @@ class CreateMaterial extends Component {
                             null
                           )}
                         </Select>
-                        <FormHelperText>
-                          {Boolean(errors.class_assigned) &&
-                          class_assigned.length === 0
-                            ? errors.class_assigned
-                            : null}
-                        </FormHelperText>
+                        {Boolean(errors.class_assigned)
+                          ?
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                          </div>
+                          : null}
                       </FormControl>
                     </Grid>
                     <Grid item>
@@ -730,7 +736,6 @@ class CreateMaterial extends Component {
                         accept="file/*"
                         style={{ display: "none" }}
                       />
-                      <Typography variant="body1">{"\u200B"}</Typography>
                       <Button
                         variant="contained"
                         startIcon={<AttachFileIcon />}
@@ -740,7 +745,7 @@ class CreateMaterial extends Component {
                         Tambah Lampiran Berkas
                       </Button>
                       <FormHelperText error>
-                        {errors.lampiran_materi}
+                        {errors.lampiran_materi ?? "\u200B"}
                       </FormHelperText>
                       <Grid container spacing={1} style={{ marginTop: "10px" }}>
                         {listFileChosen()}

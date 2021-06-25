@@ -781,9 +781,6 @@ function TeacherList(props) {
                       variant="outlined"
                       size="small"
                       style={{ border: "none" }}
-                      // TODO error helpertext
-                      // error={errors.mata_pelajaran}
-                      // helperText={errors.mata_pelajaran}
                     />
                   )}
                 />
@@ -818,9 +815,6 @@ function TeacherList(props) {
                       variant="outlined"
                       size="small"
                       style={{ border: "none" }}
-                      // TODO error helpertext
-                      // error={errors.mata_pelajaran}
-                      // helperText={errors.mata_pelajaran}
                     />
                   )}
                 />
@@ -991,9 +985,6 @@ function TeacherList(props) {
                                 variant="outlined"
                                 size="small"
                                 style={{ border: "none" }}
-                                // TODO error helpertext
-                                // error={errors.mata_pelajaran}
-                                // helperText={errors.mata_pelajaran}
                               />
                             )}
                           />
@@ -1024,9 +1015,6 @@ function TeacherList(props) {
                                 variant="outlined"
                                 size="small"
                                 style={{ border: "none" }}
-                                // TODO error helpertext
-                                // error={errors.mata_pelajaran}
-                                // helperText={errors.mata_pelajaran}
                               />
                             )}
                           />

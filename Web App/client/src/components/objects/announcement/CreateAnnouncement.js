@@ -126,6 +126,10 @@ const styles = (theme) => ({
     },
     marginRight: "7.5px",
   },
+  zeroHeightHelperText: {
+    height: "0",
+    display: "flex" // untuk men-disable "collapsing margin"
+  }
 });
 
 function LampiranFile(props) {
@@ -211,10 +215,8 @@ class CreateAnnouncement extends Component {
       fileLimitSnackbar: false,
       over_limit: [],
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
-      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
-      inputHeight: null, // menyimpan tinggi textfield
+      allClassObject: null // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
     };
-    this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
   }
 
   lampiranUploader = React.createRef(null);
@@ -239,7 +241,7 @@ class CreateAnnouncement extends Component {
           });
 
           if (this.props.auth.user.class_teached) {
-            // NOTE dengan ini, jika guru tidak mengajar kelas yang diwalikannya, 
+            // dengan ini, jika guru tidak mengajar kelas yang diwalikannya, 
             // guru tidak dapat membuat pengumuman untuk kelas walinya tersebut
             newClassOptions = this.props.auth.user.class_teached.map((classId) => {
               return { _id: classId, name: all_classes_obj[classId] };
@@ -266,12 +268,6 @@ class CreateAnnouncement extends Component {
       setCurrentClass(user.kelas);
     } else if (user.role === "Teacher") {
       refreshTeacher(user._id);
-    }
-
-    if (this.inputHeightRef.current) {
-      this.setState({
-        inputHeight: this.inputHeightRef.current.offsetHeight
-      });
     }
   }
 
@@ -506,21 +502,25 @@ class CreateAnnouncement extends Component {
                     <Typography component="label" for="title" color="primary">
                       Judul
                     </Typography>
-                    <div ref={this.inputHeightRef} style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        id="title"
-                        onChange={this.onChange}
-                        value={this.state.title}
-                        error={errors.title}
-                        type="text"
-                        helperText={errors.title}
-                        className={classnames("", {
-                          invalid: errors.title,
-                        })}
-                      />
-                    </div>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="title"
+                      onChange={this.onChange}
+                      value={this.state.title}
+                      error={errors.title}
+                      type="text"
+                      // helperText={errors.title}
+                      className={classnames("", {
+                        invalid: errors.title,
+                      })}
+                    />
+                    {errors.title
+                      ?
+                      <div className={classes.zeroHeightHelperText}>
+                        <FormHelperText variant="outlined" error>{errors.title}</FormHelperText>
+                      </div>
+                      : null}
                   </Grid>
                   <Grid item>
                     <Typography
@@ -541,11 +541,17 @@ class CreateAnnouncement extends Component {
                       value={this.state.description}
                       error={errors.description}
                       type="text"
-                      helperText={errors.description}
+                      // helperText={errors.description}
                       className={classnames("", {
                         invalid: errors.description,
                       })}
                     />
+                    {errors.description
+                      ?
+                      <div className={classes.zeroHeightHelperText}>
+                        <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                      </div>
+                      : null}
                   </Grid>
                 </Grid>
               </Grid>
@@ -568,7 +574,7 @@ class CreateAnnouncement extends Component {
                       <FormControl
                         variant="outlined"
                         fullWidth
-                        error={Boolean(errors.to) && target_role.length === 0}
+                        error={Boolean(errors.to)}
                       >
                         <Select
                           id="target_role"
@@ -590,11 +596,12 @@ class CreateAnnouncement extends Component {
                             );
                           })}
                         </Select>
-                        <FormHelperText>
-                          {Boolean(errors.to) && target_role.length === 0
-                            ? errors.to
-                            : null}
-                        </FormHelperText>
+                        {Boolean(errors.to)
+                          ?
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>{errors.to}</FormHelperText>
+                          </div>
+                          : null}
                       </FormControl>
                     </Grid>
                   ) : (
@@ -609,11 +616,7 @@ class CreateAnnouncement extends Component {
                       <FormControl
                         variant="outlined"
                         fullWidth
-                        error={
-                          Boolean(errors.class_assigned) &&
-                          class_assigned.length === 0
-                        }
-                        style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
+                        error={Boolean(errors.class_assigned)}
                       >
                         <Select
                           multiple
@@ -647,12 +650,12 @@ class CreateAnnouncement extends Component {
                             null
                           )}
                         </Select>
-                        <FormHelperText>
-                          {Boolean(errors.class_assigned) &&
-                          class_assigned.length === 0
-                            ? errors.class_assigned
-                            : null}
-                        </FormHelperText>
+                        {Boolean(errors.class_assigned)
+                          ?
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                          </div>
+                          : null}
                       </FormControl>
                     </Grid>
                   )}

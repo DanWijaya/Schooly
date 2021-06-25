@@ -115,20 +115,19 @@ const AssessmentSchema = new Schema(
     tipe soal nomor 1 sampai 4: radio, checkbox, isian, esai.
     Map {
       5f44d55155cedc284824f5c1: [
-        ["B"], ["A", "C"], [null, "jawaban isian"], ["jawaban esai"]
+        ["B"], ["A", "D"], [null, "jawaban isian", ""], ["jawaban esai"]
       ],
       5f5d8ffc6dd1f432b4f45ebb: [
-        [], ["A"], [], []
+        [], [], [], []
       ]
     }
     - jumlah elemen <array jawaban> sama dengan jumlah pertanyaan (questions.length) pada assessment
     - <array jawaban>[i] adalah jawaban murid untuk pertanyaan di index i (questions[i])
     - semua elemen <array jawaban> adalah array yang memiliki jumlah elemen >= 0
-
-    - NOTE misal ada satu soal isian yang ada 3 kotak isian (answer.length untuk soal ini = 3) dan 
-    misal murid hanya menulis jawaban pada kotak isian ke-2. setelah disubmit, array jawaban untuk soal ini = [null, "jawaban 2"].
-    gatau kenapa elemen "undefined" di index 0 bisa otomatis dikonversi menjadi null. tapi sampai sekarang, 
-    hal ini tampak belum menimbulkan masalah
+    - jumlah elemen di dalam elemen <array jawaban> soal bertipe isian tidak dipastikan sama dengan banyaknya kotak isian.
+    misal ada satu soal isian yang ada 3 kotak isian (answer.length untuk soal ini = 3) dan 
+    misal murid hanya menulis jawaban pada kotak isian ke-2. setelah disubmit, array jawaban 
+    untuk soal ini = [null (sebenernya undefined, tapi diconvert jadi null oleh JSON.stringify saat membuat http request), "jawaban 2"].
     */
 
     type: {

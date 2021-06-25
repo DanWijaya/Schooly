@@ -131,6 +131,10 @@ const styles = (theme) => ({
     },
     marginRight: "7.5px",
   },
+  zeroHeightHelperText: {
+    height: "0",
+    display: "flex" // untuk men-disable "collapsing margin"
+  }
 });
 
 function LampiranFile(props) {
@@ -220,10 +224,8 @@ class EditAnnouncement extends Component {
       success: null,
       target_role: "",
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
-      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
-      inputHeight: null, // menyimpan tinggi textfield
+      allClassObject: null // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
     };
-    this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
   }
 
   lampiranUploader = React.createRef(null);
@@ -250,12 +252,6 @@ class EditAnnouncement extends Component {
       setCurrentClass(user.kelas);
     } else if (user.role === "Teacher") {
       refreshTeacher(user._id);
-    }
-
-    if (this.inputHeightRef.current) {
-      this.setState({
-        inputHeight: this.inputHeightRef.current.offsetHeight
-      });
     }
   }
 
@@ -601,21 +597,25 @@ class EditAnnouncement extends Component {
                     <Typography component="label" for="title" color="primary">
                       Judul
                     </Typography>
-                    <div ref={this.inputHeightRef} style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        id="title"
-                        onChange={this.onChange}
-                        value={this.state.title}
-                        error={errors.title}
-                        type="text"
-                        helperText={errors.title}
-                        className={classnames("", {
-                          invalid: errors.title,
-                        })}
-                      />
-                    </div>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="title"
+                      onChange={this.onChange}
+                      value={this.state.title}
+                      error={errors.title}
+                      type="text"
+                      // helperText={errors.title}
+                      className={classnames("", {
+                        invalid: errors.title,
+                      })}
+                    />
+                    {errors.title
+                      ?
+                      <div className={classes.zeroHeightHelperText}>
+                        <FormHelperText variant="outlined" error>{errors.title}</FormHelperText>
+                      </div>
+                      : null}
                   </Grid>
                   <Grid item>
                     <Typography
@@ -636,11 +636,17 @@ class EditAnnouncement extends Component {
                       value={this.state.description}
                       error={errors.description}
                       type="text"
-                      helperText={errors.description}
+                      // helperText={errors.description}
                       className={classnames("", {
                         invalid: errors.description,
                       })}
                     />
+                    {errors.description
+                      ?
+                      <div className={classes.zeroHeightHelperText}>
+                        <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                      </div>
+                      : null}
                   </Grid>
                 </Grid>
               </Grid>
@@ -663,7 +669,7 @@ class EditAnnouncement extends Component {
                       <FormControl
                         variant="outlined"
                         fullWidth
-                        error={Boolean(errors.to) && target_role.length === 0}
+                        error={Boolean(errors.to)}
                       >
                         <Select
                           id="target_role"
@@ -685,11 +691,12 @@ class EditAnnouncement extends Component {
                             );
                           })}
                         </Select>
-                        <FormHelperText>
-                          {Boolean(errors.to) && target_role.length === 0
-                            ? errors.to
-                            : null}
-                        </FormHelperText>
+                        {Boolean(errors.to)
+                          ?
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>{errors.to}</FormHelperText>
+                          </div>
+                          : null}
                       </FormControl>
                     </Grid>
                   ) : (
@@ -705,7 +712,6 @@ class EditAnnouncement extends Component {
                         variant="outlined"
                         fullWidth
                         error={Boolean(errors.class_assigned)}
-                        style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                       >
                         <Select
                           multiple
@@ -741,11 +747,12 @@ class EditAnnouncement extends Component {
                             null
                           )}
                         </Select>
-                        <FormHelperText>
-                          {Boolean(errors.class_assigned)
-                            ? errors.class_assigned
-                            : null}
-                        </FormHelperText>
+                        {Boolean(errors.class_assigned)
+                          ?
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                          </div>
+                          : null}
                       </FormControl>
                     </Grid>
                   )}

@@ -141,6 +141,10 @@ const styles = (theme) => ({
     [theme.breakpoints.down("sm")]: {
       marginTop: theme.spacing(2),
     }
+  },
+  zeroHeightHelperText: {
+    height: "0",
+    display: "flex" // untuk men-disable "collapsing margin"
   }
 });
 
@@ -237,10 +241,8 @@ class EditTask extends Component {
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
       allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
       allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
-      inputHeight: null, // menyimpan tinggi textfield
       success: null
     };
-    this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
   }
 
   tugasUploader = React.createRef(null);
@@ -257,12 +259,6 @@ class EditTask extends Component {
       });
     });
     this.props.refreshTeacher(this.props.auth.user._id);
-
-    if (this.inputHeightRef.current) {
-      this.setState({
-        inputHeight: this.inputHeightRef.current.offsetHeight
-      });
-    }
   }
 
   componentWillUnmount() {
@@ -716,21 +712,25 @@ class EditTask extends Component {
                       <Typography component="label" for="name" color="primary">
                         Judul
                       </Typography>
-                      <div ref={this.inputHeightRef} style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}>
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          id="name"
-                          onChange={this.onChange}
-                          value={this.state.name}
-                          error={errors.name}
-                          type="text"
-                          helperText={errors.name}
-                          className={classnames("", {
-                            invalid: errors.name,
-                          })}
-                        />
-                      </div>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        id="name"
+                        onChange={this.onChange}
+                        value={this.state.name}
+                        error={errors.name}
+                        type="text"
+                        // helperText={errors.name}
+                        className={classnames("", {
+                          invalid: errors.name,
+                        })}
+                      />
+                      {errors.name
+                        ?
+                        <div className={classes.zeroHeightHelperText}>
+                          <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
+                        </div>
+                        : null}
                     </Grid>
                     <Grid item>
                       <Typography
@@ -751,11 +751,17 @@ class EditTask extends Component {
                         value={this.state.description}
                         error={errors.description}
                         type="text"
-                        helperText={errors.description}
+                        // helperText={errors.description}
                         className={classnames("", {
                           invalid: errors.description,
                         })}
                       />
+                      {errors.description
+                        ?
+                        <div className={classes.zeroHeightHelperText}>
+                          <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                        </div>
+                        : null}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -781,7 +787,6 @@ class EditTask extends Component {
                           color="primary"
                           fullWidth
                           error={Boolean(errors.subject)}
-                          style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                         >
                           <Select
                             value={this.state.subject}
@@ -799,9 +804,12 @@ class EditTask extends Component {
                             null
                           )}
                           </Select>
-                          <FormHelperText>
-                            {Boolean(errors.subject) ? errors.subject : null}
-                          </FormHelperText>
+                          {Boolean(errors.subject)
+                            ?
+                            <div className={classes.zeroHeightHelperText}>
+                              <FormHelperText variant="outlined" error>{errors.subject}</FormHelperText>
+                            </div>
+                            : null}
                         </FormControl>
                       </Grid>
                       <Grid item xs={12} md={6} className={classes.customSpacing}>
@@ -828,9 +836,20 @@ class EditTask extends Component {
                             invalidDateMessage="Format tanggal tidak benar"
                             id="deadline"
                             value={this.state.deadline}
+                            helperText={null}
                             onChange={(date) => this.onDateChange(date)}
-                            style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
+                            onError={(err) => {
+                              if (errors.deadline !== err) {
+                                this.setState({ errors: { ...errors, deadline: err } });
+                              }
+                            }}
                           />
+                          {errors.deadline
+                            ?
+                            <div className={classes.zeroHeightHelperText}>
+                              <FormHelperText variant="outlined" error>{errors.deadline}</FormHelperText>
+                            </div>
+                            : null}
                         </MuiPickersUtilsProvider>
                       </Grid>
                     </Grid>
@@ -846,7 +865,6 @@ class EditTask extends Component {
                         variant="outlined"
                         fullWidth
                         error={Boolean(errors.class_assigned)}
-                        style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                       >
                         <Select
                           multiple
@@ -880,11 +898,12 @@ class EditTask extends Component {
                             null
                           )}
                         </Select>
-                        <FormHelperText>
-                          {Boolean(errors.class_assigned)
-                            ? errors.class_assigned
-                            : null}
-                        </FormHelperText>
+                        {Boolean(errors.class_assigned)
+                          ?
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                          </div>
+                          : null}
                       </FormControl>
                     </Grid>
                     <Grid item>
@@ -898,7 +917,6 @@ class EditTask extends Component {
                         accept="file/*"
                         style={{ display: "none" }}
                       />
-                      <Typography variant="body1">{"\u200B"}</Typography>
                       <Button
                         variant="contained"
                         startIcon={<AttachFileIcon />}

@@ -244,8 +244,22 @@ const styles = (theme) => ({
   },
   customSpacing: {
     [theme.breakpoints.down("sm")]: {
-      marginTop: theme.spacing(2),
+      marginTop: theme.spacing(2)
     }
+  },
+  customPaddingBottom: {
+    [theme.breakpoints.up("md")]: {
+      paddingBottom: "0!important"
+    }
+  },
+  customPaddingTop: {
+    [theme.breakpoints.up("md")]: {
+      paddingTop: "0!important"
+    }
+  },
+  zeroHeightHelperText: {
+    height: "0",
+    display: "flex" // untuk men-disable "collapsing margin"
   }
 });
 
@@ -677,7 +691,7 @@ class EditAssessment extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-    let field = e.target.id ? e.target.id : otherfield;
+    let field = e.target?.id ? e.target.id : otherfield;
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
@@ -740,9 +754,9 @@ class EditAssessment extends Component {
     }
   };
 
-  onDateChange = (date) => {
-    this.setState({ end_date: date });
-  };
+  // onDateChange = (date) => {
+  //   this.setState({ end_date: date });
+  // };
 
   handleClickMenuTambah = (event) => {
     this.setState({ anchorEl: event.currentTarget });
@@ -1688,20 +1702,26 @@ class EditAssessment extends Component {
                           >
                             Judul
                           </Typography>
-                          <div ref={this.inputHeightRef} style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}>
+                          <div ref={this.inputHeightRef}>
                             <TextField
                               value={this.state.name}
                               fullWidth
                               variant="outlined"
                               id="name"
                               error={errors.name}
-                              helperText={errors.name}
+                              // helperText={errors.name}
                               onChange={this.onChange}
                             />
+                            {errors.name
+                              ?
+                              <div className={classes.zeroHeightHelperText}>
+                                <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
+                              </div>
+                              : null}
                           </div>
                         </div>
                       </Grid>
-                      <Grid item style={{ paddingBottom: "0" }}>
+                      <Grid item className={classes.customPaddingBottom}>
                         <Typography
                           component="label"
                           for="class_assigned"
@@ -1715,7 +1735,6 @@ class EditAssessment extends Component {
                           color="primary"
                           fullWidth
                           error={Boolean(errors.type)}
-                          style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                         >
                           <Select
                             value={this.state.type}
@@ -1726,22 +1745,22 @@ class EditAssessment extends Component {
                             <MenuItem value="Kuis">Kuis</MenuItem>
                             <MenuItem value="Ujian">Ujian</MenuItem>
                           </Select>
-                          <FormHelperText>
-                            {Boolean(errors.type) ? errors.type : null}
-                          </FormHelperText>
+                          {Boolean(errors.type)
+                            ?
+                            <div className={classes.zeroHeightHelperText}>
+                              <FormHelperText variant="outlined" error>{errors.type}</FormHelperText>
+                            </div>
+                            : null}
                         </FormControl>
                       </Grid>
                       <Hidden smDown>
                         {/* dummy checkbox agar kedua kolom form keterangan assessment simetris */}
-                        <Grid item style={{ paddingTop: 0, paddingBottom: 0 }}>
-                          <FormGroup style={{ visibility: "hidden" }}>
-                            <FormControlLabel
-                              control={<Checkbox size="small" disabled/>}
-                            />
-                          </FormGroup>
-                        </Grid>                 
+                        <Grid item style={{ padding: "0", width: "0", visibility: "hidden" }}>
+                          <FormHelperText variant="outlined">{"\u200B"}</FormHelperText>
+                          <Checkbox size="small" disabled />
+                        </Grid>
                       </Hidden>
-                      <Grid item>
+                      <Grid item className={classes.customPaddingTop}>
                         <Typography
                           component="label"
                           for="description"
@@ -1757,11 +1776,18 @@ class EditAssessment extends Component {
                           rowsMax={10}
                           fullWidth
                           error={errors.description}
-                          helperText={errors.description}
+                          // helperText={errors.description}
                           onChange={this.onChange}
                           variant="outlined"
                           id="description"
+                          type="text"
                         />
+                        {errors.description
+                          ?
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                          </div>
+                          : null}
                       </Grid>
                     </Grid>
                   </Grid>
@@ -1797,11 +1823,22 @@ class EditAssessment extends Component {
                               invalidDateMessage="Format tanggal tidak benar"
                               id="workTimeStart"
                               value={this.state.start_date}
+                              helperText={null}
                               onChange={(date) =>
                                 this.onChange(date, "start_date")
                               }
-                              style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
+                              onError={(err) => {
+                                if (errors.start_date !== err) {
+                                  this.setState({ errors: { ...errors, start_date: err } });
+                                }
+                              }}
                             />
+                            {errors.start_date
+                              ?
+                              <div className={classes.zeroHeightHelperText}>
+                                <FormHelperText variant="outlined" error>{errors.start_date}</FormHelperText>
+                              </div>
+                              : null}
                           </MuiPickersUtilsProvider>
                         </Grid>
                         <Grid item xs={12} md={6} className={classes.customSpacing}>
@@ -1826,14 +1863,25 @@ class EditAssessment extends Component {
                               cancelLabel="Batal"
                               invalidDateMessage="Format tanggal tidak benar"
                               id="workTimeEnd"
+                              helperText={null}
                               value={this.state.end_date}
                               minDate={this.state.start_date}
                               minDateMessage="Batas waktu harus setelah Waktu Mulai Pengerjaan"
                               onChange={(date) =>
                                 this.onChange(date, "end_date")
                               }
-                              style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
+                              onError={(err) => {
+                                if (errors.end_date !== err) {
+                                  this.setState({ errors: { ...errors, end_date: err } });
+                                }
+                              }}
                             />
+                            {errors.end_date
+                              ?
+                              <div className={classes.zeroHeightHelperText}>
+                                <FormHelperText variant="outlined" error>{errors.end_date}</FormHelperText>
+                              </div>
+                              : null}
                           </MuiPickersUtilsProvider>
                         </Grid>
                       </Grid>
@@ -1859,34 +1907,49 @@ class EditAssessment extends Component {
                             cancelLabel="Batal"
                             invalidDateMessage="Format tanggal tidak benar"
                             id="postDate"
+                            helperText={null}
                             value={this.state.post_date}
                             onChange={(date) =>
                               this.onChange(date, "post_date")
                             }
-                            style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
+                            onError={(err) => {
+                              if (errors.post_date !== err) {
+                                this.setState({ errors: { ...errors, post_date: err } });
+                              }
+                            }}
                           />
+                          <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
+                            {errors.post_date
+                              ? <FormHelperText variant="outlined" error>{errors.post_date}</FormHelperText>
+                              : null}
+                            {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang 
+                              untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
+                            <FormGroup style={{ width: "fit-content" }}>
+                              <FormControlLabel
+                                label={
+                                  <Typography color="textPrimary">
+                                    Rilis Otomatis
+                                  </Typography>
+                                }
+                                control={
+                                  <Checkbox
+                                    onChange={() => {
+                                      this.handleCheckScheduleMode();
+                                    }}
+                                    color="primary"
+                                    size="small"
+                                    checked={this.state.isScheduled}
+                                  />
+                                }
+                              />
+                            </FormGroup>
+                          </div>
                         </MuiPickersUtilsProvider>
                       </Grid>
-                      <Grid item style={{ paddingTop: 0, paddingBottom: 0 }}>
-                        <FormGroup>
-                          <FormControlLabel
-                            label={
-                              <Typography color="textPrimary">
-                                Rilis Otomatis
-                              </Typography>
-                            }
-                            control={
-                              <Checkbox
-                                onChange={() => {
-                                  this.handleCheckScheduleMode();
-                                }}
-                                color="primary"
-                                size="small"
-                                checked={this.state.isScheduled}
-                              />
-                            }
-                          />
-                        </FormGroup>
+                      {/* dummy checkbox untuk memberikan ruang bagi checkbox waktu rilis yang sebenarnya */}
+                      <Grid item style={{ padding: "0", width: "0", visibility: "hidden" }}>
+                        <FormHelperText variant="outlined">{"\u200B"}</FormHelperText>
+                        <Checkbox size="small" disabled />
                       </Grid>
                       <Grid item>
                         <Typography
@@ -1901,8 +1964,7 @@ class EditAssessment extends Component {
                           variant="outlined"
                           color="primary"
                           fullWidth
-                          error={Boolean(errors.subject) && !this.state.subject}
-                          style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
+                          error={Boolean(errors.subject)}
                         >
                           <Select
                             value={this.state.subject}
@@ -1920,11 +1982,12 @@ class EditAssessment extends Component {
                               null
                             )}
                           </Select>
-                          <FormHelperText>
-                            {Boolean(errors.subject) && !this.state.subject
-                              ? errors.subject
-                              : null}
-                          </FormHelperText>
+                          {Boolean(errors.subject)
+                            ?
+                            <div className={classes.zeroHeightHelperText}>
+                              <FormHelperText variant="outlined" error>{errors.subject}</FormHelperText>
+                            </div>
+                            : null}
                         </FormControl>
                       </Grid>
                       <Grid item>
@@ -1939,10 +2002,8 @@ class EditAssessment extends Component {
                           variant="outlined"
                           fullWidth
                           error={
-                            Boolean(errors.class_assigned) &&
-                            class_assigned.length === 0
+                            Boolean(errors.class_assigned)
                           }
-                          style={this.state.inputHeight ? { height: this.state.inputHeight } : undefined}
                         >
                           <Select
                             multiple
@@ -1978,11 +2039,12 @@ class EditAssessment extends Component {
                               null
                             )}
                           </Select>
-                          <FormHelperText>
-                            {Boolean(errors.class_assigned)
-                              ? errors.class_assigned
-                              : null}
-                          </FormHelperText>
+                          {Boolean(errors.class_assigned)
+                            ?
+                            <div className={classes.zeroHeightHelperText}>
+                              <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                            </div>
+                            : null}
                         </FormControl>
                       </Grid>
                     </Grid>
