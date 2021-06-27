@@ -1,7 +1,6 @@
 import { 
 	GET_EVENT, 
-	GET_ALL_EVENTS, 
-	// GET_EVENTS_BY_AUTHOR
+	GET_ALL_EVENTS
 } from "../actions/Types";
 
 const initialState = {
@@ -18,13 +17,6 @@ export default function (state = initialState, action) {
 				allEvents: action.payload
 			};
 		}
-
-		// case GET_EVENTS_BY_AUTHOR: {
-		// 	return {
-		// 		...state,
-		// 		eventsByAuthor: action.payload,
-		// 	};
-		// }
 
 		case GET_EVENT: {
 			return {

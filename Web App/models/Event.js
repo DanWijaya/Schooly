@@ -8,14 +8,9 @@ const EventSchema = new Schema(
 			type: String,
 			required: true
 		},
-		description: {
-			type: String,
-			required: true
+		location: {
+			type: String
 		},
-		// author_id: {
-		// 	type: ObjectId,
-		// 	required: true
-		// },
 		start_date: {
 			type: Date,
 			required: true,
@@ -23,6 +18,16 @@ const EventSchema = new Schema(
 		end_date: {
 			type: Date,
 			required: true,
+		},
+
+		// elemen pada array ini bernilai: "Student", "Teacher", atau "Admin"
+		to: {
+			type: [String],
+			validate: [(value) => { return value.length > 0 }, "Pihak penerima tidak boleh kosong"]
+		},
+		description: {
+			type: String,
+			required: true
 		}
 	},
 	{ timestamps: true }

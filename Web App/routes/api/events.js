@@ -11,10 +11,11 @@ router.post("/create", (req, res) => {
 
 	const newEvent = new Event({
 		name: req.body.name,
-		description: req.body.description,
-		// author_id: req.body.author_id,
+		location: req.body.location,
 		start_date: req.body.start_date,
-		end_date: req.body.end_date
+		end_date: req.body.end_date,
+		to: req.body.to,
+		description: req.body.description
 	});
 
 	newEvent
@@ -38,16 +39,7 @@ router.get("/viewOne/:id", (req, res) => {
 	});
 });
 
-// router.get("/viewByAuthor/:id", (req, res) => {
-// 	Event.find({ author_id: req.params.id }, (err, events) => {
-// 		if (events.length === 0) {
-// 			return res.status(400).json("Event not found");
-// 		}
-// 		res.json(events);
-// 	});
-// });
-
-router.post("/update/:id", (req, res) => {
+router.put("/update/:id", (req, res) => {
 	const { errors, isValid } = validateEventInput(req.body);
 	if (!isValid) {
 		return res.status(400).json(errors);
@@ -59,10 +51,12 @@ router.post("/update/:id", (req, res) => {
 		}
 		
 		eventData.name = req.body.name;
-		eventData.description = req.body.description;
+		eventData.location = req.body.location;
 		eventData.start_date = req.body.start_date;
 		eventData.end_date = req.body.end_date;
-
+		eventData.to = req.body.to;
+		eventData.description = req.body.description;
+		
 		eventData
 			.save()
 			.then(() => res.json("Update event completed"))

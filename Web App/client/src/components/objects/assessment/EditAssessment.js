@@ -165,16 +165,20 @@ const styles = (theme) => ({
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
+      backgroundColor: theme.palette.primary.main,
+      color: "white"
+      // backgroundColor: "white",
+      // color: theme.palette.primary.main,
     },
   },
   cancelButton: {
     backgroundColor: theme.palette.error.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.main,
+      backgroundColor: theme.palette.error.main,
+      color: "white"
+      // backgroundColor: "white",
+      // color: theme.palette.error.main,
     },
   },
   chips: {

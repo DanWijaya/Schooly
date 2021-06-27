@@ -14,6 +14,10 @@ module.exports = function validateEventInput(data) {
     errors.name = "Nama Kegiatan belum diisi";
   }
 
+  if ((typeof data.to === "string") && Validator.isEmpty(data.to)) {
+    errors.to = "Pihak penerima Kegiatan belum diisi";
+  }
+
   if (Validator.isEmpty(data.description)) {
     errors.description = "Deskripsi Kegiatan belum diisi";
   }

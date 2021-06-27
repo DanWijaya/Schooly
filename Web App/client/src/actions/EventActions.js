@@ -7,7 +7,11 @@ import {
 } from "./Types";
 
 export const createEvent = (eventData) => {
-	return axios.post("/api/events/create", eventData);
+	return axios
+	.post("/api/events/create", eventData)
+	.catch((err) => {
+		throw err.response.data;
+	});
 };
 
 export const getAllEvents = () => (dispatch) => {
@@ -55,9 +59,17 @@ export const getOneEvent = (eventId) => (dispatch) => {
 // };
 
 export const updateEvent = (eventData, eventId) => {
-	return axios.post(`/api/events/update/${eventId}`, eventData);
+	return axios
+		.put(`/api/events/update/${eventId}`, eventData)
+		.catch((err) => {
+			throw err.response.data;
+		});
 };
 
 export const deleteEvent = (eventId) => {
-	return axios.delete(`/api/events/delete/${eventId}`);
+	return axios
+		.delete(`/api/events/delete/${eventId}`)
+		.catch(() => {
+			throw new Error("deleteEvent error has occured");
+		});
 };

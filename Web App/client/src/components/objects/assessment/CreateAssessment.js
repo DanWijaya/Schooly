@@ -144,16 +144,16 @@ const styles = (theme) => ({
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.success.main,
+      backgroundColor: theme.palette.success.main,
+      color: "white"
     },
   },
   cancelButton: {
     backgroundColor: theme.palette.error.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.main,
+      backgroundColor: theme.palette.error.main,
+      color: "white"
     },
   },
   chips: {
