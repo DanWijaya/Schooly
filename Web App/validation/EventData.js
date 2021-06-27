@@ -4,7 +4,7 @@ const isEmpty = require("is-empty");
 module.exports = function validateEventInput(data) {
   let errors = {};
 
-  for (let key in Object.keys(data)) {
+  for (let key of Object.keys(data)) {
     if (isEmpty(data[key])) {
       data[key] = "";
     }

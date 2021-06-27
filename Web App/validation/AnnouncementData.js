@@ -5,7 +5,7 @@ module.exports = function validateAnnouncementInput(data) {
   let errors = {};
 
   // Convert empty fields to an empty strings so validator functions can be used
-  for (let key in Object.keys(data)) {
+  for (let key of Object.keys(data)) {
     if (isEmpty(data[key])) {
       data[key] = "";
     }
@@ -25,7 +25,7 @@ module.exports = function validateAnnouncementInput(data) {
     errors.class_assigned = "Kelas yang ditujukan belum diisi";
   }
 
-  if (Validator.isEmpty(data.to)) {
+  if (!data.to.length) {
     errors.to = "Peran yang ditujukan belum diisi";
   }
 

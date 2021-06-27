@@ -4,7 +4,7 @@ const isEmpty = require("is-empty");
 module.exports = function validateSubjectInput(data) {
   let errors = {};
   // isEmpty method is used for string, so don't use it for class_assigned data bcs it is array.
-  for (let key in Object.keys(data)) {
+  for (let key of Object.keys(data)) {
     if (isEmpty(data[key])) {
       data[key] = "";
     }

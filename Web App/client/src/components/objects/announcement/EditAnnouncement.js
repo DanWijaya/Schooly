@@ -222,7 +222,7 @@ class EditAnnouncement extends Component {
       openDeleteDialog: null,
       errors: {},
       success: null,
-      target_role: "",
+      target_role: [],
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       allClassObject: null // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
     };
@@ -440,7 +440,7 @@ class EditAnnouncement extends Component {
           ? [null]
           : this.state.class_assigned,
       errors: {},
-      to: user.role === "Admin" ? this.state.target_role : "Student",
+      to: user.role === "Admin" ? this.state.target_role : ["Student"],
     };
 
     let formData = new FormData();
@@ -673,16 +673,31 @@ class EditAnnouncement extends Component {
                       >
                         <Select
                           id="target_role"
+                          multiple
                           MenuProps={MenuProps}
                           value={target_role}
                           onChange={(event) => {
                             this.onChange(event, "target_role");
                           }}
+                          renderValue={(selected) => {
+                            return (
+                              <div className={classes.chips}>
+                                {selected.map((role) => {
+                                  return (
+                                    <Chip
+                                      key={role}
+                                      label={(role === "Student") ? "Murid" : (role === "Teacher") ? "Guru" : null}
+                                      className={classes.chip}
+                                    />
+                                  );
+                                })}
+                              </div>
+                            );
+                          }}
                         >
                           {[
                             ["Student", "Murid"],
-                            ["Teacher", "Guru"],
-                            ["Teacher_Student", "Keduanya"],
+                            ["Teacher", "Guru"]
                           ].map((peran) => {
                             return (
                               <MenuItem key={peran[0]} value={peran[0]}>

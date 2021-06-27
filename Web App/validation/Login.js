@@ -7,7 +7,7 @@ module.exports = function validateLoginInput(data) {
   // Convert empty fields to an empty string so we can use validator functions
 
   //data keys: email, password
-  for (let key in Object.keys(data)) {
+  for (let key of Object.keys(data)) {
     if (isEmpty(data[key])) {
       data[key] = "";
     }

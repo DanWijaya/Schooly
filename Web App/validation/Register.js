@@ -15,7 +15,7 @@ module.exports = function validateRegisterInput(data) {
   //  password2
   //  tanggal_lahir
 
-  for (let key in Object.keys(data)) {
+  for (let key of Object.keys(data)) {
     if (isEmpty(data[key])) {
       data[key] = "";
     }

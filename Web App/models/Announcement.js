@@ -40,10 +40,10 @@ const AnnoucementSchema = new Schema(
     //     required: true
     // }
 
-    // bernilai "Student", "Teacher", atau "Teacher_Student"
+		// elemen pada array ini bernilai: "Student" atau "Teacher"
     to: {
-      type: String,
-      required: true,
+      type: [String],
+      validate: [(value) => { return value.length > 0 }, "Pihak penerima tidak boleh kosong"]
     },
   },
   { timestamps: true }

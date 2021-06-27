@@ -5,7 +5,7 @@ module.exports = function validateAssessmentInput(data) {
   let errors = {};
   // data keys: name, subject, description, type
 
-  for (let key in Object.keys(data)) {
+  for (let key of Object.keys(data)) {
     if (isEmpty(data[key])) {
       data[key] = "";
     }

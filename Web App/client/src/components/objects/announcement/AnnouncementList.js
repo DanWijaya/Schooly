@@ -1017,19 +1017,10 @@ function AnnouncementSubList(props) {
               announcementRowItem(newRows, data);
             });
         } else if (author_role === "Admin") {
-          let isTargeted;
-          if (user.role === "Student") {
-            // untuk pengumuman yg diberikan oleh admin kepada saya sebagai murid
-            isTargeted = (target) => target !== "Teacher";
-          } else if (user.role === "Teacher") {
-            // untuk pengumuman yg diberikan oleh admin kepada saya sebagai guru
-            isTargeted = (target) => target !== "Student";
-          }
-          // atribut "to" pada model "Announcement" memiliki 3 range value: "Student", "Teacher", atau "Teacher_Student"
           adminAnnouncements
             .filter(
               (item) =>
-                isTargeted(item.to) &&
+                item.to.includes(user.role) &&
                 item.title.toLowerCase().includes(searchFilter.toLowerCase())
             )
             .forEach((data) => {

@@ -8,7 +8,7 @@ module.exports = function validateClassInput(data) {
   // Convert empty fields to an empty strings so validator functions can be used
   // data has:
   // name, walikelas
-  for (let key in Object.keys(data)) {
+  for (let key of Object.keys(data)) {
     if (isEmpty(data[key])) {
       data[key] = "";
     }
