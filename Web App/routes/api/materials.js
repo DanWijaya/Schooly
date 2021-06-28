@@ -47,7 +47,7 @@ router.post("/create", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.post("/update/:id", (req, res) => {
+router.put("/update/:id", (req, res) => {
   const { errors, isValid } = validateMaterialInput(req.body);
 
   if (!isValid) {

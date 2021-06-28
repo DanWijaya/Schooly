@@ -95,7 +95,7 @@ export const updateAssessment = (
 ) => (dispatch) => {
   // formData is the lampiran files
   return axios
-    .post(`/api/assessments/update/${assessmentId}`, assessmentData)
+    .put(`/api/assessments/update/${assessmentId}`, assessmentData)
     .then((res) => {
       console.log(lampiran_to_delete);
       dispatch({
@@ -252,7 +252,7 @@ export const submitAssessment = (assessmentId, data) => (dispatch) => {
   //   "userId" : user._id
   // }
   return axios
-    .post(`/api/assessments/submit/${assessmentId}`, data)
+    .put(`/api/assessments/submit/${assessmentId}`, data)
     .then((res) => {
       return res.data;
     })

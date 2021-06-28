@@ -109,7 +109,7 @@ router.get("/viewSelectedClasses/", (req, res) => {
   });
 });
 
-router.post("/update/:id", (req, res) => {
+router.put("/update/:id", (req, res) => {
   let id = req.params.id;
 
   const { errors, isValid } = validateClassInput(req.body);

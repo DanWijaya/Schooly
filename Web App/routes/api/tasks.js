@@ -106,7 +106,7 @@ router.post("/grade/:id", (req, res) => {
 });
 
 //Define update routes
-router.post("/update/:id", (req, res) => {
+router.put("/update/:id", (req, res) => {
   let grade = req.body.grade;
   const { errors, isValid } = validateTaskInput(req.body);
   if (!isValid) {

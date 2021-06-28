@@ -167,7 +167,7 @@ export const updateMaterial = (
 ) => (dispatch) => {
   // formData is the lampiran files
   return axios
-    .post(`/api/materials/update/${materialId}`, materialData)
+    .put(`/api/materials/update/${materialId}`, materialData)
     .then((res) => {
       console.log("Material updated to be :", res.data);
       console.log("Has lampiran? :", formData.has("lampiran_materi"));

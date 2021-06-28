@@ -82,7 +82,7 @@ router.post("/create", (req, res) => {
   });
 }); */
 
-router.post("/update/:id", (req, res) => {
+router.put("/update/:id", (req, res) => {
   const { errors, isValid } = validateAssessmentInput(req.body);
   if (!isValid) {
     return res.status(400).json(errors);
@@ -278,7 +278,7 @@ router.post("/update/:id", (req, res) => {
   });
 });
 
-router.post("/submit/:id", (req, res) => {
+router.put("/submit/:id", (req, res) => {
   let id = req.params.id;
   let { answers, classId, userId } = req.body;
 

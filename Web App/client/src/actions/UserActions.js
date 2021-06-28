@@ -47,7 +47,7 @@ export const registerUser = (userData, history) => (dispatch) => {
 export const updateUserData = (userData, userId, history) => (dispatch) => {
   console.log("update user data is runned");
   return axios
-    .post("/api/users/update/data/" + userId, userData)
+    .put("/api/users/update/data/" + userId, userData)
     .then((res) => {
       const { token } = res.data;
       console.log("Updating User Data");
@@ -76,7 +76,7 @@ export const updateUserData = (userData, userId, history) => (dispatch) => {
 
 export const updateAvatar = (userData, userId, formData) => (dispatch) => {
   axios
-    .post("/api/users/update/avatar/" + userId, formData)
+    .put("/api/users/update/avatar/" + userId, formData)
 
     .then((res) => {
       // Set token to localStorage
@@ -290,7 +290,7 @@ export const getPendingTeachers = () => (dispatch) => {
 
 export const setUserActive = (userId) => (dispatch) => {
   axios
-    .post(`/api/users/setuseractive/${userId}`)
+    .put(`/api/users/setuseractive/${userId}`)
     .then((res) => {
       console.log(res.data);
       window.location.reload();
@@ -302,7 +302,7 @@ export const setUserActive = (userId) => (dispatch) => {
 
 export const setUserDisabled = (userId) => (dispatch) => {
   axios
-    .post(`/api/users/setuserdisabled/${userId}`)
+    .put(`/api/users/setuserdisabled/${userId}`)
     .then((res) => {
       console.log(res.data);
       window.location.reload();
@@ -323,23 +323,6 @@ export const deleteUser = (userId) => (dispatch) => {
       console.log("Error in deleting students");
     });
 };
-
-// export const setDropboxToken = (token) => (dispatch) => {
-//   console.log("SET Drop box lah");
-//   if (token) {
-//     localStorage.setItem("dropbox_token", token);
-//     dispatch({
-//       type: SET_DROPBOX_TOKEN,
-//       payload: token,
-//     });
-//   } else {
-//     localStorage.removeItem("dropbox_token");
-//     dispatch({
-//       type: SET_DROPBOX_TOKEN,
-//       payload: null,
-//     });
-//   }
-// };
 
 export const moveStudents = (data, dummyClassId) => {
   return axios

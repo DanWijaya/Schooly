@@ -179,7 +179,7 @@ export const updateAnnouncement = (
 ) => (dispatch) => {
   // formData is the lampiran files
   return axios
-    .post(`/api/announcements/update/${annId}`, annData)
+    .put(`/api/announcements/update/${annId}`, annData)
     .then((res) => {
       console.log("Task updated to be :", res.data);
       console.log("Has lampiran? :", formData.has("lampiran_announcement"));

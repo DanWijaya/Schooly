@@ -93,7 +93,7 @@ export const getSelectedClasses = (classes_ids) => (dispatch) => {
 
 export const updateClass = (classData, classId, history) => (dispatch) => {
   return axios
-    .post("/api/classes/update/" + classId, classData)
+    .put("/api/classes/update/" + classId, classData)
     .then((res) => {
       console.log("Class updated to be : ", res.data);
       // alert("Kelas telah berhasil disunting");

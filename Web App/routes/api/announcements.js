@@ -44,7 +44,7 @@ router.post("/create", (req, res) => {
 });
 
 //Define Update routing.
-router.post("/update/:id", (req, res) => {
+router.put("/update/:id", (req, res) => {
   const { errors, isValid } = validateAnnouncementInput(req.body);
 
   if (!isValid) {

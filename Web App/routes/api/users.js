@@ -16,7 +16,6 @@ const User = require("../../models/user_model/User");
 const Student = require("../../models/user_model/Student");
 const Teacher = require("../../models/user_model/Teacher");
 const Admin = require("../../models/user_model/Admin");
-const Class = require("../../models/Class");
 const { ObjectId } = require("mongodb");
 const Validator = require("validator");
 const isEmpty = require("is-empty");
@@ -150,7 +149,7 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.post("/update/data/:id", (req, res) => {
+router.put("/update/data/:id", (req, res) => {
   let email = req.body.email;
   if (isEmpty(email)) {
     return res.status(404).json({ email: "Email belum diisi" });
@@ -281,7 +280,7 @@ router.get("/getalltask/:user_id", (req, res) => {
   });
 });
 
-router.post(
+router.put(
   "/update/avatar/:id",
   avatar.uploadAvatar.single("avatar"),
   (req, res) => {
@@ -423,7 +422,7 @@ router.get("/getpendingteachers", (req, res) => {
   });
 });
 
-router.post("/setuseractive/:id", (req, res) => {
+router.put("/setuseractive/:id", (req, res) => {
   let id = req.params.id;
 
   User.findById(id, (err, user) => {
@@ -437,7 +436,7 @@ router.post("/setuseractive/:id", (req, res) => {
   });
 });
 
-router.post("/setuserdisabled/:id", (req, res) => {
+router.put("/setuserdisabled/:id", (req, res) => {
   let id = req.params.id;
 
   User.findById(id, (err, user) => {

@@ -83,7 +83,7 @@ export const deleteSubject = (subjectId) => (dispatch) => {
 };
 export const editSubject = (subjectData) => (dispatch) => {
   return axios
-    .post(`/api/subjects/edit/${subjectData.id}`, subjectData)
+    .put(`/api/subjects/edit/${subjectData.id}`, subjectData)
     .then((res) => {
       console.log("Edited subject", res.data);
       // window.location.reload();
