@@ -1,4 +1,3 @@
-// import { reject } from "async";
 import axios from "axios";
 import {
   GET_ERRORS,
@@ -36,15 +35,12 @@ export const createAssessment = (formData, assessment, history) => (
           formData
         );
       } else {
-        return {
-          message: "Successfully created Assessment with no lampiran",
-          _id: res.data._id,
-        };
+        return res;
       }
     })
     .then((res) => {
       console.log("Successfully created Assessment.");
-      let success_res = res.data ? res.data._id : res._id;
+      let success_res = res.data._id;
       // dispatch({
       //   type: GET_SUCCESS_RESPONSE,
       //   payload: success_res,

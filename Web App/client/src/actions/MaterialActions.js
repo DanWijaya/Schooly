@@ -30,19 +30,13 @@ export const createMaterial = (formData, materialData, history) => (
         );
       } else {
         // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
-        return {
-          message: "Successfully created material with no lampiran",
-          _id: res.data._id,
-        };
+        console.log("Successfully created material.");
+        return res;
       }
     })
     .then((res) => {
       console.log("Successfully created material.");
-      let success_res = res.data ? res.data._id : res._id;
-      // dispatch({
-      //   type: GET_SUCCESS_RESPONSE,
-      //   payload: success_res,
-      // });
+      let success_res = res.data._id;
       return success_res;
     })
     .catch((err) => {
@@ -196,10 +190,7 @@ export const updateMaterial = (
         );
       } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
       else
-        return {
-          _id: materialId,
-          message: "Successfully updated material with no lampiran",
-        };
+        return res;
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");

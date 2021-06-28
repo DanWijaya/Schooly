@@ -26,16 +26,14 @@ export const createTask = (formData, taskData, history) => (dispatch) => {
       if (formData.has("lampiran_tugas")) {
         return axios.post(`/api/files/tasks/upload/${res.data._id}`, formData);
       } // Must return something, if false it won't continue to the next "then"
-      else
-        return {
-          _id: res.data._id,
-          message: "Successfully created task with no lampiran",
-        };
+      else {
+        return res;
+      }
     })
     .then((res) => {
       console.log("Lampiran tugas is uploaded");
       console.log(res);
-      let success_res = res.data ? res.data._id : res._id;
+      let success_res = res.data._id;
       // dispatch({
       //   type: GET_SUCCESS_RESPONSE,
       //   payload: success_res,
@@ -135,10 +133,6 @@ export const updateTask = (
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");
-      // dispatch({
-      //   type: GET_SUCCESS_RESPONSE,
-      //   payload: true,
-      // });
       return true;
     })
     .catch((err) => {
@@ -190,7 +184,6 @@ export const deleteTask = (taskId, history=null) => (dispatch) => {
         })
       }
       return true
-      // window.location.href = "/daftar-tugas";
     })
 
     .catch((err) => {

@@ -6,9 +6,26 @@ import {
 	// GET_EVENTS_BY_AUTHOR
 } from "./Types";
 
+// export const createEvent = (formData, eventData) => (dispatch) => {
+// 	return axios
+// 		.post("/api/materials/create", eventData)
+// 		.then((res) => {
+// 			if(formData.has("lampiran_event")) {
+// 				return axios.post(
+// 					`/api/files/events/upload/${res.data._id}`, formData
+// 				);
+// 			} else {
+
+// 			}
+// 		})
+
+// }
 export const createEvent = (eventData) => {
 	return axios
 	.post("/api/events/create", eventData)
+	.then((res) => {
+		console.log()
+	})
 	.catch((err) => {
 		throw err.response.data;
 	});
