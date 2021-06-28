@@ -8,8 +8,6 @@ import {
 import { BrowserRouter } from "react-router-dom"
 import {deleteFileSubmitTasks} from "./files/FileSubmitTaskActions";
 
-// import Dropbox from "dropbox";
-
 // Add Task
 export const createTask = (formData, taskData, history) => (dispatch) => {
   return axios

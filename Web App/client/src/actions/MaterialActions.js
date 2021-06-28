@@ -194,10 +194,6 @@ export const updateMaterial = (
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");
-      // dispatch({
-      //   type: GET_SUCCESS_RESPONSE,
-      //   payload: true,
-      // });
       return true;
     })
 
