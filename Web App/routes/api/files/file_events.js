@@ -5,11 +5,14 @@ const FileEvent = require("../../../models/lampiran/File_Event");
 const multer = require("multer");
 var AWS = require("aws-sdk");
 var fs = require("fs");
+const keys = require("../../../config/keys");
 const { ObjectId } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
-const keys = require("../../../config/keys");
+
 // Multer ships with storage engines DiskStorage and MemoryStorage
-// And Multer adds a body object and a file or files object to the request object. The body object contains the values of the text fields of the form, the file or files object contains the files uploaded via the form.
+// And Multer adds a body object and a file or files object to the request object. 
+// The body object contains the values of the text fields of the form, 
+// the file or files object contains the files uploaded via the form.
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 

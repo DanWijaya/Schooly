@@ -23,6 +23,7 @@ const file_tasks = require("./routes/api/files/file_tasks");
 const file_submit_tasks = require("./routes/api/files/file_submit_tasks");
 const file_avatar = require("./routes/api/files/file_avatar");
 const file_assessments = require("./routes/api/files/file_assessments");
+const file_events = require("./routes/api/files/file_events");
 
 // untuk objects punya
 const tasks = require("./routes/api/tasks");
@@ -93,6 +94,7 @@ app.use("/api/files/tasks", file_tasks);
 app.use("/api/files/submit_tasks", file_submit_tasks);
 app.use("/api/files/avatar", file_avatar);
 app.use("/api/files/assessments", file_assessments);
+app.use("/api/files/events", file_events);
 
 //Handle object routing
 app.use("/api/subjects", subjects);

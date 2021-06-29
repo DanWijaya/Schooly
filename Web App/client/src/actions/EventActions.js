@@ -3,21 +3,16 @@ import {
 	GET_ERRORS,
 	GET_EVENT,
 	GET_ALL_EVENTS,
-	// GET_EVENTS_BY_AUTHOR
 } from "./Types";
 
-//REVIEW ini yang buat upload lampiran
-/*export const createEvent = (formData, eventData) => (dispatch) => {
+export const createEvent = (formData, eventData) => {
 	return axios
-		.post("/api/materials/create", eventData)
+		.post("/api/events/create", eventData)
 		.then((res) => {
-			if(formData.has("lampiran_event")) {
-				//REVIEW panggil routes yang di api/files/file_events.js
+			if (formData.has("lampiran_event")) {
 				return axios.post(
-					`/api/files/events/upload/${res.data._id}`, formData
+					`/api/files/events/upload/${res.data}`, formData
 				);
-			} else {
-				return res;
 			}
 		})
 		.then((res) => {
@@ -26,22 +21,10 @@ import {
 		})
 		.catch((err) => {
 			console.log("Error happened");
-			throw err.response.id;
+			throw err.response.data;
 		})
 
 }
-*/
-
-export const createEvent = (eventData) => {
-	return axios
-	.post("/api/events/create", eventData)
-	.then((res) => {
-		console.log()
-	})
-	.catch((err) => {
-		throw err.response.data;
-	});
-};
 
 export const getAllEvents = () => (dispatch) => {
 	axios.get("/api/events/viewAll").then((res) => {
@@ -71,24 +54,6 @@ export const getOneEvent = (eventId) => (dispatch) => {
 	});
 };
 
-// export const getEventsByAuthor = (authorId) => (
-// 	dispatch
-// ) => {
-// 	axios.get(`/api/events/viewByAuthor/${authorId}`).then((res) => {
-// 		dispatch({
-// 			type: GET_EVENTS_BY_AUTHOR,
-// 			payload: res.data
-// 		});
-// 	}).catch((err) => {
-// 		dispatch({
-// 			type: GET_ERRORS,
-// 			payload: err.response.data
-// 		});
-// 	});
-// };
-
-//REVIEW ini yang buat update event lampiran.
-/*
 export const updateEvent = (
 	formData,
 	lampiran_to_delete,
@@ -96,57 +61,54 @@ export const updateEvent = (
 	eventData,
 	eventId,
 	history
-  ) => (dispatch) => {
+) => (dispatch) => {
 	// formData is the lampiran files
 	return axios
-	  .put(`/api/events/update/${eventId}`, eventData)
-	  .then((res) => {
-		console.log("Event updated to be :", res.data);
-		console.log("Has lampiran? :", formData.has("lampiran_materi"));
-		dispatch({
-		  type: GET_ERRORS,
-		  payload: false,
+		.put(`/api/events/update/${eventId}`, eventData)
+		.then((res) => {
+			console.log("Event updated to be :", res.data);
+			console.log("Has lampiran? :", formData.has("lampiran_event"));
+			// dispatch({
+			// 	type: GET_ERRORS,
+			// 	payload: false,
+			// });
+			if (lampiran_to_delete.length > 0) {
+				//REVIEW panggil routes yang di api/files/file_events.js untuk DELETE lampiran.
+				return axios.delete(`/api/files/events/${eventId}`, {
+					data: { file_to_delete: lampiran_to_delete },
+				});
+			} else {
+				return "No lampiran file is going to be deleted";
+			}
+		})
+		.then((res) => {
+			console.log("Update the lampiran files, upload some new lampiran files");
+			console.log(
+				formData.has("lampiran_event"),
+				formData.getAll("lampiran_event")
+			);
+			if (formData.has("lampiran_event")) {
+				console.log("Lampiran event going to be uploaded");
+				//REVIEW panggil routes yang di api/files/file_events.js untuk UPLOAD lampiran.
+				return axios.post(
+					`/api/files/events/upload/${eventId}`,
+					formData
+				);
+			}
+		})
+		.then((res) => {
+			console.log("Lampiran file is uploaded");
+			return true;
+		})
+		.catch((err) => {
+			console.log("ERROR happen when editing");
+			dispatch({
+				type: GET_ERRORS,
+				payload: err.response.data,
+			});
+			throw err.response.data;
 		});
-		if (lampiran_to_delete.length > 0) {
-		  //REVIEW panggil routes yang di api/files/file_events.js untuk DELETE lampiran.
-		  return axios.delete(`/api/files/events/${eventId}`, {
-			data: { file_to_delete: lampiran_to_delete },
-		  });
-		} else return "No lampiran file is going to be deleted";
-	  })
-	  .then((res) => {
-		console.log("Update the lampiran files, upload some new lampiran files");
-		console.log(
-		  formData.has("lampiran_materi"),
-		  formData.getAll("lampiran_materi")
-		);
-		if (formData.has("lampiran_materi")) {
-		  console.log("Lampiran event going to be uploaded");
-		  //REVIEW panggil routes yang di api/files/file_events.js untuk UPLOAD lampiran.
-		  return axios.post(
-			`/api/files/events/upload/${eventId}`,
-			formData
-		  );
-		} // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
-		else
-		  return res;
-	  })
-	  .then((res) => {
-		console.log("Lampiran file is uploaded");
-		return true;
-	  })
-  
-	  .catch((err) => {
-		console.log("ERROR happen when editing");
-		dispatch({
-		  type: GET_ERRORS,
-		  payload: err.response.data,
-		});
-		throw err.response.data;
-	  });
-  };
-*/
- 
+};
 
 export const updateEvent = (eventData, eventId) => {
 	return axios
@@ -156,42 +118,32 @@ export const updateEvent = (eventData, eventId) => {
 		});
 };
 
-//REVIEW Delete event.
-/*
-export const deleteEvent = (eventId, history=null) => (dispatch) => {
-	return axios
-	  .delete(`/api/events/delete/${eventId}`)
-	  .then((res) => {
-		// let lampiran_to_delete = Array.from(res.data.lampiran)
-		//REVIEW panggil routes yang di api/files/file_events.js untuk DELETE semua lampiran.
-		return axios.delete(`/api/files/events/${eventId}`);
-	  })
-	  .then((res) => {
-		if(history){
-		  history.push({
-			pathname: "/daftar-materi",
-			openDeleteSnackbar: true 
-		  })
-		}
-		console.log(res);
-		return true
-		// window.location.href = "/daftar-materi";
-	  })
-	  .catch((err) => {
-		console.log(err);
-		dispatch({
-		  type: GET_ERRORS,
-		  payload: err.response.data,
-		});
-		throw err;
-	  });
-  };
-  */
-
-export const deleteEvent = (eventId) => {
+export const deleteEvent = (eventId, history = null) => (dispatch) => {
 	return axios
 		.delete(`/api/events/delete/${eventId}`)
-		.catch(() => {
-			throw new Error("deleteEvent error has occured");
+		.then((res) => {
+			// let lampiran_to_delete = Array.from(res.data.lampiran)
+			//REVIEW panggil routes yang di api/files/file_events.js untuk DELETE semua lampiran.
+			return axios.delete(`/api/files/events/${eventId}`);
+		})
+		.then((res) => {
+			// if (history) {
+			// 	history.push({
+			// 		pathname: "/daftar-materi",
+			// 		openDeleteSnackbar: true
+			// 	})
+			// }
+			// console.log(res);
+			// return true
+			// window.location.href = "/daftar-materi";
+		})
+		.catch((err) => {
+			console.log(err);
+			throw err.response.data
+			// dispatch({
+			// 	type: GET_ERRORS,
+			// 	payload: err.response.data,
+			// });
+			// throw err;
 		});
 };
