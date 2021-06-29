@@ -110,14 +110,6 @@ export const updateEvent = (
 		});
 };
 
-export const updateEvent = (eventData, eventId) => {
-	return axios
-		.put(`/api/events/update/${eventId}`, eventData)
-		.catch((err) => {
-			throw err.response.data;
-		});
-};
-
 export const deleteEvent = (eventId, history = null) => (dispatch) => {
 	return axios
 		.delete(`/api/events/delete/${eventId}`)
