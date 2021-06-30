@@ -42,7 +42,8 @@ import {
   Chip,
   Input,
   Snackbar,
-  useMediaQuery
+  useMediaQuery,
+  CircularProgress
 } from "@material-ui/core/";
 import {
   MuiPickersUtilsProvider,
@@ -1169,6 +1170,8 @@ function CreateEventDialog(props) {
     if (newStatus) {
       // jika diset ke sepanjang hari, ...
       
+      setErrors({ ...errors, start_date_submission: undefined, end_date_submission: undefined });
+
       // di mode sepanjang hari, hanya tanggal yang ditampilkan di datetime picker. 
       // waktu tidak ditampilkan dan akan diset menjadi 00:00 (untuk start date) - 23:59 (untuk end date)
 
@@ -1495,6 +1498,54 @@ function CreateEventDialog(props) {
     setFileLampiran(temp);
   };
 
+  // DIALOG-IN-DIALOG
+  const [height, setHeight] = React.useState(null);
+  const [width, setWidth] = React.useState(null);
+  const [scrollPosition, setScrollPosition] = React.useState(0);
+  const [elementToScroll, setElementToScroll] = React.useState(null);
+
+  function handleResize() {
+    setHeight(elementToScroll.offsetHeight);
+    setWidth(elementToScroll.clientWidth);
+  }
+
+  const measuredHeightRef = React.useCallback((node) => {
+    if (node !== null) {
+      setHeight(node.offsetHeight);
+      setWidth(node.clientWidth);
+      setElementToScroll(node);
+
+      window.addEventListener("resize", handleResize);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (elementToScroll) {
+      elementToScroll.scrollTo({
+        left: 0,
+        top: scrollPosition,
+        behavior: "smooth"
+      });
+    }
+  }, [scrollPosition]);
+
+  React.useEffect(() => {
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleWheel = (e) => {
+    e.preventDefault();
+    let lowestScrollPosition = elementToScroll.scrollHeight - elementToScroll.offsetHeight;
+    let nextScrollPosition = (elementToScroll.scrollTop !== scrollPosition ? elementToScroll.scrollTop : scrollPosition) + e.deltaY;
+    if (nextScrollPosition > lowestScrollPosition) {
+      setScrollPosition(lowestScrollPosition);
+    } else if (nextScrollPosition < 0) {
+      setScrollPosition(0);
+    } else {
+      setScrollPosition(nextScrollPosition);
+    }
+  };
+
   return (
     <Dialog
       open={openCreateDialog}
@@ -1505,6 +1556,9 @@ function CreateEventDialog(props) {
       fullWidth
       BackdropProps={{
         style: { backgroundColor: "transparent" }
+      }}
+      classes={{
+        paper: classes.dialogPaper
       }}
     >
       <div className={classes.dialogTopDiv} id="drag-handle">
@@ -1525,11 +1579,31 @@ function CreateEventDialog(props) {
           Tambahkan keterangan untuk membuat kegiatan.
         </Typography>
       </DialogTitle>
-      <DialogContent dividers>
-        {
-          
-        }
-        
+      <DialogContent
+        dividers
+        style={{
+          display: "flex",
+          padding: "0",
+          flexDirection: "column",
+          position: "relative"
+        }}>
+        <MiniUploadDialog
+          width={width}
+          height={height}
+          handleWheel={handleWheel}
+        />
+        {/* REVIEW  dialog content */}
+        <div
+          ref={measuredHeightRef}
+          style={{
+            display: "flex",
+            flexGrow: "1",
+            overflowY: "scroll",
+            overflowX: "hidden",
+            padding: "16px 24px",
+            flexDirection: "column"
+          }}
+        >
         <Grid container direction="column" spacing={4}>
           {/* <Grid item>
             <Button
@@ -1837,7 +1911,7 @@ function CreateEventDialog(props) {
           </Grid>
 
         </Grid>
-
+        </div>
       </DialogContent>
       <DialogActions style={{ padding: "16px 24px" }}>
         <Button
@@ -1849,6 +1923,94 @@ function CreateEventDialog(props) {
         </Button>
       </DialogActions>
     </Dialog>
+  );
+}
+
+// REVIEW MiniUploadDialog
+function MiniUploadDialog(props) {
+  const useStyles = makeStyles((theme) => ({
+    paper: {
+      width: "300px",
+      maxWidth: "100%",
+      minHeight: "175px",
+      padding: "15px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      alignItems: "center"
+    },
+    backdrop: {
+      backgroundColor: "rgba(0,0,0,0.5)",
+      position: "absolute",
+      zIndex: "1",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    },
+    uploadSuccessIcon: {
+      color: "green",
+      height: "45px",
+      width: "45px",
+    },
+    uploadFinishButton: {
+      width: "100%",
+      marginTop: "10px",
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+      "&:focus, &:hover": {
+        backgroundColor: theme.palette.success.dark,
+        color: "white",
+      },
+    },
+  }));
+  const classes = useStyles();
+  const { handleWheel, width, height} = props;
+  
+  const messageUploading = "Kegiatan sedang dibuat";
+  const messageSuccess = "Kegiatan telah dibuat";
+  let success = false;
+  let close = false;
+
+  const handleCloseUploadDialog = () => {
+    close = true;
+  };
+
+  return (
+    <div
+      style={close ? { display: "none" } : { width: width ?? "0", height: height ?? "0"}}
+      className={`${classes.backdrop}`}
+      onWheel={(event) => { handleWheel(event) }}
+    >
+      <Paper className={`${classes.paper} MuiPaper-elevation24`}>
+      <Grid item>
+        <Typography variant="h6" align="center" gutterBottom>
+          {!success ? messageUploading : messageSuccess}
+        </Typography>
+      </Grid>
+      <Grid item>
+        {!success ? (
+          <CircularProgress />
+        ) : (
+          <CheckCircleIcon className={classes.uploadSuccessIcon} />
+        )}
+      </Grid>
+      <Grid item>
+        {!success ? (
+          <Typography variant="body2" align="center" gutterBottom>
+            <b>Mohon tunggu sebentar</b>
+          </Typography>
+        ) : (
+          <Button
+            variant="contained"
+            className={classes.uploadFinishButton}
+            onClick={handleCloseUploadDialog}
+          >
+            Selesai
+          </Button>
+        )}
+      </Grid>
+      </Paper>
+    </div>
   );
 }
 
