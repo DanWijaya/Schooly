@@ -251,7 +251,7 @@ const useStyles = makeStyles((theme) => ({
     }
   }
 }));
-// REVIEW STYLE
+// REVIEW GLOBAL STYLE
 
 function CalendarListToolbar(props) {
   const {
@@ -1083,8 +1083,23 @@ function CreateEventDialog(props) {
     },
     dialogPaper: {
       minHeight: "calc(100% - 64px)"
+    },
+    dialogContent: {
+      display: "flex",
+      padding: "0",
+      flexDirection: "column",
+      position: "relative"
+    },
+    dialogScrollableDiv: {
+      display: "flex",
+      flexGrow: "1",
+      overflowY: "scroll",
+      overflowX: "hidden",
+      padding: "16px 24px",
+      flexDirection: "column"
     }
   }));
+  // REVIEW CreateEventDialog - STYLE
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -1498,24 +1513,13 @@ function CreateEventDialog(props) {
     setFileLampiran(temp);
   };
 
-  // DIALOG-IN-DIALOG
-  const [height, setHeight] = React.useState(null);
-  const [width, setWidth] = React.useState(null);
+  // UPLOAD DIALOG
   const [scrollPosition, setScrollPosition] = React.useState(0);
   const [elementToScroll, setElementToScroll] = React.useState(null);
 
-  function handleResize() {
-    setHeight(elementToScroll.offsetHeight);
-    setWidth(elementToScroll.clientWidth);
-  }
-
   const measuredHeightRef = React.useCallback((node) => {
     if (node !== null) {
-      setHeight(node.offsetHeight);
-      setWidth(node.clientWidth);
       setElementToScroll(node);
-
-      window.addEventListener("resize", handleResize);
     }
   }, []);
 
@@ -1528,10 +1532,6 @@ function CreateEventDialog(props) {
       });
     }
   }, [scrollPosition]);
-
-  React.useEffect(() => {
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const handleWheel = (e) => {
     e.preventDefault();
@@ -1581,29 +1581,12 @@ function CreateEventDialog(props) {
       </DialogTitle>
       <DialogContent
         dividers
-        style={{
-          display: "flex",
-          padding: "0",
-          flexDirection: "column",
-          position: "relative"
-        }}>
-        <MiniUploadDialog
-          width={width}
-          height={height}
-          handleWheel={handleWheel}
-        />
-        {/* REVIEW  dialog content */}
-        <div
-          ref={measuredHeightRef}
-          style={{
-            display: "flex",
-            flexGrow: "1",
-            overflowY: "scroll",
-            overflowX: "hidden",
-            padding: "16px 24px",
-            flexDirection: "column"
-          }}
-        >
+        className={classes.dialogContent}
+      >
+        <div style={{ flexGrow: "1", height: "0" }}>
+          <MiniUploadDialog handleWheel={handleWheel} />
+        </div>
+        <div ref={measuredHeightRef} className={classes.dialogScrollableDiv}>
         <Grid container direction="column" spacing={4}>
           {/* <Grid item>
             <Button
@@ -1945,7 +1928,8 @@ function MiniUploadDialog(props) {
       zIndex: "1",
       display: "flex",
       justifyContent: "center",
-      alignItems: "center"
+      alignItems: "center",
+      overflow: "hidden"
     },
     uploadSuccessIcon: {
       color: "green",
@@ -1977,7 +1961,7 @@ function MiniUploadDialog(props) {
 
   return (
     <div
-      style={close ? { display: "none" } : { width: width ?? "0", height: height ?? "0"}}
+      style={close ? { display: "none" } : { width: "100%", height: "100%"}}
       className={`${classes.backdrop}`}
       onWheel={(event) => { handleWheel(event) }}
     >
