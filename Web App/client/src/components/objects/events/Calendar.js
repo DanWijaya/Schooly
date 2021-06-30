@@ -248,113 +248,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.success.main,
       color: "white"
     }
-  }, 
-  formIcons: {
-    width: "1rem",
-    height: "1rem",
-    marginRight: "7.5px",
-    color: theme.palette.text.secondary
-  },
-  formLabels: {
-    display: "flex",
-    alignItems:"center"
-  },
-  zeroHeightHelperText: {
-    height: "0",
-    display: "flex" // untuk men-disable "collapsing margin"
-  },
-  chips: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  chip: {
-    marginRight: 2,
-  },
-  dummyInput: {
-    height: "fit-content!important"
-  },
-  dialogTopDiv: {
-    backgroundColor: theme.palette.action.selected,
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "0 24px",
-    [theme.breakpoints.up("md")]: {
-      "&:hover": {
-        cursor: "move"
-      }
-    },
-    [theme.breakpoints.down("sm")]: {
-      justifyContent: "flex-end"
-    }
-  },
-  dialogTopIcons: {
-    width: "20px",
-    height: "20px",
-    color: theme.palette.text.secondary
-  },
-  addFileButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-  },
-  wordFileTypeIcon: {
-    backgroundColor: "#16B0DD",
-  },
-  excelFileTypeIcon: {
-    backgroundColor: "#68C74F",
-  },
-  imageFileTypeIcon: {
-    backgroundColor: "#974994",
-  },
-  pdfFileTypeIcon: {
-    backgroundColor: "#E43B37",
-  },
-  textFileTypeIcon: {
-    backgroundColor: "#F7BC24",
-  },
-  presentationFileTypeIcon: {
-    backgroundColor: "#FD931D",
-  },
-  otherFileTypeIcon: {
-    backgroundColor: "#808080",
-  },
-  deleteIconButton: {
-    marginLeft: "7.5px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
-  mdUpZeroTopPadding: {
-    [theme.breakpoints.up("md")]: {
-      paddingTop: "0!important"
-    }
-  },
-  mdUpZeroBottomPadding: {
-    [theme.breakpoints.up("md")]: {
-      paddingBottom: "0!important"
-    }
-  },
-  smDownZeroTopPadding: {
-    [theme.breakpoints.down("sm")]: {
-      paddingTop: "0!important"
-    }
-  },
-  smDownZeroBottomPadding: {
-    [theme.breakpoints.down("sm")]: {
-      paddingBottom: "0!important"
-    }
-  },
-  dialogTopIconButtons: {
-    padding: "8px",
-    "&focus, &:hover" :{
-      backgroundColor: theme.palette.action.hover
-    }
   }
 }));
 // REVIEW STYLE
@@ -1079,6 +972,118 @@ function AssessmentListItemTeacher(props) {
 }
 
 function CreateEventDialog(props) {
+  const useStyles = makeStyles((theme) => ({
+    formIcons: {
+      width: "1rem",
+      height: "1rem",
+      marginRight: "7.5px",
+      color: theme.palette.text.secondary
+    },
+    formLabels: {
+      display: "flex",
+      alignItems: "center"
+    },
+    zeroHeightHelperText: {
+      height: "0",
+      display: "flex" // untuk men-disable "collapsing margin"
+    },
+    chips: {
+      display: 'flex',
+      flexWrap: 'wrap'
+    },
+    chip: {
+      marginRight: 2,
+    },
+    dummyInput: {
+      height: "fit-content!important"
+    },
+    dialogTopDiv: {
+      backgroundColor: theme.palette.action.selected,
+      display: "flex",
+      justifyContent: "space-between",
+      padding: "0 24px",
+      [theme.breakpoints.up("md")]: {
+        "&:hover": {
+          cursor: "move"
+        }
+      },
+      [theme.breakpoints.down("sm")]: {
+        justifyContent: "flex-end"
+      }
+    },
+    dialogTopIcons: {
+      width: "20px",
+      height: "20px",
+      color: theme.palette.text.secondary
+    },
+    addFileButton: {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+      "&:focus, &:hover": {
+        backgroundColor: theme.palette.primary.main,
+        color: "white",
+      },
+    },
+    wordFileTypeIcon: {
+      backgroundColor: "#16B0DD",
+    },
+    excelFileTypeIcon: {
+      backgroundColor: "#68C74F",
+    },
+    imageFileTypeIcon: {
+      backgroundColor: "#974994",
+    },
+    pdfFileTypeIcon: {
+      backgroundColor: "#E43B37",
+    },
+    textFileTypeIcon: {
+      backgroundColor: "#F7BC24",
+    },
+    presentationFileTypeIcon: {
+      backgroundColor: "#FD931D",
+    },
+    otherFileTypeIcon: {
+      backgroundColor: "#808080",
+    },
+    deleteIconButton: {
+      marginLeft: "7.5px",
+      backgroundColor: theme.palette.error.dark,
+      color: "white",
+      "&:focus, &:hover": {
+        backgroundColor: "white",
+        color: theme.palette.error.dark,
+      },
+    },
+    mdUpZeroTopPadding: {
+      [theme.breakpoints.up("md")]: {
+        paddingTop: "0!important"
+      }
+    },
+    mdUpZeroBottomPadding: {
+      [theme.breakpoints.up("md")]: {
+        paddingBottom: "0!important"
+      }
+    },
+    smDownZeroTopPadding: {
+      [theme.breakpoints.down("sm")]: {
+        paddingTop: "0!important"
+      }
+    },
+    smDownZeroBottomPadding: {
+      [theme.breakpoints.down("sm")]: {
+        paddingBottom: "0!important"
+      }
+    },
+    dialogTopIconButtons: {
+      padding: "8px",
+      "&focus, &:hover": {
+        backgroundColor: theme.palette.action.hover
+      }
+    },
+    dialogPaper: {
+      minHeight: "calc(100% - 64px)"
+    }
+  }));
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -1123,17 +1128,24 @@ function CreateEventDialog(props) {
   const lastSelectedTime = React.useRef(null);
 
   // FORM
-  // REVIEW onsubmit
+  // REVIEW dialog onsubmit
   const onSubmit = () => {
-    let to = [...target_role];
+    let formData = new FormData();
+    if (fileLampiran) {
+      for (let i = 0; i < fileLampiran.length; i++) {
+        formData.append("lampiran_event", fileLampiran[i]);
+      }
+    }
 
     // replace "pengelola" dengan "admin"
+    let to = [...target_role];
     let adminIdx = to.indexOf("pengelola");
     if (adminIdx !== -1) {
       to.splice(adminIdx, 1, "Admin");
     }
 
-    createEvent({
+    // REVIEW handleOpenUploadDialog
+    createEvent(formData, {
       name,
       location,
       start_date,
@@ -1336,6 +1348,8 @@ function CreateEventDialog(props) {
   };
 
   const handleStartDateChange = (date) => {
+    setErrors({ ...errors, start_date_submission: undefined });
+    
     let startDate = date;
     if (isAllDay) {
       // ini perlu ditambahkan karena onchange pada date picker dapat mengubah nilai waktu (ga ngerti kenapa)
@@ -1345,6 +1359,8 @@ function CreateEventDialog(props) {
   };
 
   const handleEndDateChange = (date) => {
+    setErrors({ ...errors, end_date_submission: undefined });
+
     let endDate = date;
     if (isAllDay) {
       // ini perlu ditambahkan karena onchange pada date picker dapat mengubah nilai waktu (ga ngerti kenapa)
@@ -1383,6 +1399,21 @@ function CreateEventDialog(props) {
     } else {
       setOpenEndDateTimePicker(false);
     }
+  };
+
+  const handleChangeName = (e) => {
+    setErrors({ ...errors, name: undefined });
+    setName(e.target.value);
+  };
+
+  const handleChangeTargetRole = (e) => {
+    setErrors({ ...errors, to: undefined });
+    setTargetRole(e.target.value);
+  };
+
+  const handleChangeDescription = (e) => {
+    setErrors({ ...errors, description: undefined });
+    setDescription(e.target.value)
   };
 
   const fileType = (filename) => {
@@ -1500,7 +1531,6 @@ function CreateEventDialog(props) {
         }
         
         <Grid container direction="column" spacing={4}>
-
           {/* <Grid item>
             <Button
               color="primary"
@@ -1527,7 +1557,7 @@ function CreateEventDialog(props) {
               placeholder="Isi Judul"
               value={name}
               error={errors.name}
-              onChange={(e) => { setName(e.target.value) }}
+              onChange={(e) => { handleChangeName(e) }}
             />
             {errors.name
               ?
@@ -1597,8 +1627,8 @@ function CreateEventDialog(props) {
                   onChange={(date) => { handleStartDateChange(date) }}
                   helperText={null}
                   onError={(err) => {
-                    if (errors.start_date !== err) {
-                      setErrors({ ...errors, start_date: err });
+                    if (errors.start_date_picker !== err) {
+                      setErrors({ ...errors, start_date_picker: err });
                     }
                   }}
                   open={openStartDateTimePicker}
@@ -1606,9 +1636,11 @@ function CreateEventDialog(props) {
                   onClose={() => { handleCloseStartPicker(isAllDay) }}
                 />
                 <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
-                  {errors.start_date
-                    ? <FormHelperText variant="outlined" error>{errors.start_date}</FormHelperText>
-                    : null}
+                  {errors.start_date_submission
+                    ? <FormHelperText variant="outlined" error>{errors.start_date_submission}</FormHelperText>
+                    : errors.start_date_picker
+                      ? <FormHelperText variant="outlined" error>{errors.start_date_picker}</FormHelperText>
+                      : null}
                   {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang 
                     untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
                   <FormGroup style={{ width: "fit-content" }}>
@@ -1679,8 +1711,8 @@ function CreateEventDialog(props) {
                   onChange={(date) => { handleEndDateChange(date) }}
                   helperText={null}
                   onError={(err) => {
-                    if (errors.end_date !== err) {
-                      setErrors({ ...errors, end_date: err });
+                    if (errors.end_date_picker !== err) {
+                      setErrors({ ...errors, end_date_picker: err });
                     }
                   }}
                   open={openEndDateTimePicker}
@@ -1688,9 +1720,11 @@ function CreateEventDialog(props) {
                   onClose={() => { handleCloseEndPicker(isAllDay) }}
                 />
                 <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
-                  {errors.end_date
-                    ? <FormHelperText variant="outlined" error>{errors.end_date}</FormHelperText>
-                    : null}
+                  {errors.end_date_submission
+                    ? <FormHelperText variant="outlined" error>{errors.end_date_submission}</FormHelperText>
+                    : errors.end_date_picker
+                      ? <FormHelperText variant="outlined" error>{errors.end_date_picker}</FormHelperText>
+                      : null}
                 </div>
               </MuiPickersUtilsProvider>
             </Grid>
@@ -1710,16 +1744,14 @@ function CreateEventDialog(props) {
             <FormControl
               variant="outlined"
               fullWidth
-              error={errors.target_role}
+              error={errors.to}
             >
               <Select
                 id="target_role"
                 multiple
                 displayEmpty
                 value={target_role}
-                onChange={(e) => {
-                  setTargetRole(e.target.value);
-                }}
+                onChange={(e) => { handleChangeTargetRole(e) }}
                 renderValue={(selected) => (
                   <div className={classes.chips}>
                     {selected.length === 0
@@ -1745,10 +1777,10 @@ function CreateEventDialog(props) {
                   </MenuItem>
                 ))}
               </Select>
-              {errors.target_role
+              {errors.to
                 ?
                 <div className={classes.zeroHeightHelperText}>
-                  <FormHelperText variant="outlined" error>{errors.target_role}</FormHelperText>
+                  <FormHelperText variant="outlined" error>{errors.to}</FormHelperText>
                 </div>
                 : null}
             </FormControl>
@@ -1769,7 +1801,7 @@ function CreateEventDialog(props) {
               multiline
               value={description}
               error={errors.description}
-              onChange={(e) => { setDescription(e.target.value) }}
+              onChange={(e) => { handleChangeDescription(e) }}
             />
             {errors.description
               ?
