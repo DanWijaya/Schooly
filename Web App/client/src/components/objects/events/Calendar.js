@@ -158,7 +158,8 @@ const useStyles = makeStyles((theme) => ({
   },
   agendaContainer: {
     width: "80%",
-    marginRight: "15px"
+    marginRight: "15px",
+    overflow: "none"
   },
   calendarContainer: {
     marginLeft: "15px",
@@ -166,6 +167,21 @@ const useStyles = makeStyles((theme) => ({
   },
   calendar: {
     border: "none",
+  },
+  dayAgendaContainer: {
+    display: "flex", 
+    flexDirection: "column", 
+    marginTop: "10px",
+    height: "600px",
+    overflow: "auto",
+    flex: 1
+  },
+  dayTableCell: {
+    display: "flex", 
+    flexDirection: "row", 
+    alignItems: "center", 
+    borderBottom: "none", 
+    overflow: "none"
   },
   todayTile: {
     textAlign: "center!important",
@@ -195,6 +211,42 @@ const useStyles = makeStyles((theme) => ({
   calendarTile: {
     borderRadius: "100%",
     backgroundColor: theme.palette.primary.light
+  },
+  monthDateTile: {
+    padding: "3px 4px",
+    "&:focus, &:hover, &:active": {
+      background: "#e6e6e6",
+      cursor: "pointer"
+    },
+  },
+  todayMonthDateTile: {
+    padding: "3px 4px",
+    borderRadius: "100%",
+    background: "#195DE5",
+    color: "white",
+    "&:focus, &:hover, &:active": {
+      background: "#e6e6e6",
+      cursor: "pointer"
+    },
+  },
+  monthAgendaCell: {
+    width: "14.2875%", 
+    border: "1px solid rgba(224, 224, 224, 1)", 
+    verticalAlign: "top", 
+    padding: "10px 3px"
+  },
+  monthAgendaChip: {
+    background: theme.palette.primary.main,
+    color: "white",
+    padding: "2px 3px",
+    borderRadius: "4px",
+    margin: "2px 0"
+  },
+  moreMonthAgendaChip: {
+    background: "#e6e6e6",
+    padding: "2px 3px",
+    borderRadius: "4px",
+    margin: "2px 0"
   },
   toolbar: {
     display: "flex",
@@ -227,13 +279,47 @@ const useStyles = makeStyles((theme) => ({
   listIcon: {
     backgroundColor: theme.palette.primary.main,
   },
+  holidayContainer: {
+    marginBottom: "10px"
+  },
+  staticBlueChip: {
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: "3px",
+    flexGrow: 1,
+    overflow: "none",
+    marginBottom: "2px",
+    marginLeft: "58px",
+    padding: "2px",
+    marginRight: "32px"
+  },
   blueChip: {
     backgroundColor: theme.palette.primary.main,
-    height: "15px",
-    position: "absolute", 
-    transform: "translateY(10.5px)",
     borderRadius: "3px",
-    maxWidth: "44%"
+    width: "100%",
+    position: "absolute",
+    overflow: "none",
+    padding: "2px",
+    color: "white",
+    zIndex: 2,
+  },
+  horizontalLine: {
+    border: "rgba(224, 224, 224, 1) .25px solid",
+    position: "relative",
+    "&:after": {
+      content: "",
+      position: "absolute",
+      borderRight: "2px green solid",
+      transform: "translateX(-50%)"
+    },
+    "&:before": {
+      content: "",
+      position: "absolute",
+      borderRight: "2px green solid",
+      transform: "translateY(-50%)"
+    },
+    flexGrow: 1,
+    marginLeft: "10px",
+    overflow: "none"
   },
   greenFab: {
     backgroundColor: theme.palette.success.main,
@@ -552,16 +638,62 @@ function AgendaToolbar(props) {
     classes,
     mode,
     handleChangeMode,
-    handleOpenCreateDialog
+    handleOpenCreateDialog,
+    currentDateDayMode,
+    setCurrentDateDayMode,
+    currentDateMonthMode,
+    setCurrentDateMonthMode
   } = props;
+
+  let monthNames = [
+    "Januari", "Februari", "Maret", "April",
+    "Mei", "Juni", "Juli", "Agustus",
+    "September", "Oktober", "November", "Desember"
+  ];
+
+  let stringDateDayMode = monthNames[currentDateDayMode.getMonth()] + " " + currentDateDayMode.getDate() + ", " + currentDateDayMode.getFullYear();
+  let stringDateMonthMode = monthNames[currentDateMonthMode.getMonth()] + " " + currentDateMonthMode.getFullYear();
+
+  const handleChangeMonth = (direction) => {
+    if(direction === "next") {
+      let nextMonthDate;
+      if (currentDateMonthMode.getMonth() == 11) {
+        nextMonthDate = new Date(currentDateMonthMode.getFullYear() + 1, 0, 1);
+      } 
+      else {
+        nextMonthDate = new Date(currentDateMonthMode.getFullYear(), currentDateMonthMode.getMonth() + 1, 1);
+      }
+      setCurrentDateMonthMode(nextMonthDate);
+    }
+    else {
+      let prevMonthDate;
+      if (currentDateMonthMode.getMonth() == 0) {
+        prevMonthDate = new Date(currentDateMonthMode.getFullYear() - 1, 11, 1);
+      } 
+      else {
+        prevMonthDate = new Date(currentDateMonthMode.getFullYear(), currentDateMonthMode.getMonth() - 1, 1);
+      }
+      setCurrentDateMonthMode(prevMonthDate);
+    }
+  }
 
   return (
     <div className={classes.toolbar}>
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
         <Button variant="outlined">Hari ini</Button>
-        <ChevronLeftIcon/>
-        <ChevronRightIcon/>
-        <Typography>Juni 4, 2021</Typography>
+        {mode === "Day" ?
+          <>
+            <ChevronLeftIcon/>
+            <ChevronRightIcon/>
+            <Typography>{stringDateDayMode}</Typography>
+          </>
+        :
+          <>
+            <ChevronLeftIcon onClick={() => handleChangeMonth("prev")}/>
+            <ChevronRightIcon onClick={() => handleChangeMonth("next")}/>
+            <Typography>{stringDateMonthMode}</Typography>
+          </>
+        }
       </div>
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
         <Fab className={classes.greenFab} aria-label="add" size="small" onClick={handleOpenCreateDialog}>
@@ -2367,9 +2499,11 @@ function Calendar(props) {
   }
 
   // Calendar
+  const today = new Date()
   const [mode, setMode] = React.useState("Day");
-  const [currentMonthDates, setCurrentMonthDates] = React.useState([]);
-  console.log(currentMonthDates)
+  const [currentDateDayMode, setCurrentDateDayMode] = React.useState(today);
+  const [currentDateMonthMode, setCurrentDateMonthMode] = React.useState(today);
+  
 
   const handleOpenCreateDialog = () => {
     setOpenCreateDialog(true);
@@ -2388,7 +2522,6 @@ function Calendar(props) {
   }
 
   const renderCalendarTile = ({ activeStartDate, date, view }) => {
-    let temp
     var today = new Date()
     if(isSameDate(today, date)) {
       return classes.todayTile
@@ -2397,34 +2530,115 @@ function Calendar(props) {
   }
 
   const timeRows = [
-    '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'
+    '00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', 
+    '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', 
+    '20:00', '21:00', '22:00', '23:00'
   ]
 
-  const tableRows = [
-    '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
-  ];
+  const timeRowsDummy = [
+    [{start: 10, title: "Tugas Matematika", duration: 130, visible: true}, {start: 10, title: "Tugas Biologi", duration: 20, visible: false}], 
+    [{start: 0, title: "Tugas Matematika", duration: 70, visible: false}, {start: 10, title: "Tugas Matematika", duration: 20, visible: true}], 
+    [{start: 0, title: "Tugas Matematika", duration: 10, visible: false}], 
+    [], 
+    [{start: 0, title: "Ujian Biologi", duration: 30, visible: true}], 
+    [], [], [], [], [], [], 
+    [{start: 20, title: "Kuis Kimia", duration: 10, visible: true}, 
+    {start: 50, title: "Ujian Musik", duration: 10, visible: true}], 
+    [], [], [], [], [], [], [], [],
+    [], [], [], []
+  ]
 
   const dayNames = [
-    'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'
+    'SEN', 'SEL', 'RAB', 'KAM', 'JUM', 'SAB', 'MIN'
   ]
 
-  const dateRows = [
-    [
-      '1', '2', '3', '4', '5', '6', '7'
-    ],
-    [
-      '1', '2', '3', '4', '5', '6', '7'
-    ],
-    [
-      '1', '2', '3', '4', '5', '6', '7'
-    ],
-    [
-      '1', '2', '3', '4', '5', '6', '7'
-    ],
-    [
-      '1', '2', '3', '4', '5', '6', '7'
-    ],
-  ]
+  function getMaxDate(month, year) {
+    // Index dimulai dari 1
+    // 1: Januari
+    let months_31 = [1, 3, 5, 7, 8, 10, 12];
+    let months_30 = [4, 6, 9, 11];
+    if(months_31.includes(month)) {
+      return 31;
+    }
+    else if(months_30.includes(month)) {
+      return 30;
+    }
+    else {
+      if(((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
+        return 29;
+      }
+      else {
+        return 28;
+      }
+    }
+  }
+
+  function isValidDate(year, month, day) {
+    var d = new Date(year, month, day);
+    if (d.getFullYear() == year && d.getMonth() == month && d.getDate() == day) {
+        return true;
+    }
+    return false;
+}
+
+  const generateMonthDates = () => {
+    let result = [];
+    let firstDate = new Date(currentDateMonthMode.getFullYear(), currentDateMonthMode.getMonth(), 1, 0, 0, 0, 0);
+    let count = 1;
+    let i = 1;
+    if(count > firstDate.getDay()) {
+      count = count - 7;
+      i = i - 7;
+    }
+    while(count <= firstDate.getDay()) {
+      let tempDate = new Date(firstDate.getFullYear(), firstDate.getMonth(), 0);
+      console.log(tempDate)
+      tempDate.setDate(tempDate.getDate() - (firstDate.getDay()-i) + 1);
+      result.push(tempDate);
+      count ++;
+      i ++;
+    }
+
+    count = 1;
+    i = 1;
+    let isMaxDateFound = false;
+    while(count <= 35-firstDate.getDay()) {
+      let tempDate = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1);
+      tempDate.setDate(tempDate.getDate()+i);
+      result.push(tempDate);
+      count ++;
+      i ++;
+      if(!isMaxDateFound && tempDate.getDate() === getMaxDate(tempDate.getMonth() + 1, tempDate.getYear())) {
+        isMaxDateFound = true;
+      }
+      if(count === 35-firstDate.getDay() && !isMaxDateFound) {
+        count = count - 7;
+      }
+      if(isMaxDateFound && 35-firstDate.getDay() - count === 6) {
+        break;
+      }
+    }
+    return result;
+  }
+
+  const generateDates = () => {
+    let currentMonthDates = generateMonthDates();
+    if(currentMonthDates.length !== 0) {
+      let result = [];
+      let temp_row = [];
+      for(let date of currentMonthDates) {
+        temp_row.push(date);
+        if(temp_row.length === 7) {
+          result.push(temp_row);
+          temp_row = [];
+        }
+      }
+      return result;
+    }
+    else {
+      return [[]];
+    }
+  }
 
   const [agendaCheckboxState, setAgendaCheckboxState] = React.useState({
     checkedTask: true,
@@ -2438,30 +2652,45 @@ function Calendar(props) {
   };
 
   const generateDayModeCalendar = () => {
+    let rowHeight = 90;
     return (
-      <div style={{ display: "flex", flexDirection: "row", marginTop: "10px" }}>
-        <div style={{marginTop: "16px"}}>
-          <TableContainer component={Grid}>
-            <Table className={classes.table} aria-label="simple table">
-              <TableBody>
-              {timeRows.map((row) => (
-                <TableRow style={{borderBottom: "none"}}>
-                  <TableCell style={{borderBottom: "none", padding: "7.3px"}}>
-                    <Typography color="textSecondary" variant="body2">{row}</Typography>
-                  </TableCell>
-                </TableRow>
-              ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+      <div className={classes.dayAgendaContainer}>
+        <div className={classes.holidayContainer}>
+          <div className={classes.staticBlueChip}>
+            <Typography style={{color: "white"}} variant="body2">
+              Natal/Christmas (Contoh)
+            </Typography>
+          </div>
+          <div className={classes.staticBlueChip}>
+            <Typography style={{color: "white"}} variant="body2">
+              Idul Adha
+            </Typography>
+          </div>
         </div>
-        <TableContainer component={Grid}>
-          <Table className={classes.table} aria-label="simple table">
+        <TableContainer>
+          <Table>
             <TableBody>
-              {tableRows.map((row) => (
-                <TableRow key={row.name}>
-                  <TableCell component="th" scope="row">
-                    <div className={classes.blueChip}></div>
+              {timeRows.map((row, index) => (
+                <TableRow key={row.name} style={{height: `${rowHeight}px`, border: "none"}}>
+                  <TableCell component="th" scope="row" className={classes.dayTableCell}>
+                    <Typography color="textSecondary" variant="body2" style={{width: "32px"}}>{row}</Typography>
+                    <div className={classes.horizontalLine}>
+                      {
+                        timeRowsDummy[index].map((data) => {
+                          if(data.visible) {
+                            return (
+                              <div 
+                                className={classes.blueChip} 
+                                style={{transform: `translateY(${data.start/60*rowHeight}px)`, height: `${data.duration/60*rowHeight}px`}}
+                              >
+                                {data.title}
+                              </div>
+                            )
+                          }
+                          else return null
+                        })
+                      }
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -2473,12 +2702,13 @@ function Calendar(props) {
   }
 
   const generateMonthModeCalendar = () => {
+    let monthDates = generateDates();
     return (
       <div style={{ display: "flex", flexDirection: "row", marginTop: "10px" }}>
         <TableContainer component={Grid}>
           <Table className={classes.table} aria-label="simple table">
             <TableBody>
-            {dateRows.map((row, index) => (
+            {monthDates.map((row, index) => (
               generateDateAgenda(row, index)
             ))}
             </TableBody>
@@ -2489,26 +2719,56 @@ function Calendar(props) {
   }
 
   const generateDateAgenda = (date, index) => {
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+      "Jul", "Agu", "Sep", "Okt", "Nov", "Des"
+    ];
     if(index === 0) {
       return (
-        <TableRow style={{height: "100px"}}>
-          {date.map((column, columnIndex) => (
-            <TableCell style={{width: "14.2875%", border: "1px solid rgba(224, 224, 224, 1)", verticalAlign: "top"}} align="center">
-              <Typography color="textSecondary" variant="body2">{dayNames[columnIndex]}</Typography>
-              <Typography color="textSecondary" variant="body2">{column}</Typography>
-            </TableCell>
-          ))}
+        <TableRow style={{height: "175px"}}>
+          {date.map((column, columnIndex) => {
+            let temp_date = new Date(column).getDate();
+            if(temp_date == 1) {
+              temp_date = temp_date + " " + monthNames[new Date(column).getMonth()];
+            }
+            let today = new Date();
+            return (
+              <TableCell className={classes.monthAgendaCell}>
+                <Typography color="textSecondary" variant="body2" align="center">{dayNames[columnIndex]}</Typography>
+                <div style={{display: "flex", justifyContent: "center"}}>
+                  {isSameDate(today, column) ?
+                    <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center">{temp_date}</Typography>
+                  :
+                    <Typography color="textSecondary" variant="body2" className={classes.monthDateTile}>{temp_date}</Typography>
+                  }
+                </div>
+                <Typography variant="body2" className={classes.monthAgendaChip}>Andro's Birthday Party</Typography>
+                <Typography variant="body2" className={classes.monthAgendaChip}>Andro's Birthday</Typography>
+                <Typography variant="body2" className={classes.monthAgendaChip}>Andro's Birthday</Typography>
+                <Typography variant="body2" className={classes.moreMonthAgendaChip}>3 lagi</Typography>
+              </TableCell>
+            )
+          })}
         </TableRow>
       )
     }
     else {
       return (
-        <TableRow style={{height: "100px"}}>
-          {date.map((column) => (
-            <TableCell style={{width: "14.2875%", border: "1px solid rgba(224, 224, 224, 1)", verticalAlign: "top"}} align="center">
-              <Typography color="textSecondary" variant="body2">{column}</Typography>
-            </TableCell>
-          ))}
+        <TableRow style={{height: "150px"}}>
+          {date.map((column) => {
+            let temp_date = new Date(column).getDate();
+            let today = new Date();
+            return (
+              <TableCell className={classes.monthAgendaCell} align="center">
+                <div style={{display: "flex", justifyContent: "center"}}>
+                  {isSameDate(today, column) ?
+                    <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center">{temp_date}</Typography>
+                  :
+                    <Typography color="textSecondary" variant="body2" className={classes.monthDateTile}>{temp_date}</Typography>
+                  }
+                </div>
+              </TableCell>
+            )
+          })}
         </TableRow>
       )
     }
@@ -2530,12 +2790,17 @@ function Calendar(props) {
           mode={mode}
           handleChangeMode={handleChangeMode}
           handleOpenCreateDialog={handleOpenCreateDialog}
+          currentDateDayMode={currentDateDayMode}
+          setCurrentDateDayMode={setCurrentDateDayMode}
+          currentDateMonthMode={currentDateMonthMode}
+          setCurrentDateMonthMode={setCurrentDateMonthMode}
         />
         <Divider style={{marginTop: "10px"}}/>
         {mode === "Day" ? generateDayModeCalendar() : generateMonthModeCalendar()}
       </div>
       <div className={classes.calendarContainer}>
         <ReactCalendar
+          locale="id-ID"
           onChange={setSelectedDate}
           value={selectedDate}
           tileClassName={renderCalendarTile}
