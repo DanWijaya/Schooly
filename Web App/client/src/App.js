@@ -77,8 +77,6 @@ import ViewAssessmentAnswer from "./components/objects/assessment/ViewAssessment
 //Event
 import Calendar from "./components/objects/events/Calendar";
 import ViewEvent from "./components/objects/events/ViewEvent";
-import CreateEvent from "./components/objects/events/CreateEvent";
-import EditEvent from "./components/objects/events/EditEvent";
 //Admin Only
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
@@ -605,18 +603,6 @@ class App extends Component {
                         component={ViewEvent}
                       />
                       {/* Route Event Admin-Only*/}
-                      <PrivateRoute
-                        exact
-                        access={["Admin"]}
-                        path="/buat-kegiatan"
-                        component={CreateEvent}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={["Admin"]}
-                        path="/sunting-kegiatan/:id"
-                        component={EditEvent}
-                      />
                       <PrivateRoute
                         exact
                         access={["Admin"]}
