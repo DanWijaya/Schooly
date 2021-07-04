@@ -1330,13 +1330,13 @@ function EventDialog(props) {
   // UPLOAD DIALOG
   const [openUploadDialog, setOpenUploadDialog] = React.useState(false);
   const [uploadSuccess, setUploadSuccess] = React.useState(false);
-  const [uploadDialogScrollPosition, setUploadDialogScrollPosition] = React.useState(0);
-  const [uploadDialogScrollElement, setUploadDialogScrollElement] = React.useState(null);
+  // const [uploadDialogScrollPosition, setUploadDialogScrollPosition] = React.useState(0);
+  // const [uploadDialogScrollElement, setUploadDialogScrollElement] = React.useState(null);
 
   // DELETE DIALOG
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-  const [deleteDialogScrollPosition, setDeleteDialogScrollPosition] = React.useState(0);
-  const [deleteDialogScrollElement, setDeleteDialogScrollElement] = React.useState(null);
+  // const [deleteDialogScrollPosition, setDeleteDialogScrollPosition] = React.useState(0);
+  // const [deleteDialogScrollElement, setDeleteDialogScrollElement] = React.useState(null);
 
   // OTHER
   const [changeDialog, setChangeDialog] = React.useState(false);
@@ -1842,6 +1842,7 @@ function EventDialog(props) {
     }
   };
 
+  /*
   // UPLOAD DIALOG
   const uploadDialogScrollRef = React.useCallback((node) => {
     if (node !== null) {
@@ -1901,6 +1902,7 @@ function EventDialog(props) {
       setDeleteDialogScrollPosition(nextScrollPosition);
     }
   };
+  */
 
   const handleDelete = () => {
     deleteEvent(selectedEventId).then(() => {
@@ -1983,13 +1985,13 @@ function EventDialog(props) {
           </div>
           <div className={classes.viewDialogBottomDiv}>
             <CustomDeleteDialog
-              handleWheel={handleDeleteDialogWheel}
+              // handleWheel={handleDeleteDialogWheel}
               openDeleteDialog={openDeleteDialog}
               handleCloseDeleteDialog={handleCloseDeleteDialog}
               eventName={name}
               handleDelete={handleDelete}
             />
-            <div ref={deleteDialogScrollRef} className={classes.viewDialogScrollableDiv}>
+            <div /* ref={deleteDialogScrollRef} */ className={classes.viewDialogScrollableDiv}>
                 
               <Grid container direction="column" spacing="4" style={{ marginTop: "0", marginBottom: "0" }}>
                 <Grid item style={{ paddingTop: "0", paddingBottom: "0" }}>
@@ -2098,14 +2100,14 @@ function EventDialog(props) {
             className={classes.dialogContent}
           >
             <CustomUploadDialog 
-              handleWheel={handleUploadDialogWheel} 
+              // handleWheel={handleUploadDialogWheel} 
               openUploadDialog={openUploadDialog}
               handleUploadSuccess={handleCloseEventDialog}
               uploadSuccess={uploadSuccess}
               messageUploading={eventDialogMode === "create" ? "Kegiatan sedang dibuat" : "Kegiatan sedang disunting"}
               messageSuccess={eventDialogMode === "create" ? "Kegiatan telah dibuat" : "Kegiatan telah disunting"}
             />
-            <div ref={uploadDialogScrollRef} className={classes.createEditDialogScrollableDiv}>
+            <div /* ref={uploadDialogScrollRef} */ className={classes.createEditDialogScrollableDiv}>
               <Grid container direction="column" spacing={4}>
                 {/* <Grid item>
                   <Button
@@ -2481,7 +2483,7 @@ function CustomUploadDialog(props) {
   }));
   const classes = useStyles();
   const { 
-    handleWheel,
+    // handleWheel,
     openUploadDialog,
     messageUploading,
     messageSuccess,
@@ -2493,7 +2495,7 @@ function CustomUploadDialog(props) {
     <Fade in={openUploadDialog} /* ini sebenarnya ga terpakai karena upload dialog dibuat tutup bersamaan dengan parent dialognya */>
       <div
         className={classes.backdrop}
-        onWheel={(event) => { handleWheel(event) }}
+        // onWheel={(event) => { handleWheel(event) }}
       >
         <Paper className={`${classes.paper} MuiPaper-elevation24`}>
           <Grid item>
@@ -2577,7 +2579,7 @@ function CustomDeleteDialog(props) {
   }));
   const classes = useStyles();
   const {
-    handleWheel,
+    // handleWheel,
     openDeleteDialog,
     handleCloseDeleteDialog,
     handleDelete,
@@ -2588,7 +2590,7 @@ function CustomDeleteDialog(props) {
     <Fade in={openDeleteDialog}>
       <div
         className={classes.backdrop}
-        onWheel={(event) => { handleWheel(event) }}
+        // onWheel={(event) => { handleWheel(event) }}
       >
         <Paper className={`${classes.paper} MuiPaper-elevation24`}>
           <Grid item>
