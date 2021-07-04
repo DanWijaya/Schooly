@@ -43,7 +43,8 @@ import {
   Input,
   Snackbar,
   useMediaQuery,
-  CircularProgress
+  CircularProgress,
+  Fade
 } from "@material-ui/core/";
 import {
   MuiPickersUtilsProvider,
@@ -53,7 +54,6 @@ import {
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-// REVIEW ICONS 
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import TimerIcon from '@material-ui/icons/Timer';
@@ -61,6 +61,9 @@ import TimerOffIcon from '@material-ui/icons/TimerOff';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import SubjectIcon from '@material-ui/icons/Subject';
 import DeleteIcon from "@material-ui/icons/Delete";
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import CancelIcon from '@material-ui/icons/Cancel';
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
@@ -86,9 +89,16 @@ import {
 } from "react-icons/fa";
 import {
   createEvent,
+  updateEvent,
   getAllEvents,
+  getOneEvent,
   deleteEvent
 } from "../../../actions/EventActions";
+import {
+  downloadFileEvent,
+  viewFileEvent,
+  getFileEvents
+} from "../../../actions/files/FileEventActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getStudents, getStudentsByClass, getTeachers } from "../../../actions/UserActions";
 import { getTasks, getAllTask } from "../../../actions/TaskActions";
@@ -138,14 +148,6 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: "white",
       color: theme.palette.warning.main,
-    },
-  },
-  editEventButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
     },
   },
   deleteEventButton: {
@@ -328,16 +330,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.success.dark,
     },
   },
-  createEventButton: {
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.main,
-      color: "white"
-    }
-  }
 }));
-// REVIEW GLOBAL STYLE
+// REVIEW GLOBAL - STYLE
 
 function CalendarListToolbar(props) {
   const {
@@ -696,7 +690,7 @@ function AgendaToolbar(props) {
         }
       </div>
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-        <Fab className={classes.greenFab} aria-label="add" size="small" onClick={handleOpenCreateDialog}>
+        <Fab className={classes.greenFab} aria-label="add" size="small" onClick={() => { handleOpenCreateDialog() }}>
           <AddIcon fontSize="small"/>
         </Fab>
         <IconButton>
@@ -1104,7 +1098,7 @@ function AssessmentListItemTeacher(props) {
   );
 }
 
-function CreateEventDialog(props) {
+function EventDialog(props) {
   const useStyles = makeStyles((theme) => ({
     formIcons: {
       width: "1rem",
@@ -1127,10 +1121,14 @@ function CreateEventDialog(props) {
     chip: {
       marginRight: 2,
     },
+    viewDialogChip: {
+      backgroundColor: theme.palette.primary.main,
+      color: "white"
+    },
     dummyInput: {
       height: "fit-content!important"
     },
-    dialogTopDiv: {
+    create_edit_dialogTopDiv: {
       backgroundColor: theme.palette.action.selected,
       display: "flex",
       justifyContent: "space-between",
@@ -1143,6 +1141,11 @@ function CreateEventDialog(props) {
       [theme.breakpoints.down("sm")]: {
         justifyContent: "flex-end"
       }
+    },
+    view_dialogTopDiv: {
+      display: "flex",
+      justifyContent: "flex-end",
+      padding: "0 24px"
     },
     dialogTopIcons: {
       width: "20px",
@@ -1213,38 +1216,87 @@ function CreateEventDialog(props) {
         backgroundColor: theme.palette.action.hover
       }
     },
-    dialogPaper: {
-      minHeight: "calc(100% - 64px)"
-    },
     dialogContent: {
       display: "flex",
       padding: "0",
       flexDirection: "column",
       position: "relative"
     },
-    dialogScrollableDiv: {
+    createEditDialogScrollableDiv: {
       display: "flex",
       flexGrow: "1",
-      overflowY: "scroll",
+      overflowY: "auto",
       overflowX: "hidden",
       padding: "16px 24px",
       flexDirection: "column"
+    },
+    viewDialogScrollableDiv: {
+      flexGrow: "1",
+      overflowY: "auto",
+      overflowX: "hidden",
+      padding: "16px 24px"
+    },
+    viewDialogBottomDiv: {
+      flex: "1 1 auto",
+      overflowY: "hidden",
+      position: "relative",
+      display: "flex",
+      flexDirection: "column"
+    },
+    createEventButton: {
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+      "&:focus, &:hover": {
+        backgroundColor: theme.palette.success.main,
+        color: "white"
+      }
+    },
+    editEventButton: {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+      "&:focus, &:hover": {
+        backgroundColor: "white",
+        color: theme.palette.primary.main,
+      },
+    },
+    dialogPaper: {
+      minHeight: "calc(100% - 64px)"
+    },
+    listItem: {
+      "&:focus, &:hover": {
+        backgroundColor: theme.palette.primary.fade,
+      },
     }
   }));
-  // REVIEW CreateEventDialog - STYLE
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
+  // TODO tambain props data-data event
   const {
-    openCreateDialog,
-    handleCloseCreateDialog,
-    setSnackbarContent,
-    setSeverity,
-    setOpenSnackbar
+    openEventDialog,
+    handleCloseEventDialog,
+    handleOpenEditDialog,
+    showSnackbar,
+    handleSetUnmountEventDialog,
+    eventDialogMode,
+    // selectedEventId,
+    getOneEvent,
+    getAllEvents,
+    downloadFileEvent,
+    viewFileEvent,
+    // TODO hapus
+    allEvents
   } = props;
+  // const { allEvents } = props.eventsCollection;
+  const roleConverter = {
+    Admin: "Pengelola",
+    Teacher: "Guru",
+    Student: "Murid"
+  };
+  
+  const [selectedEventId, setSelectedEventId] = React.useState(""); // TODO hapus
 
-  // REVIEW CreateEventDialog - STATES
   const [errors, setErrors] = React.useState({});
 
   // FORM
@@ -1258,9 +1310,9 @@ function CreateEventDialog(props) {
 
   // LAMPIRAN
   const [fileLampiran, setFileLampiran] = React.useState([]);
-  // const [overLimit, setOverLimit] = React.useState([]);
-  // const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
-
+  const [fileLampiranToAdd, setFileLampiranToAdd] = React.useState([]); 
+  const [fileLampiranToDelete, setFileLampiranToDelete] = React.useState([]);
+  const [originalFileLampiran, setOriginalFileLampiran] = React.useState([]);
   const lampiranUploader = React.useRef(null);
 
   // DATETIME PICKER
@@ -1275,9 +1327,61 @@ function CreateEventDialog(props) {
   // waktu yang pernah dimasukkan sebelumnya bisa ditampilkan kembali
   const lastSelectedTime = React.useRef(null);
 
+  // UPLOAD DIALOG
+  const [openUploadDialog, setOpenUploadDialog] = React.useState(false);
+  const [uploadSuccess, setUploadSuccess] = React.useState(false);
+  const [uploadDialogScrollPosition, setUploadDialogScrollPosition] = React.useState(0);
+  const [uploadDialogScrollElement, setUploadDialogScrollElement] = React.useState(null);
+
+  // DELETE DIALOG
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+  const [deleteDialogScrollPosition, setDeleteDialogScrollPosition] = React.useState(0);
+  const [deleteDialogScrollElement, setDeleteDialogScrollElement] = React.useState(null);
+
+  // OTHER
+  const [changeDialog, setChangeDialog] = React.useState(false);
+
+  // TODO ganti dengan data event yg dipass melalui props
+  React.useEffect(() => {
+    if (eventDialogMode === "view") {
+      getAllEvents();
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (eventDialogMode === "view") {
+      if (allEvents && allEvents.length !== 0) {
+        let { _id, name, location, start_date, end_date, to, description } = allEvents[allEvents.length - 1];
+        start_date = new Date(start_date);
+        end_date = new Date(end_date);
+        setName(name);
+        setLocation(location);
+        // setLocation("");
+        setStartDate(start_date);
+        setEndDate(end_date);
+        setTargetRole(to);
+        setDescription(description);
+        // setDescription(Array(100).fill("deskripsi").join(" "));
+        setSelectedEventId(_id); // TODO hapus
+        getFileEvents(_id).then((result) => {
+          setFileLampiran(result);
+          setOriginalFileLampiran(result)
+        });
+        // setFileLampiran([{ _id: "123", filename: `${Array(100).fill("namafile").join(" ")}.txt` }]);
+        // setOriginalFileLampiran([{ _id: "123", filename: `${Array(100).fill("namafile").join(" ")}.txt` }])
+  
+        // pada datetime picker, pengguna tidak bisa menset detik. jadi, pukul 23:59:59 hanya dapat 
+        // diset dengan menyentang checkbox sepanjang hari
+        if (end_date.getHours() === 23 && end_date.getMinutes() === 59 && end_date.getSeconds() === 59) {
+          setAllDay(true);
+        }
+      }
+    }
+  }, [allEvents]);
+
+
   // FORM
-  // REVIEW dialog onsubmit
-  const onSubmit = () => {
+  const handleCreateEvent = () => {
     let formData = new FormData();
     if (fileLampiran) {
       for (let i = 0; i < fileLampiran.length; i++) {
@@ -1285,27 +1389,65 @@ function CreateEventDialog(props) {
       }
     }
 
-    // replace "pengelola" dengan "admin"
-    let to = [...target_role];
-    let adminIdx = to.indexOf("pengelola");
-    if (adminIdx !== -1) {
-      to.splice(adminIdx, 1, "Admin");
-    }
-
-    // REVIEW handleOpenUploadDialog
-    createEvent(formData, {
+    let eventData = {
       name,
       location,
       start_date,
       end_date,
-      to,
+      to: target_role,
       description
-    }).then(() => {
-      handleCloseCreateDialog();
-    }).catch((err) => {
-      setErrors(err);
-    });
-  }
+    };
+    setOpenUploadDialog(true);
+    // new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     console.log("hello");
+    //     resolve();
+    //   }, 4000);
+    // })
+    createEvent(formData, eventData)
+      .then(() => {
+        setUploadSuccess(true);
+      })
+      .catch((err) => {
+        setOpenUploadDialog(false);
+        setErrors(err);
+      });
+  };
+
+  const handleUpdateEvent = () => {
+    let formData = new FormData();
+    if (fileLampiranToAdd) {
+      for (let i = 0; i < fileLampiranToAdd.length; i++) {
+        formData.append("lampiran_event", fileLampiranToAdd[i]);
+      }
+    }
+
+    let eventData = {
+      name,
+      location,
+      start_date,
+      end_date,
+      to: target_role,
+      description
+    };
+    setOpenUploadDialog(true);
+    // new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     console.log("hello");
+    //     resolve();
+    //   }, 4000);
+    // })
+    updateEvent(formData, fileLampiranToDelete, eventData, selectedEventId)
+      .then(() => {
+        setUploadSuccess(true);
+      })
+      .catch((err) => {
+        setOpenUploadDialog(false);
+        setFileLampiran([...originalFileLampiran, ...fileLampiranToAdd]);
+        setFileLampiranToDelete([]);
+        setErrors(err);
+      });
+  };
 
   // DATETIME PICKER
   const isValidDateTime = (d) => {
@@ -1450,17 +1592,22 @@ function CreateEventDialog(props) {
         // jika tanggal mulai juga valid, 
 
         let start = new Date(start_date.getTime()); // membuat salinan
-        let startDate = lastSelectedTime.current.start_date;
-        if (startDate === null) {
-          // jika waktu simpanan null, berarti waktu yang sebelumnya akan disimpan itu tidak valid.
-          // reset waktu jadi 00:00:00
-          start.setHours(0, 0, 0);
-        } else {
-          // jika waktu simpanan ada, set waktu mulai jadi sesuai dengan waktu yang disimpan tersebut
-          start.setHours(
-            startDate.hour,
-            startDate.minute
-          );
+
+        if (lastSelectedTime.current !== null) { 
+          // lastSelectedTime.current === null ketika form ini dimuat untuk mode edit
+
+          let startDate = lastSelectedTime.current.start_date;
+          if (startDate === null) {
+            // jika waktu simpanan null, berarti waktu yang sebelumnya akan disimpan itu tidak valid.
+            // reset waktu jadi 00:00:00
+            start.setHours(0, 0, 0);
+          } else {
+            // jika waktu simpanan ada, set waktu mulai jadi sesuai dengan waktu yang disimpan tersebut
+            start.setHours(
+              startDate.hour,
+              startDate.minute
+            );
+          }
         }
         setStartDate(start);
       } else {
@@ -1474,17 +1621,24 @@ function CreateEventDialog(props) {
         // jika tanggal selesai juga valid,
 
         let end = new Date(end_date.getTime()); // membuat salinan
-        let endDate = lastSelectedTime.current.end_date;
-        if (endDate === null) {
-          // jika waktu simpanan null, berarti waktu yang sebelumnya akan disimpan itu tidak valid.
-          // reset waktu jadi 23:59:59
-          end.setHours(23, 59, 59);
-        } else {
-          // jika waktu simpanan ada, set waktu selesai jadi sesuai dengan waktu yang disimpan tersebut
-          end.setHours(
-            endDate.hour,
-            endDate.minute
-          );
+
+        if (lastSelectedTime.current !== null) {
+          // lastSelectedTime.current === null ketika form ini dimuat untuk mode edit
+
+          let endDate = lastSelectedTime.current.end_date;
+          if (endDate === null) {
+            // jika waktu simpanan null, berarti waktu yang sebelumnya akan disimpan itu tidak valid.
+            // reset waktu jadi 23:59:00 
+            // (tidak diset jadi 23:59:59 karena 23:59:59 digunakan sebagai kriteria untuk menentukan apakah event yang diretrieve dari db itu   
+            // all day apa tidak / ada kode ky gini saat load form edit: if (time === 23:59:59) {all_day = true})
+            end.setHours(23, 59, 0);
+          } else {
+            // jika waktu simpanan ada, set waktu selesai jadi sesuai dengan waktu yang disimpan tersebut
+            end.setHours(
+              endDate.hour,
+              endDate.minute
+            );
+          }
         }
         setEndDate(end);
       } else {
@@ -1551,6 +1705,7 @@ function CreateEventDialog(props) {
     }
   };
 
+  // FORM
   const handleChangeName = (e) => {
     setErrors({ ...errors, name: undefined });
     setName(e.target.value);
@@ -1598,90 +1753,197 @@ function CreateEventDialog(props) {
 
   // LAMPIRAN
   const handleLampiranUpload = (e) => {
-    const files = e.target.files;
-    let temp = [...Array.from(fileLampiran), ...Array.from(files)];
-    let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > 10);
-    let file_to_upload = temp.filter(
-      (file) => file.size / Math.pow(10, 6) <= 10
-    );
+    if (eventDialogMode === "create") {
+      const files = e.target.files;
+      let temp = [...Array.from(fileLampiran), ...Array.from(files)];
+      let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > 10);
+      let file_to_upload = temp.filter(
+        (file) => file.size / Math.pow(10, 6) <= 10
+      );
+  
+      if (errors.lampiran_materi) {
+        // karena errornya ini berupa lampiran_materi
+        setErrors({ ...errors, lampiran_materi: null });
+      }
+      setFileLampiran(file_to_upload);
+  
+      if (over_limit.length > 0) {
+        showSnackbar("error", over_limit.length + " file melebihi batas 10MB!");
+      }
 
-    if (errors.lampiran_materi) {
-      // karena errornya ini berupa lampiran_materi
-      setErrors({ ...errors, lampiran_materi: null });
-    }
-    setFileLampiran(file_to_upload);
-    // setOverLimit(over_limit);
-    // setFileLimitSnackbar(over_limit.length > 0);
-
-    setSnackbarContent(over_limit.length + " file melebihi batas 10MB!");
-    setSeverity("error");
-    setOpenSnackbar(over_limit.length > 0);
-
-    document.getElementById("file_control").value = null;
-  };
-
-  const listFileChosen = () => {
-    let temp = [];
-    if (fileLampiran.length > 0) {
-      for (let i = 0; i < fileLampiran.length; i++) {
-        temp.push(
-          <LampiranFile
-            classes={classes}
-            name={fileLampiran[i].name}
-            filetype={fileType(fileLampiran[i].name)}
-            handleLampiranDelete={handleLampiranDelete}
-            i={i}
-          />
+      document.getElementById("file_control").value = null;
+    } else if (eventDialogMode === "edit") {
+      const files = Array.from(e.target.files);
+      if (fileLampiran.length === 0) {
+        let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+        let allowed_file = files.filter(
+          (file) => file.size / Math.pow(10, 6) <= 10
         );
+        setFileLampiran(allowed_file);
+        setFileLampiranToAdd(allowed_file);
+
+        if (over_limit.length > 0) {
+          showSnackbar("error", over_limit.length + " file melebihi batas 10MB!");
+        }
+      } else {
+        if (files.length !== 0) {
+          let allowed_file = files.filter(
+            (file) => file.size / Math.pow(10, 6) <= 10
+          );
+          let over_limit = files.filter(
+            (file) => file.size / Math.pow(10, 6) > 10
+          );
+
+          let temp = [...fileLampiran, ...allowed_file];
+          let file_to_upload = [...fileLampiranToAdd, ...allowed_file];
+          allowed_file = temp;
+
+          setFileLampiran(allowed_file);
+          setFileLampiranToAdd(file_to_upload);
+
+          if (over_limit.length > 0) {
+            showSnackbar("error", over_limit.length + " file melebihi batas 10MB!");
+          }
+        }
+        document.getElementById("file_control").value = null;
       }
     }
-    return temp;
   };
 
   const handleLampiranDelete = (e, i) => {
     e.preventDefault();
-    let temp = Array.from(fileLampiran);
-    temp.splice(i, 1);
-    setFileLampiran(temp);
+    if (eventDialogMode === "create") {
+      let temp = Array.from(fileLampiran);
+      temp.splice(i, 1);
+      setFileLampiran(temp);
+    } else if (eventDialogMode === "edit") {
+      let temp = Array.from(fileLampiran);
+      let tempToDelete = fileLampiranToDelete;
+      let tempToAdd = fileLampiranToAdd;
+      // For the one that has already been uploaded, there will be a filename field (yang belum adanya name)
+      // For the one that has already in DB
+      if (fileLampiran[i].filename !== undefined) {
+        // Remove the file in fileLampiranToDelete
+        tempToDelete.push(temp[i]);
+      } else {
+        // For the one that"s not yet in DB
+        // Remove the file in fileLampiranToAdd
+        for (var j = 0; j < tempToAdd.length; j++) {
+          if (tempToAdd[j].name === temp[i].name) {
+            tempToAdd.splice(j, 1);
+          }
+        }
+      }
+      temp.splice(i, 1);
+
+      setFileLampiran(temp);
+      setFileLampiranToAdd(tempToAdd);
+      setFileLampiranToDelete(tempToDelete);
+    }
   };
 
   // UPLOAD DIALOG
-  const [scrollPosition, setScrollPosition] = React.useState(0);
-  const [elementToScroll, setElementToScroll] = React.useState(null);
-
-  const measuredHeightRef = React.useCallback((node) => {
+  const uploadDialogScrollRef = React.useCallback((node) => {
     if (node !== null) {
-      setElementToScroll(node);
+      setUploadDialogScrollElement(node);
     }
   }, []);
 
   React.useEffect(() => {
-    if (elementToScroll) {
-      elementToScroll.scrollTo({
+    if (uploadDialogScrollElement) {
+      uploadDialogScrollElement.scrollTo({
         left: 0,
-        top: scrollPosition,
+        top: uploadDialogScrollPosition,
         behavior: "smooth"
       });
     }
-  }, [scrollPosition]);
+  }, [uploadDialogScrollPosition]);
 
-  const handleWheel = (e) => {
+  const handleUploadDialogWheel = (e) => {
     e.preventDefault();
-    let lowestScrollPosition = elementToScroll.scrollHeight - elementToScroll.offsetHeight;
-    let nextScrollPosition = (elementToScroll.scrollTop !== scrollPosition ? elementToScroll.scrollTop : scrollPosition) + e.deltaY;
+    let lowestScrollPosition = uploadDialogScrollElement.scrollHeight - uploadDialogScrollElement.offsetHeight;
+    let nextScrollPosition = (uploadDialogScrollElement.scrollTop !== uploadDialogScrollPosition ? uploadDialogScrollElement.scrollTop : uploadDialogScrollPosition) + e.deltaY;
     if (nextScrollPosition > lowestScrollPosition) {
-      setScrollPosition(lowestScrollPosition);
+      setUploadDialogScrollPosition(lowestScrollPosition);
     } else if (nextScrollPosition < 0) {
-      setScrollPosition(0);
+      setUploadDialogScrollPosition(0);
     } else {
-      setScrollPosition(nextScrollPosition);
+      setUploadDialogScrollPosition(nextScrollPosition);
+    }
+  };
+
+  // DELETE DIALOG
+  const deleteDialogScrollRef = React.useCallback((node) => {
+    if (node !== null) {
+      setDeleteDialogScrollElement(node);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (deleteDialogScrollElement) {
+      deleteDialogScrollElement.scrollTo({
+        left: 0,
+        top: deleteDialogScrollPosition,
+        behavior: "smooth"
+      });
+    }
+  }, [deleteDialogScrollPosition]);
+
+  const handleDeleteDialogWheel = (e) => {
+    e.preventDefault();
+    let lowestScrollPosition = deleteDialogScrollElement.scrollHeight - deleteDialogScrollElement.offsetHeight;
+    let nextScrollPosition = (deleteDialogScrollElement.scrollTop !== deleteDialogScrollPosition ? deleteDialogScrollElement.scrollTop : deleteDialogScrollPosition) + e.deltaY;
+    if (nextScrollPosition > lowestScrollPosition) {
+      setDeleteDialogScrollPosition(lowestScrollPosition);
+    } else if (nextScrollPosition < 0) {
+      setDeleteDialogScrollPosition(0);
+    } else {
+      setDeleteDialogScrollPosition(nextScrollPosition);
+    }
+  };
+
+  const handleDelete = () => {
+    deleteEvent(selectedEventId).then(() => {
+      handleCloseEventDialog();
+      showSnackbar("success", "Kegiatan berhasil dihapus");
+    })
+
+  };
+
+  const handleOpenDeleteDialog = () => {
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+
+  // OTHER
+  const handleClickEdit = () => {
+    handleCloseEventDialog();
+    setChangeDialog(true);
+  };
+
+  const handleClosingCheck = () => {
+    if (!(openUploadDialog && !uploadSuccess)) {
+      handleCloseEventDialog();
     }
   };
 
   return (
     <Dialog
-      open={openCreateDialog}
-      onClose={handleCloseCreateDialog}
+      onExited={() => { 
+        if (changeDialog) {
+          // open edit dialog
+          setChangeDialog(false);
+          handleOpenEditDialog();
+        } else {
+          // agar state komponen ini di-reset saat dialog ditutup
+          handleSetUnmountEventDialog();
+        }
+      }}
+      open={openEventDialog}
+      onClose={() => { handleClosingCheck() }}
       PaperComponent={fullScreen ? undefined : PaperComponent}
       maxWidth="sm"
       fullScreen={fullScreen}
@@ -1689,360 +1951,496 @@ function CreateEventDialog(props) {
       BackdropProps={{
         style: { backgroundColor: "transparent" }
       }}
-      classes={{
-        paper: classes.dialogPaper
-      }}
+      classes={{ paper: classes.dialogPaper }}
     >
-      <div className={classes.dialogTopDiv} id="drag-handle">
-        <Hidden smDown>
-          <IconButton className={classes.dialogTopIconButtons} edge="start">
-            <DragHandleIcon className={classes.dialogTopIcons} />
-          </IconButton>
-        </Hidden>
-        <IconButton className={classes.dialogTopIconButtons} edge="end" onClick={handleCloseCreateDialog}>
-          <CloseIcon className={classes.dialogTopIcons} />
-        </IconButton>
-      </div>
-      <DialogTitle disableTypography>
-        <Typography variant="h5" gutterBottom>
-          <b>Buat Kegiatan</b>
-        </Typography>
-        <Typography color="textSecondary">
-          Tambahkan keterangan untuk membuat kegiatan.
-        </Typography>
-      </DialogTitle>
-      <DialogContent
-        dividers
-        className={classes.dialogContent}
-      >
-        <div style={{ flexGrow: "1", height: "0" }}>
-          <MiniUploadDialog handleWheel={handleWheel} />
-        </div>
-        <div ref={measuredHeightRef} className={classes.dialogScrollableDiv}>
-        <Grid container direction="column" spacing={4}>
-          {/* <Grid item>
-            <Button
-              color="primary"
-              onClick={() => {
-                if (errors.name) {
-                  setErrors({ ...errors, name: undefined, description: undefined, target_role: undefined })
-                } else {
-                  setErrors({ ...errors, name: "error error error error error error error error error error error error error error error ", description: "error", target_role: "error" })
-                }
-              }}>SHOW ERROR</Button>
-          </Grid> */}
-
-          {/* REVIEW dialog - 1. judul*/}
-          <Grid item>
-            <Typography component="label" for="name" color="primary" className={classes.formLabels}>
-              <EventNoteIcon className={classes.formIcons} />
-              Judul
-            </Typography>
-            <TextField
-              id="name"
-              fullWidth
-              variant="outlined"
-              type="text"
-              placeholder="Isi Judul"
-              value={name}
-              error={errors.name}
-              onChange={(e) => { handleChangeName(e) }}
-            />
-            {errors.name
-              ?
-              <div className={classes.zeroHeightHelperText}>
-                <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
-              </div>
-              : null}
-          </Grid>
-
-          {/* REVIEW dialog - 2. lokasi*/}
-          <Grid item>
-            <Typography component="label" for="location" color="primary" className={classes.formLabels}>
-              <LocationOnIcon className={classes.formIcons} />
-              Lokasi
-            </Typography>
-            <TextField
-              id="location"
-              fullWidth
-              variant="outlined"
-              type="text"
-              placeholder="Isi Lokasi"
-              value={location}
-              onChange={(e) => { setLocation(e.target.value) }}
-            />
-          </Grid>
-
-          <Grid item container spacing={2} className={classes.mdUpZeroBottomPadding}>
-            {/* REVIEW dialog - 3. waktu mulai*/}
-            <Grid item xs={12} md={6} className={classes.smDownZeroBottomPadding}>
-              <Typography
-                component="label"
-                for="eventStart"
-                color="primary"
-                className={classes.formLabels}
+      {eventDialogMode === "view"
+        ?
+        <>
+          <div className={classes.view_dialogTopDiv}>
+            <LightTooltip title="Sunting">
+              <IconButton 
+                className={classes.dialogTopIconButtons}
+                onClick={() => { handleClickEdit() }}
               >
-                <TimerIcon className={classes.formIcons} />
-                Waktu Mulai
-              </Typography>
-              {/* {start_date && isValidDateTime(start_date) ? start_date.toLocaleString() : null} */}
-              <MuiPickersUtilsProvider
-                locale={lokal}
-                utils={DateFnsUtils}
+                <EditOutlinedIcon className={classes.dialogTopIcons} />
+              </IconButton>
+            </LightTooltip>
+            <LightTooltip title="Hapus" style={{ marginRight: "24px" }}>
+              <IconButton 
+                className={classes.dialogTopIconButtons}
+                onClick={() => { handleOpenDeleteDialog() }}
               >
-                <KeyboardDatePicker
-                  okLabel="Simpan"
-                  cancelLabel="Batal"
-                  disablePast
-                  onChange={(date) => { handleStartDateChange(date) }}
-                  open={openStartDatePicker}
-                  onClose={() => { setOpenStartDatePicker(false) }}
-                  style={{ display: "none" }}
-                />
-                <KeyboardDateTimePicker
-                  id="eventStart"
-                  inputRef={startDatePicker}
-                  fullWidth
-                  disablePast
-                  inputVariant="outlined"
-                  format={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy - HH:mm"}
-                  ampm={false}
-                  okLabel="Simpan"
-                  cancelLabel="Batal"
-                  minDateMessage="Batas waktu harus waktu yang akan datang"
-                  invalidDateMessage="Format tanggal tidak benar"
-                  value={start_date}
-                  placeholder="Isi Waktu Mulai"
-                  onChange={(date) => { handleStartDateChange(date) }}
-                  helperText={null}
-                  onError={(err) => {
-                    if (errors.start_date_picker !== err) {
-                      setErrors({ ...errors, start_date_picker: err });
-                    }
-                  }}
-                  open={openStartDateTimePicker}
-                  onOpen={() => { handleOpenStartPicker(isAllDay) }}
-                  onClose={() => { handleCloseStartPicker(isAllDay) }}
-                />
-                <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
-                  {errors.start_date_submission
-                    ? <FormHelperText variant="outlined" error>{errors.start_date_submission}</FormHelperText>
-                    : errors.start_date_picker
-                      ? <FormHelperText variant="outlined" error>{errors.start_date_picker}</FormHelperText>
-                      : null}
-                  {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang 
-                    untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
-                  <FormGroup style={{ width: "fit-content" }}>
-                    <FormControlLabel
-                      label={
-                        <Typography color="textSecondary">
-                          Sepanjang Hari
-                        </Typography>
-                      }
-                      control={
-                        <Checkbox
-                          onChange={() => { handleCheckAllDay() }}
-                          color="primary"
-                          size="small"
-                          checked={isAllDay}
-                        />
-                      }
-                    />
-                  </FormGroup>
-                </div>
-                <Grid item style={{ padding: "0", width: "0", visibility: "hidden" }}>
-                  <FormHelperText variant="outlined">{"\u200B"}</FormHelperText>
-                  <Checkbox size="small" disabled />
+                <DeleteOutlinedIcon className={classes.dialogTopIcons} />
+              </IconButton>
+            </LightTooltip>
+            <IconButton 
+              edge="end" 
+              className={classes.dialogTopIconButtons} 
+              onClick={() => { handleCloseEventDialog() }}
+            >
+              <CloseIcon className={classes.dialogTopIcons} />
+            </IconButton>
+          </div>
+          <div className={classes.viewDialogBottomDiv}>
+            <CustomDeleteDialog
+              handleWheel={handleDeleteDialogWheel}
+              openDeleteDialog={openDeleteDialog}
+              handleCloseDeleteDialog={handleCloseDeleteDialog}
+              eventName={name}
+              handleDelete={handleDelete}
+            />
+            <div ref={deleteDialogScrollRef} className={classes.viewDialogScrollableDiv}>
+                
+              <Grid container direction="column" spacing="4" style={{ marginTop: "0", marginBottom: "0" }}>
+                <Grid item style={{ paddingTop: "0", paddingBottom: "0" }}>
+                  <Typography variant="h5" gutterBottom>
+                    <b>{name}</b>
+                  </Typography>
                 </Grid>
-              </MuiPickersUtilsProvider>
-            </Grid>
-            {/* REVIEW dialog - 4. waktu selesai*/}
-            <Grid item xs={12} md={6} className={classes.smDownZeroTopPadding}>
-              <Typography
-                component="label"
-                for="eventEnd"
-                color="primary"
-                className={classes.formLabels}
-              >
-                <TimerOffIcon className={classes.formIcons} />
-                Waktu Selesai
-              </Typography>
-              {/* {end_date && isValidDateTime(end_date) ? end_date.toLocaleString() : null} */}
-              <MuiPickersUtilsProvider
-                locale={lokal}
-                utils={DateFnsUtils}
-              >
-                <KeyboardDatePicker
-                  okLabel="Simpan"
-                  cancelLabel="Batal"
-                  disablePast
-                  minDate={start_date}
-                  onChange={(date) => { handleEndDateChange(date) }}
-                  open={openEndDatePicker}
-                  onClose={() => setOpenEndDatePicker(false)}
-                  style={{ display: "none" }}
-                />
-                <KeyboardDateTimePicker
-                  id="eventEnd"
-                  inputRef={endDatePicker}
-                  fullWidth
-                  disablePast
-                  inputVariant="outlined"
-                  format={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy - HH:mm"}
-                  ampm={false}
-                  okLabel="Simpan"
-                  cancelLabel="Batal"
-                  minDate={start_date}
-                  minDateMessage="Batas waktu harus setelah Waktu Mulai"
-                  invalidDateMessage="Format tanggal tidak benar"
-                  value={end_date}
-                  placeholder="Isi Waktu Selesai"
-                  onChange={(date) => { handleEndDateChange(date) }}
-                  helperText={null}
-                  onError={(err) => {
-                    if (errors.end_date_picker !== err) {
-                      setErrors({ ...errors, end_date_picker: err });
-                    }
-                  }}
-                  open={openEndDateTimePicker}
-                  onOpen={() => { handleOpenEndPicker(isAllDay) }}
-                  onClose={() => { handleCloseEndPicker(isAllDay) }}
-                />
-                <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
-                  {errors.end_date_submission
-                    ? <FormHelperText variant="outlined" error>{errors.end_date_submission}</FormHelperText>
-                    : errors.end_date_picker
-                      ? <FormHelperText variant="outlined" error>{errors.end_date_picker}</FormHelperText>
-                      : null}
-                </div>
-              </MuiPickersUtilsProvider>
-            </Grid>
-          </Grid>
-
-          {/* REVIEW dialog - 6. pihak penerima*/}
-          <Grid item className={classes.mdUpZeroTopPadding} >
-            <Typography
-              component="label"
-              for="target_role"
-              color="primary"
-              className={classes.formLabels}
-            >
-              <SupervisorAccountIcon className={classes.formIcons} />
-              Pihak Penerima
-            </Typography>
-            <FormControl
-              variant="outlined"
-              fullWidth
-              error={errors.to}
-            >
-              <Select
-                id="target_role"
-                multiple
-                displayEmpty
-                value={target_role}
-                onChange={(e) => { handleChangeTargetRole(e) }}
-                renderValue={(selected) => (
+                {location.length === 0
+                  ? null
+                  :
+                  <Grid item style={{ paddingTop: "0" }}>
+                    <Typography className={classes.formLabels}>
+                      <LocationOnIcon className={classes.formIcons} />
+                      {location}
+                    </Typography>
+                  </Grid>
+                }
+                <Grid item>
+                  <Typography className={classes.formLabels}>
+                    <TimerIcon className={classes.formIcons} />
+                    {moment(start_date)
+                      .locale("id")
+                      .format("dddd, DD MMMM YYYY  ∙  HH:mm")}
+                  </Typography>
+                  <Typography className={classes.formLabels} style={{ marginTop: "8px" }}>
+                    <TimerOffIcon className={classes.formIcons} />
+                    {moment(end_date)
+                      .locale("id")
+                      .format("dddd, DD MMMM YYYY  ∙  HH:mm")}
+                  </Typography>
+                </Grid>
+                <Grid container item direction="row" alignItems="center">
+                  <SupervisorAccountIcon className={classes.formIcons} />
                   <div className={classes.chips}>
-                    {selected.length === 0
-                      ? 
-                      // input ini hanya digunakan sebagai placeholder
-                      <Input
-                        disableUnderline
-                        placeholder="Pilih Pihak Penerima"
-                        readOnly
-                        classes={{ input: classes.dummyInput }}
+                    {target_role.map((role) => (
+                      <Chip
+                        key={role}
+                        className={`${classes.chip} ${classes.viewDialogChip}`}
+                        label={roleConverter[role]}
                       />
-                      : 
-                      selected.map((value) => (
-                        <Chip key={value} label={value} className={classes.chip} />
-                      ))}
+                    ))}
                   </div>
-                )}
+                </Grid>
+                <Grid item>
+                  <Typography
+                    align="justify"
+                    style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                  >
+                    {description}
+                  </Typography>
+                </Grid>
+                <Grid item container spacing={1}>
+                  {
+                    fileLampiran.length === 0
+                      ? null
+                      :
+                      fileLampiran.map((lampiran) => (
+                        <LampiranFile
+                          classes={classes}
+                          file_id={lampiran._id}
+                          onPreviewFile={viewFileEvent}
+                          onDownloadFile={downloadFileEvent}
+                          filename={lampiran.filename}
+                          filetype={fileType(lampiran.filename)}
+                          eventDialogMode={eventDialogMode}
+                        />
+                      ))
+                  }
+                </Grid>
+              </Grid>
+            </div>
+          </div>
+        </>
+        :
+        <>
+          <div className={classes.create_edit_dialogTopDiv} id="drag-handle">
+            <Hidden smDown>
+              <IconButton
+                edge="start"
+                className={classes.dialogTopIconButtons}
               >
-                {["Murid", "Guru", "Pengelola"].map((role) => (
-                  <MenuItem key={role} value={role}>
-                    <Checkbox checked={target_role.includes(role)} />
-                    <ListItemText primary={role} />
-                  </MenuItem>
-                ))}
-              </Select>
-              {errors.to
-                ?
-                <div className={classes.zeroHeightHelperText}>
-                  <FormHelperText variant="outlined" error>{errors.to}</FormHelperText>
-                </div>
-                : null}
-            </FormControl>
-          </Grid>
-
-          {/* REVIEW dialog - 7. deskripsi*/}
-          <Grid item>
-            <Typography component="label" for="description" color="primary" className={classes.formLabels}>
-              <SubjectIcon className={classes.formIcons} />
-              Deskripsi
+                <DragHandleIcon className={classes.dialogTopIcons} />
+              </IconButton>
+            </Hidden>
+            <IconButton 
+              edge="end"
+              className={classes.dialogTopIconButtons}
+              style={(openUploadDialog && !uploadSuccess) ? { visibility: "hidden" } : undefined}
+              onClick={() => { if (!(openUploadDialog && !uploadSuccess)) { handleCloseEventDialog() } }}
+            >
+              <CloseIcon className={classes.dialogTopIcons} />
+            </IconButton>
+          </div>
+          <DialogTitle disableTypography>
+            <Typography variant="h5" gutterBottom>
+              <b>{eventDialogMode === "create" ? "Buat Kegiatan" : "Sunting Kegiatan"}</b>
             </Typography>
-            <TextField
-              id="description"
-              fullWidth
-              variant="outlined"
-              type="text"
-              placeholder="Isi Deskripsi"
-              multiline
-              value={description}
-              error={errors.description}
-              onChange={(e) => { handleChangeDescription(e) }}
+            <Typography color="textSecondary">
+              {eventDialogMode === "create"
+                ? "Tambahkan keterangan untuk membuat kegiatan." 
+                : "Ganti keterangan untuk menyunting kegiatan."}
+            </Typography>
+          </DialogTitle>
+          <DialogContent
+            dividers
+            className={classes.dialogContent}
+          >
+            <CustomUploadDialog 
+              handleWheel={handleUploadDialogWheel} 
+              openUploadDialog={openUploadDialog}
+              handleUploadSuccess={handleCloseEventDialog}
+              uploadSuccess={uploadSuccess}
+              messageUploading={eventDialogMode === "create" ? "Kegiatan sedang dibuat" : "Kegiatan sedang disunting"}
+              messageSuccess={eventDialogMode === "create" ? "Kegiatan telah dibuat" : "Kegiatan telah disunting"}
             />
-            {errors.description
-              ?
-              <div className={classes.zeroHeightHelperText}>
-                <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
-              </div>
-              : null}
-          </Grid>
+            <div ref={uploadDialogScrollRef} className={classes.createEditDialogScrollableDiv}>
+              <Grid container direction="column" spacing={4}>
+                {/* <Grid item>
+                  <Button
+                    color="primary"
+                    onClick={() => {
+                      if (errors.name) {
+                        setErrors({ ...errors, name: undefined, description: undefined, target_role: undefined })
+                      } else {
+                        setErrors({ ...errors, name: "error error error error error error error error error error error error error error error ", description: "error", target_role: "error" })
+                      }
+                    }}>SHOW ERROR</Button>
+                </Grid> */}
 
-          {/* REVIEW dialog - 8. tambah lampiran */}
-          <Grid item>
-            <input
-              id="file_control"
-              name="lampiran"
-              type="file"
-              accept="file/*"
-              multiple={true}
-              ref={lampiranUploader}
-              onChange={handleLampiranUpload}
-              style={{ display: "none" }}
-            />
+                <Grid item>
+                  <Typography component="label" for="name" color="primary" className={classes.formLabels}>
+                    <EventNoteIcon className={classes.formIcons} />
+                    Judul
+                  </Typography>
+                  <TextField
+                    id="name"
+                    fullWidth
+                    variant="outlined"
+                    type="text"
+                    placeholder="Isi Judul"
+                    value={name}
+                    error={errors.name}
+                    onChange={(e) => { handleChangeName(e) }}
+                  />
+                  {errors.name
+                    ?
+                    <div className={classes.zeroHeightHelperText}>
+                      <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
+                    </div>
+                    : null}
+                </Grid>
+
+                <Grid item>
+                  <Typography component="label" for="location" color="primary" className={classes.formLabels}>
+                    <LocationOnIcon className={classes.formIcons} />
+                    Lokasi
+                  </Typography>
+                  <TextField
+                    id="location"
+                    fullWidth
+                    variant="outlined"
+                    type="text"
+                    placeholder="Isi Lokasi"
+                    value={location}
+                    onChange={(e) => { setLocation(e.target.value) }}
+                  />
+                </Grid>
+
+                <Grid item container spacing={2} className={classes.mdUpZeroBottomPadding}>
+                  <Grid item xs={12} md={6} className={classes.smDownZeroBottomPadding}>
+                    <Typography
+                      component="label"
+                      for="eventStart"
+                      color="primary"
+                      className={classes.formLabels}
+                    >
+                      <TimerIcon className={classes.formIcons} />
+                      Waktu Mulai
+                    </Typography>
+                    <MuiPickersUtilsProvider
+                      locale={lokal}
+                      utils={DateFnsUtils}
+                    >
+                      <KeyboardDatePicker
+                        okLabel="Simpan"
+                        cancelLabel="Batal"
+                        disablePast
+                        onChange={(date) => { handleStartDateChange(date) }}
+                        open={openStartDatePicker}
+                        onClose={() => { setOpenStartDatePicker(false) }}
+                        style={{ display: "none" }}
+                      />
+                      <KeyboardDateTimePicker
+                        id="eventStart"
+                        inputRef={startDatePicker}
+                        fullWidth
+                        disablePast
+                        inputVariant="outlined"
+                        format={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy - HH:mm"}
+                        ampm={false}
+                        okLabel="Simpan"
+                        cancelLabel="Batal"
+                        minDateMessage="Batas waktu harus waktu yang akan datang"
+                        invalidDateMessage="Format tanggal tidak benar"
+                        value={start_date}
+                        placeholder="Isi Waktu Mulai"
+                        onChange={(date) => { handleStartDateChange(date) }}
+                        helperText={null}
+                        onError={(err) => {
+                          if (errors.start_date_picker !== err) {
+                            setErrors({ ...errors, start_date_picker: err });
+                          }
+                        }}
+                        open={openStartDateTimePicker}
+                        onOpen={() => { handleOpenStartPicker(isAllDay) }}
+                        onClose={() => { handleCloseStartPicker(isAllDay) }}
+                      />
+                      <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
+                        {errors.start_date_submission
+                          ? <FormHelperText variant="outlined" error>{errors.start_date_submission}</FormHelperText>
+                          : errors.start_date_picker
+                            ? <FormHelperText variant="outlined" error>{errors.start_date_picker}</FormHelperText>
+                            : null}
+                        {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang 
+                          untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
+                        <FormGroup style={{ width: "fit-content" }}>
+                          <FormControlLabel
+                            label={
+                              <Typography color="textSecondary">
+                                Sepanjang Hari
+                              </Typography>
+                            }
+                            control={
+                              <Checkbox
+                                onChange={() => { handleCheckAllDay() }}
+                                color="primary"
+                                size="small"
+                                checked={isAllDay}
+                              />
+                            }
+                          />
+                        </FormGroup>
+                      </div>
+                      <Grid item style={{ padding: "0", width: "0", visibility: "hidden" }}>
+                        <FormHelperText variant="outlined">{"\u200B"}</FormHelperText>
+                        <Checkbox size="small" disabled />
+                      </Grid>
+                    </MuiPickersUtilsProvider>
+                  </Grid>
+                  <Grid item xs={12} md={6} className={classes.smDownZeroTopPadding}>
+                    <Typography
+                      component="label"
+                      for="eventEnd"
+                      color="primary"
+                      className={classes.formLabels}
+                    >
+                      <TimerOffIcon className={classes.formIcons} />
+                      Waktu Selesai
+                    </Typography>
+                    <MuiPickersUtilsProvider
+                      locale={lokal}
+                      utils={DateFnsUtils}
+                    >
+                      <KeyboardDatePicker
+                        okLabel="Simpan"
+                        cancelLabel="Batal"
+                        disablePast
+                        minDate={start_date}
+                        onChange={(date) => { handleEndDateChange(date) }}
+                        open={openEndDatePicker}
+                        onClose={() => setOpenEndDatePicker(false)}
+                        style={{ display: "none" }}
+                      />
+                      <KeyboardDateTimePicker
+                        id="eventEnd"
+                        inputRef={endDatePicker}
+                        fullWidth
+                        disablePast
+                        inputVariant="outlined"
+                        format={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy - HH:mm"}
+                        ampm={false}
+                        okLabel="Simpan"
+                        cancelLabel="Batal"
+                        minDate={start_date}
+                        minDateMessage="Batas waktu harus setelah Waktu Mulai"
+                        invalidDateMessage="Format tanggal tidak benar"
+                        value={end_date}
+                        placeholder="Isi Waktu Selesai"
+                        onChange={(date) => { handleEndDateChange(date) }}
+                        helperText={null}
+                        onError={(err) => {
+                          if (errors.end_date_picker !== err) {
+                            setErrors({ ...errors, end_date_picker: err });
+                          }
+                        }}
+                        open={openEndDateTimePicker}
+                        onOpen={() => { handleOpenEndPicker(isAllDay) }}
+                        onClose={() => { handleCloseEndPicker(isAllDay) }}
+                      />
+                      <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
+                        {errors.end_date_submission
+                          ? <FormHelperText variant="outlined" error>{errors.end_date_submission}</FormHelperText>
+                          : errors.end_date_picker
+                            ? <FormHelperText variant="outlined" error>{errors.end_date_picker}</FormHelperText>
+                            : null}
+                      </div>
+                    </MuiPickersUtilsProvider>
+                  </Grid>
+                </Grid>
+
+                <Grid item className={classes.mdUpZeroTopPadding} >
+                  <Typography
+                    component="label"
+                    for="target_role"
+                    color="primary"
+                    className={classes.formLabels}
+                  >
+                    <SupervisorAccountIcon className={classes.formIcons} />
+                    Pihak Penerima
+                  </Typography>
+                  <FormControl
+                    variant="outlined"
+                    fullWidth
+                    error={errors.to}
+                  >
+                    <Select
+                      id="target_role"
+                      multiple
+                      displayEmpty
+                      value={target_role}
+                      onChange={(e) => { handleChangeTargetRole(e) }}
+                      renderValue={(selected) => (
+                        <div className={classes.chips}>
+                          {selected.length === 0
+                            ? 
+                            // input ini hanya digunakan sebagai placeholder
+                            <Input
+                              disableUnderline
+                              placeholder="Pilih Pihak Penerima"
+                              readOnly
+                              classes={{ input: classes.dummyInput }}
+                            />
+                            : 
+                            selected.map((role) => {
+                              return (
+                                <Chip
+                                  key={role}
+                                  className={classes.chip}
+                                  label={roleConverter[role]}
+                                />
+                              )
+                            })}
+                        </div>
+                      )}
+                    >
+                      {["Student", "Teacher", "Admin"].map((role) => (
+                        <MenuItem key={role} value={role}>
+                          <Checkbox checked={target_role.includes(role)} color="primary"/>
+                          <ListItemText primary={roleConverter[role]} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.to
+                      ?
+                      <div className={classes.zeroHeightHelperText}>
+                        <FormHelperText variant="outlined" error>{errors.to}</FormHelperText>
+                      </div>
+                      : null}
+                  </FormControl>
+                </Grid>
+
+                <Grid item>
+                  <Typography component="label" for="description" color="primary" className={classes.formLabels}>
+                    <SubjectIcon className={classes.formIcons} />
+                    Deskripsi
+                  </Typography>
+                  <TextField
+                    id="description"
+                    fullWidth
+                    variant="outlined"
+                    type="text"
+                    placeholder="Isi Deskripsi"
+                    multiline
+                    value={description}
+                    error={errors.description}
+                    onChange={(e) => { handleChangeDescription(e) }}
+                  />
+                  {errors.description
+                    ?
+                    <div className={classes.zeroHeightHelperText}>
+                      <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                    </div>
+                    : null}
+                </Grid>
+
+                <Grid item>
+                  <input
+                    id="file_control"
+                    name="lampiran"
+                    type="file"
+                    accept="file/*"
+                    multiple={true}
+                    ref={lampiranUploader}
+                    onChange={handleLampiranUpload}
+                    style={{ display: "none" }}
+                  />
+                  <Button
+                    variant="contained"
+                    startIcon={<AttachFileIcon />}
+                    onClick={() => { lampiranUploader.current.click() }}
+                    className={classes.addFileButton}
+                  >
+                    Tambah Lampiran Berkas
+                  </Button>
+                  <Grid container spacing={1} style={{ marginTop: "10px" }}>
+                    {fileLampiran.length === 0
+                      ? null
+                      :
+                      fileLampiran.map((lampiran, index) => (
+                        <LampiranFile
+                          classes={classes}
+                          filename={lampiran.name ?? lampiran.filename}
+                          filetype={fileType(lampiran.name ?? lampiran.filename)}
+                          handleLampiranDelete={handleLampiranDelete}
+                          i={index}
+                          eventDialogMode={eventDialogMode}
+                        />
+                      ))
+                    }
+                  </Grid>
+                </Grid>
+              </Grid>
+            </div>
+          </DialogContent>
+          <DialogActions style={{ padding: "16px 24px" }}>
             <Button
               variant="contained"
-              startIcon={<AttachFileIcon />}
-              onClick={() => lampiranUploader.current.click()}
-              className={classes.addFileButton}
+              className={eventDialogMode === "create" ? classes.createEventButton : classes.editEventButton}
+              disabled={openUploadDialog}
+              onClick={() => { eventDialogMode === "create" ? handleCreateEvent() : handleUpdateEvent() }}
             >
-              Tambah Lampiran Berkas
+              {eventDialogMode === "create" ? "Buat" : "Sunting"}
             </Button>
-            <Grid container spacing={1} style={{ marginTop: "10px" }}>
-              {listFileChosen()}
-            </Grid>
-          </Grid>
-
-        </Grid>
-        </div>
-      </DialogContent>
-      <DialogActions style={{ padding: "16px 24px" }}>
-        <Button
-          variant="contained"
-          className={classes.createEventButton}
-          onClick={onSubmit}
-        >
-          Buat
-        </Button>
-      </DialogActions>
+          </DialogActions>
+        </>
+      }
     </Dialog>
   );
 }
 
-// REVIEW MiniUploadDialog
-function MiniUploadDialog(props) {
+function CustomUploadDialog(props) {
   const useStyles = makeStyles((theme) => ({
     paper: {
       width: "300px",
@@ -2061,7 +2459,9 @@ function MiniUploadDialog(props) {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      overflow: "hidden"
+      overflow: "hidden",
+      width: "100%", 
+      height: "100%"
     },
     uploadSuccessIcon: {
       color: "green",
@@ -2080,57 +2480,153 @@ function MiniUploadDialog(props) {
     },
   }));
   const classes = useStyles();
-  const { handleWheel, width, height} = props;
-  
-  const messageUploading = "Kegiatan sedang dibuat";
-  const messageSuccess = "Kegiatan telah dibuat";
-  let success = false;
-  let close = false;
-
-  const handleCloseUploadDialog = () => {
-    close = true;
-  };
+  const { 
+    handleWheel,
+    openUploadDialog,
+    messageUploading,
+    messageSuccess,
+    uploadSuccess,
+    handleUploadSuccess
+  } = props;
 
   return (
-    <div
-      style={close ? { display: "none" } : { width: "100%", height: "100%"}}
-      className={`${classes.backdrop}`}
-      onWheel={(event) => { handleWheel(event) }}
-    >
-      <Paper className={`${classes.paper} MuiPaper-elevation24`}>
-      <Grid item>
-        <Typography variant="h6" align="center" gutterBottom>
-          {!success ? messageUploading : messageSuccess}
-        </Typography>
-      </Grid>
-      <Grid item>
-        {!success ? (
-          <CircularProgress />
-        ) : (
-          <CheckCircleIcon className={classes.uploadSuccessIcon} />
-        )}
-      </Grid>
-      <Grid item>
-        {!success ? (
-          <Typography variant="body2" align="center" gutterBottom>
-            <b>Mohon tunggu sebentar</b>
-          </Typography>
-        ) : (
-          <Button
-            variant="contained"
-            className={classes.uploadFinishButton}
-            onClick={handleCloseUploadDialog}
-          >
-            Selesai
-          </Button>
-        )}
-      </Grid>
-      </Paper>
-    </div>
+    <Fade in={openUploadDialog} /* ini sebenarnya ga terpakai karena upload dialog dibuat tutup bersamaan dengan parent dialognya */>
+      <div
+        className={classes.backdrop}
+        onWheel={(event) => { handleWheel(event) }}
+      >
+        <Paper className={`${classes.paper} MuiPaper-elevation24`}>
+          <Grid item>
+            <Typography variant="h6" align="center" gutterBottom>
+              {!uploadSuccess ? messageUploading : messageSuccess}
+            </Typography>
+          </Grid>
+          <Grid item>
+            {!uploadSuccess ? (
+              <CircularProgress />
+            ) : (
+              <CheckCircleIcon className={classes.uploadSuccessIcon} />
+            )}
+          </Grid>
+          <Grid item>
+            {!uploadSuccess ? (
+              <Typography variant="body2" align="center" gutterBottom>
+                <b>Mohon tunggu sebentar</b>
+              </Typography>
+            ) : (
+              <Button
+                variant="contained"
+                className={classes.uploadFinishButton}
+                onClick={() => { handleUploadSuccess() }}
+              >
+                Selesai
+              </Button>
+            )}
+          </Grid>
+        </Paper>
+      </div>
+    </Fade>
   );
 }
 
-// REVIEW PaperComponent
+function CustomDeleteDialog(props) {
+  const useStyles = makeStyles((theme) => ({
+    paper: {
+      width: "300px",
+      maxWidth: "100%",
+      minHeight: "175px",
+      padding: "15px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      alignItems: "center"
+    },
+    backdrop: {
+      backgroundColor: "rgba(0,0,0,0.5)",
+      position: "absolute",
+      zIndex: "1",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      overflow: "hidden",
+      width: "100%",
+      height: "100%"
+    },
+    dialogDeleteButton: {
+      width: "125px",
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+      border: `1px solid ${theme.palette.error.main}`,
+      "&:focus, &:hover": {
+        backgroundColor: theme.palette.error.dark,
+        color: "white",
+        border: `1px solid ${theme.palette.error.dark}`,
+      },
+    },
+    dialogCancelButton: {
+      width: "125px",
+      backgroundColor: "white",
+      color: theme.palette.error.main,
+      border: `1px solid ${theme.palette.error.main}`,
+      "&:focus, &:hover": {
+        backgroundColor: "white",
+        color: theme.palette.error.dark,
+        border: `1px solid ${theme.palette.error.dark}`,
+      },
+    },
+  }));
+  const classes = useStyles();
+  const {
+    handleWheel,
+    openDeleteDialog,
+    handleCloseDeleteDialog,
+    handleDelete,
+    eventName
+  } = props;
+
+  return (
+    <Fade in={openDeleteDialog}>
+      <div
+        className={classes.backdrop}
+        onWheel={(event) => { handleWheel(event) }}
+      >
+        <Paper className={`${classes.paper} MuiPaper-elevation24`}>
+          <Grid item>
+            <Typography variant="h6" align="center" gutterBottom>
+              Hapus Kegiatan berikut?
+            </Typography>
+          </Grid>
+          <Grid item container direction="column" alignItems="center">
+            <Typography align="center" gutterBottom>
+              <b>{eventName}</b>
+            </Typography>
+          </Grid>
+          <Grid container spacing={2} justify="center" alignItems="center">
+            <Grid item>
+              <Button
+                onClick={() => { handleDelete() }}
+                startIcon={<DeleteOutlinedIcon />}
+                className={classes.dialogDeleteButton}
+              >
+                Iya
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                onClick={() => { handleCloseDeleteDialog() }}
+                startIcon={<CancelIcon />}
+                className={classes.dialogCancelButton}
+              >
+                Tidak
+              </Button>
+            </Grid>
+          </Grid>
+        </Paper>
+      </div>
+    </Fade>
+  );
+}
+
 function PaperComponent(props) {
   return (
     <Draggable handle="#drag-handle" cancel={'[class*="MuiDialogContent-root"]'}>
@@ -2139,14 +2635,22 @@ function PaperComponent(props) {
   );
 }
 
-// REVIEW LampiranFile
 function LampiranFile(props) {
-  const { classes, name, filetype, i, handleLampiranDelete } = props;
+  const { file_id, filename, filetype, i, handleLampiranDelete, onPreviewFile, classes, eventDialogMode } = props;
 
   return (
     <Grid item xs={12}>
       <Paper variant="outlined">
-        <ListItem disableRipple>
+        <ListItem 
+          button={eventDialogMode === "view"}
+          disableRipple
+          className={classes.listItem}
+          onClick={() => {
+            if (eventDialogMode === "view") {
+              onPreviewFile(file_id);
+            }
+          }}
+        >
           <ListItemAvatar>
             {filetype === "Word" ? (
               <Avatar className={classes.wordFileTypeIcon}>
@@ -2180,27 +2684,34 @@ function LampiranFile(props) {
           </ListItemAvatar>
           <ListItemText
             primary={
-              <LightTooltip title={name} placement="top">
-                <Typography>
-                  {name.length < 21
-                    ? name
-                    : `${name.slice(0, 15)}..${Path.extname(name)}`}
-                </Typography>
+              <LightTooltip title={filename} placement="top">
+                <div style={{ display: "flex" }}>
+                  <Typography noWrap>
+                    {filename.replace(Path.extname(filename), "")}
+                  </Typography>
+                  <Typography>
+                    {Path.extname(filename)}
+                  </Typography>
+                </div>
               </LightTooltip>
             }
             secondary={filetype}
           />
-          <LightTooltip title="Hapus Lampiran">
-            <IconButton
-              size="small"
-              className={classes.deleteIconButton}
-              onClick={(e) => {
-                handleLampiranDelete(e, i);
-              }}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </LightTooltip>
+          {eventDialogMode === "view"
+            ? null
+            :
+            <LightTooltip title="Hapus Lampiran">
+              <IconButton
+                size="small"
+                className={classes.deleteIconButton}
+                onClick={(e) => {
+                  handleLampiranDelete(e, i);
+                }}
+              >
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </LightTooltip>
+          }
         </ListItem>
       </Paper>
     </Grid>
@@ -2234,7 +2745,11 @@ function Calendar(props) {
   const { all_assessments } = props.assessmentsCollection;
 
   // REVIEW Calendar - STATES
-  const [openCreateDialog, setOpenCreateDialog] = React.useState(true);
+  // EVENT DIALOG
+  const [openEventDialog, setOpenEventDialog] = React.useState(false);
+  const [eventDialogMode, setEventDialogMode] = React.useState("");
+  const [unmountEventDialog, setUnmountEventDialog] = React.useState(false);
+  const selectedEventId = React.useRef("");
 
   // state ini akan bernilai null jika dan hanya jika pengguna belum mengklik tile kalender (belum memilih tanggal)
   const [selectedDate, setSelectedDate] = React.useState(null);
@@ -2245,14 +2760,6 @@ function Calendar(props) {
   const [severity, setSeverity] = React.useState("info");
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   
-  const handleOpenSnackbar = () => {
-    setOpenSnackbar(true);
-  };
-
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
-
   React.useEffect(() => {
     getAllEvents();
     getAllTask();
@@ -2274,6 +2781,46 @@ function Calendar(props) {
     });
     setRows(filteredEvents);
   }, [props.eventsCollection.allEvents, selectedDate]);
+
+  // SNACKBAR
+  const showSnackbar = (severity, snackbarContent) => {
+    setOpenSnackbar(true);
+    setSeverity(severity);
+    setSnackbarContent(snackbarContent);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+  // EVENT DIALOG
+  const handleOpenCreateDialog = () => {
+    setEventDialogMode("create");
+    handleUnsetUnmountEventDialog();
+    setOpenEventDialog(true);
+  }
+  const handleOpenEditDialog = () => {
+    setEventDialogMode("edit");
+    setOpenEventDialog(true);
+  }
+
+  const handleOpenViewDialog = () => {
+    setEventDialogMode("view");
+    handleUnsetUnmountEventDialog();
+    setOpenEventDialog(true);
+  }
+
+  const handleCloseEventDialog = () => {
+    setOpenEventDialog(false);
+  }
+
+  const handleSetUnmountEventDialog = () => {
+    setUnmountEventDialog(true);
+  }
+
+  const handleUnsetUnmountEventDialog = () => {
+    setUnmountEventDialog(false);
+  }
 
   function getSelectedDate() {
     return selectedDate;
@@ -2504,15 +3051,6 @@ function Calendar(props) {
   const [currentDateDayMode, setCurrentDateDayMode] = React.useState(today);
   const [currentDateMonthMode, setCurrentDateMonthMode] = React.useState(today);
   
-
-  const handleOpenCreateDialog = () => {
-    setOpenCreateDialog(true);
-  } 
-
-  const handleCloseCreateDialog = () => {
-    setOpenCreateDialog(false);
-  } 
-
   const handleChangeMode = (event) => {
     setMode(event.target.value);
   }
@@ -2776,14 +3314,26 @@ function Calendar(props) {
 
   return (
     <div className={classes.root}>
-      {/* REVIEW createeventdialog */}
-      <CreateEventDialog
-        openCreateDialog={openCreateDialog}
-        handleCloseCreateDialog={handleCloseCreateDialog}
-        setSnackbarContent={setSnackbarContent}
-        setSeverity={setSeverity}
-        setOpenSnackbar={setOpenSnackbar}
-      />
+      {unmountEventDialog
+        ? null
+        :
+        <EventDialog
+          getAllEvents={props.getAllEvents}
+          allEvents={props.eventsCollection.allEvents}
+          selectedEventId={selectedEventId}
+          eventDialogMode={eventDialogMode}
+          openEventDialog={openEventDialog}
+          handleCloseEventDialog={handleCloseEventDialog}
+          handleOpenEditDialog={handleOpenEditDialog}
+          handleSetUnmountEventDialog={handleSetUnmountEventDialog}
+          viewFileEvent={viewFileEvent}
+          showSnackbar={showSnackbar}
+        />
+      }
+      {/* TODO hapus (tombol dummy untuk buka view dialog)*/}
+      <Fab className={classes.greenFab} style={{ backgroundColor: "red" }} aria-label="add" size="small" onClick={() => { handleOpenViewDialog() }}>
+        <AddIcon fontSize="small" />
+      </Fab>
       <div className={classes.agendaContainer}>
         <AgendaToolbar
           classes={classes}
@@ -2900,13 +3450,13 @@ function Calendar(props) {
       <Snackbar
         open={openSnackbar}
         autoHideDuration={4000}
-        onClose={handleCloseSnackbar}
+        onClose={() => { handleCloseSnackbar() }}
       >
         <MuiAlert
           elevation={6}
           variant="filled"
           severity={severity}
-          onClose={handleCloseSnackbar}
+          onClose={() => { handleCloseSnackbar() }}
         >
           {snackbarContent}
         </MuiAlert>
@@ -2934,5 +3484,8 @@ export default connect(mapStateToProps, {
   getTasks,
   getAssessments,
   getStudents,
-  getTeachers
+  getTeachers,
+  getAllEvents,
+  getOneEvent,
+  viewFileEvent
 })(Calendar)

@@ -5,7 +5,6 @@ import {
 
 const initialState = {
 	selectedEvent: {},
-	eventsByAuthor: [],
 	allEvents: []
 };
 

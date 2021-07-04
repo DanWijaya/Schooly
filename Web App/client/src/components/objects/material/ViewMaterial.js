@@ -657,32 +657,6 @@ function ViewMaterial(props) {
     )
   }
 
-  // Dummy Komentar
-  // isSelfMade = true -> artinya komentar tersebut dibuat oleh user yang sedang login; false sebaliknya
-  const dummyComments = [
-    {
-      avatar: false,
-      name: "Nama Murid",
-      date: "1 Jan 2021, 18:35",
-      comment: "Jadi ceritanya pada interface tersebut dirancang sudah dipikirkan bahwa akan ada banyak sekali ragam Collections yang akan mengimplementasikan interface tersebut di class yang dibuat. Perancang interface menganggap bahwa bisa jadi ada collections jenis tertentu yang bisa jadi tidak membutuhkan methode tersebut, karenanya dia ditandai optional. Memang di Java bagaimanapun yang namanya methode di suatu interface tetap harus diimplementasikan di class yang menggunakannya namun bisa saja isinya \"kosong\" yaitu cuman mengirimkan UnsupportedOperationException.",
-      isSelfMade: true
-    },
-    {
-      avatar: false,
-      name: "Gibran",
-      date: "15 Feb 2021, 02:24",
-      comment: "Jadi ceritanya pada interface tersebut dirancang sudah dipikirkan bahwa akan ada banyak sekali ragam Collections yang akan mengimplementasikan interface tersebut di class yang dibuat.",
-      isSelfMade: false
-    },
-    {
-      avatar: false,
-      name: "Nama Murid",
-      date: "29 Mar 2022, 20:08",
-      comment: "Interface tersebut dapat dibuat dengan JavaFX",
-      isSelfMade: true
-    },
-  ]
-
   document.title = !selectedMaterials.name
     ? "Schooly | Lihat Materi"
     : `Schooly | ${selectedMaterials.name}`;

@@ -6,7 +6,7 @@ export const uploadFileEvents = (id, formData) => {
   return axios.post(`/api/files/events/upload/${id}`, formData);
 };
 
-export const getFileEvents = (id) => (dispatch) => {
+export const getFileEvents = (id) => {
   return axios
     .get(`/api/files/events/by_event/${id}`)
     .then((res) => {
@@ -16,7 +16,7 @@ export const getFileEvents = (id) => (dispatch) => {
     .catch((err) => new Error(err));
 };
 
-export const downloadFileEvent = (id) => (dispatch) => {
+export const downloadFileEvent = (id) => {
   return axios
     .get(`/api/files/events/download/${id}`)
     .then((res) => {
@@ -26,7 +26,7 @@ export const downloadFileEvent = (id) => (dispatch) => {
     .catch((err) => new Error("Error in getting S3 files"));
 };
 
-export const viewFileEvent= (id) => (dispatch) => {
+export const viewFileEvent = (id) => {
   axios
     .get(`/api/files/events/${id}`)
     .then((res) => {
