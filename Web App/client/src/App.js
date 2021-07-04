@@ -76,7 +76,6 @@ import SubmittedAssessmentList from "./components/objects/assessment/SubmittedAs
 import ViewAssessmentAnswer from "./components/objects/assessment/ViewAssessmentAnswer";
 //Event
 import Calendar from "./components/objects/events/Calendar";
-import ViewEvent from "./components/objects/events/ViewEvent";
 //Admin Only
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
@@ -596,11 +595,6 @@ class App extends Component {
                         exact
                         path="/kalender"
                         component={Calendar}
-                      />
-                      <PrivateRoute
-                        exact
-                        path="/kegiatan/:id"
-                        component={ViewEvent}
                       />
                       {/* Route Event Admin-Only*/}
                       <PrivateRoute
