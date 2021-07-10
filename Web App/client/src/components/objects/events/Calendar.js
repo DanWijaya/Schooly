@@ -113,6 +113,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Draggable from 'react-draggable';
 import Path from "path";
+import CustomLinkify from "../../misc/linkify/Linkify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -1184,7 +1185,8 @@ function EventDialog(props) {
         }
       },
       [theme.breakpoints.down("sm")]: {
-        justifyContent: "flex-end"
+        justifyContent: "flex-end",
+        backgroundColor: "transparent"
       }
     },
     view_dialogTopDiv: {
@@ -1434,12 +1436,21 @@ function EventDialog(props) {
       }
     }
 
+    let invert = {
+      Pengelola: "Admin",
+      Guru: "Teacher",
+      Murid: "Student"
+    };
+    let temp = target_role.map((elm) => roleConverter[elm]);
+    temp.sort();
+    let to = temp.map((elm) => invert[elm]);
+
     let eventData = {
       name,
       location,
       start_date,
       end_date,
-      to: target_role,
+      to,
       description
     };
     setOpenUploadDialog(true);
@@ -1467,12 +1478,21 @@ function EventDialog(props) {
       }
     }
 
+    let invert = {
+      Pengelola: "Admin",
+      Guru: "Teacher",
+      Murid: "Student"
+    };
+    let temp = target_role.map((elm) => roleConverter[elm]);
+    temp.sort();
+    let to = temp.map((elm) => invert[elm]);
+
     let eventData = {
       name,
       location,
       start_date,
       end_date,
-      to: target_role,
+      to,
       description
     };
     setOpenUploadDialog(true);
@@ -1830,6 +1850,8 @@ function EventDialog(props) {
         if (over_limit.length > 0) {
           showSnackbar("error", over_limit.length + " file melebihi batas 10MB!");
         }
+
+        document.getElementById("file_control").value = null;
       } else {
         if (files.length !== 0) {
           let allowed_file = files.filter(
@@ -2085,7 +2107,7 @@ function EventDialog(props) {
                     align="justify"
                     style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
                   >
-                    {description}
+                    <CustomLinkify text={description} />
                   </Typography>
                 </Grid>
                 <Grid item container spacing={1}>

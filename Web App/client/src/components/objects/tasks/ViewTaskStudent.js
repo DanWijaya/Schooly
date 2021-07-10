@@ -176,13 +176,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.error.main,
     color: "white",
   },
-  checkButton: {
-    borderRadius: "100%",
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    marginBottom: "10px",
-    marginRight: "10px",
-  },
   listItemPaperSubmitted: {
     backgroundColor: "#f2f2f2",
     marginTop: "5px",
@@ -232,6 +225,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   checkButton: {
+    borderRadius: "100%",
     backgroundColor: theme.palette.success.main,
     color: "white",
     marginTop: "6px",
@@ -339,6 +333,8 @@ function WorkFile(props) {
     onPreviewFile,
     handleOpenDeleteDialog,
     type,
+    handleLampiranDelete,
+    i
   } = props;
 
   let displayedName = file_name;
@@ -392,6 +388,15 @@ function WorkFile(props) {
               }
               secondary={file_type}
             />
+            <IconButton
+              size="small"
+              className={classes.deleteIconButton}
+              onClick={(e) => {
+                handleLampiranDelete(e, i);
+              }}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
           </ListItem>
         </Paper>
       ) : (
@@ -613,7 +618,7 @@ function ViewTaskStudent(props) {
     getMultipleFileAvatar
   } = props;
   const { all_subjects_map } = props.subjectsCollection;
-  console.log(tasksCollection)
+  // console.log(tasksCollection)
 
   // const theme = useTheme();
   // ref itu untuk ngerefer html yang ada di render.
@@ -858,6 +863,8 @@ function ViewTaskStudent(props) {
         temp.push(
           <WorkFile
             handleOpenDeleteDialog={handleOpenDeleteDialog}
+            handleLampiranDelete={handleLampiranDelete}
+            i={i}
             file_name={fileToSubmit[i].name}
             file_id={fileToSubmit[i].id}
             file_type={fileType(fileToSubmit[i].name)}
@@ -881,6 +888,15 @@ function ViewTaskStudent(props) {
     setFileToSubmit(temp);
     setOverLimit(over_limit);
     setFileLimitSnackbar(over_limit.length > 0);
+
+    document.getElementById("file_control").value = null;
+  };
+
+  const handleLampiranDelete = (e, i) => {
+    e.preventDefault();
+    let tempToAdd = [...fileToSubmit];
+    tempToAdd.splice(i, 1);
+    setFileToSubmit(tempToAdd);
   };
 
   const onSubmitTugas = (e) => {
@@ -1147,8 +1163,8 @@ function ViewTaskStudent(props) {
     ? "Schooly | Lihat Tugas"
     : `Schooly | ${tasksCollection.name}`;
 
-  console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline));
-  console.log(success, filesCollection.files);
+  // console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline));
+  // console.log(success, filesCollection.files);
 
   return (
     <div className={classes.root}>
@@ -1337,7 +1353,7 @@ function ViewTaskStudent(props) {
                   >
                     {/* Kasus Kosong */}
                     {listFileChosen()}
-                    {listWorkFile()}
+                    {/* {listWorkFile()} */}
                   </Grid>
                 ) : (
                   <Grid
@@ -1365,6 +1381,7 @@ function ViewTaskStudent(props) {
                   <form onSubmit={onSubmitTugas}>
                     <div style={{ marginBottom: "15px" }}>
                       <input
+                        id="file_control"
                         type="file"
                         multiple={true}
                         name="tugas"
@@ -1511,7 +1528,7 @@ function ViewTaskStudent(props) {
                   style={{
                     padding: "10px",
                     display: "flex",
-                    flexDirection: "row",
+                    flexDirection: "column",
                     justifyContent: "center",
                   }}
                 >
@@ -1545,6 +1562,7 @@ function ViewTaskStudent(props) {
                 <form onSubmit={onSubmitTugas}>
                   <div style={{ marginBottom: "15px" }}>
                     <input
+                      id="file_control"
                       type="file"
                       multiple={true}
                       name="tugas"
