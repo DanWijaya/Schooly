@@ -162,7 +162,11 @@ const useStyles = makeStyles((theme) => ({
   agendaContainer: {
     width: "80%",
     marginRight: "15px",
-    overflow: "none"
+    overflow: "none",
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+      marginRight: 0
+    },
   },
   calendarContainer: {
     marginLeft: "15px",
@@ -177,7 +181,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "10px",
     height: "600px",
     overflow: "auto",
-    flex: 1
+    flex: 1,
+    overflow: "hidden"
   },
   dayTableCell: {
     display: "flex", 
@@ -345,7 +350,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   table: {
-    tableLayout: "fixed"
+    tableLayout: "fixed",
+    overflow: "hidden"
   },
   chevronButton: {
     "&:focus, &:hover": {
@@ -669,20 +675,45 @@ function AgendaToolbar(props) {
   return (
     <div className={classes.toolbar}>
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-        <Button variant="outlined">Hari ini</Button>
-        {mode === "Day" ?
-          <>
-            <ChevronLeftIcon className={classes.chevronButton}/>
-            <ChevronRightIcon className={classes.chevronButton}/>
-            <Typography>{stringDateDayMode}</Typography>
-          </>
-        :
-          <>
-            <ChevronLeftIcon onClick={() => handleChangeMonth("prev")} className={classes.chevronButton}/>
-            <ChevronRightIcon onClick={() => handleChangeMonth("next")} className={classes.chevronButton}/>
-            <Typography>{stringDateMonthMode}</Typography>
-          </>
-        }
+        <Hidden xsDown>
+          <Button variant="outlined">Hari ini</Button>
+          {mode === "Day" ?
+            <>
+              <div style={{margin: "0 5px"}}>
+                <ChevronLeftIcon className={classes.chevronButton}/>
+                <ChevronRightIcon className={classes.chevronButton}/>
+              </div>
+              <Typography>{stringDateDayMode}</Typography>
+            </>
+          :
+            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+              <div style={{display: "flex", flexDirection: "row", alignItems: "center", margin: "0 5px"}}>
+                <ChevronLeftIcon onClick={() => handleChangeMonth("prev")} className={classes.chevronButton}/>
+                <ChevronRightIcon onClick={() => handleChangeMonth("next")} className={classes.chevronButton}/>
+              </div>
+              <Typography>{stringDateMonthMode}</Typography>
+            </div>
+          }
+        </Hidden>
+        <Hidden smUp>
+          {mode === "Day" ?
+            <>
+              <Typography>{stringDateDayMode}</Typography>
+              <div style={{margin: "0 5px"}}>
+                <ChevronLeftIcon className={classes.chevronButton}/>
+                <ChevronRightIcon className={classes.chevronButton}/>
+              </div>
+            </>
+          :
+            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+              <Typography>{stringDateMonthMode}</Typography>
+              <div style={{display: "flex", flexDirection: "row", alignItems: "center", margin: "0 5px"}}>
+                <ChevronLeftIcon onClick={() => handleChangeMonth("prev")} className={classes.chevronButton}/>
+                <ChevronRightIcon onClick={() => handleChangeMonth("next")} className={classes.chevronButton}/>
+              </div>
+            </div>
+          }
+        </Hidden>
       </div>
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
         <Fab className={classes.greenFab} aria-label="add" size="small" onClick={() => { handleOpenCreateDialog() }}>
@@ -3294,6 +3325,21 @@ function Calendar(props) {
         <TableContainer component={Grid}>
           <Table className={classes.table}>
             <TableBody>
+              <Hidden smUp>
+                <TableRow style={{verticalAlign: "bottom"}}>
+                  {
+                    dayNames.map((day) => {
+                      return (
+                        <TableCell style={{verticalAlign: "bottom"}}>
+                          <Typography align="center">
+                            {day[0]}
+                          </Typography>
+                        </TableCell>
+                      )
+                    })
+                  }
+                </TableRow>
+              </Hidden>
             {monthDates.map((row, index) => (
               generateDateAgenda(row, index)
             ))}
@@ -3312,6 +3358,7 @@ function Calendar(props) {
       <TableRow style={{height: "175px"}}>
         {date.map((column, columnIndex) => {
           let temp_date = new Date(column).getDate();
+          let temp_date_withoutMonthNames = temp_date
           if(temp_date == 1) {
             temp_date = temp_date + " " + monthNames[new Date(column).getMonth()];
           }
@@ -3383,13 +3430,29 @@ function Calendar(props) {
           return (
             <TableCell className={classes.monthAgendaCell}>
               {(index === 0) ?
-                <Typography color="textSecondary" variant="body2" align="center">{dayNames[columnIndex]}</Typography>
+                <Hidden xsDown>
+                  <Typography color="textSecondary" variant="body2" align="center">{dayNames[columnIndex]}</Typography>
+                </Hidden>
               : null}
               <div style={{display: "flex", justifyContent: "center", marginBottom: "5px"}}>
                 {isSameDate(today, column) ?
-                  <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center">{temp_date}</Typography>
+                  <>
+                    <Hidden xsDown>
+                      <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center">{temp_date}</Typography>
+                    </Hidden>
+                    <Hidden smUp>
+                      <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center">{temp_date_withoutMonthNames}</Typography>
+                    </Hidden>
+                  </>
                 :
-                  <Typography color="textSecondary" variant="body2" className={classes.monthDateTile}>{temp_date}</Typography>
+                  <>
+                    <Hidden xsDown>
+                      <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center">{temp_date}</Typography>
+                    </Hidden>
+                    <Hidden smUp>
+                      <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center">{temp_date_withoutMonthNames}</Typography>
+                    </Hidden>
+                  </>
                 }
               </div>
               {
@@ -3450,9 +3513,11 @@ function Calendar(props) {
         />
       }
       {/* TODO hapus (tombol dummy untuk buka view dialog)*/}
-      <Fab className={classes.greenFab} style={{ backgroundColor: "red" }} aria-label="add" size="small" onClick={() => { handleOpenViewDialog() }}>
-        <AddIcon fontSize="small" />
-      </Fab>
+      <Hidden xsDown>
+        <Fab className={classes.greenFab} style={{ backgroundColor: "red" }} aria-label="add" size="small" onClick={() => { handleOpenViewDialog() }}>
+          <AddIcon fontSize="small" />
+        </Fab>
+      </Hidden>
       <div className={classes.agendaContainer}>
         <AgendaToolbar
           classes={classes}
@@ -3467,90 +3532,92 @@ function Calendar(props) {
         <Divider style={{marginTop: "10px"}}/>
         {mode === "Day" ? generateDayModeCalendar() : generateMonthModeCalendar()}
       </div>
-      <div className={classes.calendarContainer}>
-        <ReactCalendar
-          locale="id-ID"
-          onChange={setSelectedDate}
-          value={selectedDate}
-          tileClassName={renderCalendarTile}
-          className={classes.calendar}
-          view="month"
-        />
-        <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
-          <Typography style={{marginTop: "15px"}}>Agenda</Typography>
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox checked={agendaCheckboxState.checkedTask}
-                  onChange={handleChange}
-                  name="checkedTask"
-                  color="primary"
-                />
-              }
-              label="Tugas"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={agendaCheckboxState.checkedQuiz}
-                  onChange={handleChange}
-                  name="checkedQuiz"
-                  color="primary"
-                />
-              }
-              label="Kuis"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={agendaCheckboxState.checkedExam}
-                  onChange={handleChange}
-                  name="checkedExam"
-                  color="primary"
-                />
-              }
-              label="Ujian"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={agendaCheckboxState.checkedEvent}
-                  onChange={handleChange}
-                  name="checkedEvent"
-                  color="primary"
-                />
-              }
-              label="Kegiatan"
-            />
-          </FormGroup>
-        </div>
-        { (role === "Teacher" && selectedClasses !== null) ?
+      <Hidden xsDown>
+        <div className={classes.calendarContainer}>
+          <ReactCalendar
+            locale="id-ID"
+            onChange={setSelectedDate}
+            value={selectedDate}
+            tileClassName={renderCalendarTile}
+            className={classes.calendar}
+            view="month"
+          />
           <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
-            <Typography style={{marginTop: "15px"}}>Kelas</Typography>
+            <Typography style={{marginTop: "15px"}}>Agenda</Typography>
             <FormGroup>
-              {
-                user.class_teached.map((class_id) => {
-                  let temp = new Map(selectedClasses);
-                  let kelas = temp.get(class_id);
-                  let class_name = ""
-                  if(kelas) {
-                    class_name = kelas.name
-                  }
-                  return (
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked={classCheckboxState[class_id]}
-                          onChange={handleChangeClassStates}
-                          name={class_id}
-                          color="primary"
-                        />
-                      }
-                      label={class_name}
-                    />
-                  )
-                })
-              }
+              <FormControlLabel
+                control={
+                  <Checkbox checked={agendaCheckboxState.checkedTask}
+                    onChange={handleChange}
+                    name="checkedTask"
+                    color="primary"
+                  />
+                }
+                label="Tugas"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox checked={agendaCheckboxState.checkedQuiz}
+                    onChange={handleChange}
+                    name="checkedQuiz"
+                    color="primary"
+                  />
+                }
+                label="Kuis"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox checked={agendaCheckboxState.checkedExam}
+                    onChange={handleChange}
+                    name="checkedExam"
+                    color="primary"
+                  />
+                }
+                label="Ujian"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox checked={agendaCheckboxState.checkedEvent}
+                    onChange={handleChange}
+                    name="checkedEvent"
+                    color="primary"
+                  />
+                }
+                label="Kegiatan"
+              />
             </FormGroup>
           </div>
-        : null}
-      </div>
+          { (role === "Teacher" && selectedClasses !== null) ?
+            <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
+              <Typography style={{marginTop: "15px"}}>Kelas</Typography>
+              <FormGroup>
+                {
+                  user.class_teached.map((class_id) => {
+                    let temp = new Map(selectedClasses);
+                    let kelas = temp.get(class_id);
+                    let class_name = ""
+                    if(kelas) {
+                      class_name = kelas.name
+                    }
+                    return (
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={classCheckboxState[class_id]}
+                            onChange={handleChangeClassStates}
+                            name={class_id}
+                            color="primary"
+                          />
+                        }
+                        label={class_name}
+                      />
+                    )
+                  })
+                }
+              </FormGroup>
+            </div>
+          : null}
+        </div>
+      </Hidden>
       <Snackbar
         open={openSnackbar}
         autoHideDuration={4000}
