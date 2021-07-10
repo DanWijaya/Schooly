@@ -191,32 +191,73 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: "none", 
     overflow: "none"
   },
+  // todayTile: {
+  //   textAlign: "center!important",
+  //   borderRadius: "100%",
+  //   background: "#195DE5",
+  //   color: "white",
+  //   maxWidth: "12%!important",
+  //   margin: ".5% 1.14285%!important",
+  //   padding: "3% 0%",
+  //   "&:focus, &:hover, &:active": {
+  //     background: "#195DE5",
+  //     backgroundColor: "#195DE5",
+  //     color: "white",
+  //     opacity: 0.8
+  //   },
+  // },
+  // activeTile: {
+  //   textAlign: "center!important",
+  //   maxWidth: "12%!important",
+  //   margin: ".5% 1.14285%!important",
+  //   padding: "3% 0%",
+  //   "&:active": {
+  //     background: "#C9DCFD",
+  //     opacity: 0.8
+  //   },
+  // },
   todayTile: {
-    textAlign: "center!important",
-    borderRadius: "100%",
-    background: "#195DE5",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    borderRadius: "50%",
+    width: "1.9rem",
+    height: "1.9rem",
+    backgroundColor: "#195DE5",
     color: "white",
-    maxWidth: "12%!important",
-    margin: ".5% 1.14285%!important",
-    padding: "3% 0%",
-    "&:focus, &:hover, &:active": {
-      background: "#195DE5",
-      backgroundColor: "#195DE5",
-      color: "white",
-      opacity: 0.8
-    },
-    marginBlockStart: 0,
-    marginBlockEnd: 0
+    [theme.breakpoints.down("sm")] :{
+      width: "1.6rem",
+      height: "1.6rem",
+    }
   },
-  activeTile: {
-    textAlign: "center!important",
-    maxWidth: "12%!important",
-    margin: ".5% 1.14285%!important",
-    padding: "3% 0%",
-    "&:active": {
-      background: "#C9DCFD",
-      opacity: 0.8
-    },
+  selectedTile: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    width: "1.9rem",
+    height: "1.9rem",
+    backgroundColor: "#C9DCFD",
+    [theme.breakpoints.down("sm")]: {
+      width: "1.6rem",
+      height: "1.6rem",
+    }
+  },
+  notSelectedTile: {
+    "&:hover": {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "absolute",
+      width: "1.9rem",
+      height: "1.9rem",
+      backgroundColor: "#EFEFEF",
+      [theme.breakpoints.down("sm")]: {
+        width: "1.6rem",
+        height: "1.6rem",
+      }
+    }
   },
   calendarTile: {
     borderRadius: "100%",
@@ -365,7 +406,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }
 }));
-// REVIEW GLOBAL - STYLE
+// ANCHOR STYLE
 
 function CalendarListToolbar(props) {
   const {
@@ -405,6 +446,33 @@ function CalendarListToolbar(props) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
+
+  // const headCells = [
+  //   {
+  //     id: "name",
+  //     numeric: false,
+  //     disablePadding: false,
+  //     label: "Mata Pelajaran",
+  //   },
+  // ];
+
+  // // Sort Menu
+  // const [anchorEl, setAnchorEl] = React.useState(null);
+  // const handleOpenSortMenu = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+  // const handleCloseSortMenu = () => {
+  //   setAnchorEl(null);
+  // };
+
+  // const onChange = (e) => {
+  //   updateSearchFilter(e.target.value);
+  // };
+
+  // const onClear = (e, id) => {
+  //   updateSearchFilter("");
+  //   document.getElementById(id).focus();
+  // };
 
   return (
     <div className={classes.toolbar}>
@@ -2725,7 +2793,9 @@ function Calendar(props) {
   const { all_assessments } = props.assessmentsCollection;
   const { selectedClasses } = props.classesCollection;
 
-  // REVIEW Calendar - STATES
+  // ANCHOR STATES
+  const [activeStartDate, setActiveStartDate] = React.useState(new Date(new Date().getFullYear(), new Date().getMonth())); // set ke awal bulan sekarang 
+
   // EVENT DIALOG
   const [openEventDialog, setOpenEventDialog] = React.useState(false);
   const [eventDialogMode, setEventDialogMode] = React.useState("");
@@ -2771,6 +2841,83 @@ function Calendar(props) {
     // });
     setRows([...props.eventsCollection.allEvents]);
   }, [props.eventsCollection.allEvents]);
+
+  const handleNextMonth = () => {
+    setActiveStartDate(new Date(activeStartDate.setMonth(activeStartDate.getMonth() + 1)));
+  };
+
+  const handlePreviousMonth = () => {
+    setActiveStartDate(new Date(activeStartDate.setMonth(activeStartDate.getMonth() - 1)));
+  };
+
+  const handleTileContent = (selectedDate) => {
+    // untuk mengurangi jumlah pengecekan now === selectedDate, 
+    // pengecekan ini hanya dilakukan ketika selectedDate ada 
+    if (selectedDate) {
+      return function ({ activeStartDate, date, view }) {
+        if (view === 'month') {
+
+          // jika tanggal yang sedang dicek adalah tanggal hari ini
+          if (isSameDate(new Date(), date)) {
+            return (
+              <div className={classes.todayTile}>
+                <abbr>
+                  {date.getDate()}
+                </abbr>
+              </div>
+            );
+          }
+          
+          // jika tanggal yang sedang dicek adalah tanggal yang pernah terakhir diklik oleh pengguna
+          if (isSameDate(selectedDate, date)) {
+            return (
+              <div className={classes.selectedTile}>
+                <abbr>
+                  {date.getDate()}
+                </abbr>
+              </div>
+            );
+          }
+        
+        }
+        return (
+          <div className={classes.notSelectedTile}>
+            <abbr>
+              {date.getDate()}
+            </abbr>
+          </div>
+        );
+      }
+    } else {
+      return function ({ activeStartDate, date, view }) {
+        if (view === 'month') {
+
+          // jika tanggal yang sedang dicek adalah tanggal hari ini
+          if (isSameDate(new Date(), date)) {
+            return (
+              <div className={classes.todayTile}>
+                <abbr>
+                  {date.getDate()}
+                </abbr>
+              </div>
+            );
+          }
+
+          // tidak mengecek now === selectedDate
+
+        }
+        // return null;
+        return (
+          <div className={classes.notSelectedTile}>
+            <abbr>
+              {date.getDate()}
+            </abbr>
+          </div>
+        );
+      }
+    }
+  };
+
 
   // SNACKBAR
   const showSnackbar = (severity, snackbarContent) => {
@@ -3134,13 +3281,13 @@ function Calendar(props) {
     return date_1.getDate() === date_2.getDate() && date_1.getMonth() === date_2.getMonth() && date_1.getYear() === date_2.getYear()
   }
 
-  const renderCalendarTile = ({ activeStartDate, date, view }) => {
-    var today = new Date()
-    if(isSameDate(today, date)) {
-      return classes.todayTile
-    }
-    return classes.activeTile
-  }
+  // const renderCalendarTile = ({ activeStartDate, date, view }) => {
+  //   var today = new Date()
+  //   if(isSameDate(today, date)) {
+  //     return classes.todayTile
+  //   }
+  //   return classes.activeTile
+  // }
 
   const timeRows = [
     '00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', 
@@ -3529,9 +3676,11 @@ function Calendar(props) {
     )
   }
 
+  // ANCHOR ELEMENT
   return (
     <div className={classes.root}>
-      {unmountEventDialog
+      {
+      unmountEventDialog
         ? null
         :
         <EventDialog
@@ -3548,11 +3697,10 @@ function Calendar(props) {
         />
       }
       {/* TODO hapus (tombol dummy untuk buka view dialog)*/}
-      <Hidden xsDown>
-        <Fab className={classes.greenFab} style={{ backgroundColor: "red" }} aria-label="add" size="small" onClick={() => { handleOpenViewDialog() }}>
-          <AddIcon fontSize="small" />
-        </Fab>
-      </Hidden>
+      {/* <Fab className={classes.greenFab} style={{ backgroundColor: "red" }} aria-label="add" size="small" onClick={() => { handleOpenViewDialog() }}>
+        <AddIcon fontSize="small" />
+      </Fab> */}
+
       <div className={classes.agendaContainer}>
         <AgendaToolbar
           classes={classes}
@@ -3569,12 +3717,46 @@ function Calendar(props) {
       </div>
       <Hidden xsDown>
         <div className={classes.calendarContainer}>
+          <Grid container alignItems="center" justify="space-between">
+            <Grid item style={{ paddingLeft: "0.6em" }}>
+              <Typography>
+                {moment(activeStartDate)
+                  .locale("id")
+                  .format("MMMM YYYY")}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <IconButton
+                size="small"
+                onClick={() => {
+                  handlePreviousMonth();
+                }}
+              >
+                <ChevronLeftIcon />
+              </IconButton>
+              <IconButton
+                size="small"
+                onClick={() => {
+                  handleNextMonth();
+                }}
+              >
+                <ChevronRightIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
           <ReactCalendar
             locale="id-ID"
             onChange={setSelectedDate}
             value={selectedDate}
-            tileClassName={renderCalendarTile}
+            // tileClassName={renderCalendarTile}
             className={classes.calendar}
+            showNavigation={false}
+            activeStartDate={activeStartDate}
+            tileContent={handleTileContent(selectedDate)}
+            formatShortWeekday={(locale, date) => {
+              // mengubah nama hari dalam satu minggu jadi satu huruf 
+              return new Date(date).toLocaleDateString(locale, { weekday: 'long' })[0];
+            }}
             view="month"
           />
           <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>

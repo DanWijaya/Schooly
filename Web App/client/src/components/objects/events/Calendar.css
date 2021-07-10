@@ -3,7 +3,7 @@
     max-width: 100%;
     background: white;
     border: 1px solid #a0a096;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Roboto, Helvetica, Arial, sans-serif !important;
     line-height: 1.125em;
   }
   .react-calendar--doubleView {
@@ -55,6 +55,7 @@
   }
   .react-calendar__month-view__weekdays__weekday {
     padding: 0.5em;
+    color: rgba(0, 0, 0, 0.54);
   }
   .react-calendar__month-view__weekNumbers {
     font-weight: bold;
@@ -82,20 +83,23 @@
     text-align: center;
     padding: 0.75em 0.5em;
     background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .react-calendar__tile:disabled {
     background-color: #f0f0f0;
   }
   .react-calendar__tile:enabled:hover,
   .react-calendar__tile:enabled:focus {
-    background-color: #e6e6e6;
+    background-color: transparent !important;
   }
   .react-calendar__tile--now {
-    background: #195DE5 !important;
+    background-color: transparent !important;
   }
   .react-calendar__tile--now:enabled:hover,
   .react-calendar__tile--now:enabled:focus {
-    background: #195DE5 !important;
+    background-color: transparent !important;
   }
   .react-calendar__tile--hasActive {
     background: #76baff !important;
@@ -105,14 +109,31 @@
     background: #a9d4ff !important;
   }
   .react-calendar__tile--active {
-    background: #76baff !important;
-    color: white;
+    background-color: transparent !important;
+    color: black !important;
   }
   .react-calendar__tile--active:enabled:hover,
   .react-calendar__tile--active:enabled:focus {
-    background: #76baff !important;
+    background-color: transparent !important;
   }
   .react-calendar--selectRange .react-calendar__tile--hover {
     background-color: #e6e6e6 !important;
   }
-  
+abbr[title] {
+  text-decoration: none;
+}
+abbr {
+  font-size: 0.8rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.00938em;
+}
+.react-calendar__tile > abbr {
+  display: none;
+}
+/* @media only screen and (min-width: 1280px) {
+  abbr {
+    font-size: 0.8rem;
+  }
+} */
