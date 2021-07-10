@@ -323,6 +323,12 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     zIndex: 2,
   },
+  invisibleChip: {
+    width: "100%",
+    position: "absolute",
+    overflow: "none",
+    padding: "2px",
+  },
   horizontalLine: {
     border: "rgba(224, 224, 224, 1) .25px solid",
     position: "relative",
@@ -2737,7 +2743,7 @@ function Calendar(props) {
 
   // Calendar
   const today = new Date()
-  const [mode, setMode] = React.useState("Month");
+  const [mode, setMode] = React.useState("Day");
   const [currentDateDayMode, setCurrentDateDayMode] = React.useState(today);
   const [currentDateMonthMode, setCurrentDateMonthMode] = React.useState(today);
 
@@ -3143,9 +3149,9 @@ function Calendar(props) {
   ]
 
   const timeRowsDummy = [
-    [{start: 10, title: "Tugas Matematika", duration: 130, visible: true}, {start: 10, title: "Tugas Biologi", duration: 20, visible: false}], 
-    [{start: 0, title: "Tugas Matematika", duration: 70, visible: false}, {start: 10, title: "Tugas Matematika", duration: 20, visible: true}], 
-    [{start: 0, title: "Tugas Matematika", duration: 10, visible: false}], 
+    [{start: 10, title: "Tugas Matematika", duration: 130, visible: true}, {start: 10, title: "Tugas Biologi", duration: 70, visible: true}, {start: 10, title: "Tugas Kimia", duration: 20, visible: true}, {start: 10, title: "Tugas Biologi", duration: 70, visible: true}, {start: 10, title: "Tugas Kimia", duration: 20, visible: true}], 
+    [{start: 0, title: "Tugas Matematika", duration: 80, visible: false}, {start: 0, title: "Tugas Biologi", duration: 20, visible: false}, {start: 10, title: "Tugas Fisika", duration: 70, visible: true}, {start: 10, title: "Tugas Biologi", duration: 20, visible: false}, {start: 0, title: "Tugas Matematika", duration: 80, visible: false}], 
+    [{start: 0, title: "Tugas Matematika", duration: 20, visible: false}], 
     [], 
     [{start: 0, title: "Ujian Biologi", duration: 30, visible: true}], 
     [], [], [], [], [], [], 
@@ -3287,30 +3293,59 @@ function Calendar(props) {
         <TableContainer>
           <Table>
             <TableBody>
-              {timeRows.map((row, index) => (
-                <TableRow key={row.name} style={{height: `${rowHeight}px`, border: "none"}}>
-                  <TableCell component="th" scope="row" className={classes.dayTableCell}>
-                    <Typography color="textSecondary" variant="body2" style={{width: "32px"}}>{row}</Typography>
-                    <div className={classes.horizontalLine}>
-                      {
-                        timeRowsDummy[index].map((data) => {
-                          if(data.visible) {
-                            return (
+              {timeRows.map((row, index) => {
+                let widthPadding = 5;
+                let i = timeRowsDummy[index].length;
+                while (i > 2) {
+                  widthPadding = widthPadding + 5/3 / (i - 2)
+                  i --;
+                }
+                return (
+                  <TableRow key={row.name} style={{height: `${rowHeight}px`, border: "none"}}>
+                    <TableCell component="th" scope="row" className={classes.dayTableCell}>
+                      <Typography color="textSecondary" variant="body2" style={{width: "32px"}}>{row}</Typography>
+                      <div className={classes.horizontalLine}>
+                        {
+                          timeRowsDummy[index].map((data, idx) => {
+                            if(data.visible) {
+                              return (
+                                <div 
+                                  className={classes.blueChip} 
+                                  style={{
+                                    transform: 
+                                    idx !== 0 ? 
+                                    `translate(calc(100% * ${idx} + ${idx} * 10px), ${data.start/60*rowHeight}px)`
+                                    : `translate(calc(100% * ${idx}), ${data.start/60*rowHeight}px)`, 
+                                    height: `${data.duration/60*rowHeight}px`,
+                                    width: `calc(100% / ${timeRowsDummy[index].length} - ${widthPadding}px)`
+                                  }}
+                                >
+                                  {data.title}
+                                </div>
+                              )
+                            }
+                            else return (
                               <div 
-                                className={classes.blueChip} 
-                                style={{transform: `translateY(${data.start/60*rowHeight}px)`, height: `${data.duration/60*rowHeight}px`}}
+                                className={classes.invisibleChip} 
+                                style={{
+                                  transform: 
+                                  idx !== 0 ? 
+                                  `translate(calc(100% * ${idx} + ${idx} * 10px), ${data.start/60*rowHeight}px)`
+                                  : `translate(calc(100% * ${idx}), ${data.start/60*rowHeight}px)`, 
+                                  height: `${data.duration/60*rowHeight}px`,
+                                  width: `calc(100% / ${timeRowsDummy[index].length} - ${widthPadding}px)`
+                                }}
                               >
-                                {data.title}
+                                
                               </div>
                             )
-                          }
-                          else return null
-                        })
-                      }
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                          })
+                        }
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
             </TableBody>
           </Table>
         </TableContainer>
