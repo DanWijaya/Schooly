@@ -2046,7 +2046,7 @@ CreateAssessment.propTypes = {
   getAllSubjects: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
+  // errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
 };

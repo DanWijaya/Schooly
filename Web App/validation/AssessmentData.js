@@ -6,8 +6,10 @@ module.exports = function validateAssessmentInput(data) {
   // data keys: name, subject, description, type
 
   for (let key of Object.keys(data)) {
-    if (isEmpty(data[key])) {
-      data[key] = "";
+    if (key !== "posted") {
+      if (isEmpty(data[key])) {
+        data[key] = "";
+      }
     }
   }
 

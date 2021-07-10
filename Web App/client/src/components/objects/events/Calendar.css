@@ -75,7 +75,7 @@
   .react-calendar__year-view .react-calendar__tile,
   .react-calendar__decade-view .react-calendar__tile,
   .react-calendar__century-view .react-calendar__tile {
-    padding: 2em 0.5em !important;
+    padding: 2em 0.1em !important;
   }
   .react-calendar__tile {
     max-width: 100%;

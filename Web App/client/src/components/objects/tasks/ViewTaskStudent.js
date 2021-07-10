@@ -613,6 +613,7 @@ function ViewTaskStudent(props) {
     getMultipleFileAvatar
   } = props;
   const { all_subjects_map } = props.subjectsCollection;
+  console.log(tasksCollection)
 
   // const theme = useTheme();
   // ref itu untuk ngerefer html yang ada di render.
