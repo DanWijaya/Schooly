@@ -87,7 +87,7 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import { getSelectedClasses } from "../../../actions/ClassActions";
+import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import {
   createEvent,
   updateEvent,
@@ -281,7 +281,7 @@ const useStyles = makeStyles((theme) => ({
     },
     marginBlockStart: 0,
     marginBlockEnd: 0,
-    padding: "2px 5px"
+    padding: "2px 4px"
   },
   monthAgendaCell: {
     width: "14.2875%",
@@ -304,6 +304,17 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover, &:active": {
       cursor: "pointer"
     },
+  },
+  monthAgendaChipAdmin: {
+    background: theme.palette.primary.main,
+    color: "white",
+    padding: "2px 3px",
+    borderRadius: "4px",
+    margin: "2px 0",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    maxWidth: "100%",
   },
   moreMonthAgendaChip: {
     background: "#e6e6e6",
@@ -725,7 +736,13 @@ function AgendaToolbar(props) {
   let stringDateMonthMode = monthNames[currentDateMonthMode.getMonth()] + " " + currentDateMonthMode.getFullYear();
 
   const handleChangeMonth = (direction) => {
-    if(direction === "next") {
+    if(direction === "now") {
+      let nowMonthDate;
+      let tempMonthDate = new Date();
+      nowMonthDate = new Date(tempMonthDate.getFullYear(), tempMonthDate.getMonth(), 1)
+      setCurrentDateMonthMode(nowMonthDate);
+    }
+    else if(direction === "next") {
       let nextMonthDate;
       if (currentDateMonthMode.getMonth() == 11) {
         nextMonthDate = new Date(currentDateMonthMode.getFullYear() + 1, 0, 1);
@@ -751,7 +768,11 @@ function AgendaToolbar(props) {
     <div className={classes.toolbar}>
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
         <Hidden xsDown>
-          <Button variant="outlined">Hari ini</Button>
+          {mode === "Day" ?
+            <Button variant="outlined">Hari ini</Button>
+          :
+            <Button variant="outlined" onClick={() => handleChangeMonth("now")}>Hari ini</Button>
+          }
           {mode === "Day" ?
             <>
               <div style={{margin: "0 5px"}}>
@@ -919,22 +940,7 @@ function ListAssessments(props) {
             )
           }
         >
-          <span 
-            style={{width: "calc(100% - 80px)", display: "inline-block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", verticalAlign: "top"}}
-          >
-            {props.work_title}
-          </span>
-          <span className="task">
-            (
-            {moment(props.work_starttime)
-            .locale("id")
-            .format("HH:mm")}
-            -
-            {moment(props.work_endtime)
-            .locale("id")
-            .format("HH:mm")}
-            )
-          </span>
+          {props.work_title}
         </Typography>
         <Dialog
           fullScreen={false}
@@ -2794,6 +2800,7 @@ function Calendar(props) {
 
   const {
     getSelectedClasses,
+    getAllClass,
     getAllEvents,
     getAllTask,
     getAllTaskFilesByUser,
@@ -2813,7 +2820,8 @@ function Calendar(props) {
   const { all_user_files } = props.filesCollection;
   const { all_subjects_map, all_subjects } = props.subjectsCollection;
   const { all_assessments } = props.assessmentsCollection;
-  const { selectedClasses } = props.classesCollection;
+  const { selectedClasses, all_classes } = props.classesCollection;
+  console.log(all_classes)
 
   // ANCHOR STATES
   const [activeStartDate, setActiveStartDate] = React.useState(new Date(new Date().getFullYear(), new Date().getMonth())); // set ke awal bulan sekarang 
@@ -2835,14 +2843,13 @@ function Calendar(props) {
 
   // Calendar
   const today = new Date()
-  const [mode, setMode] = React.useState("Day");
+  const [mode, setMode] = React.useState("Month");
   const [currentDateDayMode, setCurrentDateDayMode] = React.useState(today);
   const [currentDateMonthMode, setCurrentDateMonthMode] = React.useState(today);
 
-  console.log(user)
-  
   React.useEffect(() => {
     getSelectedClasses(user.class_teached);
+    getAllClass();
     getAllEvents();
     getAllTask();
     getAllAssessments();
@@ -3008,7 +3015,6 @@ function Calendar(props) {
     }
 
     tasksByClass.forEach((task) => {
-      console.log(task)
       let tempSelectedDate = new Date(moment(date)
       .locale("id"));
       let tempDeadlineDate = new Date(moment(task.deadline)
@@ -3024,7 +3030,6 @@ function Calendar(props) {
       tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
       tempSelectedDate.getYear() === tempDeadlineDate.getYear()) {
         if(localCounter < 3) {
-          console.log(tempSelectedDate.getDate())
           for (var i = 0; i < all_user_files.length; i++) {
             if (all_user_files[i].for_task_object === task._id) {
               flag = false;
@@ -3065,12 +3070,27 @@ function Calendar(props) {
     let tempSelectedDate = date;
     let localCounter = mainCounter;
     let result = [];
+    let classCheckList = Object.entries(classCheckboxState)
+    let selectedClassCheckList = []
+    for (let classItem of classCheckList) {
+      if(classItem[1]) {
+        selectedClassCheckList.push(classItem[0]);
+      }
+    }
     for (let i = 0; i < tasksCollection.length; i++) {
       let tempDeadlineDate = new Date(moment(tasksCollection[i].deadline).locale("id"));
+      let classFound = false;
+      for(let classId of tasksCollection[i].class_assigned) {
+        if(selectedClassCheckList.includes(classId)) {
+          classFound = true;
+          break;
+        }
+      }
       if (tasksCollection[i].person_in_charge_id === user._id &&
         tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
         tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-        tempSelectedDate.getYear() === tempDeadlineDate.getYear()) {
+        tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+        classFound) {
         let number_students_assigned = 0;
         for (let j = 0; j < all_students.length; j++) {
           if (
@@ -3103,50 +3123,93 @@ function Calendar(props) {
     }
   }
 
-  function listAssessmentsTeacher(assessmentType) {
+  function listTasksAdmin(date, mainCounter, handleChangeCounter) {
+    let tempSelectedDate = date;
+    let localCounter = mainCounter;
+    let result = [];
+    let classCheckList = Object.entries(classCheckboxState)
+    let selectedClassCheckList = []
+    for (let classItem of classCheckList) {
+      if(classItem[1]) {
+        selectedClassCheckList.push(classItem[0]);
+      }
+    }
+    for (let i = 0; i < tasksCollection.length; i++) {
+      let tempDeadlineDate = new Date(moment(tasksCollection[i].deadline).locale("id"));
+      let classFound = false;
+      for(let classId of tasksCollection[i].class_assigned) {
+        if(selectedClassCheckList.includes(classId)) {
+          classFound = true;
+          break;
+        }
+      }
+      if (
+        tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+        tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+        tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+        classFound) {
+        let number_students_assigned = 0;
+        for (let j = 0; j < all_students.length; j++) {
+          if (
+            tasksCollection[i].class_assigned.includes(all_students[j].kelas)
+          ) {
+            number_students_assigned = number_students_assigned + 1;
+          }
+        }
+        if (
+          Object.values(tasksCollection[i].grades).length !==
+          number_students_assigned
+        ) {
+          if(localCounter < 3) {
+            let task = tasksCollection[i];
+            result.push({
+              _id: task._id,
+              name: task.name,
+              subject: task.subject,
+              deadline: task.deadline,
+              createdAt: task.createdAt,
+            });
+          }
+          localCounter ++;
+        }
+      }
+    }
+    if (mode === "Month") {
+      handleChangeCounter(localCounter);
+      return result;
+    }
+  }
+
+  function listAssessmentsTeacher(tempSelectedDate, assessmentType, mainCounter, handleChangeCounter) {
     // menampilkan assessment jika ada submission yang belum selesai dinilai
 
     let result = [];
     let lowerCaseType = assessmentType === "Kuis" ? "kuis" : "ujian";
+    let localCounter = mainCounter;
+    let classCheckList = Object.entries(classCheckboxState)
+    let selectedClassCheckList = []
+    for (let classItem of classCheckList) {
+      if(classItem[1]) {
+        selectedClassCheckList.push(classItem[0]);
+      }
+    }
 
     for (let i = 0; i < all_assessments.length; i++) {
       let assessment = all_assessments[i];
+      let tempDeadlineDate = new Date(moment(assessment.start_date).locale("id"));
+      let classFound = false;
       if (assessment.type === assessmentType) {
-        // jika terdapat soal uraian pada kuis ini dan sudah ada 1 atau lebih murid yg mengumpulkan jawaban
-        if (
-          assessment.question_weight.longtext !== null &&
-          assessment.submissions &&
-          Object.keys(assessment.submissions).length > 0
-        ) {
-          // jika ada murid yang jawaban uraiannya sudah dinilai
-          if (
-            assessment.grades &&
-            Object.keys(assessment.grades).length > 0
-          ) {
-            // untuk setiap murid yang sudah mengumpulkan jawaban
-            for (const studentId of Object.keys(assessment.submissions)) {
-              // jika ada jawaban uraian yang belum dinilai
-              if (
-                !(
-                  Object.keys(assessment.grades).includes(studentId) &&
-                  assessment.grades[studentId].total_grade !== null
-                )
-              ) {
-                // tampilkan di list
-                result.push({
-                  _id: assessment._id,
-                  title: assessment.name,
-                  subject: assessment.subject,
-                  createdAt: assessment.createdAt,
-                  type: assessment.type,
-                  start_date: assessment.start_date,
-                  end_date: assessment.end_date,
-                });
-                break;
-              }
-            }
-          } else {
-            // jika belum ada satupun murid yang jawaban uraiannya sudah dinilai, tampilkan di list
+        for(let classId of all_assessments[i].class_assigned) {
+          if(selectedClassCheckList.includes(classId)) {
+            classFound = true;
+            break;
+          }
+        }
+        if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+        tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+        tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+        classFound) {
+          if(localCounter < 3) {
             result.push({
               _id: assessment._id,
               title: assessment.name,
@@ -3157,9 +3220,11 @@ function Calendar(props) {
               end_date: assessment.end_date,
             });
           }
+          localCounter ++;
         }
       }
     }
+    handleChangeCounter(localCounter);
     return result.map((row) => {
       return (
         <Link to={`/daftar-${lowerCaseType}-terkumpul/${row._id}`}>
@@ -3168,24 +3233,67 @@ function Calendar(props) {
             className={classes.monthAgendaChip} 
             align="left"
           >
-            <span 
-              style={{width: "calc(100% - 80px)", display: "inline-block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", verticalAlign: "top"}}
-            >
-              {row.title}
-            </span>
-            <span className="task">
-              (
-              {moment(row.start_date)
-              .locale("id")
-              .format("HH:mm")}
-              -
-              {moment(row.end_date)
-              .locale("id")
-              .format("HH:mm")}
-              )
-            </span>
+            {row.title}
           </Typography>
         </Link>
+      );
+    });
+  }
+
+  function listAssessmentsAdmin(tempSelectedDate, assessmentType, mainCounter, handleChangeCounter) {
+    // menampilkan assessment jika ada submission yang belum selesai dinilai
+
+    let result = [];
+    let lowerCaseType = assessmentType === "Kuis" ? "kuis" : "ujian";
+    let localCounter = mainCounter;
+    let classCheckList = Object.entries(classCheckboxState)
+    let selectedClassCheckList = []
+    for (let classItem of classCheckList) {
+      if(classItem[1]) {
+        selectedClassCheckList.push(classItem[0]);
+      }
+    }
+
+    for (let i = 0; i < all_assessments.length; i++) {
+      let assessment = all_assessments[i];
+      let tempDeadlineDate = new Date(moment(assessment.start_date).locale("id"));
+      let classFound = false;
+      if (assessment.type === assessmentType) {
+        for(let classId of all_assessments[i].class_assigned) {
+          if(selectedClassCheckList.includes(classId)) {
+            classFound = true;
+            break;
+          }
+        }
+        if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+        tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+        tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+        classFound) {
+          if(localCounter < 3) {
+            result.push({
+              _id: assessment._id,
+              title: assessment.name,
+              subject: assessment.subject,
+              createdAt: assessment.createdAt,
+              type: assessment.type,
+              start_date: assessment.start_date,
+              end_date: assessment.end_date,
+            });
+          }
+          localCounter ++;
+        }
+      }
+    }
+    handleChangeCounter(localCounter);
+    return result.map((row) => {
+      return (
+        <Typography 
+          variant="body2" 
+          className={classes.monthAgendaChipAdmin} 
+          align="left"
+        >
+          {row.title}
+        </Typography>
       );
     });
   }
@@ -3221,22 +3329,7 @@ function Calendar(props) {
                 )
               }
             >
-              <span 
-                style={{width: "calc(100% - 80px)", display: "inline-block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", verticalAlign: "top"}}
-              >
-                {eventInfo.name}
-              </span>
-              <span className="task">
-                (
-                {moment(eventInfo.start_date)
-                .locale("id")
-                .format("HH:mm")}
-                -
-                {moment(eventInfo.end_date)
-                .locale("id")
-                .format("HH:mm")}
-                )
-              </span>
+              {eventInfo.name}
             </Typography>
             <Dialog
               fullScreen={false}
@@ -3421,23 +3514,44 @@ function Calendar(props) {
     }
   }
 
-  const [agendaCheckboxState, setAgendaCheckboxState] = React.useState({
-    checkedTask: true,
-    checkedQuiz: true,
-    checkedExam: true,
-    checkedEvent: true,
-  });
+  let agendaStates = {}
+  if(role !== "Admin") {
+    agendaStates = {
+      checkedTask: true,
+      checkedQuiz: true,
+      checkedExam: true,
+      checkedEvent: true,
+    }
+  }
+  else {
+    agendaStates = {
+      checkedTask: false,
+      checkedQuiz: false,
+      checkedExam: false,
+      checkedEvent: true,
+    }
+  }
+
+  const [agendaCheckboxState, setAgendaCheckboxState] = React.useState(agendaStates);
 
   const handleChange = (event) => {
     setAgendaCheckboxState({ ...agendaCheckboxState, [event.target.name]: event.target.checked });
   };
 
-  let classStates = null
+  let classStates = {}
   if(role === "Teacher") {
     classStates = Object.assign({}, ...user.class_teached.map((class_id) => ({[class_id]: true})))
   }
 
+  React.useEffect(() => {
+    if(role === "Admin" && all_classes.length !== 0) {
+      classStates = Object.assign({}, ...all_classes.map((kelas) => ({[kelas._id]: true})))
+      setClassCheckboxState(classStates)
+    }
+  }, [all_classes])
+
   const [classCheckboxState, setClassCheckboxState] = React.useState(classStates);
+  console.log(classCheckboxState)
 
   const handleChangeClassStates = (event) => {
     setClassCheckboxState({ ...classCheckboxState, [event.target.name]: event.target.checked });
@@ -3534,8 +3648,8 @@ function Calendar(props) {
                   {
                     dayNames.map((day) => {
                       return (
-                        <TableCell style={{verticalAlign: "bottom"}}>
-                          <Typography align="center">
+                        <TableCell style={{paddingBottom: "5px"}}>
+                          <Typography align="center" variant="body2">
                             {day[0]}
                           </Typography>
                         </TableCell>
@@ -3558,144 +3672,159 @@ function Calendar(props) {
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
       "Jul", "Agu", "Sep", "Okt", "Nov", "Des"
     ];
-    return (
-      <TableRow style={{height: "175px"}}>
-        {date.map((column, columnIndex) => {
-          let temp_date = new Date(column).getDate();
-          let temp_date_withoutMonthNames = temp_date
-          if(temp_date == 1) {
-            temp_date = temp_date + " " + monthNames[new Date(column).getMonth()];
-          }
-          let mainCounter = 0;
-          const handleChangeCounter = (count) => {mainCounter = count}
+    if(all_assessments && tasksCollection && rows) {
+      return (
+        <TableRow style={{height: "150px"}}>
+          {date.map((column, columnIndex) => {
+            let temp_date = new Date(column).getDate();
+            let temp_date_withoutMonthNames = temp_date
+            if(temp_date == 1) {
+              temp_date = temp_date + " " + monthNames[new Date(column).getMonth()];
+            }
+            let mainCounter = 0;
+            const handleChangeCounter = (count) => {mainCounter = count}
 
-          let today = new Date();
-          
-          let taskList = null;
-          if(agendaCheckboxState.checkedTask) {
-            if(role === "Student") {
-              taskList = listTasks(new Date(column), mainCounter, handleChangeCounter);
+            let today = new Date();
+            
+            let taskList = null;
+            if(agendaCheckboxState.checkedTask) {
+              if(role === "Student") {
+                taskList = listTasks(new Date(column), mainCounter, handleChangeCounter);
+              }
+              if(role === "Teacher") {
+                taskList = listTasksTeacher(new Date(column), mainCounter, handleChangeCounter);
+              }
+              if(role === "Admin") {
+                taskList = listTasksAdmin(new Date(column), mainCounter, handleChangeCounter);
+              }
             }
-            if(role === "Teacher") {
-              taskList = listTasksTeacher(new Date(column), mainCounter, handleChangeCounter);
-            }
-          }
 
-          let quizList = null;
-          if(agendaCheckboxState.checkedQuiz) {
-            if(role === "Student") {
-              quizList = 
-                <ListAssessments
-                  category={null}
-                  subject={{}}
-                  type="Kuis"
-                  tab="pekerjaan-kelas"
-                  all_assessments={all_assessments}
-                  classId={classId}
-                  classes={classes}
-                  all_subjects_map={all_subjects_map}
-                  all_teachers={all_teachers}
-                  getSelectedDate={getSelectedDate}
-                  date={new Date(column)}
-                  mainCounter={mainCounter}
-                  handleChangeCounter={handleChangeCounter}
-                />
+            let quizList = null;
+            if(agendaCheckboxState.checkedQuiz) {
+              if(role === "Student") {
+                quizList = 
+                  <ListAssessments
+                    category={null}
+                    subject={{}}
+                    type="Kuis"
+                    tab="pekerjaan-kelas"
+                    all_assessments={all_assessments}
+                    classId={classId}
+                    classes={classes}
+                    all_subjects_map={all_subjects_map}
+                    all_teachers={all_teachers}
+                    getSelectedDate={getSelectedDate}
+                    date={new Date(column)}
+                    mainCounter={mainCounter}
+                    handleChangeCounter={handleChangeCounter}
+                  />
+              }
+              if(role === "Teacher") {
+                quizList = listAssessmentsTeacher(new Date(column), "Kuis", mainCounter, handleChangeCounter)
+              }
+              if(role === "Admin") {
+                quizList = listAssessmentsAdmin(new Date(column), "Kuis", mainCounter, handleChangeCounter)
+              }
             }
-            if(role === "Teacher") {
-              quizList = listAssessmentsTeacher("Kuis")
+            
+            let examList = null;
+            if(agendaCheckboxState.checkedExam) {
+              if(role === "Student") {
+                examList = 
+                  <ListAssessments
+                    category={null}
+                    subject={{}}
+                    type="Ujian"
+                    tab="pekerjaan-kelas"
+                    all_assessments={all_assessments}
+                    classId={classId}
+                    classes={classes}
+                    all_subjects_map={all_subjects_map}
+                    all_teachers={all_teachers}
+                    getSelectedDate={getSelectedDate}
+                    date={new Date(column)}
+                    mainCounter={mainCounter}
+                    handleChangeCounter={handleChangeCounter}
+                  />
+              }
+              if(role === "Teacher") {
+                examList = listAssessmentsTeacher(new Date(column), "Ujian", mainCounter, handleChangeCounter)
+              }
+              if(role === "Admin") {
+                examList = listAssessmentsAdmin(new Date(column), "Ujian", mainCounter, handleChangeCounter)
+              }
             }
-          }
-          
-          let examList = null;
-          if(agendaCheckboxState.checkedExam) {
-            examList = 
-              <ListAssessments
-                category={null}
-                subject={{}}
-                type="Ujian"
-                tab="pekerjaan-kelas"
-                all_assessments={all_assessments}
-                classId={classId}
-                classes={classes}
-                all_subjects_map={all_subjects_map}
-                all_teachers={all_teachers}
-                getSelectedDate={getSelectedDate}
-                date={new Date(column)}
-                mainCounter={mainCounter}
-                handleChangeCounter={handleChangeCounter}
-              />
-          }
+            
 
-          let eventList = {result: null}
-          if(agendaCheckboxState.checkedEvent) {
-            eventList = listEvent(new Date(column), mainCounter, handleChangeCounter);
-          }
-          
-          return (
-            <TableCell className={classes.monthAgendaCell}>
-              {(index === 0) ?
-                <Hidden xsDown>
-                  <Typography color="textSecondary" variant="body2" align="center">{dayNames[columnIndex]}</Typography>
-                </Hidden>
-              : null}
-              <div style={{display: "flex", justifyContent: "center", marginBottom: "5px"}}>
-                {isSameDate(today, column) ?
-                  <>
-                    <Hidden xsDown>
-                      <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center">{temp_date}</Typography>
-                    </Hidden>
-                    <Hidden smUp>
-                      <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center">{temp_date_withoutMonthNames}</Typography>
-                    </Hidden>
-                  </>
-                :
-                  <>
-                    <Hidden xsDown>
-                      <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center">{temp_date}</Typography>
-                    </Hidden>
-                    <Hidden smUp>
-                      <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center">{temp_date_withoutMonthNames}</Typography>
-                    </Hidden>
-                  </>
-                }
-              </div>
-              {
-                agendaCheckboxState.checkedTask && taskList !== null ?
-                taskList.map((row) => {
-                  return  (
-                    <Link to={`/tugas-murid/${row._id}`}>
-                      <Typography variant="body2" className={classes.monthAgendaChip} align="left">
-                        <span 
-                          style={{width: "calc(100% - 45px)", display: "inline-block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", verticalAlign: "top"}}
-                        >
+            let eventList = {result: null}
+            if(agendaCheckboxState.checkedEvent) {
+              eventList = listEvent(new Date(column), mainCounter, handleChangeCounter);
+            }
+            
+            return (
+              <TableCell className={classes.monthAgendaCell}>
+                {(index === 0) ?
+                  <Hidden xsDown>
+                    <Typography color="textSecondary" variant="body2" align="center">{dayNames[columnIndex]}</Typography>
+                  </Hidden>
+                : null}
+                <div style={{display: "flex", justifyContent: "center", marginBottom: "5px"}}>
+                  {isSameDate(today, column) ?
+                    <>
+                      <Hidden xsDown>
+                        <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center">{temp_date}</Typography>
+                      </Hidden>
+                      <Hidden smUp>
+                        <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center">{temp_date_withoutMonthNames}</Typography>
+                      </Hidden>
+                    </>
+                  :
+                    <>
+                      <Hidden xsDown>
+                        <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center">{temp_date}</Typography>
+                      </Hidden>
+                      <Hidden smUp>
+                        <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center">{temp_date_withoutMonthNames}</Typography>
+                      </Hidden>
+                    </>
+                  }
+                </div>
+                {
+                  agendaCheckboxState.checkedTask && taskList !== null ?
+                  taskList.map((row) => {
+                    if(role !== "Admin") {
+                      return  (
+                        <Link to={(role === "Student") ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`}>
+                          <Typography variant="body2" className={classes.monthAgendaChip} align="left">
+                            {row.name}
+                          </Typography>
+                        </Link>
+                      )
+                    }
+                    else {
+                      return  (
+                        <Typography variant="body2" className={classes.monthAgendaChipAdmin} align="left">
                           {row.name}
-                        </span>
-                        <span className="task">
-                          (
-                          {moment(row.deadline)
-                          .locale("id")
-                          .format("HH:mm")}
-                          )
-                        </span>
-                      </Typography>
-                    </Link>
-                  )
-                })
-                : null
-              }
-              {agendaCheckboxState.checkedQuiz ? quizList : null}
-              {agendaCheckboxState.checkedExam ? examList : null}
-              {agendaCheckboxState.checkedEvent ? eventList.result : null}
-              {
-                (mainCounter > 3) ?
-                  <Typography variant="body2" className={classes.moreMonthAgendaChip} align="left">{mainCounter - 3} lagi</Typography>
-                : null
-              }
-            </TableCell>
-          )
-        })}
-      </TableRow>
-    )
+                        </Typography>
+                      )
+                    }
+                  })
+                  : null
+                }
+                {agendaCheckboxState.checkedQuiz ? quizList : null}
+                {agendaCheckboxState.checkedExam ? examList : null}
+                {agendaCheckboxState.checkedEvent ? eventList.result : null}
+                {
+                  (mainCounter > 3) ?
+                    <Typography variant="body2" className={classes.moreMonthAgendaChip} align="left">{mainCounter - 3} lagi</Typography>
+                  : null
+                }
+              </TableCell>
+            )
+          })}
+        </TableRow>
+      )
+    }
   }
 
   // ANCHOR ELEMENT
@@ -3826,7 +3955,7 @@ function Calendar(props) {
               />
             </FormGroup>
           </div>
-          { (role === "Teacher" && selectedClasses !== null) ?
+          {(role === "Teacher" && selectedClasses !== null) ?
             <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
               <Typography style={{marginTop: "15px"}}>Kelas</Typography>
               <FormGroup>
@@ -3850,6 +3979,33 @@ function Calendar(props) {
                         label={class_name}
                       />
                     )
+                  })
+                }
+              </FormGroup>
+            </div>
+          : null}
+          {(role === "Admin" && all_classes !== null) ?
+            <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
+              <Typography style={{marginTop: "15px"}}>Kelas</Typography>
+              <FormGroup>
+                {
+                  all_classes.map((kelas) => {
+                    let class_id = kelas._id;
+                    let class_name = kelas.name
+                    if(Object.keys(classCheckboxState).length !== 0) {
+                      return (
+                        <FormControlLabel
+                          control={
+                            <Checkbox checked={classCheckboxState[class_id]}
+                              onChange={handleChangeClassStates}
+                              name={class_id}
+                              color="primary"
+                            />
+                          }
+                          label={class_name}
+                        />
+                      )
+                    }
                   })
                 }
               </FormGroup>
@@ -3887,6 +4043,7 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getSelectedClasses,
+  getAllClass,
   getAllEvents,
   getAllTask,
   getAllSubjects,
