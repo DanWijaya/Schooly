@@ -171,7 +171,7 @@ const useStyles = makeStyles((theme) => ({
   },
   calendarContainer: {
     marginLeft: "15px",
-    width: "20%"
+    width: "200px"
   },
   calendar: {
     border: "none",
@@ -2871,6 +2871,294 @@ function Calendar(props) {
     setRows([...props.eventsCollection.allEvents]);
   }, [props.eventsCollection.allEvents]);
 
+  React.useEffect(() => {
+    // let rows = [];
+    // for (let i = 1; i <= 24; i++) {
+    // 	rows.push([]);
+    // }
+
+    // case 1
+    // let data = [
+    // 	{
+    // 		id: 1,
+    // 		start_date: new Date(2021, 1, 1, 1),
+    // 		end_date: new Date(2021, 1, 1, 2),
+    // 	}, 
+    // 	{
+    // 		id: 2,
+    // 		start_date: new Date(2021, 1, 1, 3),
+    // 		end_date: new Date(2021, 1, 1, 4),
+    // 	},
+    // 	{
+    // 		id: 3,
+    // 		start_date: new Date(2021, 1, 1, 1, 30),
+    // 		end_date: new Date(2021, 1, 1, 4),
+    // 	},
+    // 	{
+    // 		id: 4,
+    // 		start_date: new Date(2021, 1, 1, 2),
+    // 		end_date: new Date(2021, 1, 1, 3),
+    // 	},
+    // 	{
+    // 		id: 5,
+    // 		start_date: new Date(2021, 1, 1, 2, 30),
+    // 		end_date: new Date(2021, 1, 1, 3, 30),
+    // 	},
+    // 	{
+    // 		id: 6,
+    // 		start_date: new Date(2021, 1, 1, 1, 45),
+    // 		end_date: new Date(2021, 1, 1, 2, 45),
+    // 	},
+    // 	{
+    // 		id: 7,
+    // 		start_date: new Date(2021, 1, 1, 1, 52),
+    // 		end_date: new Date(2021, 1, 1, 2, 52),
+    // 	},
+    // ];
+
+    // case 9
+    let data = [
+      {
+        id: 1,
+        start_date: new Date(2021, 1, 1, 1),
+        end_date: new Date(2021, 1, 1, 3),
+      },
+      {
+        id: 2,
+        // start_date: new Date(2021, 1, 1, 5, 30),
+        start_date: new Date(2021, 1, 1, 6),
+        end_date: new Date(2021, 1, 1, 6, 45),
+      },
+      {
+        id: 3,
+        start_date: new Date(2021, 1, 1, 2),
+        end_date: new Date(2021, 1, 1, 2, 45),
+      },
+      {
+        id: 4,
+        start_date: new Date(2021, 1, 1, 6, 15),
+        end_date: new Date(2021, 1, 1, 7),
+      },
+      {
+        id: 5,
+        start_date: new Date(2021, 1, 1, 1, 15),
+        end_date: new Date(2021, 1, 1, 2),
+      },
+      {
+        id: 6,
+        start_date: new Date(2021, 1, 1, 1, 45),
+        end_date: new Date(2021, 1, 1, 2, 15),
+      },
+      {
+        id: 7,
+        start_date: new Date(2021, 1, 1, 2, 15),
+        end_date: new Date(2021, 1, 1, 6),
+      },
+      {
+        id: 8,
+        start_date: new Date(2021, 1, 1, 2, 7, 30),
+        end_date: new Date(2021, 1, 1, 3),
+      },
+      {
+        id: 9,
+        start_date: new Date(2021, 1, 1, 6, 30),
+        end_date: new Date(2021, 1, 1, 8),
+      },
+    ];
+
+    // mengonversi start_date dan end_date menjadi epoch milidetik, lalu menyimpan hasil konversi ini di data 
+    data = data.map((elm) => ({ ...elm, start_date_epoch: elm.start_date.getTime(), end_date_epoch: elm.end_date.getTime() }));
+
+    // sort data. data yang start date-nya lebih dulu akan ditempatkan di awal array (epoch asc)
+    data.sort((a, b) => {
+      return a.start_date_epoch - b.start_date_epoch;
+    });
+
+
+    // menempatkan setiap tile di posisi paling kiri yang masih bisa ditempati.
+    // pada proses ini, lebar setiap tile diasumsikan 1/4 (lebar tile ketika 4 tile intersect). penentuan lebar akan dilakukan setelah bagian ini.
+    let lastColElement = []; // menyimpan salinan data terbawah yang ditempatkan di tiap kolom.
+    // traverse semua data/tile
+    for (let i = 0; i <= data.length - 1; i++) {
+      let currentData = data[i];
+      let foundSpace = false;
+      let col = 0;
+
+      // loop hingga tile sudah ditempatkan / startColumn sudah diset
+      while (!foundSpace) {
+        if (col > lastColElement.length - 1) {
+          // jika kolom ini tidak ada
+
+          // tambah kolom baru
+          lastColElement.push(currentData);
+
+          // menempatkan data di kolom ini
+          data[i].startColumn = col;
+
+          // untuk mengakhiri while loop
+          foundSpace = true;
+        } else {
+          // jika sudah ada minimal 1 tile yang menempati kolom ini
+
+          if (!isIntersect(lastColElement[col].start_date_epoch, lastColElement[col].end_date_epoch, currentData.start_date_epoch, currentData.end_date_epoch)) {
+            // jika tile ini tidak intersect dengan tile terakhir pada kolom ini
+
+            // letakan tile di kolom ini
+            lastColElement[col] = currentData;
+            data[i].startColumn = col;
+            foundSpace = true;
+
+          } else {
+            // jika intersect, cek kolom selanjutnya (kolom di kanan kolom ini)  
+            col++;
+          }
+        }
+      }
+
+    }
+
+
+    let columns = [];
+    /* 
+    akan berisi: 
+      [
+        [{ tile pertama pada kolom 1 }, { tile kedua dari atas pada kolom 1 }],
+        [{ tile pertama pada kolom 2 }],
+        [{ tile pertama pada kolom 3 }, { tile kedua dari atas pada kolom 3 }, { tile ketiga dari atas pada kolom 3 }],
+        [{ tile pertama pada kolom 4 }, { tile kedua dari atas  pada kolom 4 }]
+      ]
+    */
+    for (let d of data) {
+      if (columns[d.startColumn]) {
+        columns[d.startColumn].push(d);
+      } else {
+        columns[d.startColumn] = [d];
+      }
+    }
+
+    /* 
+      ide
+      - tile = node pada tree
+      - setiap tile paling kiri = root sebuah tree
+      - definisi height yang digunakan: misal ada 1 root dengan 1 child node. height tree ini adalah 1
+      - lebar tile = lebar layar / (height + 1)
+    */
+    let firstRoot = true;
+    // traverse semua data/tile
+    for (let i = 0; i <= data.length - 1; i++) {
+      if (data[i].startColumn === 0) {
+        // jika tile ini adalah root
+
+        // cek apakah root ini intersect dengan salah satu node dari tree sebelumnya,
+        let width = null;
+        if (firstRoot === false) {
+          for (let column of columns.slice(1)) {
+            for (let tile of column) {
+              // jika tile yang sedang dicek sudah sepenuhnya berada di bawah titik terbawah dari tile root, 
+              // akhiri loop karena tile-tile ini dan seterusnya pasti tidak intersect dengan tile root
+              if (tile.start_date_epoch >= data[i].end_date_epoch) {
+                break;
+              }
+
+              if (isIntersect(tile.start_date_epoch, tile.end_date_epoch, data[i].start_date_epoch, data[i].end_date_epoch) && tile.width) {
+                // jika root ini intersect dengan salah satu node dari tree sebelumnya, gunakan lebar tile pada tree tersebut 
+                width = tile.width;
+                break;
+              }
+            }
+          }
+        }
+
+        // jika root ini tidak intersect dengan salah satu node dari tree sebelumnya
+        let treeHeight = null;
+        if (width === null) {
+          treeHeight = getTreeHeight(data, columns, 0, data[i]);
+          // jika height > 3, set jadi 3 karena lebar terkecil untuk suatu tile adalah 1/4 dari layar
+          if (treeHeight > 3) {
+            treeHeight = 3;
+          }
+        }
+
+        // set lebar semua tile di tree ini
+        let subtree = new Set(getTree(data, columns, 0, data[i]));
+        subtree.forEach((value) => {
+          for (let j = 0; j <= data.length - 1; j++) {
+            if (data[j].id === value) {
+
+              data[j].width = width ?? Math.round(100 / (treeHeight + 1));
+              console.log(`${data[j].id}: ${data[j].width}`)
+              break;
+            }
+          }
+        });
+
+        firstRoot = false;
+      }
+    }
+  }, [])
+
+  function getTreeHeight(data, columns, currentCol, currentNode) {
+    // cari semua node yg ada di kanan
+    if (currentCol === columns.length - 1) {
+      return currentCol;
+    }
+    let rightTiles = columns[currentCol + 1]
+    let intersectNodes = [];
+    for (let i = 0; i <= rightTiles.length - 1; i++) {
+      if (rightTiles[i].start_date_epoch >= currentNode.end_date_epoch) {
+        break;
+      }
+
+      if (
+        isIntersect(rightTiles[i].start_date_epoch, rightTiles[i].end_date_epoch, currentNode.start_date_epoch, currentNode.end_date_epoch)
+      ) {
+        intersectNodes.push(rightTiles[i]);
+      }
+    }
+    if (intersectNodes.length === 0) {
+      return currentCol;
+    }
+    // untuk setiap intersect node, masukin ke checkrightintersect, 
+    let findMax = intersectNodes.map((node) => getTreeHeight(data, columns, currentCol + 1, node))
+    return Math.max(...findMax);
+  }
+
+  function getTree(data, columns, currentCol, currentNode) {
+
+    if (currentCol === columns.length - 1) {
+      return [currentNode.id];
+    }
+
+    let rightTiles = columns[currentCol + 1]
+    let intersectNodes = [];
+
+    for (let i = 0; i <= rightTiles.length - 1; i++) {
+      if (rightTiles[i].start_date_epoch >= currentNode.end_date_epoch) {
+        break;
+      }
+
+      if (
+        isIntersect(rightTiles[i].start_date_epoch, rightTiles[i].end_date_epoch, currentNode.start_date_epoch, currentNode.end_date_epoch)
+      ) {
+        intersectNodes.push(rightTiles[i]);
+      }
+    }
+    if (intersectNodes.length === 0) {
+      return [currentNode.id];
+    }
+    let arrayOfIdsArray = intersectNodes.map((node) => getTree(data, columns, currentCol + 1, node))
+    let res = [currentNode.id];
+    for (let arrayOfId of arrayOfIdsArray) {
+      res = res.concat(arrayOfId);
+    }
+    return res;
+  }
+
+  function isIntersect(start1, end1, start2, end2) {
+    // return end2 >= start1 && start2 <= end1;
+    return end2 > start1 && start2 < end1;
+  }
+
   const handleNextMonth = () => {
     setActiveStartDate(new Date(activeStartDate.setMonth(activeStartDate.getMonth() + 1)));
   };
@@ -3593,13 +3881,13 @@ function Calendar(props) {
                             if(data.visible) {
                               return (
                                 <div 
-                                  className={classes.blueChip} 
+                                  className={classes.blueChip}
                                   style={{
-                                    transform: 
-                                    idx !== 0 ? 
-                                    `translate(calc(100% * ${idx} + ${idx} * 10px), ${data.start/60*rowHeight}px)`
-                                    : `translate(calc(100% * ${idx}), ${data.start/60*rowHeight}px)`, 
-                                    height: `${data.duration/60*rowHeight}px`,
+                                    transform:
+                                      idx !== 0 ?
+                                        `translate(calc(100% * ${idx} + ${idx} * 10px), ${data.start / 60 * rowHeight}px)`
+                                        : `translate(calc(100% * ${idx}), ${data.start / 60 * rowHeight}px)`,
+                                    height: `${data.duration / 60 * rowHeight}px`,
                                     width: `calc(100% / ${timeRowsDummy[index].length} - ${widthPadding}px)`
                                   }}
                                 >
@@ -3608,18 +3896,17 @@ function Calendar(props) {
                               )
                             }
                             else return (
-                              <div 
-                                className={classes.invisibleChip} 
+                              <div
+                                className={classes.invisibleChip}
                                 style={{
-                                  transform: 
-                                  idx !== 0 ? 
-                                  `translate(calc(100% * ${idx} + ${idx} * 10px), ${data.start/60*rowHeight}px)`
-                                  : `translate(calc(100% * ${idx}), ${data.start/60*rowHeight}px)`, 
-                                  height: `${data.duration/60*rowHeight}px`,
+                                  transform:
+                                    idx !== 0 ?
+                                      `translate(calc(100% * ${idx} + ${idx} * 10px), ${data.start / 60 * rowHeight}px)`
+                                      : `translate(calc(100% * ${idx}), ${data.start / 60 * rowHeight}px)`,
+                                  height: `${data.duration / 60 * rowHeight}px`,
                                   width: `calc(100% / ${timeRowsDummy[index].length} - ${widthPadding}px)`
                                 }}
                               >
-                                
                               </div>
                             )
                           })
