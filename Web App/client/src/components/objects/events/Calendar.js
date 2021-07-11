@@ -905,7 +905,9 @@ function ListAssessments(props) {
     getSelectedDate,
     date,
     mainCounter,
-    handleChangeCounter
+    handleChangeCounter,
+    mode,
+    handleChangeList
   } = props;
 
   let localCounter = mainCounter;
@@ -1039,19 +1041,29 @@ function ListAssessments(props) {
           assessment.type === "Kuis" &&
           assessment.posted
         ) {
-          if(localCounter < 3) {
+          if(mode === "Month") {
+            if(localCounter < 3) {
+              result.push({
+                name: assessment.name,
+                workCategoryAvatar: workCategoryAvatar,
+                subject: assessment.subject,
+                teacher_name: teacher_name,
+                start_date: assessment.start_date,
+                end_date: assessment.end_date,
+                createdAt: assessment.createdAt,
+                finished: assessment.submissions
+              });
+            }
+            localCounter ++;
+          }
+          else {
             result.push({
-              name: assessment.name,
-              workCategoryAvatar: workCategoryAvatar,
-              subject: assessment.subject,
-              teacher_name: teacher_name,
               start_date: assessment.start_date,
               end_date: assessment.end_date,
-              createdAt: assessment.createdAt,
-              finished: assessment.submissions
+              type: type,
+              data: assessment,
             });
           }
-          localCounter ++;
         }
       }
       if (type === "Ujian") {
@@ -1062,43 +1074,60 @@ function ListAssessments(props) {
           assessment.type === "Ujian" &&
           assessment.posted
         ) {
-          if(localCounter < 3) {
+          if(mode === "Month") {
+            if(localCounter < 3) {
+              result.push({
+                name: assessment.name,
+                workCategoryAvatar: workCategoryAvatar,
+                subject: assessment.subject,
+                teacher_name: teacher_name,
+                start_date: assessment.start_date,
+                end_date: assessment.end_date,
+                createdAt: assessment.createdAt,
+                finished: assessment.submissions
+              });
+            }
+            localCounter ++;
+          }
+          else {
             result.push({
-              name: assessment.name,
-              workCategoryAvatar: workCategoryAvatar,
-              subject: assessment.subject,
-              teacher_name: teacher_name,
               start_date: assessment.start_date,
               end_date: assessment.end_date,
-              createdAt: assessment.createdAt,
-              finished: assessment.submissions
+              type: type,
+              data: assessment,
             });
           }
-          localCounter ++;
         }
       }
     }
   }
-  handleChangeCounter(localCounter);
-  return result.map((row) => (
-    <AssessmentListItem
-      work_title={row.name}
-      work_category_avatar={row.workCategoryAvatar}
-      work_subject={
-        category === "subject" ? null : all_subjects_map.get(row.subject)
-      }
-      work_teacher_name={row.teacher_name}
-      // work_status={workStatus}
-      work_starttime={moment(row.start_date)
-        .locale("id")
-        .format("DD MMM YYYY, HH:mm")}
-      work_endtime={moment(row.end_date)
-        .locale("id")
-        .format("DD MMM YYYY, HH:mm")}
-      work_dateposted={row.createdAt}
-      work_finished={row.finished}
-    />
-  ));
+  if(mode === "Month") {
+    handleChangeCounter(localCounter);
+    return result.map((row) => (
+      <AssessmentListItem
+        work_title={row.name}
+        work_category_avatar={row.workCategoryAvatar}
+        work_subject={
+          category === "subject" ? null : all_subjects_map.get(row.subject)
+        }
+        work_teacher_name={row.teacher_name}
+        // work_status={workStatus}
+        work_starttime={moment(row.start_date)
+          .locale("id")
+          .format("DD MMM YYYY, HH:mm")}
+        work_endtime={moment(row.end_date)
+          .locale("id")
+          .format("DD MMM YYYY, HH:mm")}
+        work_dateposted={row.createdAt}
+        work_finished={row.finished}
+      />
+    ));
+  }
+  else {
+    console.log(result);
+    handleChangeList(result);
+    return;
+  }
 }
 
 function AssessmentListItemTeacher(props) {
@@ -2843,7 +2872,7 @@ function Calendar(props) {
 
   // Calendar
   const today = new Date()
-  const [mode, setMode] = React.useState("Month");
+  const [mode, setMode] = React.useState("Day");
   const [currentDateDayMode, setCurrentDateDayMode] = React.useState(today);
   const [currentDateMonthMode, setCurrentDateMonthMode] = React.useState(today);
 
@@ -3273,7 +3302,7 @@ function Calendar(props) {
     return selectedDate;
   }
 
-  function listTasks(date, mainCounter, handleChangeCounter) {
+  function listTasks(date, mainCounter=null, handleChangeCounter=null) {
     let result = [];
     let localCounter = mainCounter;
     let tasksByClass = [];
@@ -3310,7 +3339,36 @@ function Calendar(props) {
       if(tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
       tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
       tempSelectedDate.getYear() === tempDeadlineDate.getYear()) {
-        if(localCounter < 3) {
+        if(mode === "Month") {
+          if(localCounter < 3) {
+            for (var i = 0; i < all_user_files.length; i++) {
+              if (all_user_files[i].for_task_object === task._id) {
+                flag = false;
+                break;
+              }
+            }
+            for (var i = 0; i < all_teachers.length; i++) {
+              if (all_teachers[i]._id == task.person_in_charge_id) {
+                teacher_name = all_teachers[i].name;
+              }
+            }
+            if (!all_subjects_map.get(task.subject)) {
+              flag = false;
+            }
+            if (flag) {
+              result.push({
+                _id: task._id,
+                name: task.name,
+                teacher_name: teacher_name,
+                subject: task.subject,
+                deadline: task.deadline,
+                createdAt: task.createdAt,
+              });
+            }
+          }
+          localCounter ++;
+        }
+        else {
           for (var i = 0; i < all_user_files.length; i++) {
             if (all_user_files[i].for_task_object === task._id) {
               flag = false;
@@ -3327,256 +3385,374 @@ function Calendar(props) {
           }
           if (flag) {
             result.push({
-              _id: task._id,
-              name: task.name,
-              teacher_name: teacher_name,
-              subject: task.subject,
               deadline: task.deadline,
-              createdAt: task.createdAt,
+              type: "Tugas",
+              data: task,
             });
-            
           }
         }
-        localCounter ++;
       }
     });
   
     if (mode === "Month") {
-      handleChangeCounter(localCounter);
-      return result;
+      handleChangeCounter(localCounter);  
     }
+    return result;
   }
 
-  function listTasksTeacher(date, mainCounter, handleChangeCounter) {
-    let tempSelectedDate = date;
-    let localCounter = mainCounter;
-    let result = [];
-    let classCheckList = Object.entries(classCheckboxState)
-    let selectedClassCheckList = []
-    for (let classItem of classCheckList) {
-      if(classItem[1]) {
-        selectedClassCheckList.push(classItem[0]);
-      }
-    }
-    for (let i = 0; i < tasksCollection.length; i++) {
-      let tempDeadlineDate = new Date(moment(tasksCollection[i].deadline).locale("id"));
-      let classFound = false;
-      for(let classId of tasksCollection[i].class_assigned) {
-        if(selectedClassCheckList.includes(classId)) {
-          classFound = true;
-          break;
+  function listTasksTeacher(date, mainCounter=null, handleChangeCounter=null) {
+    if(classCheckboxState) {
+      let tempSelectedDate = date;
+      let localCounter = mainCounter;
+      let result = [];
+      let classCheckList = Object.entries(classCheckboxState)
+      let selectedClassCheckList = []
+      for (let classItem of classCheckList) {
+        if(classItem[1]) {
+          selectedClassCheckList.push(classItem[0]);
         }
       }
-      if (tasksCollection[i].person_in_charge_id === user._id &&
-        tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
-        tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-        tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
-        classFound) {
-        let number_students_assigned = 0;
-        for (let j = 0; j < all_students.length; j++) {
-          if (
-            tasksCollection[i].class_assigned.includes(all_students[j].kelas)
-          ) {
-            number_students_assigned = number_students_assigned + 1;
-          }
-        }
-        if (
-          Object.values(tasksCollection[i].grades).length !==
-          number_students_assigned
-        ) {
-          if(localCounter < 3) {
-            let task = tasksCollection[i];
-            result.push({
-              _id: task._id,
-              name: task.name,
-              subject: task.subject,
-              deadline: task.deadline,
-              createdAt: task.createdAt,
-            });
-          }
-          localCounter ++;
-        }
-      }
-    }
-    if (mode === "Month") {
-      handleChangeCounter(localCounter);
-      return result;
-    }
-  }
-
-  function listTasksAdmin(date, mainCounter, handleChangeCounter) {
-    let tempSelectedDate = date;
-    let localCounter = mainCounter;
-    let result = [];
-    let classCheckList = Object.entries(classCheckboxState)
-    let selectedClassCheckList = []
-    for (let classItem of classCheckList) {
-      if(classItem[1]) {
-        selectedClassCheckList.push(classItem[0]);
-      }
-    }
-    for (let i = 0; i < tasksCollection.length; i++) {
-      let tempDeadlineDate = new Date(moment(tasksCollection[i].deadline).locale("id"));
-      let classFound = false;
-      for(let classId of tasksCollection[i].class_assigned) {
-        if(selectedClassCheckList.includes(classId)) {
-          classFound = true;
-          break;
-        }
-      }
-      if (
-        tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
-        tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-        tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
-        classFound) {
-        let number_students_assigned = 0;
-        for (let j = 0; j < all_students.length; j++) {
-          if (
-            tasksCollection[i].class_assigned.includes(all_students[j].kelas)
-          ) {
-            number_students_assigned = number_students_assigned + 1;
-          }
-        }
-        if (
-          Object.values(tasksCollection[i].grades).length !==
-          number_students_assigned
-        ) {
-          if(localCounter < 3) {
-            let task = tasksCollection[i];
-            result.push({
-              _id: task._id,
-              name: task.name,
-              subject: task.subject,
-              deadline: task.deadline,
-              createdAt: task.createdAt,
-            });
-          }
-          localCounter ++;
-        }
-      }
-    }
-    if (mode === "Month") {
-      handleChangeCounter(localCounter);
-      return result;
-    }
-  }
-
-  function listAssessmentsTeacher(tempSelectedDate, assessmentType, mainCounter, handleChangeCounter) {
-    // menampilkan assessment jika ada submission yang belum selesai dinilai
-
-    let result = [];
-    let lowerCaseType = assessmentType === "Kuis" ? "kuis" : "ujian";
-    let localCounter = mainCounter;
-    let classCheckList = Object.entries(classCheckboxState)
-    let selectedClassCheckList = []
-    for (let classItem of classCheckList) {
-      if(classItem[1]) {
-        selectedClassCheckList.push(classItem[0]);
-      }
-    }
-
-    for (let i = 0; i < all_assessments.length; i++) {
-      let assessment = all_assessments[i];
-      let tempDeadlineDate = new Date(moment(assessment.start_date).locale("id"));
-      let classFound = false;
-      if (assessment.type === assessmentType) {
-        for(let classId of all_assessments[i].class_assigned) {
+      for (let i = 0; i < tasksCollection.length; i++) {
+        let tempDeadlineDate = new Date(moment(tasksCollection[i].deadline).locale("id"));
+        let classFound = false;
+        for(let classId of tasksCollection[i].class_assigned) {
           if(selectedClassCheckList.includes(classId)) {
             classFound = true;
             break;
           }
         }
+        if (tasksCollection[i].person_in_charge_id === user._id &&
+          tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+          tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+          tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+          classFound) {
+          let number_students_assigned = 0;
+          for (let j = 0; j < all_students.length; j++) {
+            if (
+              tasksCollection[i].class_assigned.includes(all_students[j].kelas)
+            ) {
+              number_students_assigned = number_students_assigned + 1;
+            }
+          }
+          if (
+            Object.values(tasksCollection[i].grades).length !==
+            number_students_assigned
+          ) {
+            if(mode === "Month") {
+              if(localCounter < 3) {
+                let task = tasksCollection[i];
+                result.push({
+                  _id: task._id,
+                  name: task.name,
+                  subject: task.subject,
+                  deadline: task.deadline,
+                  createdAt: task.createdAt,
+                });
+              }
+              localCounter ++;
+            }
+            else {
+              let task = tasksCollection[i];
+              result.push({
+                deadline: task.deadline,
+                type: "Tugas",
+                data: task,
+              });
+            }
+          }
+        }
+      }
+      if (mode === "Month") {
+        handleChangeCounter(localCounter);
+      }
+      return result;
+    }
+  }
+
+  function listTasksAdmin(date, mainCounter=null, handleChangeCounter=null) {
+    if(classCheckboxState) {
+      let tempSelectedDate = date;
+      let localCounter = mainCounter;
+      let result = [];
+      let classCheckList = Object.entries(classCheckboxState)
+      let selectedClassCheckList = []
+      for (let classItem of classCheckList) {
+        if(classItem[1]) {
+          selectedClassCheckList.push(classItem[0]);
+        }
+      }
+      for (let i = 0; i < tasksCollection.length; i++) {
+        let tempDeadlineDate = new Date(moment(tasksCollection[i].deadline).locale("id"));
+        let classFound = false;
+        for(let classId of tasksCollection[i].class_assigned) {
+          if(selectedClassCheckList.includes(classId)) {
+            classFound = true;
+            break;
+          }
+        }
+        if (
+          tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+          tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+          tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+          classFound) {
+          let number_students_assigned = 0;
+          for (let j = 0; j < all_students.length; j++) {
+            if (
+              tasksCollection[i].class_assigned.includes(all_students[j].kelas)
+            ) {
+              number_students_assigned = number_students_assigned + 1;
+            }
+          }
+          if (
+            Object.values(tasksCollection[i].grades).length !==
+            number_students_assigned
+          ) {
+            if(mode === "Month") {
+              if(localCounter < 3) {
+                let task = tasksCollection[i];
+                result.push({
+                  _id: task._id,
+                  name: task.name,
+                  subject: task.subject,
+                  deadline: task.deadline,
+                  createdAt: task.createdAt,
+                });
+              }
+              localCounter ++;
+            }
+            else {
+              let task = tasksCollection[i];
+              result.push({
+                deadline: task.deadline,
+                type: "Tugas",
+                data: task,
+              });
+            }
+          }
+        }
+      }
+      if (mode === "Month") {
+        handleChangeCounter(localCounter);
+      }
+      return result;
+    }
+  }
+
+  function listAssessmentsStudentMonth(tempSelectedDate, type) {
+    // menampilkan assessment jika ada submission yang belum selesai dinilai
+    let category = null;
+    let subject = {};
+    let AssessmentsList = [];
+    let TeacherList = []
+    let result = [];
+        
+    if (Boolean(all_assessments.length)) {
+      var i;
+      for (i = all_assessments.length - 1; i >= 0; i--) {
+        let assessment = all_assessments[i];
+        let tempDeadlineDate = new Date(moment(assessment.start_date)
+        .locale("id"));
+        let class_assigned = assessment.class_assigned;
+
         if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
         tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
         tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
-        classFound) {
-          if(localCounter < 3) {
-            result.push({
-              _id: assessment._id,
-              title: assessment.name,
-              subject: assessment.subject,
-              createdAt: assessment.createdAt,
-              type: assessment.type,
-              start_date: assessment.start_date,
-              end_date: assessment.end_date,
-            });
+        class_assigned.indexOf(classId) !== -1) {
+          for (let j = 0; j < all_teachers.length; j++) {
+            if (all_teachers[j]._id === assessment.author_id) {
+              TeacherList.push(all_teachers[j].name);
+              break;
+            }
           }
-          localCounter ++;
+          AssessmentsList.push(assessment);
+        }
+      }
+      for (i = 0; i < AssessmentsList.length; i++) {
+        let assessment = AssessmentsList[i];
+        // let workStatus = "Belum Ditempuh"
+        if (type === "Kuis") {
+          if (
+            (!category ||
+              (category === "subject" && assessment.subject === subject._id)) &&
+            
+            assessment.type === "Kuis" &&
+            assessment.posted
+          ) {
+              result.push({
+                start_date: assessment.start_date,
+                end_date: assessment.end_date,
+                type: type,
+                data: assessment,
+              });  
+          }
+        }
+        if (type === "Ujian") {
+          if (
+            (!category ||
+              (category === "subject" && assessment.subject === subject._id)) &&
+            
+            assessment.type === "Ujian" &&
+            assessment.posted
+          ) {
+              result.push({
+                start_date: assessment.start_date,
+                end_date: assessment.end_date,
+                type: type,
+                data: assessment,
+              });
+          }
         }
       }
     }
-    handleChangeCounter(localCounter);
-    return result.map((row) => {
-      return (
-        <Link to={`/daftar-${lowerCaseType}-terkumpul/${row._id}`}>
-          <Typography 
-            variant="body2" 
-            className={classes.monthAgendaChip} 
-            align="left"
-          >
-            {row.title}
-          </Typography>
-        </Link>
-      );
-    });
+    return result;
+  }
+
+  function listAssessmentsTeacher(tempSelectedDate, assessmentType, mainCounter=null, handleChangeCounter=null) {
+    // menampilkan assessment jika ada submission yang belum selesai dinilai
+    if(classCheckboxState) {
+      let result = [];
+      let lowerCaseType = assessmentType === "Kuis" ? "kuis" : "ujian";
+      let localCounter = mainCounter;
+      let classCheckList = Object.entries(classCheckboxState)
+      let selectedClassCheckList = []
+      for (let classItem of classCheckList) {
+        if(classItem[1]) {
+          selectedClassCheckList.push(classItem[0]);
+        }
+      }
+
+      for (let i = 0; i < all_assessments.length; i++) {
+        let assessment = all_assessments[i];
+        let tempDeadlineDate = new Date(moment(assessment.start_date).locale("id"));
+        let classFound = false;
+        if (assessment.type === assessmentType) {
+          for(let classId of all_assessments[i].class_assigned) {
+            if(selectedClassCheckList.includes(classId)) {
+              classFound = true;
+              break;
+            }
+          }
+          if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+          tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+          tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+          classFound) {
+            if(mode === "Month") {
+              if(localCounter < 3) {
+                result.push({
+                  _id: assessment._id,
+                  title: assessment.name,
+                  subject: assessment.subject,
+                  createdAt: assessment.createdAt,
+                  type: assessment.type,
+                  start_date: assessment.start_date,
+                  end_date: assessment.end_date,
+                });
+              }
+              localCounter ++;
+            }
+            else {
+              result.push({
+                start_date: assessment.start_date,
+                end_date: assessment.end_date,
+                type: assessmentType,
+                data: assessment,
+              });
+            }
+          }
+        }
+      }
+      if(mode === "Month") {
+        handleChangeCounter(localCounter);
+        return result.map((row) => {
+          return (
+            <Link to={`/daftar-${lowerCaseType}-terkumpul/${row._id}`}>
+              <Typography 
+                variant="body2" 
+                className={classes.monthAgendaChip} 
+                align="left"
+              >
+                {row.title}
+              </Typography>
+            </Link>
+          );
+        });
+      }
+      else return result;
+    }
   }
 
   function listAssessmentsAdmin(tempSelectedDate, assessmentType, mainCounter, handleChangeCounter) {
     // menampilkan assessment jika ada submission yang belum selesai dinilai
-
-    let result = [];
-    let lowerCaseType = assessmentType === "Kuis" ? "kuis" : "ujian";
-    let localCounter = mainCounter;
-    let classCheckList = Object.entries(classCheckboxState)
-    let selectedClassCheckList = []
-    for (let classItem of classCheckList) {
-      if(classItem[1]) {
-        selectedClassCheckList.push(classItem[0]);
-      }
-    }
-
-    for (let i = 0; i < all_assessments.length; i++) {
-      let assessment = all_assessments[i];
-      let tempDeadlineDate = new Date(moment(assessment.start_date).locale("id"));
-      let classFound = false;
-      if (assessment.type === assessmentType) {
-        for(let classId of all_assessments[i].class_assigned) {
-          if(selectedClassCheckList.includes(classId)) {
-            classFound = true;
-            break;
-          }
-        }
-        if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
-        tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-        tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
-        classFound) {
-          if(localCounter < 3) {
-            result.push({
-              _id: assessment._id,
-              title: assessment.name,
-              subject: assessment.subject,
-              createdAt: assessment.createdAt,
-              type: assessment.type,
-              start_date: assessment.start_date,
-              end_date: assessment.end_date,
-            });
-          }
-          localCounter ++;
+    if(classCheckboxState) {
+      let result = [];
+      let lowerCaseType = assessmentType === "Kuis" ? "kuis" : "ujian";
+      let localCounter = mainCounter;
+      let classCheckList = Object.entries(classCheckboxState)
+      let selectedClassCheckList = []
+      for (let classItem of classCheckList) {
+        if(classItem[1]) {
+          selectedClassCheckList.push(classItem[0]);
         }
       }
+
+      for (let i = 0; i < all_assessments.length; i++) {
+        let assessment = all_assessments[i];
+        let tempDeadlineDate = new Date(moment(assessment.start_date).locale("id"));
+        let classFound = false;
+        if (assessment.type === assessmentType) {
+          for(let classId of all_assessments[i].class_assigned) {
+            if(selectedClassCheckList.includes(classId)) {
+              classFound = true;
+              break;
+            }
+          }
+          if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+          tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+          tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+          classFound) {
+            if(mode === "Month") {
+              if(localCounter < 3) {
+                result.push({
+                  _id: assessment._id,
+                  title: assessment.name,
+                  subject: assessment.subject,
+                  createdAt: assessment.createdAt,
+                  type: assessment.type,
+                  start_date: assessment.start_date,
+                  end_date: assessment.end_date,
+                });
+              }
+              localCounter ++;
+            }
+            else {
+              result.push({
+                start_date: assessment.start_date,
+                end_date: assessment.end_date,
+                type: assessmentType,
+                data: assessment,
+              });
+            }
+          }
+        }
+      }
+      if(mode === "Month") {
+        handleChangeCounter(localCounter);
+        return result.map((row) => {
+          return (
+            <Link to={`/daftar-${lowerCaseType}-terkumpul/${row._id}`}>
+              <Typography 
+                variant="body2" 
+                className={classes.monthAgendaChip} 
+                align="left"
+              >
+                {row.title}
+              </Typography>
+            </Link>
+          );
+        });
+      }
+      else return result;
     }
-    handleChangeCounter(localCounter);
-    return result.map((row) => {
-      return (
-        <Typography 
-          variant="body2" 
-          className={classes.monthAgendaChipAdmin} 
-          align="left"
-        >
-          {row.title}
-        </Typography>
-      );
-    });
   }
 
   const listEvent = (date, mainCounter, handleChangeCounter) => {
@@ -3656,19 +3832,30 @@ function Calendar(props) {
     });
     let localCounter = mainCounter;
     filteredEvents.forEach((eventInfo) => {
-      if(localCounter < 3) {
-        result.push(
-          <EventItem eventInfo={eventInfo}/>
-        )
+      if(mode === "Month") {
+        if(localCounter < 3) {
+          result.push(
+            <EventItem eventInfo={eventInfo}/>
+          )
+        }
+        localCounter ++;
       }
-      localCounter ++;
+      else {
+        result.push({
+          start_date: eventInfo.start_date,
+          end_date: eventInfo.end_date,
+          type: "Event",
+          data: eventInfo,
+        })
+      }
     })
-    handleChangeCounter(localCounter);
-    return {result, count: result.length};
+    if(mode === "Month") {
+      handleChangeCounter(localCounter);
+      return {result, count: result.length};
+    }
+    else return result;
   }
 
-  // Dimas -------------------------------------
-  
   const handleChangeMode = (event) => {
     setMode(event.target.value);
   }
@@ -3838,6 +4025,44 @@ function Calendar(props) {
     setClassCheckboxState({ ...classCheckboxState, [event.target.name]: event.target.checked });
   };
 
+  const generateDayModeList = (date) => {
+    let result = []
+    if(mode === "Day") {
+      if(tasksCollection.length !== 0 && 
+        all_assessments.length !== 0 && 
+        rows.length !== 0) {
+        if(role === "Student") {
+          let taskList = listTasks(new Date(date));
+          let quizList = listAssessmentsStudentMonth(new Date(date), "Kuis");
+          let examList = listAssessmentsStudentMonth(new Date(date), "Ujian");
+          let eventList = listEvent(new Date(date));
+          result = [...taskList, ...quizList, ...examList, ...eventList];
+        }
+        else if(role === "Teacher" && classCheckboxState) {
+          let taskList = listTasksTeacher(new Date(date));
+          let quizList = listAssessmentsTeacher(new Date(date), "Kuis");
+          let examList = listAssessmentsTeacher(new Date(date), "Ujian");
+          let eventList = listEvent(new Date(date));
+          result = [...taskList, ...quizList, ...examList, ...eventList];
+        }
+        else {
+          if(classCheckboxState) {
+            let taskList = listTasksAdmin(new Date(date));
+            let quizList = listAssessmentsAdmin(new Date(date), "Kuis");
+            let examList = listAssessmentsAdmin(new Date(date), "Ujian");
+            let eventList = listEvent(new Date(date));
+            result = [...taskList, ...quizList, ...examList, ...eventList];
+          }
+        }
+      }
+    }
+    return result;
+  }
+  
+  if(mode === "Day") {
+    console.log(generateDayModeList(new Date(2021, 5, 3)));
+  }
+
   const generateDayModeCalendar = () => {
     let rowHeight = 90;
     return (
@@ -3980,6 +4205,7 @@ function Calendar(props) {
                     date={new Date(column)}
                     mainCounter={mainCounter}
                     handleChangeCounter={handleChangeCounter}
+                    mode={mode}
                   />
               }
               if(role === "Teacher") {
@@ -4008,6 +4234,7 @@ function Calendar(props) {
                     date={new Date(column)}
                     mainCounter={mainCounter}
                     handleChangeCounter={handleChangeCounter}
+                    mode={mode}
                   />
               }
               if(role === "Teacher") {
