@@ -2847,6 +2847,8 @@ function Calendar(props) {
   const [currentDateDayMode, setCurrentDateDayMode] = React.useState(today);
   const [currentDateMonthMode, setCurrentDateMonthMode] = React.useState(today);
 
+  const [tileRows, setTileRows] = React.useState([]);
+
   React.useEffect(() => {
     getSelectedClasses(user.class_teached);
     getAllClass();
@@ -2872,11 +2874,6 @@ function Calendar(props) {
   }, [props.eventsCollection.allEvents]);
 
   React.useEffect(() => {
-    // let rows = [];
-    // for (let i = 1; i <= 24; i++) {
-    // 	rows.push([]);
-    // }
-
     // case 1
     // let data = [
     // 	{
@@ -2991,10 +2988,8 @@ function Calendar(props) {
 
           // tambah kolom baru
           lastColElement.push(currentData);
-
           // menempatkan data di kolom ini
           data[i].startColumn = col;
-
           // untuk mengakhiri while loop
           foundSpace = true;
         } else {
@@ -3002,21 +2997,17 @@ function Calendar(props) {
 
           if (!isIntersect(lastColElement[col].start_date_epoch, lastColElement[col].end_date_epoch, currentData.start_date_epoch, currentData.end_date_epoch)) {
             // jika tile ini tidak intersect dengan tile terakhir pada kolom ini
-
             // letakan tile di kolom ini
             lastColElement[col] = currentData;
             data[i].startColumn = col;
             foundSpace = true;
-
           } else {
             // jika intersect, cek kolom selanjutnya (kolom di kanan kolom ini)  
             col++;
           }
         }
       }
-
     }
-
 
     let columns = [];
     /* 
@@ -3037,7 +3028,7 @@ function Calendar(props) {
     }
 
     /* 
-      ide
+      menentukan lebar setiap tile. ide:
       - tile = node pada tree
       - setiap tile paling kiri = root sebuah tree
       - definisi height yang digunakan: misal ada 1 root dengan 1 child node. height tree ini adalah 1
@@ -3086,7 +3077,6 @@ function Calendar(props) {
             if (data[j].id === value) {
 
               data[j].width = width ?? Math.round(100 / (treeHeight + 1));
-              console.log(`${data[j].id}: ${data[j].width}`)
               break;
             }
           }
@@ -3095,51 +3085,54 @@ function Calendar(props) {
         firstRoot = false;
       }
     }
+
+    let tileRows = [];
+    for (let d of data) {
+      if (tileRows[d.start_date.getHours()]) {
+        tileRows[d.start_date.getHours()].push(d);
+      } else {
+        tileRows[d.start_date.getHours()] = [d];
+      }
+    }
+    setTileRows(tileRows);
   }, [])
 
   function getTreeHeight(data, columns, currentCol, currentNode) {
-    // cari semua node yg ada di kanan
     if (currentCol === columns.length - 1) {
       return currentCol;
     }
-    let rightTiles = columns[currentCol + 1]
+
+    let rightTiles = columns[currentCol + 1];
     let intersectNodes = [];
     for (let i = 0; i <= rightTiles.length - 1; i++) {
       if (rightTiles[i].start_date_epoch >= currentNode.end_date_epoch) {
         break;
       }
 
-      if (
-        isIntersect(rightTiles[i].start_date_epoch, rightTiles[i].end_date_epoch, currentNode.start_date_epoch, currentNode.end_date_epoch)
-      ) {
+      if (isIntersect(rightTiles[i].start_date_epoch, rightTiles[i].end_date_epoch, currentNode.start_date_epoch, currentNode.end_date_epoch)) {
         intersectNodes.push(rightTiles[i]);
       }
     }
     if (intersectNodes.length === 0) {
       return currentCol;
     }
-    // untuk setiap intersect node, masukin ke checkrightintersect, 
     let findMax = intersectNodes.map((node) => getTreeHeight(data, columns, currentCol + 1, node))
     return Math.max(...findMax);
   }
 
   function getTree(data, columns, currentCol, currentNode) {
-
     if (currentCol === columns.length - 1) {
       return [currentNode.id];
     }
 
-    let rightTiles = columns[currentCol + 1]
+    let rightTiles = columns[currentCol + 1];
     let intersectNodes = [];
-
     for (let i = 0; i <= rightTiles.length - 1; i++) {
       if (rightTiles[i].start_date_epoch >= currentNode.end_date_epoch) {
         break;
       }
 
-      if (
-        isIntersect(rightTiles[i].start_date_epoch, rightTiles[i].end_date_epoch, currentNode.start_date_epoch, currentNode.end_date_epoch)
-      ) {
+      if (isIntersect(rightTiles[i].start_date_epoch, rightTiles[i].end_date_epoch, currentNode.start_date_epoch, currentNode.end_date_epoch)) {
         intersectNodes.push(rightTiles[i]);
       }
     }
@@ -3866,7 +3859,7 @@ function Calendar(props) {
             <TableBody>
               {timeRows.map((row, index) => {
                 let widthPadding = 5;
-                let i = timeRowsDummy[index].length;
+                let i = tileRows[index]?.length ?? 0;
                 while (i > 2) {
                   widthPadding = widthPadding + 5/3 / (i - 2)
                   i --;
@@ -3877,39 +3870,22 @@ function Calendar(props) {
                       <Typography color="textSecondary" variant="body2" style={{width: "32px"}}>{row}</Typography>
                       <div className={classes.horizontalLine}>
                         {
-                          timeRowsDummy[index].map((data, idx) => {
-                            if(data.visible) {
+                          tileRows[index] ?
+                            tileRows[index].map((data, idx) => {
                               return (
-                                <div 
+                                <div
                                   className={classes.blueChip}
                                   style={{
-                                    transform:
-                                      idx !== 0 ?
-                                        `translate(calc(100% * ${idx} + ${idx} * 10px), ${data.start / 60 * rowHeight}px)`
-                                        : `translate(calc(100% * ${idx}), ${data.start / 60 * rowHeight}px)`,
-                                    height: `${data.duration / 60 * rowHeight}px`,
-                                    width: `calc(100% / ${timeRowsDummy[index].length} - ${widthPadding}px)`
+                                    transform: `translate(calc(100% * ${data.startColumn} + ${data.startColumn} * 10px), ${data.start_date.getMinutes() / 60 * rowHeight}px)`,
+                                    height: `${((data.end_date_epoch - data.start_date_epoch) / (1000 * 60)) / 60 * rowHeight}px`,
+                                    width: `calc(${data.width}% - ${widthPadding}px)`
                                   }}
                                 >
-                                  {data.title}
+                                  {data.id}
+                                  {/* {data.title} */}
                                 </div>
                               )
-                            }
-                            else return (
-                              <div
-                                className={classes.invisibleChip}
-                                style={{
-                                  transform:
-                                    idx !== 0 ?
-                                      `translate(calc(100% * ${idx} + ${idx} * 10px), ${data.start / 60 * rowHeight}px)`
-                                      : `translate(calc(100% * ${idx}), ${data.start / 60 * rowHeight}px)`,
-                                  height: `${data.duration / 60 * rowHeight}px`,
-                                  width: `calc(100% / ${timeRowsDummy[index].length} - ${widthPadding}px)`
-                                }}
-                              >
-                              </div>
-                            )
-                          })
+                            }) : null
                         }
                       </div>
                     </TableCell>
