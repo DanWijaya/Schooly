@@ -764,20 +764,32 @@ function AgendaToolbar(props) {
     }
   }
 
+  const handleChangeDay = (direction) => {
+    if (direction === "now") {
+      let tempMonthDate = new Date();
+      tempMonthDate.setHours(0, 0, 0);
+      setCurrentDateDayMode(tempMonthDate);
+    } else if (direction === "next") {
+      setCurrentDateDayMode(new Date(currentDateDayMode.getTime() + 1000 * 60 * 60 * 24));
+    } else {
+      setCurrentDateDayMode(new Date(currentDateDayMode.getTime() - 1000 * 60 * 60 * 24));
+    }
+  }
+
   return (
     <div className={classes.toolbar}>
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
         <Hidden xsDown>
           {mode === "Day" ?
-            <Button variant="outlined">Hari ini</Button>
+            <Button variant="outlined" onClick={() => handleChangeDay("now")}> Hari ini</Button>
           :
             <Button variant="outlined" onClick={() => handleChangeMonth("now")}>Hari ini</Button>
           }
           {mode === "Day" ?
             <>
               <div style={{margin: "0 5px"}}>
-                <ChevronLeftIcon className={classes.chevronButton}/>
-                <ChevronRightIcon className={classes.chevronButton}/>
+                <ChevronLeftIcon onClick={() => handleChangeDay("prev")} className={classes.chevronButton}/>
+                <ChevronRightIcon onClick={() => handleChangeDay("next")} className={classes.chevronButton}/>
               </div>
               <Typography>{stringDateDayMode}</Typography>
             </>
@@ -1498,6 +1510,7 @@ function EventDialog(props) {
     createEvent(formData, eventData)
       .then(() => {
         setUploadSuccess(true);
+        getAllEvents();
       })
       .catch((err) => {
         setOpenUploadDialog(false);
@@ -1540,6 +1553,7 @@ function EventDialog(props) {
     updateEvent(formData, fileLampiranToDelete, eventData, selectedEventId)
       .then(() => {
         setUploadSuccess(true);
+        getAllEvents();
       })
       .catch((err) => {
         setOpenUploadDialog(false);
@@ -2008,6 +2022,7 @@ function EventDialog(props) {
 
   const handleDelete = () => {
     deleteEvent(selectedEventId).then(() => {
+      getAllEvents();
       handleCloseEventDialog();
       showSnackbar("success", "Kegiatan berhasil dihapus");
     })
@@ -2850,7 +2865,8 @@ function Calendar(props) {
   const { all_subjects_map, all_subjects } = props.subjectsCollection;
   const { all_assessments } = props.assessmentsCollection;
   const { selectedClasses, all_classes } = props.classesCollection;
-  console.log(all_classes)
+  const { allEvents } = props.eventsCollection;
+  // console.log(all_classes)
 
   // ANCHOR STATES
   const [activeStartDate, setActiveStartDate] = React.useState(new Date(new Date().getFullYear(), new Date().getMonth())); // set ke awal bulan sekarang 
@@ -2943,63 +2959,87 @@ function Calendar(props) {
     // ];
 
     // case 9
-    let data = [
-      {
-        id: 1,
-        start_date: new Date(2021, 1, 1, 1),
-        end_date: new Date(2021, 1, 1, 3),
-      },
-      {
-        id: 2,
-        // start_date: new Date(2021, 1, 1, 5, 30),
-        start_date: new Date(2021, 1, 1, 6),
-        end_date: new Date(2021, 1, 1, 6, 45),
-      },
-      {
-        id: 3,
-        start_date: new Date(2021, 1, 1, 2),
-        end_date: new Date(2021, 1, 1, 2, 45),
-      },
-      {
-        id: 4,
-        start_date: new Date(2021, 1, 1, 6, 15),
-        end_date: new Date(2021, 1, 1, 7),
-      },
-      {
-        id: 5,
-        start_date: new Date(2021, 1, 1, 1, 15),
-        end_date: new Date(2021, 1, 1, 2),
-      },
-      {
-        id: 6,
-        start_date: new Date(2021, 1, 1, 1, 45),
-        end_date: new Date(2021, 1, 1, 2, 15),
-      },
-      {
-        id: 7,
-        start_date: new Date(2021, 1, 1, 2, 15),
-        end_date: new Date(2021, 1, 1, 6),
-      },
-      {
-        id: 8,
-        start_date: new Date(2021, 1, 1, 2, 7, 30),
-        end_date: new Date(2021, 1, 1, 3),
-      },
-      {
-        id: 9,
-        start_date: new Date(2021, 1, 1, 6, 30),
-        end_date: new Date(2021, 1, 1, 8),
-      },
-    ];
+    // let data = [
+    //   {
+    //     id: 1,
+    //     start_date: new Date(2021, 1, 1, 1),
+    //     end_date: new Date(2021, 1, 1, 3),
+    //   },
+    //   {
+    //     id: 2,
+    //     // start_date: new Date(2021, 1, 1, 5, 30),
+    //     start_date: new Date(2021, 1, 1, 6),
+    //     end_date: new Date(2021, 1, 1, 6, 45),
+    //   },
+    //   {
+    //     id: 3,
+    //     start_date: new Date(2021, 1, 1, 2),
+    //     end_date: new Date(2021, 1, 1, 2, 45),
+    //   },
+    //   {
+    //     id: 4,
+    //     start_date: new Date(2021, 1, 1, 6, 15),
+    //     end_date: new Date(2021, 1, 1, 7),
+    //   },
+    //   {
+    //     id: 5,
+    //     start_date: new Date(2021, 1, 1, 1, 15),
+    //     end_date: new Date(2021, 1, 1, 2),
+    //   },
+    //   {
+    //     id: 6,
+    //     start_date: new Date(2021, 1, 1, 1, 45),
+    //     end_date: new Date(2021, 1, 1, 2, 15),
+    //   },
+    //   {
+    //     id: 7,
+    //     start_date: new Date(2021, 1, 1, 2, 15),
+    //     end_date: new Date(2021, 1, 1, 6),
+    //   },
+    //   {
+    //     id: 8,
+    //     start_date: new Date(2021, 1, 1, 2, 7, 30),
+    //     end_date: new Date(2021, 1, 1, 3),
+    //   },
+    //   {
+    //     id: 9,
+    //     start_date: new Date(2021, 1, 1, 6, 30),
+    //     end_date: new Date(2021, 1, 1, 8),
+    //   },
+    // ];
 
-    // mengonversi start_date dan end_date menjadi epoch milidetik, lalu menyimpan hasil konversi ini di data 
-    data = data.map((elm) => ({ ...elm, start_date_epoch: elm.start_date.getTime(), end_date_epoch: elm.end_date.getTime() }));
+    setTileRows(placeDayModeTiles(generateDayModeList(currentDateDayMode), currentDateDayMode));
+  }, [currentDateDayMode]);
+
+  React.useEffect(() => {
+    if (allEvents) {
+      setTileRows(placeDayModeTiles(generateDayModeList(currentDateDayMode), currentDateDayMode));
+    }
+  }, [allEvents]);
+
+  function placeDayModeTiles(arrayOfObject, currentDateDayMode) {
+    let data = arrayOfObject.map((elm) => {
+      let start_date = new Date(elm.start_date);
+      let end_date = new Date(elm.end_date);
+      
+      if (end_date.getDate() !== currentDateDayMode.getDate()) {
+        if (elm.type !== "Tugas") {
+          end_date = new Date(currentDateDayMode);
+          end_date.setHours(23, 59);
+        }
+      }
+      if (start_date.getDate() !== currentDateDayMode.getDate()) {
+        start_date = new Date(currentDateDayMode);
+        start_date.setHours(0, 0);
+      }
+
+      return { ...elm, start_date, end_date, start_date_epoch: start_date.getTime(), end_date_epoch: end_date.getTime() }
+    });
 
     // sort data. data yang start date-nya lebih dulu akan ditempatkan di awal array (epoch asc)
     data.sort((a, b) => {
       return a.start_date_epoch - b.start_date_epoch;
     });
-
 
     // menempatkan setiap tile di posisi paling kiri yang masih bisa ditempati.
     // pada proses ini, lebar setiap tile diasumsikan 1/4 (lebar tile ketika 4 tile intersect). penentuan lebar akan dilakukan setelah bagian ini.
@@ -3123,9 +3163,9 @@ function Calendar(props) {
         tileRows[d.start_date.getHours()] = [d];
       }
     }
-    setTileRows(tileRows);
-  }, [])
-
+    return tileRows;
+  }
+  
   function getTreeHeight(data, columns, currentCol, currentNode) {
     if (currentCol === columns.length - 1) {
       return currentCol;
@@ -3878,18 +3918,18 @@ function Calendar(props) {
     '20:00', '21:00', '22:00', '23:00'
   ]
 
-  const timeRowsDummy = [
-    [{start: 10, title: "Tugas Matematika", duration: 130, visible: true}, {start: 10, title: "Tugas Biologi", duration: 70, visible: true}, {start: 10, title: "Tugas Kimia", duration: 20, visible: true}, {start: 10, title: "Tugas Biologi", duration: 70, visible: true}, {start: 10, title: "Tugas Kimia", duration: 20, visible: true}], 
-    [{start: 0, title: "Tugas Matematika", duration: 80, visible: false}, {start: 0, title: "Tugas Biologi", duration: 20, visible: false}, {start: 10, title: "Tugas Fisika", duration: 70, visible: true}, {start: 10, title: "Tugas Biologi", duration: 20, visible: false}, {start: 0, title: "Tugas Matematika", duration: 80, visible: false}], 
-    [{start: 0, title: "Tugas Matematika", duration: 20, visible: false}], 
-    [], 
-    [{start: 0, title: "Ujian Biologi", duration: 30, visible: true}], 
-    [], [], [], [], [], [], 
-    [{start: 20, title: "Kuis Kimia", duration: 10, visible: true}, 
-    {start: 50, title: "Ujian Musik", duration: 10, visible: true}], 
-    [], [], [], [], [], [], [], [],
-    [], [], [], []
-  ]
+  // const timeRowsDummy = [
+  //   [{start: 10, title: "Tugas Matematika", duration: 130, visible: true}, {start: 10, title: "Tugas Biologi", duration: 70, visible: true}, {start: 10, title: "Tugas Kimia", duration: 20, visible: true}, {start: 10, title: "Tugas Biologi", duration: 70, visible: true}, {start: 10, title: "Tugas Kimia", duration: 20, visible: true}], 
+  //   [{start: 0, title: "Tugas Matematika", duration: 80, visible: false}, {start: 0, title: "Tugas Biologi", duration: 20, visible: false}, {start: 10, title: "Tugas Fisika", duration: 70, visible: true}, {start: 10, title: "Tugas Biologi", duration: 20, visible: false}, {start: 0, title: "Tugas Matematika", duration: 80, visible: false}], 
+  //   [{start: 0, title: "Tugas Matematika", duration: 20, visible: false}], 
+  //   [], 
+  //   [{start: 0, title: "Ujian Biologi", duration: 30, visible: true}], 
+  //   [], [], [], [], [], [], 
+  //   [{start: 20, title: "Kuis Kimia", duration: 10, visible: true}, 
+  //   {start: 50, title: "Ujian Musik", duration: 10, visible: true}], 
+  //   [], [], [], [], [], [], [], [],
+  //   [], [], [], []
+  // ]
 
   const dayNames = [
     'SEN', 'SEL', 'RAB', 'KAM', 'JUM', 'SAB', 'MIN'
@@ -4019,7 +4059,7 @@ function Calendar(props) {
   }, [all_classes])
 
   const [classCheckboxState, setClassCheckboxState] = React.useState(classStates);
-  console.log(classCheckboxState)
+  // console.log(classCheckboxState)
 
   const handleChangeClassStates = (event) => {
     setClassCheckboxState({ ...classCheckboxState, [event.target.name]: event.target.checked });
@@ -4059,9 +4099,25 @@ function Calendar(props) {
     return result;
   }
   
-  if(mode === "Day") {
-    console.log(generateDayModeList(new Date(2021, 5, 3)));
-  }
+  // if(mode === "Day") {
+  //   console.log(generateDayModeList(new Date(2021, 5, 3)));
+  // }
+
+  /* 
+    data:
+      createdAt: "2021-07-10T00:18:35.352Z"
+      description: "Datang"
+      end_date: "2021-07-12T00:17:00.000Z"
+      location: "Rumah"
+      name: "Event Admin"
+      start_date: "2021-07-11T00:17:00.000Z"
+      to: ["Admin"]
+      updatedAt: "2021-07-10T00:18:35.352Z"
+      _id: "60e8e75bfdbc16375cb1a127"
+    end_date: "2021-07-12T00:17:00.000Z"
+    start_date: "2021-07-11T00:17:00.000Z"
+    type: "Tugas" / "Kuis" / "Ujian" / "Event"
+  */
 
   const generateDayModeCalendar = () => {
     let rowHeight = 90;
@@ -4106,8 +4162,7 @@ function Calendar(props) {
                                     width: `calc(${data.width}% - ${widthPadding}px)`
                                   }}
                                 >
-                                  {data.id}
-                                  {/* {data.title} */}
+                                  {data.data.name}
                                 </div>
                               )
                             }) : null
@@ -4321,21 +4376,21 @@ function Calendar(props) {
   return (
     <div className={classes.root}>
       {
-      unmountEventDialog
-        ? null
-        :
-        <EventDialog
-          getAllEvents={props.getAllEvents}
-          allEvents={props.eventsCollection.allEvents}
-          selectedEventId={selectedEventId}
-          eventDialogMode={eventDialogMode}
-          openEventDialog={openEventDialog}
-          handleCloseEventDialog={handleCloseEventDialog}
-          handleOpenEditDialog={handleOpenEditDialog}
-          handleSetUnmountEventDialog={handleSetUnmountEventDialog}
-          viewFileEvent={viewFileEvent}
-          showSnackbar={showSnackbar}
-        />
+        unmountEventDialog
+          ? null
+          :
+          <EventDialog
+            getAllEvents={getAllEvents}
+            allEvents={allEvents}
+            selectedEventId={selectedEventId}
+            eventDialogMode={eventDialogMode}
+            openEventDialog={openEventDialog}
+            handleCloseEventDialog={handleCloseEventDialog}
+            handleOpenEditDialog={handleOpenEditDialog}
+            handleSetUnmountEventDialog={handleSetUnmountEventDialog}
+            viewFileEvent={viewFileEvent}
+            showSnackbar={showSnackbar}
+          />
       }
       {/* TODO hapus (tombol dummy untuk buka view dialog)*/}
       {/* <Fab className={classes.greenFab} style={{ backgroundColor: "red" }} aria-label="add" size="small" onClick={() => { handleOpenViewDialog() }}>
