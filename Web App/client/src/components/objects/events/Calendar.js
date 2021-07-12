@@ -766,9 +766,7 @@ function AgendaToolbar(props) {
 
   const handleChangeDay = (direction) => {
     if (direction === "now") {
-      let tempMonthDate = new Date();
-      tempMonthDate.setHours(0, 0, 0);
-      setCurrentDateDayMode(tempMonthDate);
+      setCurrentDateDayMode(getDayStart(new Date()));
     } else if (direction === "next") {
       setCurrentDateDayMode(new Date(currentDateDayMode.getTime() + 1000 * 60 * 60 * 24));
     } else {
@@ -1583,9 +1581,10 @@ function EventDialog(props) {
         // jika tanggal dan waktu valid
 
         // set waktu mulai ke 00:00:00. tanggal tidak diubah 
-        let start = new Date(start_date.getTime()); // membuat salinan
-        start.setHours(0, 0, 0);
-        setStartDate(start);
+        // let start = new Date(start_date.getTime()); // membuat salinan
+        // start.setHours(0, 0, 0);
+        // setStartDate(start);
+        setStartDate(getDayStart(start_date));
 
         // simpan waktu
         lastSelectedTime.current.start_date = {
@@ -1631,9 +1630,10 @@ function EventDialog(props) {
 
         } else {
           // jika isi textfield picker kosong,
-          let start = new Date();
-          start.setHours(0, 0, 0);
-          setStartDate(start);
+          // let start = new Date();
+          // start.setHours(0, 0, 0);
+          // setStartDate(start);
+          setStartDate(getDayStart(new Date()));
 
           lastSelectedTime.current.start_date = null;
         }
@@ -1643,9 +1643,10 @@ function EventDialog(props) {
         // jika tanggal dan waktu valid
 
         // set waktu selesai ke 23:59:59. tanggal tidak diubah 
-        let end = new Date(end_date.getTime()); // membuat salinan
-        end.setHours(23, 59, 59);
-        setEndDate(end);
+        // let end = new Date(end_date.getTime()); // membuat salinan
+        // end.setHours(23, 59, 59);
+        // setEndDate(end);
+        setEndDate(getDayEnd(end_date));
 
         // simpan waktu
         lastSelectedTime.current.end_date = {
@@ -1691,9 +1692,10 @@ function EventDialog(props) {
         } else {
           // jika isi textfield picker kosong,
 
-          let end = new Date();
-          end.setHours(23, 59, 59);
-          setEndDate(end);
+          // let end = new Date();
+          // end.setHours(23, 59, 59);
+          // setEndDate(end);
+          setEndDate(getDayEnd(new Date()));
 
           lastSelectedTime.current.end_date = null;
         }
@@ -1714,7 +1716,7 @@ function EventDialog(props) {
           if (startDate === null) {
             // jika waktu simpanan null, berarti waktu yang sebelumnya akan disimpan itu tidak valid.
             // reset waktu jadi 00:00:00
-            start.setHours(0, 0, 0);
+            start.setHours(0, 0, 0, 0);
           } else {
             // jika waktu simpanan ada, set waktu mulai jadi sesuai dengan waktu yang disimpan tersebut
             start.setHours(
@@ -1782,7 +1784,7 @@ function EventDialog(props) {
     let endDate = date;
     if (isAllDay) {
       // ini perlu ditambahkan karena onchange pada date picker dapat mengubah nilai waktu (ga ngerti kenapa)
-      endDate.setHours(23, 59, 59);
+      endDate.setHours(23, 59, 59, 999);
     }
     setEndDate(endDate);
   };
@@ -3017,21 +3019,54 @@ function Calendar(props) {
     }
   }, [allEvents]);
 
+  // FIXME placeDayModeTiles
   function placeDayModeTiles(arrayOfObject, currentDateDayMode) {
+    const MINIMUM_DURATION_MILLISECOND = 10 * 60 * 1000; // 10 menit
+    const TASK_DURATION_MILLISECOND = 30 * 60 * 1000; // 30 menit. diset dengan angka ini agar tilenya dapat memuat 2 baris teks
+
     let data = arrayOfObject.map((elm) => {
-      let start_date = new Date(elm.start_date);
-      let end_date = new Date(elm.end_date);
-      
-      if (end_date.getDate() !== currentDateDayMode.getDate()) {
-        if (elm.type !== "Tugas") {
-          end_date = new Date(currentDateDayMode);
-          end_date.setHours(23, 59);
+      let start_date;
+      let end_date;
+
+      if (elm.type === "Tugas") {
+        // karena tugas tidak memiliki durasi, 
+        let offset = TASK_DURATION_MILLISECOND / 2;
+        start_date = substractTime(new Date(elm.deadline), offset);
+        end_date = addTime(new Date(elm.deadline), offset);
+      } else {
+        start_date = new Date(elm.start_date);
+        end_date = new Date(elm.end_date);
+      }
+
+      // hide overflow durasi dari assessment atau event yang berada pada > 1 hari
+      let start_at_current = isSameDate(start_date, currentDateDayMode);
+      let end_at_current = isSameDate(end_date, currentDateDayMode);
+      let currentDayStart = getDayStart(currentDateDayMode);
+      let currentDayEnd = getDayEnd(currentDateDayMode);
+      if (elm.type !== "Tugas") {
+        if (!end_at_current && !start_at_current) {
+          start_date = currentDayStart;
+          end_date = currentDayEnd;
+        } else if (!end_at_current && start_at_current) {
+          end_date = currentDayEnd;
+
+          if (getMillisecondDiff(start_date, currentDayEnd) < MINIMUM_DURATION_MILLISECOND) {
+            end_date = addTime(start_date, MINIMUM_DURATION_MILLISECOND);
+            // titik paling bawah tile ini akan ada di bawah 23:59
+          }
+        } else if (end_at_current && !start_at_current) {
+          start_date = currentDayStart;
+
+          if (getMillisecondDiff(currentDayStart, end_date) < MINIMUM_DURATION_MILLISECOND) {
+            start_date = substractTime(end_date, MINIMUM_DURATION_MILLISECOND);
+            // titik paling atas tile ini akan ada di atas 00:00
+          }
+        } else {
+          if (getMillisecondDiff(start_date, end_date) < MINIMUM_DURATION_MILLISECOND) {
+            end_date = addTime(start_date, MINIMUM_DURATION_MILLISECOND);
+          }
         }
-      }
-      if (start_date.getDate() !== currentDateDayMode.getDate()) {
-        start_date = new Date(currentDateDayMode);
-        start_date.setHours(0, 0);
-      }
+      } // tugas akan dibiarkan overflow ke atas 00:00 atau ke bawah 23:59
 
       return { ...elm, start_date, end_date, start_date_epoch: start_date.getTime(), end_date_epoch: end_date.getTime() }
     });
@@ -3064,7 +3099,7 @@ function Calendar(props) {
         } else {
           // jika sudah ada minimal 1 tile yang menempati kolom ini
 
-          if (!isIntersect(lastColElement[col].start_date_epoch, lastColElement[col].end_date_epoch, currentData.start_date_epoch, currentData.end_date_epoch)) {
+          if (!isIntersectExclusive(lastColElement[col].start_date_epoch, lastColElement[col].end_date_epoch, currentData.start_date_epoch, currentData.end_date_epoch)) {
             // jika tile ini tidak intersect dengan tile terakhir pada kolom ini
             // letakan tile di kolom ini
             lastColElement[col] = currentData;
@@ -3120,7 +3155,7 @@ function Calendar(props) {
                 break;
               }
 
-              if (isIntersect(tile.start_date_epoch, tile.end_date_epoch, data[i].start_date_epoch, data[i].end_date_epoch) && tile.width) {
+              if (isIntersectExclusive(tile.start_date_epoch, tile.end_date_epoch, data[i].start_date_epoch, data[i].end_date_epoch) && tile.width) {
                 // jika root ini intersect dengan salah satu node dari tree sebelumnya, gunakan lebar tile pada tree tersebut 
                 width = tile.width;
                 break;
@@ -3143,8 +3178,7 @@ function Calendar(props) {
         let subtree = new Set(getTree(data, columns, 0, data[i]));
         subtree.forEach((value) => {
           for (let j = 0; j <= data.length - 1; j++) {
-            if (data[j].id === value) {
-
+            if (data[j]._id === value) {
               data[j].width = width ?? Math.round(100 / (treeHeight + 1));
               break;
             }
@@ -3157,10 +3191,18 @@ function Calendar(props) {
 
     let tileRows = [];
     for (let d of data) {
-      if (tileRows[d.start_date.getHours()]) {
-        tileRows[d.start_date.getHours()].push(d);
+      if (isSameDate(d.start_date, currentDateDayMode)) {
+        if (tileRows[d.start_date.getHours()]) {
+          tileRows[d.start_date.getHours()].push(d);
+        } else {
+          tileRows[d.start_date.getHours()] = [d];
+        }
       } else {
-        tileRows[d.start_date.getHours()] = [d];
+        if (tileRows[0]) {
+          tileRows[0].push(d);
+        } else {
+          tileRows[0] = [d];
+        }
       }
     }
     return tileRows;
@@ -3178,7 +3220,7 @@ function Calendar(props) {
         break;
       }
 
-      if (isIntersect(rightTiles[i].start_date_epoch, rightTiles[i].end_date_epoch, currentNode.start_date_epoch, currentNode.end_date_epoch)) {
+      if (isIntersectExclusive(rightTiles[i].start_date_epoch, rightTiles[i].end_date_epoch, currentNode.start_date_epoch, currentNode.end_date_epoch)) {
         intersectNodes.push(rightTiles[i]);
       }
     }
@@ -3191,7 +3233,7 @@ function Calendar(props) {
 
   function getTree(data, columns, currentCol, currentNode) {
     if (currentCol === columns.length - 1) {
-      return [currentNode.id];
+      return [currentNode._id];
     }
 
     let rightTiles = columns[currentCol + 1];
@@ -3201,24 +3243,26 @@ function Calendar(props) {
         break;
       }
 
-      if (isIntersect(rightTiles[i].start_date_epoch, rightTiles[i].end_date_epoch, currentNode.start_date_epoch, currentNode.end_date_epoch)) {
+      if (isIntersectExclusive(rightTiles[i].start_date_epoch, rightTiles[i].end_date_epoch, currentNode.start_date_epoch, currentNode.end_date_epoch)) {
         intersectNodes.push(rightTiles[i]);
       }
     }
     if (intersectNodes.length === 0) {
-      return [currentNode.id];
+      return [currentNode._id];
     }
     let arrayOfIdsArray = intersectNodes.map((node) => getTree(data, columns, currentCol + 1, node))
-    let res = [currentNode.id];
+    let res = [currentNode._id];
     for (let arrayOfId of arrayOfIdsArray) {
       res = res.concat(arrayOfId);
     }
     return res;
   }
 
-  function isIntersect(start1, end1, start2, end2) {
-    // return end2 >= start1 && start2 <= end1;
+  function isIntersectExclusive(start1, end1, start2, end2) {
     return end2 > start1 && start2 < end1;
+  }
+  function isIntersectInclusive(start1, end1, start2, end2) {
+    return end2 >= start1 && start2 <= end1;
   }
 
   const handleNextMonth = () => {
@@ -3425,6 +3469,7 @@ function Calendar(props) {
           }
           if (flag) {
             result.push({
+              _id: task._id,
               deadline: task.deadline,
               type: "Tugas",
               data: task,
@@ -3494,6 +3539,7 @@ function Calendar(props) {
             else {
               let task = tasksCollection[i];
               result.push({
+                _id: task._id,
                 deadline: task.deadline,
                 type: "Tugas",
                 data: task,
@@ -3563,6 +3609,7 @@ function Calendar(props) {
             else {
               let task = tasksCollection[i];
               result.push({
+                _id: task._id,
                 deadline: task.deadline,
                 type: "Tugas",
                 data: task,
@@ -3590,13 +3637,20 @@ function Calendar(props) {
       var i;
       for (i = all_assessments.length - 1; i >= 0; i--) {
         let assessment = all_assessments[i];
-        let tempDeadlineDate = new Date(moment(assessment.start_date)
-        .locale("id"));
+        // let tempDeadlineDate = new Date(moment(assessment.start_date)
+        // .locale("id"));
         let class_assigned = assessment.class_assigned;
 
-        if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
-        tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-        tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+        if (
+          isIntersectInclusive(
+            new Date(assessment.start_date).getTime(), 
+            new Date(assessment.end_date).getTime(), 
+            getDayStart(tempSelectedDate).getTime(), 
+            getDayEnd(tempSelectedDate).getTime()
+          ) &&
+        // tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+        // tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+        // tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
         class_assigned.indexOf(classId) !== -1) {
           for (let j = 0; j < all_teachers.length; j++) {
             if (all_teachers[j]._id === assessment.author_id) {
@@ -3619,6 +3673,7 @@ function Calendar(props) {
             assessment.posted
           ) {
               result.push({
+                _id: assessment._id,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 type: type,
@@ -3635,6 +3690,7 @@ function Calendar(props) {
             assessment.posted
           ) {
               result.push({
+                _id: assessment._id,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 type: type,
@@ -3663,7 +3719,7 @@ function Calendar(props) {
 
       for (let i = 0; i < all_assessments.length; i++) {
         let assessment = all_assessments[i];
-        let tempDeadlineDate = new Date(moment(assessment.start_date).locale("id"));
+        // let tempDeadlineDate = new Date(moment(assessment.start_date).locale("id"));
         let classFound = false;
         if (assessment.type === assessmentType) {
           for(let classId of all_assessments[i].class_assigned) {
@@ -3672,9 +3728,16 @@ function Calendar(props) {
               break;
             }
           }
-          if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
-          tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-          tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+          if (
+            isIntersectInclusive(
+              new Date(assessment.start_date).getTime(),
+              new Date(assessment.end_date).getTime(),
+              getDayStart(tempSelectedDate).getTime(),
+              getDayEnd(tempSelectedDate).getTime()
+            ) &&
+          // tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+          // tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+          // tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
           classFound) {
             if(mode === "Month") {
               if(localCounter < 3) {
@@ -3692,6 +3755,7 @@ function Calendar(props) {
             }
             else {
               result.push({
+                _id: assessment._id,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 type: assessmentType,
@@ -3737,7 +3801,7 @@ function Calendar(props) {
 
       for (let i = 0; i < all_assessments.length; i++) {
         let assessment = all_assessments[i];
-        let tempDeadlineDate = new Date(moment(assessment.start_date).locale("id"));
+        // let tempDeadlineDate = new Date(moment(assessment.start_date).locale("id"));
         let classFound = false;
         if (assessment.type === assessmentType) {
           for(let classId of all_assessments[i].class_assigned) {
@@ -3746,9 +3810,16 @@ function Calendar(props) {
               break;
             }
           }
-          if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
-          tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-          tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+          if (
+            isIntersectInclusive(
+              new Date(assessment.start_date).getTime(),
+              new Date(assessment.end_date).getTime(),
+              getDayStart(tempSelectedDate).getTime(),
+              getDayEnd(tempSelectedDate).getTime()
+            ) &&
+          // tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
+          // tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+          // tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
           classFound) {
             if(mode === "Month") {
               if(localCounter < 3) {
@@ -3766,6 +3837,7 @@ function Calendar(props) {
             }
             else {
               result.push({
+                _id: assessment._id,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 type: assessmentType,
@@ -3868,7 +3940,16 @@ function Calendar(props) {
     let filteredEvents = rows.filter((eventInfo) => {
       let start_date = new Date(eventInfo.start_date);
       let end_date = new Date(eventInfo.end_date);
-      return (isSameDate(start_date, date) || isSameDate(end_date, date)) && eventInfo.to.includes(role);
+      // return (isSameDate(start_date, date) || isSameDate(end_date, date)) && eventInfo.to.includes(role);
+      return (
+        isIntersectInclusive(
+          start_date.getTime(),
+          end_date.getTime(),
+          getDayStart(date).getTime(),
+          getDayEnd(date).getTime()
+        ) && 
+        eventInfo.to.includes(role)
+      );
     });
     let localCounter = mainCounter;
     filteredEvents.forEach((eventInfo) => {
@@ -3882,6 +3963,7 @@ function Calendar(props) {
       }
       else {
         result.push({
+          _id: eventInfo._id,
           start_date: eventInfo.start_date,
           end_date: eventInfo.end_date,
           type: "Event",
@@ -4065,6 +4147,7 @@ function Calendar(props) {
     setClassCheckboxState({ ...classCheckboxState, [event.target.name]: event.target.checked });
   };
 
+  // FIXME generateDayModeList
   const generateDayModeList = (date) => {
     let result = []
     if(mode === "Day") {
@@ -4119,6 +4202,7 @@ function Calendar(props) {
     type: "Tugas" / "Kuis" / "Ujian" / "Event"
   */
 
+  // FIXME generateDayModeCalendar
   const generateDayModeCalendar = () => {
     let rowHeight = 90;
     return (
@@ -4157,7 +4241,11 @@ function Calendar(props) {
                                 <div
                                   className={classes.blueChip}
                                   style={{
-                                    transform: `translate(calc(100% * ${data.startColumn} + ${data.startColumn} * 10px), ${data.start_date.getMinutes() / 60 * rowHeight}px)`,
+                                    transform: 
+                                      `translate(calc(100% * ${data.startColumn} + ${data.startColumn} * 10px), ${!isSameDate(data.start_date, currentDateDayMode) && isSameDate(data.end_date, currentDateDayMode)
+                                        ? (-1 * getMillisecondDiff(data.start_date, getDayStart(data.end_date)) / (1000 * 60)) / 60 * rowHeight
+                                        : data.start_date.getMinutes() / 60 * rowHeight
+                                      }px)`,
                                     height: `${((data.end_date_epoch - data.start_date_epoch) / (1000 * 60)) / 60 * rowHeight}px`,
                                     width: `calc(${data.width}% - ${widthPadding}px)`
                                   }}
@@ -4574,6 +4662,30 @@ function Calendar(props) {
       </Snackbar>
     </div>
   );
+}
+
+function getMillisecondDiff(past, future) {
+  return future.getTime() - past.getTime();
+}
+
+function getDayEnd(date) {
+  let temp = new Date(date.getTime());
+  temp.setHours(23, 59, 59, 999);
+  return temp;
+}
+
+function getDayStart(date) {
+  let temp = new Date(date.getTime());
+  temp.setHours(0, 0, 0, 0);
+  return temp;
+}
+
+function addTime(date, millisecond) {
+  return new Date(date.getTime() + millisecond);
+}
+
+function substractTime(date, millisecond) {
+  return new Date(date.getTime() - millisecond);
 }
 
 const mapStateToProps = (state) => ({
