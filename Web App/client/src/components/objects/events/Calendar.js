@@ -426,7 +426,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   selectRoot: {
-    // width: "120px"
     display: "flex",
     alignItems: "center",
     height: "40px",
@@ -2120,16 +2119,16 @@ function EventDialog(props) {
             <div /* ref={deleteDialogScrollRef} */ className={classes.viewDialogScrollableDiv}>
                 
               <Grid container direction="column" spacing="4" style={{ marginTop: "0", marginBottom: "0" }}>
-                <Grid item style={{ paddingTop: "0", paddingBottom: "0" }}>
-                  <Typography variant="h5" gutterBottom>
+                <Grid item xs={12} style={{ paddingTop: "0", paddingBottom: "0" }}>
+                  <Typography variant="h5" gutterBottom style={{ wordBreak: "break-word" }}>
                     <b>{name}</b>
                   </Typography>
                 </Grid>
                 {location.length === 0
                   ? null
                   :
-                  <Grid item style={{ paddingTop: "0" }}>
-                    <Typography className={classes.formLabels}>
+                  <Grid item xs={12} style={{ paddingTop: "0" }}>
+                    <Typography className={classes.formLabels} style={{ wordBreak: "break-word" }}>
                       <LocationOnIcon className={classes.formIcons} />
                       {location}
                     </Typography>
@@ -3875,73 +3874,73 @@ function Calendar(props) {
   }
 
   const listEvent = (date, mainCounter, handleChangeCounter) => {
-    function EventItem(props) {
-      const { eventInfo } = props;
-      const [openDialog, setOpenDialog] = React.useState(false);
-      const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
+    // function EventItem(props) {
+    //   const { eventInfo } = props;
+    //   const [openDialog, setOpenDialog] = React.useState(false);
+    //   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
   
-      const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
-        setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
-        setOpenDialog(true);
-      };
+    //   const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
+    //     setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
+    //     setOpenDialog(true);
+    //   };
   
-      const handleCloseDialog = () => {
-        setOpenDialog(false);
-      };
+    //   const handleCloseDialog = () => {
+    //     setOpenDialog(false);
+    //   };
 
-      return (
-        <>
-            <Typography 
-              variant="body2" 
-              className={classes.monthAgendaChip} 
-              align="left"
-              onClick={() =>
-                handleOpenDialog(
-                  eventInfo.name,
-                  eventInfo.location,
-                  eventInfo.description,
-                  eventInfo.start_date,
-                  eventInfo.end_date
-                )
-              }
-            >
-              {eventInfo.name}
-            </Typography>
-            <Dialog
-              fullScreen={false}
-              open={openDialog}
-              onClose={handleCloseDialog}
-              fullWidth={true}
-              maxWidth="sm"
-            >
-              <div style={{ padding: "20px" }}>
-                <Typography variant="h4" align="center">
-                  {eventInfo.name}
-                </Typography>
-                <Typography variant="h5" align="center" color="primary">
-                  Lokasi: {eventInfo.location}
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  align="center"
-                  style={{ marginTop: "25px" }}
-                >
-                  Deskripsi: {eventInfo.description}
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  align="center"
-                >
-                  Mulai: {moment(eventInfo.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
-                </Typography>
-                <Typography variant="subtitle1" align="center">
-                  Selesai: {moment(eventInfo.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
-                </Typography>
-              </div>
-            </Dialog>
-          </>
-      )
-    }
+    //   return (
+    //     <>
+    //         <Typography 
+    //           variant="body2" 
+    //           className={classes.monthAgendaChip} 
+    //           align="left"
+    //           onClick={() =>
+    //             handleOpenDialog(
+    //               eventInfo.name,
+    //               eventInfo.location,
+    //               eventInfo.description,
+    //               eventInfo.start_date,
+    //               eventInfo.end_date
+    //             )
+    //           }
+    //         >
+    //           {eventInfo.name}
+    //         </Typography>
+    //         <Dialog
+    //           fullScreen={false}
+    //           open={openDialog}
+    //           onClose={handleCloseDialog}
+    //           fullWidth={true}
+    //           maxWidth="sm"
+    //         >
+    //           <div style={{ padding: "20px" }}>
+    //             <Typography variant="h4" align="center">
+    //               {eventInfo.name}
+    //             </Typography>
+    //             <Typography variant="h5" align="center" color="primary">
+    //               Lokasi: {eventInfo.location}
+    //             </Typography>
+    //             <Typography
+    //               variant="subtitle1"
+    //               align="center"
+    //               style={{ marginTop: "25px" }}
+    //             >
+    //               Deskripsi: {eventInfo.description}
+    //             </Typography>
+    //             <Typography
+    //               variant="subtitle1"
+    //               align="center"
+    //             >
+    //               Mulai: {moment(eventInfo.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+    //             </Typography>
+    //             <Typography variant="subtitle1" align="center">
+    //               Selesai: {moment(eventInfo.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+    //             </Typography>
+    //           </div>
+    //         </Dialog> */}
+    //       </>
+    //   )
+    // }
 
     let result = []
     let filteredEvents = allEvents.filter((eventInfo) => {
@@ -3964,8 +3963,20 @@ function Calendar(props) {
       if(mode === "Month") {
         if(localCounter < 3) {
           result.push(
-            <EventItem eventInfo={eventInfo}/>
+            <Typography 
+              variant="body2" 
+              className={classes.monthAgendaChip} 
+              align="left"
+              onClick={() => {
+                handleOpenViewDialog(eventInfo)
+              }}
+            >
+              {eventInfo.name}
+            </Typography>
           )
+          // result.push(
+          //  <EventItem eventInfo={eventInfo}/>
+          // )
         }
         localCounter ++;
       }
