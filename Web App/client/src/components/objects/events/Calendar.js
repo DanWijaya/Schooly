@@ -44,7 +44,8 @@ import {
   Snackbar,
   useMediaQuery,
   CircularProgress,
-  Fade
+  Fade,
+  InputBase
 } from "@material-ui/core/";
 import {
   MuiPickersUtilsProvider,
@@ -360,7 +361,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
     borderRadius: "3px",
     flexGrow: 1,
-    overflow: "none",
+    // overflow: "none",
+    overflow: "hidden",
     marginBottom: "2px",
     marginLeft: "58px",
     padding: "2px",
@@ -369,18 +371,24 @@ const useStyles = makeStyles((theme) => ({
   blueChip: {
     backgroundColor: theme.palette.primary.main,
     borderRadius: "3px",
-    width: "100%",
+    // width: "100%",
     position: "absolute",
-    overflow: "none",
-    padding: "2px",
+    // overflow: "none",
+    overflow: "hidden",
+    padding: "8px 12px",
     color: "white",
     zIndex: 2,
   },
-  invisibleChip: {
-    width: "100%",
-    position: "absolute",
-    overflow: "none",
-    padding: "2px",
+  // invisibleChip: {
+  //   width: "100%",
+  //   position: "absolute",
+  //   overflow: "none",
+  //   padding: "2px",
+  // },
+  blueChipHover: {
+    "&:focus, &:hover": {
+      cursor: "pointer"
+    },
   },
   horizontalLine: {
     border: "rgba(224, 224, 224, 1) .25px solid",
@@ -416,7 +424,15 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       cursor: "pointer"
     },
-  }
+  },
+  selectRoot: {
+    // width: "120px"
+    display: "flex",
+    alignItems: "center",
+    height: "40px",
+    paddingTop: "0!important",
+    paddingBottom: "0!important"
+  },
 }));
 // ANCHOR STYLE
 
@@ -723,7 +739,8 @@ function AgendaToolbar(props) {
     currentDateDayMode,
     setCurrentDateDayMode,
     currentDateMonthMode,
-    setCurrentDateMonthMode
+    setCurrentDateMonthMode,
+    role
   } = props;
 
   let monthNames = [
@@ -779,9 +796,9 @@ function AgendaToolbar(props) {
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
         <Hidden xsDown>
           {mode === "Day" ?
-            <Button variant="outlined" onClick={() => handleChangeDay("now")}> Hari ini</Button>
+            <Button style={{ height: "40px" }} variant="outlined" onClick={() => handleChangeDay("now")}> Hari ini</Button>
           :
-            <Button variant="outlined" onClick={() => handleChangeMonth("now")}>Hari ini</Button>
+            <Button style={{ height: "40px" }} variant="outlined" onClick={() => handleChangeMonth("now")}>Hari ini</Button>
           }
           {mode === "Day" ?
             <>
@@ -822,9 +839,14 @@ function AgendaToolbar(props) {
         </Hidden>
       </div>
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-        <Fab className={classes.greenFab} aria-label="add" size="small" onClick={() => { handleOpenCreateDialog() }}>
-          <AddIcon fontSize="small"/>
-        </Fab>
+        {
+          role === "Admin" 
+          ? 
+            <Fab className={classes.greenFab} aria-label="add" size="small" onClick={() => { handleOpenCreateDialog() }}>
+              <AddIcon fontSize="small"/>
+            </Fab>
+          : null
+        }
         <IconButton>
           <SearchIcon/>
         </IconButton>
@@ -833,6 +855,7 @@ function AgendaToolbar(props) {
             defaultValue="Day"
             value={mode}
             onChange={handleChangeMode}
+            classes={{ root: classes.selectRoot }}
           >
             <MenuItem value="Day">
               Hari
@@ -1364,31 +1387,23 @@ function EventDialog(props) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // TODO tambain props data-data event
   const {
+    selectedEventInfo,
     openEventDialog,
     handleCloseEventDialog,
     handleOpenEditDialog,
     showSnackbar,
     handleSetUnmountEventDialog,
     eventDialogMode,
-    // selectedEventId,
-    getOneEvent,
     getAllEvents,
     downloadFileEvent,
     viewFileEvent,
-    // TODO hapus
-    allEvents
   } = props;
-  // const { allEvents } = props.eventsCollection;
   const roleConverter = {
     Admin: "Pengelola",
     Teacher: "Guru",
     Student: "Murid"
   };
-  
-  const [selectedEventId, setSelectedEventId] = React.useState(""); // TODO hapus
-
   const [errors, setErrors] = React.useState({});
 
   // FORM
@@ -1433,17 +1448,10 @@ function EventDialog(props) {
   // OTHER
   const [changeDialog, setChangeDialog] = React.useState(false);
 
-  // TODO ganti dengan data event yg dipass melalui props
   React.useEffect(() => {
     if (eventDialogMode === "view") {
-      getAllEvents();
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (eventDialogMode === "view") {
-      if (allEvents && allEvents.length !== 0) {
-        let { _id, name, location, start_date, end_date, to, description } = allEvents[allEvents.length - 1];
+      if (Object.keys(selectedEventInfo).length !== 0) {
+        let { _id, name, location, start_date, end_date, to, description } = selectedEventInfo;
         start_date = new Date(start_date);
         end_date = new Date(end_date);
         setName(name);
@@ -1454,7 +1462,6 @@ function EventDialog(props) {
         setTargetRole(to);
         setDescription(description);
         // setDescription(Array(100).fill("deskripsi").join(" "));
-        setSelectedEventId(_id); // TODO hapus
         getFileEvents(_id).then((result) => {
           setFileLampiran(result);
           setOriginalFileLampiran(result)
@@ -1469,7 +1476,7 @@ function EventDialog(props) {
         }
       }
     }
-  }, [allEvents]);
+  }, [selectedEventInfo]);
 
 
   // FORM
@@ -1548,7 +1555,7 @@ function EventDialog(props) {
     //     resolve();
     //   }, 4000);
     // })
-    updateEvent(formData, fileLampiranToDelete, eventData, selectedEventId)
+    updateEvent(formData, fileLampiranToDelete, eventData, selectedEventInfo._id)
       .then(() => {
         setUploadSuccess(true);
         getAllEvents();
@@ -2022,8 +2029,8 @@ function EventDialog(props) {
   };
   */
 
-  const handleDelete = () => {
-    deleteEvent(selectedEventId).then(() => {
+  const handleDelete = (eventId) => {
+    deleteEvent(eventId).then(() => {
       getAllEvents();
       handleCloseEventDialog();
       showSnackbar("success", "Kegiatan berhasil dihapus");
@@ -2108,7 +2115,7 @@ function EventDialog(props) {
               openDeleteDialog={openDeleteDialog}
               handleCloseDeleteDialog={handleCloseDeleteDialog}
               eventName={name}
-              handleDelete={handleDelete}
+              handleDelete={() => { handleDelete(selectedEventInfo._id) }}
             />
             <div /* ref={deleteDialogScrollRef} */ className={classes.viewDialogScrollableDiv}>
                 
@@ -2874,14 +2881,14 @@ function Calendar(props) {
   const [activeStartDate, setActiveStartDate] = React.useState(new Date(new Date().getFullYear(), new Date().getMonth())); // set ke awal bulan sekarang 
 
   // EVENT DIALOG
+  const [selectedEventInfo, setSelectedEventInfo] = React.useState({});
   const [openEventDialog, setOpenEventDialog] = React.useState(false);
   const [eventDialogMode, setEventDialogMode] = React.useState("");
   const [unmountEventDialog, setUnmountEventDialog] = React.useState(false);
-  const selectedEventId = React.useRef("");
 
   // state ini akan bernilai null jika dan hanya jika pengguna belum mengklik tile kalender (belum memilih tanggal)
   const [selectedDate, setSelectedDate] = React.useState(null);
-  const [rows, setRows] = React.useState([]);
+  // const [rows, setRows] = React.useState([]);
 
   // SNACKBAR
   const [snackbarContent, setSnackbarContent] = React.useState("");
@@ -2908,7 +2915,7 @@ function Calendar(props) {
     getAllSubjects("map");
   }, []);
 
-  React.useEffect(() => {
+  // React.useEffect(() => {
     // mencari event yang berlangsung hari ini.
     // event yang sudah lewat jamnya, sedang berlangsung, atau belum berlangsung akan ditampilkan.
     // let now = (selectedDate === null) ? (new Date()).getDate() : selectedDate.getDate();
@@ -2917,8 +2924,8 @@ function Calendar(props) {
     //   let end_date = (new Date(eventInfo.end_date)).getDate();
     //   return (start_date <= now && now <= end_date);
     // });
-    setRows([...props.eventsCollection.allEvents]);
-  }, [props.eventsCollection.allEvents]);
+    // setRows([...props.eventsCollection.allEvents]);
+  // }, [props.eventsCollection.allEvents]);
 
   React.useEffect(() => {
     // case 1
@@ -3014,12 +3021,11 @@ function Calendar(props) {
   }, [currentDateDayMode]);
 
   React.useEffect(() => {
-    if (allEvents) {
+    if (tasksCollection && all_assessments && allEvents) {
       setTileRows(placeDayModeTiles(generateDayModeList(currentDateDayMode), currentDateDayMode));
     }
-  }, [allEvents]);
+  }, [tasksCollection, all_assessments, allEvents]);
 
-  // FIXME placeDayModeTiles
   function placeDayModeTiles(arrayOfObject, currentDateDayMode) {
     const MINIMUM_DURATION_MILLISECOND = 10 * 60 * 1000; // 10 menit
     const TASK_DURATION_MILLISECOND = 30 * 60 * 1000; // 30 menit. diset dengan angka ini agar tilenya dapat memuat 2 baris teks
@@ -3364,10 +3370,11 @@ function Calendar(props) {
     setOpenEventDialog(true);
   }
 
-  const handleOpenViewDialog = () => {
+  const handleOpenViewDialog = (eventInfo) => {
     setEventDialogMode("view");
     handleUnsetUnmountEventDialog();
     setOpenEventDialog(true);
+    setSelectedEventInfo(eventInfo);
   }
 
   const handleCloseEventDialog = () => {
@@ -3937,7 +3944,8 @@ function Calendar(props) {
     }
 
     let result = []
-    let filteredEvents = rows.filter((eventInfo) => {
+    let filteredEvents = allEvents.filter((eventInfo) => {
+    // let filteredEvents = rows.filter((eventInfo) => {
       let start_date = new Date(eventInfo.start_date);
       let end_date = new Date(eventInfo.end_date);
       // return (isSameDate(start_date, date) || isSameDate(end_date, date)) && eventInfo.to.includes(role);
@@ -4147,13 +4155,19 @@ function Calendar(props) {
     setClassCheckboxState({ ...classCheckboxState, [event.target.name]: event.target.checked });
   };
 
-  // FIXME generateDayModeList
+  // ANCHOR generateDayModeList
   const generateDayModeList = (date) => {
     let result = []
     if(mode === "Day") {
-      if(tasksCollection.length !== 0 && 
-        all_assessments.length !== 0 && 
-        rows.length !== 0) {
+      if(
+        tasksCollection && 
+        all_assessments && 
+        allEvents
+        // tasksCollection.length !== 0 && 
+        // all_assessments.length !== 0 && 
+        // allEvents.length !== 0
+        ) {
+        // rows.length !== 0) {
         if(role === "Student") {
           let taskList = listTasks(new Date(date));
           let quizList = listAssessmentsStudentMonth(new Date(date), "Kuis");
@@ -4202,7 +4216,7 @@ function Calendar(props) {
     type: "Tugas" / "Kuis" / "Ujian" / "Event"
   */
 
-  // FIXME generateDayModeCalendar
+  // ANCHOR generateDayModeCalendar
   const generateDayModeCalendar = () => {
     let rowHeight = 90;
     return (
@@ -4236,21 +4250,27 @@ function Calendar(props) {
                       <div className={classes.horizontalLine}>
                         {
                           tileRows[index] ?
-                            tileRows[index].map((data, idx) => {
+                            tileRows[index].map((obj, idx) => {
                               return (
                                 <div
-                                  className={classes.blueChip}
+                                  onClick={obj.type === "Event" ? () => { handleOpenViewDialog(obj.data) } : undefined}
+                                  className={obj.type === "Event" ? `${classes.blueChipHover} ${classes.blueChip}` : classes.blueChip}
                                   style={{
                                     transform: 
-                                      `translate(calc(100% * ${data.startColumn} + ${data.startColumn} * 10px), ${!isSameDate(data.start_date, currentDateDayMode) && isSameDate(data.end_date, currentDateDayMode)
-                                        ? (-1 * getMillisecondDiff(data.start_date, getDayStart(data.end_date)) / (1000 * 60)) / 60 * rowHeight
-                                        : data.start_date.getMinutes() / 60 * rowHeight
+                                      `translate(calc(100% * ${obj.startColumn} + ${obj.startColumn} * 10px), ${!isSameDate(obj.start_date, currentDateDayMode) && isSameDate(obj.end_date, currentDateDayMode)
+                                        ? (-1 * getMillisecondDiff(obj.start_date, getDayStart(obj.end_date)) / (1000 * 60)) / 60 * rowHeight
+                                        : obj.start_date.getMinutes() / 60 * rowHeight
                                       }px)`,
-                                    height: `${((data.end_date_epoch - data.start_date_epoch) / (1000 * 60)) / 60 * rowHeight}px`,
-                                    width: `calc(${data.width}% - ${widthPadding}px)`
+                                    height: `${((obj.end_date_epoch - obj.start_date_epoch) / (1000 * 60)) / 60 * rowHeight}px`,
+                                    width: `calc(${obj.width}% - ${widthPadding}px)`
                                   }}
                                 >
-                                  {data.data.name}
+                                  <Typography noWrap variant="body2">
+                                    {obj.data.name}
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    {`${moment(obj.data.start_date).locale("id").format("HH:mm")} – ${moment(obj.data.end_date).locale("id").format("HH:mm")}`}
+                                  </Typography>
                                 </div>
                               )
                             }) : null
@@ -4303,7 +4323,8 @@ function Calendar(props) {
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
       "Jul", "Agu", "Sep", "Okt", "Nov", "Des"
     ];
-    if(all_assessments && tasksCollection && rows) {
+    // if(all_assessments && tasksCollection && rows) {
+    if (all_assessments && tasksCollection && allEvents) {
       return (
         <TableRow style={{height: "150px"}}>
           {date.map((column, columnIndex) => {
@@ -4468,9 +4489,9 @@ function Calendar(props) {
           ? null
           :
           <EventDialog
+            downloadFileEvent={downloadFileEvent}
+            selectedEventInfo={selectedEventInfo}
             getAllEvents={getAllEvents}
-            allEvents={allEvents}
-            selectedEventId={selectedEventId}
             eventDialogMode={eventDialogMode}
             openEventDialog={openEventDialog}
             handleCloseEventDialog={handleCloseEventDialog}
@@ -4480,13 +4501,10 @@ function Calendar(props) {
             showSnackbar={showSnackbar}
           />
       }
-      {/* TODO hapus (tombol dummy untuk buka view dialog)*/}
-      {/* <Fab className={classes.greenFab} style={{ backgroundColor: "red" }} aria-label="add" size="small" onClick={() => { handleOpenViewDialog() }}>
-        <AddIcon fontSize="small" />
-      </Fab> */}
 
       <div className={classes.agendaContainer}>
         <AgendaToolbar
+          role={role}
           classes={classes}
           mode={mode}
           handleChangeMode={handleChangeMode}
