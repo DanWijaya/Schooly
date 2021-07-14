@@ -6,7 +6,6 @@ const passport = require("passport");
 
 //untuk users punya
 const users = require("./routes/api/users");
-const mockusers = require("./client/src/prototypes/mock-users/mockusers");
 
 // untuk uploads punya
 const att_announcement = require("./routes/api/upload/att_announcement");
@@ -56,7 +55,7 @@ const db = require("./config/keys").mongoURI;
 mongoose.set("useUnifiedTopology", true);
 mongoose.set("useNewUrlParser", true);
 mongoose
-  .connect(db, { useNewUrlParser: true })
+  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("MongoDB successfully connected");
   })
@@ -76,8 +75,6 @@ console.log("Check routes");
 app.use("/api/users", users);
 app.use("/api/tasks", tasks);
 app.use("/api/classes", classes);
-
-app.use("/api/mockusers", mockusers);
 
 // Handle upload routing..
 app.use("/api/upload/att_announcement", att_announcement);

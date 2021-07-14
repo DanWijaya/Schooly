@@ -11,11 +11,9 @@ import AnnouncementReducer from "./AnnouncementReducer";
 import SuccessReducer from "./SuccessReducer";
 import AssessmentReducer from "./AssessmentReducer";
 import EventReducer from "./EventReducer";
-import MockReducer from "../prototypes/mock-users/MockReducer";
 
 export default combineReducers({
   auth: UserReducer,
-  mockUserCollection: MockReducer,
   announcementsCollection: AnnouncementReducer,
   assessmentsCollection: AssessmentReducer,
   classesCollection: ClassReducer,
