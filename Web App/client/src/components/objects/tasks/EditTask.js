@@ -516,8 +516,8 @@ class EditTask extends Component {
     this.setState({ openDeleteDialog: false });
   };
 
-  onChange = (e, otherfield) => {
-    let field = e.target.id ? e.target.id : otherfield;
+  onChange = (e, otherfield=null) => {
+    let field = otherfield ? otherfield : e.target.id;
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }

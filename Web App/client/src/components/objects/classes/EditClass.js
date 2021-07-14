@@ -111,7 +111,9 @@ class EditClass extends Component {
   }
 
   onChange = (e, otherfield = null) => {
-    let field = e.target.id ? e.target.id : otherfield;
+    // otherfield ini adalah yang untuk field controllers Select atau variannya. 
+    // Karena Select ini tidak memiliki nilai e.target.id, maka awalnya kita lakukan check dulu jika
+    let field = otherfield? otherfield : e.target.id;
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }

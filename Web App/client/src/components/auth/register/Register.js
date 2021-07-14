@@ -174,7 +174,7 @@ class Register extends Component {
   };
 
   onChange = (e, otherfield) => {
-    let field = e.target.id ? e.target.id : otherfield;
+    let field = otherfield ? otherfield : e.target.id;
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }

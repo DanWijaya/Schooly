@@ -21,15 +21,19 @@ router.post("/create", (req, res) => {
 
   Class.findOne({ name: req.body.name }).then((kelas) => {
     if (kelas) {
-      return res.status(400).json({ name: "Class name already exists" });
+      return res.status(400).json({ name: "Nama kelas sudah dipakai" });
     } else {
-      const newKelas = new Class({
+      let dataKelas = {
         name: req.body.name,
-        walikelas: req.body.walikelas,
         nihil: req.body.nihil,
         ukuran: req.body.ukuran,
         subject_assigned: req.body.mata_pelajaran.map((id) => (new ObjectId(id)))
-      });
+      }
+
+      if(req.body.walikelas){
+        dataKelas.walikeas = req.body.walikeas;
+      }
+      const newKelas = new Class(dataKelas)
 
       newKelas
         .save()
@@ -125,13 +129,26 @@ router.put("/update/:id", (req, res) => {
     }
     // Initially there is else block
     classData.name = req.body.name;
-    classData.walikelas = req.body.walikelas;
-    classData.ketua_kelas = req.body.ketua_kelas;
-    classData.sekretaris = req.body.sekretaris;
-    classData.bendahara = req.body.bendahara;
-    classData.nihil = req.body.nihil;
+    classData.ketua_kelas = req.body.ketua_kelas ? req.body.ketua_kelas  :null;
+    classData.walikelas = req.body.walikelas ? req.body.walikelas : null;
+    classData.sekretaris = req.body.sekretaris ? req.body.sekretaris: null;
+    classData.bendahara = req.body.bendahara ? req.body.bendahara : null;
     classData.ukuran = req.body.ukuran;
     classData.subject_assigned = req.body.mata_pelajaran.map((id) => (new ObjectId(id)));
+
+    //Karena field walikelas ini optional.
+    
+    // if(req.body.walikelas){
+    //   console.log("Have", req.body.walikeas)
+    //   //Kalau walikelas field ada isi, diupdate.
+    //   classData.walikelas = req.body.walikelas;
+    // } else {
+    //   console.log("Don't Have", req.body.walikeas)
+    //   //Kalau walikelas field kosong, field walikelas dibuang.
+    //   classData.walikelas = null;
+    // }
+
+    console.log(classData);
 
     classData
       .save()

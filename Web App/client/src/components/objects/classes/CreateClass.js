@@ -57,7 +57,8 @@ class CreateClass extends Component {
       ukuran: 0,
       openUploadDialog: null,
       teacherOptions: null,
-      errors: {}
+      errors: {},
+      mata_pelajaran: []
     };
   }
 
@@ -91,15 +92,20 @@ class CreateClass extends Component {
   };
 
   onChange = (e, otherfield = null) => {
+    // otherfield ini adalah yang untuk field controllers Select atau variannya. 
+    // Karena Select ini tidak memiliki nilai e.target.id, maka awalnya kita lakukan check dulu jika
     
-    let field = e.target.id ? e.target.id : otherfield;
+    let field = otherfield ? otherfield : e.target.id;
+      
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
+    
 
     if (field === "mata_pelajaran") {
       this.setState({ [field]: e });
-    } else {
+    } 
+    else {
       this.setState({ [field]: e.target.value });
     }
   };

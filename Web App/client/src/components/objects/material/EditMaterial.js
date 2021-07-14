@@ -489,9 +489,9 @@ class EditMaterial extends Component {
     this.setState({ openDeleteDialog: false });
   };
 
-  onChange = (e, otherfield) => {
+  onChange = (e, otherfield=null) => {
     // dipindahkan (kode yg dari merge_fitur_4_cdn ada di bawah dan dikomen) 
-    let field = e.target.id ? e.target.id : otherfield;
+    let field = otherfield ? otherfield : e.target.id;
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
