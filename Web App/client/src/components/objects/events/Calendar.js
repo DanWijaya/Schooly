@@ -180,7 +180,7 @@ const useStyles = makeStyles((theme) => ({
   dayAgendaContainer: {
     display: "flex", 
     flexDirection: "column", 
-    marginTop: "10px",
+    // marginTop: "10px",
     height: "600px",
     overflow: "auto",
     flex: 1,
@@ -321,7 +321,10 @@ const useStyles = makeStyles((theme) => ({
     background: "#e6e6e6",
     padding: "2px 3px",
     borderRadius: "4px",
-    margin: "2px 0"
+    margin: "2px 0",
+    "&:focus, &:hover, &:active": {
+      cursor: "pointer"
+    },
   },
   toolbar: {
     display: "flex",
@@ -735,10 +738,8 @@ function AgendaToolbar(props) {
     mode,
     handleChangeMode,
     handleOpenCreateDialog,
-    currentDateDayMode,
-    setCurrentDateDayMode,
-    currentDateMonthMode,
-    setCurrentDateMonthMode,
+    currentDate,
+    setCurrentDate,
     role
   } = props;
 
@@ -748,45 +749,55 @@ function AgendaToolbar(props) {
     "September", "Oktober", "November", "Desember"
   ];
 
-  let stringDateDayMode = monthNames[currentDateDayMode.getMonth()] + " " + currentDateDayMode.getDate() + ", " + currentDateDayMode.getFullYear();
-  let stringDateMonthMode = monthNames[currentDateMonthMode.getMonth()] + " " + currentDateMonthMode.getFullYear();
+  let stringDateDayMode = monthNames[currentDate.getMonth()] + " " + currentDate.getDate() + ", " + currentDate.getFullYear();
+  let stringDateMonthMode = monthNames[currentDate.getMonth()] + " " + currentDate.getFullYear();
 
   const handleChangeMonth = (direction) => {
     if(direction === "now") {
-      let nowMonthDate;
-      let tempMonthDate = new Date();
-      nowMonthDate = new Date(tempMonthDate.getFullYear(), tempMonthDate.getMonth(), 1)
-      setCurrentDateMonthMode(nowMonthDate);
+      // let nowMonthDate;
+      // let tempMonthDate = new Date();
+      // nowMonthDate = new Date(tempMonthDate.getFullYear(), tempMonthDate.getMonth(), 1)
+      // setCurrentDateMonthMode(nowMonthDate);
+      setCurrentDate(new Date());
     }
     else if(direction === "next") {
       let nextMonthDate;
-      if (currentDateMonthMode.getMonth() == 11) {
-        nextMonthDate = new Date(currentDateMonthMode.getFullYear() + 1, 0, 1);
+      if (currentDate.getMonth() == 11) {
+        // nextMonthDate = new Date(currentDate.getFullYear() + 1, 0, 1);
+        nextMonthDate = new Date(currentDate.getFullYear() + 1, 0, currentDate.getDate());
       } 
       else {
-        nextMonthDate = new Date(currentDateMonthMode.getFullYear(), currentDateMonthMode.getMonth() + 1, 1);
+        // nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+        nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, currentDate.getDate());
       }
-      setCurrentDateMonthMode(nextMonthDate);
+      // setCurrentDateMonthMode(nextMonthDate);
+      setCurrentDate(nextMonthDate);
     }
     else {
       let prevMonthDate;
-      if (currentDateMonthMode.getMonth() == 0) {
-        prevMonthDate = new Date(currentDateMonthMode.getFullYear() - 1, 11, 1);
+      if (currentDate.getMonth() == 0) {
+        // prevMonthDate = new Date(currentDate.getFullYear() - 1, 11, 1);
+        prevMonthDate = new Date(currentDate.getFullYear() - 1, 11, currentDate.getDate());
       } 
       else {
-        prevMonthDate = new Date(currentDateMonthMode.getFullYear(), currentDateMonthMode.getMonth() - 1, 1);
+        // prevMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+        prevMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate());
       }
-      setCurrentDateMonthMode(prevMonthDate);
+      // setCurrentDateMonthMode(prevMonthDate);
+      setCurrentDate(prevMonthDate);
     }
   }
 
   const handleChangeDay = (direction) => {
     if (direction === "now") {
-      setCurrentDateDayMode(getDayStart(new Date()));
+      // setCurrentDateDayMode(getDayStart(new Date()));
+      setCurrentDate(new Date());
     } else if (direction === "next") {
-      setCurrentDateDayMode(new Date(currentDateDayMode.getTime() + 1000 * 60 * 60 * 24));
+      // setCurrentDateDayMode(new Date(currentDate.getTime() + 1000 * 60 * 60 * 24));
+      setCurrentDate(new Date(currentDate.getTime() + 1000 * 60 * 60 * 24));
     } else {
-      setCurrentDateDayMode(new Date(currentDateDayMode.getTime() - 1000 * 60 * 60 * 24));
+      // setCurrentDateDayMode(new Date(currentDate.getTime() - 1000 * 60 * 60 * 24));
+      setCurrentDate(new Date(currentDate.getTime() - 1000 * 60 * 60 * 24));
     }
   }
 
@@ -801,20 +812,20 @@ function AgendaToolbar(props) {
           }
           {mode === "Day" ?
             <>
-              <div style={{margin: "0 5px"}}>
+              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", margin: "0 5px"}}>
                 <ChevronLeftIcon onClick={() => handleChangeDay("prev")} className={classes.chevronButton}/>
                 <ChevronRightIcon onClick={() => handleChangeDay("next")} className={classes.chevronButton}/>
               </div>
               <Typography>{stringDateDayMode}</Typography>
             </>
           :
-            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+            <>
               <div style={{display: "flex", flexDirection: "row", alignItems: "center", margin: "0 5px"}}>
                 <ChevronLeftIcon onClick={() => handleChangeMonth("prev")} className={classes.chevronButton}/>
                 <ChevronRightIcon onClick={() => handleChangeMonth("next")} className={classes.chevronButton}/>
               </div>
               <Typography>{stringDateMonthMode}</Typography>
-            </div>
+            </>
           }
         </Hidden>
         <Hidden smUp>
@@ -2845,6 +2856,10 @@ function LampiranFile(props) {
   );
 }
 
+const MINIMUM_DURATION_MILLISECOND = 30 * 60 * 1000;
+const TASK_DURATION_MILLISECOND = 30 * 60 * 1000;
+const ROW_HEIGHT = 90;
+
 function Calendar(props) {
   document.title = "Schooly | Kalender";
 
@@ -2897,8 +2912,9 @@ function Calendar(props) {
   // Calendar
   const today = new Date()
   const [mode, setMode] = React.useState("Day");
-  const [currentDateDayMode, setCurrentDateDayMode] = React.useState(today);
-  const [currentDateMonthMode, setCurrentDateMonthMode] = React.useState(today);
+  // const [currentDateDayMode, setCurrentDateDayMode] = React.useState(today);
+  // const [currentDateMonthMode, setCurrentDateMonthMode] = React.useState(today);
+  const [currentDate, setCurrentDate] = React.useState(today);
 
   const [tileRows, setTileRows] = React.useState([]);
 
@@ -3016,19 +3032,18 @@ function Calendar(props) {
     //   },
     // ];
 
-    setTileRows(placeDayModeTiles(generateDayModeList(currentDateDayMode), currentDateDayMode));
-  }, [currentDateDayMode]);
+    if (mode === "Day") {
+      setTileRows(placeDayModeTiles(generateDayModeList(currentDate), currentDate));
+    }
+  }, [currentDate, mode]);
 
   React.useEffect(() => {
     if (tasksCollection && all_assessments && allEvents) {
-      setTileRows(placeDayModeTiles(generateDayModeList(currentDateDayMode), currentDateDayMode));
+      setTileRows(placeDayModeTiles(generateDayModeList(currentDate), currentDate));
     }
   }, [tasksCollection, all_assessments, allEvents]);
 
-  function placeDayModeTiles(arrayOfObject, currentDateDayMode) {
-    const MINIMUM_DURATION_MILLISECOND = 10 * 60 * 1000; // 10 menit
-    const TASK_DURATION_MILLISECOND = 30 * 60 * 1000; // 30 menit. diset dengan angka ini agar tilenya dapat memuat 2 baris teks
-
+  function placeDayModeTiles(arrayOfObject, currentDate) {
     let data = arrayOfObject.map((elm) => {
       let start_date;
       let end_date;
@@ -3044,10 +3059,10 @@ function Calendar(props) {
       }
 
       // hide overflow durasi dari assessment atau event yang berada pada > 1 hari
-      let start_at_current = isSameDate(start_date, currentDateDayMode);
-      let end_at_current = isSameDate(end_date, currentDateDayMode);
-      let currentDayStart = getDayStart(currentDateDayMode);
-      let currentDayEnd = getDayEnd(currentDateDayMode);
+      let start_at_current = isSameDate(start_date, currentDate);
+      let end_at_current = isSameDate(end_date, currentDate);
+      let currentDayStart = getDayStart(currentDate);
+      let currentDayEnd = getDayEnd(currentDate);
       if (elm.type !== "Tugas") {
         if (!end_at_current && !start_at_current) {
           start_date = currentDayStart;
@@ -3196,7 +3211,7 @@ function Calendar(props) {
 
     let tileRows = [];
     for (let d of data) {
-      if (isSameDate(d.start_date, currentDateDayMode)) {
+      if (isSameDate(d.start_date, currentDate)) {
         if (tileRows[d.start_date.getHours()]) {
           tileRows[d.start_date.getHours()].push(d);
         } else {
@@ -4067,7 +4082,7 @@ function Calendar(props) {
 
   const generateMonthDates = () => {
     let result = [];
-    let firstDate = new Date(currentDateMonthMode.getFullYear(), currentDateMonthMode.getMonth(), 1, 0, 0, 0, 0);
+    let firstDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0);
     let count = 1;
     let i = 1;
     if(count > firstDate.getDay()) {
@@ -4211,22 +4226,6 @@ function Calendar(props) {
   //   console.log(generateDayModeList(new Date(2021, 5, 3)));
   // }
 
-  /* 
-    data:
-      createdAt: "2021-07-10T00:18:35.352Z"
-      description: "Datang"
-      end_date: "2021-07-12T00:17:00.000Z"
-      location: "Rumah"
-      name: "Event Admin"
-      start_date: "2021-07-11T00:17:00.000Z"
-      to: ["Admin"]
-      updatedAt: "2021-07-10T00:18:35.352Z"
-      _id: "60e8e75bfdbc16375cb1a127"
-    end_date: "2021-07-12T00:17:00.000Z"
-    start_date: "2021-07-11T00:17:00.000Z"
-    type: "Tugas" / "Kuis" / "Ujian" / "Event"
-  */
-
   // ANCHOR generateDayModeCalendar
   const generateDayModeCalendar = () => {
     let rowHeight = 90;
@@ -4254,26 +4253,34 @@ function Calendar(props) {
                   widthPadding = widthPadding + 5/3 / (i - 2)
                   i --;
                 }
+                let verticalPadding = 8;
                 return (
-                  <TableRow key={row.name} style={{height: `${rowHeight}px`, border: "none"}}>
+                  <TableRow key={row.name} style={{height: `${ROW_HEIGHT}px`, border: "none"}}>
                     <TableCell component="th" scope="row" className={classes.dayTableCell}>
                       <Typography color="textSecondary" variant="body2" style={{width: "32px"}}>{row}</Typography>
                       <div className={classes.horizontalLine}>
                         {
                           tileRows[index] ?
                             tileRows[index].map((obj, idx) => {
+                              let height = (((obj.end_date_epoch - obj.start_date_epoch) / (1000 * 60)) / 60 * ROW_HEIGHT) - 2;
+                              let minHeight = ((MINIMUM_DURATION_MILLISECOND) / (1000 * 60)) / 60 * ROW_HEIGHT;
+                              if (height < minHeight + verticalPadding) {
+                                verticalPadding = 2;
+                              }
+
                               return (
                                 <div
                                   onClick={obj.type === "Event" ? () => { handleOpenViewDialog(obj.data) } : undefined}
                                   className={obj.type === "Event" ? `${classes.blueChipHover} ${classes.blueChip}` : classes.blueChip}
                                   style={{
                                     transform: 
-                                      `translate(calc(100% * ${obj.startColumn} + ${obj.startColumn} * 10px), ${!isSameDate(obj.start_date, currentDateDayMode) && isSameDate(obj.end_date, currentDateDayMode)
-                                        ? (-1 * getMillisecondDiff(obj.start_date, getDayStart(obj.end_date)) / (1000 * 60)) / 60 * rowHeight
-                                        : obj.start_date.getMinutes() / 60 * rowHeight
+                                      `translate(calc(100% * ${obj.startColumn} + ${obj.startColumn} * 10px), ${!isSameDate(obj.start_date, currentDate) && isSameDate(obj.end_date, currentDate)
+                                        ? (-1 * getMillisecondDiff(obj.start_date, getDayStart(obj.end_date)) / (1000 * 60)) / 60 * ROW_HEIGHT
+                                        : obj.start_date.getMinutes() / 60 * ROW_HEIGHT
                                       }px)`,
-                                    height: `${((obj.end_date_epoch - obj.start_date_epoch) / (1000 * 60)) / 60 * rowHeight}px`,
-                                    width: `calc(${obj.width}% - ${widthPadding}px)`
+                                    height: `${height}px`,
+                                    width: `calc(${obj.width}% - ${widthPadding}px)`,
+                                    padding: `${verticalPadding}px 12px`
                                   }}
                                 >
                                   <Typography noWrap variant="body2">
@@ -4481,7 +4488,17 @@ function Calendar(props) {
                 {agendaCheckboxState.checkedEvent ? eventList.result : null}
                 {
                   (mainCounter > 3) ?
-                    <Typography variant="body2" className={classes.moreMonthAgendaChip} align="left">{mainCounter - 3} lagi</Typography>
+                    <Typography 
+                      variant="body2"
+                      className={classes.moreMonthAgendaChip}
+                      align="left"
+                      onClick={() => {
+                        setCurrentDate(new Date(column))
+                        setMode("Day")
+                      }}
+                    >
+                      {mainCounter - 3} lagi
+                    </Typography>
                   : null
                 }
               </TableCell>
@@ -4520,12 +4537,25 @@ function Calendar(props) {
           mode={mode}
           handleChangeMode={handleChangeMode}
           handleOpenCreateDialog={handleOpenCreateDialog}
-          currentDateDayMode={currentDateDayMode}
-          setCurrentDateDayMode={setCurrentDateDayMode}
-          currentDateMonthMode={currentDateMonthMode}
-          setCurrentDateMonthMode={setCurrentDateMonthMode}
+          currentDate={currentDate}
+          setCurrentDate={setCurrentDate}
         />
         <Divider style={{marginTop: "10px"}}/>
+        {
+          mode === "Day"
+            ?
+            <div style={{ display: "flex", justifyContent: "flex-start", margin: "16px 0 16px 64px"}}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <Typography variant="body2">
+                  {moment(currentDate).locale("id").format("dddd").slice(0, 3).toUpperCase()}
+                </Typography>
+                <Typography variant="h5">
+                  {moment(currentDate).locale("id").format("DD")}
+                </Typography>
+              </div>
+            </div>
+            : null
+        }
         {mode === "Day" ? generateDayModeCalendar() : generateMonthModeCalendar()}
       </div>
       <Hidden xsDown>
