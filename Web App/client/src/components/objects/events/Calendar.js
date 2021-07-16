@@ -272,6 +272,14 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer"
     },
   },
+  selectedMonthDateTile: {
+    padding: "2px 5px",
+    background: "#C9DCFD",
+    "&:focus, &:hover, &:active": {
+      background: "#e6e6e6",
+      cursor: "pointer"
+    },
+  },
   todayMonthDateTile: {
     borderRadius: "100%",
     background: "#195DE5",
@@ -2915,6 +2923,7 @@ function Calendar(props) {
   // const [currentDateDayMode, setCurrentDateDayMode] = React.useState(today);
   // const [currentDateMonthMode, setCurrentDateMonthMode] = React.useState(today);
   const [currentDate, setCurrentDate] = React.useState(today);
+  const [selectedDateMonthMode, setSelectedDateMonthMode] = React.useState(today);
 
   const [tileRows, setTileRows] = React.useState([]);
 
@@ -2943,96 +2952,32 @@ function Calendar(props) {
   // }, [props.eventsCollection.allEvents]);
 
   React.useEffect(() => {
-    // case 1
-    // let data = [
-    // 	{
-    // 		id: 1,
-    // 		start_date: new Date(2021, 1, 1, 1),
-    // 		end_date: new Date(2021, 1, 1, 2),
-    // 	}, 
-    // 	{
-    // 		id: 2,
-    // 		start_date: new Date(2021, 1, 1, 3),
-    // 		end_date: new Date(2021, 1, 1, 4),
-    // 	},
-    // 	{
-    // 		id: 3,
-    // 		start_date: new Date(2021, 1, 1, 1, 30),
-    // 		end_date: new Date(2021, 1, 1, 4),
-    // 	},
-    // 	{
-    // 		id: 4,
-    // 		start_date: new Date(2021, 1, 1, 2),
-    // 		end_date: new Date(2021, 1, 1, 3),
-    // 	},
-    // 	{
-    // 		id: 5,
-    // 		start_date: new Date(2021, 1, 1, 2, 30),
-    // 		end_date: new Date(2021, 1, 1, 3, 30),
-    // 	},
-    // 	{
-    // 		id: 6,
-    // 		start_date: new Date(2021, 1, 1, 1, 45),
-    // 		end_date: new Date(2021, 1, 1, 2, 45),
-    // 	},
-    // 	{
-    // 		id: 7,
-    // 		start_date: new Date(2021, 1, 1, 1, 52),
-    // 		end_date: new Date(2021, 1, 1, 2, 52),
-    // 	},
-    // ];
-
-    // case 9
-    // let data = [
-    //   {
-    //     id: 1,
-    //     start_date: new Date(2021, 1, 1, 1),
-    //     end_date: new Date(2021, 1, 1, 3),
-    //   },
-    //   {
-    //     id: 2,
-    //     // start_date: new Date(2021, 1, 1, 5, 30),
-    //     start_date: new Date(2021, 1, 1, 6),
-    //     end_date: new Date(2021, 1, 1, 6, 45),
-    //   },
-    //   {
-    //     id: 3,
-    //     start_date: new Date(2021, 1, 1, 2),
-    //     end_date: new Date(2021, 1, 1, 2, 45),
-    //   },
-    //   {
-    //     id: 4,
-    //     start_date: new Date(2021, 1, 1, 6, 15),
-    //     end_date: new Date(2021, 1, 1, 7),
-    //   },
-    //   {
-    //     id: 5,
-    //     start_date: new Date(2021, 1, 1, 1, 15),
-    //     end_date: new Date(2021, 1, 1, 2),
-    //   },
-    //   {
-    //     id: 6,
-    //     start_date: new Date(2021, 1, 1, 1, 45),
-    //     end_date: new Date(2021, 1, 1, 2, 15),
-    //   },
-    //   {
-    //     id: 7,
-    //     start_date: new Date(2021, 1, 1, 2, 15),
-    //     end_date: new Date(2021, 1, 1, 6),
-    //   },
-    //   {
-    //     id: 8,
-    //     start_date: new Date(2021, 1, 1, 2, 7, 30),
-    //     end_date: new Date(2021, 1, 1, 3),
-    //   },
-    //   {
-    //     id: 9,
-    //     start_date: new Date(2021, 1, 1, 6, 30),
-    //     end_date: new Date(2021, 1, 1, 8),
-    //   },
-    // ];
+    // test data
+    // let testdata = [
+    //   [1, 0, 3, 0],
+    //   [1, 20, 2, 0],
+    //   [1, 40, 2, 20],
+    //   [2, 0, 6, 0],
+    //   [2, 20, 4, 0],
+    //   [5, 40, 6, 40],
+    //   [6, 30, 6, 50],
+    //   [6, 35, 7, 50],
+    // ].map((elm, index) => {
+    //   return {
+    //     _id: index,
+    //     type: "Event",
+    //     start_date: new Date(2021, 6,16, elm[0], elm[1]).toLocaleString(),
+    //     end_date: new Date(2021, 6, 16, elm[2], elm[3]).toLocaleString(),
+    //     data: {
+    //       start_date: new Date(2021, 6, 16, elm[0], elm[1]).toLocaleString(),
+    //       end_date: new Date(2021, 6, 16, elm[2], elm[3]).toLocaleString(),
+    //       name: index + 1
+    //     }
+    //   }
+    // });
 
     if (mode === "Day") {
+      // setTileRows(placeDayModeTiles(testdata, currentDate));
       setTileRows(placeDayModeTiles(generateDayModeList(currentDate), currentDate));
     }
   }, [currentDate, mode]);
@@ -4016,6 +3961,14 @@ function Calendar(props) {
     setMode(event.target.value);
   }
 
+  const handleOpenDayMode = (date, changeSelectedDate) => {
+    if (changeSelectedDate === true) {
+      setSelectedDateMonthMode(date);
+    }
+    setCurrentDate(date);
+    setMode("Day");
+  }
+
   const isSameDate = (date_1, date_2) => {
     return date_1.getDate() === date_2.getDate() && date_1.getMonth() === date_2.getMonth() && date_1.getYear() === date_2.getYear()
   }
@@ -4444,21 +4397,30 @@ function Calendar(props) {
                   {isSameDate(today, column) ?
                     <>
                       <Hidden xsDown>
-                        <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center">{temp_date}</Typography>
+                        <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date}</Typography>
                       </Hidden>
                       <Hidden smUp>
-                        <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center">{temp_date_withoutMonthNames}</Typography>
+                        <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date_withoutMonthNames}</Typography>
                       </Hidden>
                     </>
-                  :
-                    <>
-                      <Hidden xsDown>
-                        <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center">{temp_date}</Typography>
-                      </Hidden>
-                      <Hidden smUp>
-                        <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center">{temp_date_withoutMonthNames}</Typography>
-                      </Hidden>
-                    </>
+                    : isSameDate(selectedDateMonthMode, column) ?
+                      <>
+                        <Hidden xsDown>
+                          <Typography color="textSecondary" variant="body2" className={classes.selectedMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date}</Typography>
+                        </Hidden>
+                        <Hidden smUp>
+                          <Typography color="textSecondary" variant="body2" className={classes.selectedMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date_withoutMonthNames}</Typography>
+                        </Hidden>
+                      </>
+                      :
+                      <>
+                        <Hidden xsDown>
+                          <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date}</Typography>
+                        </Hidden>
+                        <Hidden smUp>
+                          <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date_withoutMonthNames}</Typography>
+                        </Hidden>
+                      </>
                   }
                 </div>
                 {
@@ -4492,10 +4454,7 @@ function Calendar(props) {
                       variant="body2"
                       className={classes.moreMonthAgendaChip}
                       align="left"
-                      onClick={() => {
-                        setCurrentDate(new Date(column))
-                        setMode("Day")
-                      }}
+                      onClick={() => { handleOpenDayMode(new Date(column), false) }}
                     >
                       {mainCounter - 3} lagi
                     </Typography>
