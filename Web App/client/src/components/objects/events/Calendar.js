@@ -4211,13 +4211,8 @@ function Calendar(props) {
                             tileRows[index].map((obj, idx) => {
                               let widthPadding = 0;
                               let i = Math.floor(100/obj.width);
-                              console.log(obj.width)
                               if(i > 1) {
-                                widthPadding = 5;
-                              }
-                              while (i > 2) {
-                                widthPadding = widthPadding + 5/3 / (i - 2)
-                                i --;
+                                widthPadding = 10 * (i-1) / i;
                               }
                               let height = (((obj.end_date_epoch - obj.start_date_epoch) / (1000 * 60)) / 60 * ROW_HEIGHT) - 2;
                               let minHeight = ((MINIMUM_DURATION_MILLISECOND) / (1000 * 60)) / 60 * ROW_HEIGHT;
