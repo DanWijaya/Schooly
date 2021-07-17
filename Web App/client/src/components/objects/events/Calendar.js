@@ -363,8 +363,12 @@ const useStyles = makeStyles((theme) => ({
   listIcon: {
     backgroundColor: theme.palette.primary.main,
   },
-  holidayContainer: {
-    marginBottom: "10px"
+  // holidayContainer: {
+  //   marginBottom: "10px",
+  // },
+  // FIXME box shadow
+  shadow: {
+    boxShadow: "0 14px 28px -28px rgba(0,0,0,0.8), 0 10px 10px -10px rgba(0,0,0,0.15)"
   },
   staticBlueChip: {
     backgroundColor: theme.palette.primary.main,
@@ -441,6 +445,15 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "0!important",
     paddingBottom: "0!important"
   },
+  mobileDayModeDateCircle: {
+    borderRadius: "50%",
+    width: "3rem",
+    height: "3rem",
+    backgroundColor: "#195DE5",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  }
 }));
 // ANCHOR STYLE
 
@@ -757,6 +770,7 @@ function AgendaToolbar(props) {
 
   let stringDateDayMode = monthNames[currentDate.getMonth()] + " " + currentDate.getDate() + ", " + currentDate.getFullYear();
   let stringDateMonthMode = monthNames[currentDate.getMonth()] + " " + currentDate.getFullYear();
+  let stringDateDayModeMobile = monthNames[currentDate.getMonth()].slice(0, 3) + " " + currentDate.getFullYear();
 
   const handleChangeMonth = (direction) => {
     if(direction === "now") {
@@ -808,11 +822,11 @@ function AgendaToolbar(props) {
   }
 
   return (
-    <div className={classes.toolbar}>
+    <div className={classes.toolbar} >
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
         <Hidden xsDown>
           {mode === "Day" ?
-            <Button style={{ height: "40px" }} variant="outlined" onClick={() => handleChangeDay("now")}> Hari ini</Button>
+            <Button style={{ height: "40px" }} variant="outlined" onClick={() => handleChangeDay("now")}>Hari ini</Button>
           :
             <Button style={{ height: "40px" }} variant="outlined" onClick={() => handleChangeMonth("now")}>Hari ini</Button>
           }
@@ -836,13 +850,7 @@ function AgendaToolbar(props) {
         </Hidden>
         <Hidden smUp>
           {mode === "Day" ?
-            <>
-              <Typography>{stringDateDayMode}</Typography>
-              <div style={{margin: "0 5px"}}>
-                <ChevronLeftIcon onClick={() => handleChangeDay("prev")} className={classes.chevronButton} />
-                <ChevronRightIcon onClick={() => handleChangeDay("next")} className={classes.chevronButton}/>
-              </div>
-            </>
+            <Typography variant="h5">{stringDateDayModeMobile}</Typography>
           :
             <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
               <Typography>{stringDateMonthMode}</Typography>
@@ -4020,6 +4028,19 @@ function Calendar(props) {
     else return result;
   }
 
+  const handleChangeDay = (direction) => {
+    if (direction === "now") {
+      // setCurrentDateDayMode(getDayStart(new Date()));
+      setCurrentDate(new Date());
+    } else if (direction === "next") {
+      // setCurrentDateDayMode(new Date(currentDate.getTime() + 1000 * 60 * 60 * 24));
+      setCurrentDate(new Date(currentDate.getTime() + 1000 * 60 * 60 * 24));
+    } else {
+      // setCurrentDateDayMode(new Date(currentDate.getTime() - 1000 * 60 * 60 * 24));
+      setCurrentDate(new Date(currentDate.getTime() - 1000 * 60 * 60 * 24));
+    }
+  }
+
   const handleChangeMode = (event) => {
     setMode(event.target.value);
   }
@@ -4372,7 +4393,14 @@ function Calendar(props) {
     // let rowHeight = 90;
     return (
       <div className={classes.dayAgendaContainer}>
-        <div className={classes.holidayContainer}>
+        <div 
+          className={
+            (new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) in holiday) ? `${classes.shadow}` : undefined
+          } 
+          style={
+            (new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) in holiday) ? { paddingBottom: "10px" } : undefined
+          }
+        >
         {/* (new Date(column.getFullYear(), column.getMonth(), column.getDate()) in holiday) */}
           {
             (new Date(currentDate.getFullYear(), currentDate.getMonth(),currentDate.getDate()) in holiday) ?
@@ -4701,21 +4729,81 @@ function Calendar(props) {
           currentDate={currentDate}
           setCurrentDate={setCurrentDate}
         />
-        <Divider style={{marginTop: "10px"}}/>
         {
           mode === "Day"
             ?
-            <div style={{ display: "flex", justifyContent: "flex-start", margin: "16px 0 16px 64px"}}>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <Typography variant="body2">
-                  {moment(currentDate).locale("id").format("dddd").slice(0, 3).toUpperCase()}
-                </Typography>
-                <Typography variant="h5">
-                  {moment(currentDate).locale("id").format("DD")}
-                </Typography>
-              </div>
-            </div>
-            : null
+            <>
+              <Hidden xsDown>
+                <Divider style={{ marginTop: "10px" }} />
+              </Hidden>
+              <Hidden xsDown>
+                <div
+                  className={
+                    (new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) in holiday) ? undefined : classes.shadow
+                  }
+                  style={{ display: "flex", flexDirection: "column", alignItems:"flex-start" }}
+                >
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "16px 0 0 56px" }}>
+                    <Typography variant="body2">
+                      {moment(currentDate).locale("id").format("dddd").slice(0, 3).toUpperCase()}
+                    </Typography>
+                    <Typography variant="h5">
+                      {moment(currentDate).locale("id").format("DD")}
+                    </Typography>
+                  </div>
+                  <div
+                    style={{ height: "16px" }}
+                  />
+                </div>
+              </Hidden>
+              <Hidden smUp>
+                <div 
+                  className={
+                    (new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) in holiday) ? undefined : classes.shadow
+                  }
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      alignItems:"center"
+                    }}
+                  >
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "16px 0 0 12px" }}>
+                      <Typography variant="body2" style={{ color: "#195DE5" }}>
+                        {moment(currentDate).locale("id").format("dddd").slice(0, 3).toUpperCase()}
+                      </Typography>
+                      <div className={classes.mobileDayModeDateCircle}>
+                        <Typography variant="h5" style={{ color: "white" }}>
+                          {moment(currentDate).locale("id").format("DD")}
+                        </Typography>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                      <Typography variant="body2">
+                        {"\u200B"}
+                      </Typography>
+                      <div style={{ height: "3rem", display: "flex", alignItems: "center" }}>
+                        <Button style={{ height: "32px", marginLeft: "24px" }} variant="outlined" onClick={() => handleChangeDay("now")}>Hari ini</Button>
+                        <div style={{ marginLeft: "24px" }}>
+                          <ChevronLeftIcon onClick={() => handleChangeDay("prev")} className={classes.chevronButton} />
+                          <ChevronRightIcon onClick={() => handleChangeDay("next")} className={classes.chevronButton} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={{ height: "16px" }}
+                  />
+                </div>
+              </Hidden>
+            </>
+            : <Divider style={{ marginTop: "10px" }} />
         }
         {mode === "Day" ? generateDayModeCalendar() : generateMonthModeCalendar()}
       </div>
