@@ -115,6 +115,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Draggable from 'react-draggable';
 import Path from "path";
 import CustomLinkify from "../../misc/linkify/Linkify";
+import { isNull } from "util";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -291,6 +292,15 @@ const useStyles = makeStyles((theme) => ({
     marginBlockStart: 0,
     marginBlockEnd: 0,
     padding: "2px 4px"
+  },
+  holidayMonthDateTile: {
+    padding: "2px 5px",
+    background: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover, &:active": {
+      background: theme.palette.error.dark,
+      cursor: "pointer"
+    },
   },
   monthAgendaCell: {
     width: "14.2875%",
@@ -2925,6 +2935,24 @@ function Calendar(props) {
   const [currentDate, setCurrentDate] = React.useState(today);
   const [selectedDateMonthMode, setSelectedDateMonthMode] = React.useState(today);
 
+  const holiday = {
+    [new Date(2021, 0, 1)]: ["Tahun Baru 2021 Masehi"],
+    [new Date(2021, 1, 12)]: ["Tahun Baru Imlek 2572 Kongzili"],
+    [new Date(2021, 2, 11)]: ["Isra Mikraj Nabi Muhammad SAW"],
+    [new Date(2021, 2, 14)]: ["Hari Suci Nyepi Tahun Baru Saka 1943"],
+    [new Date(2021, 3, 2)]: ["Wafat Isa Al Masih"],
+    [new Date(2021, 4, 1)]: ["Hari Buruh Internasional"],
+    [new Date(2021, 4, 13)]: ["Kenaikan Isa Al Masih", "Hari Raya Idul Fitri 1442 Hijriah"],
+    [new Date(2021, 4, 14)]: ["Hari Raya Idul Fitri 1442 Hijriah"],
+    [new Date(2021, 4, 26)]: ["Hari Raya Waisak 2565"],
+    [new Date(2021, 5, 1)]: ["Hari Lahir Pancasila"],
+    [new Date(2021, 6, 20)]: ["Hari Raya Idul Adha 1442 Hijriah"],
+    [new Date(2021, 7, 10)]: ["Tahun Baru Islam 1443 Hijriah"],
+    [new Date(2021, 7, 17)]: ["Hari Kemerdekaan Republik Indonesia"],
+    [new Date(2021, 9, 19)]: ["Maulid Nabi Muhammad SAW"],
+    [new Date(2021, 11, 25)]: ["Hari Raya Natal"],
+  }
+
   const [tileRows, setTileRows] = React.useState([]);
 
   React.useEffect(() => {
@@ -2978,15 +3006,15 @@ function Calendar(props) {
 
     if (mode === "Day") {
       // setTileRows(placeDayModeTiles(testdata, currentDate));
-      setTileRows(placeDayModeTiles(generateDayModeList(currentDate), currentDate));
+      setTileRows([...placeDayModeTiles(generateDayModeList(currentDate), currentDate)]);
     }
-  }, [currentDate, mode]);
+  }, [currentDate, mode, agendaCheckboxState]);
 
   React.useEffect(() => {
     if (tasksCollection && all_assessments && allEvents) {
-      setTileRows(placeDayModeTiles(generateDayModeList(currentDate), currentDate));
+      setTileRows([...placeDayModeTiles(generateDayModeList(currentDate), currentDate)]);
     }
-  }, [tasksCollection, all_assessments, allEvents]);
+  }, [tasksCollection, all_assessments, allEvents, agendaCheckboxState]);
 
   function placeDayModeTiles(arrayOfObject, currentDate) {
     let data = arrayOfObject.map((elm) => {
@@ -4112,7 +4140,10 @@ function Calendar(props) {
   const [agendaCheckboxState, setAgendaCheckboxState] = React.useState(agendaStates);
 
   const handleChange = (event) => {
-    setAgendaCheckboxState({ ...agendaCheckboxState, [event.target.name]: event.target.checked });
+    const tempAgendaCheckboxState = { ...agendaCheckboxState };
+    tempAgendaCheckboxState[event.target.name] = event.target.checked;
+    setAgendaCheckboxState({ ...tempAgendaCheckboxState });
+    console.log(agendaCheckboxState);
   };
 
   let classStates = {}
@@ -4134,6 +4165,12 @@ function Calendar(props) {
     setClassCheckboxState({ ...classCheckboxState, [event.target.name]: event.target.checked });
   };
 
+  React.useEffect(() => {
+    if (tasksCollection && all_assessments && allEvents) {
+      setTileRows([...placeDayModeTiles(generateDayModeList(currentDate), currentDate)]);
+    }
+  }, [agendaCheckboxState, classCheckboxState]);
+
   // ANCHOR generateDayModeList
   const generateDayModeList = (date) => {
     let result = []
@@ -4147,29 +4184,55 @@ function Calendar(props) {
         // allEvents.length !== 0
         ) {
         // rows.length !== 0) {
+        let taskList = [];
+        let quizList = [];
+        let examList = [];
+        let eventList = [];
         if(role === "Student") {
-          let taskList = listTasks(new Date(date));
-          let quizList = listAssessmentsStudentMonth(new Date(date), "Kuis");
-          let examList = listAssessmentsStudentMonth(new Date(date), "Ujian");
-          let eventList = listEvent(new Date(date));
-          result = [...taskList, ...quizList, ...examList, ...eventList];
+          if(agendaCheckboxState.checkedTask) {
+            taskList = listTasks(new Date(date));
+          }
+          if(agendaCheckboxState.checkedQuiz) {
+            quizList = listAssessmentsStudentMonth(new Date(date), "Kuis");
+          }
+          if(agendaCheckboxState.checkedExam) {
+            examList = listAssessmentsStudentMonth(new Date(date), "Ujian");
+          }
+          if(agendaCheckboxState.checkedEvent) {
+            eventList = listEvent(new Date(date));
+          }
         }
         else if(role === "Teacher" && classCheckboxState) {
-          let taskList = listTasksTeacher(new Date(date));
-          let quizList = listAssessmentsTeacher(new Date(date), "Kuis");
-          let examList = listAssessmentsTeacher(new Date(date), "Ujian");
-          let eventList = listEvent(new Date(date));
-          result = [...taskList, ...quizList, ...examList, ...eventList];
+          if(agendaCheckboxState.checkedTask) {
+            taskList = listTasksTeacher(new Date(date));
+          }
+          if(agendaCheckboxState.checkedQuiz) {
+            quizList = listAssessmentsTeacher(new Date(date), "Kuis");
+          }
+          if(agendaCheckboxState.checkedExam) {
+            examList = listAssessmentsTeacher(new Date(date), "Ujian");
+          }
+          if(agendaCheckboxState.checkedEvent) {
+            eventList = listEvent(new Date(date));
+          }
         }
         else {
           if(classCheckboxState) {
-            let taskList = listTasksAdmin(new Date(date));
-            let quizList = listAssessmentsAdmin(new Date(date), "Kuis");
-            let examList = listAssessmentsAdmin(new Date(date), "Ujian");
-            let eventList = listEvent(new Date(date));
-            result = [...taskList, ...quizList, ...examList, ...eventList];
+            if(agendaCheckboxState.checkedTask) {
+              taskList = listTasksAdmin(new Date(date));
+            }
+            if(agendaCheckboxState.checkedQuiz) {
+              quizList = listAssessmentsAdmin(new Date(date), "Kuis");
+            }
+            if(agendaCheckboxState.checkedExam) {
+              examList = listAssessmentsAdmin(new Date(date), "Ujian");
+            }
+            if(agendaCheckboxState.checkedEvent) {
+              eventList = listEvent(new Date(date));
+            }
           }
         }
+        result = [...taskList, ...quizList, ...examList, ...eventList];
       }
     }
     return result;
@@ -4182,19 +4245,24 @@ function Calendar(props) {
   // ANCHOR generateDayModeCalendar
   const generateDayModeCalendar = () => {
     let rowHeight = 90;
+    // console.log(Object.keys(holiday));
+    // console.log(currentDate.toString());
+    // console.log(holiday[currentDate.toString()])
     return (
       <div className={classes.dayAgendaContainer}>
         <div className={classes.holidayContainer}>
-          <div className={classes.staticBlueChip}>
-            <Typography style={{color: "white"}} variant="body2">
-              Natal/Christmas (Contoh)
-            </Typography>
-          </div>
-          <div className={classes.staticBlueChip}>
-            <Typography style={{color: "white"}} variant="body2">
-              Idul Adha
-            </Typography>
-          </div>
+        {/* (new Date(column.getFullYear(), column.getMonth(), column.getDate()) in holiday) */}
+          {
+            (new Date(currentDate.getFullYear(), currentDate.getMonth(),currentDate.getDate()) in holiday) ?
+              holiday[new Date(currentDate.getFullYear(), currentDate.getMonth(),currentDate.getDate())].map((holiday) => (
+                <div className={classes.staticBlueChip}>
+                  <Typography style={{color: "white"}} variant="body2">
+                    {holiday}
+                  </Typography>
+                </div>
+              ))
+            : null
+          }
         </div>
         <TableContainer>
           <Table>
@@ -4411,15 +4479,24 @@ function Calendar(props) {
                           <Typography color="textSecondary" variant="body2" className={classes.selectedMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date_withoutMonthNames}</Typography>
                         </Hidden>
                       </>
-                      :
-                      <>
-                        <Hidden xsDown>
-                          <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date}</Typography>
-                        </Hidden>
-                        <Hidden smUp>
-                          <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date_withoutMonthNames}</Typography>
-                        </Hidden>
-                      </>
+                      : (new Date(column.getFullYear(), column.getMonth(), column.getDate()) in holiday) ?
+                          <>
+                            <Hidden xsDown>
+                              <Typography color="textSecondary" variant="body2" className={classes.holidayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date}</Typography>
+                            </Hidden>
+                            <Hidden smUp>
+                              <Typography color="textSecondary" variant="body2" className={classes.holidayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date_withoutMonthNames}</Typography>
+                            </Hidden>
+                          </>
+                        :
+                          <>
+                            <Hidden xsDown>
+                              <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date}</Typography>
+                            </Hidden>
+                            <Hidden smUp>
+                              <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date_withoutMonthNames}</Typography>
+                            </Hidden>
+                          </>
                   }
                 </div>
                 {
