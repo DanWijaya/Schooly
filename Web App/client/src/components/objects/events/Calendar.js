@@ -368,7 +368,7 @@ const useStyles = makeStyles((theme) => ({
   // },
   // FIXME box shadow
   shadow: {
-    boxShadow: "0 14px 28px -28px rgba(0,0,0,0.8), 0 10px 10px -10px rgba(0,0,0,0.15)"
+    boxShadow: "0 14px 18px -28px rgba(0,0,0,0.8), 0 10px 10px -10px rgba(0,0,0,0.15)"
   },
   staticBlueChip: {
     backgroundColor: theme.palette.primary.main,
@@ -3756,9 +3756,10 @@ function Calendar(props) {
 
       for (let i = 0; i < all_assessments.length; i++) {
         let assessment = all_assessments[i];
+        console.log(assessment);
         // let tempDeadlineDate = new Date(moment(assessment.start_date).locale("id"));
         let classFound = false;
-        if (assessment.type === assessmentType) {
+        if (assessment.type === assessmentType && assessment.author_id === user._id) {
           for(let classId of all_assessments[i].class_assigned) {
             if(selectedClassCheckList.includes(classId)) {
               classFound = true;
