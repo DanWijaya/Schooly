@@ -366,7 +366,6 @@ const useStyles = makeStyles((theme) => ({
   // holidayContainer: {
   //   marginBottom: "10px",
   // },
-  // FIXME box shadow
   shadow: {
     boxShadow: "0 14px 18px -28px rgba(0,0,0,0.8), 0 10px 10px -10px rgba(0,0,0,0.15)"
   },
@@ -2932,6 +2931,8 @@ function Calendar(props) {
   const [selectedDateMonthMode, setSelectedDateMonthMode] = React.useState(today);
   const [objectCount, setObjectCount] = React.useState({ event: 0, ujian: 0, kuis: 0, task: 0 });
 
+  const [classCheckboxState, setClassCheckboxState] = React.useState({});
+  
   const holiday = {
     [new Date(2021, 0, 1)]: ["Tahun Baru 2021 Masehi"],
     [new Date(2021, 1, 12)]: ["Tahun Baru Imlek 2572 Kongzili"],
@@ -2962,6 +2963,10 @@ function Calendar(props) {
     getTeachers();
     getAllTaskFilesByUser(user._id);
     getAllSubjects("map");
+
+    if (role === "Teacher") {
+      setClassCheckboxState(Object.assign({}, ...user.class_teached.map((class_id) => ({ [class_id]: true }))));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -4294,21 +4299,12 @@ function Calendar(props) {
     console.log(agendaCheckboxState);
   };
 
-  let classStates = {}
-  if(role === "Teacher") {
-    classStates = Object.assign({}, ...user.class_teached.map((class_id) => ({[class_id]: true})))
-  }
-
   React.useEffect(() => {
     if(role === "Admin" && all_classes.length !== 0) {
-      classStates = Object.assign({}, ...all_classes.map((kelas) => ({[kelas._id]: true})))
-      setClassCheckboxState(classStates)
+      setClassCheckboxState(Object.assign({}, ...all_classes.map((kelas) => ({ [kelas._id]: true }))));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all_classes])
-
-  const [classCheckboxState, setClassCheckboxState] = React.useState(classStates);
-  // console.log(classCheckboxState)
 
   const handleChangeClassStates = (event) => {
     setClassCheckboxState({ ...classCheckboxState, [event.target.name]: event.target.checked });
@@ -4321,7 +4317,6 @@ function Calendar(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agendaCheckboxState, classCheckboxState]);
 
-  // ANCHOR generateDayModeList
   const generateDayModeList = (date) => {
     let result = []
     if(mode === "Day") {
@@ -4388,8 +4383,6 @@ function Calendar(props) {
     return result;
   }
   
-
-  // ANCHOR generateDayModeCalendar
   const generateDayModeCalendar = () => {
     // let rowHeight = 90;
     return (
