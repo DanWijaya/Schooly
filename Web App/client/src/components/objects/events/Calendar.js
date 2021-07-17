@@ -3144,7 +3144,7 @@ function Calendar(props) {
         subtree.forEach((value) => {
           for (let j = 0; j <= data.length - 1; j++) {
             if (data[j]._id === value) {
-              data[j].width = width ?? Math.round(100 / (treeHeight + 1));
+              data[j].width = width ?? (100 / (treeHeight + 1));
               break;
             }
           }
@@ -4200,12 +4200,6 @@ function Calendar(props) {
           <Table>
             <TableBody>
               {timeRows.map((row, index) => {
-                let widthPadding = 5;
-                let i = tileRows[index]?.length ?? 0;
-                while (i > 2) {
-                  widthPadding = widthPadding + 5/3 / (i - 2)
-                  i --;
-                }
                 let verticalPadding = 8;
                 return (
                   <TableRow key={row.name} style={{height: `${ROW_HEIGHT}px`, border: "none"}}>
@@ -4215,6 +4209,16 @@ function Calendar(props) {
                         {
                           tileRows[index] ?
                             tileRows[index].map((obj, idx) => {
+                              let widthPadding = 0;
+                              let i = Math.floor(100/obj.width);
+                              console.log(obj.width)
+                              if(i > 1) {
+                                widthPadding = 5;
+                              }
+                              while (i > 2) {
+                                widthPadding = widthPadding + 5/3 / (i - 2)
+                                i --;
+                              }
                               let height = (((obj.end_date_epoch - obj.start_date_epoch) / (1000 * 60)) / 60 * ROW_HEIGHT) - 2;
                               let minHeight = ((MINIMUM_DURATION_MILLISECOND) / (1000 * 60)) / 60 * ROW_HEIGHT;
                               if (height < minHeight + verticalPadding) {
