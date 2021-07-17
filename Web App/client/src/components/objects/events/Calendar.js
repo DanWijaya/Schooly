@@ -18,20 +18,16 @@ import {
   Avatar,
   Paper,
   Divider,
-  Badge,
   Dialog,
   TextField,
-  Menu,
   Select,
   MenuItem,
   FormHelperText,
   FormControl,
-  InputLabel,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   DialogTitle,
   DialogContent,
@@ -45,7 +41,6 @@ import {
   useMediaQuery,
   CircularProgress,
   Fade,
-  InputBase
 } from "@material-ui/core/";
 import {
   MuiPickersUtilsProvider,
@@ -65,11 +60,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import CancelIcon from '@material-ui/icons/Cancel';
-import EditIcon from "@material-ui/icons/Edit";
-import PageviewIcon from "@material-ui/icons/Pageview";
-import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
-import WarningIcon from "@material-ui/icons/Warning";
-import AssignmentIcon from "@material-ui/icons/Assignment";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SearchIcon from '@material-ui/icons/Search';
@@ -102,7 +92,7 @@ import {
   getFileEvents
 } from "../../../actions/files/FileEventActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getStudents, getStudentsByClass, getTeachers } from "../../../actions/UserActions";
+import { getStudents, getTeachers } from "../../../actions/UserActions";
 import { getTasks, getAllTask } from "../../../actions/TaskActions";
 import {
   getAssessments,
@@ -110,12 +100,10 @@ import {
 } from "../../../actions/AssessmentActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import moment from "moment";
-import ErrorIcon from "@material-ui/icons/Error";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Draggable from 'react-draggable';
 import Path from "path";
 import CustomLinkify from "../../misc/linkify/Linkify";
-import { isNull } from "util";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -185,7 +173,7 @@ const useStyles = makeStyles((theme) => ({
     height: "600px",
     overflow: "auto",
     flex: 1,
-    overflow: "hidden"
+    // overflow: "hidden"
   },
   dayTableCell: {
     display: "flex", 
@@ -456,299 +444,299 @@ const useStyles = makeStyles((theme) => ({
 }));
 // ANCHOR STYLE
 
-function CalendarListToolbar(props) {
-  const {
-    classes,
-    order,
-    orderBy,
-    onRequestSort,
-    handleOpenFormDialog,
-    searchFilter,
-    updateSearchFilter,
-    setSearchBarFocus,
-    searchBarFocus,
-    role,
-    type
-  } = props;
+// function CalendarListToolbar(props) {
+//   const {
+//     classes,
+//     order,
+//     orderBy,
+//     onRequestSort,
+//     handleOpenFormDialog,
+//     searchFilter,
+//     updateSearchFilter,
+//     setSearchBarFocus,
+//     searchBarFocus,
+//     role,
+//     type
+//   } = props;
 
-  let toolbarTitle = "";
-  let toolbarIcon = null;
+//   let toolbarTitle = "";
+//   let toolbarIcon = null;
 
-  if(type === "Event") {
-    toolbarTitle = "Daftar Kegiatan";
-    toolbarIcon = <EventNoteIcon className={classes.titleIcon} fontSize="large" />;
-  }
-  else if(type === "Task") {
-    toolbarTitle = "Daftar Tugas";
-    toolbarIcon = <AssignmentIcon className={classes.titleIcon} fontSize="large" />;
-  }
-  else if(type === "Quiz") {
-    toolbarTitle = "Daftar Kuis";
-    toolbarIcon = <FaClipboardList className={classes.titleIcon} fontSize="large" />;
-  }
-  else {
-    toolbarTitle = "Daftar Ujian";
-    toolbarIcon = <BsClipboardData className={classes.titleIcon} fontSize="large" />;
-  }
+//   if(type === "Event") {
+//     toolbarTitle = "Daftar Kegiatan";
+//     toolbarIcon = <EventNoteIcon className={classes.titleIcon} fontSize="large" />;
+//   }
+//   else if(type === "Task") {
+//     toolbarTitle = "Daftar Tugas";
+//     toolbarIcon = <AssignmentIcon className={classes.titleIcon} fontSize="large" />;
+//   }
+//   else if(type === "Quiz") {
+//     toolbarTitle = "Daftar Kuis";
+//     toolbarIcon = <FaClipboardList className={classes.titleIcon} fontSize="large" />;
+//   }
+//   else {
+//     toolbarTitle = "Daftar Ujian";
+//     toolbarIcon = <BsClipboardData className={classes.titleIcon} fontSize="large" />;
+//   }
 
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
+//   // const createSortHandler = (property) => (event) => {
+//   //   onRequestSort(event, property);
+//   // };
 
-  // const headCells = [
-  //   {
-  //     id: "name",
-  //     numeric: false,
-  //     disablePadding: false,
-  //     label: "Mata Pelajaran",
-  //   },
-  // ];
+//   // const headCells = [
+//   //   {
+//   //     id: "name",
+//   //     numeric: false,
+//   //     disablePadding: false,
+//   //     label: "Mata Pelajaran",
+//   //   },
+//   // ];
 
-  // // Sort Menu
-  // const [anchorEl, setAnchorEl] = React.useState(null);
-  // const handleOpenSortMenu = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-  // const handleCloseSortMenu = () => {
-  //   setAnchorEl(null);
-  // };
+//   // // Sort Menu
+//   // const [anchorEl, setAnchorEl] = React.useState(null);
+//   // const handleOpenSortMenu = (event) => {
+//   //   setAnchorEl(event.currentTarget);
+//   // };
+//   // const handleCloseSortMenu = () => {
+//   //   setAnchorEl(null);
+//   // };
 
-  // const onChange = (e) => {
-  //   updateSearchFilter(e.target.value);
-  // };
+//   // const onChange = (e) => {
+//   //   updateSearchFilter(e.target.value);
+//   // };
 
-  // const onClear = (e, id) => {
-  //   updateSearchFilter("");
-  //   document.getElementById(id).focus();
-  // };
+//   // const onClear = (e, id) => {
+//   //   updateSearchFilter("");
+//   //   document.getElementById(id).focus();
+//   // };
 
-  return (
-    <div className={classes.toolbar}>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden mdUp implementation="css">
-          {searchBarFocus ? null : (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              {toolbarIcon}
-              <Typography variant="h4">{toolbarTitle}</Typography>
-            </div>
-          )}
-        </Hidden>
-        <Hidden smDown implementation="css">
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            {toolbarIcon}
-            <Typography variant="h4">{toolbarTitle}</Typography>
-          </div>
-        </Hidden>
-        {/* <Hidden mdUp implementation="css">
-          {searchBarFocus ? (
-            <div style={{ display: "flex" }}>
-              <IconButton
-                onClick={() => {
-                  setSearchBarFocus(false);
-                  updateSearchFilter("");
-                }}
-              >
-                <ArrowBackIcon />
-              </IconButton>
-              <TextField
-                fullWidth
-                variant="outlined"
-                id="searchFilterMobile"
-                value={searchFilter}
-                onChange={onChange}
-                autoFocus
-                onClick={(e) => setSearchBarFocus(true)}
-                placeholder="Cari Mata Pelajaran"
-                style={{
-                  maxWidth: "200px",
-                  marginLeft: "10px",
-                }}
-                InputProps={{
-                  startAdornment: searchBarFocus ? null : (
-                    <InputAdornment
-                      position="start"
-                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
-                    >
-                      <IconButton size="small">
-                        <GoSearch />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment
-                      position="end"
-                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                    >
-                      <IconButton
-                        size="small"
-                        id="searchFilterMobile"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onClear(e, "searchFilterMobile");
-                        }}
-                        style={{
-                          opacity: 0.5,
-                          visibility: !searchFilter ? "hidden" : "visible",
-                        }}
-                      >
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  style: {
-                    borderRadius: "22.5px",
-                  },
-                }}
-              />
-            </div>
-          ) : (
-            <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
-              <IconButton
-                className={classes.goSearchButton}
-                onClick={() => setSearchBarFocus(true)}
-              >
-                <GoSearch className={classes.goSearchIconMobile} />
-              </IconButton>
-            </LightTooltip>
-          )}
-        </Hidden> */}
-      </div>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        {/* <Hidden smDown implementation="css">
-          <TextField
-            variant="outlined"
-            id="searchFilterDesktop"
-            value={searchFilter}
-            onChange={onChange}
-            onClick={() => setSearchBarFocus(true)}
-            onBlur={() => setSearchBarFocus(false)}
-            placeholder="Cari Mata Pelajaran"
-            style={{
-              maxWidth: "250px",
-              marginRight: "10px",
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment
-                  position="start"
-                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
-                >
-                  <IconButton size="small">
-                    <GoSearch />
-                  </IconButton>
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment
-                  position="end"
-                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                >
-                  <IconButton
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onClear(e, "searchFilterDesktop");
-                    }}
-                    style={{
-                      opacity: 0.5,
-                      visibility: !searchFilter ? "hidden" : "visible",
-                    }}
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-              style: {
-                borderRadius: "22.5px",
-              },
-            }}
-          />
-        </Hidden> */}
-        <Hidden mdUp implementation="css">
-          {role !== "Admin" ? null : (
-            <LightTooltip title="Buat Kegiatan">
-              <Link to="/buat-kegiatan">
-                <Fab size="small" className={classes.newEventButton}>
-                  <EventNoteIcon className={classes.newEventIconMobile} />
-                </Fab>
-              </Link>
-            </LightTooltip>
-          )}
-        </Hidden>
-        <Hidden smDown implementation="css">
-          {role !== "Admin" ? null : (
-            <Link to="/buat-kegiatan">
-              <Fab
-                size="medium"
-                variant="extended"
-                className={classes.newEventButton}
-              >
-                <EventNoteIcon className={classes.newEventIconDesktop} />
-                Buat Kegiatan
-            </Fab>
-            </Link>
-          )}
-        </Hidden>
-        {/* <LightTooltip title="Urutkan Mata Pelajaran">
-          <IconButton
-            onClick={handleOpenSortMenu}
-            className={classes.sortButton}
-          >
-            <SortIcon />
-          </IconButton>
-        </LightTooltip>
-        <Menu
-          keepMounted
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleCloseSortMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          {headCells.map((headCell, i) => (
-            <MenuItem
-              key={headCell.id}
-              sortDirection={orderBy === headCell.id ? order : false}
-              onClick={createSortHandler(headCell.id)}
-            >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-              >
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                  <span className={classes.visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </span>
-                ) : null}
-              </TableSortLabel>
-            </MenuItem>
-          ))}
-        </Menu> */}
-      </div>
-    </div>
-  );
-}
+//   return (
+//     <div className={classes.toolbar}>
+//       <div style={{ display: "flex", alignItems: "center" }}>
+//         <Hidden mdUp implementation="css">
+//           {searchBarFocus ? null : (
+//             <div
+//               style={{
+//                 display: "flex",
+//                 flexDirection: "row",
+//                 alignItems: "center",
+//               }}
+//             >
+//               {toolbarIcon}
+//               <Typography variant="h4">{toolbarTitle}</Typography>
+//             </div>
+//           )}
+//         </Hidden>
+//         <Hidden smDown implementation="css">
+//           <div
+//             style={{
+//               display: "flex",
+//               flexDirection: "row",
+//               alignItems: "center",
+//             }}
+//           >
+//             {toolbarIcon}
+//             <Typography variant="h4">{toolbarTitle}</Typography>
+//           </div>
+//         </Hidden>
+//         {/* <Hidden mdUp implementation="css">
+//           {searchBarFocus ? (
+//             <div style={{ display: "flex" }}>
+//               <IconButton
+//                 onClick={() => {
+//                   setSearchBarFocus(false);
+//                   updateSearchFilter("");
+//                 }}
+//               >
+//                 <ArrowBackIcon />
+//               </IconButton>
+//               <TextField
+//                 fullWidth
+//                 variant="outlined"
+//                 id="searchFilterMobile"
+//                 value={searchFilter}
+//                 onChange={onChange}
+//                 autoFocus
+//                 onClick={(e) => setSearchBarFocus(true)}
+//                 placeholder="Cari Mata Pelajaran"
+//                 style={{
+//                   maxWidth: "200px",
+//                   marginLeft: "10px",
+//                 }}
+//                 InputProps={{
+//                   startAdornment: searchBarFocus ? null : (
+//                     <InputAdornment
+//                       position="start"
+//                       style={{ marginLeft: "-5px", marginRight: "-5px" }}
+//                     >
+//                       <IconButton size="small">
+//                         <GoSearch />
+//                       </IconButton>
+//                     </InputAdornment>
+//                   ),
+//                   endAdornment: (
+//                     <InputAdornment
+//                       position="end"
+//                       style={{ marginLeft: "-10px", marginRight: "-10px" }}
+//                     >
+//                       <IconButton
+//                         size="small"
+//                         id="searchFilterMobile"
+//                         onClick={(e) => {
+//                           e.stopPropagation();
+//                           onClear(e, "searchFilterMobile");
+//                         }}
+//                         style={{
+//                           opacity: 0.5,
+//                           visibility: !searchFilter ? "hidden" : "visible",
+//                         }}
+//                       >
+//                         <ClearIcon />
+//                       </IconButton>
+//                     </InputAdornment>
+//                   ),
+//                   style: {
+//                     borderRadius: "22.5px",
+//                   },
+//                 }}
+//               />
+//             </div>
+//           ) : (
+//             <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
+//               <IconButton
+//                 className={classes.goSearchButton}
+//                 onClick={() => setSearchBarFocus(true)}
+//               >
+//                 <GoSearch className={classes.goSearchIconMobile} />
+//               </IconButton>
+//             </LightTooltip>
+//           )}
+//         </Hidden> */}
+//       </div>
+//       <div style={{ display: "flex", alignItems: "center" }}>
+//         {/* <Hidden smDown implementation="css">
+//           <TextField
+//             variant="outlined"
+//             id="searchFilterDesktop"
+//             value={searchFilter}
+//             onChange={onChange}
+//             onClick={() => setSearchBarFocus(true)}
+//             onBlur={() => setSearchBarFocus(false)}
+//             placeholder="Cari Mata Pelajaran"
+//             style={{
+//               maxWidth: "250px",
+//               marginRight: "10px",
+//             }}
+//             InputProps={{
+//               startAdornment: (
+//                 <InputAdornment
+//                   position="start"
+//                   style={{ marginLeft: "-5px", marginRight: "-5px" }}
+//                 >
+//                   <IconButton size="small">
+//                     <GoSearch />
+//                   </IconButton>
+//                 </InputAdornment>
+//               ),
+//               endAdornment: (
+//                 <InputAdornment
+//                   position="end"
+//                   style={{ marginLeft: "-10px", marginRight: "-10px" }}
+//                 >
+//                   <IconButton
+//                     size="small"
+//                     onClick={(e) => {
+//                       e.stopPropagation();
+//                       onClear(e, "searchFilterDesktop");
+//                     }}
+//                     style={{
+//                       opacity: 0.5,
+//                       visibility: !searchFilter ? "hidden" : "visible",
+//                     }}
+//                   >
+//                     <ClearIcon />
+//                   </IconButton>
+//                 </InputAdornment>
+//               ),
+//               style: {
+//                 borderRadius: "22.5px",
+//               },
+//             }}
+//           />
+//         </Hidden> */}
+//         <Hidden mdUp implementation="css">
+//           {role !== "Admin" ? null : (
+//             <LightTooltip title="Buat Kegiatan">
+//               <Link to="/buat-kegiatan">
+//                 <Fab size="small" className={classes.newEventButton}>
+//                   <EventNoteIcon className={classes.newEventIconMobile} />
+//                 </Fab>
+//               </Link>
+//             </LightTooltip>
+//           )}
+//         </Hidden>
+//         <Hidden smDown implementation="css">
+//           {role !== "Admin" ? null : (
+//             <Link to="/buat-kegiatan">
+//               <Fab
+//                 size="medium"
+//                 variant="extended"
+//                 className={classes.newEventButton}
+//               >
+//                 <EventNoteIcon className={classes.newEventIconDesktop} />
+//                 Buat Kegiatan
+//             </Fab>
+//             </Link>
+//           )}
+//         </Hidden>
+//         {/* <LightTooltip title="Urutkan Mata Pelajaran">
+//           <IconButton
+//             onClick={handleOpenSortMenu}
+//             className={classes.sortButton}
+//           >
+//             <SortIcon />
+//           </IconButton>
+//         </LightTooltip>
+//         <Menu
+//           keepMounted
+//           anchorEl={anchorEl}
+//           open={Boolean(anchorEl)}
+//           onClose={handleCloseSortMenu}
+//           anchorOrigin={{
+//             vertical: "bottom",
+//             horizontal: "right",
+//           }}
+//           transformOrigin={{
+//             vertical: "top",
+//             horizontal: "left",
+//           }}
+//         >
+//           {headCells.map((headCell, i) => (
+//             <MenuItem
+//               key={headCell.id}
+//               sortDirection={orderBy === headCell.id ? order : false}
+//               onClick={createSortHandler(headCell.id)}
+//             >
+//               <TableSortLabel
+//                 active={orderBy === headCell.id}
+//                 direction={orderBy === headCell.id ? order : "asc"}
+//               >
+//                 {headCell.label}
+//                 {orderBy === headCell.id ? (
+//                   <span className={classes.visuallyHidden}>
+//                     {order === "desc"
+//                       ? "sorted descending"
+//                       : "sorted ascending"}
+//                   </span>
+//                 ) : null}
+//               </TableSortLabel>
+//             </MenuItem>
+//           ))}
+//         </Menu> */}
+//       </div>
+//     </div>
+//   );
+// }
 
 function AgendaToolbar(props) {
   const {
@@ -780,7 +768,7 @@ function AgendaToolbar(props) {
     }
     else if(direction === "next") {
       let nextMonthDate;
-      if (currentDate.getMonth() == 11) {
+      if (currentDate.getMonth() === 11) {
         // nextMonthDate = new Date(currentDate.getFullYear() + 1, 0, 1);
         nextMonthDate = new Date(currentDate.getFullYear() + 1, 0, currentDate.getDate());
       } 
@@ -793,7 +781,7 @@ function AgendaToolbar(props) {
     }
     else {
       let prevMonthDate;
-      if (currentDate.getMonth() == 0) {
+      if (currentDate.getMonth() === 0) {
         // prevMonthDate = new Date(currentDate.getFullYear() - 1, 11, 1);
         prevMonthDate = new Date(currentDate.getFullYear() - 1, 11, currentDate.getDate());
       } 
@@ -851,8 +839,8 @@ function AgendaToolbar(props) {
             <>
               <Typography>{stringDateDayMode}</Typography>
               <div style={{margin: "0 5px"}}>
-                <ChevronLeftIcon className={classes.chevronButton}/>
-                <ChevronRightIcon className={classes.chevronButton}/>
+                <ChevronLeftIcon onClick={() => handleChangeDay("prev")} className={classes.chevronButton} />
+                <ChevronRightIcon onClick={() => handleChangeDay("next")} className={classes.chevronButton}/>
               </div>
             </>
           :
@@ -898,59 +886,59 @@ function AgendaToolbar(props) {
   );
 }
 
-function TaskListItem(props) {
-  const { classes } = props;
+// function TaskListItem(props) {
+//   const { classes } = props;
 
-  return (
-    <Grid item>
-      <Link to={props.work_link}>
-        <Paper variant="outlined" button className={classes.listItemPaper}>
-          <Badge
-            style={{ display: "flex", flexDirection: "row" }}
-            badgeContent={<ErrorIcon className={classes.errorIcon} />}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-          >
-            <ListItem button className={classes.listItem}>
-              <Hidden xsDown>
-                <ListItemAvatar>
-                  <Avatar className={classes.listIcon}>
-                    <AssignmentIcon />
-                  </Avatar>
-                </ListItemAvatar>
-              </Hidden>
-              <ListItemText
-                primary={
-                  <Typography variant="h6">
-                    {props.work_title}
-                  </Typography>
-                }
-                secondary={props.work_sender}
-              />
-              <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="body2" color="textSecondary">
-                    {moment(props.work_dateposted)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
-                  </Typography>
-                }
-                secondary={
-                  <Typography variant="body2" color="textSecondary">
-                    {moment(props.work_dateposted).locale("id").format("HH.mm")}
-                  </Typography>
-                }
-              />
-            </ListItem>
-          </Badge>
-        </Paper>
-      </Link>
-    </Grid>
-  );
-}
+//   return (
+//     <Grid item>
+//       <Link to={props.work_link}>
+//         <Paper variant="outlined" button className={classes.listItemPaper}>
+//           <Badge
+//             style={{ display: "flex", flexDirection: "row" }}
+//             badgeContent={<ErrorIcon className={classes.errorIcon} />}
+//             anchorOrigin={{
+//               vertical: "bottom",
+//               horizontal: "right",
+//             }}
+//           >
+//             <ListItem button className={classes.listItem}>
+//               <Hidden xsDown>
+//                 <ListItemAvatar>
+//                   <Avatar className={classes.listIcon}>
+//                     <AssignmentIcon />
+//                   </Avatar>
+//                 </ListItemAvatar>
+//               </Hidden>
+//               <ListItemText
+//                 primary={
+//                   <Typography variant="h6">
+//                     {props.work_title}
+//                   </Typography>
+//                 }
+//                 secondary={props.work_sender}
+//               />
+//               <ListItemText
+//                 align="right"
+//                 primary={
+//                   <Typography variant="body2" color="textSecondary">
+//                     {moment(props.work_dateposted)
+//                       .locale("id")
+//                       .format("DD MMM YYYY")}
+//                   </Typography>
+//                 }
+//                 secondary={
+//                   <Typography variant="body2" color="textSecondary">
+//                     {moment(props.work_dateposted).locale("id").format("HH.mm")}
+//                   </Typography>
+//                 }
+//               />
+//             </ListItem>
+//           </Badge>
+//         </Paper>
+//       </Link>
+//     </Grid>
+//   );
+// }
 
 function ListAssessments(props) {
   const {
@@ -963,7 +951,7 @@ function ListAssessments(props) {
     classes,
     all_subjects_map,
     all_teachers,
-    getSelectedDate,
+    // getSelectedDate,
     date,
     mainCounter,
     handleChangeCounter,
@@ -1191,54 +1179,54 @@ function ListAssessments(props) {
   }
 }
 
-function AssessmentListItemTeacher(props) {
-  const { classes } = props;
+// function AssessmentListItemTeacher(props) {
+//   const { classes } = props;
 
-  return (
-    <Grid item>
-      <Link to={props.link}>
-        <Paper variant="outlined" button className={classes.listItemPaper}>
-          <Badge
-            style={{ display: "flex", flexDirection: "row" }}
-            badgeContent={<WarningIcon className={classes.warningIcon} />}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-          >
-            <ListItem button className={classes.listItem}>
-              <Hidden xsDown>
-                <ListItemAvatar>
-                  <Avatar className={classes.assignmentLate}>
-                    {props.type === "Kuis" ? (
-                      <FaClipboardList />
-                    ) : (
-                      <BsClipboardData />
-                    )}
-                  </Avatar>
-                </ListItemAvatar>
-              </Hidden>
-              <ListItemText primary={props.title} secondary={props.subject} />
-              <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="body2" color="textSecondary">
-                    {moment(props.createdAt).locale("id").format("DD MMM YYYY")}
-                  </Typography>
-                }
-                secondary={
-                  <Typography variant="body2" color="textSecondary">
-                    {moment(props.createdAt).locale("id").format("HH.mm")}
-                  </Typography>
-                }
-              />
-            </ListItem>
-          </Badge>
-        </Paper>
-      </Link>
-    </Grid>
-  );
-}
+//   return (
+//     <Grid item>
+//       <Link to={props.link}>
+//         <Paper variant="outlined" button className={classes.listItemPaper}>
+//           <Badge
+//             style={{ display: "flex", flexDirection: "row" }}
+//             badgeContent={<WarningIcon className={classes.warningIcon} />}
+//             anchorOrigin={{
+//               vertical: "bottom",
+//               horizontal: "right",
+//             }}
+//           >
+//             <ListItem button className={classes.listItem}>
+//               <Hidden xsDown>
+//                 <ListItemAvatar>
+//                   <Avatar className={classes.assignmentLate}>
+//                     {props.type === "Kuis" ? (
+//                       <FaClipboardList />
+//                     ) : (
+//                       <BsClipboardData />
+//                     )}
+//                   </Avatar>
+//                 </ListItemAvatar>
+//               </Hidden>
+//               <ListItemText primary={props.title} secondary={props.subject} />
+//               <ListItemText
+//                 align="right"
+//                 primary={
+//                   <Typography variant="body2" color="textSecondary">
+//                     {moment(props.createdAt).locale("id").format("DD MMM YYYY")}
+//                   </Typography>
+//                 }
+//                 secondary={
+//                   <Typography variant="body2" color="textSecondary">
+//                     {moment(props.createdAt).locale("id").format("HH.mm")}
+//                   </Typography>
+//                 }
+//               />
+//             </ListItem>
+//           </Badge>
+//         </Paper>
+//       </Link>
+//     </Grid>
+//   );
+// }
 
 function EventDialog(props) {
   const useStyles = makeStyles((theme) => ({
@@ -1484,18 +1472,14 @@ function EventDialog(props) {
         end_date = new Date(end_date);
         setName(name);
         setLocation(location);
-        // setLocation("");
         setStartDate(start_date);
         setEndDate(end_date);
         setTargetRole(to);
         setDescription(description);
-        // setDescription(Array(100).fill("deskripsi").join(" "));
         getFileEvents(_id).then((result) => {
           setFileLampiran(result);
           setOriginalFileLampiran(result)
         });
-        // setFileLampiran([{ _id: "123", filename: `${Array(100).fill("namafile").join(" ")}.txt` }]);
-        // setOriginalFileLampiran([{ _id: "123", filename: `${Array(100).fill("namafile").join(" ")}.txt` }])
   
         // pada datetime picker, pengguna tidak bisa menset detik. jadi, pukul 23:59:59 hanya dapat 
         // diset dengan menyentang checkbox sepanjang hari
@@ -1504,6 +1488,7 @@ function EventDialog(props) {
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEventInfo]);
 
 
@@ -1634,7 +1619,9 @@ function EventDialog(props) {
 
           // dapatkan string yang ditampilkan di textfield datetime picker.
           // string ini akan memiliki format yang sama seperti format yang sedang digunakan pada datetime picker: "dd/MM/yyyy - HH:mm"
-          let [dateStr, separator, timeStr] = startDatePicker.current.getAttribute("value").split(" ");
+          let parsedStr = startDatePicker.current.getAttribute("value").split(" ");
+          let dateStr = parsedStr[0];
+          let timeStr = parsedStr[2];
   
           // mencoba mem-parse tanggal
           let [day, month, year] = dateStr.split("/");
@@ -1696,7 +1683,9 @@ function EventDialog(props) {
 
           // dapatkan string yang ditampilkan di textfield datetime picker.
           // string ini akan memiliki format yang sama seperti format yang sedang digunakan pada datetime picker: "dd/MM/yyyy - HH:mm"
-          let [dateStr, separator, timeStr] = endDatePicker.current.getAttribute("value").split(" ");
+          let parsedStr = endDatePicker.current.getAttribute("value").split(" ");
+          let dateStr = parsedStr[0];
+          let timeStr = parsedStr[2];
 
           // mencoba mem-parse tanggal
           let [day, month, year] = dateStr.split("/");
@@ -2891,9 +2880,9 @@ function Calendar(props) {
     getAllTaskFilesByUser,
     getAllSubjects,
     getAllAssessments,
-    getStudentsByClass,
+    // getStudentsByClass,
     getStudents,
-    setCurrentClass,
+    // setCurrentClass,
     getTeachers,
     tasksCollection,
   } = props;
@@ -2903,11 +2892,10 @@ function Calendar(props) {
   const classId = user.kelas;
 
   const { all_user_files } = props.filesCollection;
-  const { all_subjects_map, all_subjects } = props.subjectsCollection;
+  const { all_subjects_map, /* all_subjects */ } = props.subjectsCollection;
   const { all_assessments } = props.assessmentsCollection;
   const { selectedClasses, all_classes } = props.classesCollection;
   const { allEvents } = props.eventsCollection;
-  // console.log(all_classes)
 
   // ANCHOR STATES
   const [activeStartDate, setActiveStartDate] = React.useState(new Date(new Date().getFullYear(), new Date().getMonth())); // set ke awal bulan sekarang 
@@ -2934,6 +2922,7 @@ function Calendar(props) {
   // const [currentDateMonthMode, setCurrentDateMonthMode] = React.useState(today);
   const [currentDate, setCurrentDate] = React.useState(today);
   const [selectedDateMonthMode, setSelectedDateMonthMode] = React.useState(today);
+  const [objectCount, setObjectCount] = React.useState({ event: 0, ujian: 0, kuis: 0, task: 0 });
 
   const holiday = {
     [new Date(2021, 0, 1)]: ["Tahun Baru 2021 Masehi"],
@@ -2965,6 +2954,7 @@ function Calendar(props) {
     getTeachers();
     getAllTaskFilesByUser(user._id);
     getAllSubjects("map");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // React.useEffect(() => {
@@ -3007,14 +2997,59 @@ function Calendar(props) {
     if (mode === "Day") {
       // setTileRows(placeDayModeTiles(testdata, currentDate));
       setTileRows([...placeDayModeTiles(generateDayModeList(currentDate), currentDate)]);
+
+      let start = getDayStart(currentDate);
+      let end = getDayEnd(currentDate);
+      setObjectCount({
+        event: countEvent(start, end),
+        kuis: countAssessment(start, end, "Kuis"),
+        ujian: countAssessment(start, end, "Ujian"),
+        task: countTask(start, end)
+      });
+    } else if (mode === "Month") {
+      let start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      let dayCount = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+      let end = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayCount, 23, 59, 59, 999);
+      setObjectCount({
+        event: countEvent(start, end),
+        kuis: countAssessment(start, end, "Kuis"),
+        ujian: countAssessment(start, end, "Ujian"),
+        task: countTask(start, end)
+      });
     }
-  }, [currentDate, mode, agendaCheckboxState]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentDate, mode]);
 
   React.useEffect(() => {
-    if (tasksCollection && all_assessments && allEvents) {
+    if (tasksCollection && Array.isArray(tasksCollection) && all_assessments && allEvents) {
       setTileRows([...placeDayModeTiles(generateDayModeList(currentDate), currentDate)]);
+
+      if (mode === "Day") {
+        // setTileRows(placeDayModeTiles(testdata, currentDate));
+        setTileRows([...placeDayModeTiles(generateDayModeList(currentDate), currentDate)]);
+
+        let start = getDayStart(currentDate);
+        let end = getDayEnd(currentDate);
+        setObjectCount({
+          event: countEvent(start, end),
+          kuis: countAssessment(start, end, "Kuis"),
+          ujian: countAssessment(start, end, "Ujian"),
+          task: countTask(start, end)
+        });
+      } else if (mode === "Month") {
+        let start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        let dayCount = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+        let end = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayCount, 23, 59, 59, 999);
+        setObjectCount({
+          event: countEvent(start, end),
+          kuis: countAssessment(start, end, "Kuis"),
+          ujian: countAssessment(start, end, "Ujian"),
+          task: countTask(start, end)
+        });
+      }
     }
-  }, [tasksCollection, all_assessments, allEvents, agendaCheckboxState]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tasksCollection, all_assessments, allEvents]);
 
   function placeDayModeTiles(arrayOfObject, currentDate) {
     let data = arrayOfObject.map((elm) => {
@@ -3419,14 +3454,14 @@ function Calendar(props) {
       tempSelectedDate.getYear() === tempDeadlineDate.getYear()) {
         if(mode === "Month") {
           if(localCounter < 3) {
-            for (var i = 0; i < all_user_files.length; i++) {
+            for (let i = 0; i < all_user_files.length; i++) {
               if (all_user_files[i].for_task_object === task._id) {
                 flag = false;
                 break;
               }
             }
-            for (var i = 0; i < all_teachers.length; i++) {
-              if (all_teachers[i]._id == task.person_in_charge_id) {
+            for (let i = 0; i < all_teachers.length; i++) {
+              if (all_teachers[i]._id === task.person_in_charge_id) {
                 teacher_name = all_teachers[i].name;
               }
             }
@@ -3447,14 +3482,14 @@ function Calendar(props) {
           localCounter ++;
         }
         else {
-          for (var i = 0; i < all_user_files.length; i++) {
+          for (let i = 0; i < all_user_files.length; i++) {
             if (all_user_files[i].for_task_object === task._id) {
               flag = false;
               break;
             }
           }
-          for (var i = 0; i < all_teachers.length; i++) {
-            if (all_teachers[i]._id == task.person_in_charge_id) {
+          for (let i = 0; i < all_teachers.length; i++) {
+            if (all_teachers[i]._id === task.person_in_charge_id) {
               teacher_name = all_teachers[i].name;
             }
           }
@@ -4044,7 +4079,7 @@ function Calendar(props) {
       return 30;
     }
     else {
-      if(((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
+      if(((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)) {
         return 29;
       }
       else {
@@ -4053,13 +4088,104 @@ function Calendar(props) {
     }
   }
 
-  function isValidDate(year, month, day) {
-    var d = new Date(year, month, day);
-    if (d.getFullYear() == year && d.getMonth() == month && d.getDate() == day) {
-        return true;
+  // function isValidDate(year, month, day) {
+  //   var d = new Date(year, month, day);
+  //   if (d.getFullYear() === year && d.getMonth() === month && d.getDate() === day) {
+  //       return true;
+  //   }
+  //   return false;
+  // }
+
+  const countEvent = (start, end) => {
+    let count = 0;
+    if (allEvents) {
+      count = allEvents.filter((eventInfo) => (
+        isIntersectInclusive(
+          new Date(eventInfo.start_date).getTime(),
+          new Date(eventInfo.end_date).getTime(),
+          start.getTime(),
+          end.getTime()
+        ) && eventInfo.to.includes(role)
+      )).length;
     }
-    return false;
-}
+    return count;
+  }
+
+  const countTask = (start, end) => {
+    let count = 0;
+    if (tasksCollection && Array.isArray(tasksCollection)) {
+      let startEpoch = start.getTime();
+      let endEpoch = end.getTime();
+      
+      if (role === "Student") {
+        count = tasksCollection.filter((taskInfo) => (
+          taskInfo.class_assigned.includes(user.kelas) &&
+          new Date(taskInfo.deadline).getTime() >= startEpoch &&
+          new Date(taskInfo.deadline).getTime() <= endEpoch
+        )).length;
+      } else if (role === "Teacher") {
+        count = tasksCollection.filter((taskInfo) => (
+          taskInfo.person_in_charge_id === user._id &&
+          (Object.keys(taskInfo.grades).length !== all_students.reduce((studentCount, studentInfo) => (
+            studentCount + (taskInfo.class_assigned.includes(studentInfo.kelas) ? 1 : 0)
+          ), 0)) &&
+          new Date(taskInfo.deadline).getTime() >= startEpoch &&
+          new Date(taskInfo.deadline).getTime() <= endEpoch
+        )).length;
+      } else { // admin
+        count = tasksCollection.filter((taskInfo) => (
+          (Object.keys(taskInfo.grades).length !== all_students.reduce((studentCount, studentInfo) => (
+            studentCount + (taskInfo.class_assigned.includes(studentInfo.kelas) ? 1 : 0)
+          ), 0)) &&
+          new Date(taskInfo.deadline).getTime() >= startEpoch &&
+          new Date(taskInfo.deadline).getTime() <= endEpoch
+        )).length;
+      }
+    }
+    return count;
+  }
+
+  const countAssessment = (start, end, type) => {
+    let count = 0;
+    if (all_assessments) {
+      if (role === "Student") {
+        count = all_assessments.filter((assessmentInfo) => (
+          assessmentInfo.type === type &&
+          assessmentInfo.posted &&
+          assessmentInfo.class_assigned.includes(user.kelas) &&
+          isIntersectInclusive(
+            new Date(assessmentInfo.start_date).getTime(),
+            new Date(assessmentInfo.end_date).getTime(),
+            start.getTime(),
+            end.getTime()
+          )
+        )).length;
+      } else if (role === "Teacher") {
+        count = all_assessments.filter((assessmentInfo) => (
+          // assessmentInfo.posted &&
+          assessmentInfo.type === type &&
+          assessmentInfo.author_id === user._id &&
+          isIntersectInclusive(
+            new Date(assessmentInfo.start_date).getTime(),
+            new Date(assessmentInfo.end_date).getTime(),
+            start.getTime(),
+            end.getTime()
+          )
+        )).length;
+      } else { // admin
+        count = all_assessments.filter((assessmentInfo) => (
+          assessmentInfo.type === type &&
+          isIntersectInclusive(
+            new Date(assessmentInfo.start_date).getTime(),
+            new Date(assessmentInfo.end_date).getTime(),
+            start.getTime(),
+            end.getTime()
+          )
+        )).length;
+      }
+    }
+    return count;
+  }
 
   const generateMonthDates = () => {
     let result = [];
@@ -4156,6 +4282,7 @@ function Calendar(props) {
       classStates = Object.assign({}, ...all_classes.map((kelas) => ({[kelas._id]: true})))
       setClassCheckboxState(classStates)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all_classes])
 
   const [classCheckboxState, setClassCheckboxState] = React.useState(classStates);
@@ -4166,9 +4293,10 @@ function Calendar(props) {
   };
 
   React.useEffect(() => {
-    if (tasksCollection && all_assessments && allEvents) {
+    if (tasksCollection && Array.isArray(tasksCollection) && all_assessments && allEvents) {
       setTileRows([...placeDayModeTiles(generateDayModeList(currentDate), currentDate)]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agendaCheckboxState, classCheckboxState]);
 
   // ANCHOR generateDayModeList
@@ -4238,16 +4366,10 @@ function Calendar(props) {
     return result;
   }
   
-  // if(mode === "Day") {
-  //   console.log(generateDayModeList(new Date(2021, 5, 3)));
-  // }
 
   // ANCHOR generateDayModeCalendar
   const generateDayModeCalendar = () => {
-    let rowHeight = 90;
-    // console.log(Object.keys(holiday));
-    // console.log(currentDate.toString());
-    // console.log(holiday[currentDate.toString()])
+    // let rowHeight = 90;
     return (
       <div className={classes.dayAgendaContainer}>
         <div className={classes.holidayContainer}>
@@ -4268,7 +4390,6 @@ function Calendar(props) {
           <Table>
             <TableBody>
               {timeRows.map((row, index) => {
-                let verticalPadding = 8;
                 return (
                   <TableRow key={row.name} style={{height: `${ROW_HEIGHT}px`, border: "none"}}>
                     <TableCell component="th" scope="row" className={classes.dayTableCell}>
@@ -4276,7 +4397,8 @@ function Calendar(props) {
                       <div className={classes.horizontalLine}>
                         {
                           tileRows[index] ?
-                            tileRows[index].map((obj, idx) => {
+                            tileRows[index].map((obj) => {
+                              let verticalPadding = 8;
                               let widthPadding = 0;
                               let i = Math.floor(100/obj.width);
                               if(i > 1) {
@@ -4307,7 +4429,11 @@ function Calendar(props) {
                                     {obj.data.name}
                                   </Typography>
                                   <Typography variant="body2">
-                                    {`${moment(obj.data.start_date).locale("id").format("HH:mm")} – ${moment(obj.data.end_date).locale("id").format("HH:mm")}`}
+                                    {
+                                      obj.type === "Tugas"
+                                        ? moment(obj.data.deadline).locale("id").format("HH:mm")
+                                        : `${moment(isSameDate(new Date(obj.data.start_date), currentDate) ? obj.data.start_date : obj.start_date.toUTCString()).locale("id").format("HH:mm")} – ${moment(isSameDate(new Date(obj.data.end_date), currentDate) ? obj.data.end_date : obj.end_date.toUTCString()).locale("id").format("HH:mm")}`
+                                    }
                                   </Typography>
                                 </div>
                               )
@@ -4368,7 +4494,7 @@ function Calendar(props) {
           {date.map((column, columnIndex) => {
             let temp_date = new Date(column).getDate();
             let temp_date_withoutMonthNames = temp_date
-            if(temp_date == 1) {
+            if(temp_date === 1) {
               temp_date = temp_date + " " + monthNames[new Date(column).getMonth()];
             }
             let mainCounter = 0;
@@ -4648,7 +4774,7 @@ function Calendar(props) {
                     color="primary"
                   />
                 }
-                label="Tugas"
+                label={`Tugas (${objectCount.task})`} 
               />
               <FormControlLabel
                 control={
@@ -4658,7 +4784,7 @@ function Calendar(props) {
                     color="primary"
                   />
                 }
-                label="Kuis"
+                label={`Kuis (${objectCount.kuis})`}
               />
               <FormControlLabel
                 control={
@@ -4668,7 +4794,7 @@ function Calendar(props) {
                     color="primary"
                   />
                 }
-                label="Ujian"
+                label={`Ujian (${objectCount.ujian})`}
               />
               <FormControlLabel
                 control={
@@ -4678,7 +4804,7 @@ function Calendar(props) {
                     color="primary"
                   />
                 }
-                label="Kegiatan"
+                label={`Kegiatan (${objectCount.event})`}
               />
             </FormGroup>
           </div>
@@ -4733,6 +4859,7 @@ function Calendar(props) {
                         />
                       )
                     }
+                    return null;
                   })
                 }
               </FormGroup>
@@ -4804,7 +4931,6 @@ export default connect(mapStateToProps, {
   getAssessments,
   getStudents,
   getTeachers,
-  getAllEvents,
   getOneEvent,
   viewFileEvent
 })(Calendar)
