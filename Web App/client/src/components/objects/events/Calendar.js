@@ -41,6 +41,7 @@ import {
   useMediaQuery,
   CircularProgress,
   Fade,
+  // useMediaQuery
 } from "@material-ui/core/";
 import {
   MuiPickersUtilsProvider,
@@ -363,22 +364,23 @@ const useStyles = makeStyles((theme) => ({
   listIcon: {
     backgroundColor: theme.palette.primary.main,
   },
-  // holidayContainer: {
-  //   marginBottom: "10px",
-  // },
+  holidayContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "nowrap"
+  },
   shadow: {
     boxShadow: "0 14px 18px -28px rgba(0,0,0,0.8), 0 10px 10px -10px rgba(0,0,0,0.15)"
   },
   staticBlueChip: {
     backgroundColor: theme.palette.primary.main,
     borderRadius: "3px",
-    flexGrow: 1,
-    // overflow: "none",
+    // flexGrow: 1,
     overflow: "hidden",
     marginBottom: "2px",
-    marginLeft: "58px",
+    // marginLeft: "58px",
     padding: "2px",
-    marginRight: "32px"
+    // marginRight: "32px"
   },
   blueChip: {
     backgroundColor: theme.palette.primary.main,
@@ -387,7 +389,7 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     // overflow: "none",
     overflow: "hidden",
-    padding: "8px 12px",
+    // padding: "8px 12px",
     color: "white",
     zIndex: 2,
   },
@@ -1804,7 +1806,7 @@ function EventDialog(props) {
     let startDate = date;
     if (isAllDay) {
       // ini perlu ditambahkan karena onchange pada date picker dapat mengubah nilai waktu (ga ngerti kenapa)
-      startDate.setHours(0, 0, 0);
+      startDate.setHours(0, 0, 0, 0);
     }
     setStartDate(startDate);
   };
@@ -2103,7 +2105,7 @@ function EventDialog(props) {
       BackdropProps={{
         style: { backgroundColor: "transparent" }
       }}
-      classes={{ paper: classes.dialogPaper }}
+      // classes={{ paper: classes.dialogPaper }}
     >
       {eventDialogMode === "view"
         ?
@@ -2878,6 +2880,8 @@ function Calendar(props) {
   document.title = "Schooly | Kalender";
 
   const classes = useStyles();
+  const theme = useTheme();
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
     getSelectedClasses,
@@ -2913,8 +2917,6 @@ function Calendar(props) {
   const [eventDialogMode, setEventDialogMode] = React.useState("");
   const [unmountEventDialog, setUnmountEventDialog] = React.useState(false);
 
-  // state ini akan bernilai null jika dan hanya jika pengguna belum mengklik tile kalender (belum memilih tanggal)
-  const [selectedDate, setSelectedDate] = React.useState(null);
   // const [rows, setRows] = React.useState([]);
 
   // SNACKBAR
@@ -2929,9 +2931,13 @@ function Calendar(props) {
   // const [currentDateMonthMode, setCurrentDateMonthMode] = React.useState(today);
   const [currentDate, setCurrentDate] = React.useState(today);
   const [selectedDateMonthMode, setSelectedDateMonthMode] = React.useState(today);
-  const [objectCount, setObjectCount] = React.useState({ event: 0, ujian: 0, kuis: 0, task: 0 });
+  const [selectedDateReactCalendar, setSelectedDateReactCalendar] = React.useState(today);
+  const [itemCount, setItemCount] = React.useState({ event: 0, ujian: 0, kuis: 0, task: 0 });
 
   const [classCheckboxState, setClassCheckboxState] = React.useState({});
+
+  const [scrollbarNode, setScrollbarNode] = React.useState(null);
+  const [scrollbarWidth, setScrollbarWidth] = React.useState(0);
   
   const holiday = {
     [new Date(2021, 0, 1)]: ["Tahun Baru 2021 Masehi"],
@@ -2952,6 +2958,7 @@ function Calendar(props) {
   }
 
   const [tileRows, setTileRows] = React.useState([]);
+  const [allDayItems, setAllDayItems] = React.useState([]);
 
   React.useEffect(() => {
     getSelectedClasses(user.class_teached);
@@ -3009,11 +3016,11 @@ function Calendar(props) {
 
     if (mode === "Day") {
       // setTileRows(placeDayModeTiles(testdata, currentDate));
-      setTileRows([...placeDayModeTiles(generateDayModeList(currentDate), currentDate)]);
+      generateTiles(currentDate);
 
       let start = getDayStart(currentDate);
       let end = getDayEnd(currentDate);
-      setObjectCount({
+      setItemCount({
         event: countEvent(start, end),
         kuis: countAssessment(start, end, "Kuis"),
         ujian: countAssessment(start, end, "Ujian"),
@@ -3023,7 +3030,7 @@ function Calendar(props) {
       let start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
       let dayCount = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
       let end = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayCount, 23, 59, 59, 999);
-      setObjectCount({
+      setItemCount({
         event: countEvent(start, end),
         kuis: countAssessment(start, end, "Kuis"),
         ujian: countAssessment(start, end, "Ujian"),
@@ -3035,15 +3042,17 @@ function Calendar(props) {
 
   React.useEffect(() => {
     if (tasksCollection && Array.isArray(tasksCollection) && all_assessments && allEvents) {
-      setTileRows([...placeDayModeTiles(generateDayModeList(currentDate), currentDate)]);
+      // setTileRows(placeDayModeTiles(generateDayModeList(currentDate), currentDate));
+      generateTiles(currentDate);
 
       if (mode === "Day") {
         // setTileRows(placeDayModeTiles(testdata, currentDate));
-        setTileRows([...placeDayModeTiles(generateDayModeList(currentDate), currentDate)]);
+        // setTileRows(placeDayModeTiles(generateDayModeList(currentDate), currentDate));
+        generateTiles(currentDate);
 
         let start = getDayStart(currentDate);
         let end = getDayEnd(currentDate);
-        setObjectCount({
+        setItemCount({
           event: countEvent(start, end),
           kuis: countAssessment(start, end, "Kuis"),
           ujian: countAssessment(start, end, "Ujian"),
@@ -3053,7 +3062,7 @@ function Calendar(props) {
         let start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
         let dayCount = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
         let end = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayCount, 23, 59, 59, 999);
-        setObjectCount({
+        setItemCount({
           event: countEvent(start, end),
           kuis: countAssessment(start, end, "Kuis"),
           ujian: countAssessment(start, end, "Ujian"),
@@ -3063,6 +3072,32 @@ function Calendar(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasksCollection, all_assessments, allEvents]);
+
+  React.useEffect(() => {
+    if (scrollbarNode !== null && !mdDown && scrollbarWidth === 0) {
+      setScrollbarWidth(scrollbarNode.offsetWidth - scrollbarNode.clientWidth);
+    }
+  }, [mdDown]);
+
+  function generateTiles(currentDate) {
+    let start = getDayStart(currentDate).getTime();
+    let end = getDayEnd(currentDate).getTime();
+    let allDayItems = [];
+    let filteredData = generateDayModeList(currentDate).filter((item) => {
+      let show = true;
+      if (item.type !== "Tugas") {
+        let startDateEpoch = new Date(item.start_date).getTime();
+        let endDateEpoch = new Date(item.end_date).getTime();
+        if (startDateEpoch <= start && endDateEpoch >= end) {
+          allDayItems.push(item);
+          show = false;
+        }
+      }
+      return show;
+    });
+    setAllDayItems(allDayItems);
+    setTileRows(placeDayModeTiles(filteredData, currentDate));
+  }
 
   function placeDayModeTiles(arrayOfObject, currentDate) {
     let data = arrayOfObject.map((elm) => {
@@ -3382,6 +3417,12 @@ function Calendar(props) {
     }
   };
 
+  const scrollRef = React.useCallback((node) => {
+    if (node !== null) {
+      setScrollbarNode(node);
+      setScrollbarWidth(node.offsetWidth - node.clientWidth);
+    }
+  }, []);
 
   // SNACKBAR
   const showSnackbar = (severity, snackbarContent) => {
@@ -3424,9 +3465,9 @@ function Calendar(props) {
     setUnmountEventDialog(false);
   }
 
-  function getSelectedDate() {
-    return selectedDate;
-  }
+  // function getSelectedDate() {
+  //   return selectedDate;
+  // }
 
   function listTasks(date, mainCounter=null, handleChangeCounter=null) {
     let result = [];
@@ -4051,10 +4092,14 @@ function Calendar(props) {
     setMode(event.target.value);
   }
 
-  const handleOpenDayMode = (date, changeSelectedDate) => {
-    if (changeSelectedDate === true) {
-      setSelectedDateMonthMode(date);
-    }
+  const handleOpenDayMode = (date) => {
+    setSelectedDateMonthMode(date);
+    setCurrentDate(date);
+    setMode("Day");
+  }
+
+  const handleClickReactCalendar = (date) => {
+    setSelectedDateReactCalendar(date);
     setCurrentDate(date);
     setMode("Day");
   }
@@ -4312,7 +4357,8 @@ function Calendar(props) {
 
   React.useEffect(() => {
     if (tasksCollection && Array.isArray(tasksCollection) && all_assessments && allEvents) {
-      setTileRows([...placeDayModeTiles(generateDayModeList(currentDate), currentDate)]);
+      // setTileRows(placeDayModeTiles(generateDayModeList(currentDate), currentDate));
+      generateTiles(currentDate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agendaCheckboxState, classCheckboxState]);
@@ -4383,32 +4429,58 @@ function Calendar(props) {
     return result;
   }
   
+  const hasHoliday = (currentDate) => {
+    return (new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) in holiday);
+  };
+
+  const showShadow = (currentDate, allDayItems) => {
+    return hasHoliday(currentDate) || (allDayItems.length !== 0);
+  };
+
   const generateDayModeCalendar = () => {
     // let rowHeight = 90;
     return (
       <div className={classes.dayAgendaContainer}>
         <div 
           className={
-            (new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) in holiday) ? `${classes.shadow}` : undefined
+            showShadow(currentDate, allDayItems) ? `${classes.shadow} ${classes.holidayContainer}` : classes.holidayContainer
           } 
           style={
-            (new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) in holiday) ? { paddingBottom: "10px" } : undefined
+            showShadow(currentDate, allDayItems)
+              ? mdDown
+                ? { padding: `0 16px 10px 26px` }
+                : { padding: `0 ${16 + scrollbarWidth ?? 0}px 10px 26px` }
+              : undefined
           }
         >
         {/* (new Date(column.getFullYear(), column.getMonth(), column.getDate()) in holiday) */}
-          {
-            (new Date(currentDate.getFullYear(), currentDate.getMonth(),currentDate.getDate()) in holiday) ?
-              holiday[new Date(currentDate.getFullYear(), currentDate.getMonth(),currentDate.getDate())].map((holiday) => (
-                <div className={classes.staticBlueChip}>
-                  <Typography style={{color: "white"}} variant="body2">
-                    {holiday}
+          <Typography variant="body2" style={{ visibility: "hidden" }}>
+            00:00
+          </Typography>
+          <div style={{ display: "flex", flexDirection: "column", flexGrow: "1" }}>
+            {
+              hasHoliday(currentDate) ?
+                holiday[new Date(currentDate.getFullYear(), currentDate.getMonth(),currentDate.getDate())].map((holiday) => (
+                  <div key={holiday} className={classes.staticBlueChip}>
+                    <Typography style={{ color: "white" }} variant="body2">
+                      {holiday}
+                    </Typography>
+                  </div>
+                ))
+              : null
+            }
+            {
+              allDayItems.map((item) => (
+                <div key={item._id} className={classes.staticBlueChip}>
+                  <Typography style={{ color: "white" }} variant="body2">
+                    {item.data.name}
                   </Typography>
                 </div>
               ))
-            : null
-          }
+            }
+          </div>
         </div>
-        <TableContainer>
+        <TableContainer ref={scrollRef}>
           <Table>
             <TableBody>
               {timeRows.map((row, index) => {
@@ -4551,7 +4623,7 @@ function Calendar(props) {
                     classes={classes}
                     all_subjects_map={all_subjects_map}
                     all_teachers={all_teachers}
-                    getSelectedDate={getSelectedDate}
+                    // getSelectedDate={getSelectedDate}
                     date={new Date(column)}
                     mainCounter={mainCounter}
                     handleChangeCounter={handleChangeCounter}
@@ -4580,7 +4652,7 @@ function Calendar(props) {
                     classes={classes}
                     all_subjects_map={all_subjects_map}
                     all_teachers={all_teachers}
-                    getSelectedDate={getSelectedDate}
+                    // getSelectedDate={getSelectedDate}
                     date={new Date(column)}
                     mainCounter={mainCounter}
                     handleChangeCounter={handleChangeCounter}
@@ -4612,37 +4684,37 @@ function Calendar(props) {
                   {isSameDate(today, column) ?
                     <>
                       <Hidden xsDown>
-                        <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date}</Typography>
+                        <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date}</Typography>
                       </Hidden>
                       <Hidden smUp>
-                        <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date_withoutMonthNames}</Typography>
+                        <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date_withoutMonthNames}</Typography>
                       </Hidden>
                     </>
                     : isSameDate(selectedDateMonthMode, column) ?
                       <>
                         <Hidden xsDown>
-                          <Typography color="textSecondary" variant="body2" className={classes.selectedMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date}</Typography>
+                          <Typography color="textSecondary" variant="body2" className={classes.selectedMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date}</Typography>
                         </Hidden>
                         <Hidden smUp>
-                          <Typography color="textSecondary" variant="body2" className={classes.selectedMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date_withoutMonthNames}</Typography>
+                          <Typography color="textSecondary" variant="body2" className={classes.selectedMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date_withoutMonthNames}</Typography>
                         </Hidden>
                       </>
                       : (new Date(column.getFullYear(), column.getMonth(), column.getDate()) in holiday) ?
                           <>
                             <Hidden xsDown>
-                              <Typography color="textSecondary" variant="body2" className={classes.holidayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date}</Typography>
+                              <Typography color="textSecondary" variant="body2" className={classes.holidayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date}</Typography>
                             </Hidden>
                             <Hidden smUp>
-                              <Typography color="textSecondary" variant="body2" className={classes.holidayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date_withoutMonthNames}</Typography>
+                              <Typography color="textSecondary" variant="body2" className={classes.holidayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date_withoutMonthNames}</Typography>
                             </Hidden>
                           </>
                         :
                           <>
                             <Hidden xsDown>
-                              <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date}</Typography>
+                              <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date}</Typography>
                             </Hidden>
                             <Hidden smUp>
-                              <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column), true) }}>{temp_date_withoutMonthNames}</Typography>
+                              <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date_withoutMonthNames}</Typography>
                             </Hidden>
                           </>
                   }
@@ -4678,7 +4750,7 @@ function Calendar(props) {
                       variant="body2"
                       className={classes.moreMonthAgendaChip}
                       align="left"
-                      onClick={() => { handleOpenDayMode(new Date(column), false) }}
+                      onClick={() => { handleOpenDayMode(new Date(column)) }}
                     >
                       {mainCounter - 3} lagi
                     </Typography>
@@ -4733,11 +4805,11 @@ function Calendar(props) {
               <Hidden xsDown>
                 <div
                   className={
-                    (new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) in holiday) ? undefined : classes.shadow
+                    showShadow(currentDate, allDayItems) ? undefined : classes.shadow
                   }
                   style={{ display: "flex", flexDirection: "column", alignItems:"flex-start" }}
                 >
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "16px 0 0 56px" }}>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "16px 0 0 72px" }}>
                     <Typography variant="body2">
                       {moment(currentDate).locale("id").format("dddd").slice(0, 3).toUpperCase()}
                     </Typography>
@@ -4753,7 +4825,7 @@ function Calendar(props) {
               <Hidden smUp>
                 <div 
                   className={
-                    (new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) in holiday) ? undefined : classes.shadow
+                    showShadow(currentDate, allDayItems) ? undefined : classes.shadow
                   }
                   style={{
                     display: "flex",
@@ -4832,13 +4904,12 @@ function Calendar(props) {
           </Grid>
           <ReactCalendar
             locale="id-ID"
-            onChange={setSelectedDate}
-            value={selectedDate}
-            // tileClassName={renderCalendarTile}
+            onChange={(value) => { handleClickReactCalendar(value) }}
+            value={selectedDateReactCalendar}
             className={classes.calendar}
             showNavigation={false}
             activeStartDate={activeStartDate}
-            tileContent={handleTileContent(selectedDate)}
+            tileContent={handleTileContent(selectedDateReactCalendar)}
             formatShortWeekday={(locale, date) => {
               // mengubah nama hari dalam satu minggu jadi satu huruf 
               return new Date(date).toLocaleDateString(locale, { weekday: 'long' })[0];
@@ -4856,7 +4927,7 @@ function Calendar(props) {
                     color="primary"
                   />
                 }
-                label={`Tugas (${objectCount.task})`} 
+                label={`Tugas (${itemCount.task})`} 
               />
               <FormControlLabel
                 control={
@@ -4866,7 +4937,7 @@ function Calendar(props) {
                     color="primary"
                   />
                 }
-                label={`Kuis (${objectCount.kuis})`}
+                label={`Kuis (${itemCount.kuis})`}
               />
               <FormControlLabel
                 control={
@@ -4876,7 +4947,7 @@ function Calendar(props) {
                     color="primary"
                   />
                 }
-                label={`Ujian (${objectCount.ujian})`}
+                label={`Ujian (${itemCount.ujian})`}
               />
               <FormControlLabel
                 control={
@@ -4886,7 +4957,7 @@ function Calendar(props) {
                     color="primary"
                   />
                 }
-                label={`Kegiatan (${objectCount.event})`}
+                label={`Kegiatan (${itemCount.event})`}
               />
             </FormGroup>
           </div>
