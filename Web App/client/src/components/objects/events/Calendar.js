@@ -870,7 +870,7 @@ function AgendaToolbar(props) {
             </Fab>
           : null
         }
-        <IconButton>
+        <IconButton disabled>
           <SearchIcon/>
         </IconButton>
         <FormControl variant="outlined">
@@ -883,9 +883,9 @@ function AgendaToolbar(props) {
             <MenuItem value="Day">
               Hari
             </MenuItem>
-            <MenuItem value="Week">Minggu</MenuItem>
+            <MenuItem value="Week" disabled>Minggu (Coming soon)</MenuItem>
             <MenuItem value="Month">Bulan</MenuItem>
-            <MenuItem value="Year">Tahun</MenuItem>
+            <MenuItem value="Year" disabled>Tahun (Coming soon)</MenuItem>
           </Select>
         </FormControl>
       </div>
