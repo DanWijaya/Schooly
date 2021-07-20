@@ -28,9 +28,9 @@ module.exports = function validateEventInput(data) {
     errors.to = "Pihak penerima Kegiatan belum diisi";
   }
 
-  if (Validator.isEmpty(data.description)) {
-    errors.description = "Deskripsi Kegiatan belum diisi";
-  }
+  // if (Validator.isEmpty(data.description)) {
+  //   errors.description = "Deskripsi Kegiatan belum diisi";
+  // }
 
   return {
     errors,

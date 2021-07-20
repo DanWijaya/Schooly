@@ -394,7 +394,7 @@ const useStyles = makeStyles((theme) => ({
   //   overflow: "none",
   //   padding: "2px",
   // },
-  blueChipHover: {
+  hoverPointerCursor: {
     "&:focus, &:hover": {
       cursor: "pointer"
     },
@@ -1414,6 +1414,7 @@ function EventDialog(props) {
     getAllEvents,
     downloadFileEvent,
     viewFileEvent,
+    role
   } = props;
   const roleConverter = {
     Admin: "Pengelola",
@@ -2101,22 +2102,29 @@ function EventDialog(props) {
         ?
         <>
           <div className={classes.view_dialogTopDiv}>
-            <LightTooltip title="Sunting">
-              <IconButton 
-                className={classes.dialogTopIconButtons}
-                onClick={() => { handleClickEdit() }}
-              >
-                <EditOutlinedIcon className={classes.dialogTopIcons} />
-              </IconButton>
-            </LightTooltip>
-            <LightTooltip title="Hapus" style={{ marginRight: "24px" }}>
-              <IconButton 
-                className={classes.dialogTopIconButtons}
-                onClick={() => { handleOpenDeleteDialog() }}
-              >
-                <DeleteOutlinedIcon className={classes.dialogTopIcons} />
-              </IconButton>
-            </LightTooltip>
+            {
+              role === "Admin"
+                ?
+                <>
+                  <LightTooltip title="Sunting">
+                    <IconButton
+                      className={classes.dialogTopIconButtons}
+                      onClick={() => { handleClickEdit() }}
+                    >
+                      <EditOutlinedIcon className={classes.dialogTopIcons} />
+                    </IconButton>
+                  </LightTooltip>
+                  <LightTooltip title="Hapus" style={{ marginRight: "24px" }}>
+                    <IconButton
+                      className={classes.dialogTopIconButtons}
+                      onClick={() => { handleOpenDeleteDialog() }}
+                    >
+                      <DeleteOutlinedIcon className={classes.dialogTopIcons} />
+                    </IconButton>
+                  </LightTooltip>
+                </>
+                : null
+            }
             <IconButton 
               edge="end" 
               className={classes.dialogTopIconButtons} 
@@ -2141,15 +2149,15 @@ function EventDialog(props) {
                     <b>{name}</b>
                   </Typography>
                 </Grid>
-                {location.length === 0
-                  ? null
-                  :
+                {location && location.length > 0
+                  ?
                   <Grid item xs={12} style={{ paddingTop: "0" }}>
                     <Typography className={classes.formLabels} style={{ wordBreak: "break-word" }}>
                       <LocationOnIcon className={classes.formIcons} />
                       {location}
                     </Typography>
                   </Grid>
+                  : null
                 }
                 <Grid item>
                   <Typography className={classes.formLabels}>
@@ -2177,20 +2185,24 @@ function EventDialog(props) {
                     ))}
                   </div>
                 </Grid>
-                <Grid item>
-                  <Typography
-                    align="justify"
-                    style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-                  >
-                    <CustomLinkify text={description} />
-                  </Typography>
-                </Grid>
-                <Grid item container spacing={1}>
-                  {
-                    fileLampiran.length === 0
-                      ? null
-                      :
-                      fileLampiran.map((lampiran) => (
+                {
+                  description && description.length > 0
+                    ?
+                    <Grid item>
+                      <Typography
+                        align="justify"
+                        style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                      >
+                        <CustomLinkify text={description} />
+                      </Typography>
+                    </Grid>
+                    : null
+                }
+                {
+                  fileLampiran && fileLampiran.length > 0
+                    ?
+                    <Grid item container spacing={1}>
+                      {fileLampiran.map((lampiran) => (
                         <LampiranFile
                           classes={classes}
                           file_id={lampiran._id}
@@ -2200,9 +2212,10 @@ function EventDialog(props) {
                           filetype={fileType(lampiran.filename)}
                           eventDialogMode={eventDialogMode}
                         />
-                      ))
-                  }
-                </Grid>
+                      ))}
+                    </Grid>
+                    : null
+                }
               </Grid>
             </div>
           </div>
@@ -2251,18 +2264,6 @@ function EventDialog(props) {
             />
             <div /* ref={uploadDialogScrollRef} */ className={classes.createEditDialogScrollableDiv}>
               <Grid container direction="column" spacing={4}>
-                {/* <Grid item>
-                  <Button
-                    color="primary"
-                    onClick={() => {
-                      if (errors.name) {
-                        setErrors({ ...errors, name: undefined, description: undefined, target_role: undefined })
-                      } else {
-                        setErrors({ ...errors, name: "error error error error error error error error error error error error error error error ", description: "error", target_role: "error" })
-                      }
-                    }}>SHOW ERROR</Button>
-                </Grid> */}
-
                 <Grid item>
                   <Typography component="label" for="name" color="primary" className={classes.formLabels}>
                     <EventNoteIcon className={classes.formIcons} />
@@ -2518,15 +2519,8 @@ function EventDialog(props) {
                     placeholder="Isi Deskripsi"
                     multiline
                     value={description}
-                    error={errors.description}
                     onChange={(e) => { handleChangeDescription(e) }}
                   />
-                  {errors.description
-                    ?
-                    <div className={classes.zeroHeightHelperText}>
-                      <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
-                    </div>
-                    : null}
                 </Grid>
 
                 <Grid item>
@@ -4064,6 +4058,56 @@ function Calendar(props) {
     else return result;
   }
 
+  const listEventAdmin = (date, mainCounter, handleChangeCounter) => {
+    let result = []
+    let filteredEvents = allEvents.filter((eventInfo) => {
+      let start_date = new Date(eventInfo.start_date);
+      let end_date = new Date(eventInfo.end_date);
+      return (
+        isIntersectInclusive(
+          start_date.getTime(),
+          end_date.getTime(),
+          getDayStart(date).getTime(),
+          getDayEnd(date).getTime()
+        )
+      );
+    });
+    let localCounter = mainCounter;
+    filteredEvents.forEach((eventInfo) => {
+      if (mode === "Month") {
+        if (localCounter < 3) {
+          result.push(
+            <Typography
+              variant="body2"
+              className={classes.monthAgendaChip}
+              align="left"
+              onClick={() => {
+                handleOpenViewDialog(eventInfo)
+              }}
+            >
+              {eventInfo.name}
+            </Typography>
+          )
+        }
+        localCounter++;
+      }
+      else {
+        result.push({
+          _id: eventInfo._id,
+          start_date: eventInfo.start_date,
+          end_date: eventInfo.end_date,
+          type: "Event",
+          data: eventInfo,
+        })
+      }
+    })
+    if (mode === "Month") {
+      handleChangeCounter(localCounter);
+      return { result, count: result.length };
+    }
+    else return result;
+  }
+
   const handleChangeDay = (direction) => {
     if (direction === "now") {
       // setCurrentDateDayMode(getDayStart(new Date()));
@@ -4408,7 +4452,7 @@ function Calendar(props) {
               examList = listAssessmentsAdmin(new Date(date), "Ujian");
             }
             if(agendaCheckboxState.checkedEvent) {
-              eventList = listEvent(new Date(date));
+              eventList = listEventAdmin(new Date(date));
             }
           }
         }
@@ -4460,7 +4504,11 @@ function Calendar(props) {
             }
             {
               allDayItems.map((item) => (
-                <div key={item._id} className={classes.staticBlueChip}>
+                <div 
+                  key={item._id} 
+                  className={item.type === "Event" && role === "Admin" ? `${classes.hoverPointerCursor} ${classes.staticBlueChip}` : classes.staticBlueChip}
+                  onClick={item.type === "Event" && role === "Admin" ? () => { handleOpenViewDialog(item.data) } : undefined}
+                >
                   <Typography style={{ color: "white" }} variant="body2">
                     {item.data.name}
                   </Typography>
@@ -4495,8 +4543,8 @@ function Calendar(props) {
 
                               return (
                                 <div
-                                  onClick={obj.type === "Event" ? () => { handleOpenViewDialog(obj.data) } : undefined}
-                                  className={obj.type === "Event" ? `${classes.blueChipHover} ${classes.blueChip}` : classes.blueChip}
+                                  onClick={obj.type === "Event" && role === "Admin" ? () => { handleOpenViewDialog(obj.data) } : undefined}
+                                  className={obj.type === "Event" && role === "Admin" ? `${classes.hoverPointerCursor} ${classes.blueChip}` : classes.blueChip}
                                   style={{
                                     transform: 
                                       `translate(calc(100% * ${obj.startColumn} + ${obj.startColumn} * 10px), ${!isSameDate(obj.start_date, currentDate) && isSameDate(obj.end_date, currentDate)
@@ -4659,7 +4707,11 @@ function Calendar(props) {
 
             let eventList = {result: null}
             if(agendaCheckboxState.checkedEvent) {
-              eventList = listEvent(new Date(column), mainCounter, handleChangeCounter);
+              if (role === "Admin") {
+                eventList = listEventAdmin(new Date(column), mainCounter, handleChangeCounter);
+              } else {
+                eventList = listEvent(new Date(column), mainCounter, handleChangeCounter);
+              }
             }
             
             return (
@@ -4770,6 +4822,7 @@ function Calendar(props) {
             handleSetUnmountEventDialog={handleSetUnmountEventDialog}
             viewFileEvent={viewFileEvent}
             showSnackbar={showSnackbar}
+            role={role}
           />
       }
 
@@ -4892,6 +4945,7 @@ function Calendar(props) {
           </Grid>
           <ReactCalendar
             locale="id-ID"
+            showFixedNumberOfWeeks
             onChange={(value) => { handleClickReactCalendar(value) }}
             value={selectedDateReactCalendar}
             className={classes.calendar}
