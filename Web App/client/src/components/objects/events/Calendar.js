@@ -41,7 +41,6 @@ import {
   useMediaQuery,
   CircularProgress,
   Fade,
-  // useMediaQuery
 } from "@material-ui/core/";
 import {
   MuiPickersUtilsProvider,
@@ -375,12 +374,9 @@ const useStyles = makeStyles((theme) => ({
   staticBlueChip: {
     backgroundColor: theme.palette.primary.main,
     borderRadius: "3px",
-    // flexGrow: 1,
     overflow: "hidden",
     marginBottom: "2px",
-    // marginLeft: "58px",
     padding: "2px",
-    // marginRight: "32px"
   },
   blueChip: {
     backgroundColor: theme.palette.primary.main,
@@ -389,7 +385,6 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     // overflow: "none",
     overflow: "hidden",
-    // padding: "8px 12px",
     color: "white",
     zIndex: 2,
   },
@@ -456,7 +451,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center"
   }
 }));
-// ANCHOR STYLE
 
 // function CalendarListToolbar(props) {
 //   const {
@@ -1399,9 +1393,6 @@ function EventDialog(props) {
         color: theme.palette.primary.main,
       },
     },
-    dialogPaper: {
-      minHeight: "calc(100% - 64px)"
-    },
     listItem: {
       "&:focus, &:hover": {
         backgroundColor: theme.palette.primary.fade,
@@ -2105,7 +2096,6 @@ function EventDialog(props) {
       BackdropProps={{
         style: { backgroundColor: "transparent" }
       }}
-      // classes={{ paper: classes.dialogPaper }}
     >
       {eventDialogMode === "view"
         ?
@@ -2908,7 +2898,6 @@ function Calendar(props) {
   const { selectedClasses, all_classes } = props.classesCollection;
   const { allEvents } = props.eventsCollection;
 
-  // ANCHOR STATES
   const [activeStartDate, setActiveStartDate] = React.useState(new Date(new Date().getFullYear(), new Date().getMonth())); // set ke awal bulan sekarang 
 
   // EVENT DIALOG
@@ -4764,7 +4753,6 @@ function Calendar(props) {
     }
   }
 
-  // ANCHOR ELEMENT
   return (
     <div className={classes.root}>
       {
