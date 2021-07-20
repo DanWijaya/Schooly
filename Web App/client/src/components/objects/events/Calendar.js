@@ -4069,7 +4069,7 @@ function Calendar(props) {
           end_date.getTime(),
           getDayStart(date).getTime(),
           getDayEnd(date).getTime()
-        )
+        ) && (eventInfo.author_id === user._id || eventInfo.to.includes("Admin"))
       );
     });
     let localCounter = mainCounter;
@@ -4506,8 +4506,8 @@ function Calendar(props) {
               allDayItems.map((item) => (
                 <div 
                   key={item._id} 
-                  className={item.type === "Event" && role === "Admin" ? `${classes.hoverPointerCursor} ${classes.staticBlueChip}` : classes.staticBlueChip}
-                  onClick={item.type === "Event" && role === "Admin" ? () => { handleOpenViewDialog(item.data) } : undefined}
+                  className={item.type === "Event" ? `${classes.hoverPointerCursor} ${classes.staticBlueChip}` : classes.staticBlueChip}
+                  onClick={item.type === "Event" ? () => { handleOpenViewDialog(item.data) } : undefined}
                 >
                   <Typography style={{ color: "white" }} variant="body2">
                     {item.data.name}
@@ -4543,8 +4543,8 @@ function Calendar(props) {
 
                               return (
                                 <div
-                                  onClick={obj.type === "Event" && role === "Admin" ? () => { handleOpenViewDialog(obj.data) } : undefined}
-                                  className={obj.type === "Event" && role === "Admin" ? `${classes.hoverPointerCursor} ${classes.blueChip}` : classes.blueChip}
+                                  onClick={obj.type === "Event" ? () => { handleOpenViewDialog(obj.data) } : undefined}
+                                  className={obj.type === "Event" ? `${classes.hoverPointerCursor} ${classes.blueChip}` : classes.blueChip}
                                   style={{
                                     transform: 
                                       `translate(calc(100% * ${obj.startColumn} + ${obj.startColumn} * 10px), ${!isSameDate(obj.start_date, currentDate) && isSameDate(obj.end_date, currentDate)
