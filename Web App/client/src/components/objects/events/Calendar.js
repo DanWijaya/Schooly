@@ -4893,7 +4893,7 @@ function Calendar(props) {
           {(role === "Teacher" && selectedClasses !== null) ?
             <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
               <Typography style={{marginTop: "15px"}}>Kelas</Typography>
-              <FormGroup>
+              <div style={{display: "flex", flexDirection: "column", height: "235px", overflow: "auto"}}>
                 {
                   user.class_teached.map((class_id) => {
                     let temp = new Map(selectedClasses);
@@ -4916,13 +4916,13 @@ function Calendar(props) {
                     )
                   })
                 }
-              </FormGroup>
+              </div>
             </div>
           : null}
           {(role === "Admin" && all_classes !== null) ?
             <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
               <Typography style={{marginTop: "15px"}}>Kelas</Typography>
-              <FormGroup>
+              <div style={{display: "flex", flexDirection: "column", height: "235px", overflow: "auto"}}>
                 {
                   all_classes.map((kelas) => {
                     let class_id = kelas._id;
@@ -4944,7 +4944,7 @@ function Calendar(props) {
                     return null;
                   })
                 }
-              </FormGroup>
+              </div>
             </div>
           : null}
         </div>
