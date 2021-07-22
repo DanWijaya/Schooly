@@ -1370,7 +1370,6 @@ function ManageUsers(props) {
                           <LightTooltip title="Nonaktifkan">
                             <IconButton
                               size="small"
-                              style={{ display: "none" }}
                               className={classes.profileDisableButton}
                               onClick={(e) => {
                                 handleOpenDisableDialog(e, row._id, row.name);

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, Redirect, useHistory, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -691,6 +691,7 @@ function WelcomePanel(props) {
 class Dashboard extends Component {
   constructor(props) {
     super(props);
+    // const history = useHistory();
     this.state = {
       anchorEl: null,
       taskGraphCurrentSubject: null,
@@ -713,7 +714,7 @@ class Dashboard extends Component {
     } = this.props;
     // const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
-
+    
     getAllTask(); // actions yang membuat GET request ke Database.
     getAllSubjects();
     getTeachers();
@@ -722,6 +723,12 @@ class Dashboard extends Component {
 
     // const { all_subjects_map } = this.props.subjectsCollection
     // let subjectArray = Object.keys(all_subjects_map)
+    // console.log(user.role)
+
+    if (!user.active){
+      // usehistory().push('/masuk')
+      Redirect('/masuk')
+    }
 
     if (user.role === "Student") {
       getStudentsByClass(user.kelas);
