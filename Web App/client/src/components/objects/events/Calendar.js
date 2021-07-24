@@ -2858,7 +2858,7 @@ function Calendar(props) {
             }
           }
 
-          if (date.getDay() === 6) {
+          if (date.getDay() === 6 && date.getMonth() == activeStartDate.getMonth()) {
             return (
               <div style={{color: "black"}}>
                 <abbr>
@@ -3920,7 +3920,7 @@ function Calendar(props) {
                             tileRows[index].map((obj) => {
                               let verticalPadding = 8;
                               let widthPadding = 0;
-                              let i = Math.floor(100/obj.width);
+                              let i = tileRows[index].length;
                               if(i > 1) {
                                 widthPadding = 10 * (i-1) / i;
                               }
