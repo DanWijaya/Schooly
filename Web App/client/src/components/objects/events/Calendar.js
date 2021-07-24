@@ -169,11 +169,9 @@ const useStyles = makeStyles((theme) => ({
   dayAgendaContainer: {
     display: "flex", 
     flexDirection: "column", 
-    // marginTop: "10px",
     height: "600px",
     overflow: "auto",
     flex: 1,
-    // overflow: "hidden"
   },
   dayTableCell: {
     display: "flex", 
@@ -182,31 +180,6 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: "none", 
     overflow: "none"
   },
-  // todayTile: {
-  //   textAlign: "center!important",
-  //   borderRadius: "100%",
-  //   background: "#195DE5",
-  //   color: "white",
-  //   maxWidth: "12%!important",
-  //   margin: ".5% 1.14285%!important",
-  //   padding: "3% 0%",
-  //   "&:focus, &:hover, &:active": {
-  //     background: "#195DE5",
-  //     backgroundColor: "#195DE5",
-  //     color: "white",
-  //     opacity: 0.8
-  //   },
-  // },
-  // activeTile: {
-  //   textAlign: "center!important",
-  //   maxWidth: "12%!important",
-  //   margin: ".5% 1.14285%!important",
-  //   padding: "3% 0%",
-  //   "&:active": {
-  //     background: "#C9DCFD",
-  //     opacity: 0.8
-  //   },
-  // },
   todayTile: {
     display: "flex",
     justifyContent: "center",
@@ -250,6 +223,9 @@ const useStyles = makeStyles((theme) => ({
       }
     }
   },
+  holidayTile: {
+    color: "#d10000"
+  },
   calendarTile: {
     borderRadius: "100%",
     backgroundColor: theme.palette.primary.light
@@ -282,13 +258,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px 4px"
   },
   holidayMonthDateTile: {
-    padding: "2px 5px",
-    background: theme.palette.error.main,
-    color: "white",
-    "&:focus, &:hover, &:active": {
-      background: theme.palette.error.dark,
-      cursor: "pointer"
-    },
+    color: "#d10000"
   },
   monthAgendaCell: {
     width: "14.2875%",
@@ -381,19 +351,11 @@ const useStyles = makeStyles((theme) => ({
   blueChip: {
     backgroundColor: theme.palette.primary.main,
     borderRadius: "3px",
-    // width: "100%",
     position: "absolute",
-    // overflow: "none",
     overflow: "hidden",
     color: "white",
     zIndex: 2,
   },
-  // invisibleChip: {
-  //   width: "100%",
-  //   position: "absolute",
-  //   overflow: "none",
-  //   padding: "2px",
-  // },
   hoverPointerCursor: {
     "&:focus, &:hover": {
       cursor: "pointer"
@@ -452,300 +414,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// function CalendarListToolbar(props) {
-//   const {
-//     classes,
-//     order,
-//     orderBy,
-//     onRequestSort,
-//     handleOpenFormDialog,
-//     searchFilter,
-//     updateSearchFilter,
-//     setSearchBarFocus,
-//     searchBarFocus,
-//     role,
-//     type
-//   } = props;
-
-//   let toolbarTitle = "";
-//   let toolbarIcon = null;
-
-//   if(type === "Event") {
-//     toolbarTitle = "Daftar Kegiatan";
-//     toolbarIcon = <EventNoteIcon className={classes.titleIcon} fontSize="large" />;
-//   }
-//   else if(type === "Task") {
-//     toolbarTitle = "Daftar Tugas";
-//     toolbarIcon = <AssignmentIcon className={classes.titleIcon} fontSize="large" />;
-//   }
-//   else if(type === "Quiz") {
-//     toolbarTitle = "Daftar Kuis";
-//     toolbarIcon = <FaClipboardList className={classes.titleIcon} fontSize="large" />;
-//   }
-//   else {
-//     toolbarTitle = "Daftar Ujian";
-//     toolbarIcon = <BsClipboardData className={classes.titleIcon} fontSize="large" />;
-//   }
-
-//   // const createSortHandler = (property) => (event) => {
-//   //   onRequestSort(event, property);
-//   // };
-
-//   // const headCells = [
-//   //   {
-//   //     id: "name",
-//   //     numeric: false,
-//   //     disablePadding: false,
-//   //     label: "Mata Pelajaran",
-//   //   },
-//   // ];
-
-//   // // Sort Menu
-//   // const [anchorEl, setAnchorEl] = React.useState(null);
-//   // const handleOpenSortMenu = (event) => {
-//   //   setAnchorEl(event.currentTarget);
-//   // };
-//   // const handleCloseSortMenu = () => {
-//   //   setAnchorEl(null);
-//   // };
-
-//   // const onChange = (e) => {
-//   //   updateSearchFilter(e.target.value);
-//   // };
-
-//   // const onClear = (e, id) => {
-//   //   updateSearchFilter("");
-//   //   document.getElementById(id).focus();
-//   // };
-
-//   return (
-//     <div className={classes.toolbar}>
-//       <div style={{ display: "flex", alignItems: "center" }}>
-//         <Hidden mdUp implementation="css">
-//           {searchBarFocus ? null : (
-//             <div
-//               style={{
-//                 display: "flex",
-//                 flexDirection: "row",
-//                 alignItems: "center",
-//               }}
-//             >
-//               {toolbarIcon}
-//               <Typography variant="h4">{toolbarTitle}</Typography>
-//             </div>
-//           )}
-//         </Hidden>
-//         <Hidden smDown implementation="css">
-//           <div
-//             style={{
-//               display: "flex",
-//               flexDirection: "row",
-//               alignItems: "center",
-//             }}
-//           >
-//             {toolbarIcon}
-//             <Typography variant="h4">{toolbarTitle}</Typography>
-//           </div>
-//         </Hidden>
-//         {/* <Hidden mdUp implementation="css">
-//           {searchBarFocus ? (
-//             <div style={{ display: "flex" }}>
-//               <IconButton
-//                 onClick={() => {
-//                   setSearchBarFocus(false);
-//                   updateSearchFilter("");
-//                 }}
-//               >
-//                 <ArrowBackIcon />
-//               </IconButton>
-//               <TextField
-//                 fullWidth
-//                 variant="outlined"
-//                 id="searchFilterMobile"
-//                 value={searchFilter}
-//                 onChange={onChange}
-//                 autoFocus
-//                 onClick={(e) => setSearchBarFocus(true)}
-//                 placeholder="Cari Mata Pelajaran"
-//                 style={{
-//                   maxWidth: "200px",
-//                   marginLeft: "10px",
-//                 }}
-//                 InputProps={{
-//                   startAdornment: searchBarFocus ? null : (
-//                     <InputAdornment
-//                       position="start"
-//                       style={{ marginLeft: "-5px", marginRight: "-5px" }}
-//                     >
-//                       <IconButton size="small">
-//                         <GoSearch />
-//                       </IconButton>
-//                     </InputAdornment>
-//                   ),
-//                   endAdornment: (
-//                     <InputAdornment
-//                       position="end"
-//                       style={{ marginLeft: "-10px", marginRight: "-10px" }}
-//                     >
-//                       <IconButton
-//                         size="small"
-//                         id="searchFilterMobile"
-//                         onClick={(e) => {
-//                           e.stopPropagation();
-//                           onClear(e, "searchFilterMobile");
-//                         }}
-//                         style={{
-//                           opacity: 0.5,
-//                           visibility: !searchFilter ? "hidden" : "visible",
-//                         }}
-//                       >
-//                         <ClearIcon />
-//                       </IconButton>
-//                     </InputAdornment>
-//                   ),
-//                   style: {
-//                     borderRadius: "22.5px",
-//                   },
-//                 }}
-//               />
-//             </div>
-//           ) : (
-//             <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
-//               <IconButton
-//                 className={classes.goSearchButton}
-//                 onClick={() => setSearchBarFocus(true)}
-//               >
-//                 <GoSearch className={classes.goSearchIconMobile} />
-//               </IconButton>
-//             </LightTooltip>
-//           )}
-//         </Hidden> */}
-//       </div>
-//       <div style={{ display: "flex", alignItems: "center" }}>
-//         {/* <Hidden smDown implementation="css">
-//           <TextField
-//             variant="outlined"
-//             id="searchFilterDesktop"
-//             value={searchFilter}
-//             onChange={onChange}
-//             onClick={() => setSearchBarFocus(true)}
-//             onBlur={() => setSearchBarFocus(false)}
-//             placeholder="Cari Mata Pelajaran"
-//             style={{
-//               maxWidth: "250px",
-//               marginRight: "10px",
-//             }}
-//             InputProps={{
-//               startAdornment: (
-//                 <InputAdornment
-//                   position="start"
-//                   style={{ marginLeft: "-5px", marginRight: "-5px" }}
-//                 >
-//                   <IconButton size="small">
-//                     <GoSearch />
-//                   </IconButton>
-//                 </InputAdornment>
-//               ),
-//               endAdornment: (
-//                 <InputAdornment
-//                   position="end"
-//                   style={{ marginLeft: "-10px", marginRight: "-10px" }}
-//                 >
-//                   <IconButton
-//                     size="small"
-//                     onClick={(e) => {
-//                       e.stopPropagation();
-//                       onClear(e, "searchFilterDesktop");
-//                     }}
-//                     style={{
-//                       opacity: 0.5,
-//                       visibility: !searchFilter ? "hidden" : "visible",
-//                     }}
-//                   >
-//                     <ClearIcon />
-//                   </IconButton>
-//                 </InputAdornment>
-//               ),
-//               style: {
-//                 borderRadius: "22.5px",
-//               },
-//             }}
-//           />
-//         </Hidden> */}
-//         <Hidden mdUp implementation="css">
-//           {role !== "Admin" ? null : (
-//             <LightTooltip title="Buat Kegiatan">
-//               <Link to="/buat-kegiatan">
-//                 <Fab size="small" className={classes.newEventButton}>
-//                   <EventNoteIcon className={classes.newEventIconMobile} />
-//                 </Fab>
-//               </Link>
-//             </LightTooltip>
-//           )}
-//         </Hidden>
-//         <Hidden smDown implementation="css">
-//           {role !== "Admin" ? null : (
-//             <Link to="/buat-kegiatan">
-//               <Fab
-//                 size="medium"
-//                 variant="extended"
-//                 className={classes.newEventButton}
-//               >
-//                 <EventNoteIcon className={classes.newEventIconDesktop} />
-//                 Buat Kegiatan
-//             </Fab>
-//             </Link>
-//           )}
-//         </Hidden>
-//         {/* <LightTooltip title="Urutkan Mata Pelajaran">
-//           <IconButton
-//             onClick={handleOpenSortMenu}
-//             className={classes.sortButton}
-//           >
-//             <SortIcon />
-//           </IconButton>
-//         </LightTooltip>
-//         <Menu
-//           keepMounted
-//           anchorEl={anchorEl}
-//           open={Boolean(anchorEl)}
-//           onClose={handleCloseSortMenu}
-//           anchorOrigin={{
-//             vertical: "bottom",
-//             horizontal: "right",
-//           }}
-//           transformOrigin={{
-//             vertical: "top",
-//             horizontal: "left",
-//           }}
-//         >
-//           {headCells.map((headCell, i) => (
-//             <MenuItem
-//               key={headCell.id}
-//               sortDirection={orderBy === headCell.id ? order : false}
-//               onClick={createSortHandler(headCell.id)}
-//             >
-//               <TableSortLabel
-//                 active={orderBy === headCell.id}
-//                 direction={orderBy === headCell.id ? order : "asc"}
-//               >
-//                 {headCell.label}
-//                 {orderBy === headCell.id ? (
-//                   <span className={classes.visuallyHidden}>
-//                     {order === "desc"
-//                       ? "sorted descending"
-//                       : "sorted ascending"}
-//                   </span>
-//                 ) : null}
-//               </TableSortLabel>
-//             </MenuItem>
-//           ))}
-//         </Menu> */}
-//       </div>
-//     </div>
-//   );
-// }
-
 function AgendaToolbar(props) {
   const {
     classes,
@@ -772,36 +440,26 @@ function AgendaToolbar(props) {
 
   const handleChangeMonth = (direction) => {
     if(direction === "now") {
-      // let nowMonthDate;
-      // let tempMonthDate = new Date();
-      // nowMonthDate = new Date(tempMonthDate.getFullYear(), tempMonthDate.getMonth(), 1)
-      // setCurrentDateMonthMode(nowMonthDate);
       setCurrentDate(new Date());
     }
     else if(direction === "next") {
       let nextMonthDate;
       if (currentDate.getMonth() === 11) {
-        // nextMonthDate = new Date(currentDate.getFullYear() + 1, 0, 1);
         nextMonthDate = new Date(currentDate.getFullYear() + 1, 0, currentDate.getDate());
       } 
       else {
-        // nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
         nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, currentDate.getDate());
       }
-      // setCurrentDateMonthMode(nextMonthDate);
       setCurrentDate(nextMonthDate);
     }
     else {
       let prevMonthDate;
       if (currentDate.getMonth() === 0) {
-        // prevMonthDate = new Date(currentDate.getFullYear() - 1, 11, 1);
         prevMonthDate = new Date(currentDate.getFullYear() - 1, 11, currentDate.getDate());
       } 
       else {
-        // prevMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
         prevMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate());
       }
-      // setCurrentDateMonthMode(prevMonthDate);
       setCurrentDate(prevMonthDate);
     }
   }
@@ -895,72 +553,16 @@ function AgendaToolbar(props) {
   );
 }
 
-// function TaskListItem(props) {
-//   const { classes } = props;
-
-//   return (
-//     <Grid item>
-//       <Link to={props.work_link}>
-//         <Paper variant="outlined" button className={classes.listItemPaper}>
-//           <Badge
-//             style={{ display: "flex", flexDirection: "row" }}
-//             badgeContent={<ErrorIcon className={classes.errorIcon} />}
-//             anchorOrigin={{
-//               vertical: "bottom",
-//               horizontal: "right",
-//             }}
-//           >
-//             <ListItem button className={classes.listItem}>
-//               <Hidden xsDown>
-//                 <ListItemAvatar>
-//                   <Avatar className={classes.listIcon}>
-//                     <AssignmentIcon />
-//                   </Avatar>
-//                 </ListItemAvatar>
-//               </Hidden>
-//               <ListItemText
-//                 primary={
-//                   <Typography variant="h6">
-//                     {props.work_title}
-//                   </Typography>
-//                 }
-//                 secondary={props.work_sender}
-//               />
-//               <ListItemText
-//                 align="right"
-//                 primary={
-//                   <Typography variant="body2" color="textSecondary">
-//                     {moment(props.work_dateposted)
-//                       .locale("id")
-//                       .format("DD MMM YYYY")}
-//                   </Typography>
-//                 }
-//                 secondary={
-//                   <Typography variant="body2" color="textSecondary">
-//                     {moment(props.work_dateposted).locale("id").format("HH.mm")}
-//                   </Typography>
-//                 }
-//               />
-//             </ListItem>
-//           </Badge>
-//         </Paper>
-//       </Link>
-//     </Grid>
-//   );
-// }
-
 function ListAssessments(props) {
   const {
     category,
     subject,
     type,
-    // tab,
     all_assessments,
     classId,
     classes,
     all_subjects_map,
     all_teachers,
-    // getSelectedDate,
     date,
     mainCounter,
     handleChangeCounter,
@@ -1073,9 +675,6 @@ function ListAssessments(props) {
         }
         AssessmentsList.push(assessment);
       }
-      // if(i === all_assessments.length - 5){ // item terakhir harus pas index ke 4.
-      //   break;
-      // }
     }
     for (i = 0; i < AssessmentsList.length; i++) {
       let assessment = AssessmentsList[i];
@@ -1169,7 +768,6 @@ function ListAssessments(props) {
           category === "subject" ? null : all_subjects_map.get(row.subject)
         }
         work_teacher_name={row.teacher_name}
-        // work_status={workStatus}
         work_starttime={moment(row.start_date)
           .locale("id")
           .format("DD MMM YYYY, HH:mm")}
@@ -1187,55 +785,6 @@ function ListAssessments(props) {
     return;
   }
 }
-
-// function AssessmentListItemTeacher(props) {
-//   const { classes } = props;
-
-//   return (
-//     <Grid item>
-//       <Link to={props.link}>
-//         <Paper variant="outlined" button className={classes.listItemPaper}>
-//           <Badge
-//             style={{ display: "flex", flexDirection: "row" }}
-//             badgeContent={<WarningIcon className={classes.warningIcon} />}
-//             anchorOrigin={{
-//               vertical: "bottom",
-//               horizontal: "right",
-//             }}
-//           >
-//             <ListItem button className={classes.listItem}>
-//               <Hidden xsDown>
-//                 <ListItemAvatar>
-//                   <Avatar className={classes.assignmentLate}>
-//                     {props.type === "Kuis" ? (
-//                       <FaClipboardList />
-//                     ) : (
-//                       <BsClipboardData />
-//                     )}
-//                   </Avatar>
-//                 </ListItemAvatar>
-//               </Hidden>
-//               <ListItemText primary={props.title} secondary={props.subject} />
-//               <ListItemText
-//                 align="right"
-//                 primary={
-//                   <Typography variant="body2" color="textSecondary">
-//                     {moment(props.createdAt).locale("id").format("DD MMM YYYY")}
-//                   </Typography>
-//                 }
-//                 secondary={
-//                   <Typography variant="body2" color="textSecondary">
-//                     {moment(props.createdAt).locale("id").format("HH.mm")}
-//                   </Typography>
-//                 }
-//               />
-//             </ListItem>
-//           </Badge>
-//         </Paper>
-//       </Link>
-//     </Grid>
-//   );
-// }
 
 function EventDialog(props) {
   const useStyles = makeStyles((theme) => ({
@@ -1460,13 +1009,9 @@ function EventDialog(props) {
   // UPLOAD DIALOG
   const [openUploadDialog, setOpenUploadDialog] = React.useState(false);
   const [uploadSuccess, setUploadSuccess] = React.useState(false);
-  // const [uploadDialogScrollPosition, setUploadDialogScrollPosition] = React.useState(0);
-  // const [uploadDialogScrollElement, setUploadDialogScrollElement] = React.useState(null);
 
   // DELETE DIALOG
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-  // const [deleteDialogScrollPosition, setDeleteDialogScrollPosition] = React.useState(0);
-  // const [deleteDialogScrollElement, setDeleteDialogScrollElement] = React.useState(null);
 
   // OTHER
   const [changeDialog, setChangeDialog] = React.useState(false);
@@ -1495,7 +1040,6 @@ function EventDialog(props) {
         }
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEventInfo]);
 
 
@@ -2002,68 +1546,6 @@ function EventDialog(props) {
     }
   };
 
-  /*
-  // UPLOAD DIALOG
-  const uploadDialogScrollRef = React.useCallback((node) => {
-    if (node !== null) {
-      setUploadDialogScrollElement(node);
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (uploadDialogScrollElement) {
-      uploadDialogScrollElement.scrollTo({
-        left: 0,
-        top: uploadDialogScrollPosition,
-        behavior: "smooth"
-      });
-    }
-  }, [uploadDialogScrollPosition]);
-
-  const handleUploadDialogWheel = (e) => {
-    e.preventDefault();
-    let lowestScrollPosition = uploadDialogScrollElement.scrollHeight - uploadDialogScrollElement.offsetHeight;
-    let nextScrollPosition = (uploadDialogScrollElement.scrollTop !== uploadDialogScrollPosition ? uploadDialogScrollElement.scrollTop : uploadDialogScrollPosition) + e.deltaY;
-    if (nextScrollPosition > lowestScrollPosition) {
-      setUploadDialogScrollPosition(lowestScrollPosition);
-    } else if (nextScrollPosition < 0) {
-      setUploadDialogScrollPosition(0);
-    } else {
-      setUploadDialogScrollPosition(nextScrollPosition);
-    }
-  };
-
-  // DELETE DIALOG
-  const deleteDialogScrollRef = React.useCallback((node) => {
-    if (node !== null) {
-      setDeleteDialogScrollElement(node);
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (deleteDialogScrollElement) {
-      deleteDialogScrollElement.scrollTo({
-        left: 0,
-        top: deleteDialogScrollPosition,
-        behavior: "smooth"
-      });
-    }
-  }, [deleteDialogScrollPosition]);
-
-  const handleDeleteDialogWheel = (e) => {
-    e.preventDefault();
-    let lowestScrollPosition = deleteDialogScrollElement.scrollHeight - deleteDialogScrollElement.offsetHeight;
-    let nextScrollPosition = (deleteDialogScrollElement.scrollTop !== deleteDialogScrollPosition ? deleteDialogScrollElement.scrollTop : deleteDialogScrollPosition) + e.deltaY;
-    if (nextScrollPosition > lowestScrollPosition) {
-      setDeleteDialogScrollPosition(lowestScrollPosition);
-    } else if (nextScrollPosition < 0) {
-      setDeleteDialogScrollPosition(0);
-    } else {
-      setDeleteDialogScrollPosition(nextScrollPosition);
-    }
-  };
-  */
-
   const handleDelete = (eventId) => {
     deleteEvent(eventId).then(() => {
       getAllEvents();
@@ -2152,13 +1634,12 @@ function EventDialog(props) {
           </div>
           <div className={classes.viewDialogBottomDiv}>
             <CustomDeleteDialog
-              // handleWheel={handleDeleteDialogWheel}
               openDeleteDialog={openDeleteDialog}
               handleCloseDeleteDialog={handleCloseDeleteDialog}
               eventName={name}
               handleDelete={() => { handleDelete(selectedEventInfo._id) }}
             />
-            <div /* ref={deleteDialogScrollRef} */ className={classes.viewDialogScrollableDiv}>
+            <div className={classes.viewDialogScrollableDiv}>
                 
               <Grid container direction="column" spacing="4" style={{ marginTop: "0", marginBottom: "0" }}>
                 <Grid item xs={12} style={{ paddingTop: "0", paddingBottom: "0" }}>
@@ -2650,7 +2131,6 @@ function CustomUploadDialog(props) {
     <Fade in={openUploadDialog} /* ini sebenarnya ga terpakai karena upload dialog dibuat tutup bersamaan dengan parent dialognya */>
       <div
         className={classes.backdrop}
-        // onWheel={(event) => { handleWheel(event) }}
       >
         <Paper className={`${classes.paper} MuiPaper-elevation24`}>
           <Grid item>
@@ -2734,7 +2214,6 @@ function CustomDeleteDialog(props) {
   }));
   const classes = useStyles();
   const {
-    // handleWheel,
     openDeleteDialog,
     handleCloseDeleteDialog,
     handleDelete,
@@ -2745,7 +2224,6 @@ function CustomDeleteDialog(props) {
     <Fade in={openDeleteDialog}>
       <div
         className={classes.backdrop}
-        // onWheel={(event) => { handleWheel(event) }}
       >
         <Paper className={`${classes.paper} MuiPaper-elevation24`}>
           <Grid item>
@@ -2894,9 +2372,7 @@ function Calendar(props) {
     getAllTaskFilesByUser,
     getAllSubjects,
     getAllAssessments,
-    // getStudentsByClass,
     getStudents,
-    // setCurrentClass,
     getTeachers,
     tasksCollection,
   } = props;
@@ -2919,8 +2395,6 @@ function Calendar(props) {
   const [eventDialogMode, setEventDialogMode] = React.useState("");
   const [unmountEventDialog, setUnmountEventDialog] = React.useState(false);
 
-  // const [rows, setRows] = React.useState([]);
-
   // SNACKBAR
   const [snackbarContent, setSnackbarContent] = React.useState("");
   const [severity, setSeverity] = React.useState("info");
@@ -2929,8 +2403,6 @@ function Calendar(props) {
   // Calendar
   const today = new Date()
   const [mode, setMode] = React.useState("Day");
-  // const [currentDateDayMode, setCurrentDateDayMode] = React.useState(today);
-  // const [currentDateMonthMode, setCurrentDateMonthMode] = React.useState(today);
   const [currentDate, setCurrentDate] = React.useState(today);
   const [selectedDateMonthMode, setSelectedDateMonthMode] = React.useState(today);
   const [selectedDateReactCalendar, setSelectedDateReactCalendar] = React.useState(today);
@@ -2976,20 +2448,7 @@ function Calendar(props) {
     if (role === "Teacher") {
       setClassCheckboxState(Object.assign({}, ...user.class_teached.map((class_id) => ({ [class_id]: true }))));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // React.useEffect(() => {
-    // mencari event yang berlangsung hari ini.
-    // event yang sudah lewat jamnya, sedang berlangsung, atau belum berlangsung akan ditampilkan.
-    // let now = (selectedDate === null) ? (new Date()).getDate() : selectedDate.getDate();
-    // let filteredEvents = props.eventsCollection.allEvents.filter((eventInfo) => {
-    //   let start_date = (new Date(eventInfo.start_date)).getDate();
-    //   let end_date = (new Date(eventInfo.end_date)).getDate();
-    //   return (start_date <= now && now <= end_date);
-    // });
-    // setRows([...props.eventsCollection.allEvents]);
-  // }, [props.eventsCollection.allEvents]);
 
   React.useEffect(() => {
     // test data
@@ -3017,7 +2476,7 @@ function Calendar(props) {
     // });
 
     if (mode === "Day") {
-      // setTileRows(placeDayModeTiles(testdata, currentDate));
+
       generateTiles(currentDate);
 
       let start = getDayStart(currentDate);
@@ -3039,17 +2498,13 @@ function Calendar(props) {
         task: countTask(start, end)
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDate, mode]);
 
   React.useEffect(() => {
     if (tasksCollection && Array.isArray(tasksCollection) && all_assessments && allEvents) {
-      // setTileRows(placeDayModeTiles(generateDayModeList(currentDate), currentDate));
       generateTiles(currentDate);
 
       if (mode === "Day") {
-        // setTileRows(placeDayModeTiles(testdata, currentDate));
-        // setTileRows(placeDayModeTiles(generateDayModeList(currentDate), currentDate));
         generateTiles(currentDate);
 
         let start = getDayStart(currentDate);
@@ -3379,6 +2834,29 @@ function Calendar(props) {
               </div>
             );
           }
+
+          // jika tanggal yang sedang dicek adalah tanggal merah
+          for (let holidayKey of Object.keys(holiday)) {
+            if (isSameDate(new Date(holidayKey), date)) {
+              return (
+                <div className={classes.holidayTile}>
+                  <abbr>
+                    {date.getDate()}
+                  </abbr>
+                </div>
+              );
+            }
+          }
+
+          if (date.getDay() === 6) {
+            return (
+              <div style={{color: "black"}}>
+                <abbr>
+                  {date.getDate()}
+                </abbr>
+              </div>
+            );
+          }
         
         }
         return (
@@ -3407,7 +2885,6 @@ function Calendar(props) {
           // tidak mengecek now === selectedDate
 
         }
-        // return null;
         return (
           <div className={classes.notSelectedTile}>
             <abbr>
@@ -3466,10 +2943,6 @@ function Calendar(props) {
   const handleUnsetUnmountEventDialog = () => {
     setUnmountEventDialog(false);
   }
-
-  // function getSelectedDate() {
-  //   return selectedDate;
-  // }
 
   function listTasks(date, mainCounter=null, handleChangeCounter=null) {
     let result = [];
@@ -3722,8 +3195,6 @@ function Calendar(props) {
       var i;
       for (i = all_assessments.length - 1; i >= 0; i--) {
         let assessment = all_assessments[i];
-        // let tempDeadlineDate = new Date(moment(assessment.start_date)
-        // .locale("id"));
         let class_assigned = assessment.class_assigned;
 
         if (
@@ -3733,9 +3204,6 @@ function Calendar(props) {
             getDayStart(tempSelectedDate).getTime(), 
             getDayEnd(tempSelectedDate).getTime()
           ) &&
-        // tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
-        // tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-        // tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
         class_assigned.indexOf(classId) !== -1) {
           for (let j = 0; j < all_teachers.length; j++) {
             if (all_teachers[j]._id === assessment.author_id) {
@@ -3748,7 +3216,6 @@ function Calendar(props) {
       }
       for (i = 0; i < AssessmentsList.length; i++) {
         let assessment = AssessmentsList[i];
-        // let workStatus = "Belum Ditempuh"
         if (type === "Kuis") {
           if (
             (!category ||
@@ -3821,9 +3288,6 @@ function Calendar(props) {
               getDayStart(tempSelectedDate).getTime(),
               getDayEnd(tempSelectedDate).getTime()
             ) &&
-          // tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
-          // tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-          // tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
           classFound) {
             if(mode === "Month") {
               if(localCounter < 3) {
@@ -3887,7 +3351,6 @@ function Calendar(props) {
 
       for (let i = 0; i < all_assessments.length; i++) {
         let assessment = all_assessments[i];
-        // let tempDeadlineDate = new Date(moment(assessment.start_date).locale("id"));
         let classFound = false;
         if (assessment.type === assessmentType) {
           for(let classId of all_assessments[i].class_assigned) {
@@ -3903,9 +3366,6 @@ function Calendar(props) {
               getDayStart(tempSelectedDate).getTime(),
               getDayEnd(tempSelectedDate).getTime()
             ) &&
-          // tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
-          // tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-          // tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
           classFound) {
             if(mode === "Month") {
               if(localCounter < 3) {
@@ -3954,80 +3414,10 @@ function Calendar(props) {
   }
 
   const listEvent = (date, mainCounter, handleChangeCounter) => {
-    // function EventItem(props) {
-    //   const { eventInfo } = props;
-    //   const [openDialog, setOpenDialog] = React.useState(false);
-    //   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
-  
-    //   const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
-    //     setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
-    //     setOpenDialog(true);
-    //   };
-  
-    //   const handleCloseDialog = () => {
-    //     setOpenDialog(false);
-    //   };
-
-    //   return (
-    //     <>
-    //         <Typography 
-    //           variant="body2" 
-    //           className={classes.monthAgendaChip} 
-    //           align="left"
-    //           onClick={() =>
-    //             handleOpenDialog(
-    //               eventInfo.name,
-    //               eventInfo.location,
-    //               eventInfo.description,
-    //               eventInfo.start_date,
-    //               eventInfo.end_date
-    //             )
-    //           }
-    //         >
-    //           {eventInfo.name}
-    //         </Typography>
-    //         <Dialog
-    //           fullScreen={false}
-    //           open={openDialog}
-    //           onClose={handleCloseDialog}
-    //           fullWidth={true}
-    //           maxWidth="sm"
-    //         >
-    //           <div style={{ padding: "20px" }}>
-    //             <Typography variant="h4" align="center">
-    //               {eventInfo.name}
-    //             </Typography>
-    //             <Typography variant="h5" align="center" color="primary">
-    //               Lokasi: {eventInfo.location}
-    //             </Typography>
-    //             <Typography
-    //               variant="subtitle1"
-    //               align="center"
-    //               style={{ marginTop: "25px" }}
-    //             >
-    //               Deskripsi: {eventInfo.description}
-    //             </Typography>
-    //             <Typography
-    //               variant="subtitle1"
-    //               align="center"
-    //             >
-    //               Mulai: {moment(eventInfo.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
-    //             </Typography>
-    //             <Typography variant="subtitle1" align="center">
-    //               Selesai: {moment(eventInfo.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
-    //             </Typography>
-    //           </div>
-    //         </Dialog> */}
-    //       </>
-    //   )
-    // }
-
     let result = []
     let filteredEvents = allEvents.filter((eventInfo) => {
-    // let filteredEvents = rows.filter((eventInfo) => {
       let start_date = new Date(eventInfo.start_date);
       let end_date = new Date(eventInfo.end_date);
-      // return (isSameDate(start_date, date) || isSameDate(end_date, date)) && eventInfo.to.includes(role);
       return (
         isIntersectInclusive(
           start_date.getTime(),
@@ -4054,9 +3444,6 @@ function Calendar(props) {
               {eventInfo.name}
             </Typography>
           )
-          // result.push(
-          //  <EventItem eventInfo={eventInfo}/>
-          // )
         }
         localCounter ++;
       }
@@ -4129,13 +3516,10 @@ function Calendar(props) {
 
   const handleChangeDay = (direction) => {
     if (direction === "now") {
-      // setCurrentDateDayMode(getDayStart(new Date()));
       setCurrentDate(new Date());
     } else if (direction === "next") {
-      // setCurrentDateDayMode(new Date(currentDate.getTime() + 1000 * 60 * 60 * 24));
       setCurrentDate(new Date(currentDate.getTime() + 1000 * 60 * 60 * 24));
     } else {
-      // setCurrentDateDayMode(new Date(currentDate.getTime() - 1000 * 60 * 60 * 24));
       setCurrentDate(new Date(currentDate.getTime() - 1000 * 60 * 60 * 24));
     }
   }
@@ -4169,32 +3553,11 @@ function Calendar(props) {
     return date_1.getDate() === date_2.getDate() && date_1.getMonth() === date_2.getMonth() && date_1.getYear() === date_2.getYear()
   }
 
-  // const renderCalendarTile = ({ activeStartDate, date, view }) => {
-  //   var today = new Date()
-  //   if(isSameDate(today, date)) {
-  //     return classes.todayTile
-  //   }
-  //   return classes.activeTile
-  // }
-
   const timeRows = [
     '00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', 
     '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', 
     '20:00', '21:00', '22:00', '23:00'
   ]
-
-  // const timeRowsDummy = [
-  //   [{start: 10, title: "Tugas Matematika", duration: 130, visible: true}, {start: 10, title: "Tugas Biologi", duration: 70, visible: true}, {start: 10, title: "Tugas Kimia", duration: 20, visible: true}, {start: 10, title: "Tugas Biologi", duration: 70, visible: true}, {start: 10, title: "Tugas Kimia", duration: 20, visible: true}], 
-  //   [{start: 0, title: "Tugas Matematika", duration: 80, visible: false}, {start: 0, title: "Tugas Biologi", duration: 20, visible: false}, {start: 10, title: "Tugas Fisika", duration: 70, visible: true}, {start: 10, title: "Tugas Biologi", duration: 20, visible: false}, {start: 0, title: "Tugas Matematika", duration: 80, visible: false}], 
-  //   [{start: 0, title: "Tugas Matematika", duration: 20, visible: false}], 
-  //   [], 
-  //   [{start: 0, title: "Ujian Biologi", duration: 30, visible: true}], 
-  //   [], [], [], [], [], [], 
-  //   [{start: 20, title: "Kuis Kimia", duration: 10, visible: true}, 
-  //   {start: 50, title: "Ujian Musik", duration: 10, visible: true}], 
-  //   [], [], [], [], [], [], [], [],
-  //   [], [], [], []
-  // ]
 
   const dayNames = [
     'SEN', 'SEL', 'RAB', 'KAM', 'JUM', 'SAB', 'MIN'
@@ -4220,14 +3583,6 @@ function Calendar(props) {
       }
     }
   }
-
-  // function isValidDate(year, month, day) {
-  //   var d = new Date(year, month, day);
-  //   if (d.getFullYear() === year && d.getMonth() === month && d.getDate() === day) {
-  //       return true;
-  //   }
-  //   return false;
-  // }
 
   const countEvent = (start, end) => {
     let count = 0;
@@ -4295,7 +3650,6 @@ function Calendar(props) {
         )).length;
       } else if (role === "Teacher") {
         count = all_assessments.filter((assessmentInfo) => (
-          // assessmentInfo.posted &&
           assessmentInfo.type === type &&
           assessmentInfo.author_id === user._id &&
           isIntersectInclusive(
@@ -4409,7 +3763,6 @@ function Calendar(props) {
     if(role === "Admin" && all_classes.length !== 0) {
       setClassCheckboxState(Object.assign({}, ...all_classes.map((kelas) => ({ [kelas._id]: true }))));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all_classes])
 
   const handleChangeClassStates = (event) => {
@@ -4418,10 +3771,8 @@ function Calendar(props) {
 
   React.useEffect(() => {
     if (tasksCollection && Array.isArray(tasksCollection) && all_assessments && allEvents) {
-      // setTileRows(placeDayModeTiles(generateDayModeList(currentDate), currentDate));
       generateTiles(currentDate);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agendaCheckboxState, classCheckboxState]);
 
   const generateDayModeList = (date) => {
@@ -4431,11 +3782,7 @@ function Calendar(props) {
         tasksCollection && 
         all_assessments && 
         allEvents
-        // tasksCollection.length !== 0 && 
-        // all_assessments.length !== 0 && 
-        // allEvents.length !== 0
         ) {
-        // rows.length !== 0) {
         let taskList = [];
         let quizList = [];
         let examList = [];
@@ -4499,7 +3846,6 @@ function Calendar(props) {
   };
 
   const generateDayModeCalendar = () => {
-    // let rowHeight = 90;
     return (
       <div className={classes.dayAgendaContainer}>
         <div 
@@ -4514,7 +3860,6 @@ function Calendar(props) {
               : undefined
           }
         >
-        {/* (new Date(column.getFullYear(), column.getMonth(), column.getDate()) in holiday) */}
           <Typography variant="body2" style={{ visibility: "hidden" }}>
             00:00
           </Typography>
@@ -4646,7 +3991,6 @@ function Calendar(props) {
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
       "Jul", "Agu", "Sep", "Okt", "Nov", "Des"
     ];
-    // if(all_assessments && tasksCollection && rows) {
     if (all_assessments && tasksCollection && allEvents) {
       return (
         <TableRow style={{height: "150px"}}>
@@ -4688,7 +4032,6 @@ function Calendar(props) {
                     classes={classes}
                     all_subjects_map={all_subjects_map}
                     all_teachers={all_teachers}
-                    // getSelectedDate={getSelectedDate}
                     date={new Date(column)}
                     mainCounter={mainCounter}
                     handleChangeCounter={handleChangeCounter}
@@ -4745,9 +4088,14 @@ function Calendar(props) {
             return (
               <TableCell className={classes.monthAgendaCell}>
                 {(index === 0) ?
-                  <Hidden xsDown>
-                    <Typography color="textSecondary" variant="body2" align="center">{dayNames[columnIndex]}</Typography>
-                  </Hidden>
+                  (columnIndex === 6) ?
+                    <Hidden xsDown>
+                      <Typography color="textSecondary" variant="body2" align="center" className={classes.holidayTile}>{dayNames[columnIndex]}</Typography>
+                    </Hidden>
+                  : 
+                    <Hidden xsDown>
+                      <Typography color="textSecondary" variant="body2" align="center">{dayNames[columnIndex]}</Typography>
+                    </Hidden>
                 : null}
                 <div style={{display: "flex", justifyContent: "center", marginBottom: "5px"}}>
                   {isSameDate(today, column) ?
@@ -4768,7 +4116,7 @@ function Calendar(props) {
                           <Typography color="textSecondary" variant="body2" className={classes.selectedMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date_withoutMonthNames}</Typography>
                         </Hidden>
                       </>
-                      : (new Date(column.getFullYear(), column.getMonth(), column.getDate()) in holiday) ?
+                      : (new Date(column.getFullYear(), column.getMonth(), column.getDate()) in holiday || column.getDay() == 0) ?
                           <>
                             <Hidden xsDown>
                               <Typography color="textSecondary" variant="body2" className={classes.holidayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date}</Typography>
