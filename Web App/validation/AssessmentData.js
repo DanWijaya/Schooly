@@ -17,6 +17,14 @@ module.exports = function validateAssessmentInput(data) {
     errors.name = "Nama belum diisi";
   }
 
+  if (Validator.isEmpty(data.start_date)) {
+    errors.start_date_custom = "Waktu mulai belum diisi";
+  }
+
+  if (Validator.isEmpty(data.end_date)) {
+    errors.end_date_custom = "Waktu selesai belum diisi";
+  }
+
   if (Validator.isEmpty(data.subject)) {
     errors.subject = "Mata Pelajaran belum diisi";
   }

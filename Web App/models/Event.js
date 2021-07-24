@@ -27,8 +27,11 @@ const EventSchema = new Schema(
 		},
 		description: {
 			type: String,
-			// required: true
-		}
+		},
+		author_id: {
+			type: ObjectId,
+			required: true,
+		},
 	},
 	{ timestamps: true }
 );

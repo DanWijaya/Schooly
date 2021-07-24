@@ -11,25 +11,25 @@ module.exports = function validateEventInput(data) {
   }
 
   if (Validator.isEmpty(data.name)) {
-    errors.name = "Nama Kegiatan belum diisi";
+    errors.name = "Nama belum diisi";
   }
 
   if (Validator.isEmpty(data.start_date)) {
-    errors.start_date_submission = "Waktu mulai Kegiatan belum diisi";
+    errors.start_date_custom = "Waktu mulai belum diisi";
   }
   
   if (Validator.isEmpty(data.end_date)) {
-    errors.end_date_submission = "Waktu selesai Kegiatan belum diisi";
+    errors.end_date_custom = "Waktu selesai belum diisi";
   }
 
   // jika to berisi array kosong, atribut ini tidak akan direplace dengan "".
   // dengan menggunakan length, array kosong dan string kosong akan bisa dihandle sekaligus
   if (!data.to.length) {
-    errors.to = "Pihak penerima Kegiatan belum diisi";
+    errors.to = "Pihak penerima belum diisi";
   }
 
   // if (Validator.isEmpty(data.description)) {
-  //   errors.description = "Deskripsi Kegiatan belum diisi";
+  //   errors.description = "Deskripsi belum diisi";
   // }
 
   return {

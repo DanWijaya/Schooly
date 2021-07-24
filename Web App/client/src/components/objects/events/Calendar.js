@@ -754,7 +754,10 @@ function AgendaToolbar(props) {
     handleOpenCreateDialog,
     currentDate,
     setCurrentDate,
-    role
+    role,
+    setSelectedDateReactCalendar,
+    activeStartDate,
+    setActiveStartDate,
   } = props;
 
   let monthNames = [
@@ -804,15 +807,18 @@ function AgendaToolbar(props) {
   }
 
   const handleChangeDay = (direction) => {
+    let time;
     if (direction === "now") {
-      // setCurrentDateDayMode(getDayStart(new Date()));
-      setCurrentDate(new Date());
+      time = new Date();
     } else if (direction === "next") {
-      // setCurrentDateDayMode(new Date(currentDate.getTime() + 1000 * 60 * 60 * 24));
-      setCurrentDate(new Date(currentDate.getTime() + 1000 * 60 * 60 * 24));
+      time = new Date(currentDate.getTime() + 1000 * 60 * 60 * 24);
     } else {
-      // setCurrentDateDayMode(new Date(currentDate.getTime() - 1000 * 60 * 60 * 24));
-      setCurrentDate(new Date(currentDate.getTime() - 1000 * 60 * 60 * 24));
+      time = new Date(currentDate.getTime() - 1000 * 60 * 60 * 24);
+    }
+    setCurrentDate(time);
+    setSelectedDateReactCalendar(time);
+    if (time.getMonth() !== activeStartDate.getMonth() || time.getFullYear() !== activeStartDate.getFullYear()) {
+      setActiveStartDate(new Date(time.getFullYear(), time.getMonth(), 1, 0, 0, 0, 0));
     }
   }
 
@@ -1414,7 +1420,7 @@ function EventDialog(props) {
     getAllEvents,
     downloadFileEvent,
     viewFileEvent,
-    role
+    user
   } = props;
   const roleConverter = {
     Admin: "Pengelola",
@@ -1517,24 +1523,21 @@ function EventDialog(props) {
       start_date,
       end_date,
       to,
-      description
+      description,
+      author_id: user._id
     };
-    setOpenUploadDialog(true);
-    // new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     console.log("hello");
-    //     resolve();
-    //   }, 4000);
-    // })
-    createEvent(formData, eventData)
-      .then(() => {
-        setUploadSuccess(true);
-        getAllEvents();
-      })
-      .catch((err) => {
-        setOpenUploadDialog(false);
-        setErrors(err);
-      });
+    if (Object.values(errors).every((error) => (!error))) {
+      setOpenUploadDialog(true);
+      createEvent(formData, eventData)
+        .then(() => {
+          setUploadSuccess(true);
+          getAllEvents();
+        })
+        .catch((err) => {
+          setOpenUploadDialog(false);
+          setErrors(err);
+        });
+    }
   };
 
   const handleUpdateEvent = () => {
@@ -1562,24 +1565,20 @@ function EventDialog(props) {
       to,
       description
     };
-    setOpenUploadDialog(true);
-    // new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     console.log("hello");
-    //     resolve();
-    //   }, 4000);
-    // })
-    updateEvent(formData, fileLampiranToDelete, eventData, selectedEventInfo._id)
-      .then(() => {
-        setUploadSuccess(true);
-        getAllEvents();
-      })
-      .catch((err) => {
-        setOpenUploadDialog(false);
-        setFileLampiran([...originalFileLampiran, ...fileLampiranToAdd]);
-        setFileLampiranToDelete([]);
-        setErrors(err);
-      });
+    if (Object.values(errors).every((error) => (!error))) {
+      setOpenUploadDialog(true);
+      updateEvent(formData, fileLampiranToDelete, eventData, selectedEventInfo._id)
+        .then(() => {
+          setUploadSuccess(true);
+          getAllEvents();
+        })
+        .catch((err) => {
+          setOpenUploadDialog(false);
+          setFileLampiran([...originalFileLampiran, ...fileLampiranToAdd]);
+          setFileLampiranToDelete([]);
+          setErrors(err);
+        });
+    }
   };
 
   // DATETIME PICKER
@@ -1592,7 +1591,7 @@ function EventDialog(props) {
     if (newStatus) {
       // jika diset ke sepanjang hari, ...
       
-      setErrors({ ...errors, start_date_submission: undefined, end_date_submission: undefined });
+      setErrors({ ...errors, start_date_custom: undefined, end_date_custom: undefined });
 
       // di mode sepanjang hari, hanya tanggal yang ditampilkan di datetime picker. 
       // waktu tidak ditampilkan dan akan diset menjadi 00:00 (untuk start date) - 23:59 (untuk end date)
@@ -1796,6 +1795,16 @@ function EventDialog(props) {
     setErrors({ ...errors, start_date_submission: undefined });
     
     let startDate = date;
+    if (isValidDateTime(startDate) && isValidDateTime(end_date)) {
+      if (end_date.getTime() < startDate.getTime()) {
+        setErrors({ ...errors, start_date_custom: "Batas waktu harus sebelum Waktu Selesai" });
+      } else {
+        setErrors({ ...errors, start_date_custom: undefined, end_date_custom: undefined });
+      }
+    } else {
+      setErrors({ ...errors, start_date_custom: undefined });
+    }
+
     if (isAllDay) {
       // ini perlu ditambahkan karena onchange pada date picker dapat mengubah nilai waktu (ga ngerti kenapa)
       startDate.setHours(0, 0, 0, 0);
@@ -1804,9 +1813,17 @@ function EventDialog(props) {
   };
 
   const handleEndDateChange = (date) => {
-    setErrors({ ...errors, end_date_submission: undefined });
-
     let endDate = date;
+    if (isValidDateTime(start_date) && isValidDateTime(endDate)) {
+      if (endDate.getTime() < start_date.getTime()) {
+        setErrors({ ...errors, end_date_custom: "Batas waktu harus setelah Waktu Mulai" });
+      } else { 
+        setErrors({ ...errors, start_date_custom: undefined, end_date_custom: undefined });
+      }
+    } else {
+      setErrors({ ...errors, end_date_custom: undefined });
+    }
+
     if (isAllDay) {
       // ini perlu ditambahkan karena onchange pada date picker dapat mengubah nilai waktu (ga ngerti kenapa)
       endDate.setHours(23, 59, 59, 999);
@@ -2103,7 +2120,7 @@ function EventDialog(props) {
         <>
           <div className={classes.view_dialogTopDiv}>
             {
-              role === "Admin"
+              user.role === "Admin"
                 ?
                 <>
                   <LightTooltip title="Sunting">
@@ -2348,13 +2365,14 @@ function EventDialog(props) {
                             setErrors({ ...errors, start_date_picker: err });
                           }
                         }}
+                        error={errors.start_date_custom || errors.start_date_picker}
                         open={openStartDateTimePicker}
                         onOpen={() => { handleOpenStartPicker(isAllDay) }}
                         onClose={() => { handleCloseStartPicker(isAllDay) }}
                       />
                       <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
-                        {errors.start_date_submission
-                          ? <FormHelperText variant="outlined" error>{errors.start_date_submission}</FormHelperText>
+                        {errors.start_date_custom
+                          ? <FormHelperText variant="outlined" error>{errors.start_date_custom}</FormHelperText>
                           : errors.start_date_picker
                             ? <FormHelperText variant="outlined" error>{errors.start_date_picker}</FormHelperText>
                             : null}
@@ -2430,13 +2448,14 @@ function EventDialog(props) {
                             setErrors({ ...errors, end_date_picker: err });
                           }
                         }}
+                        error={errors.end_date_custom || errors.end_date_picker}
                         open={openEndDateTimePicker}
                         onOpen={() => { handleOpenEndPicker(isAllDay) }}
                         onClose={() => { handleCloseEndPicker(isAllDay) }}
                       />
                       <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
-                        {errors.end_date_submission
-                          ? <FormHelperText variant="outlined" error>{errors.end_date_submission}</FormHelperText>
+                        {errors.end_date_custom
+                          ? <FormHelperText variant="outlined" error>{errors.end_date_custom}</FormHelperText>
                           : errors.end_date_picker
                             ? <FormHelperText variant="outlined" error>{errors.end_date_picker}</FormHelperText>
                             : null}
@@ -2887,7 +2906,7 @@ function Calendar(props) {
   const classId = user.kelas;
 
   const { all_user_files } = props.filesCollection;
-  const { all_subjects_map, /* all_subjects */ } = props.subjectsCollection;
+  const { all_subjects_map } = props.subjectsCollection;
   const { all_assessments } = props.assessmentsCollection;
   const { selectedClasses, all_classes } = props.classesCollection;
   const { allEvents } = props.eventsCollection;
@@ -4122,6 +4141,12 @@ function Calendar(props) {
   }
 
   const handleChangeMode = (event) => {
+    if (event.target.value === "Day") {
+      setSelectedDateReactCalendar(currentDate);
+      if (currentDate.getMonth() !== activeStartDate.getMonth() || currentDate.getFullYear() !== activeStartDate.getFullYear()) {
+        setActiveStartDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0));
+      }
+    }
     setMode(event.target.value);
   }
 
@@ -4133,6 +4158,9 @@ function Calendar(props) {
 
   const handleClickReactCalendar = (date) => {
     setSelectedDateReactCalendar(date);
+    if (date.getFullYear() !== activeStartDate.getFullYear() || date.getMonth() !== activeStartDate.getMonth()) {
+      setActiveStartDate(new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0));
+    }
     setCurrentDate(date);
     setMode("Day");
   }
@@ -4822,7 +4850,7 @@ function Calendar(props) {
             handleSetUnmountEventDialog={handleSetUnmountEventDialog}
             viewFileEvent={viewFileEvent}
             showSnackbar={showSnackbar}
-            role={role}
+            user={user}
           />
       }
 
@@ -4835,6 +4863,9 @@ function Calendar(props) {
           handleOpenCreateDialog={handleOpenCreateDialog}
           currentDate={currentDate}
           setCurrentDate={setCurrentDate}
+          setSelectedDateReactCalendar={setSelectedDateReactCalendar}
+          activeStartDate={activeStartDate}
+          setActiveStartDate={setActiveStartDate}
         />
         {
           mode === "Day"

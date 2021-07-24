@@ -598,7 +598,7 @@ class EditAssessment extends Component {
     });
 
     // jika soal dan bobot sudah lengkap dan benar, submit
-    if (invalidQuestionIndex.length === 0 && completeWeight) {
+    if (invalidQuestionIndex.length === 0 && completeWeight && Object.values(this.state.errors).every((error) => (!error))) {
       let longtext;
       if (typeCount.get("longtext") === 0) {
         longtext = null;
@@ -694,14 +694,41 @@ class EditAssessment extends Component {
     this.setState({ openDeleteDialog: false });
   };
 
+  isValidDateTime = (d) => {
+    return d instanceof Date && !isNaN(d);
+  };
+
   onChange = (e, otherfield = null) => {
-    let field = e.target?.id ? e.target.id : otherfield;
+    let field = e?.target?.id ? e.target.id : otherfield;
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
 
     if (otherfield) {
       if (otherfield === "end_date" || otherfield === "start_date" || otherfield === "post_date") {
+
+        if (otherfield === "start_date") {
+          if (this.isValidDateTime(e) && this.isValidDateTime(this.state.end_date)) {
+            if (this.state.end_date.getTime() < e.getTime()) {
+              this.setState({ errors: { ...this.state.errors, start_date_custom: "Batas waktu harus sebelum Waktu Selesai Pengerjaan" } });
+            } else {
+              this.setState({ errors: { ...this.state.errors, start_date_custom: null, end_date_custom: null } });
+            }
+          } else {
+            this.setState({ errors: { ...this.state.errors, start_date_custom: null } });
+          }
+        } else if (otherfield === "end_date") {
+          if (this.isValidDateTime(e) && this.isValidDateTime(this.state.start_date)) {
+            if (e.getTime() < this.state.start_date.getTime()) {
+              this.setState({ errors: { ...this.state.errors, end_date_custom: "Batas waktu harus setelah Waktu Mulai Pengerjaan" } });
+            } else {
+              this.setState({ errors: { ...this.state.errors, start_date_custom: null, end_date_custom: null } });
+            }
+          } else {
+            this.setState({ errors: { ...this.state.errors, end_date_custom: null } });
+          }
+        }
+
         this.setState({ [otherfield]: e });
       } else if (otherfield === "subject") { // jika guru memilih mata pelajaran
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
@@ -1836,13 +1863,15 @@ class EditAssessment extends Component {
                                   this.setState({ errors: { ...errors, start_date: err } });
                                 }
                               }}
+                              error={errors.start_date_custom || errors.start_date}
                             />
-                            {errors.start_date
-                              ?
-                              <div className={classes.zeroHeightHelperText}>
-                                <FormHelperText variant="outlined" error>{errors.start_date}</FormHelperText>
-                              </div>
-                              : null}
+                            <div className={classes.zeroHeightHelperText}>
+                              {errors.start_date_custom
+                                ? <FormHelperText variant="outlined" error>{errors.start_date_custom}</FormHelperText>
+                                : errors.start_date
+                                  ? <FormHelperText variant="outlined" error>{errors.start_date}</FormHelperText>
+                                  : null}
+                            </div>
                           </MuiPickersUtilsProvider>
                         </Grid>
                         <Grid item xs={12} md={6} className={classes.customSpacing}>
@@ -1879,13 +1908,15 @@ class EditAssessment extends Component {
                                   this.setState({ errors: { ...errors, end_date: err } });
                                 }
                               }}
+                              error={errors.end_date_custom || errors.end_date}
                             />
-                            {errors.end_date
-                              ?
-                              <div className={classes.zeroHeightHelperText}>
-                                <FormHelperText variant="outlined" error>{errors.end_date}</FormHelperText>
-                              </div>
-                              : null}
+                            <div className={classes.zeroHeightHelperText}>
+                              {errors.end_date_custom
+                                ? <FormHelperText variant="outlined" error>{errors.end_date_custom}</FormHelperText>
+                                : errors.end_date
+                                  ? <FormHelperText variant="outlined" error>{errors.end_date}</FormHelperText>
+                                  : null}
+                            </div>
                           </MuiPickersUtilsProvider>
                         </Grid>
                       </Grid>
