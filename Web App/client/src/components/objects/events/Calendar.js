@@ -349,7 +349,9 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px",
   },
   blueChip: {
-    backgroundColor: theme.palette.primary.main,
+    // TODO ganti balik backgroundColor nya jadi primary main
+    backgroundColor: "rgba(0,0,0,0.1)",
+    // backgroundColor: theme.palette.primary.main,
     borderRadius: "3px",
     position: "absolute",
     overflow: "hidden",
@@ -362,7 +364,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   horizontalLine: {
-    border: "rgba(224, 224, 224, 1) .25px solid",
+    // border: "rgba(224, 224, 224, 1) .25px solid",
     position: "relative",
     "&:after": {
       content: "",
@@ -2356,6 +2358,7 @@ function LampiranFile(props) {
 const MINIMUM_DURATION_MILLISECOND = 30 * 60 * 1000;
 const TASK_DURATION_MILLISECOND = 30 * 60 * 1000;
 const ROW_HEIGHT = 90;
+const BOTTOM_PADDING = 2;
 
 function Calendar(props) {
   document.title = "Schooly | Kalender";
@@ -2432,6 +2435,7 @@ function Calendar(props) {
   }
 
   const [tileRows, setTileRows] = React.useState([]);
+  const [maxTreeHeight, setMaxTreeHeight] = React.useState([]);
   const [allDayItems, setAllDayItems] = React.useState([]);
 
   React.useEffect(() => {
@@ -2668,10 +2672,11 @@ function Calendar(props) {
       menentukan lebar setiap tile. ide:
       - tile = node pada tree
       - setiap tile paling kiri = root sebuah tree
-      - definisi height yang digunakan: misal ada 1 root dengan 1 child node. height tree ini adalah 1
+      - definisi height yang digunakan: tinggi tree yang hanya ada root = 0, tinggi tree yang ada 1 parent node dan 1 child node = 1
       - lebar tile = lebar layar / (height + 1)
     */
     let firstRoot = true;
+    let maxTreeHeight = 1;
     // traverse semua data/tile
     for (let i = 0; i <= data.length - 1; i++) {
       if (data[i].startColumn === 0) {
@@ -2701,6 +2706,9 @@ function Calendar(props) {
         let treeHeight = null;
         if (width === null) {
           treeHeight = getTreeHeight(data, columns, 0, data[i]);
+          if (treeHeight > maxTreeHeight) {
+            maxTreeHeight = treeHeight;
+          }
           // jika height > 3, set jadi 3 karena lebar terkecil untuk suatu tile adalah 1/4 dari layar
           if (treeHeight > 3) {
             treeHeight = 3;
@@ -2722,6 +2730,8 @@ function Calendar(props) {
       }
     }
 
+    setMaxTreeHeight(maxTreeHeight);
+    
     let tileRows = [];
     for (let d of data) {
       if (isSameDate(d.start_date, currentDate)) {
@@ -3899,6 +3909,12 @@ function Calendar(props) {
                     <TableCell component="th" scope="row" className={classes.dayTableCell}>
                       <Typography color="textSecondary" variant="body2" style={{width: "32px"}}>{row}</Typography>
                       <div className={classes.horizontalLine}>
+                        <div
+                          style={{
+                            border: "rgba(224, 224, 224, 1) .25px solid",
+                            width: `calc(100% + ${maxTreeHeight <= 3 ? 0 : (maxTreeHeight - 3)} * 25%)`
+                          }}
+                        />
                         {
                           tileRows[index] ?
                             tileRows[index].map((obj) => {
@@ -3908,7 +3924,7 @@ function Calendar(props) {
                               if(i > 1) {
                                 widthPadding = 10 * (i-1) / i;
                               }
-                              let height = (((obj.end_date_epoch - obj.start_date_epoch) / (1000 * 60)) / 60 * ROW_HEIGHT) - 2;
+                              let height = (((obj.end_date_epoch - obj.start_date_epoch) / (1000 * 60)) / 60 * ROW_HEIGHT) - BOTTOM_PADDING;
                               let minHeight = ((MINIMUM_DURATION_MILLISECOND) / (1000 * 60)) / 60 * ROW_HEIGHT;
                               if (height < minHeight + verticalPadding) {
                                 verticalPadding = 2;
