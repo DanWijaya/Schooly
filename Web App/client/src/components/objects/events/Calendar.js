@@ -349,9 +349,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px",
   },
   blueChip: {
-    // TODO ganti balik backgroundColor nya jadi primary main
-    backgroundColor: "rgba(0,0,0,0.1)",
-    // backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.primary.main,
     borderRadius: "3px",
     position: "absolute",
     overflow: "hidden",
@@ -364,7 +362,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   horizontalLine: {
-    // border: "rgba(224, 224, 224, 1) .25px solid",
     position: "relative",
     "&:after": {
       content: "",
@@ -691,7 +688,6 @@ function ListAssessments(props) {
             <BsClipboardData />
           </Avatar>
         );
-      // let workStatus = "Belum Ditempuh"
       if (type === "Kuis") {
         if (
           (!category ||
@@ -1147,9 +1143,6 @@ function EventDialog(props) {
         // jika tanggal dan waktu valid
 
         // set waktu mulai ke 00:00:00. tanggal tidak diubah 
-        // let start = new Date(start_date.getTime()); // membuat salinan
-        // start.setHours(0, 0, 0);
-        // setStartDate(start);
         setStartDate(getDayStart(start_date));
 
         // simpan waktu
@@ -1198,9 +1191,6 @@ function EventDialog(props) {
 
         } else {
           // jika isi textfield picker kosong,
-          // let start = new Date();
-          // start.setHours(0, 0, 0);
-          // setStartDate(start);
           setStartDate(getDayStart(new Date()));
 
           lastSelectedTime.current.start_date = null;
@@ -1211,9 +1201,6 @@ function EventDialog(props) {
         // jika tanggal dan waktu valid
 
         // set waktu selesai ke 23:59:59. tanggal tidak diubah 
-        // let end = new Date(end_date.getTime()); // membuat salinan
-        // end.setHours(23, 59, 59);
-        // setEndDate(end);
         setEndDate(getDayEnd(end_date));
 
         // simpan waktu
@@ -1240,7 +1227,6 @@ function EventDialog(props) {
           // ga pakai new Date(int year, int month, int day) karena nilai month > 11, month < 0, day < 1, dan day > 31 atau 30 masih
           // diterima dan menghasilkan Date yang valid
           let parsedDate = new Date(`${year}-${month}-${day}`);
-          // let parsedDate = new Date(Number(year), Number(month) - 1, Number(day));
 
           // jika tanggal tidak valid, set tanggal mulai menjadi tanggal sekarang 
           setEndDate(isValidDateTime(parsedDate) ? parsedDate : new Date());
@@ -1262,9 +1248,6 @@ function EventDialog(props) {
         } else {
           // jika isi textfield picker kosong,
 
-          // let end = new Date();
-          // end.setHours(23, 59, 59);
-          // setEndDate(end);
           setEndDate(getDayEnd(new Date()));
 
           lastSelectedTime.current.end_date = null;
@@ -1755,7 +1738,7 @@ function EventDialog(props) {
             className={classes.dialogContent}
           >
             <CustomUploadDialog 
-              // handleWheel={handleUploadDialogWheel} 
+              // handleWheel={handleUploadDialogWheel}
               openUploadDialog={openUploadDialog}
               handleUploadSuccess={handleCloseEventDialog}
               uploadSuccess={uploadSuccess}
@@ -2455,32 +2438,7 @@ function Calendar(props) {
   }, []);
 
   React.useEffect(() => {
-    // test data
-    // let testdata = [
-    //   [1, 0, 3, 0],
-    //   [1, 20, 2, 0],
-    //   [1, 40, 2, 20],
-    //   [2, 0, 6, 0],
-    //   [2, 20, 4, 0],
-    //   [5, 40, 6, 40],
-    //   [6, 30, 6, 50],
-    //   [6, 35, 7, 50],
-    // ].map((elm, index) => {
-    //   return {
-    //     _id: index,
-    //     type: "Event",
-    //     start_date: new Date(2021, 6,16, elm[0], elm[1]).toLocaleString(),
-    //     end_date: new Date(2021, 6, 16, elm[2], elm[3]).toLocaleString(),
-    //     data: {
-    //       start_date: new Date(2021, 6, 16, elm[0], elm[1]).toLocaleString(),
-    //       end_date: new Date(2021, 6, 16, elm[2], elm[3]).toLocaleString(),
-    //       name: index + 1
-    //     }
-    //   }
-    // });
-
     if (mode === "Day") {
-
       generateTiles(currentDate);
 
       let start = getDayStart(currentDate);
@@ -4076,7 +4034,6 @@ function Calendar(props) {
                     classes={classes}
                     all_subjects_map={all_subjects_map}
                     all_teachers={all_teachers}
-                    // getSelectedDate={getSelectedDate}
                     date={new Date(column)}
                     mainCounter={mainCounter}
                     handleChangeCounter={handleChangeCounter}

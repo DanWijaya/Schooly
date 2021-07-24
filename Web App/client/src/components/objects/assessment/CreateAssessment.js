@@ -560,8 +560,6 @@ class CreateAssessment extends Component {
         
         if (otherfield === "start_date") {
           if (this.isValidDateTime(e) && this.isValidDateTime(this.state.end_date)) {
-            console.log(e)
-            console.log(this.state.end_date)
             if (this.state.end_date.getTime() < e.getTime()) {
               this.setState({ errors: { ...this.state.errors, start_date_custom: "Batas waktu harus sebelum Waktu Selesai Pengerjaan" } });
             } else {
@@ -572,8 +570,6 @@ class CreateAssessment extends Component {
           }
         } else if (otherfield === "end_date") {
           if (this.isValidDateTime(e) && this.isValidDateTime(this.state.start_date)) {
-            console.log(this.state.start_date)
-            console.log(e)
             if (e.getTime() < this.state.start_date.getTime()) {
               this.setState({ errors: { ...this.state.errors, end_date_custom: "Batas waktu harus setelah Waktu Mulai Pengerjaan" } });
             } else {
