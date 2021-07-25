@@ -349,7 +349,9 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px",
   },
   blueChip: {
-    backgroundColor: theme.palette.primary.main,
+    // TODO ganti warna  
+    backgroundColor: 'rgba(0,0,0,0.1)',
+    // backgroundColor: theme.palette.primary.main,
     borderRadius: "3px",
     position: "absolute",
     overflow: "hidden",
@@ -2342,6 +2344,7 @@ const MINIMUM_DURATION_MILLISECOND = 30 * 60 * 1000;
 const TASK_DURATION_MILLISECOND = 30 * 60 * 1000;
 const ROW_HEIGHT = 90;
 const BOTTOM_PADDING = 2;
+const TILE_HORIZONTAL_MARGIN = 10;
 
 function Calendar(props) {
   document.title = "Schooly | Kalender";
@@ -2418,7 +2421,8 @@ function Calendar(props) {
   }
 
   const [tileRows, setTileRows] = React.useState([]);
-  const [maxTreeHeight, setMaxTreeHeight] = React.useState([]);
+  const [maxTreeHeight, setMaxTreeHeight] = React.useState(0);
+  const [highestTreeWidth, setHighestTreeWidth] = React.useState(0);
   const [allDayItems, setAllDayItems] = React.useState([]);
 
   React.useEffect(() => {
@@ -2501,6 +2505,45 @@ function Calendar(props) {
   function generateTiles(currentDate) {
     let start = getDayStart(currentDate).getTime();
     let end = getDayEnd(currentDate).getTime();
+    
+    // TODO hapus test data
+    // test data
+    let todayY = 2021;
+    let todayM = 6;
+    let todayD = 25;
+    let testdata = [
+      [0, 0, 1, 0],
+      [0, 0, 1, 0],
+      [0, 0, 9, 0],
+      [0, 0, 9, 0],
+      [2, 0, 3, 0],
+      [2, 0, 3, 0],
+      [2, 0, 3, 0],
+      [2, 0, 3, 0],
+      [2, 0, 3, 0],
+      // [1, 20, 2, 0],
+      // [1, 40, 2, 20],
+      // [2, 0, 6, 0],
+      // [2, 20, 4, 0],
+      // [5, 40, 6, 40],
+      // [6, 30, 6, 50],
+      // [6, 35, 7, 50],
+    ].map((elm, index) => {
+      return {
+        _id: index,
+        type: "Event",
+        start_date: new Date(todayY, todayM, todayD, elm[0], elm[1]).toLocaleString(),
+        end_date: new Date(todayY, todayM, todayD, elm[2], elm[3]).toLocaleString(),
+        data: {
+          start_date: new Date(todayY, todayM, todayD, elm[0], elm[1]).toLocaleString(),
+          end_date: new Date(todayY, todayM, todayD, elm[2], elm[3]).toLocaleString(),
+          name: index + 1
+        }
+      }
+    });
+
+
+    // memisahkan tile yang sepanjang hari dengan yang tidak sepanjang hari
     let allDayItems = [];
     let filteredData = generateDayModeList(currentDate).filter((item) => {
       let show = true;
@@ -2515,10 +2558,31 @@ function Calendar(props) {
       return show;
     });
     setAllDayItems(allDayItems);
+
+    // TODO ganti balik jadi pakai filteredData data
     setTileRows(placeDayModeTiles(filteredData, currentDate));
+    // setTileRows(placeDayModeTiles(testdata, currentDate));
   }
 
   function placeDayModeTiles(arrayOfObject, currentDate) {
+    /*  
+      bentuk arrayOfObject:
+      {
+        _id: <Assessment/Task/Event>._id,
+        type: "Event"/"Tugas"/"Ujian"/"Kuis",
+        data: dokumen suatu <Assessment/Task/Event> dari db,
+
+        // jika type === bukan "Tugas"
+        start_date: <Assessment/Event>.start_date, // masih dalam bentuk string
+        end_date: <Assessment/Event>.end_date, // masih dalam bentuk string
+        // kedua nilai untuk atribut ini akan diubah dan nilainya bisa berbeda dengan nilai "end_date" dan "start_date" pada atribut "data".
+        // kedua nilai atribut ini akan digunakan untuk menghitung tinggi tile untuk object ini.
+        
+        // jika type === "Tugas"
+        deadline: <Task>.deadline, // masih dalam bentuk string
+        // object tugas akan ditambahkan atribut "start_date" dan "end_date" yang dihitung berdasarkan atribut ini
+      }
+    */
     let data = arrayOfObject.map((elm) => {
       let start_date;
       let end_date;
@@ -2634,7 +2698,8 @@ function Calendar(props) {
       - lebar tile = lebar layar / (height + 1)
     */
     let firstRoot = true;
-    let maxTreeHeight = 1;
+    let maxTreeHeight = 0;
+    let highestTreeWidth = 0;
     // traverse semua data/tile
     for (let i = 0; i <= data.length - 1; i++) {
       if (data[i].startColumn === 0) {
@@ -2660,17 +2725,13 @@ function Calendar(props) {
           }
         }
 
-        // jika root ini tidak intersect dengan salah satu node dari tree sebelumnya
-        let treeHeight = null;
-        if (width === null) {
-          treeHeight = getTreeHeight(data, columns, 0, data[i]);
-          if (treeHeight > maxTreeHeight) {
-            maxTreeHeight = treeHeight;
-          }
-          // jika height > 3, set jadi 3 karena lebar terkecil untuk suatu tile adalah 1/4 dari layar
-          if (treeHeight > 3) {
-            treeHeight = 3;
-          }
+        let treeHeight = getTreeHeight(data, columns, 0, data[i]);
+        if (treeHeight > maxTreeHeight) {
+          maxTreeHeight = treeHeight;
+
+          // treeHeight ini akan dipakai untuk menghitung width jika root ini 
+          // tidak intersect dengan salah satu node dari tree sebelumnya
+          highestTreeWidth = width ?? (100 / ((treeHeight > 3 ? 3 : treeHeight) + 1));
         }
 
         // set lebar semua tile di tree ini
@@ -2678,7 +2739,7 @@ function Calendar(props) {
         subtree.forEach((value) => {
           for (let j = 0; j <= data.length - 1; j++) {
             if (data[j]._id === value) {
-              data[j].width = width ?? (100 / (treeHeight + 1));
+              data[j].width = width ?? (100 / ((treeHeight > 3 ? 3 : treeHeight) + 1));
               break;
             }
           }
@@ -2688,6 +2749,7 @@ function Calendar(props) {
       }
     }
 
+    setHighestTreeWidth(highestTreeWidth);
     setMaxTreeHeight(maxTreeHeight);
     
     let tileRows = [];
@@ -3869,19 +3931,32 @@ function Calendar(props) {
                       <div className={classes.horizontalLine}>
                         <div
                           style={{
-                            border: "rgba(224, 224, 224, 1) .25px solid",
-                            width: `calc(100% + ${maxTreeHeight <= 3 ? 0 : (maxTreeHeight - 3)} * 25%)`
+                            paddingRight: maxTreeHeight <= 3 ? undefined : "16px", 
+                            width:
+                              maxTreeHeight <= 3
+                                ? '100%'
+                                : `calc(16px + ${maxTreeHeight * TILE_HORIZONTAL_MARGIN}px + ${(maxTreeHeight + 1)} * (${highestTreeWidth}% - ${TILE_HORIZONTAL_MARGIN * (Math.floor(100 / highestTreeWidth) - 1) / Math.floor(100 / highestTreeWidth)}px))`
                           }}
-                        />
+                        >
+                          {/* tujuan dibuat seperti ini: menambahkan margin di ujung kanan garis horizontal */}
+                          <div
+                            style={{
+                              border: "rgba(224, 224, 224, 1) .25px solid",
+                              width: "100%"
+                            }}
+                          />
+                        </div>
+                        
                         {
                           tileRows[index] ?
                             tileRows[index].map((obj) => {
                               let verticalPadding = 8;
                               let widthPadding = 0;
-                              let i = tileRows[index].length;
+                              let i = Math.floor(100/obj.width);
                               if(i > 1) {
-                                widthPadding = 10 * (i-1) / i;
+                                widthPadding = TILE_HORIZONTAL_MARGIN * (i-1) / i;
                               }
+
                               let height = (((obj.end_date_epoch - obj.start_date_epoch) / (1000 * 60)) / 60 * ROW_HEIGHT) - BOTTOM_PADDING;
                               let minHeight = ((MINIMUM_DURATION_MILLISECOND) / (1000 * 60)) / 60 * ROW_HEIGHT;
                               if (height < minHeight + verticalPadding) {
@@ -3894,7 +3969,7 @@ function Calendar(props) {
                                   className={obj.type === "Event" ? `${classes.hoverPointerCursor} ${classes.blueChip}` : classes.blueChip}
                                   style={{
                                     transform: 
-                                      `translate(calc(100% * ${obj.startColumn} + ${obj.startColumn} * 10px), ${!isSameDate(obj.start_date, currentDate) && isSameDate(obj.end_date, currentDate)
+                                      `translate(calc(100% * ${obj.startColumn} + ${obj.startColumn * TILE_HORIZONTAL_MARGIN}px), ${!isSameDate(obj.start_date, currentDate) && isSameDate(obj.end_date, currentDate)
                                         ? (-1 * getMillisecondDiff(obj.start_date, getDayStart(obj.end_date)) / (1000 * 60)) / 60 * ROW_HEIGHT
                                         : obj.start_date.getMinutes() / 60 * ROW_HEIGHT
                                       }px)`,
