@@ -389,9 +389,6 @@ class EditAssessment extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { selectedAssessments } = nextProps.assessmentsCollection;
 
-    // if (!nextProps.errors) {
-    //   this.handleOpenUploadDialog();
-    // }
     if (Boolean(selectedAssessments) && nextProps.errors) {
       if (Object.keys(selectedAssessments).length !== 0) {
         let weights = {
@@ -710,7 +707,7 @@ class EditAssessment extends Component {
         if (otherfield === "start_date") {
           if (this.isValidDateTime(e) && this.isValidDateTime(this.state.end_date)) {
             if (this.state.end_date.getTime() < e.getTime()) {
-              this.setState({ errors: { ...this.state.errors, start_date_custom: "Batas waktu harus sebelum Waktu Selesai Pengerjaan" } });
+              this.setState({ errors: { ...this.state.errors, start_date_custom: "Harus sebelum Waktu Selesai Pengerjaan" } });
             } else {
               this.setState({ errors: { ...this.state.errors, start_date_custom: null, end_date_custom: null } });
             }
@@ -720,7 +717,7 @@ class EditAssessment extends Component {
         } else if (otherfield === "end_date") {
           if (this.isValidDateTime(e) && this.isValidDateTime(this.state.start_date)) {
             if (e.getTime() < this.state.start_date.getTime()) {
-              this.setState({ errors: { ...this.state.errors, end_date_custom: "Batas waktu harus setelah Waktu Mulai Pengerjaan" } });
+              this.setState({ errors: { ...this.state.errors, end_date_custom: "Harus setelah Waktu Mulai Pengerjaan" } });
             } else {
               this.setState({ errors: { ...this.state.errors, start_date_custom: null, end_date_custom: null } });
             }
@@ -1850,7 +1847,7 @@ class EditAssessment extends Component {
                               ampm={false}
                               okLabel="Simpan"
                               cancelLabel="Batal"
-                              minDateMessage="Batas waktu harus waktu yang akan datang"
+                              minDateMessage="Harus waktu yang akan datang"
                               invalidDateMessage="Format tanggal tidak benar"
                               id="workTimeStart"
                               value={this.state.start_date}
@@ -1899,7 +1896,7 @@ class EditAssessment extends Component {
                               helperText={null}
                               value={this.state.end_date}
                               minDate={this.state.start_date}
-                              minDateMessage="Batas waktu harus setelah Waktu Mulai Pengerjaan"
+                              minDateMessage="Harus setelah Waktu Mulai Pengerjaan"
                               onChange={(date) =>
                                 this.onChange(date, "end_date")
                               }

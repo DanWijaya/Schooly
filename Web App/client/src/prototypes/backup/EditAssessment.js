@@ -1047,7 +1047,7 @@ class EditAssessment extends Component {
                               ampm={false}
                               okLabel="Simpan"
                               cancelLabel="Batal"
-                              minDateMessage="Batas waktu harus waktu yang akan datang"
+                              minDateMessage="Harus waktu yang akan datang"
                               invalidDateMessage="Format tanggal tidak benar"
                               id="workTime"
                               value={this.state.start_date}
@@ -1081,7 +1081,7 @@ class EditAssessment extends Component {
                               id="workTime"
                               value={this.state.end_date}
                               minDate={this.state.start_date}
-                              minDateMessage="Batas waktu harus setelah Waktu Mulai Pengerjaan"
+                              minDateMessage="Harus setelah Waktu Mulai Pengerjaan"
                               onChange={(date) =>
                                 this.onChange(date, "end_date")
                               }

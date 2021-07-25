@@ -1326,7 +1326,7 @@ function EventDialog(props) {
     let startDate = date;
     if (isValidDateTime(startDate) && isValidDateTime(end_date)) {
       if (end_date.getTime() < startDate.getTime()) {
-        setErrors({ ...errors, start_date_custom: "Batas waktu harus sebelum Waktu Selesai" });
+        setErrors({ ...errors, start_date_custom: "Harus sebelum Waktu Selesai" });
       } else {
         setErrors({ ...errors, start_date_custom: undefined, end_date_custom: undefined });
       }
@@ -1345,7 +1345,7 @@ function EventDialog(props) {
     let endDate = date;
     if (isValidDateTime(start_date) && isValidDateTime(endDate)) {
       if (endDate.getTime() < start_date.getTime()) {
-        setErrors({ ...errors, end_date_custom: "Batas waktu harus setelah Waktu Mulai" });
+        setErrors({ ...errors, end_date_custom: "Harus setelah Waktu Mulai" });
       } else { 
         setErrors({ ...errors, start_date_custom: undefined, end_date_custom: undefined });
       }
@@ -1820,7 +1820,7 @@ function EventDialog(props) {
                         ampm={false}
                         okLabel="Simpan"
                         cancelLabel="Batal"
-                        minDateMessage="Batas waktu harus waktu yang akan datang"
+                        minDateMessage="Harus waktu yang akan datang"
                         invalidDateMessage="Format tanggal tidak benar"
                         value={start_date}
                         placeholder="Isi Waktu Mulai"
@@ -1903,7 +1903,7 @@ function EventDialog(props) {
                         okLabel="Simpan"
                         cancelLabel="Batal"
                         minDate={start_date}
-                        minDateMessage="Batas waktu harus setelah Waktu Mulai"
+                        minDateMessage="Harus setelah Waktu Mulai"
                         invalidDateMessage="Format tanggal tidak benar"
                         value={end_date}
                         placeholder="Isi Waktu Selesai"

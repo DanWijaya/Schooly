@@ -425,7 +425,7 @@ class Register extends Component {
                     disableFuture
                     label="Tanggal Lahir"
                     inputVariant="outlined"
-                    maxDateMessage="Batas waktu harus waktu yang akan datang"
+                    maxDateMessage="Harus waktu yang akan datang"
                     invalidDateMessage="Format tanggal tidak benar"
                     format="dd/MMMM/yyyy"
                     okLabel="Simpan"

@@ -329,7 +329,7 @@ function ProfileDataEditorDialog(props) {
                           disableFuture
                           label="Tanggal Lahir"
                           inputVariant="outlined"
-                          maxDateMessage="Batas waktu harus waktu yang akan datang"
+                          maxDateMessage="Harus waktu yang akan datang"
                           invalidDateMessage="Format tanggal tidak benar"
                           format="dd/MM/yyyy"
                           okLabel="Simpan"
