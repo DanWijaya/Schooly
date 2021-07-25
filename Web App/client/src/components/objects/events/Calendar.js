@@ -224,7 +224,20 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   holidayTile: {
-    color: "#d10000"
+    color: "#d10000",
+    "&:hover": {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "absolute",
+      width: "1.9rem",
+      height: "1.9rem",
+      backgroundColor: "#EFEFEF",
+      [theme.breakpoints.down("sm")]: {
+        width: "1.6rem",
+        height: "1.6rem",
+      }
+    }
   },
   calendarTile: {
     borderRadius: "100%",
@@ -258,7 +271,12 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px 4px"
   },
   holidayMonthDateTile: {
-    color: "#d10000"
+    color: "#d10000",
+    padding: "2px 5px",
+    "&:focus, &:hover, &:active": {
+      background: "#e6e6e6",
+      cursor: "pointer"
+    },
   },
   monthAgendaCell: {
     width: "14.2875%",
@@ -2880,7 +2898,7 @@ function Calendar(props) {
 
           if (date.getDay() === 6 && date.getMonth() == activeStartDate.getMonth()) {
             return (
-              <div style={{color: "black"}}>
+              <div style={{color: "black"}} className={classes.notSelectedTile}>
                 <abbr>
                   {date.getDate()}
                 </abbr>
@@ -4138,7 +4156,7 @@ function Calendar(props) {
                 {(index === 0) ?
                   (columnIndex === 6) ?
                     <Hidden xsDown>
-                      <Typography color="textSecondary" variant="body2" align="center" className={classes.holidayTile}>{dayNames[columnIndex]}</Typography>
+                      <Typography color="textSecondary" variant="body2" align="center" style={{color: "#d10000"}}>{dayNames[columnIndex]}</Typography>
                     </Hidden>
                   : 
                     <Hidden xsDown>
