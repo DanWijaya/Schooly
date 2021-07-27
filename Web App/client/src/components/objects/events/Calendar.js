@@ -367,9 +367,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px",
   },
   blueChip: {
-    // TODO ganti warna  
-    backgroundColor: 'rgba(0,0,0,0.1)',
-    // backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.primary.main,
     borderRadius: "3px",
     position: "absolute",
     overflow: "hidden",
@@ -2523,44 +2521,7 @@ function Calendar(props) {
   function generateTiles(currentDate) {
     let start = getDayStart(currentDate).getTime();
     let end = getDayEnd(currentDate).getTime();
-    
-    // TODO hapus test data
-    // test data
-    let todayY = 2021;
-    let todayM = 6;
-    let todayD = 25;
-    let testdata = [
-      [0, 0, 1, 0],
-      [0, 0, 1, 0],
-      [0, 0, 9, 0],
-      [0, 0, 9, 0],
-      [2, 0, 3, 0],
-      [2, 0, 3, 0],
-      [2, 0, 3, 0],
-      [2, 0, 3, 0],
-      [2, 0, 3, 0],
-      // [1, 20, 2, 0],
-      // [1, 40, 2, 20],
-      // [2, 0, 6, 0],
-      // [2, 20, 4, 0],
-      // [5, 40, 6, 40],
-      // [6, 30, 6, 50],
-      // [6, 35, 7, 50],
-    ].map((elm, index) => {
-      return {
-        _id: index,
-        type: "Event",
-        start_date: new Date(todayY, todayM, todayD, elm[0], elm[1]).toLocaleString(),
-        end_date: new Date(todayY, todayM, todayD, elm[2], elm[3]).toLocaleString(),
-        data: {
-          start_date: new Date(todayY, todayM, todayD, elm[0], elm[1]).toLocaleString(),
-          end_date: new Date(todayY, todayM, todayD, elm[2], elm[3]).toLocaleString(),
-          name: index + 1
-        }
-      }
-    });
-
-
+  
     // memisahkan tile yang sepanjang hari dengan yang tidak sepanjang hari
     let allDayItems = [];
     let filteredData = generateDayModeList(currentDate).filter((item) => {
@@ -2576,10 +2537,7 @@ function Calendar(props) {
       return show;
     });
     setAllDayItems(allDayItems);
-
-    // TODO ganti balik jadi pakai filteredData data
     setTileRows(placeDayModeTiles(filteredData, currentDate));
-    // setTileRows(placeDayModeTiles(testdata, currentDate));
   }
 
   function placeDayModeTiles(arrayOfObject, currentDate) {
