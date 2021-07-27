@@ -1001,6 +1001,7 @@ function EventDialog(props) {
   const [end_date, setEndDate] = React.useState(null);
   const [target_role, setTargetRole] = React.useState([]);
   const [description, setDescription] = React.useState("");
+  const [author_id, setAuthorId] = React.useState("");
   const [isAllDay, setAllDay] = React.useState(false);
 
   // LAMPIRAN
@@ -1035,7 +1036,7 @@ function EventDialog(props) {
   React.useEffect(() => {
     if (eventDialogMode === "view") {
       if (Object.keys(selectedEventInfo).length !== 0) {
-        let { _id, name, location, start_date, end_date, to, description } = selectedEventInfo;
+        let { _id, name, location, start_date, end_date, to, description, author_id } = selectedEventInfo;
         start_date = new Date(start_date);
         end_date = new Date(end_date);
         setName(name);
@@ -1044,6 +1045,7 @@ function EventDialog(props) {
         setEndDate(end_date);
         setTargetRole(to);
         setDescription(description);
+        setAuthorId(author_id);
         getFileEvents(_id).then((result) => {
           setFileLampiran(result);
           setOriginalFileLampiran(result)
@@ -1605,7 +1607,7 @@ function EventDialog(props) {
         <>
           <div className={classes.view_dialogTopDiv}>
             {
-              user.role === "Admin"
+              user._id === author_id
                 ?
                 <>
                   <LightTooltip title="Sunting">
