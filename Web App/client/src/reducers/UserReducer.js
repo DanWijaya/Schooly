@@ -3,6 +3,7 @@ import {
   USER_LOADING,
   GET_USERS,
   GET_ALL_TEACHERS,
+  GET_ALL_TEACHERS_MAP,
   GET_ALL_STUDENTS,
   GET_ONE_USER,
   GET_STUDENTS_BY_CLASS,
@@ -17,6 +18,7 @@ const initialState = {
   isAuthenticated: false,
   user: {},
   all_teachers: [],
+  all_teachers_map: new Map(),
   all_students: [],
   students_by_class: [],
   loading: false,
@@ -49,6 +51,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         all_teachers: action.payload,
+      };
+    case GET_ALL_TEACHERS_MAP:
+      return {
+        ...state,
+        all_teachers_map: action.payload,
       };
     case GET_ALL_STUDENTS:
       return {

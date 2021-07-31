@@ -3,28 +3,34 @@ const router = express.Router();
 const keys = require("../../config/keys");
 
 //Load input validation
-const validateTaskInput = require("../../validation/TaskData");
+const {
+  validateTaskInput,
+  validateTaskGrade,
+} = require("../../validation/TaskData");
 // Load Task model
 const Task = require("../../models/Task");
 const Class = require("../../models/Class");
+
+const mongoose = require("mongoose");
 
 //Define create route
 
 router.post("/create", (req, res) => {
   // pakai body parser
   console.log(req.body);
+  console.log("COBA MUNCULIN LAH");
   const { errors, isValid } = validateTaskInput(req.body);
   if (!isValid) {
     console.log("Not Valid");
     return res.status(400).json(errors); // errors ini kan juga json
   }
-
-  Task.findOne({ name: req.body.name, subject: req.body.subject }).then(
-    (task) => {
+  console.log(req.body);
+  Task.findOne({ name: req.body.name, subject: req.body.subject })
+    .then((task) => {
       if (task) {
         return res
           .status(400)
-          .json({ name: "tasks with same name and subject already exist" });
+          .json({ name: "Tugas dengan nama dan mata pelajaran yang sama sudah ada" });
       } else {
         const newTask = new Task(req.body);
         // const newTask = new Task({
@@ -39,13 +45,13 @@ router.post("/create", (req, res) => {
         newTask
           .save()
           .then((task) => {
-            res.json(task);
             console.log("Task is created");
+            res.json(task);
           })
           .catch((err) => console.log(err));
       }
-    }
-  );
+    })
+    .catch((err) => res.status(400).json(err));
 });
 
 //Define View classes route
@@ -78,11 +84,31 @@ router.get("/view/:id", (req, res) => {
   });
 });
 
+router.post("/grade/:id", (req, res) => {
+  let { id } = req.params;
+  console.log(req.body);
+  const { errorsGrade, isValidGrade } = validateTaskGrade(req.body);
+  if (!isValidGrade) {
+    return res.status(400).json(errorsGrade);
+  }
+  let grade = req.body.grade;
+  Task.findById(id, (err, taskData) => {
+    if (!taskData) return res.status(404).send("Task data is not found");
+    //grade kan dia Map (key, value). grade -> (studentId, nilainya)
+    // untuk yang kasi nilai
+    taskData.grades.set(req.body.studentId, grade);
+
+    taskData
+      .save()
+      .then((taskData) => res.json("Grade Task complete"))
+      .catch((err) => res.status(400).send("Unable to find task in database"));
+  });
+});
+
 //Define update routes
-router.post("/update/:id", (req, res) => {
+router.put("/update/:id", (req, res) => {
   let grade = req.body.grade;
   const { errors, isValid } = validateTaskInput(req.body);
-
   if (!isValid) {
     console.log("Not Valid");
     return res.status(400).json(errors);
@@ -95,20 +121,23 @@ router.post("/update/:id", (req, res) => {
     if (!taskData) return res.status(404).send("Task data is not found");
     else {
       // taskData.grades
-      console.log(grade);
-      if (!grade) {
-        // Untuk taskData yang bukan edit atau kasi nilai
-        taskData.name = req.body.name;
-        taskData.deadine = req.body.deadine;
-        taskData.subject = req.body.subject;
-        taskData.class_assigned = req.body.class_assigned;
-        taskData.description = req.body.description;
-        taskData.deadline = req.body.deadline;
-      } else {
-        //grade kan dia Map (key, value). grade -> (studentId, nilainya)
-        // untuk yang kasi nilai
-        taskData.grades.set(req.body.studentId, grade);
-      }
+      // Untuk taskData yang bukan edit atau kasi nilai
+      taskData.name = req.body.name;
+      taskData.deadine = req.body.deadine;
+      taskData.subject = req.body.subject;
+      taskData.class_assigned = req.body.class_assigned;
+      taskData.description = req.body.description;
+      taskData.deadline = req.body.deadline;
+
+      // else {
+      //   const { errorsGrade, isValidGrade } = validateTaskGrade(req.body);
+      //   if (!isValidGrade) {
+      //     return res.status(400).json(errorsGrade);
+      //   }
+      //   //grade kan dia Map (key, value). grade -> (studentId, nilainya)
+      //   // untuk yang kasi nilai
+      //   taskData.grades.set(req.body.studentId, grade);
+      // }
 
       taskData
         .save()
@@ -118,15 +147,125 @@ router.post("/update/:id", (req, res) => {
   });
 });
 
-router.get("/gettasksbysc/:subjectId&:classId", (req, res) => {
+router.get("/view", (req, res) => {
+  const { subjectId, classId } = req.query;
+  let query = {};
+  if (subjectId) {
+    query.subject = subjectId;
+  }
+  if (classId) {
+    query.class_assigned = { $elemMatch: { $eq: classId } };
+  }
+
+  Task.find(query).then((tasks) => {
+    if (!tasks) {
+      return res.status(200).json("Belum ada tugas");
+    } else {
+      return res.json(tasks);
+    }
+  });
+});
+
+/* router.get("/byclass/:classId", (req, res) => {
   Task.find({
-    subject: req.params.subjectId,
     class_assigned: { $elemMatch: { $eq: req.params.classId } },
   }).then((tasks) => {
     if (!tasks) {
       return res.status(200).json("Belum ada tugas");
     } else {
-      return res.json(tasks);
+      return res.status(200).json(tasks);
+    }
+  });
+}); */
+
+router.post("/comment/:taskId", (req, res) => {
+  let comment = req.body;
+
+  Task.findById(req.params.taskId, (err, taskData) => {
+    if (!taskData) {
+      return res.status(404).send("Task data is not found");
+    } else {
+      if (comment.content.length === 0) {
+        res.status(400).json("Isi komentar tidak boleh kosong");
+        return;
+      }
+
+      let newComments = taskData.comments ? [...taskData.comments] : [];
+      comment.createdAt = new mongoose.Types.ObjectId().getTimestamp();
+      newComments.push(comment);
+
+      taskData.comments = newComments;
+      taskData
+        .save()
+        .then(() => {
+          res.json("Create task comment complete")
+        })
+        .catch(() => {
+          res.status(400).send("Unable to create task comment")
+        });
+    }
+  });
+});
+
+router.put("/comment/:taskId", (req, res) => {
+  let { updatedContent, commentId } = req.body;
+
+  Task.findById(req.params.taskId, (err, taskData) => {
+    if (!taskData) {
+      return res.status(404).send("Task data is not found");
+    } else {
+      if (updatedContent.length === 0) {
+        res.status(400).json("Isi komentar tidak boleh kosong");
+        return;
+      }
+
+      let newComments = taskData.comments ? [...taskData.comments] : [];
+      for (let i = 0; i < newComments.length; i++) {
+        if (newComments[i]._id.toString() === commentId) {
+          newComments[i].edited = true;
+          newComments[i].content = updatedContent;
+          break;
+        }
+      }
+
+      taskData.comments = newComments;
+      taskData
+        .save()
+        .then(() => {
+          res.json("Edit task comment complete")
+        })
+        .catch(() => {
+          res.status(400).send("Unable to edit task comment")
+        });
+    }
+  });
+});
+
+router.delete("/comment/:taskId&:commentId", (req, res) => {
+  const { taskId, commentId } = req.params;
+  
+  Task.findById(taskId, (err, taskData) => {
+    if (!taskData) {
+      return res.status(404).send("Task data is not found");
+    } else {
+
+      let newComments = taskData.comments ? [...taskData.comments] : [];
+      for (let i = 0; i < newComments.length; i++) {
+        if (newComments[i]._id.toString() === commentId) {
+          newComments.splice(i, 1);
+          break;
+        }
+      }
+
+      taskData.comments = newComments;
+      taskData
+        .save()
+        .then(() => {
+          res.json("Delete task comment complete")
+        })
+        .catch(() => {
+          res.status(400).send("Unable to delete task comment")
+        });
     }
   });
 });

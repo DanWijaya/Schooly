@@ -4,6 +4,10 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
+import {
+  uploadFileAvatar,
+  getFileAvatar,
+} from "../../../actions/files/FileAvatarActions";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import informationContacts from "./InformationContacts.png";
@@ -30,6 +34,7 @@ import {
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 import CakeIcon from "@material-ui/icons/Cake";
 import ColorLensIcon from "@material-ui/icons/ColorLens";
 import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
@@ -42,12 +47,14 @@ import SchoolIcon from "@material-ui/icons/School";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "10px",
   },
   avatar: {
@@ -169,7 +176,25 @@ function ProfileDataItem(props) {
 function Profile(props) {
   const classes = useStyles();
   const { user } = props.auth;
-  const { updateAvatar, setCurrentClass, classesCollection } = props;
+  const {
+    updateAvatar,
+    setCurrentClass,
+    classesCollection,
+    uploadFileAvatar,
+    getFileAvatar,
+  } = props;
+  const [avatar, setAvatar] = React.useState(null);
+  const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
+
+  console.log(user);
+  React.useEffect(() => {
+    console.log("use effect");
+    // let id = user._id ? user._id : user._id
+    let id = user._id;
+    getFileAvatar(id)
+      .then((result) => setAvatar(result))
+      .catch((err) => console.log(err));
+  }, [user.avatar]);
 
   // Alert control for ProfilePictureEditorDialog
   const [openAlert, setOpenAlert] = React.useState(false);
@@ -182,7 +207,6 @@ function Profile(props) {
     }
     setOpenAlert(false);
   };
-
   // Alert control for ProfileDataEditorDialog
   const [openDataEditorAlert, setOpenDataEditorAlert] = React.useState(false);
   const handleOpenDataEditorAlert = () => {
@@ -211,13 +235,19 @@ function Profile(props) {
     window.location.reload();
   };
 
+  const handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setFileLimitSnackbar(false);
+  };
+
   // Initially classesCollection.kelas.name === undefined
   if (user.role === "Student" && !classesCollection.kelas.name) {
     setCurrentClass(user.kelas);
   }
 
   document.title = "Schooly | Profil Saya";
-
   return (
     <div className={classes.root}>
       {/* ProfilePictureEditorDialog Snackbar */}
@@ -268,6 +298,17 @@ function Profile(props) {
           Kata sandi berhasil diganti!
         </MuiAlert>
       </Snackbar>
+      {/* Profile Pict Size Limit Snackbar */}
+      <Snackbar
+        open={fileLimitSnackbar}
+        autoHideDuration={2000}
+        onClose={handleCloseErrorSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <MuiAlert elevation={6} variant="filled" severity="error">
+          Foto profil melebihi batas 5MB!
+        </MuiAlert>
+      </Snackbar>
       <Grid container direction="column" spacing={1} alignItems="center">
         <Grid item>
           {user.avatar ? (
@@ -275,22 +316,24 @@ function Profile(props) {
               badgeContent={
                 <ProfilePictureEditorDialog
                   user={user}
-                  updateAvatar={updateAvatar}
+                  avatar={avatar}
+                  // updateAvatar={uploadFileAvatar}
+                  setFileLimitSnackbar={setFileLimitSnackbar}
+                  fileLimitSnackbar={fileLimitSnackbar}
                   handleOpenAlert={handleOpenAlert}
                 />
               }
             >
-              <Avatar
-                src={`/api/upload/avatar/${user.avatar}`}
-                className={classes.avatar}
-              />
+              <Avatar src={avatar} className={classes.avatar} />
             </StyledBadge>
           ) : (
             <StyledBadge
               badgeContent={
                 <ProfilePictureEditorDialog
                   user={user}
-                  updateAvatar={updateAvatar}
+                  // updateAvatar={uploadFileAvatar}
+                  setFileLimitSnackbar={setFileLimitSnackbar}
+                  fileLimitSnackbar={fileLimitSnackbar}
                   handleOpenAlert={handleOpenAlert}
                 />
               }
@@ -327,16 +370,10 @@ function Profile(props) {
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   <Link
                     to={{
-                      pathname: "/lihat-rapor",
-                      state: {
-                        role: "Student",
-                        nama: user.name,
-                        kelas: classesCollection.kelas,
-                        id: user._id,
-                      },
+                      pathname: `/lihat-rapor/${user._id}`,
                     }}
                   >
-                    <LightTooltip title="Lihat Rapor">
+                    <LightTooltip title="Klik Untuk Melihat Rapor">
                       <Button
                         variant="contained"
                         className={classes.buttonRapor}
@@ -367,13 +404,7 @@ function Profile(props) {
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   <Link
                     to={{
-                      pathname: "/lihat-rapor",
-                      state: {
-                        role: "Student",
-                        nama: user.name,
-                        kelas: classesCollection.kelas,
-                        id: user._id,
-                      },
+                      pathname: `/lihat-rapor/${user._id}`,
                     }}
                   >
                     <LightTooltip title="Klik Untuk Melihat Rapor">
@@ -445,12 +476,12 @@ function Profile(props) {
                   profile_data_category="Jenis Kelamin"
                   profile_data_info={user.jenis_kelamin}
                 />
-                <Divider variant="inset" />
+                {/* <Divider variant="inset" />
                 <ProfileDataItem
                   profile_data_icon={<SchoolIcon />}
                   profile_data_category="Sekolah"
                   profile_data_info={user.sekolah}
-                />
+                /> */}
               </List>
             </Paper>
           </Grid>
@@ -563,7 +594,6 @@ function Profile(props) {
 Profile.propTypes = {
   auth: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
-  updateAvatar: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
 };
 
@@ -572,6 +602,9 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(mapStateToProps, { updateAvatar, setCurrentClass })(
-  Profile
-);
+export default connect(mapStateToProps, {
+  updateAvatar,
+  setCurrentClass,
+  uploadFileAvatar,
+  getFileAvatar,
+})(Profile);

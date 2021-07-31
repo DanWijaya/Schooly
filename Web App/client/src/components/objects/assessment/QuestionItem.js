@@ -17,7 +17,9 @@ import {
   Typography,
   Checkbox,
   FormGroup,
+  Hidden,
   InputAdornment,
+  FormHelperText
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -67,6 +69,18 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     alignItems: "center",
   },
+  formLabel: {
+    display: "flex",
+    flexGrow: "1",
+  },
+  helpIcon: {
+    cursor: "default",
+    color: "grey",
+    marginTop: "5px",
+  },
+  inputSize: {
+    fontSize: "inherit!important",
+  },
 }));
 
 function QuestionItem(props) {
@@ -90,6 +104,9 @@ function QuestionItem(props) {
     parseAnswer,
     handleLongtextWeight,
     longtextWeight,
+    backtickError,
+    renderbtErrors,
+    lampiranUrls,
   } = props;
   const classes = useStyles();
 
@@ -99,9 +116,9 @@ function QuestionItem(props) {
   const textRef = React.useRef(null);
   const [longtextValue, setLongtextValue] = React.useState("");
   const [longtextAnswer, setLongtextAnswer] = React.useState("");
-
+  const [localBtError, setLocalBtError] = React.useState(false);
   const [lampiranToPreview, setLampiranToPreview] = React.useState([]);
-
+  const weightInput = React.useRef(null);
   // dipakai untuk edit assessment
   // const [currentLampiran, setCurrentLampiran] = React.useState([])
 
@@ -157,6 +174,7 @@ function QuestionItem(props) {
       //agar setelah mengetikan karakter, error "belum diisi" langsung hilang
       handleChangeQuestion(e, index);
     }
+    setLocalBtError(false);
     setValue(e.target.value);
   };
 
@@ -168,10 +186,12 @@ function QuestionItem(props) {
       handleChangeQuestion(e, index, textRef.current.value); // e.target.id berisi id elemen pemanggil handleBlur ini
     }
   };
-
   React.useEffect(() => {
     setValue(name);
   }, [name]);
+  React.useEffect(() => {
+    setLocalBtError(backtickError);
+  }, [renderbtErrors]);
   React.useEffect(() => {
     if (type === "longtext") {
       if (answer && answer.length !== 0) {
@@ -180,9 +200,14 @@ function QuestionItem(props) {
     }
   }, [answer, type]);
   React.useEffect(() => {
+    // setLongtextValue("1");
     setLongtextValue(longtextWeight);
   }, [longtextWeight]);
-
+  React.useEffect(() => {
+    if (weightInput.current && weightInput.current.value !== longtextValue && (longtextValue === undefined || longtextValue === null)) {
+      weightInput.current.value = "";
+    }
+  }, [longtextValue]);
   React.useEffect(() => {
     console.log("Lampiran to preview set to empty");
     setLampiranToPreview([]);
@@ -201,8 +226,10 @@ function QuestionItem(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lampiranToAdd.length]);
 
-  console.log("Current lampiran : ", currentLampiran);
-  console.log("Lampiran to preview: ", lampiranToPreview);
+  // console.log("Current lampiran : ", currentLampiran);
+  // console.log("Lampiran to preview: ", lampiranToPreview);
+  let lampiranToUrl = isEdit ? new Map(JSON.parse(lampiranUrls)) : null;
+
   return (
     <Grid item>
       <Paper>
@@ -221,57 +248,232 @@ function QuestionItem(props) {
               <Typography variant="h6" style={{ marginLeft: "5px" }}>
                 Soal {index + 1}
               </Typography>
-              <GridList
-                cols={3}
-                cellHeight={300}
-                style={{ margin: "10px 0px 10px 0px" }}
-              >
-                {isEdit
-                  ? currentLampiran.map((image, i) => (
-                      <GridListTile key={image} cols={1}>
-                        <img
-                          alt="current img"
-                          src={`/api/upload/att_assessment/${image}`}
-                        />
-                        <GridListTileBar
-                          titlePosition="top"
-                          actionIcon={
-                            <IconButton
-                              style={{ color: "white" }}
-                              onClick={(e) => handleQuestionImage(e, index, i)}
-                            >
-                              <CloseIcon />
-                            </IconButton>
-                          }
-                          title={`Gambar ${i + 1}`}
-                          actionPosition="right"
-                        />
-                      </GridListTile>
-                    ))
-                  : null}
-                {lampiranToPreview.map((image, i) => (
-                  <GridListTile key={image} cols={1}>
-                    <img alt="current img" src={image} />
-                    <GridListTileBar
-                      titlePosition="top"
-                      actionIcon={
-                        <IconButton
-                          style={{ color: "white" }}
-                          onClick={(e) => handleQuestionImage(e, index, i)}
-                        >
-                          <CloseIcon />
-                        </IconButton>
-                      }
-                      title={`Gambar ${i + 1 + currentLampiran.length}`}
-                      actionPosition="right"
-                    />
-                  </GridListTile>
-                ))}
-              </GridList>
+              <Hidden smDown>
+                <GridList
+                  cols={3}
+                  cellHeight={300}
+                  style={{ margin: "10px 0px 10px 0px" }}
+                >
+                  {isEdit
+                    ? currentLampiran.map((image, i) => (
+                        <GridListTile key={image} cols={1}>
+                          <img
+                            alt="current img"
+                            // src={`/api/upload/att_assessment/${image}`
+                            src={lampiranToUrl.get(image.toString())}
+                          />
+                          <GridListTileBar
+                            titlePosition="top"
+                            actionIcon={
+                              <IconButton
+                                style={{ color: "white" }}
+                                onClick={(e) =>
+                                  handleQuestionImage(e, index, i)
+                                }
+                              >
+                                <CloseIcon />
+                              </IconButton>
+                            }
+                            title={`Gambar ${i + 1}`}
+                            actionPosition="right"
+                          />
+                        </GridListTile>
+                      ))
+                    : null}
+                  {lampiranToPreview.map((image, i) => (
+                    <GridListTile key={image} cols={1}>
+                      <img alt="current img" src={image} />
+                      <GridListTileBar
+                        titlePosition="top"
+                        actionIcon={
+                          <IconButton
+                            style={{ color: "white" }}
+                            // onClick={(e) => handleQuestionImage(e, index, i + currentLampiran.length)
+                            onClick={(e) => handleQuestionImage(e, index, i)}
+                          >
+                            <CloseIcon />
+                          </IconButton>
+                        }
+                        title={`Gambar ${i + 1 + currentLampiran.length}`}
+                        actionPosition="right"
+                      />
+                    </GridListTile>
+                  ))}
+                </GridList>
+              </Hidden>
+              <Hidden mdUp xsDown>
+                <GridList
+                  cols={2}
+                  cellHeight={300}
+                  style={{ margin: "10px 0px 10px 0px" }}
+                >
+                  {isEdit
+                    ? currentLampiran.map((image, i) => (
+                        <GridListTile key={image} cols={1}>
+                          <img
+                            alt="current img"
+                            // src={`/api/upload/att_assessment/${image}`
+                            src={lampiranToUrl.get(image.toString())}
+                          />
+                          <GridListTileBar
+                            titlePosition="top"
+                            actionIcon={
+                              <IconButton
+                                style={{ color: "white" }}
+                                // onClick={(e) => handleQuestionImage(e, index, i + currentLampiran.length)
+                                onClick={(e) =>
+                                  handleQuestionImage(e, index, i)
+                                }
+                              >
+                                <CloseIcon />
+                              </IconButton>
+                            }
+                            title={`Gambar ${i + 1}`}
+                            actionPosition="right"
+                          />
+                        </GridListTile>
+                      ))
+                    : null}
+                  {lampiranToPreview.map((image, i) => (
+                    <GridListTile key={image} cols={1}>
+                      <img alt="current img" src={image} />
+                      <GridListTileBar
+                        titlePosition="top"
+                        actionIcon={
+                          <IconButton
+                            style={{ color: "white" }}
+                            onClick={(e) => handleQuestionImage(e, index, i)}
+                          >
+                            <CloseIcon />
+                          </IconButton>
+                        }
+                        title={`Gambar ${i + 1 + currentLampiran.length}`}
+                        actionPosition="right"
+                      />
+                    </GridListTile>
+                  ))}
+                </GridList>
+              </Hidden>
+              <Hidden smUp>
+                <GridList
+                  cols={1}
+                  cellHeight={300}
+                  style={{ margin: "10px 0px 10px 0px" }}
+                >
+                  {isEdit
+                    ? currentLampiran.map((image, i) => (
+                        <GridListTile key={image} cols={1}>
+                          <img
+                            alt="current img"
+                            // src={`/api/upload/att_assessment/${image}`
+                            src={lampiranToUrl.get(image.toString())}
+                          />
+                          <GridListTileBar
+                            titlePosition="top"
+                            actionIcon={
+                              <IconButton
+                                style={{ color: "white" }}
+                                onClick={(e) =>
+                                  handleQuestionImage(e, index, i)
+                                }
+                              >
+                                <CloseIcon />
+                              </IconButton>
+                            }
+                            title={`Gambar ${i + 1}`}
+                            actionPosition="right"
+                          />
+                        </GridListTile>
+                      ))
+                    : null}
+                  {lampiranToPreview.map((image, i) => (
+                    <GridListTile key={image} cols={1}>
+                      <img alt="current img" src={image} />
+                      <GridListTileBar
+                        titlePosition="top"
+                        actionIcon={
+                          <IconButton
+                            style={{ color: "white" }}
+                            onClick={(e) => handleQuestionImage(e, index, i)}
+                          >
+                            <CloseIcon />
+                          </IconButton>
+                        }
+                        title={`Gambar ${i + 1 + currentLampiran.length}`}
+                        actionPosition="right"
+                      />
+                    </GridListTile>
+                  ))}
+                </GridList>
+              </Hidden>
               {type === "shorttext" ? (
                 <TextField
-                  helperText={!name.length ? "Belum diisi" : null}
-                  error={!name.length}
+                  FormHelperTextProps={{
+                    style: {
+                      marginRight: "12px",
+                    },
+                  }}
+                  helperText={
+                    <>
+                      {!name.length ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography variant="caption">Belum diisi</Typography>
+                          <LightTooltip
+                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. 
+                        Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian."
+                          >
+                            <HelpIcon
+                              fontSize="small"
+                              className={classes.helpIcon}
+                            />
+                          </LightTooltip>
+                        </div>
+                      ) : localBtError ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography variant="caption">
+                            Periksa kembali
+                          </Typography>
+                          <LightTooltip
+                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. 
+                        Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian."
+                          >
+                            <HelpIcon
+                              fontSize="small"
+                              className={classes.helpIcon}
+                            />
+                          </LightTooltip>
+                        </div>
+                      ) : (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <LightTooltip
+                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. 
+                        Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian."
+                          >
+                            <HelpIcon
+                              fontSize="small"
+                              className={classes.helpIcon}
+                            />
+                          </LightTooltip>
+                        </div>
+                      )}
+                    </>
+                  }
+                  error={!name.length || localBtError}
                   multiline
                   rowsMax={10}
                   id="name"
@@ -285,17 +487,15 @@ function QuestionItem(props) {
                   onBlur={(e) => {
                     handleBlur(e, index);
                   }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <LightTooltip title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian.">
-                          <IconButton>
-                            <HelpIcon />
-                          </IconButton>
-                        </LightTooltip>
-                      </InputAdornment>
-                    ),
-                  }}
+                  // InputProps={{
+                  //   endAdornment: (
+                  //     <InputAdornment position="end">
+                  //       <LightTooltip title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian.">
+                  //         <HelpIcon fontSize="small" style={{cursor: "default", color: "grey" }} />
+                  //       </LightTooltip>
+                  //     </InputAdornment>
+                  //   ),
+                  // }}
                 />
               ) : (
                 <TextField
@@ -350,6 +550,7 @@ function QuestionItem(props) {
                               placeholder="Isi Pilihan"
                             />
                           }
+                          classes={{ label: classes.formLabel }}
                         />
                         <IconButton
                           onClick={(e) =>
@@ -403,6 +604,7 @@ function QuestionItem(props) {
                               placeholder="Isi Pilihan"
                             />
                           }
+                          classes={{ label: classes.formLabel }}
                         />
                         <IconButton
                           onClick={(e) =>
@@ -519,17 +721,17 @@ function QuestionItem(props) {
             <Divider />
             <Grid
               container
-              style={{ padding: "20px" }}
+              className={classes.content}
               justify="flex-end"
               alignItems="center"
             >
-              {/* <Grid item style={{ marginRight: "20px", height: "3rem", display: "flex", alignItems: "center"}}> */}
               <Grid item style={{ marginRight: "20px" }}>
                 <Typography color="primary">Bobot: </Typography>
               </Grid>
               <Grid item style={{ height: "3rem" }}>
                 <TextField
                   value={longtextValue}
+                  inputRef={weightInput}
                   onChange={(e) => {
                     handleLongtextWeight(e, index);
                   }}
@@ -549,8 +751,9 @@ function QuestionItem(props) {
                   }
                   FormHelperTextProps={{
                     style: {
-                      margin: "0px",
-                    },
+                      marginLeft: "0",
+                      marginRight: "0"
+                    }
                   }}
                   InputProps={{
                     style: {
@@ -581,7 +784,9 @@ export default React.memo(
       prevProps.options === nextProps.options &&
       prevProps.answer === nextProps.answer &&
       prevProps.lampiran_length === nextProps.lampiran_length &&
-      prevProps.longtextWeight === nextProps.longtextWeight
+      prevProps.longtextWeight === nextProps.longtextWeight &&
+      prevProps.renderbtErrors === nextProps.renderbtErrors &&
+      prevProps.lampiranUrls === nextProps.lampiranUrls
     );
   }
 );

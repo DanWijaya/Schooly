@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { logoutUser } from "../../../actions/UserActions";
+import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
+
 import LightTooltip from "../light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -44,9 +46,18 @@ const useStyles = makeStyles((theme) => ({
 function NavBarLoggedInContents(props) {
   const classes = useStyles();
 
-  const { isMobileView, logoutUser } = props;
+  const { isMobileView, logoutUser, getFileAvatar } = props;
   const { user } = props.auth;
+  const [avatar, setAvatar] = React.useState(avatar);
 
+  React.useEffect(() => {
+    getFileAvatar(user._id)
+      .then((result) => {
+        console.log(result);
+        setAvatar(result);
+      })
+      .catch((err) => console.log(err));
+  }, [user.avatar]);
   // Menu items in Mobile
   const [mobileAnchorEl, setMobileAnchorEl] = React.useState(null);
   const handleMobileMenuClose = () => {
@@ -77,10 +88,7 @@ function NavBarLoggedInContents(props) {
     <Grid container className={classes.navbarContents}>
       <LightTooltip title={user.name}>
         <IconButton onClick={handleProfileMenu}>
-          <Avatar
-            src={`/api/upload/avatar/${user.avatar}`}
-            className={classes.navbarProfilePicture}
-          />
+          <Avatar src={avatar} className={classes.navbarProfilePicture} />
         </IconButton>
       </LightTooltip>
       <Menu
@@ -101,10 +109,7 @@ function NavBarLoggedInContents(props) {
         <Link to="/profil" onClick={handleProfileMenuClose}>
           <MenuItem className={classes.menuItem}>
             <ListItemIcon>
-              <Avatar
-                src={`/api/upload/avatar/${user.avatar}`}
-                className={classes.navbarProfilePicture}
-              />
+              <Avatar src={avatar} className={classes.navbarProfilePicture} />
             </ListItemIcon>
             <ListItemText primary="Profil Saya" />
           </MenuItem>
@@ -143,10 +148,7 @@ function NavBarLoggedInContents(props) {
         <Link to="/profil" onClick={handleMobileMenuClose}>
           <MenuItem className={classes.menuItem}>
             <ListItemIcon>
-              <Avatar
-                src={`/api/upload/avatar/${user.avatar}`}
-                className={classes.navbarProfilePicture}
-              />
+              <Avatar src={avatar} className={classes.navbarProfilePicture} />
             </ListItemIcon>
             <ListItemText primary="Profil Saya" />
           </MenuItem>
@@ -185,4 +187,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { logoutUser })(NavBarLoggedInContents);
+export default connect(mapStateToProps, { logoutUser, getFileAvatar })(
+  NavBarLoggedInContents
+);

@@ -111,7 +111,7 @@ function ProfileDataItemEdit(props) {
   const { errors } = props;
   console.log(errors);
   return (
-    <ListItem style={{margin: "5px 0px 5px 0px"}}>
+    <ListItem style={{ margin: "5px 0px 5px 0px" }}>
       <Grid container alignItems="center">
         <Grid item sm={2}>
           <Hidden xsDown implementation="css">
@@ -147,10 +147,10 @@ function ProfileDataItemEdit(props) {
 
 function ProfileDataEditorDialog(props) {
   const classes = useStyles();
-
+  
   const { user } = props.auth;
-  const { updateUserData, clearErrors, errors } = props;
-
+  const { updateUserData, clearErrors, errors, handleOpenAlert } = props;
+  // handleOpenAlert()
   //Dialog
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -197,10 +197,12 @@ function ProfileDataEditorDialog(props) {
   const onSubmit = (e) => {
     e.preventDefault();
     let userId = user._id;
-    if (!isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
-      props.handleOpenAlert();
+    handleOpenAlert()
+    // if (isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
+    //   handleOpenAlert();
 
-    updateUserData(dataProfil, userId, props.history);
+    updateUserData(dataProfil, userId, props.history)
+        .then((res) => props.handleOpenAlert());
   };
 
   const handleChangeDataProfil = (e, otherfield) => {
@@ -327,7 +329,7 @@ function ProfileDataEditorDialog(props) {
                           disableFuture
                           label="Tanggal Lahir"
                           inputVariant="outlined"
-                          maxDateMessage="Batas waktu harus waktu yang akan datang"
+                          maxDateMessage="Harus waktu yang akan datang"
                           invalidDateMessage="Format tanggal tidak benar"
                           format="dd/MM/yyyy"
                           okLabel="Simpan"

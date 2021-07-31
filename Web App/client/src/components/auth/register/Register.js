@@ -7,7 +7,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { registerUser } from "../../../actions/UserActions";
-import { getAllClass } from "../../../actions/ClassActions";
+// import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import authBackground from "../AuthBackground.png";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
@@ -38,6 +38,7 @@ import {
 } from "@material-ui/pickers";
 import MuiAlert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 
 const styles = (theme) => ({
   root: {
@@ -45,7 +46,10 @@ const styles = (theme) => ({
     flexDirection: "column",
     alignItems: "center",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     minHeight: "500px",
     padding: "10px",
     backgroundImage: `url(${authBackground})`,
@@ -121,19 +125,21 @@ class Register extends Component {
       password: "",
       password2: "",
       errors: {},
-      kelas: "", // Student Data
-      subject_teached: "", // Teacher Data
+      // kelas: "", // Student Data
+      // subject_teached: "", // Teacher Data
       tanggal_lahir: new Date(),
       activeStep: 0,
       snackbarOpen: false,
       dialogOpen: false,
       submitButtonClicked: false,
+      openUploadDialog: false,
     };
   }
 
   componentDidMount() {
     // If logged in and user navigates to Register page, should redirect them to dashboard
-    this.props.getAllClass();
+    // this.props.getAllClass();
+
     this.props.getAllSubjects();
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");
@@ -147,6 +153,13 @@ class Register extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.errors === false) {
+      this.setState({
+        errors: nextProps.errors,
+      });
+      return;
+    }
+
     if (Object.keys(nextProps.errors).length > 0) {
       console.log(this.state.snackbarOpen);
       this.setState({
@@ -161,13 +174,18 @@ class Register extends Component {
   };
 
   onChange = (e, otherfield) => {
-    if (otherfield === "kelas") {
-      console.log(e.target.value);
-      this.setState({ kelas: e.target.value });
-    } else if (otherfield === "role") this.setState({ role: e.target.value });
-    else if (otherfield === "subject")
-      this.setState({ subject_teached: e.target.value });
-    else this.setState({ [e.target.id]: e.target.value });
+    let field = otherfield ? otherfield : e.target.id;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+    this.setState({ [field]: e.target.value });
+    // if (otherfield === "role") {
+    //   this.setState({ role: e.target.value });
+    // } else if (otherfield === "subject") {
+    //   this.setState({ subject_teached: e.target.value });
+    // } else {
+    //   this.setState({ [e.target.id]: e.target.value });
+    // }
   };
 
   onSubmit = (e) => {
@@ -175,7 +193,7 @@ class Register extends Component {
     var newUser = {
       name: this.state.name,
       role: this.state.role,
-      email: this.state.email,
+      email: this.state.email.toLowerCase(),
       phone: this.state.phone,
       emergency_phone: this.state.emergency_phone,
       address: this.state.address,
@@ -184,25 +202,38 @@ class Register extends Component {
       tanggal_lahir: this.state.tanggal_lahir,
     };
 
-    const role = this.state.role;
+    // if (role === "Teacher") {
+    //   newUser.subject_teached = this.state.subject_teached;
+    // }
 
-    if (role === "Student") {
-      newUser.kelas = this.state.kelas;
-    } else if (role === "Teacher") {
-      newUser.subject_teached = this.state.subject_teached;
+    if (this.state.activeStep === 2) {
+      this.setState({ submitButtonClicked: true });
     }
 
-    if (this.state.activeStep === 2)
-      this.setState({ submitButtonClicked: true });
-
     console.log(newUser);
-    if (this.state.submitButtonClicked)
-      this.props.registerUser(newUser, this.props.history);
+    if (this.state.submitButtonClicked) {
+      // this.props.registerUser(newUser, this.props.history);
+      this.props
+        .registerUser(newUser)
+        .then((res) => {
+          this.handleOpenUploadDialog();
+        })
+        .catch((err) =>
+          this.setState({
+            errors: err,
+            snackbarOpen: true,
+          })
+        );
+    }
+  };
+
+  handleOpenUploadDialog = () => {
+    this.setState({ openUploadDialog: true });
   };
 
   render() {
     const { classes } = this.props;
-    const { all_classes } = this.props.classesCollection;
+    // const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { errors } = this.state;
 
@@ -309,63 +340,36 @@ class Register extends Component {
                   })}
                 />
               </Grid>
-              {this.state.role === "Student" ? (
-                <Grid item>
-                  <FormControl
-                    id="kelas"
-                    variant="outlined"
-                    color="primary"
-                    fullWidth
-                    error={Boolean(errors.kelas)}
-                  >
-                    <InputLabel id="kelas-label">Kelas</InputLabel>
-                    <Select
-                      labelId="kelas-label"
-                      label="Kelas"
-                      value={this.state.kelas}
-                      onChange={(event) => {
-                        this.onChange(event, "kelas");
-                      }}
-                    >
-                      {all_classes.map((kelas) => (
-                        <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
-                      ))}
-                    </Select>
-                    <FormHelperText>
-                      {Boolean(errors.kelas) ? errors.kelas : null}
-                    </FormHelperText>
-                  </FormControl>
-                </Grid>
-              ) : this.state.role === "Teacher" ? (
-                <Grid item>
-                  <FormControl
-                    id="subject"
-                    variant="outlined"
-                    color="primary"
-                    fullWidth
-                    error={Boolean(errors.subject_teached)}
-                  >
-                    <InputLabel id="subject-label">Mata Pelajaran</InputLabel>
-                    <Select
-                      labelId="subject-label"
-                      label="Mata Pelajaran"
-                      value={this.state.subject_teached}
-                      onChange={(event) => {
-                        this.onChange(event, "subject");
-                      }}
-                    >
-                      {all_subjects.map((subject) => (
-                        <MenuItem value={subject._id}>{subject.name}</MenuItem>
-                      ))}
-                    </Select>
-                    <FormHelperText>
-                      {Boolean(errors.subject_teached)
-                        ? errors.subject_teached
-                        : null}
-                    </FormHelperText>
-                  </FormControl>
-                </Grid>
-              ) : null}
+              {
+                // this.state.role === "Student" ? (
+                //   <Grid item>
+                //     <FormControl
+                //       id="kelas"
+                //       variant="outlined"
+                //       color="primary"
+                //       fullWidth
+                //       error={Boolean(errors.kelas)}
+                //     >
+                //       <InputLabel id="kelas-label">Kelas</InputLabel>
+                //       <Select
+                //         labelId="kelas-label"
+                //         label="Kelas"
+                //         value={this.state.kelas}
+                //         onChange={(event) => {
+                //           this.onChange(event, "kelas");
+                //         }}
+                //       >
+                //         {all_classes.map((kelas) => (
+                //           <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
+                //         ))}
+                //       </Select>
+                //       <FormHelperText>
+                //         {Boolean(errors.kelas) ? errors.kelas : null}
+                //       </FormHelperText>
+                //     </FormControl>
+                //   </Grid>
+                // ) :
+              }
               <Grid item>
                 <TextField
                   fullWidth
@@ -421,12 +425,15 @@ class Register extends Component {
                     disableFuture
                     label="Tanggal Lahir"
                     inputVariant="outlined"
-                    maxDateMessage="Batas waktu harus waktu yang akan datang"
+                    maxDateMessage="Harus waktu yang akan datang"
                     invalidDateMessage="Format tanggal tidak benar"
                     format="dd/MMMM/yyyy"
                     okLabel="Simpan"
                     cancelLabel="Batal"
                     id="tanggal_lahir"
+                    defaultValue={null}
+                    error={errors.tanggal_lahir}
+                    helperText={errors.tanggal_lahir}
                     value={this.state.tanggal_lahir}
                     onChange={(date) => this.handleDateChange(date)}
                   />
@@ -526,6 +533,13 @@ class Register extends Component {
 
     return (
       <div className={classes.root}>
+        <UploadDialog
+          openUploadDialog={this.state.openUploadDialog}
+          success={!errors}
+          messageUploading="Akun baru sedang dibuat"
+          messageSuccess="Akun baru telah terdaftar"
+          redirectLink="/masuk"
+        />
         <Link to="/">
           <img
             alt="Schooly Introduction"
@@ -633,7 +647,7 @@ Register.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
-  getAllClass: PropTypes.func.isRequired,
+  // getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
 };
 
@@ -641,13 +655,13 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
   subjectsCollection: state.subjectsCollection,
-  classesCollection: state.classesCollection,
+  // classesCollection: state.classesCollection,
 });
 
 export default withRouter(
   connect(mapStateToProps, {
     registerUser,
-    getAllClass,
+    // getAllClass,
     getAllSubjects,
     clearErrors,
   })(withStyles(styles)(Register))

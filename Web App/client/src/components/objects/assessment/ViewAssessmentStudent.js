@@ -4,9 +4,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
 import {
   getOneAssessment,
   submitAssessment,
+  getStatus
 } from "../../../actions/AssessmentActions";
 import {
   Avatar,
@@ -37,7 +39,9 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ErrorIcon from "@material-ui/icons/Error";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import moment from "moment";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import "moment/locale/id";
 import SubmitDialog from "../../misc/dialog/SubmitDialog";
 import ToggleButton from "@material-ui/lab/ToggleButton";
@@ -46,7 +50,10 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "10px",
   },
   content: {
@@ -139,6 +146,15 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.success.main,
     color: "white",
   },
+  latePaper: {
+    display: "flex",
+    justifyContent: "center",
+    padding: "5px",
+    paddingLeft: "10px",
+    paddingRight: "10px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+  },
   toggleGroupRoot: {
     display: "flex",
     justifyContent: "space-between",
@@ -169,7 +185,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.main,
       color: "white",
       cursor: "pointer",
-      "&:hover": {
+      "&:focus, &:hover": {
         backgroundColor: theme.palette.primary.main,
       },
     },
@@ -215,16 +231,17 @@ function TimeoutDialog(props) {
 function Timer(props) {
   const classes = useStyles();
   let { start_date, end_date, id, onSubmit, setOpenTimeoutDialog } = props;
-  console.log(start_date, end_date);
+
   let startTime = new Date(start_date);
   let finishTime = new Date(end_date);
 
   let workTime = Math.floor((finishTime - startTime) / 1000);
-  let remainingTime = localStorage.getItem(`remainingTime_${id}`)
-    ? localStorage.getItem(`remainingTime_${id}`)
-    : Math.floor((finishTime - startTime) / 1000);
+  // let remainingTime = localStorage.getItem(`remainingTime_${id}`)
+  //   ? localStorage.getItem(`remainingTime_${id}`)
+  //   : Math.floor((finishTime - startTime) / 1000);
   // let remainingTime = Math.floor((finishTime - startTime)/1000)
-  const [time, setTime] = React.useState(remainingTime);
+  // const [time, setTime] = React.useState(remainingTime);
+  const [time, setTime] = React.useState(workTime);
   var hours = Math.floor(time / 3600) % 24;
   var minutes = Math.floor(time / 60) % 60;
   var seconds = time % 60;
@@ -245,6 +262,63 @@ function Timer(props) {
       } else {
         localStorage.setItem(`remainingTime_${id}`, time - 2);
       }
+      clearInterval(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [time]);
+  return (
+    <div className={classes.root}>
+      <Box position="relative" display="inline-flex">
+        <CircularProgress
+          variant="static"
+          value={(time / workTime) * 100}
+          size={200}
+        />
+        <Box
+          top={0}
+          left={0}
+          bottom={0}
+          right={0}
+          position="absolute"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Typography variant="h5" component="div" color="textSecondary">
+            {`${hours} :
+              ${minutes < 10 ? `0${minutes}` : minutes} :
+              ${seconds < 10 ? `0${seconds}` : seconds}`}
+          </Typography>
+        </Box>
+      </Box>
+    </div>
+  );
+}
+
+function StartTimer(props) {
+  const classes = useStyles();
+  let { start_date, end_date, setShowStartButton } = props;
+
+  let startTime = new Date(start_date);
+  let finishTime = new Date(end_date);
+  let workTime = Math.floor((finishTime - startTime) / 1000);
+
+  const [time, setTime] = React.useState(workTime);
+
+  let hours = Math.floor(time / 3600) % 24;
+  let minutes = Math.floor(time / 60) % 60;
+  let seconds = time % 60;
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setTime((prevTime) => prevTime - 1);
+    }, 1000);
+
+    if (time <= 0) {
+      setShowStartButton(true);
+    }
+
+    return () => {
       clearInterval(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -288,7 +362,6 @@ function questionPage(
 ) {
   // function QuestionPage(props) {
   // const { classes, handleChangeQuestion, question_number, answer } = props;
-  console.log(answer);
   return (
     <ToggleButton
       value={question_number - 1}
@@ -341,16 +414,8 @@ function questionPage(
           horizontal: "right",
         }}
       >
-        {/* <Paper
-          buttons
-          variant="outlined"
-          className={classes.questionPage}
-          onClick={() => handleChangeQuestion(question_number-1)}
-        > */}
         <Typography>{question_number}</Typography>
-        {/* </Paper> */}
       </Badge>
-      {/* </Grid> */}
     </ToggleButton>
   );
 }
@@ -365,6 +430,7 @@ function ViewAssessmentStudent(props) {
     getAllSubjects,
     getAllClass,
     submitAssessment,
+    getFileAssessment,
   } = props;
   const { user } = props.auth;
 
@@ -379,11 +445,27 @@ function ViewAssessmentStudent(props) {
   const [finish, setFinish] = React.useState(null);
   const [openSubmitDialog, setOpenSubmitDialog] = React.useState(null);
   const [openTimeoutDialog, setOpenTimeoutDialog] = React.useState(null);
+  const [lampiranUrls, setLampiranUrls] = React.useState(new Map());
+  const [currentTime, setCurrentTime] = React.useState(null);
+  const [showStartButton, setShowStartButton] = React.useState(false);
+  const [showClosedMessage, setShowClosedMessage] = React.useState(false);
 
   // nanti pas onSubmit, akan ngeclear localStorage.removeItem("remainingTime");
   React.useEffect(() => {
+    getStatus(id).then((res) => {
+      if (res.data.status === -1) {
+        setCurrentTime(res.data.now);
+      } else if ((res.data.status === 0)) {
+        setCurrentTime(res.data.now);
+        setShowStartButton(true);
+      } else { // (res.data.status === 1)
+        setShowClosedMessage(true);
+      }
+    });
     getAllSubjects("map");
     getAllClass("map");
+    getFileAssessment(id).then((result) => setLampiranUrls(result));
+
     new Promise((resolve, reject) => {
       getOneAssessment(id, resolve);
     }).then((res) => {
@@ -392,12 +474,15 @@ function ViewAssessmentStudent(props) {
         setAnswer(JSON.parse(localStorage.getItem(`answers_${id}`)));
       }
     });
+
+    if (localStorage.getItem(`status`) === "ujian") {
+      startTest();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   let questions = selectedAssessments.questions;
   let questions_length = !questions ? 0 : questions.length;
-  // console.log(submissions)
   React.useEffect(() => {
     if (questions_length) {
       let arr = [];
@@ -483,8 +568,13 @@ function ViewAssessmentStudent(props) {
     }
 
     return (
-      <Typography variant="body1" gutterButtom>
-        <form>{splitResult}</form>
+      <Typography
+        align="justify"
+        style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+      >
+        <form>
+          <CustomLinkify text={splitResult} />
+        </form>
       </Typography>
     );
   };
@@ -498,15 +588,18 @@ function ViewAssessmentStudent(props) {
     if(localStorage.getItem(`status`) === "ujian"){
       startTest()
     }*/
-    localStorage.setItem(`status`, "ujian");
-    window.location.reload(false);
+    getStatus(id).then((res) => {
+      if (res.data.status === -1) {
+        setCurrentTime(res.data.now);
+      } else if ((res.data.status === 0)) {
+        setCurrentTime(res.data.now);
+        localStorage.setItem(`status`, "ujian");
+        startTest();
+      } else { // (res.data.status === 1)
+        setShowClosedMessage(true);
+      }
+    });
   };
-
-  React.useEffect(() => {
-    if (localStorage.getItem(`status`) === "ujian") {
-      startTest();
-    }
-  }, []);
 
   const startTest = () => {
     setStart(true);
@@ -535,7 +628,6 @@ function ViewAssessmentStudent(props) {
       .catch((err) => console.log(err));
   };
 
-  console.log(localStorage.getItem(`remainingTime_${id}`));
   const showSubmitButton = () => {
     console.log(localStorage.getItem(`remainingTime_${id}`));
     if (submissions) {
@@ -560,8 +652,8 @@ function ViewAssessmentStudent(props) {
   };
 
   const showTestStatus = () => {
-    if (submissions) {
-      if (submissions[user._id]) {
+    if (!start) {
+      if (submissions && submissions[user._id]) {
         return (
           <Paper className={classes.submittedPaper}>
             <CheckCircleOutlineIcon />
@@ -570,17 +662,7 @@ function ViewAssessmentStudent(props) {
             </Typography>
           </Paper>
         );
-      }
-    }
-    if (!start) {
-      if (!finish) {
-        //   return(
-        //     <Typography variant="h6" align="center">
-        //       TELAH SELESAI
-        //     </Typography>
-        //   )
-        // }
-        // else{
+      } else if (showStartButton) {
         return (
           <Grid item>
             <Button
@@ -592,11 +674,31 @@ function ViewAssessmentStudent(props) {
             </Button>
           </Grid>
         );
+      } else if (showClosedMessage) {
+        return (
+          <Paper className={classes.latePaper}>
+            <ErrorOutlineIcon />
+            <Typography variant="button" style={{ marginLeft: "5px" }}>
+              TELAH SELESAI
+            </Typography>
+          </Paper>
+        );
+      } else if (currentTime !== null) {
+        return (
+          <StartTimer
+            start_date={currentTime}
+            end_date={selectedAssessments.start_date}
+            setShowStartButton={setShowStartButton}
+          />
+        );
+      } else {
+        return null;
       }
     } else {
       return (
         <Timer
-          start_date={selectedAssessments.start_date}
+          start_date={currentTime}
+          // start_date={selectedAssessments.start_date}
           end_date={selectedAssessments.end_date}
           id={id}
           finish={finish}
@@ -645,13 +747,6 @@ function ViewAssessmentStudent(props) {
                           i + 1,
                           answer
                         );
-                        // return (
-                        // <QuestionPage
-                        //   classes={classes}
-                        //   question_number={i + 1}
-                        //   handleChangeQuestion={handleChangeQuestion}
-                        //   answer={answer}/>
-                        // )
                       })}
                 </ToggleButtonGroup>
               </Grid>
@@ -664,7 +759,7 @@ function ViewAssessmentStudent(props) {
               <Grid item xs sm className={classes.content}>
                 <Grid container direction="column" spacing={2}>
                   <Grid item>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6" color="primary" gutterBottom>
                       Soal {qnsIndex + 1}
                     </Typography>
                     <GridList
@@ -678,7 +773,7 @@ function ViewAssessmentStudent(props) {
                             <GridListTile key={image} cols={1}>
                               <img
                                 alt="current img"
-                                src={`/api/upload/att_assessment/${image}`}
+                                src={lampiranUrls.get(image)}
                               />
                               <GridListTileBar
                                 title={`Gambar ${i + 1}`}
@@ -692,8 +787,15 @@ function ViewAssessmentStudent(props) {
                       "shorttext" ? (
                       generateSoalShortTextStudent()
                     ) : (
-                      <Typography variant="h6" gutterButtom>
-                        {questions[qnsIndex].name}
+                      <Typography
+                        align="justify"
+                        style={{
+                          wordBreak: "break-word",
+                          whiteSpace: "pre-wrap",
+                        }}
+                        gutterButtom
+                      >
+                        <CustomLinkify text={questions[qnsIndex].name} />
                       </Typography>
                     )}
                   </Grid>
@@ -821,7 +923,7 @@ function ViewAssessmentStudent(props) {
       return <Redirect to="/tidak-ditemukan" />;
     }
   }
-
+ console.log(window.innerHeight)
   return (
     <div className={classes.root}>
       <SubmitDialog
@@ -922,4 +1024,5 @@ export default connect(mapStateToProps, {
   getOneAssessment,
   getAllClass,
   getAllSubjects,
+  getFileAssessment,
 })(ViewAssessmentStudent);

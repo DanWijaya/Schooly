@@ -5,10 +5,13 @@ module.exports = function validateMaterialInput(data) {
   let errors = {};
   console.log("Dari validation: ", data);
   // isEmpty method is used for string, so don't use it for class_assigned data bcs it is array.
-  data.name = isEmpty(data.name) ? "" : data.name;
-  // data.deadline, there is no need?
-  data.subject = isEmpty(data.subject) ? "" : data.subject;
-  data.description = isEmpty(data.description) ? "" : data.description;
+  // data keys: name, subect, description, class_assigned, lampiran_materi
+
+  for (let key of Object.keys(data)) {
+    if (isEmpty(data[key])) {
+      data[key] = "";
+    }
+  }
 
   console.log(data.class_assigned);
   if (Validator.isEmpty(data.name)) {

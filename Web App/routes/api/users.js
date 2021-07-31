@@ -16,7 +16,6 @@ const User = require("../../models/user_model/User");
 const Student = require("../../models/user_model/Student");
 const Teacher = require("../../models/user_model/Teacher");
 const Admin = require("../../models/user_model/Admin");
-const Class = require("../../models/Class");
 const { ObjectId } = require("mongodb");
 const Validator = require("validator");
 const isEmpty = require("is-empty");
@@ -97,7 +96,7 @@ router.post("/login", (req, res) => {
         // Create JWT Payload
 
         var payload = {
-          id: user._id,
+          _id: user._id,
           role: user.role,
           avatar: user.avatar,
 
@@ -124,6 +123,8 @@ router.post("/login", (req, res) => {
           payload.tugas = user.tugas;
         } else if (user.role === "Teacher") {
           payload.subject_teached = user.subject_teached;
+          payload.class_teached = user.class_teached;
+          payload.class_to_subject = user.class_to_subject;
         }
         // Sign token
         jwt.sign(
@@ -148,7 +149,7 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.post("/update/data/:id", (req, res) => {
+router.put("/update/data/:id", (req, res) => {
   let email = req.body.email;
   if (isEmpty(email)) {
     return res.status(404).json({ email: "Email belum diisi" });
@@ -193,7 +194,7 @@ router.post("/update/data/:id", (req, res) => {
         .catch((err) => console.log(err));
 
       var payload = {
-        id: user._id,
+        _id: user._id,
         role: user.role,
         avatar: user.avatar,
 
@@ -221,6 +222,8 @@ router.post("/update/data/:id", (req, res) => {
         payload.tugas = user.tugas;
       } else if (user.role === "Teacher") {
         payload.subject_teached = user.subject_teached;
+        payload.class_teached = user.class_teached;
+        payload.class_to_subject = user.class_to_subject;
       }
 
       jwt.sign(
@@ -277,7 +280,7 @@ router.get("/getalltask/:user_id", (req, res) => {
   });
 });
 
-router.post(
+router.put(
   "/update/avatar/:id",
   avatar.uploadAvatar.single("avatar"),
   (req, res) => {
@@ -295,7 +298,7 @@ router.post(
           .catch((err) => console.log(err));
 
         var payload = {
-          id: user._id,
+          _id: user._id,
           role: user.role,
           avatar: user.avatar,
 
@@ -322,6 +325,8 @@ router.post(
           payload.kelas = user.kelas;
         } else if (user.role === "Teacher") {
           payload.subject_teached = user.subject_teached;
+          payload.class_teached = user.class_teached;
+          payload.class_to_subject = user.class_to_subject;
         }
         // Sign token
         jwt.sign(
@@ -358,7 +363,7 @@ router.get("/getstudents", (req, res) => {
 });
 
 router.get("/getOneUser/:id", (req, res) => {
-  console.log("getOneUser is runned");
+  // console.log("getOneUser is runned");
   let id = req.params.id;
   User.findById(id, (err, user) => {
     if (!user || !user.active)
@@ -417,7 +422,7 @@ router.get("/getpendingteachers", (req, res) => {
   });
 });
 
-router.post("/setuseractive/:id", (req, res) => {
+router.put("/setuseractive/:id", (req, res) => {
   let id = req.params.id;
 
   User.findById(id, (err, user) => {
@@ -431,7 +436,7 @@ router.post("/setuseractive/:id", (req, res) => {
   });
 });
 
-router.post("/setuserdisabled/:id", (req, res) => {
+router.put("/setuserdisabled/:id", (req, res) => {
   let id = req.params.id;
 
   User.findById(id, (err, user) => {
@@ -453,25 +458,16 @@ router.delete("/delete/:id", (req, res) => {
   });
 });
 
-router.post("/bulkupdateclass", (req, res) => {
+router.put("/class-assignment/:dummyClassId", (req, res) => {
   let operations = [];
-
-  let allStudentId = [];
-  for (let entries of Object.entries(req.body)) {
-    // let classId = ObjectId(entries[0]);
-    // let studentIdArray = entries[1].map((id) => {return ObjectId(id)});
-
-    let classId = entries[0];
-    let studentIdArray = entries[1];
-
-    for (let studentId of studentIdArray) {
-      allStudentId.push(studentId);
-    }
-
+  for (let [classId, studentIdArray] of Object.entries(req.body)) {
     operations.push({
       updateMany: {
         filter: { _id: { $in: studentIdArray } },
-        update: { kelas: classId },
+        update:
+          classId === req.params.dummyClassId
+            ? { $unset: { kelas: "" } }
+            : { kelas: classId },
       },
     });
   }
@@ -484,6 +480,28 @@ router.post("/bulkupdateclass", (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
+});
+
+router.put("/teacher/:teacherId", (req, res) => {
+  User.findById(req.params.teacherId, (err, user) => {
+    if (!user) {
+      return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan" });
+    } else {
+      user.subject_teached = req.body.subject_teached;
+      user.class_teached = req.body.class_teached;
+      user.class_to_subject = req.body.class_to_subject;
+
+      user
+        .save()
+        .then(() => {
+          res.json("Update teacher completed");
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(400).json(err);
+        });
+    }
+  });
 });
 
 module.exports = router;

@@ -38,16 +38,39 @@ const TaskSchema = new Schema(
       },
     ],
     grades: {
-        type: Map,
-        default: new Map()  // userId -> the score.
+      type: Map,
+      default: new Map(), // userId -> the score.
     },
-    submissions: {
-        type: Map,
-        default: new Map
-        //submissions berupa user_id -> Object
-        //Objectnya berupa object dengan key-pair (file id, file name)
 
-    }
-}, { timestamps: true })
+    // submissions: {
+    //     type: Map,
+    //     default: new Map()
+    //     //submissions berupa user_id -> Object
+    //     //Objectnya berupa object dengan key-pair (file id, file name)
+    // }
+    comments: [
+      {
+        author_id: { 
+          type: ObjectId, 
+          required: true 
+        },
+        content: { 
+          type: String,
+          required: true
+        },
+        edited: {
+          type: Boolean,
+          default: false
+        },
+        createdAt: {
+          type: Date,
+          required: true
+        }
+      },
+    ]  
+  },
+  { timestamps: true }
+);
 
-module.exports = Task = mongoose.model("tasks", TaskSchema);
+const Task = mongoose.model("tasks", TaskSchema);
+module.exports = Task;

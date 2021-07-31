@@ -21,14 +21,19 @@ router.post("/create", (req, res) => {
 
   Class.findOne({ name: req.body.name }).then((kelas) => {
     if (kelas) {
-      return res.status(400).json({ name: "Class name already exists" });
+      return res.status(400).json({ name: "Nama kelas sudah dipakai" });
     } else {
-      const newKelas = new Class({
+      let dataKelas = {
         name: req.body.name,
-        walikelas: req.body.walikelas._id,
         nihil: req.body.nihil,
         ukuran: req.body.ukuran,
-      });
+        subject_assigned: req.body.mata_pelajaran.map((id) => (new ObjectId(id)))
+      }
+
+      if(req.body.walikelas){
+        dataKelas.walikeas = req.body.walikeas;
+      }
+      const newKelas = new Class(dataKelas)
 
       newKelas
         .save()
@@ -108,7 +113,7 @@ router.get("/viewSelectedClasses/", (req, res) => {
   });
 });
 
-router.post("/update/:id", (req, res) => {
+router.put("/update/:id", (req, res) => {
   let id = req.params.id;
 
   const { errors, isValid } = validateClassInput(req.body);
@@ -124,12 +129,26 @@ router.post("/update/:id", (req, res) => {
     }
     // Initially there is else block
     classData.name = req.body.name;
-    classData.walikelas = req.body.walikelas;
-    classData.ketua_kelas = req.body.ketua_kelas;
-    classData.sekretaris = req.body.sekretaris;
-    classData.bendahara = req.body.bendahara;
-    classData.nihil = req.body.nihil;
+    classData.ketua_kelas = req.body.ketua_kelas ? req.body.ketua_kelas  :null;
+    classData.walikelas = req.body.walikelas ? req.body.walikelas : null;
+    classData.sekretaris = req.body.sekretaris ? req.body.sekretaris: null;
+    classData.bendahara = req.body.bendahara ? req.body.bendahara : null;
     classData.ukuran = req.body.ukuran;
+    classData.subject_assigned = req.body.mata_pelajaran.map((id) => (new ObjectId(id)));
+
+    //Karena field walikelas ini optional.
+    
+    // if(req.body.walikelas){
+    //   console.log("Have", req.body.walikeas)
+    //   //Kalau walikelas field ada isi, diupdate.
+    //   classData.walikelas = req.body.walikelas;
+    // } else {
+    //   console.log("Don't Have", req.body.walikeas)
+    //   //Kalau walikelas field kosong, field walikelas dibuang.
+    //   classData.walikelas = null;
+    // }
+
+    console.log(classData);
 
     classData
       .save()
@@ -176,12 +195,9 @@ router.post("/update/:id", (req, res) => {
   });
 });
 
-router.post("/bulkupdateclass", (req, res) => {
+router.put("/class-officers", (req, res) => {
   let operations = [];
-
-  for (let entries of Object.entries(req.body)) {
-    let classId = entries[0];
-    let rolesToDelete = entries[1];
+  for (let [classId, rolesToDelete] of Object.entries(req.body)) {
     let fieldToUnset = {};
 
     for (let role of rolesToDelete) {
@@ -199,7 +215,7 @@ router.post("/bulkupdateclass", (req, res) => {
 
   Class.bulkWrite(operations, { ordered: false })
     .then(() => {
-      res.json("Bulkupdate pengurus kelas completed");
+      res.json("Unassign class officers complete");
     })
     .catch((err) => {
       console.log(err);
@@ -207,17 +223,15 @@ router.post("/bulkupdateclass", (req, res) => {
     });
 });
 
-router.post("/bulkupdatewali", (req, res) => {
+router.put("/homeroom-teachers", (req, res) => {
   let operations = [];
-
-  for (let entries of Object.entries(req.body)) {
-    let classId = entries[0];
-    let teacherId = entries[1];
+  for (let [classId, teacherId] of Object.entries(req.body)) {
     let updateArgument = {};
 
     if (teacherId) {
       updateArgument = { walikelas: teacherId };
     } else {
+      // jika teacherId null, atribut walikelas kelas ini akan dihapus
       updateArgument = { $unset: { walikelas: "" } };
     }
 
@@ -231,7 +245,7 @@ router.post("/bulkupdatewali", (req, res) => {
 
   Class.bulkWrite(operations, { ordered: false })
     .then(() => {
-      res.json("Bulkupdate wali kelas completed");
+      res.json("Set homeroom teachers complete");
     })
     .catch((err) => {
       console.log(err);

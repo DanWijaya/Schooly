@@ -5,9 +5,11 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { getAllTask, deleteTask } from "../../../actions/TaskActions";
+import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   IconButton,
@@ -23,6 +25,7 @@ import {
   Paper,
   Menu,
   MenuItem,
+  Snackbar,
   TableSortLabel,
   TextField,
   Typography,
@@ -32,6 +35,7 @@ import {
   Avatar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
+import MuiAlert from "@material-ui/lab/Alert";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -49,9 +53,10 @@ function createData(
   subject,
   deadline,
   class_assigned,
-  createdAt
+  createdAt,
+  submissionStatus
 ) {
-  return { _id, tasktitle, subject, deadline, class_assigned, createdAt };
+  return { _id, tasktitle, subject, deadline, class_assigned, createdAt, submissionStatus };
 }
 
 var rows = [];
@@ -146,14 +151,15 @@ function TaskListToolbar(props) {
     updateSearchFilter(e.target.value);
   };
 
-  const onClear = (e) => {
+  const onClear = (e, id) => {
     updateSearchFilter("");
+    document.getElementById(id).focus();
   };
 
   return (
     <div className={classes.toolbar}>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {searchBarFocus ? null : (
             <div
               style={{
@@ -167,7 +173,7 @@ function TaskListToolbar(props) {
             </div>
           )}
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <div
             style={{
               display: "flex",
@@ -179,7 +185,7 @@ function TaskListToolbar(props) {
             <Typography variant="h4">Daftar Tugas</Typography>
           </div>
         </Hidden>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {searchBarFocus ? (
             <div style={{ display: "flex" }}>
               <IconButton
@@ -198,7 +204,7 @@ function TaskListToolbar(props) {
                 onChange={onChange}
                 autoFocus
                 onClick={(e) => setSearchBarFocus(true)}
-                placeholder="Search Tugas"
+                placeholder="Cari Tugas"
                 style={{
                   maxWidth: "200px",
                   marginLeft: "10px",
@@ -253,8 +259,8 @@ function TaskListToolbar(props) {
           )}
         </Hidden>
       </div>
-      <div style={{ display: "flex" }}>
-        <Hidden xsDown implementation="css">
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Hidden smDown implementation="css">
           <TextField
             variant="outlined"
             id="searchFilterDesktop"
@@ -262,7 +268,7 @@ function TaskListToolbar(props) {
             onChange={onChange}
             onClick={() => setSearchBarFocus(true)}
             onBlur={() => setSearchBarFocus(false)}
-            placeholder="Search Tugas"
+            placeholder="Cari Tugas"
             style={{
               maxWidth: "250px",
               marginRight: "10px",
@@ -304,7 +310,7 @@ function TaskListToolbar(props) {
             }}
           />
         </Hidden>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {role === "Student" ? null : (
             <LightTooltip title="Buat Tugas">
               <Link to="/buat-tugas">
@@ -315,9 +321,8 @@ function TaskListToolbar(props) {
             </LightTooltip>
           )}
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           {role === "Student" ? null : (
-            // ANCHOR contoh tombol round edge
             <Link to="/buat-tugas">
               <Fab
                 size="medium"
@@ -356,11 +361,11 @@ function TaskListToolbar(props) {
             <MenuItem
               key={headCell.id}
               sortDirection={orderBy === headCell.id ? order : false}
+              onClick={createSortHandler(headCell.id)}
             >
               <TableSortLabel
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
               >
                 {headCell.label}
                 {orderBy === headCell.id ? (
@@ -391,7 +396,10 @@ TaskListToolbar.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "10px",
   },
   toolbar: {
@@ -494,9 +502,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.success.main,
   },
   listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
+    padding: "6px 16px"
   },
   assignmentLate: {
     backgroundColor: theme.palette.primary.main,
@@ -517,6 +523,8 @@ function TaskList(props) {
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
+  const [submittedTaskIds, setSubmittedTaskIds] = React.useState(null);
+  const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
   const {
     tasksCollection,
@@ -537,7 +545,8 @@ function TaskList(props) {
         data.subject,
         data.deadline,
         data.class_assigned,
-        data.createdAt
+        data.createdAt,
+        data.submissionStatus
       )
     );
   };
@@ -547,45 +556,66 @@ function TaskList(props) {
       getAllTask();
       getAllClass("map");
       getAllSubjects("map");
+
+      if (user.role === "Student") {
+        let submittedTaskIdSet = new Set();
+        getFileSubmitTasksByAuthor(user._id).then((response) => {
+          for (let file of response.data) {
+            submittedTaskIdSet.add(file.task_id);
+          }
+        }).finally(() => {
+          // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
+          setSubmittedTaskIds(submittedTaskIdSet);
+        });
+      }
+      
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
+  React.useEffect(() => {
+    // Untuk muculin delete snackbar pas didelete dari view page
+    if(props.location.openDeleteSnackbar){
+      handleOpenDeleteSnackbar()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const retrieveTasks = () => {
+    rows = [];
     // If tasksCollection is not undefined or an empty array
-    if (tasksCollection.length) {
-      rows = [];
+    if (tasksCollection.length > 0) {
       if (user.role === "Teacher") {
         tasksCollection
           .filter((item) =>
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )
-          .map((data) => {
+          .forEach((data) => {
             if (data.person_in_charge_id === user._id) {
-              return taskRowItem(data);
+              taskRowItem(data);
             }
-            return null;
           });
       } else if (user.role === "Student") {
-        tasksCollection
-          .filter((item) =>
-            item.name.toLowerCase().includes(searchFilter.toLowerCase())
-          )
-          .map((data) => {
-            let class_assigned = data.class_assigned;
-            if (class_assigned.indexOf(user.kelas) !== -1) {
-              return taskRowItem(data);
-            }
-            return null;
-          });
+        if (submittedTaskIds) { 
+          tasksCollection
+            .filter((item) =>
+              item.name.toLowerCase().includes(searchFilter.toLowerCase())
+            )
+            .forEach((data) => {
+              let class_assigned = data.class_assigned;
+              if (class_assigned.indexOf(user.kelas) !== -1) {
+                taskRowItem({ ...data, submissionStatus: submittedTaskIds.has(data._id) });
+              }
+            });
+        }
       } else {
         //Admin
         tasksCollection
           .filter((item) =>
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )
-          .map((data) => taskRowItem(data));
+          .forEach((data) => taskRowItem(data));
       }
     }
   };
@@ -596,12 +626,27 @@ function TaskList(props) {
     setOrderBy(property);
   };
 
+  const handleOpenDeleteSnackbar = () => {
+    setOpenDeleteSnackbar(true);
+  }
+
+  const handleCloseDeleteSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenDeleteSnackbar(false);
+  };
+
   // Call the function to view the tasks on tablerows.
   // This function is defined above.
   retrieveTasks();
 
   const onDeleteTask = (id) => {
-    deleteTask(id);
+    deleteTask(id).then((res) => {
+      handleOpenDeleteSnackbar()
+      handleCloseDeleteDialog()
+      getAllTask();
+    });
   };
 
   // Delete Dialog
@@ -657,9 +702,7 @@ function TaskList(props) {
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
         {rows.length === 0 ? (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
@@ -811,7 +854,8 @@ function TaskList(props) {
                       <Badge
                         style={{ display: "flex", flexDirection: "row" }}
                         badgeContent={
-                          workStatus(row) === "Belum Dikumpulkan" ? (
+                          row.submissionStatus === false ? (
+                          // workStatus(row) === "Belum Dikumpulkan" ? (
                             <ErrorIcon className={classes.errorIcon} />
                           ) : (
                             <CheckCircleIcon className={classes.checkIcon} />
@@ -823,8 +867,8 @@ function TaskList(props) {
                         }}
                       >
                         <ListItem
-                          button
-                          component="a"
+                          // button
+                          // component="a"
                           className={classes.listItem}
                         >
                           <Hidden smUp implementation="css">
@@ -893,6 +937,23 @@ function TaskList(props) {
           })
         )}
       </Grid>
+      <Snackbar
+        open={openDeleteSnackbar}
+        autoHideDuration={4000}
+        onClose={(event, reason) => {
+          handleCloseDeleteSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseDeleteSnackbar(event, reason);
+          }}
+        >
+          Tugas berhasil dihapus
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

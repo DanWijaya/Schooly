@@ -39,20 +39,20 @@ export const globalStyles = responsiveFontSizes(
         main: "#0d2481",
       },
       radio: {
-        main: "#02AFF8" 
+        main: "#02AFF8",
       },
       checkbox: {
-        main: "#049F90"
+        main: "#049F90",
       },
       shorttext: {
-        main: "#FD7D2E"
+        main: "#FD7D2E",
       },
       longtext: {
-        main: "#B2417C"
+        main: "#B2417C",
       },
       copylink: {
-        main: "#974994"
-      }
+        main: "#974994",
+      },
     },
     overrides: {
       MuiButton: {
@@ -98,6 +98,25 @@ export const globalStyles = responsiveFontSizes(
           maxWidth: "none",
         },
       },
+      MuiFilledInput: {
+        multiline: {
+          padding: "18.5px 0px",
+        },
+      },
+      MuiOutlinedInput: {
+        multiline: {
+          padding: "18.5px 0px"
+        }
+      },
+      MuiAutocomplete: {
+        input: {
+          borderBottom: "none!important",
+          boxShadow: "none!important",
+          margin: "0px 15px 0px 15px!important",
+          WebkitBoxShadow: "0 0 0 1000px white inset!important",
+          width: "0!important"
+        },
+      }
     },
     props: {
       MuiTab: {
@@ -115,10 +134,15 @@ export const globalStyles = responsiveFontSizes(
             paddingTop: "14px",
             paddingBottom: "14px",
             paddingLeft: "15px",
+            backgroundColor: "white",
+            "&:focus, &:hover, &:active": {
+              backgroundColor: "white",
+              opacity: 1,
+            },
           },
         },
       },
-      MuiTextField: {
+      TextField: {
         InputLabelProps: {
           shrink: true,
         },
@@ -143,7 +167,7 @@ export const globalStyles = responsiveFontSizes(
           style: {
             borderBottom: "none",
             boxShadow: "none",
-            margin: "0px 15px 0px 15px",
+            margin: "0px 15px 5px 15px",
           },
         },
       },

@@ -5,25 +5,34 @@ import {
   GET_ALL_CLASSES_MAP,
   GET_CLASSES,
   SET_CURRENT_CLASS,
-  // GET_SUCCESS_RESPONSE,
+  GET_SUCCESS_RESPONSE,
 } from "./Types";
 
 // Add Class
 export const createClass = (classData, history) => (dispatch) => {
   console.log(classData);
-  axios
+  return axios
     .post("/api/classes/create", classData)
     .then((res) => {
       console.log(res.data);
-      alert("Kelas telah dibuat");
-      history.push("/daftar-kelas");
+      // history.push("/daftar-kelas");
+      dispatch({
+        type: GET_ERRORS,
+        payload: false,
+      });
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: res.data._id,
+      });
+      return res.data._id;
     })
-    .catch((err) =>
+    .catch((err) => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
-      })
-    );
+      });
+      throw err.response.data;
+    });
 };
 
 // View All Class
@@ -83,26 +92,36 @@ export const getSelectedClasses = (classes_ids) => (dispatch) => {
 };
 
 export const updateClass = (classData, classId, history) => (dispatch) => {
-  axios
-    .post("/api/classes/update/" + classId, classData)
+  return axios
+    .put("/api/classes/update/" + classId, classData)
     .then((res) => {
       console.log("Class updated to be : ", res.data);
-      alert("Kelas telah berhasil disunting");
-      history.push("/daftar-kelas");
+      // alert("Kelas telah berhasil disunting");
+      // history.push("/daftar-kelas");
+      dispatch({
+        type: GET_ERRORS,
+        payload: false,
+      });
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: classId,
+      });
+      return classId;
     })
     .catch((err) => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };
 
-export const deleteClass = (classId) => (dispatch) => {
-  axios
+export const deleteClass = (classId, history) => (dispatch) => {
+ return axios
     .delete("/api/classes/delete/" + classId)
     .then((res) => {
-      window.location.reload();
+      return "Class is successfully deleted"
     })
     .catch((err) => {
       console.log(err.response.data);
@@ -110,12 +129,14 @@ export const deleteClass = (classId) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err;
     });
 };
 
 export const setCurrentClass = (classId) => (dispatch) => {
   // console.log("set current class is runned")
-  axios
+  // sebelumnya tidak ada return
+  return axios
     .get("/api/classes/setCurrentClass/" + classId)
     .then((res) => {
       // console.log("Class to be edited");
@@ -125,7 +146,7 @@ export const setCurrentClass = (classId) => (dispatch) => {
         payload: res.data,
       });
       console.log("setCurrentClass completed");
-      // res.send(classData);
+      return res.data;
     })
     .catch((err) => {
       console.log(classId);
@@ -141,22 +162,22 @@ export const setCurrentClass = (classId) => (dispatch) => {
   // }
 };
 
-export const updateClassAdmin = (classesData) => {
+export const unassignClassOfficers = (classesData) => {
   return axios
-    .post("/api/classes/bulkupdateclass", classesData)
+    .put("/api/classes/class-officers", classesData)
     .then(() => {
-      console.log("updateClassAdmin completed");
+      console.log("unassignClassOfficers completed");
     })
     .catch((err) => {
       throw new Error(err.response.data);
     });
 };
 
-export const updateWaliAdmin = (classesData) => {
+export const setHomeroomTeachers = (classesData) => {
   return axios
-    .post("/api/classes/bulkupdatewali", classesData)
+    .put("/api/classes/homeroom-teachers", classesData)
     .then(() => {
-      console.log("updateWaliAdmin completed");
+      console.log("setHomeroomTeachers completed");
     })
     .catch((err) => {
       throw new Error(err.response.data);

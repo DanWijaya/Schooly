@@ -6,7 +6,10 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     margin: "auto",
     marginTop: "100px",
     padding: "10px",
@@ -87,7 +90,9 @@ function Footer(props) {
                     </Link>
                   </Typography>
                   <Typography gutterBottom className={classes.mobileFont}>
-                    <Link to="https://instagram.com/schoolysystem">Media Sosial</Link>
+                    <Link to="https://instagram.com/schoolysystem">
+                      Media Sosial
+                    </Link>
                   </Typography>
                 </div>
               </Grid>
@@ -125,7 +130,7 @@ function Footer(props) {
                   <a href="mailto:schoolysystem@gmail.com">Hubungi Kami</a>
                 </Grid>
                 <Grid item>
-                  <a href="https://instagram.com/schoolysystem">Media Sosial</a>
+                  <a href="https://instagram.com/schoolysystem" target="blank_">Media Sosial</a>
                 </Grid>
               </Grid>
             </div>

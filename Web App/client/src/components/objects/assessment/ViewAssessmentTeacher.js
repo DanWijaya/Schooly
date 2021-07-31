@@ -1,14 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import {
   getOneAssessment,
   deleteAssessment,
 } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Fab,
@@ -22,6 +24,7 @@ import {
   Input,
   Snackbar,
   Divider,
+  useMediaQuery,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -30,19 +33,21 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LinkIcon from "@material-ui/icons/Link";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import MuiAlert from "@material-ui/lab/Alert";
+import SwitchBase from "@material-ui/core/internal/SwitchBase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     padding: "10px",
-  },
-  content: {
-    padding: "20px",
   },
   seeAllAssessmentButton: {
     backgroundColor: theme.palette.success.main,
@@ -98,38 +103,52 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  // startDateText: {
-  //   color: theme.palette.primary.main
-  // },
-  // endDateText: {
-  //   color: theme.palette.warning.main
-  // },
   answerText: {
     color: theme.palette.success.dark,
   },
   optionText: {
     color: "black",
+    marginLeft: "8px",
   },
   paperBox: {
     padding: "20px",
-    marginBottom: "10px",
+    // marginBottom: "10px",
   },
   dividerColor: {
     backgroundColor: theme.palette.primary.main,
+  },
+  checkIcon: {
+    color: theme.palette.success.dark,
+    fontSize: "1rem",
+    verticalAlign: "middle",
+  },
+  fiberIcon: {
+    fontSize: "0.5rem",
+    verticalAlign: "middle",
+  },
+  bullets: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "1rem",
+  },
+  shortAnswerText: {
+    color: theme.palette.text.secondary,
   },
 }));
 
 function ViewAssessmentTeacher(props) {
   const classes = useStyles();
-
+  const history = useHistory();
   document.title = "Schooly | Buat Kuis";
   const assessment_id = props.match.params.id;
-
+  const isMobileView = useMediaQuery("(max-width:780px)");
   const {
     getOneAssessment,
     getAllClass,
     getAllSubjects,
     deleteAssessment,
+    getFileAssessment,
   } = props;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
@@ -142,17 +161,23 @@ function ViewAssessmentTeacher(props) {
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(
     null
   );
+  const [lampiranUrls, setLampiranUrls] = React.useState(new Map());
 
-  console.log(selectedAssessmentName);
+  console.log(selectedAssessments);
   React.useEffect(() => {
     getOneAssessment(assessment_id);
     getAllClass("map");
     getAllSubjects("map");
+    getFileAssessment(assessment_id).then((result) => setLampiranUrls(result));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  console.log(lampiranUrls);
+
   const onDeleteAssessment = (id) => {
-    deleteAssessment(id);
+    deleteAssessment(id, type, history).then((res) => {
+      console.log(res);
+    });
   };
 
   // Delete Dialog
@@ -173,19 +198,24 @@ function ViewAssessmentTeacher(props) {
 
     for (let i = 1; i <= splitResult.length - 2; i += 2) {
       splitResult[i] = (
-        <Input
-          type="text"
+        <span
+          className={classes.shortAnswerText}
           key={`${qstIndex}-${iterator}`}
-          disabled={true}
-          value={qst.answer[iterator]}
-        />
+        >
+          <u>{qst.answer[iterator]}</u>
+        </span>
       );
       iterator++;
     }
 
     return (
-      <Typography variant="body1" gutterButtom>
-        <form>{splitResult}</form>
+      <Typography
+        align="justify"
+        style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+      >
+        <form>
+          <CustomLinkify text={splitResult} />
+        </form>
       </Typography>
     );
   };
@@ -214,7 +244,7 @@ function ViewAssessmentTeacher(props) {
     selectedAssessments.type === "Kuis"
       ? `http://${window.location.host}/kuis-murid/${assessment_id}`
       : `http://${window.location.host}/ujian-murid/${assessment_id}`;
-
+  console.log(questions);
   return (
     <div className={classes.root}>
       {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
@@ -232,8 +262,6 @@ function ViewAssessmentTeacher(props) {
       <Grid container direction="column" spacing={3}>
         <Grid item style={{ marginBottom: "20px" }}>
           <Paper className={classes.paperBox}>
-            {/* <Grid container spacing={6} className={classes.content}> */}
-            {/* <Grid container spacing={2} className={classes.content}> */}
             <Grid container spacing={2}>
               <Hidden smDown>
                 <Grid item xs={12} style={{ paddingBottom: "0" }}>
@@ -261,6 +289,7 @@ function ViewAssessmentTeacher(props) {
                   spacing={8}
                   style={{ paddingTop: "0" }}
                 >
+                  {/* h6 ditambahkan agar teks ini rata atas dengan teks mata pelajaran*/}
                   <h6 style={{ marginBottom: "0" }}>
                     <Typography
                       align="right"
@@ -316,8 +345,8 @@ function ViewAssessmentTeacher(props) {
                 <Divider className={classes.dividerColor} />
               </Grid>
 
-              <Grid item xs={12} style={{ marginTop: "30px" }}>
-                <Typography color="primary" gutterBottom>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" gutterBottom>
                   Kelas yang Diberikan:
                 </Typography>
                 <Typography>
@@ -337,11 +366,17 @@ function ViewAssessmentTeacher(props) {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} style={{ marginTop: "30px" }}>
-                <Typography color="primary" gutterBottom>
-                  Deskripsi Kuis/Ujian:
+              <Grid item xs={12} style={{ marginTop: "15px" }}>
+                <Typography color="textSecondary" gutterBottom>
+                  Deskripsi {type}:
                 </Typography>
-                <Typography>{selectedAssessments.description}</Typography>
+                <Typography
+                  variant="body1"
+                  align="justify"
+                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                >
+                  <CustomLinkify text={selectedAssessments.description} />
+                </Typography>
               </Grid>
             </Grid>
           </Paper>
@@ -351,7 +386,7 @@ function ViewAssessmentTeacher(props) {
           ? null
           : questions.map((question, i) => (
               <Grid item>
-                <Paper>
+                <Paper className={classes.paperBox}>
                   <Grid
                     container
                     direction="column"
@@ -359,7 +394,7 @@ function ViewAssessmentTeacher(props) {
                     className={classes.content}
                   >
                     <Grid item>
-                      <Typography variant="h6" gutterBottom color="primary">
+                      <Typography variant="h6" color="primary" gutterBottom>
                         Soal {i + 1}
                       </Typography>
                       <GridList
@@ -367,65 +402,109 @@ function ViewAssessmentTeacher(props) {
                         cellHeight={300}
                         style={{ margin: "10px 0px 10px 0px" }}
                       >
-                        {question.lampiran.map((image, i) => (
-                          <GridListTile key={image} cols={1}>
-                            <img
-                              alt="current img"
-                              src={`/api/upload/att_assessment/${image}`}
-                            />
-                            <GridListTileBar
-                              title={`Gambar ${i + 1}`}
-                              titlePosition="top"
-                              actionPosition="right"
-                            />
-                          </GridListTile>
-                        ))}
+                        {question.lampiran.map((img, i) => {
+                          let image = img;
+                          if (lampiranUrls.has(image.toString())) {
+                            return (
+                              <GridListTile key={image} cols={1}>
+                                <img
+                                  alt="current img"
+                                  src={lampiranUrls.get(image.toString())}
+                                />
+                                <GridListTileBar
+                                  title={`Gambar ${i + 1}`}
+                                  titlePosition="top"
+                                  actionPosition="right"
+                                />
+                              </GridListTile>
+                            );
+                          }
+                          return null;
+                        })}
                       </GridList>
-                      <Typography variant="h6">
-                        {question.type === "shorttext" ? (
-                          generateSoalShortTextTeacher(question, i)
-                        ) : question.type === "longtext" ? (
-                          <Typography gutterButtom>{question.name}</Typography>
-                        ) : (
-                          <Typography gutterButtom>{question.name}</Typography>
-                        )}
-                      </Typography>
+                      {/* <Typography variant="h6"> */}
+                      {question.type === "shorttext" ? (
+                        generateSoalShortTextTeacher(question, i)
+                      ) : question.type === "longtext" ? (
+                        <Grid container direction="column" spacing={2}>
+                          <Grid item>
+                            <Typography
+                              align="justify"
+                              style={{
+                                wordBreak: "break-word",
+                                whiteSpace: "pre-wrap",
+                              }}
+                            >
+                              <CustomLinkify text={question.name} />
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography
+                              color="textSecondary"
+                              align="justify"
+                              style={{
+                                wordBreak: "break-word",
+                                whiteSpace: "pre-wrap",
+                              }}
+                            >
+                              <CustomLinkify text={question.answer} />
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      ) : (
+                        <Typography
+                          align="justify"
+                          style={{
+                            wordBreak: "break-word",
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          <CustomLinkify text={question.name} />
+                        </Typography>
+                      )}
+                      {/* </Typography> */}
                     </Grid>
                     <Grid item>
                       {question.type === "radio"
                         ? question.options.map((option, i) => (
-                            // <Typography className={question.answer[0] === String.fromCharCode(97 + i).toUpperCase() ? classes.answerText : classes.optionText}>
-                            <Typography className={classes.optionText}>
-                              {option + " "}
-                              {question.answer[0] ===
-                              String.fromCharCode(97 + i).toUpperCase() ? (
-                                <CheckCircleIcon
-                                  style={{
-                                    fontSize: "1rem",
-                                    verticalAlign: "middle",
-                                  }}
-                                  className={classes.answerText}
-                                />
-                              ) : null}
-                            </Typography>
+                            <Grid container alignItems="center">
+                              <Grid item className={classes.bullets}>
+                                {question.answer[0] ===
+                                String.fromCharCode(97 + i).toUpperCase() ? (
+                                  <CheckCircleIcon
+                                    className={classes.checkIcon}
+                                  />
+                                ) : (
+                                  <FiberManualRecordIcon
+                                    className={classes.fiberIcon}
+                                  />
+                                )}
+                              </Grid>
+                              <Typography className={classes.optionText}>
+                                {option}
+                              </Typography>
+                            </Grid>
                           ))
                         : question.type === "checkbox"
                         ? question.options.map((option, i) => (
-                            // <Typography className={question.answer.includes(String.fromCharCode(97 + i).toUpperCase()) ? classes.answerText : classes.optionText}>
-                            <Typography className={classes.optionText}>
-                              {option + " "}
-                              {question.answer.includes(
-                                String.fromCharCode(97 + i).toUpperCase()
-                              ) ? (
-                                <CheckCircleIcon
-                                  style={{
-                                    fontSize: "1rem",
-                                    verticalAlign: "middle",
-                                  }}
-                                  className={classes.answerText}
-                                />
-                              ) : null}
-                            </Typography>
+                            <Grid container alignItems="center">
+                              <Grid item className={classes.bullets}>
+                                {question.answer.includes(
+                                  String.fromCharCode(97 + i).toUpperCase()
+                                ) ? (
+                                  <CheckCircleIcon
+                                    className={classes.checkIcon}
+                                  />
+                                ) : (
+                                  <FiberManualRecordIcon
+                                    className={classes.fiberIcon}
+                                  />
+                                )}
+                              </Grid>
+                              <Typography className={classes.optionText}>
+                                {option}
+                              </Typography>
+                            </Grid>
                           ))
                         : // question.type === "shorttext" || question.type === "shorttext"
                           null}
@@ -434,26 +513,47 @@ function ViewAssessmentTeacher(props) {
                 </Paper>
               </Grid>
             ))}
-        <Grid item container spacing={2} justify="flex-end" alignItems="center">
-          <Grid item>
-            <Link
-              to={
-                selectedAssessments.type === "Kuis"
-                  ? `/daftar-kuis-terkumpul/${assessment_id}`
-                  : `/daftar-ujian-terkumpul/${assessment_id}`
-              }
-            >
-              <Fab
-                variant="extended"
-                className={classes.seeAllAssessmentButton}
+        <Grid
+          item
+          container
+          justify="flex-end"
+          alignItems="center"
+          style={{ paddingTop: "4px" }}
+        >
+          <Grid item style={{ paddingRight: "10px" }}>
+            {selectedAssessments &&
+            selectedAssessments.submissions &&
+            Object.keys(selectedAssessments.submissions).length !== 0 ? (
+              <Link
+                to={
+                  selectedAssessments.type === "Kuis"
+                    ? `/daftar-kuis-terkumpul/${assessment_id}`
+                    : `/daftar-ujian-terkumpul/${assessment_id}`
+                }
               >
-                <AssignmentIcon style={{ marginRight: "10px" }} />
-                Lihat Hasil
-              </Fab>
-            </Link>
+                <Fab
+                  variant="extended"
+                  className={classes.seeAllAssessmentButton}
+                >
+                  <AssignmentIcon style={{ marginRight: "7.5px" }} />
+                  Lihat Hasil
+                </Fab>
+              </Link>
+            ) : (
+              <>
+                <Fab
+                  variant="extended"
+                  className={classes.seeAllAssessmentButton}
+                  disabled
+                >
+                  <AssignmentIcon style={{ marginRight: "7.5px" }} />
+                  Lihat Hasil
+                </Fab>
+              </>
+            )}
           </Grid>
-          <Grid item>
-            <LightTooltip title="Copy Link">
+          <Grid item style={{ paddingRight: "10px" }}>
+            <LightTooltip title="Salin Tautan">
               <Fab
                 className={classes.copyToClipboardButton}
                 onClick={(e) => copyToClipboardButton(e, linkToShare, type)}
@@ -462,8 +562,8 @@ function ViewAssessmentTeacher(props) {
               </Fab>
             </LightTooltip>
           </Grid>
-          <Grid item>
-            <Link to={`/sunting-kuis/${assessment_id}`}>
+          <Grid item style={{ paddingRight: "10px" }}>
+            <Link to={ type === "Kuis" ? `/sunting-kuis/${assessment_id}` : `/sunting-ujian/${assessment_id}`}>
               <LightTooltip title="Sunting" placement="bottom">
                 <Fab className={classes.editAssessmentButton}>
                   <EditIcon />
@@ -491,7 +591,7 @@ function ViewAssessmentTeacher(props) {
         onClose={handleCloseCopySnackBar}
       >
         <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
-          Link {type} berhasil disalin ke Clipboard Anda!
+          Tautan {type} berhasil disalin ke Clipboard Anda!
         </MuiAlert>
       </Snackbar>
     </div>
@@ -520,4 +620,5 @@ export default connect(mapStateToProps, {
   deleteAssessment,
   getAllClass,
   getAllSubjects,
+  getFileAssessment,
 })(ViewAssessmentTeacher);

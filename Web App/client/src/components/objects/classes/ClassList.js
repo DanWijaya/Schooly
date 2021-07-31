@@ -2,19 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-// NOTE changehere 1 import
 import {
   getTeachers,
   getStudents,
-  updateStudentsClass,
+  moveStudents,
 } from "../../../actions/UserActions";
 import {
   getAllClass,
   deleteClass,
-  updateClassAdmin,
+  unassignClassOfficers,
 } from "../../../actions/ClassActions";
-import { getAllAssessments } from "../../../actions/AssessmentActions";
-import { getAllTask } from "../../../actions/TaskActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -28,10 +25,17 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  InputAdornment,
   Paper,
   TableSortLabel,
   Typography,
   Snackbar,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
@@ -40,8 +44,13 @@ import EditIcon from "@material-ui/icons/Edit";
 import SortIcon from "@material-ui/icons/Sort";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
+import { GoSearch } from "react-icons/go";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { AiOutlineUserSwitch } from "react-icons/ai";
+import { GiTeacher } from "react-icons/gi";
+import ClearIcon from "@material-ui/icons/Clear";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 function createData(_id, name, homeroomTeacher, size, absent) {
   return { _id, name, homeroomTeacher, size, absent };
@@ -75,14 +84,24 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+
 function ClassListToolbar(props) {
-  const { classes, user, order, orderBy, onRequestSort } = props;
-  const { all_students, all_teachers } = props;
-  // NOTE changehere 2 ClassListToolbar props
+  const {
+    classes,
+    user,
+    order,
+    orderBy,
+    onRequestSort,
+    searchFilter,
+    updateSearchFilter,
+    searchBarFocus,
+    setSearchBarFocus,
+  } = props;
+  const { all_students, all_teachers_map } = props;
   const { getStudents, handleOpenSnackbar } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
-  // const all_classes = Array.from(all_classes_map.values());
 
+  
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -109,6 +128,8 @@ function ClassListToolbar(props) {
   };
 
   // Export Import CSV Menu
+  const dummyClassId = "no_class";
+  const dummyClassName = "belum ditempatkan";
   const [csvAnchor, setCSVAnchor] = React.useState(null);
   const handleOpenCSVMenu = (event) => {
     setCSVAnchor(event.currentTarget);
@@ -117,39 +138,65 @@ function ClassListToolbar(props) {
     setCSVAnchor(null);
   };
 
+  const onChange = (e) => {
+    updateSearchFilter(e.target.value);
+  };
+
+  const onClear = (e, id) => {
+    updateSearchFilter("");
+    document.getElementById(id).focus();
+  };
+
   const handleClickExport = () => {
-    if (!all_students || !all_teachers || !all_classes_map) {
+    if (!all_students || !all_teachers_map || !all_classes_map) {
       return;
     }
 
     let classData = {
-      /* contoh isi:
+      [dummyClassId]: {
+        studentsEmail: [], // semua murid di kelas dummy ini merupakan murid yang belum ditempatkan ke kelas manapun
+        classNames: dummyClassName,
+      },
+    };
+    /* contoh isi:
+      {
         classId_1: {
-          studentsEmail: [ studentEmail_1, studentEmail_2, studentEmail_3, ... ],
+          studentsEmail: [ studentEmail_1, studentEmail_2, studentEmail_3, ... ], -> semua murid anggota kelas ini
           classNames: className_1
-        }, 
+        },
         classId_2: {
           studentsEmail: [ studentEmail_1, studentEmail_2, studentEmail_3, ... ],
           classNames: className_2
-        }, 
+        },
         ...
-        */
-    };
+      } key -> id semua kelas yang ada di db
+    */
 
     let blobData = "";
     // matrix ini digunakan untuk menghasilkan string isi file csv yang akan didownload.
     let tempMatrix = [];
-    // if (role === "Student") {
+    /* contoh isi:
+      [
+        [nama_kelas_1, nama_kelas_2, nama_kelas_3, ...]
+        [email_murid_1_anggota_kelas_1, email_murid_1_anggota_kelas_2, email_murid_1_anggota_kelas_3, ...]
+        [email_murid_2_anggota_kelas_1, undefined                    , email_murid_2_anggota_kelas_3, ...]
+        [email_murid_3_anggota_kelas_1, undefined                    , undefined                    , ...]
+      ]
+    */
     for (let classInfo of all_classes) {
       classData[classInfo._id] = {
-        studentsEmail: [], // *
+        studentsEmail: [],
         classNames: classInfo.name,
       };
     }
 
     // menyimpan email-email murid suatu kelas
     for (let student of all_students) {
-      classData[student.kelas].studentsEmail.push(student.email);
+      if (student.kelas) {
+        classData[student.kelas].studentsEmail.push(student.email);
+      } else {
+        classData[dummyClassId].studentsEmail.push(student.email);
+      }
     }
 
     let classDataEntries = Object.entries(classData);
@@ -171,35 +218,24 @@ function ClassListToolbar(props) {
 
     // mengisi matrix
     for (let entry of classDataEntries) {
+      // menyimpan nama kelas di baris pertama
       tempMatrix[0].push(entry[1].classNames);
 
+      // dari "atas ke bawah" kolom, masukan email semua murid anggota kelas ini
       for (let i = 0; i <= entry[1].studentsEmail.length - 1; i++) {
+        // i itu index baris. pengisian mulai dari i + 1 karena baris pertama sudah diisi nama kelas.
         tempMatrix[i + 1].push(entry[1].studentsEmail[i]);
       }
 
+      // jika semua email murid untuk kelas ini sudah dimasukan ke kolom, isi sisa baris kolom ini dengan undefined
       for (
-        let i = entry[1].studentsEmail.length;
-        i <= maxStudentCount - 1;
+        let i = entry[1].studentsEmail.length + 1;
+        i <= maxStudentCount;
         i++
       ) {
-        tempMatrix[i + 1].push(undefined);
+        tempMatrix[i].push(undefined);
       }
     }
-    // } else if (role === "Teacher") {
-    //   for (let classInfo of all_classes) {
-    //     tempMatrix[0].push(classInfo.name);
-
-    //     // semua kelas pasti punya walikelas
-    //     let teacherEmail;
-    //     for (let teacher of all_teachers) {
-    //       if (teacher._id === classInfo.walikelas) {
-    //         teacherEmail = teacher.email;
-    //         break;
-    //       }
-    //     }
-    //     tempMatrix[1].push(teacherEmail);
-    //   }
-    // }
 
     for (let rowArray of tempMatrix) {
       blobData += rowArray.join(",") + "\r\n";
@@ -211,7 +247,7 @@ function ClassListToolbar(props) {
     const a = document.createElement("a");
     a.setAttribute("hidden", "");
     a.setAttribute("href", url);
-    a.setAttribute("download", "file.csv");
+    a.setAttribute("download", "data_kelas.csv");
     a.click();
   };
 
@@ -221,10 +257,12 @@ function ClassListToolbar(props) {
     fileInput.current.click();
   };
 
+  const invalidEmails = React.useRef([]);
   const handleImportCSV = (event) => {
     event.preventDefault();
-    // if (!all_students || !all_teachers || !all_classes_map || !tasksCollection || !all_assessments) {
-    if (!all_students || !all_teachers || !all_classes_map) {
+    invalidEmails.current = []; // digunakan untuk menampilkan semua email murid yang tidak ditemukan di database
+    // if (!all_students || !all_teachers_map || !all_classes_map || !tasksCollection || !all_assessments) {
+    if (!all_students || !all_teachers_map || !all_classes_map) {
       return;
     }
 
@@ -245,9 +283,7 @@ function ClassListToolbar(props) {
         let classNames = dataMatrix[0];
         if (classNames.includes("")) {
           throw new Error(
-            `Nama kelas tidak boleh kosong. Nama kelas yang kosong ditemukan pada kolom ${
-              classNames.findIndex((name) => name === "") + 1
-            }.`
+            "Masih ada nama kelas yang kosong pada kolom" + (classNames.findIndex((name) => name === "") + 1) + "mohon periksa kembali"
           );
         }
         let classId = [];
@@ -261,88 +297,113 @@ function ClassListToolbar(props) {
               break;
             }
           }
+          // jika kelas ini ada di db,
           if (id) {
-            classId.push(id);
+            if (classId.includes(id)) {
+              throw new Error(
+                `Terdapat duplikasi nama kelas "${className}", mohon periksa kembali`
+              );
+            } else {
+              classId.push(id);
+            }
           } else {
             // jika kelas ini tidak ada di db,
-            throw new Error(
-              `Kelas bernama "${className}" tidak terdaftar di basisdata`
-            );
+
+            if (className === dummyClassName) {
+              classId.push(dummyClassId);
+            } else {
+              throw new Error(
+                `Kelas bernama "${className}" tidak terdaftar di basisdata, mohon periksa kembali`
+              );
+            }
           }
         }
 
-        let classesToUpdate = {};
-        let newClassParticipant = {};
+        let classesToUpdate = {}; // digunakan untuk menghapus id murid pengurus kelas pada kelas-kelas tertentu
+        let newClassParticipant = {}; // digunakan untuk mengubah kelas murid-murid yang pindah kelas
+        let allStudentEmail = new Set(); // digunakan untuk mengecek duplikasi email
         // traverse dari kiri ke kanan, atas ke bawah
-        // for (let row of dataMatrix) {
         for (let row = 1; row <= dataMatrix.length - 1; row++) {
           for (let column = 0; column <= classNames.length - 1; column++) {
             // jika sel tidak ada atau berisi string kosong, tidak lakukan apa-apa
             // jika sel berisi email murid,
-            // if ((row[i] !== "") && (row[i] !== undefined)) {
-            if (
-              dataMatrix[row][column] !== "" &&
-              dataMatrix[row][column] !== undefined
-            ) {
+            let currentEmail = dataMatrix[row][column];
+            if (currentEmail !== "" && currentEmail !== undefined) {
+              // cek duplikasi email
+              if (allStudentEmail.has(currentEmail)) {
+                throw new Error(
+                  `Terdapat duplikasi email "${currentEmail}", mohon periksa kembali`
+                );
+              }
+              allStudentEmail.add(currentEmail);
+
               // mencari id kelas lama, id kelas baru, dan id murid dengan menggunakan kriteria pencarian berupa email murid
               let newClassId = classId[column];
               let oldClassId;
               let studentId;
               for (let storedStudent of all_students) {
-                if (dataMatrix[row][column] === storedStudent.email) {
+                if (currentEmail === storedStudent.email) {
                   oldClassId = storedStudent.kelas;
                   studentId = storedStudent._id;
                   break;
                 }
               }
-              if (!studentId) {
+              if (studentId) {
+                // jika murid ini tidak dipindahkan ke kelas lain, tidak lakukan apa-apa
+                // jika murid ini dipindahkan ke kelas lain,
+                if (newClassId !== oldClassId) {
+                  //  jika murid ini merupakan ketua kelas/bendahara/sekretaris pada kelas sebelumnya, ubah info kelas sebelumnya
+                  let oldClassInfo;
+                  let fieldToDelete = [];
+
+                  // jika murid ini dipindahkan dari suatu kelas,
+                  if (oldClassId) {
+                    oldClassInfo = all_classes_map.get(oldClassId);
+
+                    if (oldClassInfo.ketua_kelas === studentId) {
+                      fieldToDelete.push("ketua_kelas");
+                    }
+                    if (oldClassInfo.bendahara === studentId) {
+                      fieldToDelete.push("bendahara");
+                    }
+                    if (oldClassInfo.sekretaris === studentId) {
+                      fieldToDelete.push("sekretaris");
+                    }
+
+                    if (fieldToDelete.length > 0) {
+                      classesToUpdate[oldClassId] = fieldToDelete;
+                    }
+                  } else {
+                    // jika sebelumnya, murid ini belum ditempatkan di kelas manapun,
+
+                    // jika murid ini tidak ditempatkan di kelas manapun lagi
+                    if (newClassId === dummyClassId) {
+                      // do nothing (skip langkah di bawah)
+                      continue;
+                    }
+                  }
+
+                  // catat id murid yang akan dipindahkan ke kelas ini
+                  if (newClassParticipant[newClassId]) {
+                    newClassParticipant[newClassId].push(studentId);
+                  } else {
+                    newClassParticipant[newClassId] = [studentId];
+                  }
+                }
+              } else {
                 // jika murid ini tidak ada di database,
+                invalidEmails.current.push(currentEmail);
                 // throw new Error(`Murid yang memiliki email "${row[i].email}" tidak terdaftar di basisdata`);
-                console.log(
-                  `Murid yang memiliki email "${dataMatrix[row][column]}" tidak terdaftar di basisdata`
-                );
-                break;
-              }
-
-              // jika murid ini tidak dipindahkan ke kelas lain, tidak lakukan apa-apa
-              // jika murid ini dipindahkan ke kelas lain,
-              if (newClassId !== oldClassId) {
-                //  jika murid ini merupakan ketua kelas/bendahara/sekretaris pada kelas sebelumnya, ubah info kelas sebelumnya
-                let oldClassInfo = all_classes_map.get(oldClassId);
-                // let newclassData = {
-                //   ...oldClassInfo,
-                // }
-                let fieldToDelete = [];
-                if (oldClassInfo.ketua_kelas === studentId) {
-                  // newclassData.ketua_kelas = undefined;
-                  fieldToDelete.push("ketua_kelas");
-                }
-                if (oldClassInfo.bendahara === studentId) {
-                  // newclassData.bendahara = undefined;
-                  fieldToDelete.push("bendahara");
-                }
-                if (oldClassInfo.sekretaris === studentId) {
-                  // newclassData.sekretaris = undefined;
-                  fieldToDelete.push("sekretaris");
-                }
-
-                if (fieldToDelete.length > 0) {
-                  classesToUpdate[oldClassId] = fieldToDelete;
-                }
-
-                // untuk update kelas user
-                if (newClassParticipant[newClassId]) {
-                  newClassParticipant[newClassId].push(studentId);
-                } else {
-                  newClassParticipant[newClassId] = [studentId];
-                }
+                // console.log(
+                //   `Murid yang memiliki email "${currentEmail}" tidak terdaftar di basisdata`
+                // );
               }
             }
           }
         }
 
         if (Object.keys(classesToUpdate).length !== 0) {
-          updateClassAdmin(classesToUpdate)
+          unassignClassOfficers(classesToUpdate)
             .then(() => {
               console.log("Penghapusan pengurus kelas berhasil dilakukan");
             })
@@ -352,10 +413,13 @@ function ClassListToolbar(props) {
         }
 
         if (Object.keys(newClassParticipant).length !== 0) {
-          updateStudentsClass(newClassParticipant)
+          moveStudents(newClassParticipant, dummyClassId)
             .then(() => {
-              // agar jumlah murid diperbarui, panggil ulang getStudents
+              // agar text jumlah murid di halaman ini diperbarui, panggil ulang getStudents
               getStudents();
+              if (invalidEmails.current.length !== 0) {
+                handleOpenEmailDialog();
+              }
               handleOpenSnackbar(
                 "success",
                 "Pemindahan murid berhasil dilakukan"
@@ -378,10 +442,171 @@ function ClassListToolbar(props) {
     fileInput.current.value = "";
   };
 
+  // Dialog Email
+  const [openDialog, setOpenDialog] = React.useState(false);
+
+  const handleOpenEmailDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseEmailDialog = () => {
+    setOpenDialog(false);
+  };
   return (
     <div className={classes.toolbar}>
-      <Typography variant="h4">Daftar Kelas</Typography>
+      {/* <Typography variant="h4">Daftar Kelas</Typography> */}
       <div style={{ display: "flex", alignItems: "center" }}>
+        <Hidden mdUp implementation="css">
+          {searchBarFocus ? null : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              {/* <MenuBookIcon className={classes.titleIcon} fontSize="large" /> */}
+              <Typography variant="h4">Daftar Kelas</Typography>
+            </div>
+          )}
+        </Hidden>
+        <Hidden smDown implementation="css">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            {/* <MenuBookIcon className={classes.titleIcon} fontSize="large" /> */}
+            <Typography variant="h4">Daftar Kelas</Typography>
+          </div>
+        </Hidden>
+        <Hidden mdUp implementation="css">
+          {searchBarFocus ? (
+            <div style={{ display: "flex" }}>
+              <IconButton
+                onClick={() => {
+                  setSearchBarFocus(false);
+                  updateSearchFilter("");
+                }}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+              <TextField
+                fullWidth
+                variant="outlined"
+                id="searchFilterMobile"
+                value={searchFilter}
+                onChange={onChange}
+                autoFocus
+                onClick={(e) => setSearchBarFocus(true)}
+                placeholder="Kelas"
+                style={{
+                  maxWidth: user.role === "Admin" ? "110px" : "200px",
+                  marginLeft: "10px",
+                }}
+                InputProps={{
+                  startAdornment: searchBarFocus ? null : (
+                    <InputAdornment
+                      position="start"
+                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                    >
+                      <IconButton size="small">
+                        <GoSearch />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                    >
+                      <IconButton
+                        size="small"
+                        id="searchFilterMobile"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onClear(e);
+                        }}
+                        style={{
+                          opacity: 0.5,
+                          visibility: !searchFilter ? "hidden" : "visible",
+                        }}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  style: {
+                    borderRadius: "22.5px",
+                  },
+                }}
+              />
+            </div>
+          ) : (
+            <LightTooltip title="Search" style={{ marginLeft: "5px" }}>
+              <IconButton
+                className={classes.goSearchButton}
+                onClick={() => setSearchBarFocus(true)}
+              >
+                <GoSearch className={classes.goSearchIconMobile} />
+              </IconButton>
+            </LightTooltip>
+          )}
+        </Hidden>
+      </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Hidden smDown implementation="css">
+          <TextField
+            variant="outlined"
+            id="searchFilterDesktop"
+            value={searchFilter}
+            onChange={onChange}
+            onClick={() => setSearchBarFocus(true)}
+            onBlur={() => setSearchBarFocus(false)}
+            placeholder="Cari Kelas"
+            style={{
+              maxWidth: "250px",
+              marginRight: "10px",
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment
+                  position="start"
+                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                >
+                  <IconButton size="small">
+                    <GoSearch />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment
+                  position="end"
+                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                >
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClear(e);
+                    }}
+                    style={{
+                      opacity: 0.5,
+                      visibility: !searchFilter ? "hidden" : "visible",
+                    }}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "22.5px",
+              },
+            }}
+          />
+        </Hidden>
         {user.role === "Admin" ? (
           <div>
             <Hidden smUp implementation="css">
@@ -411,54 +636,8 @@ function ClassListToolbar(props) {
             </Hidden>
           </div>
         ) : null}
-        <LightTooltip title="Urutkan Kelas">
-          <IconButton
-            onClick={handleOpenSortMenu}
-            className={classes.sortButton}
-            style={{ marginRight: "3px" }}
-          >
-            <SortIcon />
-          </IconButton>
-        </LightTooltip>
-        <Menu
-          keepMounted
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleCloseSortMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          {headCells.map((headCell, i) => (
-            <MenuItem
-              key={headCell.id}
-              sortDirection={orderBy === headCell.id ? order : false}
-            >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
-              >
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                  <span className={classes.visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </span>
-                ) : null}
-              </TableSortLabel>
-            </MenuItem>
-          ))}
-        </Menu>
-
         {user.role === "Admin" ? (
-          <div>
+          <>
             <form
               onChange={(event) => {
                 handleImportCSV(event);
@@ -471,10 +650,10 @@ function ClassListToolbar(props) {
             <LightTooltip title="Atur Kelas Murid">
               <IconButton
                 onClick={handleOpenCSVMenu}
-                className={classes.sortButton}
+                className={classes.toolbarButtons}
                 style={{ marginRight: "3px" }}
               >
-                <AccountTreeIcon />
+                <GiTeacher />
               </IconButton>
             </LightTooltip>
             <Menu
@@ -497,14 +676,89 @@ function ClassListToolbar(props) {
 
             <LightTooltip title="Atur Wali Kelas">
               <Link to="/atur-walikelas">
-                <IconButton className={classes.sortButton}>
+                <IconButton
+                  className={classes.toolbarButtons}
+                  style={{ marginRight: "3px" }}
+                >
                   <AiOutlineUserSwitch />
                 </IconButton>
               </Link>
             </LightTooltip>
-          </div>
+          </>
         ) : null}
+        <LightTooltip title="Urutkan Kelas">
+          <IconButton
+            onClick={handleOpenSortMenu}
+            className={classes.toolbarButtons}
+            style={user.role === "Admin" ? { marginLeft: "3px" } : null}
+          >
+            <SortIcon />
+          </IconButton>
+        </LightTooltip>
+        <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseSortMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          {headCells.map((headCell, i) => (
+            <MenuItem
+              key={headCell.id}
+              sortDirection={orderBy === headCell.id ? order : false}
+              onClick={createSortHandler(headCell.id)}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <span className={classes.visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </span>
+                ) : null}
+              </TableSortLabel>
+            </MenuItem>
+          ))}
+        </Menu>
       </div>
+
+      <Dialog
+        classes={{ paper: classes.dialogPaper }}
+        maxWidth="xs"
+        fullWidth
+        open={openDialog}
+      >
+        <DialogTitle>Email berikut tidak ditemukan di basis data</DialogTitle>
+        <DialogContent dividers>
+          {invalidEmails.current.map((email, idx) => (
+            <Typography
+              variant="body1"
+              style={{
+                marginBottom:
+                  idx === invalidEmails.current.length - 1 ? "0" : "16px",
+              }}
+            >
+              {email}
+            </Typography>
+          ))}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEmailDialog} color="primary">
+            Tutup
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
@@ -521,7 +775,10 @@ ClassListToolbar.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "10px",
   },
   toolbar: {
@@ -552,7 +809,7 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
   },
-  sortButton: {
+  toolbarButtons: {
     backgroundColor: theme.palette.action.selected,
     color: "black",
     "&:focus, &:hover": {
@@ -572,8 +829,11 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   classPaper: {
+    borderRadius: "3px",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
+    transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
     "&:focus, &:hover": {
-      border: "1px solid #2196F3",
+      boxShadow: "0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.15)",
       cursor: "pointer",
     },
   },
@@ -599,6 +859,22 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.dark,
     },
   },
+  emptyClass: {
+    display: "flex",
+    justifyContent: "center",
+    maxWidth: "150px",
+    padding: "2px",
+    paddingLeft: "6px",
+    paddingRight: "6px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    marginLeft: "5px",
+  },
+  dialogPaper: {
+    maxHeight: "70vh",
+    // width: "300px",
+    // maxWidth: "100%",
+  },
 }));
 
 function ClassList(props) {
@@ -609,8 +885,9 @@ function ClassList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedClassId, setSelectedClassId] = React.useState(null);
   const [selectedClassName, setSelectedClassName] = React.useState(null);
-
-  // NOTE changehere 3 classlist props
+  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
+  const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
   const { classesCollection, tasksCollection } = props;
   const {
     clearErrors,
@@ -618,14 +895,9 @@ function ClassList(props) {
     getTeachers,
     deleteClass,
     getAllClass,
-    getAllTask,
-    getAllAssessments,
   } = props;
-  // const {updateClassAdmin, updateStudentsClass} = props;
 
-  const { user, all_teachers, all_students } = props.auth;
-  // const { all_classes_map } = props.classesCollection;
-  const { all_assessments } = props.assessmentsCollection;
+  const { user, all_teachers_map, all_students } = props.auth;
 
   console.log(classesCollection);
 
@@ -645,23 +917,19 @@ function ClassList(props) {
       createData(
         data._id,
         data.name,
-        !all_teachers.size || !all_teachers.get(data.walikelas)
+        !all_teachers_map.size || !all_teachers_map.get(data.walikelas)
           ? null
-          : all_teachers.get(data.walikelas).name,
+          : all_teachers_map.get(data.walikelas).name,
         temp_ukuran,
         !data.nihil ? "Nihil" : "Tidak Nihil"
       )
     );
   };
-  // NOTE changehere 4 useeffect
   React.useEffect(() => {
     getAllClass();
     getAllClass("map");
-    getTeachers();
     getTeachers("map");
     getStudents();
-    getAllTask();
-    getAllAssessments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -674,11 +942,15 @@ function ClassList(props) {
 
   console.log(classesCollection);
 
-  console.log(all_teachers);
+  console.log(all_teachers_map);
   const retrieveClasses = () => {
     if (classesCollection.all_classes.length > 0) {
       rows = [];
-      classesCollection.all_classes.map((data, i) => classItem(data, i));
+      classesCollection.all_classes
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchFilter.toLowerCase())
+        )
+        .map((data, i) => classItem(data, i));
     }
   };
 
@@ -693,7 +965,15 @@ function ClassList(props) {
   retrieveClasses();
 
   const onDeleteClass = (id) => {
-    deleteClass(id);
+    deleteClass(id).then((res) => {
+      console.log(res);
+
+      getAllClass();
+      getAllClass("map");
+      getTeachers("map");
+      handleOpenDeleteSnackbar();
+      handleCloseDeleteDialog();
+    });
   };
 
   // Delete Dialog box
@@ -707,6 +987,17 @@ function ClassList(props) {
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
     clearErrors();
+  };
+
+  const handleOpenDeleteSnackbar = () => {
+    setOpenDeleteSnackbar(true);
+  }
+
+  const handleCloseDeleteSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenDeleteSnackbar(false);
   };
 
   // Snackbar
@@ -758,16 +1049,18 @@ function ClassList(props) {
         user={user}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
-        // NOTE changehere 5 elemen ClassListToolbar
         classesCollection={classesCollection}
-        all_teachers={all_teachers}
+        all_teachers_map={all_teachers_map}
         all_students={all_students}
         getStudents={getStudents}
         handleOpenSnackbar={handleOpenSnackbar}
-        // updateClassAdmin={updateClassAdmin}
-        // updateStudentsClass={updateStudentsClass}
         tasksCollection={tasksCollection}
-        all_assessments={all_assessments}
+        // all_assessments={all_assessments}
+        setSearchBarFocus={setSearchBarFocus}
+        searchBarFocus={searchBarFocus}
+        //Two props added for search filter.
+        searchFilter={searchFilter}
+        updateSearchFilter={updateSearchFilter}
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container spacing={2}>
@@ -776,23 +1069,18 @@ function ClassList(props) {
           : stableSort(rows, getComparator(order, orderBy)).map(
               (row, index) => {
                 const labelId = `enhanced-table-checkbox-${index}`;
-                console.log(row);
                 let viewpage = `/kelas/${row._id}`;
                 return (
                   <Grid item xs={12} sm={6} md={4}>
                     <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
-                      <Paper
-                        button
-                        square
-                        variant="outlined"
-                        className={classes.classPaper}
-                      >
+                      <Paper button className={classes.classPaper}>
                         <Avatar
                           variant="square"
                           style={{
                             backgroundColor: colorMap.get(row._id),
                             width: "100%",
                             height: "120px",
+                            borderRadius: "3px 3px 0px 0px",
                           }}
                         >
                           <FaChalkboardTeacher
@@ -807,13 +1095,37 @@ function ClassList(props) {
                           <Typography id={labelId} variant="h5" align="center">
                             {row.name}
                           </Typography>
-                          <Typography
-                            variant="body1"
-                            color="textSecondary"
-                            align="center"
-                          >
-                            Wali Kelas: <b>{row.homeroomTeacher}</b>
-                          </Typography>
+                          {row.homeroomTeacher && row.homeroomTeacher !== "" ? (
+                            <Typography
+                              variant="body1"
+                              color="textSecondary"
+                              align="center"
+                              style={{ marginTop: "5px" }}
+                            >
+                              Wali Kelas: {row.homeroomTeacher}
+                            </Typography>
+                          ) : (
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                marginTop: "5px",
+                              }}
+                            >
+                              <Typography
+                                variant="body1"
+                                color="textSecondary"
+                                align="center"
+                              >
+                                Wali Kelas:
+                              </Typography>
+                              <Paper className={classes.emptyClass}>
+                                <Typography variant="body2">KOSONG</Typography>
+                              </Paper>
+                            </div>
+                          )}
                         </div>
                         <Divider />
                         <Grid
@@ -833,7 +1145,7 @@ function ClassList(props) {
                               alignItems="center"
                             >
                               <Grid item>
-                                <LightTooltip title="Jumlah Peserta">
+                                <LightTooltip title="Jumlah Murid">
                                   <Badge
                                     badgeContent={row.size}
                                     color="secondary"
@@ -850,6 +1162,23 @@ function ClassList(props) {
                                     </IconButton>
                                   </Badge>
                                 </LightTooltip>
+                                {/* <LightTooltip title="Jumlah Murid">
+                                  <Badge
+                                    badgeContent={row.size}
+                                    color="secondary"
+                                    anchorOrigin={{
+                                      vertical: "bottom",
+                                      horizontal: "left",
+                                    }}
+                                    showZero
+                                  >
+                                    <IconButton size="small" disabled>
+                                      <SupervisorAccountIcon
+                                        className={classes.classPersonIcon}
+                                      />
+                                    </IconButton>
+                                  </Badge>
+                                </LightTooltip> */}
                               </Grid>
                               <Grid item>
                                 <LightTooltip title="Sunting">
@@ -892,7 +1221,7 @@ function ClassList(props) {
                               alignItems="center"
                             >
                               <Grid item>
-                                <LightTooltip title="Jumlah Peserta">
+                                <LightTooltip title="Jumlah Murid">
                                   <Badge
                                     badgeContent={row.size}
                                     color="secondary"
@@ -909,6 +1238,23 @@ function ClassList(props) {
                                     </IconButton>
                                   </Badge>
                                 </LightTooltip>
+                                {/* <LightTooltip title="Jumlah Murid">
+                                  <Badge
+                                    badgeContent={row.size}
+                                    color="secondary"
+                                    anchorOrigin={{
+                                      vertical: "bottom",
+                                      horizontal: "left",
+                                    }}
+                                    showZero
+                                  >
+                                    <IconButton size="small" disabled>
+                                      <SupervisorAccountIcon
+                                        className={classes.classPersonIcon}
+                                      />
+                                    </IconButton>
+                                  </Badge>
+                                </LightTooltip> */}
                               </Grid>
                             </Grid>
                           )}
@@ -922,7 +1268,7 @@ function ClassList(props) {
       </Grid>
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={3000}
+        autoHideDuration={4000}
         onClose={(event, reason) => {
           handleCloseSnackbar(event, reason);
         }}
@@ -937,6 +1283,23 @@ function ClassList(props) {
           {snackbarContent}
         </MuiAlert>
       </Snackbar>
+      <Snackbar
+        open={openDeleteSnackbar}
+        autoHideDuration={4000}
+        onClose={(event, reason) => {
+          handleCloseDeleteSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseDeleteSnackbar(event, reason);
+          }}
+        >
+          Kelas berhasil dihapus
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }
@@ -949,28 +1312,16 @@ ClassList.propTypes = {
   errors: PropTypes.object.isRequired,
   deleteClass: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-
-  // NOTE changehere 6
-  assessmentsCollection: PropTypes.object.isRequired,
   getStudents: PropTypes.func.isRequired,
-  getAllTask: PropTypes.func.isRequired,
-  // updateClassAdmin: PropTypes.func.isRequired,
-  // updateStudentsClass: PropTypes.func.isRequired,
-  getAllAssessments: PropTypes.func.isRequired,
-  tasksCollection: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
   classesCollection: state.classesCollection,
-  assessmentsCollection: state.assessmentsCollection,
-  tasksCollection: state.tasksCollection,
 });
 
-// NOTE changehere 7
 export default connect(
-  // mapStateToProps, { clearErrors, getTeachers, getStudents, getAllClass, deleteClass, updateClassAdmin, updateStudentsClass, getAllTask, getAllAssessments}
   mapStateToProps,
   {
     clearErrors,
@@ -978,7 +1329,5 @@ export default connect(
     getStudents,
     getAllClass,
     deleteClass,
-    getAllTask,
-    getAllAssessments,
   }
 )(ClassList);

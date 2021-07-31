@@ -44,17 +44,17 @@ import {
 import SortIcon from "@material-ui/icons/Sort";
 import EditIcon from "@material-ui/icons/Edit";
 import { BsFlagFill, BsFlag } from "react-icons/bs";
-// const path = require("path");
+import GetAppIcon from "@material-ui/icons/GetApp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "10px",
   },
-  // studentFileListContainer: {
-  //   margin: "20px",
-  // },
   personListContainer: {
     display: "flex",
     alignItems: "center",
@@ -68,55 +68,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  // checkCircleIcon: {
-  //   marginRight: "10px",
-  //   backgroundColor: theme.palette.primary.main,
-  //   color: "white",
-  //   "&:focus, &:hover": {
-  //     backgroundColor: "white",
-  //     color: theme.palette.primary.main
-  //   },
-  // },
-  // downloadAllButton: {
-  //   backgroundColor: theme.palette.primary.main,
-  //   color: "white",
-  //   "&:focus, &:hover": {
-  //     backgroundColor: "white",
-  //     color: theme.palette.primary.main
-  //   }
-  // },
-  // downloadIconButton: {
-  //   marginLeft: "5px",
-  //   backgroundColor: theme.palette.primary.main,
-  //   color: "white",
-  //   "&:focus, &:hover": {
-  //     backgroundColor: "white",
-  //     color: theme.palette.primary.main,
-  //   },
-  // },
-  // wordFileTypeIcon: {
-  //   backgroundColor: "#16B0DD",
-  // },
-  // excelFileTypeIcon: {
-  //   backgroundColor: "#68C74F",
-  // },
-  // imageFileTypeIcon: {
-  //   backgroundColor: "#974994",
-  // },
-  // pdfFileTypeIcon: {
-  //   backgroundColor: "#E43B37",
-  // },
-  // textFileTypeIcon: {
-  //   backgroundColor: "#F7BC24",
-  // },
-  // presentationFileTypeIcon: {
-  //   backgroundColor: "#FD931D",
-  // },
-  // otherFileTypeIcon: {
-  //   backgroundColor: "#808080",
-  // },
-  content: {
-    padding: "20px",
+  paperbox: {
+    padding: "20px 20px 0 20px",
   },
   visuallyHidden: {
     border: 0,
@@ -178,12 +131,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   editIconFab: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
     marginRight: "7.5px",
   },
   editIconButton: {
     // marginRight: "10px",
+    marginRight: "0px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -192,8 +146,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   redFlagIcon: {
-    color: theme.palette.error.main,
-    fontSize: "1.6em",
+    color: theme.palette.error.dark,
+    fontSize: "1.2em",
     [theme.breakpoints.down("xs")]: {
       fontSize: "1em",
     },
@@ -203,7 +157,7 @@ const useStyles = makeStyles((theme) => ({
   },
   flagIcon: {
     color: theme.palette.text.secondary,
-    fontSize: "1.6em",
+    fontSize: "1.2em",
     [theme.breakpoints.down("xs")]: {
       fontSize: "1em",
     },
@@ -231,6 +185,12 @@ const useStyles = makeStyles((theme) => ({
   },
   dividerColor: {
     backgroundColor: theme.palette.primary.main,
+  },
+  emptyDescription: {
+    padding: "8px 0",
+    [theme.breakpoints.down("xs")]: {
+      margin: "20px",
+    },
   },
 }));
 
@@ -349,11 +309,15 @@ function SubmittedAssessmentList(props) {
   const handleCloseSortMenu = () => {
     setAnchorEl(null);
   };
-  const handleRequestSort = (property) => {
+  const createSortHandler = (property) => (event) => {
+    handleRequestSort(event, property);
+  };
+  const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
   const headCells = [
     { id: "name", numeric: false, disablePadding: true, label: "Nama Murid" },
   ];
@@ -412,6 +376,7 @@ function SubmittedAssessmentList(props) {
           <Tabs
             value={value}
             variant="scrollable"
+            scrollButtons="on"
             onChange={handleChange}
             indicatorColor="primary"
             textColor="primary"
@@ -435,6 +400,73 @@ function SubmittedAssessmentList(props) {
     updateAssessmentSuspects(assessment_id, newSuspects).then(() => {
       setSuspects(newSuspects);
     });
+  };
+
+  const handleExportAssessment = () => {
+    console.log(selectedAssessments);
+    let result = "";
+    let classArray = [];
+    selectedAssessments.class_assigned.forEach((kelas, i) => {
+      let className = all_classes.find((cls) => cls._id === kelas).name;
+      if (i !== 0) {
+        result = result + ",";
+      }
+      result = result + className;
+      if (i !== selectedAssessments.class_assigned.length - 1) {
+        result = result + ",";
+      }
+      classArray.push([kelas]);
+    });
+    console.log(Object.keys(selectedAssessments.grades));
+
+    let gradeKeys = Object.keys(selectedAssessments.grades);
+    let gradeValues = Object.values(selectedAssessments.grades);
+    console.log(gradeValues);
+    gradeKeys.forEach((student_id, i) => {
+      let studentData = all_students.find((std) => std._id === student_id);
+      let studentName = studentData.name;
+      let studentClass = studentData.kelas;
+      for (let j = 0; j < classArray.length; j++) {
+        if (classArray[j][0] === studentClass) {
+          classArray[j].push({
+            studentName: studentName,
+            studentScore: gradeValues[i].total_grade,
+          });
+          break;
+        }
+      }
+    });
+
+    let classLength = [];
+    for (let i = 0; i < classArray.length; i++) {
+      classLength.push(classArray[i].length);
+    }
+    let maxClassLength = Math.max(...classLength) - 1;
+
+    for (let i = 0; i < maxClassLength; i++) {
+      result = result + "\n";
+      for (let j = 0; j < classArray.length; j++) {
+        if (j !== 0) {
+          result = result + ",";
+        }
+        if (i + 1 < classArray[j].length) {
+          result = result + classArray[j][i + 1].studentName;
+          result = result + ",";
+          result = result + classArray[j][i + 1].studentScore;
+        }
+        if (i + 1 >= classArray[j].length) {
+          result = result + ",";
+        }
+      }
+    }
+    console.log(result);
+    const blob = new Blob([result], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.setAttribute("hidden", "");
+    a.setAttribute("href", url);
+    a.setAttribute("download", `Hasil ${selectedAssessments.name}.csv`);
+    a.click();
   };
 
   const listClassTabPanel = () => {
@@ -512,6 +544,7 @@ function SubmittedAssessmentList(props) {
 
       for (var i = 0; i < selectedAssessments.class_assigned.length; i++) {
         let students_in_class = [];
+        let isClassSubmissionEmpty = true;
 
         let all_student_object = {}; // akan menyimpan info semua murid yang mendapatkan assessment ini
         rows.current = []; // akan menyimpan object-object yang berisi id dan nama murid (1 object = 1 murid) untuk semua murid yang mendapatkan assessment ini
@@ -546,6 +579,7 @@ function SubmittedAssessmentList(props) {
             scores = JSON.parse(JSON.stringify(scoresTemplate));
 
             if (hasLongtextQuestion) {
+              console.log("ADA Long text");
               if (
                 selectedAssessments.grades &&
                 selectedAssessments.grades[student._id]
@@ -650,6 +684,7 @@ function SubmittedAssessmentList(props) {
           let columns2 = [];
 
           if (scores) {
+            // jika murid mengerjakan assessment ini, scores akan berisi nilai murid
             let c = 0; // digunakan untuk menambahkan divider di antara elemen tipe soal
             for (let typeArray of types.entries()) {
               let type = typeArray[0]; //isi array ini ada 2, dua-duanya nilainya sama, yaitu tipe soal
@@ -751,12 +786,21 @@ function SubmittedAssessmentList(props) {
               }
               c++;
             }
+
+            isClassSubmissionEmpty = false;
           } else {
-            columns1.push(
-              <Typography variant="h5" color="textSecondary">
+            let content = (
+              <Typography
+                variant="subtitle1"
+                color="textSecondary"
+                align="center"
+                className={classes.emptyDescription}
+              >
                 Belum mengerjakan
               </Typography>
             );
+            columns1.push(content);
+            columns2.push(content);
           }
 
           students_in_class.push(
@@ -781,8 +825,32 @@ function SubmittedAssessmentList(props) {
                       selectedAssessments.grades &&
                       selectedAssessments.grades[student._id] &&
                       selectedAssessments.grades[student._id].total_grade
-                        ? "Telah Dinilai"
-                        : "Belum Dinilai"
+                        ? 
+                          <>
+                            Telah Dinilai<br />  
+                            Waktu Pengumpulan:&nbsp;
+                            <Hidden smUp>
+                              <br />
+                            </Hidden>
+                            {moment(selectedAssessments.submissions_timestamp[student._id])
+                            .locale("id")
+                            .format("DD MMM YYYY, HH:mm")}
+                          </>
+                        : 
+                          <>
+                            Belum Dinilai
+                            {scores ? 
+                              <>
+                                <br />Waktu Pengumpulan:&nbsp;
+                                <Hidden smUp>
+                                  <br />
+                                </Hidden>
+                                {moment(selectedAssessments.submissions_timestamp[student._id])
+                                .locale("id")
+                                .format("DD MMM YYYY, HH:mm")}
+                              </>
+                            : null}
+                          </>
                     }
                   />
                   {selectedAssessments.grades &&
@@ -974,7 +1042,20 @@ function SubmittedAssessmentList(props) {
 
         TabPanelList.push(
           <TabPanel value={value} index={i}>
-            {students_in_class}
+            {isClassSubmissionEmpty ? (
+              <Grid
+                container
+                alignItems="center"
+                justify="center"
+                style={{ height: "20vh" }}
+              >
+                <Typography variant="h5" color="textSecondary" align="center">
+                  {`Belum ada murid yang mengerjakan ${selectedAssessments.type.toLowerCase()}`}
+                </Typography>
+              </Grid>
+            ) : (
+              students_in_class
+            )}
           </TabPanel>
         );
       }
@@ -982,156 +1063,13 @@ function SubmittedAssessmentList(props) {
     return selectedAssessments.class_assigned.length > 0 ? TabPanelList : null;
   };
 
-  document.title = "Schooly | Daftar Tugas Terkumpul";
+  document.title = `Schooly | Daftar ${
+    selectedAssessments.type === "Kuis" ? "Kuis" : "Ujian"
+  } Terkumpul`;
   return (
     <div className={classes.root}>
-      <Paper>
-        <Grid container spacing={2} className={classes.content}>
-          {/* <Grid item xs={12} md={7}>
-            <Typography variant="h4" gutterBottom>
-              {selectedAssessments.name}
-            </Typography>
-            <Typography variant="caption" color="textSecondary">
-              <h6>Mata Pelajaran: {all_subjects_map.get(selectedAssessments.subject)}</h6>
-            </Typography>
-            <Hidden smDown implementation="css">
-              <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
-                Deskripsi Kuis/Ujian:
-            </Typography>
-            </Hidden>
-          </Grid>
-          <Grid item xs={12} md={5} spacing={2}>
-            <Hidden mdUp implementation="css">
-              <Typography variant="body2" color="textSecondary">
-                Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
-              </Typography>
-              <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
-                Deskripsi Kuis/Ujian:
-              </Typography>
-              <Typography align="justify">
-                {selectedAssessments.description}
-              </Typography>
-
-              <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>
-                <Link to={(selectedAssessments.type === "Kuis") ? `/lihat-jawaban-kuis/${selectedAssessments._id}` : `/lihat-jawaban-ujian/${selectedAssessments._id}`}>
-                  <Fab size="medium" variant="extended" className={classes.editFab}>
-                    <EditIcon className={classes.editIconFab} />
-                    Periksa
-                  </Fab>
-                </Link>
-
-                <LightTooltip title="Urutkan Kuis">
-                  <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-                    <SortIcon />
-                  </IconButton>
-                </LightTooltip>
-                <Menu
-                  keepMounted
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleCloseSortMenu}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  {headCells.map((headCell, i) => (
-                    <MenuItem
-                      key={headCell.id}
-                      sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                      <TableSortLabel
-                        active={orderBy === headCell.id}
-                        direction={orderBy === headCell.id ? order : "asc"}
-                        onClick={() => { handleRequestSort(headCell.id) }}
-                      >
-                        {headCell.label}
-                        {orderBy === headCell.id ?
-                          <span className={classes.visuallyHidden}>
-                            {order === "desc" ? "sorted descending" : "sorted ascending"}
-                          </span>
-                          : null
-                        }
-                      </TableSortLabel>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Grid>
-            </Hidden>
-            <Hidden smDown implementation="css">
-              <Typography align="right" variant="body2" color="textSecondary">
-                Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
-              </Typography>
-              <Typography align="right" variant="body2" color="textSecondary">
-                Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
-              </Typography>
-
-              <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>
-                <Link to={(selectedAssessments.type === "Kuis") ? `/lihat-jawaban-kuis/${selectedAssessments._id}` : `/lihat-jawaban-ujian/${selectedAssessments._id}`}>
-                  <Fab size="medium" variant="extended" className={classes.editFab}>
-                    <EditIcon className={classes.editIconFab} />
-                    Periksa
-                  </Fab>
-                </Link>
-
-                <LightTooltip title="Urutkan Kuis">
-                  <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-                    <SortIcon />
-                  </IconButton>
-                </LightTooltip>
-                <Menu
-                  keepMounted
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleCloseSortMenu}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  {headCells.map((headCell, i) => (
-                    <MenuItem
-                      key={headCell.id}
-                      sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                      <TableSortLabel
-                        active={orderBy === headCell.id}
-                        direction={orderBy === headCell.id ? order : "asc"}
-                        onClick={() => { handleRequestSort(headCell.id) }}
-                      >
-                        {headCell.label}
-                        {orderBy === headCell.id ?
-                          <span className={classes.visuallyHidden}>
-                            {order === "desc" ? "sorted descending" : "sorted ascending"}
-                          </span>
-                          : null
-                        }
-                      </TableSortLabel>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Grid>
-            </Hidden>
-          </Grid>
-          <Hidden smDown>
-            <Grid item xs={12}>
-              <Typography align="justify">
-                {selectedAssessments.description}
-              </Typography>
-            </Grid>
-          </Hidden> */}
-
+      <Paper className={classes.paperbox}>
+        <Grid container spacing={2}>
           <Hidden smDown>
             <Grid item xs={12} style={{ paddingBottom: "0" }}>
               <Typography variant="h4">{selectedAssessments.name}</Typography>
@@ -1144,6 +1082,7 @@ function SubmittedAssessmentList(props) {
             </Grid>
 
             <Grid item xs={12} md={5} spacing={8} style={{ paddingTop: "0" }}>
+              {/* h6 ditambahkan agar teks ini rata atas dengan teks nama mata pelajaran*/}
               <h6 style={{ marginBottom: "0" }}>
                 <Typography align="right" variant="body2" color="textSecondary">
                   Mulai:{" "}
@@ -1189,34 +1128,7 @@ function SubmittedAssessmentList(props) {
             <Divider className={classes.dividerColor} />
           </Grid>
 
-          <Grid item xs={12} style={{ marginTop: "30px" }}>
-            <Typography color="primary" gutterBottom>
-              Kelas yang Diberikan:
-            </Typography>
-            <Typography>
-              {!selectedAssessments.class_assigned || !all_classes.length
-                ? null
-                : selectedAssessments.class_assigned.map((kelas, i) => {
-                    let className = all_classes.find((cls) => cls._id === kelas)
-                      .name;
-                    if (className) {
-                      if (i === selectedAssessments.class_assigned.length - 1)
-                        return `${className}`;
-                      return `${className}, `;
-                    }
-                    return null;
-                  })}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} style={{ marginTop: "30px" }}>
-            <Typography color="primary" gutterBottom>
-              Deskripsi Kuis/Ujian:
-            </Typography>
-            <Typography>{selectedAssessments.description}</Typography>
-          </Grid>
-
-          <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>
+          <Grid container item justify="flex-end" alignItems="center">
             <Link
               to={
                 selectedAssessments.type === "Kuis"
@@ -1230,10 +1142,11 @@ function SubmittedAssessmentList(props) {
               </Fab>
             </Link>
 
-            <LightTooltip title="Urutkan Kuis">
+            <LightTooltip title={`Urutkan ${selectedAssessments.type}`}>
               <IconButton
                 onClick={handleOpenSortMenu}
                 className={classes.sortButton}
+                style={{ marginRight: "3px" }}
               >
                 <SortIcon />
               </IconButton>
@@ -1256,13 +1169,11 @@ function SubmittedAssessmentList(props) {
                 <MenuItem
                   key={headCell.id}
                   sortDirection={orderBy === headCell.id ? order : false}
+                  onClick={createSortHandler(headCell.id)}
                 >
                   <TableSortLabel
                     active={orderBy === headCell.id}
                     direction={orderBy === headCell.id ? order : "asc"}
-                    onClick={() => {
-                      handleRequestSort(headCell.id);
-                    }}
                   >
                     {headCell.label}
                     {orderBy === headCell.id ? (
@@ -1276,9 +1187,19 @@ function SubmittedAssessmentList(props) {
                 </MenuItem>
               ))}
             </Menu>
+            <LightTooltip title={`Export Hasil ${selectedAssessments.type}`}>
+              <IconButton
+                onClick={handleExportAssessment}
+                className={classes.sortButton}
+              >
+                <GetAppIcon />
+              </IconButton>
+            </LightTooltip>
+          </Grid>
+          <Grid item style={{ width: "100%", paddingBottom: "0" }}>
+            {listClassTab()}
           </Grid>
         </Grid>
-        {listClassTab()}
       </Paper>
       {/* jika selectedAssessment belum selesai diload, suspects akan bernilai null. Array kosong bernilai true*/}
       {suspects ? listClassTabPanel() : null}

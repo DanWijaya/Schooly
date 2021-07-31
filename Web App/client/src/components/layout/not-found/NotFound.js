@@ -19,7 +19,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     textAlign: "center",
     margin: "auto",
-    maxwidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     height: "350px",
     backgroundImage: `url(${notFoundBackground})`,
     backgroundPosition: "bottom",

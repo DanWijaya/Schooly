@@ -10,11 +10,10 @@ import AuthReducer from "./AuthReducer";
 import AnnouncementReducer from "./AnnouncementReducer";
 import SuccessReducer from "./SuccessReducer";
 import AssessmentReducer from "./AssessmentReducer";
-import MockReducer from "../prototypes/mock-users/MockReducer";
+import EventReducer from "./EventReducer";
 
 export default combineReducers({
   auth: UserReducer,
-  mockUserCollection: MockReducer,
   announcementsCollection: AnnouncementReducer,
   assessmentsCollection: AssessmentReducer,
   classesCollection: ClassReducer,
@@ -25,4 +24,5 @@ export default combineReducers({
   subjectsCollection: SubjectReducer,
   success: SuccessReducer,
   tasksCollection: TasksReducer,
+  eventsCollection: EventReducer
 });

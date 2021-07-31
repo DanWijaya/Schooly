@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
       border: `1px solid ${theme.palette.error.dark}`,
     },
   },
-
   dialogCancelButton: {
     width: "125px",
     backgroundColor: "white",
@@ -39,20 +38,20 @@ const useStyles = makeStyles((theme) => ({
   warningText: {
     color: theme.palette.error.main,
     marginLeft: "3px",
+    fontSize: "10px",
   },
   warningIcon: {
     color: theme.palette.error.main,
+    width: "15px",
+    height: "15px",
   },
   warning: {
     display: "flex",
-    flexDirection: "row",
     alignItems: "center",
-    marginBottom: "5px",
   },
 }));
 
 function DeleteDialog(props) {
-
   // const {
   //   openDeleteDialog,
   //   handleCloseDeleteDialog,
@@ -64,8 +63,18 @@ function DeleteDialog(props) {
   //   isWarning,
   // } = props;
   const classes = useStyles();
-  const { openDeleteDialog, handleCloseDeleteDialog, itemType, itemName, deleteItem, 
-    redirectLink, customMessage, customConfirm, customDecline, isWarning } = props;
+  const {
+    openDeleteDialog,
+    handleCloseDeleteDialog,
+    itemType,
+    itemName,
+    deleteItem,
+    redirectLink,
+    customMessage,
+    // customConfirm,
+    customDecline,
+    isWarning,
+  } = props;
 
   return (
     <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
@@ -79,80 +88,61 @@ function DeleteDialog(props) {
         <Grid item>
           {/* <Typography variant="h5" align="center">
             Hapus {itemType} berikut? */}
-          <Typography variant="h5" align="center" gutterBottom>
-            {customMessage ? `${customMessage} ${itemType}` : `Hapus ${itemType} berikut`}
+          <Typography variant="h6" align="center" gutterBottom>
+            {customMessage
+              ? `${customMessage} ${itemType}`
+              : `Hapus ${itemType} berikut?`}
           </Typography>
         </Grid>
-        {itemName ? (
+        <Grid item container direction="column" alignItems="center">
           <Grid item>
-            <Typography
-              align="center"
-              gutterBottom
-              style={{ marginTop: "10px" }}
-            >
-              <b>{itemName}</b>
-            </Typography>
+            {itemName ? (
+              <Typography align="center" gutterBottom>
+                <b>{itemName}</b>
+              </Typography>
+            ) : null}
+          </Grid>
+          <Grid item>
             {isWarning ? (
               <div className={classes.warning}>
-                <ErrorOutlineIcon
-                  className={classes.warningIcon}
-                  fontSize="small"
-                />
-                <Typography
-                  variant="caption"
-                  align="center"
-                  className={classes.warningText}
-                >
+                <ErrorOutlineIcon className={classes.warningIcon} />
+                <Typography align="center" className={classes.warningText}>
                   Nilai Murid pada {itemType} ini juga akan dihapus
                 </Typography>
               </div>
             ) : null}
           </Grid>
-        ) : null}
+        </Grid>
         <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item>
-          {!redirectLink ?
-            <Button
-              onClick={deleteItem}
-              startIcon={<DeleteOutlineIcon />}
-              className={classes.dialogDeleteButton}
-            >
-              Hapus
-            </Button>
-          : 
-          <Link to={redirectLink}>
+            {!redirectLink ? (
               <Button
-              onClick={deleteItem}
-              startIcon={<DeleteOutlineIcon />}
-              className={classes.dialogDeleteButton}
-            >
-              Hapus
-            </Button>
-          </Link>
-          }
-          </Grid>
-          <Grid item>
-            {/* {!isLink ? ( */}
-            {/* {!redirectLink ? */}
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={<CancelIcon />}
-                className={classes.dialogCancelButton}
+                onClick={deleteItem}
+                startIcon={<DeleteOutlineIcon />}
+                className={classes.dialogDeleteButton}
               >
-                {customDecline ? customDecline : "Batal"}
+                Iya
               </Button>
-            {/* ) : ( */}
-            {/* :
+            ) : (
               <Link to={redirectLink}>
                 <Button
-                  startIcon={<CancelIcon />}
-                  className={classes.dialogCancelButton}
+                  onClick={deleteItem}
+                  startIcon={<DeleteOutlineIcon />}
+                  className={classes.dialogDeleteButton}
                 >
-                  {customDecline ? customDecline : "Batal"}
+                  Iya
                 </Button>
               </Link>
             )}
-            } */}
+          </Grid>
+          <Grid item>
+            <Button
+              onClick={handleCloseDeleteDialog}
+              startIcon={<CancelIcon />}
+              className={classes.dialogCancelButton}
+            >
+              {customDecline ? customDecline : "Tidak"}
+            </Button>
           </Grid>
         </Grid>
       </Grid>

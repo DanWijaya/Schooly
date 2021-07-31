@@ -5,17 +5,15 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
-import { getTasksBySC, getAllTask } from "../../../actions/TaskActions";
+import { getAllTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import {
-  getKuisBySC,
-  getUjianBySC,
-  getAllAssessments,
-} from "../../../actions/AssessmentActions";
-import { getStudents, getStudentsByClass } from "../../../actions/UserActions";
+import { setCurrentClass } from "../../../actions/ClassActions";
+import { getAllAssessments } from "../../../actions/AssessmentActions";
+import { getStudents, getStudentsByClass, getTeachers } from "../../../actions/UserActions";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Fab,
@@ -40,6 +38,7 @@ import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import { AiOutlineUserSwitch } from "react-icons/ai";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
@@ -53,7 +52,10 @@ import { Bar } from "react-chartjs-2";
 const styles = (theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "10px",
   },
   timePaperStudent: {
@@ -103,8 +105,16 @@ const styles = (theme) => ({
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: "white",
       },
+      color: "black"
     },
   },
+  menuItemText: {
+    "&:hover": {
+        color: "white",
+      },
+      color: "black"
+  },
+  
   manageTaskButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -114,6 +124,19 @@ const styles = (theme) => ({
     },
   },
   manageTaskIcon: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+    marginRight: "7.5px",
+  },
+  manageHomeroomTeacherButton: {
+    backgroundColor: theme.palette.primary.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.dark,
+    },
+  },
+  manageHomeroomTeacherIcon: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
     marginRight: "7.5px",
@@ -167,6 +190,14 @@ const styles = (theme) => ({
     marginTop: "10px",
     alignItems: "center",
   },
+  greyBackground: {
+    display: "flex",
+    alignItems: "center",
+    textAlign: "center",
+    height: "100%",
+    padding: "15px",
+    backgroundColor: "#e3e5e5",
+  },
 });
 
 function TaskListItem(props) {
@@ -219,6 +250,55 @@ function TaskListItem(props) {
   );
 }
 
+function AssessmentListItemTeacher(props) {
+  const { classes } = props;
+
+  return (
+    <Grid item>
+      <Link to={props.link}>
+        <Paper variant="outlined" button className={classes.listItemPaper}>
+          <Badge
+            style={{ display: "flex", flexDirection: "row" }}
+            badgeContent={<WarningIcon className={classes.warningIcon} />}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <ListItem button className={classes.listItem}>
+              <Hidden xsDown>
+                <ListItemAvatar>
+                  <Avatar className={classes.assignmentLate}>
+                    {props.type === "Kuis" ? (
+                      <FaClipboardList />
+                    ) : (
+                      <BsClipboardData />
+                    )}
+                  </Avatar>
+                </ListItemAvatar>
+              </Hidden>
+              <ListItemText primary={props.title} secondary={props.subject} />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.createdAt).locale("id").format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.createdAt).locale("id").format("HH.mm")}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          </Badge>
+        </Paper>
+      </Link>
+    </Grid>
+  );
+}
+
 function DashboardGraph(props) {
   const { scores, workType, names } = props;
 
@@ -247,11 +327,12 @@ function DashboardGraph(props) {
       <Bar
         data={state}
         options={{
-          title: {
-            display: true,
-            text: `Nilai ${workType} Anda`,
-            fontSize: 20,
-          },
+          // title: {
+          //   display: true,
+          //   text: `Nilai ${workType} Anda`,
+          //   fontSize: 16,
+          //   fontStyle: "normal"
+          // },
           legend: {
             display: false,
             position: "right",
@@ -289,6 +370,26 @@ function DashboardGraph(props) {
   );
 }
 
+function sortAscByCreatedAt(rows) {
+  const stabilizedThis = rows.map((el, index) => [el, index]);
+  const descendingComparator = (a, b, orderBy) => {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  };
+  const comparator = (a, b) => descendingComparator(a, b, "createdAt");
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
 function ListAssessments(props) {
   const {
     category,
@@ -299,6 +400,7 @@ function ListAssessments(props) {
     classId,
     classes,
     all_subjects_map,
+    all_teachers
   } = props;
 
   function AssessmentListItem(props) {
@@ -306,8 +408,8 @@ function ListAssessments(props) {
     const [openDialog, setOpenDialog] = React.useState(false);
     const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-    const handleOpenDialog = (title, subject, start_date, end_date) => {
-      setCurrentDialogInfo({ title, subject, start_date, end_date });
+    const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
+      setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
       setOpenDialog(true);
     };
 
@@ -324,6 +426,7 @@ function ListAssessments(props) {
             handleOpenDialog(
               props.work_title,
               props.work_subject,
+              props.work_teacher_name,
               props.work_starttime,
               props.work_endtime
             )
@@ -384,10 +487,16 @@ function ListAssessments(props) {
               align="center"
               style={{ marginTop: "25px" }}
             >
-              Mulai : {currentDialogInfo.start_date}
+              Guru: {currentDialogInfo.teacher_name}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              align="center"
+            >
+              Mulai: {currentDialogInfo.start_date}
             </Typography>
             <Typography variant="subtitle1" align="center">
-              Selesai : {currentDialogInfo.end_date}
+              Selesai: {currentDialogInfo.end_date}
             </Typography>
             <Typography
               variant="subtitle2"
@@ -395,8 +504,8 @@ function ListAssessments(props) {
               color="textSecondary"
               style={{ marginTop: "10px", textAlign: "center" }}
             >
-              Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata
-              Pelajaran Terkait
+              Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
+              pelajaran terkait.
             </Typography>
           </div>
         </Dialog>
@@ -405,6 +514,7 @@ function ListAssessments(props) {
   }
 
   let AssessmentsList = [];
+  let TeacherList = []
   let result = [];
   if (Boolean(all_assessments.length)) {
     var i;
@@ -412,6 +522,12 @@ function ListAssessments(props) {
       let assessment = all_assessments[i];
       let class_assigned = assessment.class_assigned;
       if (class_assigned.indexOf(classId) !== -1) {
+        for (let j = 0; j < all_teachers.length; j++) {
+          if (all_teachers[j]._id === assessment.author_id) {
+            TeacherList.push(all_teachers[j].name);
+            break;
+          }
+        }
         AssessmentsList.push(assessment);
       }
       // if(i === all_assessments.length - 5){ // item terakhir harus pas index ke 4.
@@ -421,6 +537,7 @@ function ListAssessments(props) {
 
     for (i = 0; i < AssessmentsList.length; i++) {
       let assessment = AssessmentsList[i];
+      let teacher_name = TeacherList[i];
       let workCategoryAvatar =
         type === "Kuis" ? (
           <Avatar className={classes.assignmentLate}>
@@ -440,25 +557,34 @@ function ListAssessments(props) {
           assessment.type === "Kuis" &&
           assessment.posted
         ) {
-          result.push(
-            <AssessmentListItem
-              work_title={assessment.name}
-              work_category_avatar={workCategoryAvatar}
-              work_subject={
-                category === "subject"
-                  ? null
-                  : all_subjects_map.get(assessment.subject)
-              }
-              // work_status={workStatus}
-              work_starttime={moment(assessment.start_date)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_endtime={moment(assessment.end_date)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_dateposted={assessment.createdAt}
-            />
-          );
+          result.push({
+            name: assessment.name,
+            workCategoryAvatar: workCategoryAvatar,
+            subject: assessment.subject,
+            teacher_name: teacher_name,
+            start_date: assessment.start_date,
+            end_date: assessment.end_date,
+            createdAt: assessment.createdAt,
+          });
+          // result.push(
+          //   <AssessmentListItem
+          //     work_title={assessment.name}
+          //     work_category_avatar={workCategoryAvatar}
+          //     work_subject={
+          //       category === "subject"
+          //         ? null
+          //         : all_subjects_map.get(assessment.subject)
+          //     }
+          //     // work_status={workStatus}
+          //     work_starttime={moment(assessment.start_date)
+          //       .locale("id")
+          //       .format("DD MMM YYYY, HH:mm")}
+          //     work_endtime={moment(assessment.end_date)
+          //       .locale("id")
+          //       .format("DD MMM YYYY, HH:mm")}
+          //     work_dateposted={assessment.createdAt}
+          //   />
+          // );
         }
       }
       if (type === "Ujian") {
@@ -469,39 +595,60 @@ function ListAssessments(props) {
           assessment.type === "Ujian" &&
           assessment.posted
         ) {
-          result.push(
-            <AssessmentListItem
-              work_title={assessment.name}
-              work_category_avatar={workCategoryAvatar}
-              work_subject={
-                category === "subject"
-                  ? null
-                  : all_subjects_map.get(assessment.subject)
-              }
-              // work_status={workStatus}
-              work_starttime={moment(assessment.start_date)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_endtime={moment(assessment.end_date)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_dateposted={assessment.createdAt}
-            />
-          );
+          result.push({
+            name: assessment.name,
+            workCategoryAvatar: workCategoryAvatar,
+            subject: assessment.subject,
+            teacher_name: teacher_name,
+            start_date: assessment.start_date,
+            end_date: assessment.end_date,
+            createdAt: assessment.createdAt,
+          });
+          // result.push(
+          //   <AssessmentListItem
+          //     work_title={assessment.name}
+          //     work_category_avatar={workCategoryAvatar}
+          //     work_subject={
+          //       category === "subject"
+          //         ? null
+          //         : all_subjects_map.get(assessment.subject)
+          //     }
+          //     // work_status={workStatus}
+          //     work_starttime={moment(assessment.start_date)
+          //       .locale("id")
+          //       .format("DD MMM YYYY, HH:mm")}
+          //     work_endtime={moment(assessment.end_date)
+          //       .locale("id")
+          //       .format("DD MMM YYYY, HH:mm")}
+          //     work_dateposted={assessment.createdAt}
+          //   />
+          // );
         }
       }
-      if (!category && result.length === 5) break;
-      if (category === "subject" && result.length === 3) break;
     }
   }
   if (result.length === 0) {
-    result.push(
-      <Typography variant="subtitle1" align="center" color="textSecondary">
-        Kosong
-      </Typography>
-    );
+    return <Empty />;
+  } else {
+    return sortAscByCreatedAt(result).map((row) => (
+      <AssessmentListItem
+        work_title={row.name}
+        work_category_avatar={row.workCategoryAvatar}
+        work_subject={
+          category === "subject" ? null : all_subjects_map.get(row.subject)
+        }
+        work_teacher_name={row.teacher_name}
+        // work_status={workStatus}
+        work_starttime={moment(row.start_date)
+          .locale("id")
+          .format("DD MMM YYYY, HH:mm")}
+        work_endtime={moment(row.end_date)
+          .locale("id")
+          .format("DD MMM YYYY, HH:mm")}
+        work_dateposted={row.createdAt}
+      />
+    ));
   }
-  return result;
 }
 
 function WelcomePanel(props) {
@@ -549,6 +696,7 @@ class Dashboard extends Component {
       taskGraphCurrentSubject: null,
       quizGraphCurrentSubject: null,
       examGraphCurrentSubject: null,
+      allowedSubjectIndex: null
     };
   }
 
@@ -560,22 +708,23 @@ class Dashboard extends Component {
       getAllAssessments,
       getStudentsByClass,
       getStudents,
+      setCurrentClass,
+      getTeachers
     } = this.props;
     // const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
 
     getAllTask(); // actions yang membuat GET request ke Database.
     getAllSubjects();
+    getTeachers();
     getAllSubjects("map"); // untuk dapatin subject"nya gitu
+    setCurrentClass(user.kelas);
 
     // const { all_subjects_map } = this.props.subjectsCollection
     // let subjectArray = Object.keys(all_subjects_map)
 
     if (user.role === "Student") {
       getStudentsByClass(user.kelas);
-      // getTasksBySC
-      // getKuisBySC
-      // getUjianBySC
     }
     getAllAssessments();
     getAllTaskFilesByUser(user._id); // yang dapatin takfiles cuma berlaku untuk student soalnya
@@ -596,42 +745,78 @@ class Dashboard extends Component {
 
   changeGraphSubject = (workType, direction, subjectsLength) => {
     if (workType === "Tugas") {
-      if (direction === "Left" && this.state.taskGraphCurrentSubject > 0) {
+      let currentIndex = this.state.allowedSubjectIndex.indexOf(this.state.taskGraphCurrentSubject);
+      if (direction === "Left") {
+        let newIndex;
+        if(currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
+          newIndex = 0;
+        }
+        else {
+          newIndex = currentIndex + 1;
+        }
         this.setState({
-          taskGraphCurrentSubject: this.state.taskGraphCurrentSubject - 1,
+          taskGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
         });
-      } else if (
-        direction === "Right" &&
-        this.state.taskGraphCurrentSubject < subjectsLength - 1
-      ) {
+      } else if (direction === "Right") {
+        let newIndex;
+        if(currentIndex - 1 < 0) {
+          newIndex = this.state.allowedSubjectIndex.length - 1;
+        }
+        else {
+          newIndex = currentIndex - 1;
+        }
         this.setState({
-          taskGraphCurrentSubject: this.state.taskGraphCurrentSubject + 1,
+          taskGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
         });
       }
     } else if (workType === "Kuis") {
-      if (direction === "Left" && this.state.quizGraphCurrentSubject > 0) {
+      let currentIndex = this.state.allowedSubjectIndex.indexOf(this.state.quizGraphCurrentSubject);
+      if (direction === "Left") {
+        let newIndex;
+        if(currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
+          newIndex = 0;
+        }
+        else {
+          newIndex = currentIndex + 1;
+        }
         this.setState({
-          quizGraphCurrentSubject: this.state.quizGraphCurrentSubject - 1,
+          taskGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
         });
-      } else if (
-        direction === "Right" &&
-        this.state.quizGraphCurrentSubject < subjectsLength - 1
-      ) {
+      } else if (direction === "Right") {
+        let newIndex;
+        if(currentIndex - 1 < 0) {
+          newIndex = this.state.allowedSubjectIndex.length - 1;
+        }
+        else {
+          newIndex = currentIndex - 1;
+        }
         this.setState({
-          quizGraphCurrentSubject: this.state.quizGraphCurrentSubject + 1,
+          quizGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
         });
       }
     } else if (workType === "Ujian") {
-      if (direction === "Left" && this.state.examGraphCurrentSubject > 0) {
+      let currentIndex = this.state.allowedSubjectIndex.indexOf(this.state.examGraphCurrentSubject);
+      if (direction === "Left") {
+        let newIndex;
+        if(currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
+          newIndex = 0;
+        }
+        else {
+          newIndex = currentIndex + 1;
+        }
         this.setState({
-          examGraphCurrentSubject: this.state.examGraphCurrentSubject - 1,
+          examGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
         });
-      } else if (
-        direction === "Right" &&
-        this.state.examGraphCurrentSubject < subjectsLength - 1
-      ) {
+      } else if (direction === "Right") {
+        let newIndex;
+        if(currentIndex - 1 < 0) {
+          newIndex = this.state.allowedSubjectIndex.length - 1;
+        }
+        else {
+          newIndex = currentIndex - 1;
+        }
         this.setState({
-          examGraphCurrentSubject: this.state.examGraphCurrentSubject + 1,
+          examGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
         });
       }
     }
@@ -640,33 +825,50 @@ class Dashboard extends Component {
   render() {
     const { classes, tasksCollection } = this.props;
 
-    const { user, all_students } = this.props.auth;
+    const { user, all_students, all_teachers } = this.props.auth;
     const { all_user_files } = this.props.filesCollection;
     const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { all_assessments } = this.props.assessmentsCollection;
+    const { kelas } = this.props.classesCollection
 
     const classId = user.kelas;
+    console.log(this.props.classesCollection)
+    console.log(all_teachers)
 
     if (
-      this.state.taskGraphCurrentSubject === null &&
-      all_subjects.length !== 0
+      this.state.allowedSubjectIndex === null &&
+      all_subjects.length !== 0 &&
+      Object.keys(kelas).length !== 0
     ) {
-      let randomNumber = Math.floor(Math.random() * all_subjects.length);
-      this.setState({ taskGraphCurrentSubject: randomNumber });
-    }
-    if (
-      this.state.quizGraphCurrentSubject === null &&
-      all_subjects.length !== 0
-    ) {
-      let randomNumber = Math.floor(Math.random() * all_subjects.length);
-      this.setState({ quizGraphCurrentSubject: randomNumber });
-    }
-    if (
-      this.state.examGraphCurrentSubject === null &&
-      all_subjects.length !== 0
-    ) {
-      let randomNumber = Math.floor(Math.random() * all_subjects.length);
-      this.setState({ examGraphCurrentSubject: randomNumber });
+      let allowedIndexes = [];
+      console.log(kelas)
+      for(let i=0;i<all_subjects.length;i++) {
+        if(kelas.subject_assigned.includes(all_subjects[i]._id)) {
+          allowedIndexes.push(i);
+        }
+      }
+      this.setState({ allowedSubjectIndex: allowedIndexes });
+      if (
+        this.state.taskGraphCurrentSubject === null &&
+        all_subjects.length !== 0
+      ) {
+        let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+        this.setState({ taskGraphCurrentSubject: randomNumber });
+      }
+      if (
+        this.state.quizGraphCurrentSubject === null &&
+        all_subjects.length !== 0
+      ) {
+        let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+        this.setState({ quizGraphCurrentSubject: randomNumber });
+      }
+      if (
+        this.state.examGraphCurrentSubject === null &&
+        all_subjects.length !== 0
+      ) {
+        let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+        this.setState({ examGraphCurrentSubject: randomNumber });
+      }
     }
 
     function graphTask(subjectIndex) {
@@ -698,22 +900,46 @@ class Dashboard extends Component {
               workType="Tugas"
             />
           );
-        } else{
+        } else {
           return (
-            <Typography
-              align="center"
-              color="textSecondary"
-              variant="subtitle-1"
-            >
-              Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
-            </Typography>
+            <Grid item style={{ height: "270px", width: "250px" }}>
+              <div className={classes.greyBackground}>
+                <Typography
+                  align="center"
+                  color="textSecondary"
+                  variant="subtitle1"
+                >
+                  Belum ada Tugas yang telah dinilai untuk mata pelajaran
+                  terkait
+                </Typography>
+              </div>
+            </Grid>
+
+            // <Typography
+            //   align="center"
+            //   color="textSecondary"
+            //   variant="subtitle-1"
+            // >
+            //   Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
+            // </Typography>
           );
         }
-      } else{
+      } else {
         return (
-          <Typography align="center" color="textSecondary" variant="subtitle-1">
-            Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
-          </Typography>
+          <Grid item style={{ height: "270px", width: "250px" }}>
+            <div className={classes.greyBackground}>
+              <Typography
+                align="center"
+                color="textSecondary"
+                variant="subtitle1"
+              >
+                Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
+              </Typography>
+            </div>
+          </Grid>
+          // <Typography align="center" color="textSecondary" variant="subtitle-1">
+          //   Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
+          // </Typography>
         );
       }
     }
@@ -768,22 +994,47 @@ class Dashboard extends Component {
               workType={type}
             />
           );
-        } else{
+        } else {
           return (
-            <Typography
-              align="center"
-              color="textSecondary"
-              variant="subtitle-1"
-            >
-              Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
-            </Typography>
+            <Grid item style={{ height: "270px", width: "250px" }}>
+              <div className={classes.greyBackground}>
+                <Typography
+                  align="center"
+                  color="textSecondary"
+                  variant="subtitle1"
+                >
+                  Belum ada {type} yang telah dinilai untuk mata pelajaran
+                  terkait
+                </Typography>
+              </div>
+            </Grid>
+
+            // <Typography
+            //   align="center"
+            //   color="textSecondary"
+            //   variant="subtitle-1"
+            // >
+            //   Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
+            // </Typography>
           );
         }
-      } else{
+      } else {
         return (
-          <Typography align="center" color="textSecondary" variant="subtitle-1">
-            Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
-          </Typography>
+          <Grid item style={{ height: "270px", width: "250px" }}>
+            <div className={classes.greyBackground}>
+              <Typography
+                align="center"
+                color="textSecondary"
+                variant="subtitle1"
+              >
+                Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
+              </Typography>
+            </div>
+          </Grid>
+
+          // <Typography align="center" color="textSecondary" variant="subtitle-1">
+          //   Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
+          // </Typography>
         );
       }
     }
@@ -793,45 +1044,56 @@ class Dashboard extends Component {
       // tasksByClass.map((task) => {
       tasksByClass.forEach((task) => {
         let flag = true;
+        let teacher_name;
         for (var i = 0; i < all_user_files.length; i++) {
           if (all_user_files[i].for_task_object === task._id) {
             flag = false;
             break;
           }
         }
+        for (var i = 0; i < all_teachers.length; i++) {
+          if (all_teachers[i]._id == task.person_in_charge_id) {
+            teacher_name = all_teachers[i].name;
+          }
+        }
         if (!all_subjects_map.get(task.subject)) {
           flag = false;
         }
         if (flag) {
-          result.push(
-            <TaskListItem
-              classes={classes}
-              work_title={task.name}
-              work_sender={all_subjects_map.get(task.subject)}
-              work_deadline_mobile={moment(task.deadline)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_deadline_desktop={moment(task.deadline)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_link={`/tugas-murid/${task._id}`}
-              work_dateposted={task.createdAt}
-            />
-          );
+          result.push({
+            _id: task._id,
+            name: task.name,
+            teacher_name: teacher_name,
+            subject: task.subject,
+            deadline: task.deadline,
+            createdAt: task.createdAt,
+          });
         }
       });
       if (result.length === 0) {
-        result.push(
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
-        );
+        return <Empty />;
+      } else {
+        return sortAscByCreatedAt(result).map((row) => (
+          <TaskListItem
+            classes={classes}
+            work_title={row.name}
+            work_sender={all_subjects_map.get(row.subject)}
+            work_deadline_mobile={moment(row.deadline)
+              .locale("id")
+              .format("DD MMM YYYY, HH:mm")}
+            work_deadline_desktop={moment(row.deadline)
+              .locale("id")
+              .format("DD MMM YYYY, HH:mm")}
+            work_link={`/tugas-murid/${row._id}`}
+            work_dateposted={row.createdAt}
+          />
+        ));
       }
-      return result;
     }
 
     function listTasksTeacher() {
       let result = [];
+      console.log(user);
       for (let i = 0; i < tasksCollection.length; i++) {
         if (tasksCollection[i].person_in_charge_id === user._id) {
           let number_students_assigned = 0;
@@ -847,32 +1109,109 @@ class Dashboard extends Component {
             number_students_assigned
           ) {
             let task = tasksCollection[i];
-            result.push(
-              <TaskListItem
-                classes={classes}
-                work_title={task.name}
-                work_sender={all_subjects_map.get(task.subject)}
-                work_deadline_mobile={moment(task.deadline)
-                  .locale("id")
-                  .format("DD MMM YYYY, HH:mm")}
-                work_deadline_desktop={moment(task.deadline)
-                  .locale("id")
-                  .format("DD MMM YYYY, HH:mm")}
-                work_link={`/tugas-guru/${task._id}`}
-                work_dateposted={task.createdAt}
-              />
-            );
+            result.push({
+              _id: task._id,
+              name: task.name,
+              subject: task.subject,
+              deadline: task.deadline,
+              createdAt: task.createdAt,
+            });
           }
         }
       }
       if (result.length === 0) {
-        result.push(
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
-        );
+        return <Empty />;
+      } else {
+        return sortAscByCreatedAt(result).map((row) => {
+          return (
+            <TaskListItem
+              classes={classes}
+              work_title={row.name}
+              work_sender={all_subjects_map.get(row.subject)}
+              work_deadline_mobile={moment(row.deadline)
+                .locale("id")
+                .format("DD MMM YYYY, HH:mm")}
+              work_deadline_desktop={moment(row.deadline)
+                .locale("id")
+                .format("DD MMM YYYY, HH:mm")}
+              work_link={`/tugas-guru/${row._id}`}
+              work_dateposted={row.createdAt}
+            />
+          );
+        });
       }
-      return result;
+    }
+
+    function listAssessmentsTeacher(assessmentType) {
+      // menampilkan assessment jika ada submission yang belum selesai dinilai
+
+      let result = [];
+      let lowerCaseType = assessmentType === "Kuis" ? "kuis" : "ujian";
+
+      for (let i = 0; i < all_assessments.length; i++) {
+        let assessment = all_assessments[i];
+        if (assessment.type === assessmentType) {
+          // jika terdapat soal uraian pada kuis ini dan sudah ada 1 atau lebih murid yg mengumpulkan jawaban
+          if (
+            assessment.question_weight.longtext !== null &&
+            assessment.submissions &&
+            Object.keys(assessment.submissions).length > 0
+          ) {
+            // jika ada murid yang jawaban uraiannya sudah dinilai
+            if (
+              assessment.grades &&
+              Object.keys(assessment.grades).length > 0
+            ) {
+              // untuk setiap murid yang sudah mengumpulkan jawaban
+              for (const studentId of Object.keys(assessment.submissions)) {
+                // jika ada jawaban uraian yang belum dinilai
+                if (
+                  !(
+                    Object.keys(assessment.grades).includes(studentId) &&
+                    assessment.grades[studentId].total_grade !== null
+                  )
+                ) {
+                  // tampilkan di list
+                  result.push({
+                    _id: assessment._id,
+                    title: assessment.name,
+                    subject: assessment.subject,
+                    createdAt: assessment.createdAt,
+                    type: assessment.type,
+                  });
+                  break;
+                }
+              }
+            } else {
+              // jika belum ada satupun murid yang jawaban uraiannya sudah dinilai, tampilkan di list
+              result.push({
+                _id: assessment._id,
+                title: assessment.name,
+                subject: assessment.subject,
+                createdAt: assessment.createdAt,
+                type: assessment.type,
+              });
+            }
+          }
+        }
+      }
+
+      if (result.length === 0) {
+        return <Empty />;
+      } else {
+        return sortAscByCreatedAt(result).map((row) => {
+          return (
+            <AssessmentListItemTeacher
+              classes={classes}
+              title={row.title}
+              subject={all_subjects_map.get(row.subject)}
+              link={`/daftar-${lowerCaseType}-terkumpul/${row._id}`}
+              createdAt={row.createdAt}
+              type={row.type}
+            />
+          );
+        });
+      }
     }
 
     function showSubject(subjectIndex) {
@@ -991,6 +1330,7 @@ class Dashboard extends Component {
                           classId={classId}
                           classes={classes}
                           all_subjects_map={all_subjects_map}
+                          all_teachers={all_teachers}
                         />
                       </Grid>
                     </Paper>
@@ -1037,6 +1377,7 @@ class Dashboard extends Component {
                           classId={classId}
                           classes={classes}
                           all_subjects_map={all_subjects_map}
+                          all_teachers={all_teachers}
                         />
                       </Grid>
                     </Paper>
@@ -1057,7 +1398,7 @@ class Dashboard extends Component {
                           <Grid item>
                             <Grid container alignItems="center">
                               <Typography variant="h5" color="primary">
-                                Diagram Batang Tugas
+                                Nilai Tugas Anda
                               </Typography>
                             </Grid>
                           </Grid>
@@ -1105,7 +1446,7 @@ class Dashboard extends Component {
                           <Grid item>
                             <Grid container alignItems="center">
                               <Typography variant="h5" color="primary">
-                                Diagram Batang Kuis
+                                Nilai Kuis Anda
                               </Typography>
                             </Grid>
                           </Grid>
@@ -1164,7 +1505,7 @@ class Dashboard extends Component {
                           <Grid item>
                             <Grid container alignItems="center">
                               <Typography variant="h5" color="primary">
-                                Diagram Batang Ujian
+                                Nilai Ujian Anda
                               </Typography>
                             </Grid>
                           </Grid>
@@ -1218,17 +1559,6 @@ class Dashboard extends Component {
                 alignItems="center"
               >
                 <Grid item>
-                  <Link to="/daftar-tugas">
-                    <Fab
-                      variant="extended"
-                      className={classes.manageTaskButton}
-                    >
-                      <AssignmentIcon className={classes.manageTaskIcon} />
-                      Lihat Tugas
-                    </Fab>
-                  </Link>
-                </Grid>
-                <Grid item>
                   <Fab
                     className={classes.createButton}
                     onClick={(event) => this.handleMenuOpen(event)}
@@ -1251,96 +1581,205 @@ class Dashboard extends Component {
                       horizontal: "center",
                     }}
                   >
-                    <MenuItem
-                      button
-                      component="a"
-                      href="/buat-pengumuman"
-                      className={classes.menuItem}
-                    >
+                    <Link to="/buat-pengumuman">
+                      <MenuItem
+                        className={classes.menuItem}
+                      >
                       <ListItemIcon>
                         <AnnouncementIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Pengumuman" />
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Pengumuman</Typography>}/>
                     </MenuItem>
+                    </Link>
+                    <Link to="/buat-materi">
                     <MenuItem
-                      button
-                      component="a"
-                      href="/buat-materi"
                       className={classes.menuItem}
                     >
                       <ListItemIcon>
                         <MenuBookIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Materi" />
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Materi</Typography>} />
                     </MenuItem>
+                    </Link>
+                    <Link to="/buat-tugas">
                     <MenuItem
-                      button
-                      component="a"
-                      href="/buat-tugas"
                       className={classes.menuItem}
                     >
                       <ListItemIcon>
                         <AssignmentIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Tugas" />
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Tugas</Typography>} />
                     </MenuItem>
+                    </Link>
+                    <Link to="/buat-kuis">
                     <MenuItem
-                      button
-                      component="a"
-                      href="/buat-kuis-ujian"
                       className={classes.menuItem}
                     >
                       <ListItemIcon>
                         <FaTasks />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Kuis/Ujian" />
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Kuis</Typography>} />
                     </MenuItem>
+                    </Link>
+                    <Link to="/buat-ujian">
+                    <MenuItem
+                      className={classes.menuItem}
+                    >
+                      <ListItemIcon>
+                        <FaTasks />
+                      </ListItemIcon>
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Ujian</Typography>} />
+                    </MenuItem>
+                    </Link>
+                    {/* <Link to="/buat-kuis-ujian">
+                    <MenuItem
+                      className={classes.menuItem}
+                    >
+                      <ListItemIcon>
+                        <FaTasks />
+                      </ListItemIcon>
+                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Kuis/Ujian</Typography>} />
+                    </MenuItem>
+                    </Link> */}
                   </Menu>
                 </Grid>
               </Grid>
-              <Grid
-                item
-                direction="row"
-                spacing={2}
-                xs={12}
-                style={{ marginTop: "10px" }}
-              >
-                <Paper style={{ padding: "20px" }}>
-                  <Grid
-                    container
-                    justify="space-between"
-                    alignItems="center"
-                    style={{ marginBottom: "15px" }}
-                  >
-                    <Grid item>
-                      <Grid container alignItems="center">
-                        <AssignmentIcon
-                          color="action"
-                          style={{ marginRight: "10px", fontSize: "20px" }}
-                        />
-                        <Typography variant="h5" color="primary">
-                          Tugas Yang Belum Diperiksa
-                        </Typography>
+              <Grid item xs={12} style={{ marginTop: "20px" }}>
+                <Grid container direction="column" spacing={2}>
+                  <Grid item>
+                    <Paper style={{ padding: "20px" }}>
+                      <Grid
+                        container
+                        justify="space-between"
+                        alignItems="center"
+                        style={{ marginBottom: "15px" }}
+                      >
+                        <Grid item>
+                          <Grid container alignItems="center">
+                            <AssignmentIcon
+                              color="action"
+                              style={{ marginRight: "10px", fontSize: "20px" }}
+                            />
+                            <Typography variant="h5" color="primary">
+                              Tugas yang Belum Diperiksa
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Link to="/daftar-tugas">
+                            <LightTooltip title="Lihat Semua" placement="top">
+                              <IconButton>
+                                <ChevronRightIcon />
+                              </IconButton>
+                            </LightTooltip>
+                          </Link>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                    <Grid item>
-                      <Link to="/daftar-tugas">
-                        <LightTooltip title="Lihat Semua" placement="top">
-                          <IconButton>
-                            <ChevronRightIcon />
-                          </IconButton>
-                        </LightTooltip>
-                      </Link>
-                    </Grid>
+                      <Grid container direction="column" spacing={1}>
+                        {listTasksTeacher()}
+                      </Grid>
+                    </Paper>
                   </Grid>
-                  <Grid container direction="column" spacing={1}>
-                    {listTasksTeacher()}
+                  <Grid item>
+                    <Paper style={{ padding: "20px" }}>
+                      <Grid
+                        container
+                        justify="space-between"
+                        alignItems="center"
+                        style={{ marginBottom: "15px" }}
+                      >
+                        <Grid item>
+                          <Grid container alignItems="center">
+                            <FaClipboardList
+                              style={{
+                                marginRight: "10px",
+                                fontSize: "20px",
+                                color: "grey",
+                              }}
+                            />
+                            <Typography variant="h5" color="primary">
+                              Kuis yang Belum Diperiksa
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Link to="/daftar-kuis">
+                            <LightTooltip title="Lihat Semua" placement="top">
+                              <IconButton>
+                                <ChevronRightIcon />
+                              </IconButton>
+                            </LightTooltip>
+                          </Link>
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="column" spacing={1}>
+                        {listAssessmentsTeacher("Kuis")}
+                      </Grid>
+                    </Paper>
                   </Grid>
-                </Paper>
+                  <Grid item>
+                    <Paper style={{ padding: "20px" }}>
+                      <Grid
+                        container
+                        justify="space-between"
+                        alignItems="center"
+                        style={{ marginBottom: "15px" }}
+                      >
+                        <Grid item>
+                          <Grid container alignItems="center">
+                            <BsClipboardData
+                              color="action"
+                              style={{
+                                marginRight: "10px",
+                                fontSize: "20px",
+                                color: "grey",
+                              }}
+                            />
+                            <Typography variant="h5" color="primary">
+                              Ujian yang Belum Diperiksa
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Link to="/daftar-ujian">
+                            <LightTooltip title="Lihat Semua" placement="top">
+                              <IconButton>
+                                <ChevronRightIcon />
+                              </IconButton>
+                            </LightTooltip>
+                          </Link>
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="column" spacing={1}>
+                        {listAssessmentsTeacher("Ujian")}
+                      </Grid>
+                    </Paper>
+                  </Grid>
+                </Grid>
               </Grid>
             </>
           ) : (
-            <Grid item container direction="row" justify="flex-end">
+            <Grid
+              item
+              container
+              direction="row"
+              justify="flex-end"
+              alignItems="center"
+              spacing={1}
+            >
+              <Grid item>
+                <Link to="/atur-walikelas">
+                  <Fab
+                    variant="extended"
+                    className={classes.manageHomeroomTeacherButton}
+                  >
+                    <AiOutlineUserSwitch
+                      className={classes.manageHomeroomTeacherIcon}
+                    />
+                    Atur Wali Kelas
+                  </Fab>
+                </Link>
+              </Grid>
               <Grid item>
                 <Link to="/daftar-kelas">
                   <Fab variant="extended" className={classes.manageClassButton}>
@@ -1348,6 +1787,55 @@ class Dashboard extends Component {
                     Atur Kelas
                   </Fab>
                 </Link>
+              </Grid>
+              <Grid item>
+                <Fab
+                  className={classes.createButton}
+                  onClick={(event) => this.handleMenuOpen(event)}
+                >
+                  <AddIcon />
+                </Fab>
+                <Menu
+                  keepMounted
+                  anchorEl={this.state.anchorEl}
+                  open={Boolean(this.state.anchorEl)}
+                  onClose={this.handleMenuClose}
+                  getContentAnchorEl={null}
+                  style={{ marginTop: "10px" }}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  <MenuItem
+                    button
+                    component="a"
+                    href="/buat-kelas"
+                    className={classes.menuItem}
+                  >
+                    <ListItemIcon>
+                      <FaChalkboardTeacher
+                        className={classes.manageClassIcon}
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Kelas" />
+                  </MenuItem>
+                  <MenuItem
+                    button
+                    component="a"
+                    href="/buat-pengumuman"
+                    className={classes.menuItem}
+                  >
+                    <ListItemIcon>
+                      <AnnouncementIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Pengumuman" />
+                  </MenuItem>
+                </Menu>
               </Grid>
             </Grid>
           )}
@@ -1369,9 +1857,8 @@ Dashboard.propTypes = {
   getAllAssessments: PropTypes.func.isRequired,
   getStudentsByClass: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
-  getTasksBySC: PropTypes.func.isRequired,
-  getKuisBySC: PropTypes.func.isRequired,
-  getUjianBySC: PropTypes.func.isRequired,
+  getTeachers: PropTypes.func.isRequired,
+  setCurrentClass: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -1391,8 +1878,7 @@ export default withRouter(
     getAllAssessments,
     getStudentsByClass,
     getStudents,
-    getTasksBySC,
-    getKuisBySC,
-    getUjianBySC,
+    setCurrentClass,
+    getTeachers
   })(withStyles(styles)(Dashboard))
 );

@@ -3,14 +3,17 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import { getFileAnnouncements } from "../../../actions/files/FileAnnouncementActions";
 import {
   getOneAnnouncement,
   updateAnnouncement,
 } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
+import { refreshTeacher } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import { clearSuccess } from "../../../actions/SuccessActions"
+import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -27,11 +30,13 @@ import {
   MenuItem,
   Paper,
   Select,
+  Snackbar,
   TextField,
   Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
+import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {
   FaFile,
@@ -42,13 +47,17 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import { truncate } from "fs";
 
 const path = require("path");
 
 const styles = (theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "10px",
   },
   content: {
@@ -106,8 +115,6 @@ const styles = (theme) => ({
     backgroundColor: "#808080",
   },
   editAnnouncementButton: {
-    width: "100%",
-    marginTop: "20px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -115,6 +122,19 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+    },
+    marginRight: "7.5px",
+  },
+  zeroHeightHelperText: {
+    height: "0",
+    display: "flex" // untuk men-disable "collapsing margin"
+  }
 });
 
 function LampiranFile(props) {
@@ -167,15 +187,17 @@ function LampiranFile(props) {
             }
             secondary={filetype}
           />
-          <IconButton
-            size="small"
-            className={classes.deleteIconButton}
-            onClick={(e) => {
-              handleLampiranDelete(e, i);
-            }}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
+          <LightTooltip title="Hapus Lampiran">
+            <IconButton
+              size="small"
+              className={classes.deleteIconButton}
+              onClick={(e) => {
+                handleLampiranDelete(e, i);
+              }}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </LightTooltip>
         </ListItem>
       </Paper>
     </Grid>
@@ -188,13 +210,21 @@ class EditAnnouncement extends Component {
     this.state = {
       title: "",
       description: "",
+      originalFileLampiran: [],
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
+      fileLimitSnackbar: false,
+      over_limit: [],
       class_assigned: [],
       anchorEl: null,
       openUploadDialog: null,
+      openDeleteDialog: null,
       errors: {},
+      success: null,
+      target_role: [],
+      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
+      allClassObject: null // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
     };
   }
 
@@ -203,62 +233,124 @@ class EditAnnouncement extends Component {
 
   componentDidMount() {
     const { user } = this.props.auth;
-    const { setCurrentClass, getOneAnnouncement, getAllClass } = this.props;
+    const {
+      setCurrentClass,
+      getOneAnnouncement,
+      getAllClass,
+      getFileAnnouncements,
+      refreshTeacher
+    } = this.props;
+    const { id } = this.props.match.params;
 
-    getOneAnnouncement(this.props.match.params.id);
+    getOneAnnouncement(id);
     getAllClass();
-    if (user.role === "Student") setCurrentClass(user.kelas);
+    getFileAnnouncements(id).then((result) => {
+      this.setState({ fileLampiran: result, originalFileLampiran: result });
+    });
+
+    if (user.role === "Student") {
+      setCurrentClass(user.kelas);
+    } else if (user.role === "Teacher") {
+      refreshTeacher(user._id);
+    }
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
-    this.props.clearSuccess()
+  componentWillUnmount() {
+    // this.props.clearErrors();
+    this.props.clearSuccess();
   }
 
   // kurang tau gimana cara ubah.
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { selectedAnnouncements } = nextProps.announcements;
 
-    if (!nextProps.errors) {
-      this.handleOpenUploadDialog();
-    }
+    // if edited, nextProps.errors is false, supaya ndak run ini..
+    this.setState({
+      title: selectedAnnouncements.title,
+      description: selectedAnnouncements.description,
+      // fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : [],
+      class_assigned: Boolean(selectedAnnouncements.class_assigned)
+        ? selectedAnnouncements.class_assigned
+        : [],
+      target_role: selectedAnnouncements.to,
+      // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
+      // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
+    });
+  }
 
-    if (nextProps.errors) {
-      // if edited, nextProps.errors is false, supaya ndak run ini..
-      this.setState({
-        title: selectedAnnouncements.title,
-        description: selectedAnnouncements.description,
-        fileLampiran: Boolean(selectedAnnouncements.lampiran)
-          ? selectedAnnouncements.lampiran
-          : [],
-        class_assigned: Boolean(selectedAnnouncements.class_assigned)
-          ? selectedAnnouncements.class_assigned
-          : [],
-        // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
-        // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
-      });
+  componentDidUpdate(prevProps, prevState) {
+    // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas
+    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
+      const selectedAnnouncementProps = this.props.announcements.selectedAnnouncements;
+
+      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
+      selectedAnnouncementProps && selectedAnnouncementProps.constructor === Object && (Object.keys(selectedAnnouncementProps).length !== 0)) {
+        
+        let newClassOptions = [];
+        let all_classes_obj = {};
+
+        if (this.props.auth.user.role === "Teacher") {
+          // perlu dicek karena hanya guru yang memiliki atribut yang berisi kelas-kelas yand diajar
+
+          this.props.classesCollection.all_classes.forEach((classInfo) => {
+            all_classes_obj[classInfo._id] = classInfo.name;
+          });
+
+          if (this.props.auth.user.class_teached) {
+            newClassOptions = this.props.auth.user.class_teached.map((classId) => {
+              return { _id: classId, name: all_classes_obj[classId] };
+            });
+          }
+        } else {
+          this.props.classesCollection.all_classes.forEach((classInfo) => {
+            all_classes_obj[classInfo._id] = classInfo.name;
+            newClassOptions.push({ _id: classInfo._id, name: classInfo.name });
+          });
+        }
+
+        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+      }
     }
   }
 
   handleLampiranUpload = (e) => {
-    const files = e.target.files;
-    let temp;
-    let tempToAdd;
-    if (this.state.fileLampiran.length === 0){
-      this.setState({fileLampiran: Array.from(files), fileLampiranToAdd: Array.from(files)})
-    }
-    else {
+    const files = Array.from(e.target.files);
+    if (this.state.fileLampiran.length === 0) {
+      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+      let allowed_file = files.filter(
+        (file) => file.size / Math.pow(10, 6) <= 10
+      );
+      this.setState({
+        fileLampiran: allowed_file,
+        fileLampiranToAdd: allowed_file,
+        over_limit: over_limit,
+        fileLimitSnackbar: over_limit.length > 0,
+      });
+    } else {
       if (files.length !== 0) {
-        temp = [...this.state.fileLampiran, ...Array.from(files)];
-        tempToAdd = [...this.state.fileLampiranToAdd, ...Array.from(files)]
-        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
+        let allowed_file = files.filter(
+          (file) => file.size / Math.pow(10, 6) <= 10
+        );
+        let over_limit = files.filter(
+          (file) => file.size / Math.pow(10, 6) > 10
+        );
+
+        let temp = [...this.state.fileLampiran, ...allowed_file];
+        let file_to_upload = [...this.state.fileLampiranToAdd, ...allowed_file];
+        allowed_file = temp;
+        this.setState({
+          fileLampiran: allowed_file,
+          fileLampiranToAdd: file_to_upload,
+          over_limit: over_limit,
+          fileLimitSnackbar: over_limit.length > 0,
+        });
       }
     }
     document.getElementById("file_control").value = null;
   };
 
   handleLampiranDelete = (e, i, name) => {
-    e.preventDefault()
+    e.preventDefault();
     let temp = Array.from(this.state.fileLampiran);
     let tempToDelete = this.state.fileLampiranToDelete;
     let tempToAdd = this.state.fileLampiranToAdd;
@@ -298,12 +390,32 @@ class EditAnnouncement extends Component {
     this.setState({ openUploadDialog: true });
   };
 
-  onChange = (e, otherfield = null) => {
-    if (otherfield) {
-      this.setState({ [otherfield]: e.target.value });
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false});
+  }
+
+  handleOpenDeleteDialog = () => {
+    this.setState({ openDeleteDialog: true });
+  };
+
+
+  handleCloseDeleteDialog = () => {
+    this.setState({ openDeleteDialog: false });
+  };
+
+  handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
     }
+    this.setState({ fileLimitSnackbar: false });
+  };
+
+  onChange = (e, otherfield = null) => {
+    let field = otherfield ? otherfield : e.target.id;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+    this.setState({ [field]: e.target.value });
   };
 
   onSubmit = (e) => {
@@ -313,34 +425,57 @@ class EditAnnouncement extends Component {
     const {
       fileLampiranToAdd,
       fileLampiranToDelete,
-      fileLampiran,
+      // fileLampiran,
     } = this.state;
     const { user } = this.props.auth;
     const { kelas } = this.props.classesCollection;
     const { selectedAnnouncements } = this.props.announcements;
-
     const announcementObject = {
       title: this.state.title,
       description: this.state.description,
       class_assigned:
-        user.role === "Student" ? [kelas] : this.state.class_assigned,
+        user.role === "Student"
+          ? [kelas]
+          : user.role === "Admin"
+          ? [null]
+          : this.state.class_assigned,
       errors: {},
+      to: user.role === "Admin" ? this.state.target_role : ["Student"],
     };
 
-    let formData = new FormData()
-    for (var i = 0; i< fileLampiranToAdd.length; i++) {
-      formData.append("lampiran_announcement", fileLampiranToAdd[i])
+    let formData = new FormData();
+    for (var i = 0; i < fileLampiranToAdd.length; i++) {
+      formData.append("lampiran_announcement", fileLampiranToAdd[i]);
     }
+    
+    this.handleOpenUploadDialog();
 
-    this.props.updateAnnouncement(
-      formData,
-      fileLampiranToDelete,
-      selectedAnnouncements.lampiran,
-      announcementObject,
-      id,
-      this.props.history
-    );
-    this.setState({ fileLampiranToDelete: [] });
+    this.props
+      .updateAnnouncement(
+        formData,
+        fileLampiranToDelete,
+        selectedAnnouncements.lampiran,
+        announcementObject,
+        id,
+        this.props.history
+      )
+      .then((res) => {
+        this.setState({success: res});
+        // this.handleOpenUploadDialog();
+      })
+      .catch((err) => {
+        this.handleCloseUploadDialog()
+        this.setState({
+          errors: err,
+          fileLampiran: [
+            ...this.state.originalFileLampiran,
+            ...this.state.fileLampiranToAdd,
+          ],
+          fileLampiranToDelete: [],
+        })
+      }
+      );
+    // this.setState({ fileLampiranToDelete: [] });
   };
 
   render() {
@@ -358,8 +493,9 @@ class EditAnnouncement extends Component {
     };
 
     const { classes } = this.props;
-    const { fileLampiran, class_assigned } = this.state;
-    const { errors, success } = this.props;
+    const { fileLampiran, class_assigned, target_role, errors } = this.state;
+    // const { success } = this.props;
+    const { success } = this.state;
     const { user } = this.props.auth;
     const { all_classes, kelas } = this.props.classesCollection;
 
@@ -391,37 +527,39 @@ class EditAnnouncement extends Component {
         default:
           return "File Lainnya";
       }
-    }
+    };
     const listFileChosen = () => {
-      let temp = []
+      let temp = [];
       // if (fileLampiran.length > 0) {
-        for (var i = 0; i < fileLampiran.length; i++) {
-          temp.push(
-            <LampiranFile //Yang di displaykan ada di DB (filename) sama yang baru diadd (name)
-              classes={classes}
-              name={
-                !fileLampiran[i].filename
-                  ? fileLampiran[i].name
-                  : fileLampiran[i].filename
-              }
-              filetype={
-                !fileLampiran[i].filename
-                  ? fileType(fileLampiran[i].name)
-                  : fileType(fileLampiran[i].filename)
-              }
-              handleLampiranDelete={this.handleLampiranDelete}
-              i={i}
-            />
-          );
-        }
+      for (var i = 0; i < fileLampiran.length; i++) {
+        temp.push(
+          <LampiranFile //Yang di displaykan ada di DB (filename) sama yang baru diadd (name)
+            classes={classes}
+            name={
+              !fileLampiran[i].filename
+                ? fileLampiran[i].name
+                : fileLampiran[i].filename
+            }
+            filetype={
+              !fileLampiran[i].filename
+                ? fileType(fileLampiran[i].name)
+                : fileType(fileLampiran[i].filename)
+            }
+            handleLampiranDelete={this.handleLampiranDelete}
+            i={i}
+          />
+        );
+      }
       // }
       return temp;
     };
 
-    if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user._id) {
-      return (
-        <Redirect to="/tidak-ditemukan"/>
-      )
+    if (
+      user.role === "Student" &&
+      Boolean(kelas.ketua_kelas) &&
+      kelas.ketua_kelas !== user._id
+    ) {
+      return <Redirect to="/tidak-ditemukan" />;
     }
 
     return (
@@ -432,6 +570,17 @@ class EditAnnouncement extends Component {
           messageUploading="Pengumuman sedang disunting"
           messageSuccess="Pengumuman telah disunting"
           redirectLink={`/pengumuman/${this.props.match.params.id}`}
+        />
+        <DeleteDialog
+          openDeleteDialog={this.state.openDeleteDialog}
+          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+          itemType={"Sunting"}
+          itemName={this.state.title}
+          // itemName={this.state.name}
+          // isLink={true}
+          // redirectLink="/daftar-kuis"
+          redirectLink={`/daftar-pengumuman`}
+          isWarning={false}
         />
         <Paper>
           <div className={classes.content}>
@@ -456,11 +605,17 @@ class EditAnnouncement extends Component {
                       value={this.state.title}
                       error={errors.title}
                       type="text"
-                      helperText={errors.title}
+                      // helperText={errors.title}
                       className={classnames("", {
                         invalid: errors.title,
                       })}
                     />
+                    {errors.title
+                      ?
+                      <div className={classes.zeroHeightHelperText}>
+                        <FormHelperText variant="outlined" error>{errors.title}</FormHelperText>
+                      </div>
+                      : null}
                   </Grid>
                   <Grid item>
                     <Typography
@@ -481,11 +636,17 @@ class EditAnnouncement extends Component {
                       value={this.state.description}
                       error={errors.description}
                       type="text"
-                      helperText={errors.description}
+                      // helperText={errors.description}
                       className={classnames("", {
                         invalid: errors.description,
                       })}
                     />
+                    {errors.description
+                      ?
+                      <div className={classes.zeroHeightHelperText}>
+                        <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                      </div>
+                      : null}
                   </Grid>
                 </Grid>
               </Grid>
@@ -496,7 +657,64 @@ class EditAnnouncement extends Component {
               />
               <Grid item xs={12} md className={classes.content}>
                 <Grid container direction="column" spacing={4}>
-                  {user.role === "Student" ? null : (
+                  {user.role === "Student" ? null : user.role === "Admin" ? (
+                    <Grid item>
+                      <Typography
+                        component="label"
+                        for="target_role"
+                        color="primary"
+                      >
+                        Ditujukan Kepada
+                      </Typography>
+                      <FormControl
+                        variant="outlined"
+                        fullWidth
+                        error={Boolean(errors.to)}
+                      >
+                        <Select
+                          id="target_role"
+                          multiple
+                          MenuProps={MenuProps}
+                          value={target_role}
+                          onChange={(event) => {
+                            this.onChange(event, "target_role");
+                          }}
+                          renderValue={(selected) => {
+                            return (
+                              <div className={classes.chips}>
+                                {selected.map((role) => {
+                                  return (
+                                    <Chip
+                                      key={role}
+                                      label={(role === "Student") ? "Murid" : (role === "Teacher") ? "Guru" : null}
+                                      className={classes.chip}
+                                    />
+                                  );
+                                })}
+                              </div>
+                            );
+                          }}
+                        >
+                          {[
+                            ["Student", "Murid"],
+                            ["Teacher", "Guru"]
+                          ].map((peran) => {
+                            return (
+                              <MenuItem key={peran[0]} value={peran[0]}>
+                                {peran[1]}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                        {Boolean(errors.to)
+                          ?
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>{errors.to}</FormHelperText>
+                          </div>
+                          : null}
+                      </FormControl>
+                    </Grid>
+                  ) : (
                     <Grid item>
                       <Typography
                         component="label"
@@ -521,42 +739,35 @@ class EditAnnouncement extends Component {
                           renderValue={(selected) => {
                             return (
                               <div className={classes.chips}>
-                                {selected.map((id) => {
-                                  let name;
-                                  if (all_classes.length === 0) return null;
-                                  else {
-                                    for (var i in all_classes) {
-                                      if (all_classes[i]._id === id) {
-                                        name = all_classes[i].name;
-                                        break;
-                                      }
-                                    }
-                                    return (
-                                      <Chip
-                                        key={id}
-                                        label={name}
-                                        className={classes.chip}
-                                      />
-                                    );
-                                  }
+                                {selected.map((classId) => {
+                                  return (
+                                    <Chip
+                                      key={classId}
+                                      label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
+                                      className={classes.chip}
+                                    />
+                                  );
                                 })}
                               </div>
                             );
                           }}
                         >
-                          {all_classes.map((kelas) => {
-                            return (
-                              <MenuItem value={kelas._id}>
-                                {kelas.name}
+                          {(this.state.classOptions !== null) ? (
+                            this.state.classOptions.map((classInfo) => (
+                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
+                                {classInfo.name}
                               </MenuItem>
-                            );
-                          })}
+                            ))
+                          ) : (
+                            null
+                          )}
                         </Select>
-                        <FormHelperText>
-                          {Boolean(errors.class_assigned)
-                            ? errors.class_assigned
-                            : null}
-                        </FormHelperText>
+                        {Boolean(errors.class_assigned)
+                          ?
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                          </div>
+                          : null}
                       </FormControl>
                     </Grid>
                   )}
@@ -579,6 +790,7 @@ class EditAnnouncement extends Component {
                       ref={this.uploadedLampiran}
                       style={{ display: "none" }}
                     />
+                    <Typography variant="body1">{"\u200B"}</Typography>
                     <Button
                       variant="contained"
                       startIcon={<AttachFileIcon />}
@@ -601,7 +813,14 @@ class EditAnnouncement extends Component {
               style={{ display: "flex", justifyContent: "flex-end" }}
               className={classes.content}
             >
-              <div>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <Button
+                  variant="contained"
+                  className={classes.cancelButton}
+                  onClick={this.handleOpenDeleteDialog}
+                >
+                  Batal
+                </Button>
                 <Button
                   variant="contained"
                   type="submit"
@@ -613,6 +832,16 @@ class EditAnnouncement extends Component {
             </div>
           </form>
         </Paper>
+        <Snackbar
+          open={this.state.fileLimitSnackbar}
+          autoHideDuration={4000}
+          onClose={this.handleCloseErrorSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <MuiAlert elevation={6} variant="filled" severity="error">
+            {this.state.over_limit.length} file melebihi batas 10MB!
+          </MuiAlert>
+        </Snackbar>
       </div>
     );
   }
@@ -623,14 +852,6 @@ EditAnnouncement.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
   announcements: PropTypes.object.isRequired,
-  getAnnouncement: PropTypes.func.isRequired,
-  getAllAnnouncements: PropTypes.func.isRequired,
-  getOneAnnouncement: PropTypes.func.isRequired,
-  updateAnnouncement: PropTypes.func.isRequired,
-  setCurrentClass: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  clearSuccess: PropTypes.func.isRequired,
-  getAllClass: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -641,6 +862,13 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(
-  mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, getAllClass, clearErrors, clearSuccess }
-  )(withStyles(styles)(EditAnnouncement))
+export default connect(mapStateToProps, {
+  getOneAnnouncement,
+  updateAnnouncement,
+  setCurrentClass,
+  getAllClass,
+  clearErrors,
+  clearSuccess,
+  getFileAnnouncements,
+  refreshTeacher
+})(withStyles(styles)(EditAnnouncement));

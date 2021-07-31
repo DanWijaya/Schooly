@@ -7,9 +7,11 @@ const keys = require("../../config/keys");
 const validateMaterialInput = require("../../validation/MaterialData");
 const Material = require("../../models/Material");
 
+const mongoose = require("mongoose");
+
 router.post("/create", (req, res) => {
   const { errors, isValid } = validateMaterialInput(req.body);
-  console.log(errors);
+  console.log("MASALAH DI CREATE", errors, isValid);
   if (!isValid) {
     console.log(errors);
     return res.status(400).json(errors);
@@ -20,7 +22,7 @@ router.post("/create", (req, res) => {
   let class_assigned_ids = [];
 
   if (class_assigned.length > 0) {
-    class_assigned.map((kelas) => class_assigned_ids.push(kelas._id));
+    class_assigned.forEach((kelas) => class_assigned_ids.push(kelas));
   }
 
   console.log("author id : ", req.body.author_id);
@@ -38,12 +40,14 @@ router.post("/create", (req, res) => {
     .save()
     .then((material) => {
       console.log("Material is created");
-      res.json(material);
+      console.log(material);
+      return res.status(200).json(material);
+      // res.json(material);
     })
     .catch((err) => console.log(err));
 });
 
-router.post("/update/:id", (req, res) => {
+router.put("/update/:id", (req, res) => {
   const { errors, isValid } = validateMaterialInput(req.body);
 
   if (!isValid) {
@@ -132,6 +136,98 @@ router.delete("/delete/:id", (req, res) => {
       res.status(400).json(err);
     } else {
       res.json(materials);
+    }
+  });
+});
+
+router.post("/comment/:materialId", (req, res) => {
+  let comment = req.body;
+
+  Material.findById(req.params.materialId, (err, materialData) => {
+    if (!materialData) {
+      return res.status(404).send("Material data is not found");
+    } else {
+      if (comment.content.length === 0) {
+        res.status(400).json("Isi komentar tidak boleh kosong");
+        return;
+      }
+
+      let newComments = materialData.comments ? [...materialData.comments] : [];
+      comment.createdAt = new mongoose.Types.ObjectId().getTimestamp();
+      newComments.push(comment);
+
+      materialData.comments = newComments;
+      materialData
+        .save()
+        .then(() => {
+          res.json("Create material comment complete")
+        })
+        .catch(() => {
+          res.status(400).send("Unable to create material comment")
+        });
+    }
+  });
+});
+
+router.put("/comment/:materialId", (req, res) => {
+  let { updatedContent, commentId } = req.body;
+
+  Material.findById(req.params.materialId, (err, materialData) => {
+    if (!materialData) {
+      return res.status(404).send("Material data is not found");
+    } else {
+      if (updatedContent.length === 0) {
+        res.status(400).json("Isi komentar tidak boleh kosong");
+        return;
+      }
+
+      let newComments = materialData.comments ? [...materialData.comments] : [];
+      for (let i = 0; i < newComments.length; i++) {
+        if (newComments[i]._id.toString() === commentId) {
+          newComments[i].edited = true;
+          newComments[i].content = updatedContent;
+          break;
+        }
+      }
+
+      materialData.comments = newComments;
+      materialData
+        .save()
+        .then(() => {
+          res.json("Edit material comment complete")
+        })
+        .catch(() => {
+          res.status(400).send("Unable to edit material comment")
+        });
+    }
+  });
+});
+
+router.delete("/comment/:materialId&:commentId", (req, res) => {
+  const { materialId, commentId } = req.params;
+
+  Material.findById(materialId, (err, materialData) => {
+    if (!materialData) {
+      return res.status(404).send("Material data is not found");
+    } else {
+
+      let newComments = materialData.comments ? [...materialData.comments] : [];      
+      for (let i = 0; i < newComments.length; i++) {
+        if (newComments[i]._id.toString() === commentId) {
+          newComments.splice(i, 1);
+          break;
+        }
+      }
+
+      materialData.comments = newComments;
+      materialData
+        .save()
+        .then(() => {
+          res.json("Delete material comment complete")
+        })
+        .catch(() => {
+          res.status(400).send("Unable to delete material comment")
+        });
     }
   });
 });

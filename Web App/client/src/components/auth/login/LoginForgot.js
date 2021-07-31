@@ -23,7 +23,10 @@ const styles = (theme) => ({
     flexDirection: "column",
     alignItems: "center",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     minHeight: "500px",
     padding: "10px",
     backgroundImage: `url(${authBackground})`,
@@ -85,7 +88,7 @@ class LoginForgot extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     console.log("Submitted");
-    this.props.createHash(this.state.email);
+    this.props.createHash(this.state.email.toLowerCase());
   };
 
   componentDidMount() {
@@ -127,7 +130,7 @@ class LoginForgot extends Component {
                   align="center"
                   color="textSecondary"
                 >
-                  Masukkan email Anda untuk melanjutkan.
+                  Masukkan email akun Anda untuk melanjutkan.
                 </Typography>
               </Grid>
             ) : (

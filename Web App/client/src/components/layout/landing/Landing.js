@@ -18,6 +18,7 @@ import {
   Grid,
   Paper,
   Typography,
+  Hidden,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -45,14 +46,20 @@ const styles = (theme) => ({
     alignItems: "center",
     justifyContent: "flex-end",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "20px",
     color: "white",
   },
   schoolyAccess: {
     textAlign: "center",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     marginTop: "30px",
     marginBottom: "30px",
     padding: "10px",
@@ -63,7 +70,10 @@ const styles = (theme) => ({
   schoolyFeatures: {
     textAlign: "center",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     marginTop: "50px",
     marginBottom: "75px",
     padding: "20px",
@@ -104,16 +114,24 @@ const styles = (theme) => ({
     margin: "auto",
     marginTop: "30px",
     padding: "10px",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
   },
   sendMessageButton: {
     width: "160px",
-    marginRight: "30px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
+    },
+    [theme.breakpoints.up("sm")]: {
+      marginRight: "30px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      marginBottom: "16px",
     },
   },
   copyLinkButton: {
@@ -387,26 +405,56 @@ class Landing extends Component {
             Klik tombol "Kirim Pesan" untuk menghubungi kami atau tombol "Salin
             Tautan" untuk mengirim tautan ini ke sekolah Anda.
           </Typography>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Button
-              variant="contained"
-              href="mailto:schoolysystem@gmail.com"
-              startIcon={<ContactMailIcon />}
-              className={classes.sendMessageButton}
+          <Hidden xsDown>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Button
+                variant="contained"
+                href="mailto:schoolysystem@gmail.com"
+                startIcon={<ContactMailIcon />}
+                className={classes.sendMessageButton}
+              >
+                KIRIM PESAN
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<FilterNoneIcon />}
+                className={classes.copyLinkButton}
+                onClick={() =>
+                  this.copyToClipboard("http://www.schoolysystem.com")
+                }
+              >
+                SALIN TAUTAN
+              </Button>
+            </div>
+          </Hidden>
+          <Hidden smUp>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              KIRIM PESAN
-            </Button>
-            <Button
-              variant="contained"
-              startIcon={<FilterNoneIcon />}
-              className={classes.copyLinkButton}
-              onClick={() =>
-                this.copyToClipboard("http://www.schoolysystem.com")
-              }
-            >
-              SALIN TAUTAN
-            </Button>
-          </div>
+              <Button
+                variant="contained"
+                href="mailto:schoolysystem@gmail.com"
+                startIcon={<ContactMailIcon />}
+                className={classes.sendMessageButton}
+              >
+                KIRIM PESAN
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<FilterNoneIcon />}
+                className={classes.copyLinkButton}
+                onClick={() =>
+                  this.copyToClipboard("http://www.schoolysystem.com")
+                }
+              >
+                SALIN TAUTAN
+              </Button>
+            </div>
+          </Hidden>
         </div>
       </div>
     );

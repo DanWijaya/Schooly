@@ -9,33 +9,45 @@ import {
   GET_USERS,
   GET_ALL_STUDENTS,
   GET_ALL_TEACHERS,
+  GET_ALL_TEACHERS_MAP,
   GET_ONE_USER,
   GET_STUDENTS_BY_CLASS,
   GET_PENDING_STUDENTS,
   GET_PENDING_TEACHERS,
-  SET_DROPBOX_TOKEN,
+  // SET_DROPBOX_TOKEN,
+  GET_SUCCESS_RESPONSE
 } from "./Types";
 
 // Register User
 export const registerUser = (userData, history) => (dispatch) => {
-  axios
-    .post("/api/users/register", userData)
-    .then((res) => {
-      alert("Akun baru telah terdaftar");
-      history.push("/masuk");
-    })
-    .catch((err) => {
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      });
-    });
+  return (
+    axios
+      .post("/api/users/register", userData)
+      // .then((res) => {
+      // alert("Akun baru telah terdaftar");
+      // history.push("/masuk");
+      // })
+      .then(() => {
+        dispatch({
+          type: GET_ERRORS,
+          payload: false,
+        });
+        return true; // Success
+      })
+      .catch((err) => {
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data,
+        });
+        throw err.response.data; // Fail
+      })
+  );
 };
 
 export const updateUserData = (userData, userId, history) => (dispatch) => {
   console.log("update user data is runned");
-  axios
-    .post("/api/users/update/data/" + userId, userData)
+  return axios
+    .put("/api/users/update/data/" + userId, userData)
     .then((res) => {
       const { token } = res.data;
       console.log("Updating User Data");
@@ -48,20 +60,23 @@ export const updateUserData = (userData, userId, history) => (dispatch) => {
       const decoded = jwt_decode(token);
       // Set current user
       dispatch(setCurrentUser(decoded));
+      console.log("Successfully update user data")
+      return true
     })
     .catch((err) => {
-      console.log("jancuk la");
       console.log(err);
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
       });
+
+      throw err;
     });
 };
 
 export const updateAvatar = (userData, userId, formData) => (dispatch) => {
   axios
-    .post("/api/users/update/avatar/" + userId, formData)
+    .put("/api/users/update/avatar/" + userId, formData)
 
     .then((res) => {
       // Set token to localStorage
@@ -89,12 +104,11 @@ export const updateAvatar = (userData, userId, formData) => (dispatch) => {
 // to initiate a dispatch, pass the result to the dispatch() function.
 // Login - get user token
 export const loginUser = (userData) => (dispatch) => {
-  axios
+  return axios
     .post("/api/users/login", userData)
     .then((res) => {
       console.log("Berhasil login");
       // Save to localStorage
-
       // Set token to localStorage
       const { token } = res.data;
       localStorage.setItem("jwtToken", token);
@@ -107,6 +121,7 @@ export const loginUser = (userData) => (dispatch) => {
 
       // Set current user
       dispatch(setCurrentUser(decoded));
+      return true;
     })
     .catch((err) => {
       console.log("error");
@@ -114,6 +129,7 @@ export const loginUser = (userData) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };
 
@@ -121,13 +137,13 @@ export const loginUser = (userData) => (dispatch) => {
 export const logoutUser = () => (dispatch) => {
   // Remove token from local storage
   localStorage.removeItem("jwtToken");
-  localStorage.removeItem("dropbox_token");
+  // localStorage.removeItem("dropbox_token");
   // Remove auth header for future requests
   setAuthToken(false);
   console.log("test");
   // Set current user to empty object {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
-  setDropboxToken(false);
+  // setDropboxToken(false);
   // if (history !== undefined)
   //   history.push("/masuk")
   window.location.href = "/masuk";
@@ -168,7 +184,7 @@ export const getStudents = () => (dispatch) => {
 
 export const getTeachers = (data = "array") => (dispatch) => {
   // console.log('getTeacher start')
-  axios
+  return axios
     .get("/api/users/getteachers")
     .then((res) => {
       // console.log(res.data)
@@ -176,16 +192,20 @@ export const getTeachers = (data = "array") => (dispatch) => {
         let temp = new Map();
         res.data.map((teacher) => temp.set(teacher._id, teacher));
         dispatch({
-          type: GET_ALL_TEACHERS,
+          // type: GET_ALL_TEACHERS,
+          type: GET_ALL_TEACHERS_MAP,
           payload: temp,
         });
+        console.log("getTeacher completed");
+        return temp;
       } else {
         dispatch({
           type: GET_ALL_TEACHERS,
           payload: res.data,
         });
+        console.log("getTeacher completed");
+        return res.data;
       }
-      console.log("getTeacher completed");
     })
     .catch((err) => {
       console.log("Error in getting all Teachers");
@@ -193,7 +213,7 @@ export const getTeachers = (data = "array") => (dispatch) => {
 };
 
 export const getOneUser = (userId) => (dispatch) => {
-  axios
+  return axios
     .get("/api/users/getOneUser/" + userId)
     .then((res) => {
       console.log(res.data);
@@ -201,6 +221,7 @@ export const getOneUser = (userId) => (dispatch) => {
         type: GET_ONE_USER,
         payload: res.data,
       });
+      return res.data;
     })
     .catch((err) => {
       console.log("Error in getting one user");
@@ -269,7 +290,7 @@ export const getPendingTeachers = () => (dispatch) => {
 
 export const setUserActive = (userId) => (dispatch) => {
   axios
-    .post(`/api/users/setuseractive/${userId}`)
+    .put(`/api/users/setuseractive/${userId}`)
     .then((res) => {
       console.log(res.data);
       window.location.reload();
@@ -281,7 +302,7 @@ export const setUserActive = (userId) => (dispatch) => {
 
 export const setUserDisabled = (userId) => (dispatch) => {
   axios
-    .post(`/api/users/setuserdisabled/${userId}`)
+    .put(`/api/users/setuserdisabled/${userId}`)
     .then((res) => {
       console.log(res.data);
       window.location.reload();
@@ -303,30 +324,41 @@ export const deleteUser = (userId) => (dispatch) => {
     });
 };
 
-export const setDropboxToken = (token) => (dispatch) => {
-  console.log("SET Drop box lah");
-  if (token) {
-    localStorage.setItem("dropbox_token", token);
-    dispatch({
-      type: SET_DROPBOX_TOKEN,
-      payload: token,
-    });
-  } else {
-    localStorage.removeItem("dropbox_token");
-    dispatch({
-      type: SET_DROPBOX_TOKEN,
-      payload: null,
-    });
-  }
-};
-
-export const updateStudentsClass = (data) => {
+export const moveStudents = (data, dummyClassId) => {
   return axios
-    .post("/api/users/bulkupdateclass", data)
+    .put(`/api/users/class-assignment/${dummyClassId}`, data)
     .then(() => {
-      console.log("updateStudentsClass completed");
+      console.log("moveStudents completed");
     })
     .catch((err) => {
       throw new Error(err.response.data);
     });
+};
+
+export const updateTeacher = (data, teacherId) => (dispatch) => {
+  axios
+    .put(`/api/users/teacher/${teacherId}`, data)
+    .then(() => {
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: teacherId
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
+
+export const refreshTeacher = (teacherId) => (dispatch) => {
+  axios
+  .get("/api/users/getOneUser/" + teacherId)
+  .then((res) => {
+    dispatch(setCurrentUser(res.data));
+  })
+  .catch((err) => {
+    console.log(err);
+  });    
 };

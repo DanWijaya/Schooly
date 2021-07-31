@@ -13,19 +13,19 @@ import _53c9cc from "./_53c9cc.png";
 import _fab328 from "./_fab328.png";
 
 const subjectBackground = [
-    {"#5dc692" : _5dc692},
-    {"#70d0db" : _70d0db},
-    {"#151e34" : _151e34},
-    {"#868acd" : _868acd},
-    {"#76294f" : _76294f},
-    {"#ef2c5f" : _ef2c5f},
-    {"#f7ca13" : _f7ca13},
-    {"#f9d291" : _f9d291},
-    {"#f25624" : _f25624},
-    {"#71d0e1" : _71d0e1},
-    {"#f6836b" : _f6836b},
-    {"#53c9cc" : _53c9cc},
-    {"#fab328" : _fab328},
-]
+  { "#5dc692": _5dc692 },
+  { "#70d0db": _70d0db },
+  { "#151e34": _151e34 },
+  { "#868acd": _868acd },
+  { "#76294f": _76294f },
+  { "#ef2c5f": _ef2c5f },
+  { "#f7ca13": _f7ca13 },
+  { "#f9d291": _f9d291 },
+  { "#f25624": _f25624 },
+  { "#71d0e1": _71d0e1 },
+  { "#f6836b": _f6836b },
+  { "#53c9cc": _53c9cc },
+  { "#fab328": _fab328 },
+];
 
-export default subjectBackground
+export default subjectBackground;

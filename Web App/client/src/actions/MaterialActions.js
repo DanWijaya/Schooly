@@ -11,7 +11,7 @@ export const createMaterial = (formData, materialData, history) => (
   dispatch
 ) => {
   console.log("RUNLAH!!", formData, materialData);
-  axios
+  return axios
     .post("/api/materials/create", materialData)
     .then((res) => {
       console.log(formData.getAll("lampiran_materi"));
@@ -21,29 +21,23 @@ export const createMaterial = (formData, materialData, history) => (
         type: GET_ERRORS,
         payload: false,
       });
+
       if (formData.has("lampiran_materi")) {
         console.log("Post lampiran material is running");
         return axios.post(
-          `/api/upload/att_material/lampiran/${res.data._id}`,
+          `/api/files/materials/upload/${res.data._id}`,
           formData
         );
       } else {
         // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
-        return {
-          message: "Successfully created material with no lampiran",
-          _id: res.data._id,
-        };
+        console.log("Successfully created material.");
+        return res;
       }
     })
     .then((res) => {
       console.log("Successfully created material.");
-      let success_res = res.data ? res.data._id : res._id;
-      dispatch({
-        type: GET_SUCCESS_RESPONSE,
-        payload: success_res,
-      });
-      //   window.location.href="/daftar-materi"
-      //   history.push("/daftar-materi")
+      let success_res = res.data._id;
+      return success_res;
     })
     .catch((err) => {
       console.log("error happened");
@@ -51,6 +45,7 @@ export const createMaterial = (formData, materialData, history) => (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };
 
@@ -127,19 +122,24 @@ export const getOneMaterial = (materialId) => (dispatch) => {
     });
 };
 
-export const deleteMaterial = (materialId, history) => (dispatch) => {
-  axios
+export const deleteMaterial = (materialId, history=null) => (dispatch) => {
+  return axios
     .delete(`/api/materials/delete/${materialId}`)
     .then((res) => {
-      console.log("Deleted: ", res.data);
-      let lampiran_to_delete = Array.from(res.data.lampiran);
-      return axios.delete(`/api/upload/att_material/lampiran/${"deleteall"}`, {
-        data: { lampiran_to_delete: lampiran_to_delete },
-      });
+      // let lampiran_to_delete = Array.from(res.data.lampiran)
+      // return axios.delete(`/api/upload/att_material/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete} })
+      return axios.delete(`/api/files/materials/${materialId}`);
     })
     .then((res) => {
+      if(history){
+        history.push({
+          pathname: "/daftar-materi",
+          openDeleteSnackbar: true 
+        })
+      }
       console.log(res);
-      window.location.href = "/daftar-materi";
+      return true
+      // window.location.href = "/daftar-materi";
     })
     .catch((err) => {
       console.log(err);
@@ -147,6 +147,7 @@ export const deleteMaterial = (materialId, history) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err;
     });
 };
 
@@ -159,11 +160,10 @@ export const updateMaterial = (
   history
 ) => (dispatch) => {
   // formData is the lampiran files
-  console.log("Update material is runned");
-  axios
-    .post(`/api/materials/update/${materialId}`, materialData)
+  return axios
+    .put(`/api/materials/update/${materialId}`, materialData)
     .then((res) => {
-      console.log("Task updated to be :", res.data);
+      console.log("Material updated to be :", res.data);
       console.log("Has lampiran? :", formData.has("lampiran_materi"));
       dispatch({
         type: GET_ERRORS,
@@ -171,11 +171,8 @@ export const updateMaterial = (
       });
       if (lampiran_to_delete.length > 0) {
         // axios.delete put the data is quite different..
-        return axios.delete(`/api/upload/att_material/lampiran/${materialId}`, {
-          data: {
-            lampiran_to_delete: lampiran_to_delete,
-            current_lampiran: current_lampiran,
-          },
+        return axios.delete(`/api/files/materials/${materialId}`, {
+          data: { file_to_delete: lampiran_to_delete },
         });
       } else return "No lampiran file is going to be deleted";
     })
@@ -188,18 +185,16 @@ export const updateMaterial = (
       if (formData.has("lampiran_materi")) {
         console.log("Lampiran material going to be uploaded");
         return axios.post(
-          `/api/upload/att_material/lampiran/${materialId}`,
+          `/api/files/materials/upload/${materialId}`,
           formData
         );
       } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
-      else return "Successfully updated task with no lampiran";
+      else
+        return res;
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");
-      dispatch({
-        type: GET_SUCCESS_RESPONSE,
-        payload: true,
-      });
+      return true;
     })
 
     .catch((err) => {
@@ -208,5 +203,40 @@ export const updateMaterial = (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
+    });
+};
+
+export const createMaterialComment = (
+  materialId,
+  comment
+) => {
+  return axios
+    .post(`/api/materials/comment/${materialId}`, comment)
+    .catch(() => {
+      throw new Error("createMaterialComment error has occured");
+    });
+};
+
+export const editMaterialComment = (
+  materialId,
+  updatedContent,
+  commentId
+) => {
+  return axios
+    .put(`/api/materials/comment/${materialId}`, { updatedContent, commentId })
+    .catch(() => {
+      throw new Error("editMaterialComment error has occured");
+    });
+};
+
+export const deleteMaterialComment = (
+  materialId,
+  commentId
+) => {
+  return axios
+    .delete(`/api/materials/comment/${materialId}&${commentId}`)
+    .catch(() => {
+      throw new Error("deleteMaterialComment error has occured");
     });
 };

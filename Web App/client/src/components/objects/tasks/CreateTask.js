@@ -8,10 +8,11 @@ import classnames from "classnames";
 import { createTask } from "../../../actions/TaskActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getOneUser } from "../../../actions/UserActions";
+import { getOneUser, refreshTeacher } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -30,6 +31,7 @@ import {
   Select,
   TextField,
   Typography,
+  Snackbar,
 } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
@@ -37,6 +39,7 @@ import {
 } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
+import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {
   FaFile,
@@ -53,7 +56,10 @@ const path = require("path");
 const styles = (theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "10px",
   },
   content: {
@@ -118,6 +124,24 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+    },
+    marginRight: "7.5px",
+  },
+  customSpacing: {
+    [theme.breakpoints.down("sm")]: {
+      marginTop: theme.spacing(2),
+    }
+  },
+  zeroHeightHelperText: {
+    height: "0",
+    display: "flex" // untuk men-disable "collapsing margin"
+  }
 });
 
 // name = fileLampiran[i].name
@@ -171,15 +195,17 @@ function LampiranFile(props) {
             }
             secondary={filetype}
           />
-          <IconButton
-            size="small"
-            className={classes.deleteIconButton}
-            onClick={(e) => {
-              handleLampiranDelete(e, i);
-            }}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
+          <LightTooltip title="Hapus Lampiran">
+            <IconButton
+              size="small"
+              className={classes.deleteIconButton}
+              onClick={(e) => {
+                handleLampiranDelete(e, i);
+              }}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </LightTooltip>
         </ListItem>
       </Paper>
     </Grid>
@@ -197,9 +223,17 @@ class CreateTask extends Component {
       class_assigned: [],
       description: "",
       errors: {},
+      success: null,
       fileLampiran: [],
       openUploadDialog: null,
+      openDeleteDialog: null,
       anchorEl: null,
+      over_limit: [],
+      fileLimitSnackbar: false,
+      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
+      subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      allSubjectObject: null // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
     };
   }
 
@@ -220,15 +254,91 @@ class CreateTask extends Component {
     this.setState({ openUploadDialog: true });
   };
 
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  }
+
+  handleOpenDeleteDialog = () => {
+    this.setState({ openDeleteDialog: true });
+  };
+
+  handleCloseDeleteDialog = () => {
+    this.setState({ openDeleteDialog: false });
+  };
+
   onChange = (e, otherfield = null) => {
-    console.log(this.state.class_assigned, e.target.value);
+    // dipindahkan (kode yg dari merge_fitur_4_cdn ada di bawah dan dikomen) 
+    let field = otherfield ? otherfield : e.target.id;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+    // this.setState({ [field]: e.target.value }); // di sini jadi dikomen
+
     // if (Object.keys(this.props.errors).length !== 0)
     if (otherfield) {
-      // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
-      this.setState({ [otherfield]: e.target.value });
+      if (otherfield === "subject") { // jika guru memilih mata pelajaran
+        // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
+        let newClassOptions = [];
+        if (this.props.auth.user.class_to_subject) {
+          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+            if (subjectIdArray.includes(e.target.value)) {
+              newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+            }
+          }
+        }
+
+        this.setState({ subject: e.target.value, classOptions: newClassOptions });
+
+      } else if (otherfield === "class_assigned") { // jika guru memilih kelas
+        let selectedClasses = e.target.value;
+
+        if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
+          this.setState((prevState, props) => {
+            return {
+              class_assigned: selectedClasses,
+              // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
+              subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
+            }
+          });
+        } else { // jika guru menambahkan atau mengurangi pilihan kelas
+          // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
+          let subjectMatrix = [];
+          if (this.props.auth.user.class_to_subject) {
+            for (let classId of selectedClasses) {
+              if (this.props.auth.user.class_to_subject[classId]) {
+                subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+              }
+            }
+          }
+          let subjects = [];
+          if (subjectMatrix.length !== 0) {
+            subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+              return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
+            });
+          }
+
+          // menambahkan matpel tersebut ke opsi matpel
+          let newSubjectOptions = [];
+          subjects.forEach((subjectId) => {
+            newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
+          })
+
+          this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
+        }
+      } else {
+        // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
+        this.setState({ [otherfield]: e.target.value });
+      }
     } else {
       this.setState({ [e.target.id]: e.target.value });
     }
+
+    // dari merge_fitur_4_cdn
+    // let field = e.target.id ? e.target.id : otherfield;
+    // if (this.state.errors[field]) {
+    //   this.setState({ errors: { ...this.state.errors, [field]: null } });
+    // }
+    // this.setState({ [field]: e.target.value });
   };
 
   onDateChange = (date) => {
@@ -257,13 +367,21 @@ class CreateTask extends Component {
       }
     console.log(formData.getAll("lampiran_tugas"), this.state.fileLampiran);
     console.log(taskData);
-    this.props.createTask(formData, taskData, this.props.history);
+    this.handleOpenUploadDialog();
+    this.props
+      .createTask(formData, taskData, this.props.history)
+      .then((res) => this.setState({success: res}))
+      .catch((err) => {
+        this.handleCloseUploadDialog();
+        this.setState({ errors: err })
+      });
   };
 
   componentDidMount() {
-    const { getAllClass, getAllSubjects } = this.props;
+    const { getAllClass, getAllSubjects, refreshTeacher } = this.props;
     getAllClass();
     getAllSubjects();
+    refreshTeacher(this.props.auth.user._id);
   }
 
   componentWillUnmount() {
@@ -273,7 +391,7 @@ class CreateTask extends Component {
 
   // akan selalu dirun kalau ada terima state atau props yang berubah.
   componentDidUpdate(prevProps, prevState) {
-    console.log(this.props.errors);
+    // console.log(this.props.errors);
     // this.props.errors = false, ini berarti kan !this.props.erros itu true
 
     if (!this.props.errors && this.props.errors !== prevProps.errors) {
@@ -281,12 +399,66 @@ class CreateTask extends Component {
       // setelah ngerun this.handleOpenUploadDialog(), komponennya dirender lagi. Karena itu jd tuh prevProps.errors = false, this.props.errors = false. maka this.props.errors = false dan prevProps.errors = false. this.state.dialog = true, prevState.dialog = false
       this.handleOpenUploadDialog();
     }
+
+    // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas dan mata pelajaran
+    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
+      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
+        
+        let all_classes_obj = {};
+        this.props.classesCollection.all_classes.forEach((classInfo) => {
+          all_classes_obj[classInfo._id] = classInfo.name; 
+        });
+    
+        let newClassOptions = [];
+        if (this.props.auth.user.class_teached) {
+          newClassOptions = this.props.auth.user.class_teached.map((classId) => {
+            return { _id: classId, name: all_classes_obj[classId] };
+          });
+        }
+
+        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
+    }
+
+    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
+      if (this.props.subjectsCollection.all_subjects && (this.props.subjectsCollection.all_subjects.length !== 0)) {
+        
+        let all_subjects_obj = {};
+        this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
+          all_subjects_obj[subjectInfo._id] = subjectInfo.name; 
+        });
+  
+        let newSubjectOptions = [];
+        if (this.props.auth.user.subject_teached) {
+          newSubjectOptions = this.props.auth.user.subject_teached.map((subjectId) => {
+            return { _id: subjectId, name: all_subjects_obj[subjectId] };
+          });
+        }
+  
+        this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
+      } // jika memang belum ada matpel yang tercatat di sistem, opsi matpel akan tetap null
+    }
   }
+
+  handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ fileLimitSnackbar: false });
+  };
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
     let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-    this.setState({ fileLampiran: temp });
+    let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > 10);
+    let file_to_upload = temp.filter(
+      (file) => file.size / Math.pow(10, 6) <= 10
+    );
+    this.setState({
+      fileLampiran: file_to_upload,
+      over_limit: over_limit,
+      fileLimitSnackbar: over_limit.length > 0,
+    });
     document.getElementById("file_control").value = null;
   };
 
@@ -302,8 +474,8 @@ class CreateTask extends Component {
   };
 
   render() {
-    const { classes, errors, success } = this.props;
-    const { class_assigned, fileLampiran } = this.state;
+    const { classes } = this.props;
+    const { class_assigned, fileLampiran, errors, success } = this.state;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
@@ -381,6 +553,16 @@ class CreateTask extends Component {
             messageSuccess="Tugas telah dibuat"
             redirectLink={`/tugas-guru/${success}`}
           />
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType={"Tugas"}
+            itemName={this.state.name}
+            // isLink={true}
+            // redirectLink="/daftar-kuis"
+            redirectLink={`/daftar-tugas`}
+            isWarning={false}
+          />
           <Paper>
             <div className={classes.content}>
               <Typography variant="h5" gutterBottom>
@@ -408,11 +590,17 @@ class CreateTask extends Component {
                         value={this.state.name}
                         error={errors.name}
                         type="text"
-                        helperText={errors.name}
+                        // helperText={errors.name}
                         className={classnames("", {
                           invalid: errors.name,
                         })}
                       />
+                      {errors.name
+                        ?
+                        <div className={classes.zeroHeightHelperText}>
+                          <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
+                        </div>
+                        : null}
                     </Grid>
                     <Grid item>
                       <Typography
@@ -433,11 +621,17 @@ class CreateTask extends Component {
                         value={this.state.description}
                         error={errors.description}
                         type="text"
-                        helperText={errors.description}
+                        // helperText={errors.description}
                         className={classnames("", {
                           invalid: errors.description,
                         })}
                       />
+                      {errors.description
+                        ?
+                        <div className={classes.zeroHeightHelperText}>
+                          <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                        </div>
+                        : null}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -470,18 +664,25 @@ class CreateTask extends Component {
                               this.onChange(event, "subject");
                             }}
                           >
-                            {all_subjects.map((subject) => (
-                              <MenuItem value={subject._id}>
-                                {subject.name}
-                              </MenuItem>
-                            ))}
+                            {(this.state.subjectOptions !== null) ? (
+                              this.state.subjectOptions.map((subject) => (
+                                <MenuItem key={subject._id} value={subject._id}>
+                                  {subject.name}
+                                </MenuItem>
+                              ))
+                            ) : (
+                              null
+                            )}
                           </Select>
-                          <FormHelperText>
-                            {Boolean(errors.subject) ? errors.subject : null}
-                          </FormHelperText>
+                          {Boolean(errors.subject)
+                            ?
+                            <div className={classes.zeroHeightHelperText}>
+                              <FormHelperText variant="outlined" error>{errors.subject}</FormHelperText>
+                            </div>
+                            : null}
                         </FormControl>
                       </Grid>
-                      <Grid item xs={12} md={6}>
+                      <Grid item xs={12} md={6} className={classes.customSpacing}>
                         <Typography
                           component="label"
                           for="deadline"
@@ -501,12 +702,25 @@ class CreateTask extends Component {
                             ampm={false}
                             okLabel="Simpan"
                             cancelLabel="Batal"
-                            minDateMessage="Batas waktu harus waktu yang akan datang"
+                            minDateMessage="Harus waktu yang akan datang"
                             invalidDateMessage="Format tanggal tidak benar"
                             id="deadline"
                             value={this.state.deadline}
+                            helperText={null}
                             onChange={(date) => this.onDateChange(date)}
+                            onError={(err) => {
+                              if (errors.deadline !== err) {
+                                this.setState({errors: { ...errors, deadline: err }});
+                              }
+                            }}
+                            
                           />
+                          {errors.deadline
+                            ?
+                            <div className={classes.zeroHeightHelperText}>
+                              <FormHelperText variant="outlined" error>{errors.deadline}</FormHelperText>
+                            </div>
+                            : null}
                         </MuiPickersUtilsProvider>
                       </Grid>
                     </Grid>
@@ -533,19 +747,11 @@ class CreateTask extends Component {
                           }}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
-                              {selected.map((id) => {
-                                let name;
-                                for (var i in all_classes) {
-                                  // i is the index
-                                  if (all_classes[i]._id === id) {
-                                    name = all_classes[i].name;
-                                    break;
-                                  }
-                                }
+                              {selected.map((classId) => {
                                 return (
                                   <Chip
-                                    key={id}
-                                    label={name}
+                                    key={classId}
+                                    label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
                                     className={classes.chip}
                                   />
                                 );
@@ -553,25 +759,22 @@ class CreateTask extends Component {
                             </div>
                           )}
                         >
-                          {all_classes.map((kelas) => {
-                            console.log(kelas, class_assigned);
-                            return (
-                              <MenuItem
-                                value={kelas._id}
-                                key={kelas._id}
-                                selected
-                              >
-                                {kelas.name}
+                          {(this.state.classOptions !== null) ? (
+                            this.state.classOptions.map((classInfo) => (
+                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
+                                {classInfo.name}
                               </MenuItem>
-                            );
-                          })}
+                            ))
+                          ) : (
+                            null
+                          )}
                         </Select>
-                        <FormHelperText>
-                          {Boolean(errors.class_assigned) &&
-                          class_assigned.length === 0
-                            ? errors.class_assigned
-                            : null}
-                        </FormHelperText>
+                        {Boolean(errors.class_assigned)
+                          ?
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                          </div>
+                          : null}
                       </FormControl>
                     </Grid>
                     <Grid item>
@@ -607,16 +810,40 @@ class CreateTask extends Component {
                 style={{ display: "flex", justifyContent: "flex-end" }}
                 className={classes.content}
               >
-                <Button
-                  variant="contained"
-                  type="submit"
-                  className={classes.createTaskButton}
-                >
-                  Buat Tugas
-                </Button>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <Button
+                    variant="contained"
+                    className={classes.cancelButton}
+                    onClick={this.handleOpenDeleteDialog}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    className={classes.createTaskButton}
+                  >
+                    Buat Tugas
+                  </Button>
+                </div>
               </div>
             </form>
           </Paper>
+          <Snackbar
+            open={this.state.fileLimitSnackbar}
+            autoHideDuration={4000}
+            onClose={this.handleCloseErrorSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              onClose={this.handleCloseSnackbar}
+              severity="error"
+            >
+              {this.state.over_limit.length} file melebihi batas 10MB!
+            </MuiAlert>
+          </Snackbar>
         </div>
       );
     } else {
@@ -635,11 +862,6 @@ CreateTask.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  createTask: PropTypes.func.isRequired,
-  getAllClass: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
-  getOneUser: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -657,4 +879,5 @@ export default connect(mapStateToProps, {
   getOneUser,
   clearErrors,
   clearSuccess,
+  refreshTeacher
 })(withStyles(styles)(CreateTask));

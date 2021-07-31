@@ -13,6 +13,7 @@ import {
   ListItemText,
   Toolbar,
   Typography,
+  Tooltip,
 } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
@@ -21,11 +22,12 @@ import AssessmentIcon from "@material-ui/icons/Assessment";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import EventNoteIcon from '@material-ui/icons/EventNote';
 import { BsClipboardData } from "react-icons/bs";
 import {
   FaChalkboardTeacher,
   FaClipboardList,
-  FaDropbox,
+  // FaDropbox,
   FaUserCheck,
   FaUserClock,
 } from "react-icons/fa";
@@ -68,11 +70,11 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(2.7),
     height: theme.spacing(2.7),
   },
-  dropboxIcon: {
-    width: theme.spacing(2.7),
-    height: theme.spacing(2.7),
-    color: theme.palette.dropbox.main,
-  },
+  // dropboxIcon: {
+  //   width: theme.spacing(2.7),
+  //   height: theme.spacing(2.7),
+  //   color: theme.palette.dropbox.main,
+  // },
 }));
 
 const StyledListItem = withStyles((theme) => ({
@@ -90,22 +92,28 @@ function DrawerContent(props) {
 
   const generateList = (linkto, icon, itemText, subheader = false) => {
     return (
-      <Link to={linkto} onClick={handleDrawerMobile}>
-        <StyledListItem button>
-          <ListItemIcon>{icon}</ListItemIcon>
-          <ListItemText
-            primary={<Typography color="textPrimary">{itemText}</Typography>}
-          />
-        </StyledListItem>
-      </Link>
+        <Link to={linkto} onClick={handleDrawerMobile}>
+          <Tooltip title={itemText} placement="right" enterDelay={300}>
+            <StyledListItem button>
+              <ListItemIcon>{icon}</ListItemIcon>
+              <ListItemText
+                primary={<Typography color="textPrimary">{itemText}</Typography>}
+              />
+            </StyledListItem>
+          </Tooltip>
+        </Link>
     );
   };
 
   /* directedTo is for the page that is directed when clicking the classIcon in NavBarContents*/
   let directedTo;
   if (user !== undefined) {
-    if (user.role === "Student") directedTo = `/kelas/${user.kelas}`;
-    else directedTo = "/daftar-kelas";
+    if (user.role === "Student") {
+      directedTo = `/kelas/${user.kelas}`;
+      // directedTo = "/daftar-kelas";
+    } else {
+      directedTo = "/daftar-kelas";
+    }
   }
 
   let ListItemContents;
@@ -136,6 +144,16 @@ function DrawerContent(props) {
         <LibraryBooksIcon className={classes.drawerListItemIcon} />,
         "Mata Pelajaran",
       ],
+      [
+        "/daftar-pengumuman",
+        <AnnouncementIcon className={classes.drawerListItemIcon} />,
+        "Pengumuman",
+      ],
+      [
+        "/kalender",
+        <EventNoteIcon className={classes.drawerListItemIcon} />,
+        "Kalender",
+      ]
     ];
   else if (user.role === "Student") {
     ListItemContents = [
@@ -175,6 +193,16 @@ function DrawerContent(props) {
         <BsClipboardData className={classes.drawerListItemIcon} />,
         "Ujian",
       ],
+      [
+        `/lihat-rapor/${user._id}`,
+        <AssessmentIcon className={classes.drawerListItemIcon} />,
+        "Rapor",
+      ],
+      [
+        "/kalender",
+        <EventNoteIcon className={classes.drawerListItemIcon} />,
+        "Kalender",
+      ]
     ];
   } else {
     ListItemContents = [
@@ -214,14 +242,17 @@ function DrawerContent(props) {
         <BsClipboardData className={classes.drawerListItemIcon} />,
         "Ujian",
       ],
-    ];
-    if (user.role === "Teacher") {
-      ListItemContents.push([
-        { pathname: "/lihat-rapor", state: { role: "Other" } },
+      [
+        "/lihat-rapor/semua",
         <AssessmentIcon className={classes.drawerListItemIcon} />,
         "Rapor",
-      ]);
-    }
+      ],
+      [
+        "/kalender",
+        <EventNoteIcon className={classes.drawerListItemIcon} />,
+        "Kalender",
+      ]
+    ];
   }
 
   return (
@@ -231,14 +262,14 @@ function DrawerContent(props) {
           generateList(item[0], item[1], item[2], item[3])
         )}
       </List>
-      <Divider />
+      {/* <Divider />
       <List>
         {generateList(
           "/dropbox-connect",
           <FaDropbox className={classes.dropboxIcon} />,
           "Dropbox"
         )}
-      </List>
+      </List> */}
     </div>
   );
 }

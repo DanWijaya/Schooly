@@ -1,14 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
+import CustomLinkify from "../../misc/linkify/Linkify";
+import {
+  getFileAnnouncements,
+  downloadFileAnnouncements,
+  viewFileAnnouncement,
+} from "../../../actions/files/FileAnnouncementActions";
 import {
   getOneAnnouncement,
   deleteAnnouncement,
 } from "../../../actions/AnnouncementActions";
-import { getSelectedClasses } from "../../../actions/ClassActions";
+import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { getUsers } from "../../../actions/UserActions";
 import {
   downloadLampiranAnnouncement,
@@ -20,13 +26,13 @@ import {
   Avatar,
   Fab,
   Grid,
-  Hidden,
   IconButton,
   ListItem,
   ListItemAvatar,
   ListItemText,
   Paper,
   Typography,
+  Divider,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
@@ -47,15 +53,18 @@ const path = require("path");
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     padding: "10px",
   },
-  paper: {
+  paperBox: {
     padding: "20px",
-    marginBottom: "10px",
+    // marginBottom: "10px",
   },
   listItemPaper: {
     marginBottom: "10px",
@@ -68,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
   teacherButtonContainer: {
     display: "flex",
     justifyContent: "flex-end",
-    marginTop: "20px",
+    // marginTop: "20px",
   },
   editAnnouncementButton: {
     marginRight: "10px",
@@ -119,6 +128,9 @@ const useStyles = makeStyles((theme) => ({
   },
   deadlineWarningText: {
     color: theme.palette.warning.main,
+  },
+  dividerColor: {
+    backgroundColor: theme.palette.primary.main,
   },
 }));
 
@@ -182,7 +194,7 @@ function LampiranFile(props) {
             }
             secondary={filetype}
           />
-          <IconButton
+          {/* <IconButton
             size="small"
             className={classes.downloadIconButton}
             onClick={(e) => {
@@ -191,7 +203,7 @@ function LampiranFile(props) {
             }}
           >
             <CloudDownloadIcon fontSize="small" />
-          </IconButton>
+          </IconButton> */}
         </ListItem>
       </Paper>
     </Grid>
@@ -202,6 +214,8 @@ function ViewAnnouncement(props) {
   document.title = "Schooly | Lihat Pengumuman";
 
   const classes = useStyles();
+  const history = useHistory();
+
   const { selectedAnnouncements } = props.announcements;
   const {
     getUsers,
@@ -211,23 +225,35 @@ function ViewAnnouncement(props) {
     previewLampiranAnnouncement,
     deleteAnnouncement,
     getSelectedClasses,
+    getAllClass,
+    getFileAnnouncements,
+    viewFileAnnouncement,
+    downloadFileAnnouncements,
   } = props;
+  const { all_classes_map } = props.classesCollection;
   const { user, retrieved_users } = props.auth;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [fileLampiran, setFileLampiran] = React.useState([]);
+
   const announcement_id = props.match.params.id;
 
+  React.useEffect(() => {}, []);
+
   React.useEffect(() => {
+    console.log(announcement_id)
     getOneAnnouncement(announcement_id);
+    getAllClass("map");
     getSelectedClasses(selectedAnnouncements.class_assigned);
     if (selectedAnnouncements._id) {
-      console.log("getusers is runned");
       getUsers([selectedAnnouncements.author_id]);
     }
+    getFileAnnouncements(announcement_id).then((result) => {
+      setFileLampiran(result);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAnnouncements._id]); // beacause only receive one announcement.
 
-  console.log(new Date(), classesCollection);
-  console.log("selected announcement: ", selectedAnnouncements);
+
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
     switch (ext_file) {
@@ -259,7 +285,9 @@ function ViewAnnouncement(props) {
   };
 
   const onDeleteAnnouncement = (announcement_id) => {
-    deleteAnnouncement(announcement_id);
+    deleteAnnouncement(announcement_id, history).then((res) => {
+      console.log(res);
+    });
     // setFileTugas(null)
   };
 
@@ -273,18 +301,18 @@ function ViewAnnouncement(props) {
   };
 
   const onDownloadFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran_announcement")
-      downloadLampiranAnnouncement(id);
+    if (fileCategory === "lampiran_announcement") console.log(":Download");
+    // downloadLampiranAnnouncement(id)
     else console.log("File Category is not specified");
   };
 
   const onPreviewFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran_announcement")
-      previewLampiranAnnouncement(id);
+    if (fileCategory === "lampiran_announcement") console.log("Download");
+    // previewLampiranAnnouncement(id)
     else console.log("File Category is not specified");
   };
-
-  console.log(selectedAnnouncements.lampiran)
+  // console.log(user);
+  console.log(retrieved_users.get(selectedAnnouncements.author_id))
   return (
     <div className={classes.root}>
       <DeleteDialog
@@ -296,21 +324,23 @@ function ViewAnnouncement(props) {
           onDeleteAnnouncement(announcement_id);
         }}
       />
-      <Paper className={classes.paper}>
-        <Grid container direction="column" spacing={6}>
-          <Grid item container direction="row">
-            <Grid item xs={12} md={6}>
-              <ListItemText
-                primary={
-                  <Typography variant="h4">
-                    {selectedAnnouncements.title}
-                  </Typography>
-                }
-                secondary={
+      <Grid container direction="column" spacing={2}>
+        <Grid item>
+          <Paper className={classes.paperBox}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} style={{ paddingBottom: "0" }}>
+                <Typography variant="h4">
+                  {selectedAnnouncements.title}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} style={{ paddingTop: "0" }}>
+              {/* h6 ditambahkan agar margin teks ini dengan teks nama pengumuman 
+              memiliki margin yang sama seperti pada halaman-halaman view objek lainnya */}
+                <h6 style={{ marginBottom: "0" }}>
                   <Typography
                     variant="body2"
                     color="textSecondary"
-                    style={{ marginTop: "10px" }}
+                    // style={{ marginTop: "10px" }}
                   >
                     Oleh:{" "}
                     <b>
@@ -322,93 +352,105 @@ function ViewAnnouncement(props) {
                             .name}
                     </b>
                   </Typography>
-                }
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Hidden mdUp implementation="css">
-                <ListItemText
-                  primary={
-                    <Typography
-                      variant="body2"
-                      className={classes.deadlineWarningText}
-                    >
-                      {/* Tanggal diumumkan: {moment(selectedAnnouncements.date_announced).locale("id").format("DD MMM YYYY, HH:mm")} */}
-                      Tanggal diumumkan:{" "}
-                      {moment(selectedAnnouncements.createdAt)
-                        .locale("id")
-                        .format("DD MMM YYYY, HH:mm")}
-                    </Typography>
-                  }
-                />
-              </Hidden>
-              <Hidden smDown implementation="css">
-                <ListItemText
-                  align="right"
-                  primary={
-                    <Typography
-                      variant="body2"
-                      className={classes.deadlineWarningText}
-                    >
-                      {/* Tanggal diumumkan: {moment(selectedAnnouncements.date_announced).locale("id").format("DD MMM YYYY, HH:mm")} */}
-                      Tanggal diumumkan:{" "}
-                      {moment(selectedAnnouncements.createdAt)
-                        .locale("id")
-                        .format("DD MMM YYYY, HH:mm")}
-                    </Typography>
-                  }
-                />
-              </Hidden>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Typography color="primary" gutterBottom>
-              Deskripsi:
-            </Typography>
-            <Typography variant="body1">
-              {selectedAnnouncements.description}
-            </Typography>
-          </Grid>
-          {!selectedAnnouncements.lampiran ||
-          selectedAnnouncements.lampiran.length === 0 ? null : (
-            <Grid item>
-              <Typography color="primary" gutterBottom>
-                Lampiran Berkas:
-              </Typography>
-              <Grid item container spacing={1}>
-                {selectedAnnouncements.lampiran.map((lampiran) => (
-                  <LampiranFile
-                    file_id={lampiran.id}
-                    onPreviewFile={onPreviewFile}
-                    onDownloadFile={onDownloadFile}
-                    filename={lampiran.filename}
-                    filetype={fileType(lampiran.filename)}
-                  />
-                ))}
+                </h6>
+                <Typography variant="body2" color="textSecondary">
+                  Waktu Dibuat:{" "}
+                  {moment(selectedAnnouncements.createdAt)
+                    .locale("id")
+                    .format("DD MMM YYYY, HH:mm")}
+                </Typography>
               </Grid>
+              <Grid item xs={12}>
+                <Divider className={classes.dividerColor} />
+              </Grid>
+              {retrieved_users.get(selectedAnnouncements.author_id) ? user.role === "Teacher" &&
+              retrieved_users.size &&
+              selectedAnnouncements.author_id &&
+              retrieved_users.get(selectedAnnouncements.author_id).role ===
+                "Teacher" ? (
+                <Grid item xs={12} style={{ marginBottom: "15px" }}>
+                  <Typography color="textSecondary" gutterBottom>
+                    Kelas yang Diberikan:
+                  </Typography>
+                  <Typography>
+                    {!selectedAnnouncements.class_assigned ||
+                    !all_classes_map.size
+                      ? null
+                      : selectedAnnouncements.class_assigned.map((kelas, i) => {
+                          if (all_classes_map.get(kelas)) {
+                            if (
+                              i ===
+                              selectedAnnouncements.class_assigned.length - 1
+                            )
+                              return `${all_classes_map.get(kelas).name}`;
+                            return `${all_classes_map.get(kelas).name}, `;
+                          }
+                          return null;
+                        })}
+                  </Typography>
+                </Grid>
+              ) : null :null}
+
+              <Grid item xs={12}>
+                <Typography color="textSecondary" gutterBottom>
+                  Deskripsi Pengumuman:
+                </Typography>
+                <Typography
+                  variant="body1"
+                  align="justify"
+                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                >
+                  <CustomLinkify text={selectedAnnouncements.description} />
+                </Typography>
+              </Grid>
+              {!fileLampiran.length === 0 ? null : (
+                <Grid item xs={12} style={{ marginTop: "15px" }}>
+                  <Typography color="textSecondary" gutterBottom>
+                    Lampiran Berkas:
+                  </Typography>
+                  <Grid item container spacing={1}>
+                    {fileLampiran.map((lampiran) => (
+                      <LampiranFile
+                        file_id={lampiran._id}
+                        onPreviewFile={viewFileAnnouncement}
+                        onDownloadFile={downloadFileAnnouncements}
+                        filename={lampiran.filename}
+                        filetype={fileType(lampiran.filename)}
+                      />
+                    ))}
+                  </Grid>
+                </Grid>
+              )}
             </Grid>
-          )}
+          </Paper>
         </Grid>
-      </Paper>
-      {user.role === "Admin" || user._id === selectedAnnouncements.author_id ? ( // kalau studentnya ketua kelas yang buat pengumumannya
-        <div className={classes.teacherButtonContainer}>
-          <Link to={`/sunting-pengumuman/${announcement_id}`}>
-            <LightTooltip title="Sunting Pengumuman" placement="bottom">
-              <Fab className={classes.editAnnouncementButton}>
-                <EditIcon />
-              </Fab>
-            </LightTooltip>
-          </Link>
-          <LightTooltip title="Hapus Pengumuman" placement="bottom">
-            <Fab
-              className={classes.deleteAnnouncementButton}
-              onClick={(e) => handleOpenDeleteDialog(e, announcement_id)}
-            >
-              <DeleteIcon />
-            </Fab>
-          </LightTooltip>
-        </div>
-      ) : null}
+        {user.role === "Admin" ||
+        user._id === selectedAnnouncements.author_id ? ( // kalau studentnya ketua kelas yang buat pengumumannya
+          <Grid item container justify="flex-end" alignItems="center">
+            <Grid item>
+              {/* <div className={classes.teacherButtonContainer}> */}
+              <Link to={`/sunting-pengumuman/${announcement_id}`}>
+                <LightTooltip title="Sunting Pengumuman" placement="bottom">
+                  <Fab className={classes.editAnnouncementButton}>
+                    <EditIcon />
+                  </Fab>
+                </LightTooltip>
+              </Link>
+            </Grid>
+            <Grid item>
+              <LightTooltip title="Hapus Pengumuman" placement="bottom">
+                <Fab
+                  className={classes.deleteAnnouncementButton}
+                  onClick={(e) => handleOpenDeleteDialog(e, announcement_id)}
+                >
+                  <DeleteIcon />
+                </Fab>
+              </LightTooltip>
+            </Grid>
+          </Grid>
+        ) : // {/* </div> */}
+        null}
+      </Grid>
     </div>
   );
 }
@@ -422,6 +464,7 @@ ViewAnnouncement.propTypes = {
   downloadLampiranAnnouncement: PropTypes.func.isRequired,
   previewLampiranAnnouncement: PropTypes.func.isRequired,
   getSelectedClasses: PropTypes.func.isRequired,
+  getAllClass: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
 };
 
@@ -438,4 +481,8 @@ export default connect(mapStateToProps, {
   previewLampiranAnnouncement,
   downloadLampiranAnnouncement,
   getSelectedClasses,
+  getAllClass,
+  getFileAnnouncements,
+  viewFileAnnouncement,
+  downloadFileAnnouncements,
 })(ViewAnnouncement);

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { useLocation, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import "moment/locale/id";
 import {
@@ -24,11 +24,11 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import FormControl from "@material-ui/core/FormControl";
 import { Bar } from "react-chartjs-2";
-import { getStudentsByClass } from "../../../actions/UserActions";
-import { getTasksBySC, getAllTask } from "../../../actions/TaskActions";
+import { getStudentsByClass, getOneUser, refreshTeacher } from "../../../actions/UserActions";
+import { getTasks, getAllTask } from "../../../actions/TaskActions";
+import { setCurrentClass } from "../../../actions/ClassActions";
 import {
-  getKuisBySC,
-  getUjianBySC,
+  getAssessments,
   getAllAssessments,
 } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
@@ -42,7 +42,10 @@ import { FaClipboardList } from "react-icons/fa";
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "10px",
   },
   avatar: {
@@ -107,20 +110,6 @@ const useStyles = makeStyles((theme) => ({
   tableHeader: {
     backgroundColor: theme.palette.primary.main,
   },
-  select: {
-    minWidth: "200px",
-    maxWidth: "200px",
-    [theme.breakpoints.up("md")]: {
-      minWidth: "150px",
-      maxWidth: "150px",
-    },
-  },
-  selectposition: {
-    justifyContent: "flex-end",
-    [theme.breakpoints.down("sm")]: {
-      justifyContent: "flex-start",
-    },
-  },
   graph: {
     display: "flex",
     flexDirection: "row",
@@ -133,14 +122,23 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     marginTop: "10px",
     alignItems: "center",
+    width: "20vw",
+    [theme.breakpoints.down("sm")]: {
+      width: "200px"
+    }
   },
   greyBackground: {
     display: "flex",
     alignItems: "center",
     textAlign: "center",
-    height: "100%",
+    justifyContent: "center",
     padding: "15px",
     backgroundColor: "#e3e5e5",
+    height: "21vw",
+    width: "60vw",
+    [theme.breakpoints.down("sm")]: {
+      height:"200px", 
+    }    
   },
   customMargin: {
     [theme.breakpoints.down("sm")]: {
@@ -152,10 +150,18 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "0",
     textAlign: "center",
   },
+  graphParentContainer: {
+    position: "relative",
+    height: "21vw",
+    width: "60vw",
+    [theme.breakpoints.down("sm")]: {
+      height: "200px",
+    },
+  },
 }));
 
 function ScoreGraph(props) {
-  const { scores, workType, names } = props;
+  const { scores, workType, names, classes } = props;
 
   let label = [];
   for (let i = 0; i < scores.length; i++) {
@@ -178,11 +184,12 @@ function ScoreGraph(props) {
   return (
     // A react-chart hyper-responsively and continuously fills the available
     // space of its parent element automatically
-    <div style={{ height: "100%", width: "100%" }}>
+    <div className={classes.graphParentContainer}>
       <Bar
         responsive
         data={state}
         options={{
+          maintainAspectRatio: false,
           title: {
             display: false,
             text: `Nilai ${workType} Anda`,
@@ -226,8 +233,6 @@ function ScoreGraph(props) {
             },
           },
         }}
-        width="100%"
-        height="100%"
       />
     </div>
   );
@@ -235,34 +240,49 @@ function ScoreGraph(props) {
 
 function ReportView(props) {
   const classes = useStyles();
-  const location = useLocation();
-
-  const { role, nama, kelas, id } = location.state;
-  // role = "Teacher" / "Student" / "Other" ("Other" kalau guru mengklik icon lihat rapor di side drawer)
-  // nama                                   (ini tidak ada kalau rolenya "Other". akan berisi nama murid)
-  // kelas = classesCollection.kelas        (ini tidak ada kalau rolenya "Other". ini akan berisi document Kelas yang ditempati murid)
-  // id                                     (ini tidak ada kalau rolenya "Other". akan berisi id murid)
-
-  const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
-  const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
 
   const {
-    getTasksBySC,
-    getKuisBySC,
-    getUjianBySC,
     getAllAssessments,
     getAllClass,
     getAllSubjects,
     getStudentsByClass,
     getAllTask,
     tasksCollection,
+    getOneUser,
+    setCurrentClass,
+    refreshTeacher
   } = props;
-  const { all_classes, all_classes_map } = props.classesCollection;
 
-  const { user, students_by_class } = props.auth;
+  const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
+  const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
+
+  const { all_classes, all_classes_map } = props.classesCollection;
+  const { user, students_by_class, selectedUser } = props.auth;
   const { all_subjects_map, all_subjects } = props.subjectsCollection;
   const allTaskArray = props.tasksCollection; // mengambil data dari DB
   const { all_assessments } = props.assessmentsCollection;
+
+  const { name, _id } = selectedUser;
+  const id = _id;
+
+  const [kelas, setKelas] = React.useState("");
+
+  React.useEffect(() => {
+    getOneUser(props.match.params.id);
+    if (user.role === "Teacher") {
+      refreshTeacher(user._id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
+    setCurrentClass(selectedUser.kelas);
+  }, [selectedUser]);
+
+  React.useEffect(() => {
+    setKelas(props.classesCollection.kelas);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.classesCollection.kelas]);
 
   const countAllClassUpdate = React.useRef(0);
   const countMIDependencyUpdate = React.useRef(0);
@@ -299,28 +319,64 @@ function ReportView(props) {
   const [emptyCondition, setEmptyCondition] = React.useState([]);
 
   // Graph
-  const [taskGraphCurrentSubject, setTaskGraphCurrentSubject] = React.useState(
+  const [graphType, setGraphType] = React.useState(0);
+  const [graphSubject, setGraphSubject] = React.useState(
     null
   );
-  const [quizGraphCurrentSubject, setQuizGraphCurrentSubject] = React.useState(
-    null
-  );
-  const [examGraphCurrentSubject, setExamGraphCurrentSubject] = React.useState(
+  // const [taskGraphCurrentSubject, setTaskGraphCurrentSubject] = React.useState(
+  //   null
+  // );
+  // const [quizGraphCurrentSubject, setQuizGraphCurrentSubject] = React.useState(
+  //   null
+  // );
+  // const [examGraphCurrentSubject, setExamGraphCurrentSubject] = React.useState(
+  //   null
+  // );
+  const [allowedSubjectIndex, setAllowedSubjectIndex] = React.useState(
     null
   );
 
-  if (taskGraphCurrentSubject === null && all_subjects.length !== 0) {
-    let randomNumber = Math.floor(Math.random() * all_subjects.length);
-    setTaskGraphCurrentSubject(randomNumber);
-  }
-  if (quizGraphCurrentSubject === null && all_subjects.length !== 0) {
-    let randomNumber = Math.floor(Math.random() * all_subjects.length);
-    setQuizGraphCurrentSubject(randomNumber);
-  }
-  if (examGraphCurrentSubject === null && all_subjects.length !== 0) {
-    let randomNumber = Math.floor(Math.random() * all_subjects.length);
-    setExamGraphCurrentSubject(randomNumber);
-  }
+  React.useEffect(() => {
+    if (
+      allowedSubjectIndex === null &&
+      all_subjects.length !== 0 &&
+      Object.keys(kelas).length !== 0
+    ) {
+      let allowedIndexes = [];
+      console.log(kelas)
+      for(let i=0;i<all_subjects.length;i++) {
+        if(kelas.subject_assigned.includes(all_subjects[i]._id)) {
+          allowedIndexes.push(i);
+        }
+      }
+      setAllowedSubjectIndex(allowedIndexes)
+      let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+      setGraphSubject(randomNumber);
+      
+      // if (
+      //   taskGraphCurrentSubject === null &&
+      //   all_subjects.length !== 0
+      // ) {
+      //   let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+      //   setTaskGraphCurrentSubject(randomNumber)
+      // }
+      // if (
+      //   quizGraphCurrentSubject === null &&
+      //   all_subjects.length !== 0
+      // ) {
+      //   let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+      //   setQuizGraphCurrentSubject(randomNumber)
+      // }
+      // if (
+      //   examGraphCurrentSubject === null &&
+      //   all_subjects.length !== 0
+      // ) {
+      //   let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+      //   setExamGraphCurrentSubject(randomNumber)
+      // }
+    }
+  }, [all_subjects]);
+  
 
   function graphTask(subjectIndex) {
     if (all_subjects[subjectIndex]) {
@@ -346,6 +402,7 @@ function ReportView(props) {
       if (subjectScores.length !== 0) {
         return (
           <ScoreGraph
+            classes={classes}
             scores={subjectScores}
             names={subjectNames}
             workType="Tugas"
@@ -400,6 +457,7 @@ function ReportView(props) {
       if (subjectScores.length !== 0) {
         return (
           <ScoreGraph
+            classes={classes}
             scores={subjectScores}
             names={subjectNames}
             workType={type}
@@ -410,35 +468,227 @@ function ReportView(props) {
   }
 
   const changeGraphSubject = (workType, direction, subjectsLength) => {
-    if (workType === "Tugas") {
-      if (direction === "Left" && taskGraphCurrentSubject > 0) {
-        setTaskGraphCurrentSubject(taskGraphCurrentSubject - 1);
-      } else if (
-        direction === "Right" &&
-        taskGraphCurrentSubject < subjectsLength - 1
-      ) {
-        setTaskGraphCurrentSubject(taskGraphCurrentSubject + 1);
+    let currentIndex = allowedSubjectIndex.indexOf(graphSubject);
+    let newIndex;
+
+    if (direction === "Left") {
+      if(currentIndex + 1 >= allowedSubjectIndex.length) {
+        newIndex = 0;
+      } else {
+        newIndex = currentIndex + 1;
       }
-    } else if (workType === "Kuis") {
-      if (direction === "Left" && quizGraphCurrentSubject > 0) {
-        setQuizGraphCurrentSubject(quizGraphCurrentSubject - 1);
-      } else if (
-        direction === "Right" &&
-        quizGraphCurrentSubject < subjectsLength - 1
-      ) {
-        setQuizGraphCurrentSubject(quizGraphCurrentSubject + 1);
-      }
-    } else if (workType === "Ujian") {
-      if (direction === "Left" && examGraphCurrentSubject > 0) {
-        setExamGraphCurrentSubject(examGraphCurrentSubject - 1);
-      } else if (
-        direction === "Right" &&
-        examGraphCurrentSubject < subjectsLength - 1
-      ) {
-        setExamGraphCurrentSubject(examGraphCurrentSubject + 1);
+    } else if (direction === "Right") {
+      if(currentIndex - 1 < 0) {
+        newIndex = allowedSubjectIndex.length - 1;
+      } else {
+        newIndex = currentIndex - 1;
       }
     }
+    setGraphSubject(allowedSubjectIndex[newIndex]);
+
+    // if (workType === "Tugas") {
+    //   let currentIndex = allowedSubjectIndex.indexOf(taskGraphCurrentSubject);
+    //   if (direction === "Left") {
+    //     let newIndex;
+    //     if(currentIndex + 1 >= allowedSubjectIndex.length) {
+    //       newIndex = 0;
+    //     }
+    //     else {
+    //       newIndex = currentIndex + 1;
+    //     }
+    //     setTaskGraphCurrentSubject(allowedSubjectIndex[newIndex])
+    //   } else if (direction === "Right") {
+    //     let newIndex;
+    //     if(currentIndex - 1 < 0) {
+    //       newIndex = allowedSubjectIndex.length - 1;
+    //     }
+    //     else {
+    //       newIndex = currentIndex - 1;
+    //     }
+    //     setTaskGraphCurrentSubject(allowedSubjectIndex[newIndex])
+    //   }
+    // } else if (workType === "Kuis") {
+    //   let currentIndex = allowedSubjectIndex.indexOf(quizGraphCurrentSubject);
+    //   if (direction === "Left") {
+    //     let newIndex;
+    //     if(currentIndex + 1 >= allowedSubjectIndex.length) {
+    //       newIndex = 0;
+    //     }
+    //     else {
+    //       newIndex = currentIndex + 1;
+    //     }
+    //     setQuizGraphCurrentSubject(allowedSubjectIndex[newIndex])
+    //   } else if (direction === "Right") {
+    //     let newIndex;
+    //     if(currentIndex - 1 < 0) {
+    //       newIndex = allowedSubjectIndex.length - 1;
+    //     }
+    //     else {
+    //       newIndex = currentIndex - 1;
+    //     }
+    //     setQuizGraphCurrentSubject(allowedSubjectIndex[newIndex])
+    //   }
+    // } else if (workType === "Ujian") {
+    //   let currentIndex = allowedSubjectIndex.indexOf(examGraphCurrentSubject);
+    //   if (direction === "Left") {
+    //     let newIndex;
+    //     if(currentIndex + 1 >= allowedSubjectIndex.length) {
+    //       newIndex = 0;
+    //     }
+    //     else {
+    //       newIndex = currentIndex + 1;
+    //     }
+    //     setExamGraphCurrentSubject(allowedSubjectIndex[newIndex])
+    //   } else if (direction === "Right") {
+    //     let newIndex;
+    //     if(currentIndex - 1 < 0) {
+    //       newIndex = allowedSubjectIndex.length - 1;
+    //     }
+    //     else {
+    //       newIndex = currentIndex - 1;
+    //     }
+    //     setExamGraphCurrentSubject(allowedSubjectIndex[newIndex])
+    //   }
+    // }
   };
+
+  function createGraph() {
+    let graph;
+    let subject;
+    const types = ["Tugas", "Kuis", "Ujian"];
+
+    subject = showSubject(graphSubject);
+    if (types[graphType] === "Tugas") {
+      graph = graphTask(graphSubject);
+    } else if (types[graphType] === "Kuis") {
+      graph = graphAssessment(graphSubject, "Kuis");
+    } else {
+      graph = graphAssessment(graphSubject, "Ujian");
+    }
+
+    // if (types[graphType] === "Tugas") {
+    //   graph = graphTask(taskGraphCurrentSubject);
+    //   subject = showSubject(taskGraphCurrentSubject)
+    // } else if (types[graphType] === "Kuis") {
+    //   graph = graphAssessment(quizGraphCurrentSubject, "Kuis");
+    //   subject = showSubject(quizGraphCurrentSubject)
+
+    // } else {
+    //   graph = graphAssessment(examGraphCurrentSubject, "Ujian");
+    //   subject = showSubject(examGraphCurrentSubject)
+    // }
+
+    return (
+      // <Grid item xs={12} sm={4} container direction="column" spacing={1} alignItems="center">
+      //   <Grid item>
+      //     <div className={classes.graphButtons}>
+      //       <IconButton
+      //         onClick={() => {
+      //           if (graphType - 1 < 0) {
+      //             setGraphType(types.length - 1);
+      //           } else {
+      //             setGraphType((graphType - 1) % 3);
+      //           }
+      //         }}
+      //       >
+      //         <ArrowBackIosIcon />
+      //       </IconButton>
+      //       <Typography align="center">
+      //         Nilai {types[graphType]} Anda
+      //       </Typography>
+      //       <IconButton
+      //         onClick={() => {setGraphType((graphType + 1) % 3)}}
+      //         >
+      //         <ArrowForwardIosIcon />
+      //       </IconButton>
+      //     </div>
+      <Grid item container direction="column" spacing={1} alignItems="center">
+        <Grid item className={classes.graphButtons} style={{ margin: "0 0 10px" }}>
+          <IconButton
+            onClick={() => {
+              if (graphType - 1 < 0) {
+                setGraphType(types.length - 1);
+              } else {
+                setGraphType(graphType - 1);
+              }
+            }}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
+          <Typography align="center">
+            Nilai {types[graphType]} Anda
+        </Typography>
+          <IconButton
+            onClick={() => { setGraphType((graphType + 1) % types.length) }}
+          >
+            <ArrowForwardIosIcon />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          {graph === null ? (
+            <div className={classes.greyBackground}>
+              <Typography
+                align="center"
+                color="textSecondary"
+                variant="subtitle2"
+              >
+                Belum ada {types[graphType]} yang telah dinilai untuk mata pelajaran terkait
+              </Typography>
+            </div>
+          ) : (
+            graph
+          )}
+        </Grid>
+        {/* <Grid item>
+          <div className={classes.graphButtons}>
+            <IconButton
+              onClick={() =>
+                changeGraphSubject(types[graphType], "Left", all_subjects.length)
+              }
+            >
+              <ArrowBackIosIcon />
+            </IconButton>
+            {subject}
+            <IconButton
+              onClick={() =>
+                changeGraphSubject(
+                  types[graphType],
+                  "Right",
+                  all_subjects.length
+                ) */}
+        <Grid item className={classes.graphButtons}>
+          <IconButton
+            onClick={() => {
+              if (graphSubject - 1 < 0) {
+                setGraphSubject(all_subjects.length - 1);
+              } else {
+                setGraphSubject(graphSubject - 1);
+              }
+              // >
+              //     <ArrowForwardIosIcon />
+              //   </IconButton>
+              // </div>
+            }}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
+          {subject}
+          <IconButton
+            onClick={() => {
+              setGraphSubject((graphSubject + 1) % all_subjects.length);
+              // changeGraphSubject(
+              //   types[graphType],
+              //   "Right",
+              //   all_subjects.length
+            }
+            }
+          >
+            <ArrowForwardIosIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
+    )
+  }
 
   function showSubject(subjectIndex) {
     if (all_subjects[subjectIndex]) {
@@ -524,34 +774,75 @@ function ReportView(props) {
   // ini digunakan untuk membuat tabel halaman lihat-rapor yang dibuka dari profile view murid atau profile
   // tipe argumen = Object (bisa pakai Object karena urutan nama kolom dan jumlah kolomnya fix)
   function generateRowCellFormat2(row) {
+    let trueSubject = false;
+    let nonWaliView = false;
+    console.log(kelas)
+    if(kelasWali.get("id") === selectedUser.kelas) {
+      console.log("hitung")
+      if(kelas.subject_assigned) {
+        console.log("hitung2")
+        for(let i=0;i<all_subjects.length;i++) {
+          if(kelas.subject_assigned.includes(all_subjects[i]._id) && row.subject === all_subjects[i].name) {
+            console.log(kelas)
+            trueSubject = true;
+            break;
+          }
+        }
+      }
+    }
+    else if (user.role === "Teacher" && kelasWali.get("id") !== selectedUser.kelas) {
+      if (user.class_to_subject && user.class_to_subject[kelas._id]) {
+        for(let i=0;i<all_subjects.length;i++) {
+          if(kelas.subject_assigned) {
+            if(user.class_to_subject[kelas._id].includes(all_subjects[i]._id) && row.subject === all_subjects[i].name) {
+              nonWaliView = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+    else if (user.role === "Student") {
+      if(kelas.subject_assigned) {
+        for(let i=0;i<all_subjects.length;i++) {
+          if(kelas.subject_assigned.includes(all_subjects[i]._id) && row.subject === all_subjects[i].name) {
+            console.log(kelas)
+            trueSubject = true;
+            break;
+          }
+        }
+      }
+    }
     let emptyCellSymbol = "-"; // jika sel isi kosong, masukkan "-"
-    return (
-      <TableRow key={row.subject}>
-        {" "}
-        {/* nama subjek sudah dipastikan unik*/}
-        <TableCell style={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
-          {row.subject}
-        </TableCell>
-        <TableCell
-          align="center"
-          style={{ border: "1px solid rgba(224, 224, 224, 1)" }}
-        >
-          {row.taskAvg !== null ? row.taskAvg : emptyCellSymbol}
-        </TableCell>
-        <TableCell
-          align="center"
-          style={{ border: "1px solid rgba(224, 224, 224, 1)" }}
-        >
-          {row.quizAvg !== null ? row.quizAvg : emptyCellSymbol}
-        </TableCell>
-        <TableCell
-          align="center"
-          style={{ border: "1px solid rgba(224, 224, 224, 1)" }}
-        >
-          {row.assessmentAvg !== null ? row.assessmentAvg : emptyCellSymbol}
-        </TableCell>
-      </TableRow>
-    );
+    if(trueSubject || nonWaliView) {
+      return (
+        <TableRow key={row.subject}>
+          {" "}
+          {/* nama subjek sudah dipastikan unik*/}
+          <TableCell style={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+            {row.subject}
+          </TableCell>
+          <TableCell
+            align="center"
+            style={{ border: "1px solid rgba(224, 224, 224, 1)" }}
+          >
+            {row.taskAvg !== null ? row.taskAvg : emptyCellSymbol}
+          </TableCell>
+          <TableCell
+            align="center"
+            style={{ border: "1px solid rgba(224, 224, 224, 1)" }}
+          >
+            {row.quizAvg !== null ? row.quizAvg : emptyCellSymbol}
+          </TableCell>
+          <TableCell
+            align="center"
+            style={{ border: "1px solid rgba(224, 224, 224, 1)" }}
+          >
+            {row.assessmentAvg !== null ? row.assessmentAvg : emptyCellSymbol}
+          </TableCell>
+        </TableRow>
+      );
+    }
   }
 
   function generateHeaderCellMatpel(nama) {
@@ -623,16 +914,30 @@ function ReportView(props) {
     let message = [];
     if (emptyCondition.includes("noStudent")) {
       message.push(
-        <Typography variant="h5" color="textSecondary" align="center">
-          Kelas ini tidak memiliki murid
-        </Typography>
+        <Grid
+          container
+          alignItems="center"
+          justify="center"
+          style={{ height: "20vh" }}
+        >
+          <Typography variant="h5" color="textSecondary" align="center">
+            Kelas ini tidak memiliki murid
+          </Typography>
+        </Grid>
       );
     }
     if (emptyCondition.includes("noGrade")) {
       message.push(
-        <Typography variant="h5" color="textSecondary" align="center">
-          Belum ada tugas, kuis, atau ujian
-        </Typography>
+        <Grid
+          container
+          alignItems="center"
+          justify="center"
+          style={{ height: "20vh" }}
+        >
+          <Typography variant="h5" color="textSecondary" align="center">
+            Belum ada tugas, kuis, atau ujian
+          </Typography>
+        </Grid>
       );
     }
     return message;
@@ -647,43 +952,63 @@ function ReportView(props) {
 
   function handleKelasChange(event) {
     // reminder: event.target.value berisi value Select yang sedang dipilih
+    let selectedClassId = event.target.value;
+
     if (isSubjectSelected) {
-      setValueKelas(event.target.value);
-      getStudentsByClass(event.target.value); // ini akan membuat useEffect yg depend terhadap students_by_class menjadi dipanggil
+      setValueKelas(selectedClassId);
+      getStudentsByClass(selectedClassId); // ini akan membuat useEffect yg depend terhadap students_by_class menjadi dipanggil
     } else {
-      setValueKelas(event.target.value);
+      setValueKelas(selectedClassId);
       setIsClassSelected(true);
       setValueMatpel("");
 
       // jika guru adalah wali kelas dan kelas yang dipilih adalah kelas wali,
-      if (kelasWali.size !== 0 && event.target.value === kelasWali.get("id")) {
+      if (kelasWali.size !== 0 && selectedClassId === kelasWali.get("id")) {
         setKontenMatpel(semuaMatpel);
       } else {
         // jika guru bukan wali kelas atau kelas yang dipilih bukan kelas wali,
         // tampilkan hanya semua matpel yang diajarkan ke kelas yang dipilih
         let matpel = new Map();
-        user.subject_teached.forEach((subjectId) => {
-          matpel.set(subjectId, semuaMatpel.get(subjectId));
-        });
+        if (user.class_to_subject && user.class_to_subject[selectedClassId]) {
+          user.class_to_subject[selectedClassId].forEach((subjectId) => {
+            matpel.set(subjectId, semuaMatpel.get(subjectId));
+          });
+        }
         setKontenMatpel(matpel);
       }
     }
   }
 
   function handleMatPelChange(event) {
+    let selectedSubjectId = event.target.value;
+
     if (isClassSelected) {
-      setValueMatpel(event.target.value);
+      setValueMatpel(selectedSubjectId);
       getStudentsByClass(valueKelas); // ini akan membuat useEffect yg depend terhadap students_by_class menjadi dipanggil
     } else {
-      // jika guru memilih subject yg diajarnya, isi Select kelas dengan semua kelas
-      if (user.subject_teached.includes(event.target.value)) {
-        setKontenKelas(semuaKelas);
-      } else {
-        // jika guru memilih subject yg bukan diajarnya, isi kelas hanyalah kelas yang diwalikannya (jika ada)
-        setKontenKelas(new Map());
+      // jika guru ini adalah guru wali
+      let kelas = new Map();
+      if (user.class_to_subject) {
+        if (kelasWali.size !== 0) {
+          if (user.subject_teached.includes(selectedSubjectId)) {
+            for (let [classId, subjectIdArray] of Object.entries(user.class_to_subject)) {
+              if (subjectIdArray.includes(selectedSubjectId)) {
+                kelas.set(classId, semuaKelas.get(classId));
+              }
+            }
+            kelas.delete(kelasWali.get("id")); // perlu didelete karena pada saat meng-generate opsi kelas, kelas yang diwalikan guru ini sudah ditambahkan
+          } // jika guru ini memilih mata pelajaran yang tidak diajarkannya, dia hanya dapat memilih kelas yg diwalikannya
+        } else {
+          for (let [classId, subjectIdArray] of Object.entries(user.class_to_subject)) {
+            if (subjectIdArray.includes(selectedSubjectId)) {
+              kelas.set(classId, semuaKelas.get(classId));
+            }
+          }
+        }
       }
 
-      setValueMatpel(event.target.value);
+      setKontenKelas(kelas);
+      setValueMatpel(selectedSubjectId);
       setIsSubjectSelected(true);
       setValueKelas("");
     }
@@ -842,7 +1167,7 @@ function ReportView(props) {
     getAllSubjects();
     getAllSubjects("map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [role]);
+  }, []);
 
   // menentukan status guru (wali atau nonwali) setelah all_classes sudah ada
   React.useEffect(() => {
@@ -956,18 +1281,22 @@ function ReportView(props) {
         } // jika items kosong, hasGrade akan tetap bernilai false
       };
 
-      getTasksBySC(valueMatpel, valueKelas)
+      getTasks(valueMatpel, valueKelas)
         .then((taskArray) => {
           addScore(taskArray, "tugas");
         })
         .then(() => {
-          return getKuisBySC(valueMatpel, valueKelas).then((kuisArray) => {
+          return getAssessments("Kuis", valueMatpel, valueKelas).then((kuisArray) => {
             addScore(kuisArray, "kuis");
+          }).catch((err) => {
+            console.log(err);
           });
         })
         .then(() => {
-          return getUjianBySC(valueMatpel, valueKelas).then((ujianArray) => {
+          return getAssessments("Ujian", valueMatpel, valueKelas).then((ujianArray) => {
             addScore(ujianArray, "ujian");
+          }).catch((err) => {
+            console.log(err);
           });
         })
         .then(() => {
@@ -1003,10 +1332,9 @@ function ReportView(props) {
         let daftarMatpel = new Map();
         let daftarKelas = new Map();
 
-        // mengisi daftar kelas dengan semua kelas yang ada
-        // (karena guru pasti mengajar minimal satu subject dan setiap subject diajar ke semua kelas)
-        all_classes_map.forEach((classInfo, classId) => {
-          daftarKelas.set(classId, classInfo.name);
+        // mengisi daftar kelas dengan semua kelas yang diajar oleh guru ini
+        user.class_teached.forEach((classId) => {
+          daftarKelas.set(classId, all_classes_map.get(classId).name);
         });
 
         if (kelasWali.size !== 0) {
@@ -1040,8 +1368,14 @@ function ReportView(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kelasWali, all_classes_map, all_subjects_map]);
 
-  if (!location.state) {
+  // Untuk view dari sidebar teacher, untuk sekarang reserve special code "semua"
+  let role;
+  if (props.match.params.id === "semua" && user.role === "Teacher") {
+    role = "Other";
+  } else if (props.match.params.id === "semua" && user.role !== "Teacher") {
     return <Redirect to="/tidak-ditemukan" />;
+  } else {
+    role = user.role;
   }
 
   return (
@@ -1058,7 +1392,7 @@ function ReportView(props) {
             <Grid item>
               <Typography>
                 <b>Nama: </b>
-                {nama}
+                {name}
               </Typography>
             </Grid>
             <Grid item>
@@ -1102,12 +1436,19 @@ function ReportView(props) {
             <Divider className={classes.profileDivider} />
           </Grid>
           <Grid
+            item
             container
             justify="center"
-            spacing={4}
+            // spacing={4}
             alignItems="center"
-          >
-            <Grid item container direction="column" spacing={1} xs={12} sm={4} alignItems="center">
+          >           
+            {/* {createGraph()} */}
+            <Paper style={{ padding: "20px", width: "100%"}}>
+              {createGraph()}
+            </Paper>
+
+            {/* ----------------- ini dipakai kalau ingin menampilkan 3 graph bersampingan ----------------- */}
+            {/* <Grid item container direction="column" spacing={1} xs={12} sm={4} alignItems="center">
               <Grid item>
                 <Typography variant="h6" align="center">
                   Nilai Tugas Anda
@@ -1141,11 +1482,7 @@ function ReportView(props) {
                   {showSubject(taskGraphCurrentSubject)}
                   <IconButton
                     onClick={() =>
-                      changeGraphSubject(
-                        "Tugas",
-                        "Right",
-                        all_subjects.length
-                      )
+                      changeGraphSubject("Tugas", "Right", all_subjects.length)
                     }
                   >
                     <ArrowForwardIosIcon />
@@ -1153,7 +1490,15 @@ function ReportView(props) {
                 </div>
               </Grid>
             </Grid>
-            <Grid item container direction="column" spacing={1} xs={12} sm={4} alignItems="center">
+            <Grid
+              item
+              container
+              direction="column"
+              spacing={1}
+              xs={12}
+              sm={4}
+              alignItems="center"
+            >
               <Grid item>
                 <Typography variant="h6" align="center">
                   Nilai Kuis Anda
@@ -1172,9 +1517,7 @@ function ReportView(props) {
                     </Typography>
                   </div>
                 ) : (
-                  <div>
-                    {graphAssessment(quizGraphCurrentSubject, "Kuis")}
-                  </div>
+                  <div>{graphAssessment(quizGraphCurrentSubject, "Kuis")}</div>
                 )}
               </Grid>
               <Grid item>
@@ -1197,7 +1540,15 @@ function ReportView(props) {
                 </div>
               </Grid>
             </Grid>
-            <Grid item container direction="column" spacing={1} xs={12} sm={4} alignItems="center">
+            <Grid
+              item
+              container
+              direction="column"
+              spacing={1}
+              xs={12}
+              sm={4}
+              alignItems="center"
+            >
               <Grid item>
                 <Typography variant="h6" align="center">
                   Nilai Ujian Anda
@@ -1216,9 +1567,7 @@ function ReportView(props) {
                     </Typography>
                   </div>
                 ) : (
-                  <div>
-                    {graphAssessment(examGraphCurrentSubject, "Ujian")}
-                  </div>
+                  <div>{graphAssessment(examGraphCurrentSubject, "Ujian")}</div>
                 )}
               </Grid>
               <Grid item>
@@ -1233,25 +1582,17 @@ function ReportView(props) {
                   {showSubject(examGraphCurrentSubject)}
                   <IconButton
                     onClick={() =>
-                      changeGraphSubject(
-                        "Ujian",
-                        "Right",
-                        all_subjects.length
-                      )
+                      changeGraphSubject("Ujian", "Right", all_subjects.length)
                     }
                   >
                     <ArrowForwardIosIcon />
                   </IconButton>
                 </div>
               </Grid>
-            </Grid>
+            </Grid> */}
+            {/* --------------------------------------------------- */}
           </Grid>
-          <Grid
-            item
-            container
-            direction="column"
-            style={{ margin: "auto" }}
-          >
+          <Grid item container direction="column" style={{ margin: "auto" }}>
             <Grid item>
               <TableContainer component={Paper}>
                 <Table
@@ -1284,60 +1625,47 @@ function ReportView(props) {
             </Typography>
             <Divider className={classes.profileDivider} />
           </Grid>
-          <Grid
-            item
-            justify="space-between"
-            alignItems="center"
-            style={{ display: "flex", flexWrap: "wrap" }}
-          >
-            <Grid item md={6} className={classes.customMargin}>
+          <Grid item container justify="space-between" alignItems="center">
+            <Grid item md={7} className={classes.customMargin}>
               <Typography>
-                Berikut Ini adalah Rapor Seluruh Siswa Sesuai Kelas dan Mata
-                Pelajaran yang Dipilih
+                Berikut adalah rapor seluruh murid sesuai kelas dan mata
+                pelajaran yang dipilih
               </Typography>
             </Grid>
             <Grid item container md={5} spacing={3}>
-              <Grid item md={6} container className={classes.selectposition}>
-                <Grid item>
-                  <FormControl variant="outlined">
-                    <InputLabel id="kelas-label">Kelas</InputLabel>
-                    <Select
-                      labelId="kelas-label"
-                      id="kelas"
-                      value={valueKelas}
-                      onChange={(event) => {
-                        handleKelasChange(event);
-                      }}
-                      className={classes.select}
-                      label="Kelas"
-                    >
-                      {kontenKelas.size !== 0 || kelasWali.size !== 0
-                        ? generateKelasMenuItem()
-                        : null}
-                    </Select>
-                  </FormControl>
-                </Grid>
+              <Grid item container md={6}>
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel id="kelas-label">Kelas</InputLabel>
+                  <Select
+                    labelId="kelas-label"
+                    id="kelas"
+                    value={valueKelas}
+                    onChange={(event) => {
+                      handleKelasChange(event);
+                    }}
+                    label="Kelas"
+                  >
+                    {kontenKelas.size !== 0 || kelasWali.size !== 0
+                      ? generateKelasMenuItem()
+                      : null}
+                  </Select>
+                </FormControl>
               </Grid>
-              <Grid item md={6} container className={classes.selectposition}>
-                <Grid item>
-                  <FormControl variant="outlined">
-                    <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
-                    <Select
-                      labelId="matpel-label"
-                      id="matpel"
-                      value={valueMatpel}
-                      onChange={(event) => {
-                        handleMatPelChange(event);
-                      }}
-                      className={classes.select}
-                      label="Mata Pelajaran"
-                    >
-                      {kontenMatpel.size !== 0
-                        ? generateMatPelMenuItem()
-                        : null}
-                    </Select>
-                  </FormControl>
-                </Grid>
+              <Grid item container md={6}>
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
+                  <Select
+                    labelId="matpel-label"
+                    id="matpel"
+                    value={valueMatpel}
+                    onChange={(event) => {
+                      handleMatPelChange(event);
+                    }}
+                    label="Mata Pelajaran"
+                  >
+                    {kontenMatpel.size !== 0 ? generateMatPelMenuItem() : null}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
           </Grid>
@@ -1459,10 +1787,13 @@ function ReportView(props) {
 
 ReportView.propTypes = {
   auth: PropTypes.object.isRequired,
+  getOneUser: PropTypes.func.isRequired,
+  setCurrentClass: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.array.isRequired,
   assessmentsCollection: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -1475,11 +1806,11 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getStudentsByClass,
-  getTasksBySC,
-  getKuisBySC,
-  getUjianBySC,
   getAllAssessments,
   getAllClass,
   getAllSubjects,
   getAllTask,
+  getOneUser,
+  setCurrentClass,
+  refreshTeacher
 })(ReportView);

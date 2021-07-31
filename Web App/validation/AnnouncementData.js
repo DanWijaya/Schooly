@@ -5,12 +5,16 @@ module.exports = function validateAnnouncementInput(data) {
   let errors = {};
 
   // Convert empty fields to an empty strings so validator functions can be used
-  data.title = isEmpty(data.title) ? "" : data.title;
-  data.description = isEmpty(data.description) ? "" : data.description;
+  for (let key of Object.keys(data)) {
+    if (isEmpty(data[key])) {
+      data[key] = "";
+    }
+  }
+  //data keys: title, description, to
 
   // Name checks
   if (Validator.isEmpty(data.title)) {
-    errors.title = "Name Pengumuman belum diisi";
+    errors.title = "Nama Pengumuman belum diisi";
   }
 
   if (Validator.isEmpty(data.description)) {
@@ -19,6 +23,10 @@ module.exports = function validateAnnouncementInput(data) {
 
   if (!data.class_assigned.length) {
     errors.class_assigned = "Kelas yang ditujukan belum diisi";
+  }
+
+  if (!data.to.length) {
+    errors.to = "Peran yang ditujukan belum diisi";
   }
 
   return {

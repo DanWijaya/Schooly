@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import "moment/locale/id";
+import { getTeachers } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
@@ -11,6 +12,7 @@ import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import subjectBackground from "./subject-background/SubjectBackground";
+import Empty from "../../misc/empty/Empty";
 import {
   Avatar,
   Divider,
@@ -37,11 +39,13 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 
-const useStyles =
-    makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "20px",
   },
   workIconButton: {
@@ -57,8 +61,8 @@ const useStyles =
     flexDirection: "column",
     justifyContent: "center",
     padding: "40px 0px 40px 30px",
-    backgroundColor: props => props.backgroundColor,
-    backgroundImage: props => `url(${props.backgroundImage})`,
+    backgroundColor: (props) => props.backgroundColor,
+    backgroundImage: (props) => `url(${props.backgroundImage})`,
     backgroundPosition: "right bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
@@ -298,8 +302,8 @@ function AssessmentListItem(props) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-  const handleOpenDialog = (title, subject, start_date, end_date) => {
-    setCurrentDialogInfo({ title, subject, start_date, end_date });
+  const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
+    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
     setOpenDialog(true);
     console.log(title);
   };
@@ -318,6 +322,7 @@ function AssessmentListItem(props) {
             handleOpenDialog(
               props.work_title,
               props.work_subject,
+              props.work_teacher_name,
               props.work_starttime,
               props.work_endtime
             )
@@ -367,6 +372,7 @@ function AssessmentListItem(props) {
             handleOpenDialog(
               props.work_title,
               props.work_subject,
+              props.work_teacher_name,
               props.work_starttime,
               props.work_endtime
             )
@@ -428,10 +434,16 @@ function AssessmentListItem(props) {
             align="center"
             style={{ marginTop: "25px" }}
           >
-            Mulai : {currentDialogInfo.start_date}
+            Guru: {currentDialogInfo.teacher_name}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
+          >
+            Mulai: {currentDialogInfo.start_date}
           </Typography>
           <Typography variant="subtitle1" align="center">
-            Selesai : {currentDialogInfo.end_date}
+            Selesai: {currentDialogInfo.end_date}
           </Typography>
           <Typography
             variant="subtitle2"
@@ -439,8 +451,8 @@ function AssessmentListItem(props) {
             color="textSecondary"
             style={{ marginTop: "10px", textAlign: "center" }}
           >
-            Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata
-            Pelajaran Terkait
+            Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
+            pelajaran terkait.
           </Typography>
         </div>
       </Dialog>
@@ -450,7 +462,7 @@ function AssessmentListItem(props) {
 
 function ViewSubject(props) {
 
-  const { user } = props.auth;
+  const { user, all_teachers } = props.auth;
   const id = props.match.params.id;
   const {
     setCurrentClass,
@@ -461,6 +473,7 @@ function ViewSubject(props) {
     getMaterial,
     getAllAssessments,
     assessmentsCollection,
+    getTeachers
   } = props;
   const all_assessments = assessmentsCollection.all_assessments;
   const { kelas } = props.classesCollection;
@@ -471,12 +484,11 @@ function ViewSubject(props) {
 
   let subjects_list = Array.from(all_subjects_map.keys());
   let background_idx = subjects_list.indexOf(id) % subjectBackground.length;
+  let background_image, background_color;
 
-  let background_image, background_color
-
-  if(background_idx !== -1){
-    background_image = Object.values(subjectBackground[background_idx])[0]
-    background_color = Object.keys(subjectBackground[background_idx])[0]
+  if (background_idx !== -1) {
+    background_image = Object.values(subjectBackground[background_idx])[0];
+    background_color = Object.keys(subjectBackground[background_idx])[0];
   }
   const classes = useStyles({
     backgroundColor: background_color,
@@ -492,6 +504,7 @@ function ViewSubject(props) {
     getAllTaskFilesByUser(user._id);
     getAllSubjects("map");
     getAllAssessments();
+    getTeachers("map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -708,7 +721,7 @@ function ViewSubject(props) {
   ) {
     let AssessmentsList = [];
     let result = [];
-    if (Boolean(all_assessments.length)) {
+    if (Boolean(all_assessments.length) && all_teachers instanceof Map) {
       var i;
       for (i = all_assessments.length - 1; i >= 0; i--) {
         let assessment = all_assessments[i];
@@ -768,6 +781,7 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
+                  work_teacher_name={all_teachers.get(assessment.author_id).name}
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -797,6 +811,7 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
+                  work_teacher_name={all_teachers.get(assessment.author_id).name}
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -833,6 +848,7 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
+                  work_teacher_name={all_teachers.get(assessment.author_id).name}
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -861,6 +877,7 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
+                  work_teacher_name={all_teachers.get(assessment.author_id).name}
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -878,7 +895,9 @@ function ViewSubject(props) {
     return result;
   }
 
-  document.title = all_subjects_map.get(id) ? `Schooly | ${all_subjects_map.get(id)}` : "Schooly";
+  document.title = all_subjects_map.get(id)
+    ? `Schooly | ${all_subjects_map.get(id)}`
+    : "Schooly";
 
   return (
     <div className={classes.root}>
@@ -908,13 +927,7 @@ function ViewSubject(props) {
           <Divider />
           <List className={classes.expansionPanelList}>
             {listMaterials("subject", id, "mata_pelajaran").length === 0 ? (
-              <Typography
-                variant="subtitle1"
-                align="center"
-                color="textSecondary"
-              >
-                Kosong
-              </Typography>
+              <Empty />
             ) : (
               <>{listMaterials("subject", id, "mata_pelajaran")}</>
             )}
@@ -937,13 +950,7 @@ function ViewSubject(props) {
           <Divider />
           <List className={classes.expansionPanelList}>
             {listTasks("subject", id, "mata_pelajaran").length === 0 ? (
-              <Typography
-                variant="subtitle1"
-                align="center"
-                color="textSecondary"
-              >
-                Kosong
-              </Typography>
+              <Empty />
             ) : (
               <>{listTasks("subject", id, "mata_pelajaran")}</>
             )}
@@ -967,13 +974,7 @@ function ViewSubject(props) {
           <List className={classes.expansionPanelList}>
             {listAssessments("subject", id, "Kuis", "mata_pelajaran").length ===
             0 ? (
-              <Typography
-                variant="subtitle1"
-                align="center"
-                color="textSecondary"
-              >
-                Kosong
-              </Typography>
+              <Empty />
             ) : (
               <>{listAssessments("subject", id, "Kuis", "mata_pelajaran")}</>
             )}
@@ -997,13 +998,7 @@ function ViewSubject(props) {
           <List className={classes.expansionPanelList}>
             {listAssessments("subject", id, "Ujian", "mata_pelajaran")
               .length === 0 ? (
-              <Typography
-                variant="subtitle1"
-                align="center"
-                color="textSecondary"
-              >
-                Kosong
-              </Typography>
+              <Empty />
             ) : (
               <>{listAssessments("subject", id, "Ujian", "mata_pelajaran")}</>
             )}
@@ -1025,6 +1020,7 @@ ViewSubject.propTypes = {
   setCurrentClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getAllTask: PropTypes.func.isRequired,
+  getTeachers: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
@@ -1047,4 +1043,5 @@ export default connect(mapStateToProps, {
   getAllTaskFilesByUser,
   getMaterial,
   getAllAssessments,
+  getTeachers
 })(ViewSubject);

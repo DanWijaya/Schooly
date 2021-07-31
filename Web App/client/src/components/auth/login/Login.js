@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter, Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
@@ -27,7 +27,10 @@ const styles = (theme) => ({
     flexDirection: "column",
     alignItems: "center",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     minHeight: "500px",
     padding: "10px",
     backgroundImage: `url(${authBackground})`,
@@ -57,6 +60,9 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  primary: {
+    color: theme.palette.primary.main,
+  },
 });
 
 class Login extends Component {
@@ -69,6 +75,7 @@ class Login extends Component {
       isAuthenticated: false,
       passwordIsMasked: true, // True = masked
       icon: true, // True = shown
+      passwordtextfieldFocus: false,
     };
   }
 
@@ -76,6 +83,7 @@ class Login extends Component {
     // untuk handle kalau misalnya usernya udah logged in lalu buka login pagenya. Langusng ke beranda
     // If logged in and user navigates to Login page, should redirect them to dashboard
     // this.props.auth.isAuthenticated = true, berarti udah logged in dan masuk ke beranda langsung
+
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");
     }
@@ -95,22 +103,23 @@ class Login extends Component {
       // nextProps.auth.isAuthenticated = kalau true,
       return { isAuthenticated: nextProps.auth.isAuthenticated };
     // ini sama dengan this.setState({ isAuthenticated : nextProps.auth.isAuthenticated })
-    else if (nextProps.errors)
-      // kalau errorsnya ngak false.
-      return { errors: nextProps.errors };
     else return null; // gak ngapa ngapain
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.isAuthenticated) {
+    if (
+      this.state.isAuthenticated &&
+      this.props.auth.isAuthenticated !== prevProps.auth.isAuthenticated
+    ) {
       // jika murid yang belum login membuka link assessment (/kuis-murid/:id),
       // setelah login, murid akan diarahkan ke halaman assessment tersebut
-      if (this.props.location.state) {
+      if (this.props.location.state && this.props.location.state.url) {
         window.location.href = `.${this.props.location.state.url}`;
       } else {
         // untuk redirect ke page lain.
         window.location.href = "./beranda";
       }
+      this.props.handleLoading(true);
     }
   }
 
@@ -121,10 +130,12 @@ class Login extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     const userData = {
-      email: this.state.email,
+      email: this.state.email.toLowerCase(),
       password: this.state.password,
     };
-    this.props.loginUser(userData);
+    this.props.loginUser(userData).catch((err) => {
+      this.setState({ errors: err });
+    });
   };
 
   togglePasswordVisibility = () => {
@@ -134,9 +145,18 @@ class Login extends Component {
     }));
   };
 
+  setIsFocused = (bool) => {
+    this.setState({ passwordtextfieldFocus: bool });
+  };
+
   render() {
     const { classes } = this.props;
-    const { passwordIsMasked, icon, errors } = this.state;
+    const {
+      passwordIsMasked,
+      icon,
+      errors,
+      passwordtextfieldFocus,
+    } = this.state;
 
     document.title = "Masuk ke Schooly";
     document.body.style =
@@ -197,6 +217,12 @@ class Login extends Component {
                       className={classnames("", {
                         invalid: errors.password || errors.passwordincorrect,
                       })}
+                      onFocus={() => {
+                        this.setIsFocused(true);
+                      }}
+                      onBlur={() => {
+                        this.setIsFocused(false);
+                      }}
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
@@ -205,9 +231,21 @@ class Login extends Component {
                               onClick={this.togglePasswordVisibility}
                             >
                               {icon ? (
-                                <VisibilityIcon />
+                                <VisibilityIcon
+                                  className={
+                                    passwordtextfieldFocus
+                                      ? classes.primary
+                                      : null
+                                  }
+                                />
                               ) : (
-                                <VisibilityOffIcon />
+                                <VisibilityOffIcon
+                                  className={
+                                    passwordtextfieldFocus
+                                      ? classes.primary
+                                      : null
+                                  }
+                                />
                               )}
                             </IconButton>
                           </InputAdornment>
@@ -229,7 +267,7 @@ class Login extends Component {
             </Grid>
             <Divider />
             <Grid item container justify="space-around">
-              <Link to="/akun/lupa-katasandi">Lupa Kata Sandi?</Link>|
+              <Link to="/akun/lupa-katasandi">Lupa Kata Sandi?</Link>·
               <Link to="/daftar">Belum ada Akun?</Link>
             </Grid>
           </Grid>

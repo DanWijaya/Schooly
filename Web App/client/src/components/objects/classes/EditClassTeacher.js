@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getAllClass, updateWaliAdmin } from "../../../actions/ClassActions";
+import { getAllClass, setHomeroomTeachers } from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -28,7 +28,10 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "10px",
   },
   content: {
@@ -87,39 +90,43 @@ function EditClassTeacher(props) {
   React.useEffect(() => {
     getTeachers();
     getAllClass();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* 
-  {
-    <id guru>: {
-      name: <nama guru>,
-      email: <email guru>,
-      classId: <id kelas yang diwalikan> -> null jika guru ini tidak mewalikan kelas manapun 
-    },
-    ...
+    isi:
+    {
+      <id guru>: {
+        name: <nama guru>,
+        email: <email guru>,
+        classId: <id kelas yang diwalikan> -> null jika guru ini tidak mewalikan kelas manapun 
+      },
+      ...
 
-  } key -> id semua guru yang ada di db
+    } key -> id semua guru yang ada di db
   */
   const [statusWali, setStatusWali] = React.useState(null);
 
   /* 
-  {
-    <id kelas>: [<id guru wali 1>, <id guru wali 2>, ...], -> array kosong jika kelas ini tidak memiliki wali kelas
-    ...
-  } key -> id semua kelas yang ada di db
-  teacherId akan berisi id semua guru yang di-assign ke kelas tersebut. akan digunakan untuk memberi tanda pada Select-Select yang memiliki value sama.   
+    isi:
+    {
+      <id kelas>: [<id guru wali 1>, <id guru wali 2>, ...], -> array kosong jika kelas ini tidak memiliki wali kelas
+      ...
+    } key -> id semua kelas yang ada di db
+
+    <id guru wali> akan berisi id semua guru yang di-assign ke kelas tersebut. akan digunakan untuk memberi tanda pada Select-Select yang memiliki value sama.   
   */
   const [statusKelas, setStatusKelas] = React.useState(null);
 
   /*
-  bentuk isi:
-  {
-    <id kelas>: <id guru wali kelas>, -> undefined jika kelas ini tidak memiliki wali kelas
-    ...
-  } key -> id semua kelas yang ada di db 
-  menyimpan kondisi awal semua kelas.
-  akan digunakan untuk membandingkan kondisi awal sebelum wali kelas diubah dan kondisi sesudah diubah.   
+    isi:
+    {
+      <id kelas>: <id guru wali kelas>, -> undefined jika kelas ini tidak memiliki wali kelas
+      ...
+    } key -> id semua kelas yang ada di db
+
+    menyimpan kondisi awal semua kelas.
+    akan digunakan untuk membandingkan kondisi awal sebelum wali kelas diubah dan kondisi sesudah diubah.   
   */
   const all_classes_wali = React.useRef({});
 
@@ -136,7 +143,7 @@ function EditClassTeacher(props) {
           name: teacher.name,
           email: teacher.email,
           avatar: teacher.avatar,
-          classId: null
+          classId: null,
         };
       }
 
@@ -158,7 +165,7 @@ function EditClassTeacher(props) {
   function generateAllClassMenuItems() {
     let menuItems = [
       <MenuItem key="null" value={null}>
-        Kosong
+        <em>Kosong</em>
       </MenuItem>,
     ];
     for (let classInfo of all_classes) {
@@ -206,22 +213,26 @@ function EditClassTeacher(props) {
 
       if (teacherIdArray.length > 1) {
         // jika masih ada kelas yang memiliki lebih dari 1 wali kelas, batal submit
-        handleOpenSnackbar("error", "Tidak boleh ada kelas yang memiliki lebih dari 1 wali kelas");
+        handleOpenSnackbar(
+          "error",
+          "Tidak boleh ada kelas yang memiliki lebih dari 1 wali kelas"
+        );
         return;
       } else {
         let waliSebelum = all_classes_wali.current[classId];
-        let waliSesudah = teacherIdArray[0];
+        let waliSesudah =
+          teacherIdArray.length === 0 ? null : teacherIdArray[0];
         if (waliSebelum !== waliSesudah) {
           classToUpdate[classId] = waliSesudah;
-          // value bisa undefined
-          // jika undefined, field walikelas kelas ini akan dihapus
+          // value bisa null
+          // jika null, field walikelas kelas ini akan dihapus
         }
       }
     }
 
     if (Object.keys(classToUpdate).length !== 0) {
       setOpenUploadDialog(true);
-      updateWaliAdmin(classToUpdate)
+      setHomeroomTeachers(classToUpdate)
         .then(() => {
           setSuccess(true);
           // handleOpenSnackbar("success", "Pengubahan wali kelas berhasil dilakukan");
@@ -291,8 +302,20 @@ function EditClassTeacher(props) {
         redirectLink="/daftar-kelas"
         isWarning={false}
       />
-      <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
-        <MuiAlert variant="filled" severity={severity} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={(event, reason) => {
+          handleCloseSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity={severity}
+          onClose={(event, reason) => {
+            handleCloseSnackbar(event, reason);
+          }}
+        >
           {snackbarContent}
         </MuiAlert>
       </Snackbar>
@@ -319,11 +342,13 @@ function EditClassTeacher(props) {
                     <ListItem className={classes.listItem}>
                       <Hidden xsDown>
                         <ListItemAvatar>
-                        {!teacherInfo.avatar ? (
-                          <Avatar />
-                        ) : (
-                          <Avatar src={`/api/upload/avatar/${teacherInfo.avatar}`} />
-                        )}
+                          {!teacherInfo.avatar ? (
+                            <Avatar />
+                          ) : (
+                            <Avatar
+                              src={`/api/upload/avatar/${teacherInfo.avatar}`}
+                            />
+                          )}
                         </ListItemAvatar>
                       </Hidden>
                       <ListItemText
@@ -366,8 +391,13 @@ function EditClassTeacher(props) {
               })
             : null}
           <Divider />
-          <div style={{ display: "flex", justifyContent: "flex-end" }} className={classes.content}>
-            <div style={{ display: "flex", alignItems: "center", padding: "4px" }}>            
+          <div
+            style={{ display: "flex", justifyContent: "flex-end" }}
+            className={classes.content}
+          >
+            <div
+              style={{ display: "flex", alignItems: "center", padding: "4px" }}
+            >
               <Button
                 variant="contained"
                 onClick={handleOpenDeleteDialog}
@@ -376,7 +406,9 @@ function EditClassTeacher(props) {
                 Batal
               </Button>
             </div>
-            <div style={{ display: "flex", alignItems: "center", padding: "4px"}}>
+            <div
+              style={{ display: "flex", alignItems: "center", padding: "4px" }}
+            >
               <Button
                 variant="contained"
                 onClick={handleSubmit}

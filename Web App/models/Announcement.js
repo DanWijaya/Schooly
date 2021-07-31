@@ -22,10 +22,13 @@ const AnnoucementSchema = new Schema(
         default: [],
       },
     ],
+
+    // jika dibuat oleh admin, array ini berisi satu elemen: null.
+    // ditambahkan null agar tidak perlu mengecek role author_id saat validasi.
     class_assigned: [
       {
         type: ObjectId,
-        required: true,
+        // required: true,
       },
     ],
     author_id: {
@@ -36,6 +39,12 @@ const AnnoucementSchema = new Schema(
     //     type: Date,
     //     required: true
     // }
+
+		// elemen pada array ini bernilai: "Student" atau "Teacher"
+    to: {
+      type: [String],
+      validate: [(value) => { return value.length > 0 }, "Pihak penerima tidak boleh kosong"]
+    },
   },
   { timestamps: true }
 );

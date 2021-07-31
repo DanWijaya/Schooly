@@ -3,18 +3,23 @@ const isEmpty = require("is-empty");
 
 module.exports = function validateRegisterInput(data) {
   let errors = {};
-
   // Convert empty fields to an empty string so we can use validator functions
-  data.name = !isEmpty(data.name) ? data.name : "";
-  data.email = !isEmpty(data.email) ? data.email : "";
-  data.phone = !isEmpty(data.phone) ? data.phone : "";
-  data.emergency_phone = !isEmpty(data.emergency_phone)
-    ? data.emergency_phone
-    : "";
-  data.address = !isEmpty(data.address) ? data.address : "";
-  data.password = !isEmpty(data.password) ? data.password : "";
-  data.password2 = !isEmpty(data.password2) ? data.password2 : "";
-  data.role = !isEmpty(data.role) ? data.role : "";
+  // data keys: name
+  //  email
+  //  role
+  //  subject_teached
+  //  phone
+  //  emergency_phone
+  //  address
+  //  password
+  //  password2
+  //  tanggal_lahir
+
+  for (let key of Object.keys(data)) {
+    if (isEmpty(data[key])) {
+      data[key] = "";
+    }
+  }
 
   // Name checks
   if (Validator.isEmpty(data.name)) {
@@ -32,23 +37,31 @@ module.exports = function validateRegisterInput(data) {
   if (Validator.isEmpty(data.role)) {
     errors.role = "Peran belum diisi";
   }
-
-  // Check for student class field
-  if (data.role === "Student" && Validator.isEmpty(data.kelas)) {
-    errors.kelas = "Kelas belum dipilih";
-  }
-  if (data.role === "Teacher" && Validator.isEmpty(data.subject_teached)) {
-    errors.subject_teached = "Mata pelajaran belum dipilih";
-  }
+  // else {
+  //   // Specific to Teacher
+  //   if (data.role === "Teacher") {
+  //     if (Validator.isEmpty(data.subject_teached)) {
+  //       errors.subject_teached = "Mata pelajaran belum dipilih";
+  //     }
+  //   }
+  // }
 
   // Phone checks
   if (Validator.isEmpty(data.phone)) {
     errors.phone = "Nomor telepon belum diisi";
+  } else {
+    if (!Validator.isNumeric(data.phone)) {
+      errors.phone = "Nomor telepon harus berupa angka semua";
+    }
   }
 
   // Emergency phone checks
   if (Validator.isEmpty(data.emergency_phone)) {
     errors.emergency_phone = "Nomor telepon darurat belum diisi";
+  } else {
+    if (!Validator.isNumeric(data.emergency_phone)) {
+      errors.emergency_phone = "Nomor telepon harus berupa angka semua";
+    }
   }
 
   // Address checks
@@ -56,24 +69,30 @@ module.exports = function validateRegisterInput(data) {
     errors.address = "Alamat belum diisi";
   }
 
-  // Password checks
+  // Password checks error messagenya terlalu panjang kadang kadang
   if (Validator.isEmpty(data.password)) {
     errors.password = "Kata sandi belum diisi";
+  } else {
+    if (data.password.length < 8) {
+      errors.password = "Kata sandi wajib memiliki 8 karakter atau lebih";
+    } else if (!Validator.isStrongPassword(data.password, { minSymbols: 0 })) {
+      errors.password =
+        "Kata sandi wajib memiliki minimal 1 huruf kecil, 1 huruf besar dan 1 angka.";
+    }
   }
 
+  //Password confirmation checks
   if (Validator.isEmpty(data.password2)) {
     errors.password2 = "Konfirmasi kata sandi belum diisi";
   }
 
-  if (
-    !Validator.isEmpty(data.password) &&
-    !Validator.isLength(data.password, { min: 8, max: 30 })
-  ) {
-    errors.password = "Kata sandi wajib memiliki 8 karakter atau lebih";
-  }
-
   if (!Validator.equals(data.password, data.password2)) {
     errors.password2 = "Kata sandi harus sama";
+  }
+
+  //tanggal lahir checks
+  if (!data.tanggal_lahir) {
+    errors.tanggal_lahir = "Tanggal lahir belum diisi";
   }
 
   return {

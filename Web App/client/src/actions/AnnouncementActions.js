@@ -4,6 +4,7 @@ import {
   GET_ALL_ANNOUNCEMENTS,
   GET_ANNOUNCEMENT,
   GET_SUCCESS_RESPONSE,
+  GET_ADMIN_ANNOUNCEMENTS,
 } from "./Types";
 
 // Add Announcement
@@ -11,7 +12,7 @@ export const createAnnouncement = (formData, announcementData, history) => (
   dispatch
 ) => {
   console.log("RUNLAH!!", formData, announcementData);
-  axios
+  return axios
     .post("/api/announcements/create", announcementData)
     .then((res) => {
       console.log("this is the res", res.data);
@@ -24,23 +25,21 @@ export const createAnnouncement = (formData, announcementData, history) => (
       if (formData.has("lampiran_announcement")) {
         console.log("Post lampiran announcement is running");
         return axios.post(
-          `/api/upload/att_announcement/lampiran/${res.data._id}`,
+          `/api/files/announcements/upload/${res.data._id}`,
           formData
         );
       } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
       else
-        return {
-          message: "Successfully created announcement with no lampiran",
-          _id: res.data._id,
-        };
+        return res;
     })
     .then((res) => {
       console.log("Announcement is Created!!!!");
-      let success_res = res.data ? res.data._id : res._id;
+      let success_res = res.data._id;
       dispatch({
         type: GET_SUCCESS_RESPONSE,
         payload: success_res,
       });
+      return success_res;
       //   history.push("/daftar-pengumuman")
     })
     .catch((err) => {
@@ -49,6 +48,7 @@ export const createAnnouncement = (formData, announcementData, history) => (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };
 
@@ -91,6 +91,61 @@ export const getAnnouncement = (Id, category) => (dispatch) => {
   }
 };
 
+export const getAdminAnnouncements = () => (dispatch) => {
+  axios
+    .get(`/api/announcements/viewAdmin`)
+    .then((res) => {
+      console.log("getAdminAnnouncements completed");
+      dispatch({
+        type: GET_ADMIN_ANNOUNCEMENTS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
+
+export const deleteAnnouncement = (
+  announcementId,
+  history=null,
+  lampiran_to_delete = null
+) => (dispatch) => {
+  return axios
+    .delete(`/api/announcements/delete/${announcementId}`)
+    .then((res) => {
+      console.log("Deleted: ", res.data);
+      // let lampiran_to_delete = Array.from(res.data.lampiran)
+      return axios.delete(`/api/files/announcements/${announcementId}`);
+      // if (lampiran_to_delete.length > 0){
+      //   return axios.delete(`/api/upload/att_announcement/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete}})
+      // }
+      // return "Announcement deleted has no lampiran"
+    })
+    .then((res) => {
+      console.log(res);
+      if(history){
+        history.push({
+          pathname: "/daftar-pengumuman",
+          openDeleteSnackbar: true 
+        })
+      }
+      return true
+      // window.location.href = "/daftar-pengumuman";
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+      throw err
+    });
+};
 export const getOneAnnouncement = (annId) => (dispatch) => {
   console.log("run getOneAnnoucnement");
   axios
@@ -111,32 +166,6 @@ export const getOneAnnouncement = (annId) => (dispatch) => {
     });
 };
 
-export const deleteAnnouncement = (announcementId, history) => (dispatch) => {
-  axios
-    .delete(`/api/announcements/delete/${announcementId}`)
-    .then((res) => {
-      console.log("Deleted: ", res.data);
-      let lampiran_to_delete = Array.from(res.data.lampiran);
-      if (lampiran_to_delete.length > 0)
-        return axios.delete(
-          `/api/upload/att_announcement/lampiran/${"deleteall"}`,
-          { data: { lampiran_to_delete: lampiran_to_delete } }
-        );
-      return "Announcement deleted has no lampiran";
-    })
-    .then((res) => {
-      console.log(res);
-      window.location.href = "/daftar-pengumuman";
-    })
-    .catch((err) => {
-      console.log(err);
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      });
-    });
-};
-
 export const updateAnnouncement = (
   formData,
   lampiran_to_delete,
@@ -146,8 +175,8 @@ export const updateAnnouncement = (
   history
 ) => (dispatch) => {
   // formData is the lampiran files
-  axios
-    .post(`/api/announcements/update/${annId}`, annData)
+  return axios
+    .put(`/api/announcements/update/${annId}`, annData)
     .then((res) => {
       console.log("Task updated to be :", res.data);
       console.log("Has lampiran? :", formData.has("lampiran_announcement"));
@@ -158,13 +187,12 @@ export const updateAnnouncement = (
       console.log("From actions: ", lampiran_to_delete);
       if (lampiran_to_delete.length > 0) {
         // axios.delete put the data is quite different..
-        return axios.delete(`/api/upload/att_announcement/lampiran/${annId}`, {
-          data: {
-            lampiran_to_delete: lampiran_to_delete,
-            current_lampiran: current_lampiran,
-          },
+        return axios.delete(`/api/files/announcements/${annId}`, {
+          data: { file_to_delete: lampiran_to_delete },
         });
-      } else return "No lampiran file is going to be deleted";
+      } else {
+        return "No lampiran file is going to be deleted";
+      }
     })
     .then((res) => {
       console.log("Update the lampiran files, upload some new lampiran files");
@@ -174,10 +202,7 @@ export const updateAnnouncement = (
       );
       if (formData.has("lampiran_announcement")) {
         console.log("Lampiran announcement going to be uploaded");
-        return axios.post(
-          `/api/upload/att_announcement/lampiran/${annId}`,
-          formData
-        );
+        return axios.post(`/api/files/announcements/upload/${annId}`, formData);
       } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
       else return "Successfully updated task with no lampiran";
     })
@@ -187,7 +212,7 @@ export const updateAnnouncement = (
         type: GET_SUCCESS_RESPONSE,
         payload: true,
       });
-      // alert("Announcement is created")
+      return true;
       // history.push("/daftar-pengumuman");
     })
 
@@ -197,5 +222,6 @@ export const updateAnnouncement = (
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };

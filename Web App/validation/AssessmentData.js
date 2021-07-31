@@ -3,13 +3,26 @@ const isEmpty = require("is-empty");
 
 module.exports = function validateAssessmentInput(data) {
   let errors = {};
-  data.name = isEmpty(data.name) ? "" : data.name;
-  data.subject = isEmpty(data.subject) ? "" : data.subject;
-  data.description = isEmpty(data.description) ? "" : data.description;
-  data.type = isEmpty(data.type) ? "" : data.type;
+  // data keys: name, subject, description, type
+
+  for (let key of Object.keys(data)) {
+    if (key !== "posted") {
+      if (isEmpty(data[key])) {
+        data[key] = "";
+      }
+    }
+  }
 
   if (Validator.isEmpty(data.name)) {
     errors.name = "Nama belum diisi";
+  }
+
+  if (Validator.isEmpty(data.start_date)) {
+    errors.start_date_custom = "Waktu mulai belum diisi";
+  }
+
+  if (Validator.isEmpty(data.end_date)) {
+    errors.end_date_custom = "Waktu selesai belum diisi";
   }
 
   if (Validator.isEmpty(data.subject)) {

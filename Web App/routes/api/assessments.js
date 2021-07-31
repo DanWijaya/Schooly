@@ -52,7 +52,7 @@ router.post("/create", (req, res) => {
   );
 });
 
-router.post("/grade/:id", (req, res) => {
+/* router.post("/grade/:id", (req, res) => {
   let { id } = req.params;
 
   Assessment.findById(id, (err, assessmentData) => {
@@ -80,9 +80,9 @@ router.post("/grade/:id", (req, res) => {
         .catch((err) => res.status(400).send("Unable to update task database"));
     }
   });
-});
+}); */
 
-router.post("/update/:id", (req, res) => {
+router.put("/update/:id", (req, res) => {
   const { errors, isValid } = validateAssessmentInput(req.body);
   if (!isValid) {
     return res.status(400).json(errors);
@@ -101,6 +101,7 @@ router.post("/update/:id", (req, res) => {
       assessmentData.start_date = req.body.start_date;
       assessmentData.end_date = req.body.end_date;
       assessmentData.posted = req.body.posted;
+      assessmentData.post_date = req.body.post_date;
       assessmentData.type = req.body.type;
 
       let questions = req.body.questions;
@@ -151,7 +152,7 @@ router.post("/update/:id", (req, res) => {
             let longtextGrade = {};
             let isLongtextQuestionAdded = false;
             for (let i = 0; i < questions.length; i++) {
-              // 1. jika soal dihapus, semua jawaban murid akan diabaikan dan soal ini tidak masuk dalam penilaian
+              // 1. jika soal ini dihapus, semua jawaban murid akan diabaikan dan soal ini tidak masuk dalam penilaian
 
               // 2. jika soal ini sudah ada sebelum perubahan assessment dilakukan, (baik mengalami perubahan maupun tidak),
               if (transformIdx[i] !== -1) {
@@ -244,10 +245,12 @@ router.post("/update/:id", (req, res) => {
             if (!isLongtextQuestionAdded) {
               // weight_accumulator sudah dipastikan tidak 0
               let score = (100 * point_accumulator) / weight_accumulator;
-              assessmentData.grades.set(key, {
-                total_grade: parseFloat(score.toFixed(1)),
-                longtext_grades: longtextGrade,
-              });
+              if (assessmentData.grades) {
+                assessmentData.grades.set(key, {
+                  total_grade: parseFloat(score.toFixed(1)),
+                  longtext_grades: longtextGrade,
+                });
+              }
             }
             assessmentData.submissions.set(
               key,
@@ -275,7 +278,7 @@ router.post("/update/:id", (req, res) => {
   });
 });
 
-router.post("/submit/:id", (req, res) => {
+router.put("/submit/:id", (req, res) => {
   let id = req.params.id;
   let { answers, classId, userId } = req.body;
 
@@ -284,19 +287,29 @@ router.post("/submit/:id", (req, res) => {
     if (!assessmentData) {
       return res.status(404).send("Assessment cannot be found");
     } else {
-      if (!assessmentData.posted) {
+      let now = new Date();
+      if (now < new Date(assessmentData.post_date)) {
         return res.json("Assessment not posted");
       }
+
       console.log(answers, classId, userId);
-      let { submissions, grades, questions } = assessmentData;
+      let { submissions, questions, submissions_timestamp } = assessmentData;
+      let grades;
       if (submissions) {
         if (!submissions.has(userId)) {
           submissions.set(userId, answers);
+          submissions_timestamp.set(userId, now);
+        } else {
+          return res.send("Assessment has already answered");
         }
       } else {
-        let map = new Map();
-        map.set(userId, answers);
-        submissions = map;
+        let map1 = new Map();
+        map1.set(userId, answers);
+        submissions = map1;
+
+        let map2 = new Map();
+        map2.set(userId, now);
+        submissions_timestamp = map2;
       }
 
       let hasLongtextQuestion = false;
@@ -315,64 +328,64 @@ router.post("/submit/:id", (req, res) => {
           grades = new Map(assessmentData.grades);
         }
 
-        if (!grades.has(userId)) {
-          let studentId = userId; //agar sebagian kode bisa direuse di updateGrade
+        // if (!grades.has(userId)) {
+        let studentId = userId; //agar sebagian kode bisa direuse di updateGrade
 
-          let weights = assessmentData.question_weight;
-          let point_accumulator = 0;
-          let weight_accumulator = 0;
-          for (let i = 0; i < questions.length; i++) {
-            // answers.length sudah dipastikan sama dengan questions.length di ViewAssessmentStudent.js
-            // answers[i] adalah jawaban murid untuk pertanyaan ke-(i + 1), misal answer[0] adalah jawaban murid untuk pertanyaan pertama.
-            // questions[i].answer adalah kunci jawaban untuk pertanyaan ke-(i + 1).
-            // answers dan questions[i].answer adalah array of array
-            if (questions[i].type === "radio") {
-              if (questions[i].answer[0] === answers[i][0]) {
-                point_accumulator += 1 * weights.radio;
+        let weights = assessmentData.question_weight;
+        let point_accumulator = 0;
+        let weight_accumulator = 0;
+        for (let i = 0; i < questions.length; i++) {
+          // answers.length sudah dipastikan sama dengan questions.length di ViewAssessmentStudent.js
+          // answers[i] adalah jawaban murid untuk pertanyaan ke-(i + 1), misal answer[0] adalah jawaban murid untuk pertanyaan pertama.
+          // questions[i].answer adalah kunci jawaban untuk pertanyaan ke-(i + 1).
+          // answers dan questions[i].answer adalah array of array
+          if (questions[i].type === "radio") {
+            if (questions[i].answer[0] === answers[i][0]) {
+              point_accumulator += 1 * weights.radio;
+            }
+            weight_accumulator += 1 * weights.radio;
+          } else if (questions[i].type === "checkbox") {
+            let temp_correct = 0;
+            answers[i].forEach((student_answer) => {
+              if (questions[i].answer.includes(student_answer)) {
+                temp_correct = temp_correct + 1;
+              } else {
+                temp_correct = temp_correct - 2;
               }
-              weight_accumulator += 1 * weights.radio;
-            } else if (questions[i].type === "checkbox") {
-              let temp_correct = 0;
-              answers[i].forEach((student_answer) => {
-                if (questions[i].answer.includes(student_answer)) {
-                  temp_correct = temp_correct + 1;
-                } else {
-                  temp_correct = temp_correct - 2;
-                }
-              });
-              weight_accumulator += 1 * weights.checkbox;
+            });
+            weight_accumulator += 1 * weights.checkbox;
 
-              if (temp_correct > 0) {
-                // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
-                // karena itu, questions[i].answer.length pasti tidak 0
-                point_accumulator +=
-                  (weights.checkbox * temp_correct) /
-                  questions[i].answer.length;
-              }
-            } else if (questions[i].type === "shorttext") {
-              let temp_correct = 0;
-              for (let j = 0; j < questions[i].answer.length; j++) {
-                if (answers[i][j] === questions[i].answer[j]) {
-                  temp_correct++;
-                }
-              }
+            if (temp_correct > 0) {
               // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
               // karena itu, questions[i].answer.length pasti tidak 0
-              weight_accumulator += 1 * weights.shorttext;
               point_accumulator +=
-                (weights.shorttext * temp_correct) / questions[i].answer.length;
+                (weights.checkbox * temp_correct) / questions[i].answer.length;
             }
+          } else if (questions[i].type === "shorttext") {
+            let temp_correct = 0;
+            for (let j = 0; j < questions[i].answer.length; j++) {
+              if (answers[i][j] === questions[i].answer[j]) {
+                temp_correct++;
+              }
+            }
+            // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
+            // karena itu, questions[i].answer.length pasti tidak 0
+            weight_accumulator += 1 * weights.shorttext;
+            point_accumulator +=
+              (weights.shorttext * temp_correct) / questions[i].answer.length;
           }
-          let score = (100 * point_accumulator) / weight_accumulator;
-          grades.set(studentId, {
-            total_grade: parseFloat(score.toFixed(1)),
-            longtext_grades: null,
-          });
         }
+        let score = (100 * point_accumulator) / weight_accumulator;
+        grades.set(studentId, {
+          total_grade: parseFloat(score.toFixed(1)),
+          longtext_grades: null,
+        });
+        // }
 
         assessmentData.grades = grades;
       } // jika ada soal uraian, penghitungan nilai akan ditunda hingga semua jawaban uraian untuk suatu murid sudah dinilai
       assessmentData.submissions = submissions;
+      assessmentData.submissions_timestamp = submissions_timestamp;
 
       assessmentData
         .save()
@@ -383,19 +396,34 @@ router.post("/submit/:id", (req, res) => {
 });
 
 router.get("/viewall", (req, res) => {
-  Assessment.find({}).then((assessments) => {
-    if (!assessments) res.status(400).json("Assessments are not found");
-    else res.json(assessments);
+  Assessment.find({}).lean().then((assessments) => {
+    if (!assessments) {
+      res.status(404).json("Assessments are not found");
+    } else {
+      res.json(assessments.map((assessment) => {
+        if (assessment.posted === null) {
+          return { ...assessment, posted: new Date() >= new Date(assessment.post_date) };
+        } else {
+          return assessment;
+        }
+      }));
+    }
   });
 });
 
 router.get("/view/:id", (req, res) => {
   let id = req.params.id;
   Assessment.findById(id, (err, assessment) => {
-    if (!assessment) return res.status(404).json("Quiz is not found");
-
-    return res.json(assessment);
-  });
+    if (!assessment) {
+      res.status(404).json("Assessment is not found");
+    } else {
+      if (assessment.posted === null) {
+        res.json({ ...assessment, posted: new Date() >= new Date(assessment.post_date) });
+      } else {
+        res.json(assessment);
+      }
+    }
+  }).lean();
 });
 
 router.delete("/delete/:id", (req, res) => {
@@ -409,36 +437,36 @@ router.delete("/delete/:id", (req, res) => {
   });
 });
 
-router.get("/getkuisbysc/:subjectId&:classId", (req, res) => {
-  Assessment.find({
-    subject: req.params.subjectId,
-    class_assigned: { $elemMatch: { $eq: req.params.classId } },
-    type: "Kuis",
-  }).then((kuis) => {
-    if (!kuis) {
-      return res.status(200).json("Belum ada kuis");
+router.get("/view", (req, res) => {
+  const { subjectId, classId, type } = req.query;
+  let query = {};
+  if (subjectId) {
+    query.subject = subjectId;
+  }
+  if (classId) {
+    query.class_assigned = { $elemMatch: { $eq: classId } };
+  }
+  if (type === "Kuis" || type === "Ujian") {
+    query.type = type;
+  }
+
+  Assessment.find(query).lean().then((assessments) => {
+    if (assessments.length === 0) {
+      res.status(404).json(`Belum ada ${type}`);
     } else {
-      return res.json(kuis);
+      res.json(assessments.map((assessment) => {
+        if (assessment.posted === null) {
+          return { ...assessment, posted: new Date() >= new Date(assessment.post_date) };
+        } else {
+          return assessment;
+        }
+      }));
     }
   });
 });
 
-router.get("/getujianbysc/:subjectId&:classId", (req, res) => {
-  Assessment.find({
-    subject: req.params.subjectId,
-    class_assigned: { $elemMatch: { $eq: req.params.classId } },
-    type: "Ujian",
-  }).then((ujian) => {
-    if (!ujian) {
-      return res.status(200).json("Belum ada ujian");
-    } else {
-      return res.json(ujian);
-    }
-  });
-});
-
-router.post("/updateSuspects/:id", (req, res) => {
-  Assessment.findById(req.params.id, (err, assessmentData) => {
+router.put("/suspects/:assessmentId", (req, res) => {
+  Assessment.findById(req.params.assessmentId, (err, assessmentData) => {
     if (!assessmentData) {
       return res.status(404).send("Assessment data is not found");
     } else {
@@ -449,13 +477,13 @@ router.post("/updateSuspects/:id", (req, res) => {
         .catch(() =>
           res
             .status(400)
-            .send(`Unable to update suspects attribute for assessment ${id}`)
+            .send(`Unable to update assessment suspects`)
         );
     }
   });
 });
 
-router.post("/updateGrades", (req, res) => {
+router.put("/grades", (req, res) => {
   Assessment.findById(req.body.assessmentId, (err, assessmentData) => {
     if (!assessmentData) {
       return res.status(404).send("Assessment data is not found");
@@ -570,6 +598,35 @@ router.post("/updateGrades", (req, res) => {
         .catch(() => res.status(400).send(`Unable to update grades attribute`));
     }
   });
+});
+
+router.get("/status/:id", (req, res) => {
+  Assessment.findById(req.params.id, (err, assessment) => {
+    if (!assessment) {
+      return res.status(404).json("Assessment not found");
+    }
+    let now = new Date();
+    let startDate = new Date(assessment.start_date);
+    let endDate = new Date(assessment.end_date);
+    let status;
+    if (now < startDate) {
+      status = -1;
+    } else if (now >= startDate && now <= endDate) {
+      status = 0;
+    } else { // (now > endDate)
+      status = 1;
+    }
+    res.json({ status, now });
+  });
+});
+
+router.post("/validity", (req, res) => {
+  const { errors, isValid } = validateAssessmentInput(req.body);
+  if (isValid) {
+    res.status(200);
+  } else {
+    res.status(400).json(errors);
+  }
 });
 
 module.exports = router;

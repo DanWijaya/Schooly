@@ -1,8 +1,13 @@
-import { GET_ALL_ANNOUNCEMENTS, GET_ANNOUNCEMENT } from "../actions/Types";
+import {
+  GET_ALL_ANNOUNCEMENTS,
+  GET_ANNOUNCEMENT,
+  GET_ADMIN_ANNOUNCEMENTS,
+} from "../actions/Types";
 
 const initialState = {
   selectedAnnouncements: [],
   all_announcements: [],
+  adminAnnouncements: [],
 };
 
 export default function (state = initialState, action) {
@@ -17,6 +22,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         selectedAnnouncements: action.payload,
+      };
+    }
+    case GET_ADMIN_ANNOUNCEMENTS: {
+      return {
+        ...state,
+        adminAnnouncements: action.payload,
       };
     }
     default:

@@ -3,6 +3,7 @@ import {
   GET_ALL_SUBJECTS,
   GET_ERRORS,
   GET_ALL_SUBJECTS_MAP,
+  GET_SUCCESS_RESPONSE,
 } from "./Types";
 import axios from "axios";
 
@@ -49,37 +50,48 @@ export const getAllSubjects = (data = "array") => (dispatch) => {
 };
 export const createSubject = (subjectData) => (dispatch) => {
   // router.post()
-  axios
+  return axios
     .post("/api/subjects/create", subjectData)
     .then((res) => {
       console.log("Run create subject");
-      window.location.reload();
+      // window.location.reload();
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: res.data,
+      });
+      return res.data;
     })
     .catch((err) => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };
 
 export const deleteSubject = (subjectId) => (dispatch) => {
-  axios
+  return axios
     .delete(`/api/subjects/delete/${subjectId}`)
     .then((res) => {
-      console.log("Deleted subject", res.data);
-      window.location.reload();
+      return "Subject is successfully deleted"
+      // window.location.reload();
     })
     .catch((err) => {
       console.log(err, "Error in deleting the subject");
     });
 };
 export const editSubject = (subjectData) => (dispatch) => {
-  axios
-    .post(`/api/subjects/edit/${subjectData.id}`, subjectData)
+  return axios
+    .put(`/api/subjects/edit/${subjectData.id}`, subjectData)
     .then((res) => {
       console.log("Edited subject", res.data);
-      window.location.reload();
+      // window.location.reload();
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: res.data,
+      });
+      return res.data;
     })
     .catch((err) => {
       console.log(err, "Error in editing the subject");
@@ -87,5 +99,6 @@ export const editSubject = (subjectData) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };

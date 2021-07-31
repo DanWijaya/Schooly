@@ -5,8 +5,9 @@ import { useLocation, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { updateAvatar } from "../../../actions/UserActions";
+import { updateAvatar, getOneUser } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
+import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
 import {
   Avatar,
   Badge,
@@ -39,7 +40,10 @@ import WorkIcon from "@material-ui/icons/Work";
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "10px",
   },
   avatar: {
@@ -68,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   profileDataItemAvatar: {
-    backgroundColor: "#00b7ff",
+    backgroundColor: "#00b7ffg",
   },
   buttonRapor: {
     backgroundColor: theme.palette.warning.main,
@@ -165,54 +169,65 @@ function ProfileDataItem(props) {
 
 function ProfileView(props) {
   const classes = useStyles();
-  const location = useLocation();
 
-  const { user } = props.auth;
-  const { setCurrentClass, classesCollection } = props;
-
+  const { user, selectedUser } = props.auth;
+  const {
+    setCurrentClass,
+    classesCollection,
+    getFileAvatar,
+    getOneUser,
+  } = props;
+  const [avatar, setAvatar] = React.useState(null);
   const [namakelas, setNamaKelas] = React.useState("");
-  const [firstAssign, setFirstAssign] = React.useState(true);
 
   React.useEffect(() => {
-    if (role === "Student") {
-      setCurrentClass(kelas);
-    }
+    getOneUser(props.match.params.id).then((selectedUser) => {
+      if (selectedUser.role === "Student") {
+        setCurrentClass(selectedUser.kelas);
+      }
+      getFileAvatar(selectedUser._id)
+        .then((result) => setAvatar(result))
+        .catch((err) => console.log(err));
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
-    if (firstAssign) {
-      setFirstAssign(false);
-    } else {
-      setNamaKelas(classesCollection.kelas.name);
-    }
+    setCurrentClass(selectedUser.kelas)
+  }, [selectedUser]);
+
+  console.log(selectedUser)
+
+  React.useEffect(() => {
+    setNamaKelas(classesCollection.kelas.name);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classesCollection]);
 
-  if (location.state === undefined) {
-    return <Redirect to="/tidak-ditemukan" />;
-  }
+  // if (location.state === undefined) {
+  //   return <Redirect to="/tidak-ditemukan" />;
+  // }
 
   const {
-    avatar,
-    nama,
+    name,
     role,
     viewable_section,
     jenis_kelamin,
     email,
     phone,
     emergency_phone,
-    alamat,
-    hobi,
-    ket,
-    cita,
-    uni,
+    address,
+    hobi_minat,
+    ket_non_teknis,
+    cita_cita,
+    uni_impian,
     kelas,
     admin,
-    id,
+    _id,
     tanggal_lahir,
-  } = location.state;
-  document.title = `Schooly | ${nama}`;
+  } = selectedUser;
+  document.title = selectedUser.name
+    ? `Schooly | ${selectedUser.name}`
+    : "Schooly";
 
   return (
     <div className={classes.root}>
@@ -220,10 +235,7 @@ function ProfileView(props) {
         <Grid item>
           {avatar ? (
             <StyledBadge>
-              <Avatar
-                src={`/api/upload/avatar/${avatar}`}
-                className={classes.avatar}
-              />
+              <Avatar src={avatar} className={classes.avatar} />
             </StyledBadge>
           ) : (
             <StyledBadge>
@@ -233,7 +245,7 @@ function ProfileView(props) {
         </Grid>
         <Grid item>
           <Typography variant="h4" align="center">
-            {nama}
+            {name}
           </Typography>
           <Typography variant="h6" align="center">
             {role === "Student"
@@ -249,35 +261,83 @@ function ProfileView(props) {
       </Grid>
       <Divider className={classes.profileDivider} />
       {role === "Student" && user.role === "Teacher" ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginBottom: "20px",
-          }}
-        >
-          <Link
-            to={{
-              pathname: "/lihat-rapor",
-              state: {
-                role: user.role,
-                nama: nama,
-                kelas: classesCollection.kelas,
-                id: id,
-              },
+        (classesCollection.kelas.walikelas) ? 
+        (classesCollection.kelas.walikelas === user._id) ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: "20px",
             }}
           >
-            <LightTooltip title="Klik Untuk Melihat Rapor">
-              <Button
-                variant="contained"
-                className={classes.buttonRapor}
-                startIcon={<AssessmentOutlinedIcon />}
+            <Link
+              to={{
+                pathname: `/lihat-rapor/${_id}`,
+              }}
+            >
+              <LightTooltip title="Klik Untuk Melihat Rapor">
+                <Button
+                  variant="contained"
+                  className={classes.buttonRapor}
+                  startIcon={<AssessmentOutlinedIcon />}
+                >
+                  Lihat Rapor
+                </Button>
+              </LightTooltip>
+            </Link>
+          </div>
+        ) : (user.class_teached).includes(classesCollection.kelas._id) ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginBottom: "20px",
+                }}
               >
-                Lihat Rapor
-              </Button>
-            </LightTooltip>
-          </Link>
-        </div>
+                <Link
+                  to={{
+                    pathname: `/lihat-rapor/${_id}`,
+                  }}
+                >
+                  <LightTooltip title="Klik Untuk Melihat Rapor">
+                    <Button
+                      variant="contained"
+                      className={classes.buttonRapor}
+                      startIcon={<AssessmentOutlinedIcon />}
+                    >
+                      Lihat Rapor
+                    </Button>
+                  </LightTooltip>
+                </Link>
+              </div>
+            )
+          : null
+        : (user.class_teached).includes(classesCollection.kelas._id) ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: "20px",
+            }}
+          >
+            <Link
+              to={{
+                pathname: `/lihat-rapor/${_id}`,
+              }}
+            >
+              <LightTooltip title="Klik Untuk Melihat Rapor">
+                <Button
+                  variant="contained"
+                  className={classes.buttonRapor}
+                  startIcon={<AssessmentOutlinedIcon />}
+                >
+                  Lihat Rapor
+                </Button>
+              </LightTooltip>
+            </Link>
+          </div>
+        )
+      : null
       ) : null}
       <Grid container direction="column" spacing={4}>
         {user.role === "Teacher" ||
@@ -307,7 +367,7 @@ function ProfileView(props) {
                     <ProfileDataItem
                       profile_data_icon={<PersonIcon />}
                       profile_data_category="Nama"
-                      profile_data_info={nama}
+                      profile_data_info={name}
                     />
                     <Divider variant="inset" />
                     <ProfileDataItem
@@ -347,7 +407,7 @@ function ProfileView(props) {
                         <ProfileDataItem
                           profile_data_icon={<HomeIcon />}
                           profile_data_category="Alamat"
-                          profile_data_info={alamat}
+                          profile_data_info={address}
                         />
                       </div>
                     ) : null}
@@ -355,7 +415,7 @@ function ProfileView(props) {
                 </Paper>
               </Grid>,
             ].concat(
-              viewable_section === "no_karir" ? null : (
+              !(role === "Student") ? null : (
                 <Grid item>
                   <Paper className={classes.informationPaper}>
                     <div className={classes.backgroundGradient}>
@@ -380,25 +440,25 @@ function ProfileView(props) {
                       <ProfileDataItem
                         profile_data_icon={<SportsEsportsIcon />}
                         profile_data_category="Hobi dan Minat"
-                        profile_data_info={hobi}
+                        profile_data_info={hobi_minat}
                       />
                       <Divider variant="inset" />
                       <ProfileDataItem
                         profile_data_icon={<ColorLensIcon />}
                         profile_data_category="Keterampilan Non-Akademik"
-                        profile_data_info={ket}
+                        profile_data_info={ket_non_teknis}
                       />
                       <Divider variant="inset" />
                       <ProfileDataItem
                         profile_data_icon={<WorkIcon />}
                         profile_data_category="Cita-Cita"
-                        profile_data_info={cita}
+                        profile_data_info={cita_cita}
                       />
                       <Divider variant="inset" />
                       <ProfileDataItem
                         profile_data_icon={<AccountBalanceIcon />}
                         profile_data_category="Perguruan Tinggi Impian"
-                        profile_data_info={uni}
+                        profile_data_info={uni_impian}
                       />
                     </List>
                   </Paper>
@@ -415,6 +475,7 @@ ProfileView.propTypes = {
   auth: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   updateAvatar: PropTypes.func.isRequired,
+  getOneUser: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
@@ -426,6 +487,10 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(mapStateToProps, { updateAvatar, setCurrentClass })(
-  ProfileView
-);
+export default connect(mapStateToProps, {
+  updateAvatar,
+  setCurrentClass,
+  getFileAvatar,
+  getOneUser,
+  getFileAvatar,
+})(ProfileView);

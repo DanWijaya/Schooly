@@ -7,9 +7,12 @@ import "date-fns";
 import {
   getOneAssessment,
   updateAssessment,
+  validateAssessment
 } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
+import { refreshTeacher } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -37,6 +40,8 @@ import {
   ListItemIcon,
   ListItemText,
   Menu,
+  FormGroup,
+  Checkbox
 } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
@@ -62,7 +67,10 @@ import InfoIcon from "@material-ui/icons/Info";
 const styles = (theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "10px",
   },
   addQuestionButton: {
@@ -101,7 +109,22 @@ const styles = (theme) => ({
     padding: "20px 20px 30px 20px",
   },
   pageNavigatorContent: {
-    padding: "20px 20px 30px 5px",
+    padding: "20px 20px 20px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "20px 10px 20px",
+    },
+  },
+  settingsButton: {
+    // backgroundColor: "white",
+    // color: theme.palette.text.secondary,
+    // "&:focus, &:hover": {
+    //   backgroundColor: theme.palette.text.secondary,
+    //   color: "white",
+    // },
+    [theme.breakpoints.down("xs")]: {
+      paddingRight: "0",
+      paddingLeft: "0",
+    },
   },
   divider: {
     [theme.breakpoints.down("md")]: {
@@ -138,20 +161,24 @@ const styles = (theme) => ({
       justifyContent: "center",
     },
   },
-  createAssessmentButton: {
-    backgroundColor: theme.palette.success.main,
+  editAssessmentButton: {
+    backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.success.main,
+      backgroundColor: theme.palette.primary.main,
+      color: "white"
+      // backgroundColor: "white",
+      // color: theme.palette.primary.main,
     },
   },
   cancelButton: {
     backgroundColor: theme.palette.error.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.main,
+      backgroundColor: theme.palette.error.main,
+      color: "white"
+      // backgroundColor: "white",
+      // color: theme.palette.error.main,
     },
   },
   chips: {
@@ -161,15 +188,15 @@ const styles = (theme) => ({
   chip: {
     marginRight: 2,
   },
-  settingsButton: {
-    backgroundColor: "grey",
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "#555555",
-      color: "white",
-    },
-    marginInlineEnd: "2em",
-  },
+  // settingsButton: {
+  //   backgroundColor: "grey",
+  //   color: "white",
+  //   "&:focus, &:hover": {
+  //     backgroundColor: "#555555",
+  //     color: "white",
+  //   },
+  //   marginInlineEnd: "2em",
+  // },
   menuVisible: {
     "& .MuiListItemIcon-root": {
       color: theme.palette.warning.main,
@@ -216,12 +243,28 @@ const styles = (theme) => ({
       },
     },
   },
-  customMargin: {
-    margin: "24px 0",
-    [theme.breakpoints.down("xs")]: {
-      margin: "18px 0",
-    },
+  dividerMargin: {
+    margin: "4px 0"
   },
+  customSpacing: {
+    [theme.breakpoints.down("sm")]: {
+      marginTop: theme.spacing(2)
+    }
+  },
+  customPaddingBottom: {
+    [theme.breakpoints.up("md")]: {
+      paddingBottom: "0!important"
+    }
+  },
+  customPaddingTop: {
+    [theme.breakpoints.up("md")]: {
+      paddingTop: "0!important"
+    }
+  },
+  zeroHeightHelperText: {
+    height: "0",
+    display: "flex" // untuk men-disable "collapsing margin"
+  }
 });
 
 class EditAssessment extends Component {
@@ -247,43 +290,95 @@ class EditAssessment extends Component {
       class_assigned: [],
       start_date: new Date(),
       end_date: new Date(),
+      post_date: new Date(),
+      posted: null,
+      isScheduled: null,
+      type: "",
       openDeleteDialog: false,
       openUploadDialog: false,
-      posted: null,
       success: false,
       page: 0,
       rowsPerPage: 10,
       qnsListitem: [],
-      type: "",
       snackbarOpen: false,
       snackbarMessage: "",
       anchorEl: null,
       checkboxSnackbarOpen: false,
       radioSnackbarOpen: false,
       copySnackbarOpen: false,
+      fileLimitSnackbar: false,
       weights: {
-        radio: null,
-        checkbox: null,
-        shorttext: null,
-      },
+        radio: undefined,
+        checkbox: undefined,
+        shorttext: undefined,
+      }, // weight radio, checkbox, shorttext akan diset null ketika masih bernilai undefined saat tombol create assessment ditekan
+      longtextWeight: [-1],
       // array longtextWeight akan memiliki elemen sebanyak pertanyaan di assessment
       // longtextWeight[0] = 10 -> berarti pertanyaan nomor 1 adalah soal uraian dan memiliki bobot 10
-      // longtextWeight[1] = null -> berarti pertanyaan nomor 2 adalah soal non uraian
+      // longtextWeight[1] = -1 -> berarti pertanyaan nomor 2 adalah soal non uraian
       // longtextWeight[2] = undefined -> berarti pertanyaan nomor 3 adalah soal uraian yang bobotnya belum diubah
       // sejak pertama kali soal tersebut ditambahkan
-      longtextWeight: [null],
+      // longtextWeight[2] = null -> berarti bobot soal uraian ini masih undefined saat tombol create assessment ditekan
+      backtickErrors: [],
+      // array backtickErrors akan memiliki elemen sebanyak pertanyaan di assessment
+      // backtickErrors[0] = false -> berarti pertanyaan nomor 1 sudah valid
+      // backtickErrors[1] = true -> berarti terdapat jawaban kosong (``) atau jumlah backtick ganjil pada pertanyaan nomor 2
+      // backtickErrors[2] = -1 -> berarti pertanyaan nomor 2 adalah soal non isian. Nilai "-1" dapat diabaikan, ini dapat diganti dengan nilai lain selain true false
+      renderbtErrors: false, // abaikan nilainya, ini hanya dipakai agar QuestionItem dirender ulang saat submit dan ada soal yang dihapus
       ready: false,
+      lampiranUrls: new Map(),
+      over_limit: [],
+      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
+      subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
+      inputHeight: null, // menyimpan tinggi textfield
+      customHeight: null, // menyimpan tinggi label + textfield
+      errors: {},
+      success: null
     };
+    this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
+    this.customHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi label "Judul" dan textfield
   }
 
-  imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
+  imageUploader = React.createRef(null); // untuk ngerefer html object yang lain
 
-  componentDidMount(){
-    const { getOneAssessment, getAllClass, getAllSubjects, handleSideDrawerExist} = this.props;
-    handleSideDrawerExist(false)
-    getAllClass()
-    getOneAssessment(this.props.match.params.id)
-    getAllSubjects()
+  componentDidMount() {
+    const {
+      getOneAssessment,
+      getAllClass,
+      getAllSubjects,
+      handleSideDrawerExist,
+      getFileAssessment,
+      refreshTeacher
+    } = this.props;
+    const { pathname } = this.props.location;
+    const assessment_id = this.props.match.params.id;
+    if(pathname === `/sunting-kuis/${assessment_id}`){
+      this.setState({ type: "Kuis"})
+    } else if(pathname === `/sunting-ujian/${assessment_id}`){
+      this.setState({ type: "Ujian"})
+    } else {
+      console.log("Kuis atau Ujian tidak dispecify");
+    }
+    
+    handleSideDrawerExist(false);
+    getAllClass();
+    getOneAssessment(assessment_id);
+    getAllSubjects();
+    refreshTeacher(this.props.auth.user._id);
+    getFileAssessment(assessment_id)
+      .then((result) => {
+        this.setState({ lampiranUrls: result });
+      })
+      .catch((err) => this.setState({ lampiranUrls: new Map() }));
+    if (this.inputHeightRef.current && this.customHeightRef.current) {
+      this.setState({
+        inputHeight: this.inputHeightRef.current.offsetHeight,
+        customHeight: this.customHeightRef.current.offsetHeight + this.inputHeightRef.current.offsetHeight + 32 // tinggi (label + textfield) + (textfield) + (space antara textfield dan label di bawahnya)  
+        // customHeight: document.getElementById("top").getBoundingClientRect().top - document.getElementById("bottom").getBoundingClientRect().bottom // hasilnya salah
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -294,9 +389,6 @@ class EditAssessment extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { selectedAssessments } = nextProps.assessmentsCollection;
 
-    if (!nextProps.errors) {
-      this.handleOpenUploadDialog();
-    }
     if (Boolean(selectedAssessments) && nextProps.errors) {
       if (Object.keys(selectedAssessments).length !== 0) {
         let weights = {
@@ -307,14 +399,18 @@ class EditAssessment extends Component {
 
         let longtextWeight = [];
         for (let i = 0; i <= selectedAssessments.questions.length - 1; i++) {
-          longtextWeight.push(null);
+          longtextWeight.push(-1);
         }
 
         if (selectedAssessments.question_weight.longtext) {
           for (let [key, value] of Object.entries(
             selectedAssessments.question_weight.longtext
           )) {
-            longtextWeight[key] = value;
+            if (value === null) {
+              longtextWeight[key] = undefined;
+            } else {
+              longtextWeight[key] = value;
+            }
           }
         }
 
@@ -331,7 +427,6 @@ class EditAssessment extends Component {
           class_assigned: Boolean(selectedAssessments.class_assigned)
             ? selectedAssessments.class_assigned
             : [],
-          posted: selectedAssessments.posted,
           type: selectedAssessments.type,
           weights: weights,
           longtextWeight: longtextWeight,
@@ -339,6 +434,20 @@ class EditAssessment extends Component {
           // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
           // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
         });
+        if (selectedAssessments.post_date === null) {
+          this.setState({
+            posted: selectedAssessments.posted,
+            isScheduled: false
+          });
+        } else {
+          console.log("selectedAssessments.posted " + selectedAssessments.posted);
+          console.log("selectedAssessments.post_date " + selectedAssessments.post_date);
+          this.setState({
+            posted: false,
+            post_date: selectedAssessments.post_date,
+            isScheduled: true
+          });
+        }
       }
     }
   }
@@ -383,22 +492,23 @@ class EditAssessment extends Component {
     let formData = new FormData();
     let invalidQuestionIndex = [];
     let completeWeight = true;
+    let newBtErrors = [];
 
     const { questions, lampiranToDelete } = this.state;
-    const { updateAssessment, history } = this.props;
+    const { updateAssessment, validateAssessment, history } = this.props;
 
-    let typeCount = {
-      radio: 0,
-      checkbox: 0,
-      shorttext: 0,
-      longtext: 0,
-    };
-
+    // mencatat jumlah soal untuk tiap jenis soal
+    let typeCount = new Map([
+      ["radio", 0],
+      ["checkbox", 0],
+      ["shorttext", 0],
+      ["longtext", 0],
+    ]);
     for (let question of this.state.questions) {
-      typeCount[question.type]++;
+      typeCount.set(question.type, typeCount.get(question.type) + 1);
     }
 
-    if (this.state.posted) {
+    if (this.state.posted || this.state.isScheduled) {
       // pengecekan isi soal
       for (var i = 0; i < questions.length; i++) {
         let qns = questions[i];
@@ -408,9 +518,13 @@ class EditAssessment extends Component {
           if (qns.type === "shorttext") {
             if (qns.answer.length === 0) {
               invalidQuestionIndex.push(i);
+              newBtErrors[i] = true;
             } else {
               if (qns.answer.includes("")) {
                 invalidQuestionIndex.push(i);
+                newBtErrors[i] = true;
+              } else {
+                newBtErrors[i] = false;
               }
             }
           } else if (qns.type === "radio" || qns.type === "checkbox") {
@@ -420,57 +534,92 @@ class EditAssessment extends Component {
           }
         }
       }
+      this.setState({
+        backtickErrors: newBtErrors,
+        renderbtErrors: !this.state.renderbtErrors,
+      });
 
-      //pengecekan bobot
-      let filteredtypeCount = Object.entries(typeCount).filter(
+      // pengecekan bobot
+      let filteredtypeCount = Array.from(typeCount).filter(
         (pair) => pair[1] > 0
       );
-      if (filteredtypeCount.length !== 0) {
-        for (let pair of filteredtypeCount) {
-          let type = pair[0];
-
+      if (filteredtypeCount.length === 0) {
+        completeWeight = false;
+      } else {
+        for (let [type, count] of filteredtypeCount) {
           if (type === "longtext") {
-            for (let weight of this.state.longtextWeight.filter(
-              (value) => value !== null
-            )) {
-              if (isNaN(Number(weight)) || Number(weight) <= 0) {
+            for (let weight of this.state.longtextWeight) {
+              // agar data assessment tidak disubmit ketika ada bobot yang tidak valid
+              if (weight !== -1 && (isNaN(Number(weight)) || Number(weight) <= 0)) {
                 completeWeight = false;
-                break;
               }
             }
           } else {
+            // agar data assessment tidak disubmit ketika ada bobot yang tidak valid
             if (
               isNaN(Number(this.state.weights[type])) ||
               Number(this.state.weights[type]) <= 0
             ) {
               completeWeight = false;
-              break;
             }
           }
         }
-      } else {
-        completeWeight = false;
       }
     }
 
+    let newWeights = { ...this.state.weights };
+    // Untuk kasus dimana tidak ada longtext, tetap perlu diassign value supaya tidak undefined
+    let newLongtextWeight = [...this.state.longtextWeight];
+
+    for (let [type, count] of typeCount) {
+      if (count === 0) {
+        continue;
+      }
+      if (type === "longtext") {
+        newLongtextWeight = newLongtextWeight.map((weight) => {
+          if (weight === undefined) {
+            return null;
+          }
+          return weight;
+        });
+      } else {
+        if (this.state.weights[type] === undefined) {
+          newWeights[type] = null;
+        }
+      }
+    }
+
+    this.setState({
+      weights: newWeights,
+      longtextWeight: newLongtextWeight,
+    });
+
     // jika soal dan bobot sudah lengkap dan benar, submit
-    if (invalidQuestionIndex.length === 0 && completeWeight) {
+    if (invalidQuestionIndex.length === 0 && completeWeight && Object.values(this.state.errors).every((error) => (!error))) {
       let longtext;
-      if (typeCount.longtext === 0) {
+      if (typeCount.get("longtext") === 0) {
         longtext = null;
       } else {
+        // mengonversi bobot soal uraian dari string menjadi bilangan
         longtext = {};
         this.state.longtextWeight.forEach((val, idx) => {
-          if (val !== null) {
-            longtext[idx] = Number(val);
+          if (val !== -1) {
+            if (val === null || val === "") {
+              longtext[idx] = null;
+            } else {
+              longtext[idx] = Number(val);
+            }
           }
         });
       }
       let question_weight = {
-        radio: typeCount.radio === 0 ? null : this.state.weights.radio,
-        checkbox: typeCount.checkbox === 0 ? null : this.state.weights.checkbox,
+        radio: typeCount.get("radio") === 0 ? null : Number(this.state.weights.radio),
+        checkbox:
+          typeCount.get("checkbox") === 0 ? null : Number(this.state.weights.checkbox),
         shorttext:
-          typeCount.shorttext === 0 ? null : this.state.weights.shorttext,
+          typeCount.get("shorttext") === 0
+            ? null
+            : Number(this.state.weights.shorttext),
         longtext: longtext,
       };
 
@@ -489,13 +638,13 @@ class EditAssessment extends Component {
         class_assigned: this.state.class_assigned,
         description: this.state.description,
         questions: this.state.questions,
-        posted: this.state.posted,
+        posted: this.state.isScheduled ? null: this.state.posted,
+        post_date: this.state.isScheduled ? this.state.post_date: null,
         type: this.state.type,
         question_weight: question_weight,
       };
       const assessmentId = this.props.match.params.id;
-      console.log(assessmentData);
-
+      this.handleOpenUploadDialog();
       updateAssessment(
         formData,
         assessmentData,
@@ -504,17 +653,35 @@ class EditAssessment extends Component {
         history
       )
         .then((res) => {
-          console.log("Assessment is updated successfully");
+          this.setState({ success: res});
+          // this.handleOpenUploadDialog();
+          // console.log("Assessment is updated successfully");
         })
-        .catch(() => this.handleOpenErrorSnackbar());
+        .catch((err) => {
+          this.setState({ errors: err });
+          this.handleCloseUploadDialog();
+          this.handleOpenErrorSnackbar();
+        });
     } else {
-      this.handleOpenErrorSnackbar();
+      const assessmentData = {
+        name: this.state.name,
+        subject: this.state.subject,
+        class_assigned: this.state.class_assigned,
+        description: this.state.description,
+        questions: this.state.questions,
+        type: this.state.type,
+      };
+      validateAssessment(assessmentData).then(() => this.handleOpenErrorSnackbar());
     }
   };
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
   };
+
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false})
+  }
 
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
@@ -524,10 +691,89 @@ class EditAssessment extends Component {
     this.setState({ openDeleteDialog: false });
   };
 
+  isValidDateTime = (d) => {
+    return d instanceof Date && !isNaN(d);
+  };
+
   onChange = (e, otherfield = null) => {
+    let field = e?.target?.id ? e.target.id : otherfield;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+
     if (otherfield) {
-      if (otherfield === "end_date" || otherfield === "start_date") {
+      if (otherfield === "end_date" || otherfield === "start_date" || otherfield === "post_date") {
+
+        if (otherfield === "start_date") {
+          if (this.isValidDateTime(e) && this.isValidDateTime(this.state.end_date)) {
+            if (this.state.end_date.getTime() < e.getTime()) {
+              this.setState({ errors: { ...this.state.errors, start_date_custom: "Harus sebelum Waktu Selesai Pengerjaan" } });
+            } else {
+              this.setState({ errors: { ...this.state.errors, start_date_custom: null, end_date_custom: null } });
+            }
+          } else {
+            this.setState({ errors: { ...this.state.errors, start_date_custom: null } });
+          }
+        } else if (otherfield === "end_date") {
+          if (this.isValidDateTime(e) && this.isValidDateTime(this.state.start_date)) {
+            if (e.getTime() < this.state.start_date.getTime()) {
+              this.setState({ errors: { ...this.state.errors, end_date_custom: "Harus setelah Waktu Mulai Pengerjaan" } });
+            } else {
+              this.setState({ errors: { ...this.state.errors, start_date_custom: null, end_date_custom: null } });
+            }
+          } else {
+            this.setState({ errors: { ...this.state.errors, end_date_custom: null } });
+          }
+        }
+
         this.setState({ [otherfield]: e });
+      } else if (otherfield === "subject") { // jika guru memilih mata pelajaran
+        // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
+        let newClassOptions = [];
+        if (this.props.auth.user.class_to_subject) {
+          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+            if (subjectIdArray.includes(e.target.value)) {
+              newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+            }
+          }
+        }
+
+        this.setState({ subject: e.target.value, classOptions: newClassOptions });
+
+      } else if (otherfield === "class_assigned") { // jika guru memilih kelas
+        let selectedClasses = e.target.value;
+
+        if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
+          this.setState((prevState, props) => {
+            return {
+              class_assigned: selectedClasses,
+              // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
+              subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
+            }
+          });
+        } else { // jika guru menambahkan atau mengurangi pilihan kelas
+          // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
+          let subjectMatrix = [];
+          if (this.props.auth.user.class_to_subject) {
+            for (let classId of selectedClasses) {
+              subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+            }
+          }
+          let subjects = [];
+          if (subjectMatrix.length !== 0) {
+            subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+              return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
+            });
+          }
+          
+          // menambahkan matpel tersebut ke opsi matpel
+          let newSubjectOptions = [];
+          subjects.forEach((subjectId) => {
+            newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
+          })
+
+          this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
+        }
       } else {
         this.setState({ [otherfield]: e.target.value });
       }
@@ -536,9 +782,9 @@ class EditAssessment extends Component {
     }
   };
 
-  onDateChange = (date) => {
-    this.setState({ end_date: date });
-  };
+  // onDateChange = (date) => {
+  //   this.setState({ end_date: date });
+  // };
 
   handleClickMenuTambah = (event) => {
     this.setState({ anchorEl: event.currentTarget });
@@ -591,11 +837,12 @@ class EditAssessment extends Component {
     }
     this.setState((state) => {
       let value = [...state.longtextWeight];
-      value.push(option === "longtext" ? undefined : null);
-      return { longtextWeight: value };
+      let btErrors = [...state.backtickErrors];
+      value.push(option === "longtext" ? undefined : -1);
+      btErrors.push(option === "shorttext" ? false : -1);
+      return { longtextWeight: value, backtickErrors: btErrors };
     });
-    this.setState({ questions: questions });
-    this.setState({ currentQuestionOption: null });
+    this.setState({ questions: questions, currentQuestionOption: null });
   };
 
   handleChangeQuestion = (
@@ -776,6 +1023,7 @@ class EditAssessment extends Component {
   };
 
   handleDuplicateQuestion = (i) => {
+    console.log(i);
     let questions = this.state.questions;
     // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
@@ -789,17 +1037,7 @@ class EditAssessment extends Component {
         lampiran: [...questions[i].lampiran],
         type: questions[i].type,
       });
-    }
-    // else if (questions[i].type === "longtext") {
-    //   questions.splice(i+1, 0, {
-    //     name: questions[i].name,
-    //     options: null,
-    //     answer: null,
-    //     lampiran: [...questions[i].lampiran],
-    //     type: questions[i].type
-    //   })
-    // }
-    else {
+    } else {
       questions.splice(i + 1, 0, {
         name: questions[i].name,
         options: [...questions[i].options],
@@ -811,8 +1049,14 @@ class EditAssessment extends Component {
     this.setState({ questions: questions });
     this.setState((state) => {
       let value = [...state.longtextWeight];
+      let btErrors = [...state.backtickErrors];
       value.splice(i + 1, 0, state.longtextWeight[i]);
-      return { longtextWeight: value };
+      btErrors.splice(i + 1, 0, state.backtickErrors[i]);
+      return {
+        longtextWeight: value,
+        backtickErrors: btErrors,
+        renderbtErrors: !this.state.renderbtErrors,
+      };
     });
   };
 
@@ -821,10 +1065,31 @@ class EditAssessment extends Component {
     let questions = this.state.questions;
     questions.splice(index, 1);
     this.setState({ questions: questions });
+
+    let newBtErrors = [];
+    for (var i = 0; i < questions.length; i++) {
+      let qns = questions[i];
+      if (qns.type === "shorttext") {
+        if (qns.answer.length === 0) {
+          newBtErrors[i] = true;
+        } else {
+          if (qns.answer.includes("")) {
+            newBtErrors[i] = true;
+          } else {
+            newBtErrors[i] = false;
+          }
+        }
+      }
+    }
+
     this.setState((state) => {
       let value = [...state.longtextWeight];
       value.splice(index, 1);
-      return { longtextWeight: value };
+      return {
+        longtextWeight: value,
+        backtickErrors: newBtErrors,
+        renderbtErrors: !this.state.renderbtErrors,
+      };
     });
   };
 
@@ -856,9 +1121,19 @@ class EditAssessment extends Component {
     } else {
       if (e.target.files) {
         const files = Array.from(e.target.files);
-        let temp = questions[qnsIndex].lampiran.concat(files);
+        let over_limit = files.filter(
+          (file) => file.size / Math.pow(10, 6) > 5
+        );
+        let file_to_upload = files.filter(
+          (file) => file.size / Math.pow(10, 6) <= 5
+        );
+        let temp = questions[qnsIndex].lampiran.concat(file_to_upload);
         questions[qnsIndex].lampiran = temp;
-        this.setState({ questions: questions });
+        this.setState({
+          questions: questions,
+          fileLimitSnackbar: over_limit.length > 0,
+          over_limit: over_limit,
+        });
       }
     }
   };
@@ -866,6 +1141,12 @@ class EditAssessment extends Component {
   handlePostToggle = () => {
     this.setState((prevState) => ({
       posted: !prevState.posted,
+    }));
+  };
+
+  handleCheckScheduleMode = () => {
+    this.setState((prevState) => ({
+      isScheduled: !prevState.isScheduled,
     }));
   };
 
@@ -878,6 +1159,8 @@ class EditAssessment extends Component {
   };
 
   listQuestion = () => {
+    console.log(this.state.lampiranUrls);
+    console.log("List quesiton is runned");
     let { questions } = this.state;
     const { page, rowsPerPage } = this.state;
     let questionList = [];
@@ -887,7 +1170,7 @@ class EditAssessment extends Component {
         let lampiranToAdd = question.lampiran.filter(
           (l) => typeof l !== "string"
         );
-        console.log(lampiranToAdd);
+        // console.log(lampiranToAdd);
         let currentLampiran = question.lampiran.filter(
           (l) => typeof l === "string"
         );
@@ -910,10 +1193,11 @@ class EditAssessment extends Component {
           }
         }
 
+        let questionIdx = i + page * rowsPerPage;
         return (
           <QuestionItem
             isEdit={true}
-            index={i + page * rowsPerPage}
+            index={questionIdx}
             name={question.name}
             options={JSON.stringify(question.options)}
             answer={question.answer}
@@ -930,7 +1214,12 @@ class EditAssessment extends Component {
             type={question.type}
             check_data={booleanArray}
             handleLongtextWeight={this.handleLongtextWeight}
-            longtextWeight={this.state.longtextWeight[i + page * rowsPerPage]}
+            longtextWeight={this.state.longtextWeight[questionIdx]}
+            backtickError={this.state.backtickErrors[questionIdx]}
+            renderbtErrors={this.state.renderbtErrors}
+            lampiranUrls={JSON.stringify(
+              Array.from(this.state.lampiranUrls.entries())
+            )}
           />
         );
       });
@@ -941,6 +1230,69 @@ class EditAssessment extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (!this.props.errors && this.props.errors !== prevProps.errors) {
       this.handleOpenUploadDialog();
+    }
+
+    // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas dan mata pelajaran
+    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
+      const selectedAssessmentProps = this.props.assessmentsCollection.selectedAssessments;
+
+      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
+      selectedAssessmentProps && selectedAssessmentProps.constructor === Object && (Object.keys(selectedAssessmentProps).length !== 0)) {
+        
+        let all_classes_obj = {};
+        this.props.classesCollection.all_classes.forEach((classInfo) => {
+          all_classes_obj[classInfo._id] = classInfo.name; 
+        });
+
+        // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
+        let newClassOptions = [];
+        if (this.props.auth.user.class_to_subject) {
+          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+            if (subjectIdArray.includes(selectedAssessmentProps.subject)) {
+              newClassOptions.push({ _id: classId, name: all_classes_obj[classId] });
+            }
+          }
+        }
+
+        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+      }
+    }
+
+    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
+      const selectedAssessmentProps = this.props.assessmentsCollection.selectedAssessments;
+
+      if ( this.props.subjectsCollection.all_subjects && ( this.props.subjectsCollection.all_subjects.length !== 0) &&
+      selectedAssessmentProps && selectedAssessmentProps.constructor === Object && (Object.keys(selectedAssessmentProps).length !== 0)) {
+        
+        let all_subjects_obj = {};
+         this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
+          all_subjects_obj[subjectInfo._id] = subjectInfo.name; 
+        });
+  
+        // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
+        let subjectMatrix = [];
+        if (this.props.auth.user.class_to_subject) {
+          for (let classId of selectedAssessmentProps.class_assigned) {
+            if (this.props.auth.user.class_to_subject[classId]) {
+              subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+            }
+          }
+        }
+        let subjects = [];
+        if (subjectMatrix.length !== 0) {
+          subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+            return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
+          });
+        }
+
+        // menambahkan matpel tersebut ke opsi matpel
+        let newSubjectOptions = [];
+        subjects.forEach((subjectId) => {
+          newSubjectOptions.push({ _id: subjectId, name: all_subjects_obj[subjectId] });
+        })
+
+        this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
+      }
     }
   }
 
@@ -994,178 +1346,86 @@ class EditAssessment extends Component {
       },
     };
 
-    let typeCount = {
-      radio: 0,
-      checkbox: 0,
-      shorttext: 0,
-      longtext: 0,
-    };
-
+    let typeCount = new Set();
     for (let question of this.state.questions) {
-      typeCount[question.type]++;
+      typeCount.add(question.type);
     }
-
-    let columnsDesktopView = [];
-    // let gridMobileView;
-    let gridItemMobileView = [];
-    let c = 0;
-    let filteredtypeCount = Object.entries(typeCount).filter(
-      (pair) => pair[1] > 0
+    let filteredtypeCount = ["radio", "checkbox", "shorttext", "longtext"].filter(
+      (type) => typeCount.has(type)
     );
 
     if (filteredtypeCount.length !== 0) {
-      // mobile view
-      // for (let type of Object.keys(typeCount)) {
+      let desktopView = [];
+      let mobileView = [
+        <>
+          <Typography variant="h6">Bobot Per Soal:</Typography>
+          <FormHelperText>{"\u200B"}</FormHelperText>
+          <Divider className={classes.dividerMargin} />
+        </>
+      ];
 
-      gridItemMobileView.push(
-        <Typography variant="h6">Bobot Per Soal:</Typography>
-      );
-      gridItemMobileView.push(<Divider className={classes.customMargin} />);
-
-      for (let pair of filteredtypeCount) {
-        let type = pair[0];
+      for (let i = 0; i < filteredtypeCount.length; i++) {
+        let type = filteredtypeCount[i];
         let weight = this.state.weights[type];
         let showError =
-          (isNaN(Number(weight)) || Number(weight) <= 0) && weight !== null;
+          weight === null || (weight !== undefined && Number(weight) <= 0);
 
-        gridItemMobileView.push(
-          //   <Grid container item xs={6} spacing="1" direction="column" justify="space-between" alignItems="center">
-          //     <Grid item>
-          //       {columnTemplate[type].icon}
-          //     </Grid>
-          //     <Grid item>
-          //       <Hidden xsDown>
-          //         <Typography align="center">
-          //           {columnTemplate[type].text}
-          //         </Typography>
-          //       </Hidden>
-          //       <Hidden smUp>
-          //         <Typography align="center" style={{ fontSize: "0.8rem" }}>
-          //           {columnTemplate[type].text}
-          //         </Typography>
-          //       </Hidden>
-          //     </Grid>
-          //     <Grid item>
-          //       <Hidden xsDown>
-          //         <Typography component="label" for="weight" color="primary">
-          //           Bobot Per Soal:
-          //         </Typography>
-          //       </Hidden>
-          //       <Hidden smUp>
-          //         <Typography component="label" for="weight" color="primary" style={{ fontSize: "0.8rem" }}>
-          //           Bobot Per Soal:
-          //         </Typography>
-          //       </Hidden>
-          //     </Grid>
-          //     {(type !== "longtext") ? (
-          //       <Grid item style={{ height: "65px" }}>
-          //         <Hidden xsDown>
-          //           <TextField
-          //             defaultValue={this.state.weights[type]}
-          //             variant="outlined"
-          //             id="weight"
-          //             fullWidth
-          //             onChange={(e) => { this.handleWeight(e, type) }}
-          //             error={showError}
-          //             helperText={showError ? "Periksa Kembali!" : null}
-          //             InputProps={{
-          //               style: {
-          //                 width: "150px"
-          //               },
-          //               endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
-          //             }}
-          //           />
-          //         </Hidden>
-          //         <Hidden smUp>
-          //           <TextField
-          //             defaultValue={this.state.weights[type]}
-          //             variant="outlined"
-          //             id="weight"
-          //             fullWidth
-          //             onChange={(e) => { this.handleWeight(e, type) }}
-          //             error={showError}
-          //             helperText={showError ? "Periksa Kembali!" : null}
-          //             FormHelperTextProps={{
-          //               style: {
-          //                 margin: "0px"
-          //               }
-          //             }}
-          //             InputProps={{
-          //               style: {
-          //                 width: "110px"
-          //               },
-          //               endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
-          //             }}
-          //           />
-          //         </Hidden>
-
-          //       </Grid>
-          //     ) : (
-          //       <Grid item style={{ height: "65px" }}>
-          //         <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
-          //           <IconButton>
-          //             <InfoIcon />
-          //           </IconButton>
-          //         </LightTooltip>
-          //       </Grid>
-          //     )}
-          //   </Grid>
+        mobileView.push(
           <Grid container>
-            <Grid
-              item
+            <Grid container>
+              {/* untuk menambahkan margin */}
+              <FormHelperText>{"\u200B"}</FormHelperText>
+            </Grid>
+            <div /* tidak pakai grid container agar widthnya tidak diset 100% */
               style={{
                 display: "flex",
                 flexDirection: "column",
-                marginRight: "20px",
+                flexGrow: "1"
               }}
-              justify="center"
             >
-              {columnTemplate[type].icon}
-            </Grid>
-            <Grid
-              item
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                flexGrow: "1",
-              }}
-              justify="center"
-            >
-              <Hidden xsDown>
-                <Typography align="left">
-                  {columnTemplate[type].text}
-                </Typography>
-              </Hidden>
-              <Hidden smUp>
-                <Typography align="left" style={{ fontSize: "0.8rem" }}>
-                  {columnTemplate[type].text}
-                </Typography>
-              </Hidden>
-            </Grid>
+              <Grid container alignItems="center" style={{ flexGrow: "1"}}>
+                <Grid item style={{ marginRight: "20px" }}>
+                  {columnTemplate[type].icon}
+                </Grid>
+                <Grid item>
+                  <Hidden xsDown>
+                    <Typography align="left">
+                      {columnTemplate[type].text}
+                    </Typography>
+                  </Hidden>
+                  <Hidden smUp>
+                    <Typography align="left" style={{ fontSize: "0.8rem" }}>
+                      {columnTemplate[type].text}
+                    </Typography>
+                  </Hidden>
+                </Grid>
+              </Grid>
+              {type !== "longtext" ? <FormHelperText>{"\u200B"}</FormHelperText> : null}
+            </div>
             {type !== "longtext" ? (
               <Grid
                 item
                 style={{
                   display: "flex",
-                  flexDirection: "column",
-                  height: "34px",
+                  flexDirection: "column"
                 }}
               >
                 <Hidden xsDown>
                   <TextField
                     defaultValue={this.state.weights[type]}
                     variant="outlined"
-                    id="weight"
+                    key={type}
                     fullWidth
                     onChange={(e) => {
                       this.handleWeight(e, type);
                     }}
                     error={showError}
-                    helperText={showError ? "Periksa Kembali!" : null}
+                    helperText={showError ? "Periksa Kembali!" : "\u200B"}
                     FormHelperTextProps={{
                       style: {
-                        margin: "0px",
-                      },
+                        marginLeft: "0",
+                        marginRight: "0"
+                      }
                     }}
                     InputProps={{
                       style: {
@@ -1181,22 +1441,22 @@ class EditAssessment extends Component {
                   <TextField
                     defaultValue={this.state.weights[type]}
                     variant="outlined"
-                    id="weight"
+                    key={type}
                     fullWidth
                     onChange={(e) => {
                       this.handleWeight(e, type);
                     }}
                     error={showError}
-                    helperText={showError ? "Periksa Kembali!" : null}
+                    helperText={showError ? "Periksa Kembali!" : "\u200B"}
                     FormHelperTextProps={{
                       style: {
-                        margin: "0px",
-                      },
+                        marginLeft: "0",
+                        marginRight: "0"
+                      }
                     }}
                     InputProps={{
                       style: {
-                        height: "34px",
-                        width: "85px",
+                        width: "85px"
                       },
                       endAdornment: (
                         <Typography
@@ -1224,7 +1484,7 @@ class EditAssessment extends Component {
                 <Hidden xsDown>
                   <Grid
                     item
-                    style={{ display: "flex", width: "100px", height: "42px" }}
+                    style={{ display: "flex", width: "100px" }}
                     justify="center"
                     alignItems="center"
                   >
@@ -1238,7 +1498,7 @@ class EditAssessment extends Component {
                 <Hidden smUp>
                   <Grid
                     item
-                    style={{ display: "flex", width: "85px", height: "34px" }}
+                    style={{ display: "flex", width: "85px" }}
                     justify="center"
                     alignItems="center"
                   >
@@ -1254,31 +1514,7 @@ class EditAssessment extends Component {
           </Grid>
         );
 
-        // gridMobileView = (
-        //   <Grid container style={{ padding: "20px 10px" }} justify="center">
-        //     <Grid container item xs={12} spacing="1" justify="center" alignItems="center">
-        //       {gridItemMobileView[0]}
-        //       <Divider orientation="vertical" flexItem />
-        //       {gridItemMobileView[1]}
-        //     </Grid>
-        //     <Grid item xs={12} style={{ margin: "10px 0px" }}>
-        //       <Divider />
-        //     </Grid>
-        //     <Grid container item xs={12} spacing="1" justify="center" alignItems="center">
-        //       {gridItemMobileView[2]}
-        //       <Divider orientation="vertical" flexItem />
-        //       {gridItemMobileView[3]}
-        //     </Grid>
-        //   </Grid>
-        // );
-
-        // desktop view
-        // for (let pair of filteredtypeCount) {
-        //   let type = pair[0];
-        //   let weight = this.state.weights[type];
-        //   let showError = (isNaN(Number(weight)) || Number(weight) <= 0) && (weight !== null);
-        columnsDesktopView.push(
-          //  item xs={12 / filteredtypeCount.length} -> mengatasi bug tampilan margin besar di bawah bagian ini
+        desktopView.push(
           <Grid
             container
             item
@@ -1300,20 +1536,21 @@ class EditAssessment extends Component {
               </Typography>
             </Grid>
             {type !== "longtext" ? (
-              <Grid item style={{ height: "65px" }}>
+              <Grid item>
                 <TextField
                   defaultValue={this.state.weights[type]}
                   variant="outlined"
-                  id="weight"
+                  key={type}
                   fullWidth
                   onChange={(e) => {
                     this.handleWeight(e, type);
                   }}
                   error={showError}
-                  helperText={showError ? "Periksa Kembali!" : null}
+                  helperText={showError ? "Periksa Kembali!" : "\u200B"}
                   FormHelperTextProps={{
                     style: {
-                      margin: "0px",
+                      marginLeft: "0",
+                      marginRight: "0"
                     },
                   }}
                   InputProps={{
@@ -1327,23 +1564,24 @@ class EditAssessment extends Component {
                 />
               </Grid>
             ) : (
-              <Grid item style={{ height: "65px" }}>
+              <Grid item>
                 <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
                   <IconButton>
                     <InfoIcon />
                   </IconButton>
                 </LightTooltip>
+                <FormHelperText>{"\u200B"}</FormHelperText>
               </Grid>
             )}
           </Grid>
         );
         // jika elemen ini bukan elemen terakhir, tambahkan divider
-        if (c + 1 < filteredtypeCount.length) {
-          columnsDesktopView.push(<Divider orientation="vertical" flexItem />);
-          gridItemMobileView.push(<Divider className={classes.customMargin} />);
+        if (i !== filteredtypeCount.length - 1) {
+          desktopView.push(<Divider orientation="vertical" flexItem />);
+          mobileView.push(<Divider className={classes.dividerMargin} />);
         }
-        c++;
       }
+
       return (
         <Paper>
           <Hidden smDown>
@@ -1352,18 +1590,17 @@ class EditAssessment extends Component {
               style={{ padding: "20px", height: "240px" }}
               justify="center"
             >
-              {columnsDesktopView}
+              {desktopView}
             </Grid>
           </Hidden>
           <Hidden mdUp>
-            {/* {gridMobileView} */}
             <Grid
               container
               style={{ padding: "20px" }}
               wrap="nowrap"
               direction="column"
             >
-              {gridItemMobileView}
+              {mobileView}
             </Grid>
           </Hidden>
         </Paper>
@@ -1374,8 +1611,8 @@ class EditAssessment extends Component {
   };
 
   render() {
-    const { class_assigned } = this.state;
-    const { classes, errors, success } = this.props;
+    const { class_assigned, errors, success } = this.state;
+    const { classes } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
 
@@ -1431,8 +1668,8 @@ class EditAssessment extends Component {
     //   checked: {},
     // }))(Switch);
 
-    console.log("QUESTIONS : ", this.state.questions);
-    document.title = "Schooly | Sunting Kuis/Ujian";
+    // console.log("QUESTIONS : ", this.state.questions);
+    document.title = `Schooly | Sunting ${this.state.type} `;
 
     return (
       <div className={classes.root}>
@@ -1448,23 +1685,25 @@ class EditAssessment extends Component {
           // itemType="Kuis"
           // itemName={this.state.name}
           customMessage="Hapus perubahan"
-          redirectLink="/daftar-kuis"
-          // customConfirm="Ya"
+          // redirectLink="/daftar-kuis"
+          redirectLink={
+            this.state.type === "Kuis" ? `/kuis-guru/${this.props.match.params.id}` : `/ujian-guru/${this.props.match.params.id}`
+          }
           customDecline="Tidak"
           deleteItem=""
           isLink={true}
-          redirectLink="/daftar-kuis"
           isWarning={false}
         />
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
           success={success}
-          // messageUploading="Kuis/Ujian sedang disunting"
           messageUploading={`${this.state.type} sedang disunting`}
-          // messageSuccess="Kuis/Ujian telah disunting"
           messageSuccess={`${this.state.type} telah disunting`}
-          redirectLink="/daftar-kuis"
-          // redirectLink={(this.state.type === "Kuis") ? `/daftar-kuis` : `/daftar-ujian`}
+          redirectLink={
+            this.state.type === "Kuis"
+              ? `/kuis-guru/${this.props.match.params.id}`
+              : `/ujian-guru/${this.props.match.params.id}`
+          }
         />
         <form onSubmit={(e) => this.onSubmit(e)}>
           <Grid container direction="column" spacing={3}>
@@ -1472,10 +1711,10 @@ class EditAssessment extends Component {
               <Paper>
                 <div className={classes.content}>
                   <Typography variant="h5" gutterBottom>
-                    <b>Sunting Kuis/Ujian</b>
+                    <b>Sunting {this.state.type} </b>
                   </Typography>
                   <Typography color="textSecondary">
-                    Tambahkan keterangan untuk menyunting Kuis/Ujian.
+                    Tambahkan keterangan untuk menyunting {this.state.type}.
                   </Typography>
                 </div>
                 <Divider />
@@ -1483,44 +1722,34 @@ class EditAssessment extends Component {
                   <Grid item xs={12} md className={classes.content}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <Typography
-                          component="label"
-                          for="name"
-                          color="primary"
-                        >
-                          Judul
-                        </Typography>
-                        <TextField
-                          value={this.state.name}
-                          fullWidth
-                          variant="outlined"
-                          id="name"
-                          error={errors.name}
-                          helperText={errors.name}
-                          onChange={this.onChange}
-                        />
+                        <div ref={this.customHeightRef}>
+                          <Typography
+                            component="label"
+                            for="name"
+                            color="primary"
+                          >
+                            Judul
+                          </Typography>
+                          <div ref={this.inputHeightRef}>
+                            <TextField
+                              value={this.state.name}
+                              fullWidth
+                              variant="outlined"
+                              id="name"
+                              error={errors.name}
+                              // helperText={errors.name}
+                              onChange={this.onChange}
+                            />
+                            {errors.name
+                              ?
+                              <div className={classes.zeroHeightHelperText}>
+                                <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
+                              </div>
+                              : null}
+                          </div>
+                        </div>
                       </Grid>
-                      <Grid item>
-                        <Typography
-                          component="label"
-                          for="description"
-                          color="primary"
-                        >
-                          Deskripsi
-                        </Typography>
-                        <TextField
-                          value={this.state.description}
-                          multiline
-                          rowsMax={10}
-                          fullWidth
-                          error={errors.description}
-                          helperText={errors.description}
-                          onChange={this.onChange}
-                          variant="outlined"
-                          id="description"
-                        />
-                      </Grid>
-                      <Grid item>
+                      <Grid item className={classes.customPaddingBottom}>
                         <Typography
                           component="label"
                           for="class_assigned"
@@ -1544,10 +1773,49 @@ class EditAssessment extends Component {
                             <MenuItem value="Kuis">Kuis</MenuItem>
                             <MenuItem value="Ujian">Ujian</MenuItem>
                           </Select>
-                          <FormHelperText>
-                            {Boolean(errors.type) ? errors.type : null}
-                          </FormHelperText>
+                          {Boolean(errors.type)
+                            ?
+                            <div className={classes.zeroHeightHelperText}>
+                              <FormHelperText variant="outlined" error>{errors.type}</FormHelperText>
+                            </div>
+                            : null}
                         </FormControl>
+                      </Grid>
+                      <Hidden smDown>
+                        {/* dummy checkbox agar kedua kolom form keterangan assessment simetris */}
+                        <Grid item style={{ padding: "0", width: "0", visibility: "hidden" }}>
+                          <FormHelperText variant="outlined">{"\u200B"}</FormHelperText>
+                          <Checkbox size="small" disabled />
+                        </Grid>
+                      </Hidden>
+                      <Grid item className={classes.customPaddingTop}>
+                        <Typography
+                          component="label"
+                          for="description"
+                          color="primary"
+                        >
+                          Deskripsi
+                        </Typography>
+                        <TextField
+                          value={this.state.description}
+                          multiline
+                          // 1 row = 17px. ukuran padding (cek dengan devtool) = 37px
+                          rows={(this.state.customHeight - 37) / 17}
+                          rowsMax={10}
+                          fullWidth
+                          error={errors.description}
+                          // helperText={errors.description}
+                          onChange={this.onChange}
+                          variant="outlined"
+                          id="description"
+                          type="text"
+                        />
+                        {errors.description
+                          ?
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                          </div>
+                          : null}
                       </Grid>
                     </Grid>
                   </Grid>
@@ -1562,7 +1830,7 @@ class EditAssessment extends Component {
                         <Grid item xs={12} md={6}>
                           <Typography
                             component="label"
-                            for="workTime"
+                            for="workTimeStart"
                             color="primary"
                           >
                             Waktu Mulai Pengerjaan
@@ -1579,20 +1847,34 @@ class EditAssessment extends Component {
                               ampm={false}
                               okLabel="Simpan"
                               cancelLabel="Batal"
-                              minDateMessage="Batas waktu harus waktu yang akan datang"
+                              minDateMessage="Harus waktu yang akan datang"
                               invalidDateMessage="Format tanggal tidak benar"
-                              id="workTime"
+                              id="workTimeStart"
                               value={this.state.start_date}
+                              helperText={null}
                               onChange={(date) =>
                                 this.onChange(date, "start_date")
                               }
+                              onError={(err) => {
+                                if (errors.start_date !== err) {
+                                  this.setState({ errors: { ...errors, start_date: err } });
+                                }
+                              }}
+                              error={errors.start_date_custom || errors.start_date}
                             />
+                            <div className={classes.zeroHeightHelperText}>
+                              {errors.start_date_custom
+                                ? <FormHelperText variant="outlined" error>{errors.start_date_custom}</FormHelperText>
+                                : errors.start_date
+                                  ? <FormHelperText variant="outlined" error>{errors.start_date}</FormHelperText>
+                                  : null}
+                            </div>
                           </MuiPickersUtilsProvider>
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} md={6} className={classes.customSpacing}>
                           <Typography
                             component="label"
-                            for="workTime"
+                            for="workTimeEnd"
                             color="primary"
                           >
                             Waktu Selesai Pengerjaan
@@ -1603,23 +1885,103 @@ class EditAssessment extends Component {
                           >
                             <KeyboardDateTimePicker
                               fullWidth
-                              disablePast
+                              // disablePast
                               inputVariant="outlined"
                               format="dd/MM/yyyy - HH:mm"
                               ampm={false}
                               okLabel="Simpan"
                               cancelLabel="Batal"
                               invalidDateMessage="Format tanggal tidak benar"
-                              id="workTime"
+                              id="workTimeEnd"
+                              helperText={null}
                               value={this.state.end_date}
                               minDate={this.state.start_date}
-                              minDateMessage="Batas waktu harus setelah Mulai waktu pengerjaan"
+                              minDateMessage="Harus setelah Waktu Mulai Pengerjaan"
                               onChange={(date) =>
                                 this.onChange(date, "end_date")
                               }
+                              onError={(err) => {
+                                if (errors.end_date !== err) {
+                                  this.setState({ errors: { ...errors, end_date: err } });
+                                }
+                              }}
+                              error={errors.end_date_custom || errors.end_date}
                             />
+                            <div className={classes.zeroHeightHelperText}>
+                              {errors.end_date_custom
+                                ? <FormHelperText variant="outlined" error>{errors.end_date_custom}</FormHelperText>
+                                : errors.end_date
+                                  ? <FormHelperText variant="outlined" error>{errors.end_date}</FormHelperText>
+                                  : null}
+                            </div>
                           </MuiPickersUtilsProvider>
                         </Grid>
+                      </Grid>
+                      <Grid item style={{ paddingBottom: "0" }}>
+                        <Typography
+                          component="label"
+                          for="postDate"
+                          color="primary"
+                        >
+                          Waktu Rilis
+                        </Typography>
+                        <MuiPickersUtilsProvider
+                          locale={lokal}
+                          utils={DateFnsUtils}
+                        >
+                          <KeyboardDateTimePicker
+                            disabled={!this.state.isScheduled}
+                            fullWidth
+                            inputVariant="outlined"
+                            format="dd/MM/yyyy - HH:mm"
+                            ampm={false}
+                            okLabel="Simpan"
+                            cancelLabel="Batal"
+                            invalidDateMessage="Format tanggal tidak benar"
+                            id="postDate"
+                            helperText={null}
+                            value={this.state.post_date}
+                            onChange={(date) =>
+                              this.onChange(date, "post_date")
+                            }
+                            onError={(err) => {
+                              if (errors.post_date !== err) {
+                                this.setState({ errors: { ...errors, post_date: err } });
+                              }
+                            }}
+                          />
+                          <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
+                            {errors.post_date
+                              ? <FormHelperText variant="outlined" error>{errors.post_date}</FormHelperText>
+                              : null}
+                            {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang 
+                              untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
+                            <FormGroup style={{ width: "fit-content" }}>
+                              <FormControlLabel
+                                label={
+                                  <Typography color="textPrimary">
+                                    Rilis Otomatis
+                                  </Typography>
+                                }
+                                control={
+                                  <Checkbox
+                                    onChange={() => {
+                                      this.handleCheckScheduleMode();
+                                    }}
+                                    color="primary"
+                                    size="small"
+                                    checked={this.state.isScheduled}
+                                  />
+                                }
+                              />
+                            </FormGroup>
+                          </div>
+                        </MuiPickersUtilsProvider>
+                      </Grid>
+                      {/* dummy checkbox untuk memberikan ruang bagi checkbox waktu rilis yang sebenarnya */}
+                      <Grid item style={{ padding: "0", width: "0", visibility: "hidden" }}>
+                        <FormHelperText variant="outlined">{"\u200B"}</FormHelperText>
+                        <Checkbox size="small" disabled />
                       </Grid>
                       <Grid item>
                         <Typography
@@ -1634,7 +1996,7 @@ class EditAssessment extends Component {
                           variant="outlined"
                           color="primary"
                           fullWidth
-                          error={Boolean(errors.subject) && !this.state.subject}
+                          error={Boolean(errors.subject)}
                         >
                           <Select
                             value={this.state.subject}
@@ -1642,17 +2004,22 @@ class EditAssessment extends Component {
                               this.onChange(event, "subject");
                             }}
                           >
-                            {all_subjects.map((subject) => (
-                              <MenuItem value={subject._id}>
-                                {subject.name}
-                              </MenuItem>
-                            ))}
+                            {(this.state.subjectOptions !== null) ? (
+                              this.state.subjectOptions.map((subject) => (
+                                <MenuItem key={subject._id} value={subject._id}>
+                                  {subject.name}
+                                </MenuItem>
+                              ))
+                            ) : (
+                              null
+                            )}
                           </Select>
-                          <FormHelperText>
-                            {Boolean(errors.subject) && !this.state.subject
-                              ? errors.subject
-                              : null}
-                          </FormHelperText>
+                          {Boolean(errors.subject)
+                            ?
+                            <div className={classes.zeroHeightHelperText}>
+                              <FormHelperText variant="outlined" error>{errors.subject}</FormHelperText>
+                            </div>
+                            : null}
                         </FormControl>
                       </Grid>
                       <Grid item>
@@ -1667,8 +2034,7 @@ class EditAssessment extends Component {
                           variant="outlined"
                           fullWidth
                           error={
-                            Boolean(errors.class_assigned) &&
-                            class_assigned.length === 0
+                            Boolean(errors.class_assigned)
                           }
                         >
                           <Select
@@ -1683,18 +2049,11 @@ class EditAssessment extends Component {
                             }
                             renderValue={(selected) => (
                               <div className={classes.chips}>
-                                {selected.map((id) => {
-                                  let name;
-                                  for (let i in all_classes) {
-                                    if (all_classes[i]._id === id) {
-                                      name = all_classes[i].name;
-                                      break;
-                                    }
-                                  }
+                                {selected.map((classId) => {
                                   return (
                                     <Chip
-                                      key={id}
-                                      label={name}
+                                      key={classId}
+                                      label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
                                       className={classes.chip}
                                     />
                                   );
@@ -1702,18 +2061,22 @@ class EditAssessment extends Component {
                               </div>
                             )}
                           >
-                            {all_classes.map((kelas) => (
-                              <MenuItem value={kelas._id}>
-                                {kelas.name}
-                              </MenuItem>
-                            ))}
+                            {(this.state.classOptions !== null) ? (
+                              this.state.classOptions.map((classInfo) => (
+                                <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
+                                  {classInfo.name}
+                                </MenuItem>
+                              ))
+                            ) : (
+                              null
+                            )}
                           </Select>
-                          <FormHelperText>
-                            {Boolean(errors.class_assigned) &&
-                            class_assigned.length === 0
-                              ? errors.class_assigned
-                              : null}
-                          </FormHelperText>
+                          {Boolean(errors.class_assigned)
+                            ?
+                            <div className={classes.zeroHeightHelperText}>
+                              <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                            </div>
+                            : null}
                         </FormControl>
                       </Grid>
                     </Grid>
@@ -1769,83 +2132,98 @@ class EditAssessment extends Component {
                 </LightTooltip>
               </Grid>
             </Grid>
-            <Hidden smDown implementation="css">
+            <Grid item container justify="center">
               <Grid item>
-                <Paper>
-                  <Grid
-                    container
-                    spacing={2}
-                    justify="space-between"
-                    alignItems="center"
-                    className={classes.pageNavigatorContent}
-                  >
-                    <Grid
-                      item
-                      container
-                      md={9}
-                      alignItems="center"
-                      className={classes.pageNavigator}
-                    >
-                      <Grid item>
-                        <TablePagination
-                          labelRowsPerPage="Soal Per Halaman"
-                          rowsPerPageOptions={[5, 10]}
-                          component="div"
-                          count={this.state.questions.length}
-                          rowsPerPage={this.state.rowsPerPage}
-                          page={this.state.page}
-                          onChangePage={this.handleChangePage}
-                          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip
-                          title={
-                            !this.state.posted
-                              ? `Murid dapat melihat deskripsi ${this.state.type} (Muncul Pada Layar Murid)`
-                              : `Murid tidak dapat melihat deskripsi ${this.state.type} (Tidak Muncul Pada Layar Murid)`
-                          }
+                <TablePagination
+                  labelRowsPerPage="Soal Per Halaman"
+                  rowsPerPageOptions={[5, 10]}
+                  component="div"
+                  count={this.state.questions.length}
+                  rowsPerPage={this.state.rowsPerPage}
+                  page={this.state.page}
+                  onChangePage={this.handleChangePage}
+                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                />
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Paper>
+                <Grid
+                  container
+                  // spacing={2}
+                  justify="space-between"
+                  alignItems="center"
+                  className={classes.pageNavigatorContent}
+                >
+                  <Grid item className={classes.pageNavigator}>
+                    <Grid item>
+                      <LightTooltip title={`Pengaturan`}>
+                        <IconButton
+                          disableRipple
+                          className={classes.settingsButton}
+                          onClick={(event) => this.handleMenuOpen(event)}
                         >
-                          <FormControlLabel
-                            label={
+                          <SettingsIcon />
+                        </IconButton>
+                      </LightTooltip>
+                      <Menu
+                        keepMounted
+                        anchorEl={this.state.anchorEl}
+                        open={Boolean(this.state.anchorEl)}
+                        onClose={this.handleMenuClose}
+                        getContentAnchorEl={null}
+                        style={{ marginTop: "10px" }}
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "center",
+                        }}
+                        transformOrigin={{
+                          vertical: "bottom",
+                          horizontal: "center",
+                        }}
+                      >
+                        <MenuItem
+                          button
+                          disabled={this.state.isScheduled}
+                          className={classes.menuVisible}
+                          onClick={this.handlePostToggle}
+                        >
+                          <ListItemIcon>
+                            {!this.state.posted ? (
+                              <VisibilityIcon />
+                            ) : (
+                              <VisibilityOffIcon />
+                            )}
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={
                               !this.state.posted
                                 ? "Tampilkan ke Murid"
                                 : "Sembunyikan dari Murid"
                             }
-                            labelPlacement="start"
-                            control={
-                              <ToggleViewQuiz
-                                checked={this.state.posted}
-                                onChange={this.handlePostToggle}
-                                checkedIcon={<FiberManualRecordIcon />}
-                                icon={<FiberManualRecordIcon />}
-                              />
-                            }
                           />
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip
-                          title={`Salin tautan ${this.state.type} ke Clipboard`}
+                        </MenuItem>
+                        <MenuItem
+                          button
+                          component="a"
+                          className={classes.menuCopy}
+                          onClick={() => {
+                            navigator.clipboard.writeText(linkToShare);
+                            this.handleOpenCopySnackBar();
+                          }}
                         >
-                          <IconButton
-                            onClick={(e) => {
-                              this.copyToClipboard(e, linkToShare);
-                            }}
-                            className={classes.copyToClipboardButton}
-                          >
+                          <ListItemIcon>
                             <LinkIcon />
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={`Salin Tautan ${this.state.type}`}
+                          />
+                        </MenuItem>
+                      </Menu>
                     </Grid>
-                    <Grid
-                      item
-                      container
-                      md={3}
-                      spacing={1}
-                      className={classes.assessmentSettings}
-                    >
+                  </Grid>
+                  <Grid item className={classes.assessmentSettings}>
+                    <Grid container spacing={1}>
                       <Grid item>
                         <Button
                           variant="contained"
@@ -1859,141 +2237,16 @@ class EditAssessment extends Component {
                         <Button
                           variant="contained"
                           type="submit"
-                          className={classes.createAssessmentButton}
+                          className={classes.editAssessmentButton}
                         >
-                          Sunting
+                          Sunting {this.state.type}
                         </Button>
                       </Grid>
                     </Grid>
                   </Grid>
-                </Paper>
-              </Grid>
-            </Hidden>
-            <Hidden mdUp implementation="css">
-              <Grid item>
-                <Paper>
-                  <Grid
-                    container
-                    spacing={2}
-                    justify="space-between"
-                    alignItems="center"
-                    className={classes.pageNavigatorContent}
-                  >
-                    <Grid
-                      item
-                      container
-                      md={9}
-                      alignItems="center"
-                      className={classes.pageNavigator}
-                    >
-                      <Grid item>
-                        <TablePagination
-                          labelRowsPerPage="Soal Per Halaman"
-                          rowsPerPageOptions={[5, 10]}
-                          component="div"
-                          count={this.state.questions.length}
-                          rowsPerPage={this.state.rowsPerPage}
-                          page={this.state.page}
-                          onChangePage={this.handleChangePage}
-                          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-              <Grid
-                container
-                justify="flex-end"
-                style={{ marginTop: "20px" }}
-                spacing={5}
-              >
-                <Grid item>
-                  <Fab
-                    className={classes.settingsButton}
-                    onClick={(event) => this.handleMenuOpen(event)}
-                  >
-                    <SettingsIcon />
-                  </Fab>
-                  <Menu
-                    keepMounted
-                    anchorEl={this.state.anchorEl}
-                    open={Boolean(this.state.anchorEl)}
-                    onClose={this.handleMenuClose}
-                    getContentAnchorEl={null}
-                    style={{ marginTop: "10px" }}
-                    anchorOrigin={{
-                      vertical: "top",
-                      horizontal: "center",
-                    }}
-                    transformOrigin={{
-                      vertical: "bottom",
-                      horizontal: "center",
-                    }}
-                  >
-                    <MenuItem
-                      button
-                      component="a"
-                      className={classes.menuVisible}
-                      onClick={this.handlePostToggle}
-                    >
-                      <ListItemIcon>
-                        {!this.state.posted ? (
-                          <VisibilityIcon />
-                        ) : (
-                          <VisibilityOffIcon />
-                        )}
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          !this.state.posted
-                            ? "Tampilkan ke Murid"
-                            : "Sembunyikan dari Murid"
-                        }
-                      />
-                    </MenuItem>
-                    <MenuItem
-                      button
-                      component="a"
-                      className={classes.menuCopy}
-                      onClick={() => {
-                        navigator.clipboard.writeText(linkToShare);
-                        this.handleOpenCopySnackBar();
-                      }}
-                    >
-                      <ListItemIcon>
-                        <LinkIcon />
-                      </ListItemIcon>
-                      <ListItemText primary={`Copy Link ${this.state.type}`} />
-                    </MenuItem>
-                    <MenuItem
-                      button
-                      component="a"
-                      className={classes.menuCancel}
-                      onClick={this.handleOpenDeleteDialog}
-                    >
-                      <ListItemIcon>
-                        <CancelIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Batal" />
-                    </MenuItem>
-                    <MenuItem
-                      button
-                      type="submit"
-                      className={classes.menuSubmit}
-                      onClick={(e) => {
-                        this.onSubmit(e);
-                      }}
-                    >
-                      <ListItemIcon>
-                        <SendIcon />
-                      </ListItemIcon>
-                      <ListItemText primary={`Sunting ${this.state.type}`} />
-                    </MenuItem>
-                  </Menu>
                 </Grid>
-              </Grid>
-            </Hidden>
+              </Paper>
+            </Grid>
           </Grid>
         </form>
         <Snackbar
@@ -2026,7 +2279,7 @@ class EditAssessment extends Component {
           onClose={this.handleCloseCopySnackBar}
         >
           <MuiAlert onClose={this.handleCloseCopySnackBar} severity="success">
-            Link {this.state.type} berhasil disalin ke Clipboard Anda!
+            Tautan {this.state.type} berhasil disalin ke Clipboard Anda!
           </MuiAlert>
         </Snackbar>
         <Snackbar
@@ -2041,8 +2294,18 @@ class EditAssessment extends Component {
             onClose={this.handleCloseSnackbar}
             severity="error"
           >
-            Masih ada bagian yang belum diisi atau salah, silahkan diperiksa
+            Masih ada bagian yang belum diisi atau salah, silakan diperiksa
             kembali!
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={this.state.fileLimitSnackbar}
+          autoHideDuration={4000}
+          onClose={this.handleFileLimitSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <MuiAlert elevation={6} variant="filled" severity="error">
+            {this.state.over_limit.length} file melebihi batas 5MB!
           </MuiAlert>
         </Snackbar>
       </div>
@@ -2060,6 +2323,7 @@ EditAssessment.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -2068,6 +2332,7 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
   assessmentsCollection: state.assessmentsCollection,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, {
@@ -2075,5 +2340,8 @@ export default connect(mapStateToProps, {
   getAllClass,
   getAllSubjects,
   updateAssessment,
+  validateAssessment,
   clearErrors,
+  getFileAssessment,
+  refreshTeacher
 })(withStyles(styles)(React.memo(EditAssessment)));

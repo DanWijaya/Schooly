@@ -51,7 +51,7 @@ router.post("/saveresethash", async (req, res) => {
         from: `Schoolysystem-no-reply <postmaster@sandboxa9362837cf4f4b1ca75f325216ac2b8e.mailgun.org>`,
         to: foundUser.email,
         subject: `Permohonan Mengubah Kata Sandi di saat ${time_in_string}`,
-        html: `Permohonan untuk mengubah kata sandi akun Schooly dengan alamat email ${foundUser.email} dilakukan. Silahkan klik tautan dibawah ini. <b>Tautan ini hanya berlaku selama 5 menit dan hanya bisa digunakan untuk mengubah kata sandi satu kali.</b> <br/><br/> <a href=http://localhost:5000/akun/ubah-katasandi/${foundUser.passwordReset}>Ubah Kata Sandi</a>`,
+        html: `Permohonan untuk mengubah kata sandi akun Schooly dengan alamat email ${foundUser.email} dilakukan. Silahkan klik tautan dibawah ini. <b>Tautan ini hanya berlaku selama 5 menit dan hanya bisa digunakan untuk mengubah kata sandi satu kali.</b> <br/><br/> <a href=http://${window.location.hostname}:5000/akun/ubah-katasandi/${foundUser.passwordReset}>Ubah Kata Sandi</a>`,
       };
 
       // Send it
@@ -157,22 +157,18 @@ router.post("/changepassword", (req, res) => {
   console.log(email);
   if (Validator.isEmpty(req.body.new_password)) {
     if (Validator.isEmpty(req.body.old_password))
-      return res
-        .status(404)
-        .json({
-          new_password: "Kata sandi baru belum diisi",
-          old_password: "Kata sandi saat ini belum diisi",
-        });
+      return res.status(404).json({
+        new_password: "Kata sandi baru belum diisi",
+        old_password: "Kata sandi saat ini belum diisi",
+      });
 
     return res
       .status(404)
       .json({ new_password: "Kata sandi baru belum diisi" });
   } else if (!Validator.isLength(req.body.new_password, { min: 8, max: 30 })) {
-    return res
-      .status(404)
-      .json({
-        new_password: "Kata sandi harus terdiri dari 8 hingga 30 karakter",
-      });
+    return res.status(404).json({
+      new_password: "Kata sandi harus terdiri dari 8 hingga 30 karakter",
+    });
   } else if (!Validator.equals(new_password, new_password2)) {
     return res
       .status(404)
@@ -191,11 +187,9 @@ router.post("/changepassword", (req, res) => {
       if (isMatch) {
         bcrypt.compare(new_password, user.password).then((isMatch) => {
           if (isMatch)
-            return res
-              .status(404)
-              .json({
-                new_password: "Kata sandi baru dan lama tidak boleh sama",
-              });
+            return res.status(404).json({
+              new_password: "Kata sandi baru dan lama tidak boleh sama",
+            });
 
           // User matched, then hash the new password before saving to Database.
           bcrypt.genSalt(10, (err, salt) => {

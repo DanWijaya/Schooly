@@ -33,7 +33,7 @@ router.post("/create", (req, res) => {
   });
 });
 
-router.post("/edit/:id", (req, res) => {
+router.put("/edit/:id", (req, res) => {
   let id = req.params.id;
 
   const { errors, isValid } = validateSubjectInput(req.body);

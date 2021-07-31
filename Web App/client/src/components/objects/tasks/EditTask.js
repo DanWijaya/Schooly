@@ -8,9 +8,15 @@ import classnames from "classnames";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getOneTask, updateTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { refreshTeacher } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import { clearSuccess } from "../../../actions/SuccessActions"
+import { clearSuccess } from "../../../actions/SuccessActions";
+import {
+  deleteFileTasks,
+  getFileTasks,
+} from "../../../actions/files/FileTaskActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -27,6 +33,7 @@ import {
   MenuItem,
   Paper,
   Select,
+  Snackbar,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -36,6 +43,7 @@ import {
 } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
+import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {
   FaFile,
@@ -51,10 +59,11 @@ const path = require("path");
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
-    justifyContent: "center",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
   },
   content: {
     padding: "20px",
@@ -112,7 +121,6 @@ const styles = (theme) => ({
   },
   editTaskButton: {
     width: "100%",
-    marginTop: "20px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -120,6 +128,24 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+    },
+    marginRight: "7.5px",
+  },
+  customSpacing: {
+    [theme.breakpoints.down("sm")]: {
+      marginTop: theme.spacing(2),
+    }
+  },
+  zeroHeightHelperText: {
+    height: "0",
+    display: "flex" // untuk men-disable "collapsing margin"
+  }
 });
 
 function LampiranFile(props) {
@@ -172,15 +198,17 @@ function LampiranFile(props) {
             }
             secondary={filetype}
           />
-          <IconButton
-            size="small"
-            className={classes.deleteIconButton}
-            onClick={(e) => {
-              handleLampiranDelete(e, i);
-            }}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
+          <LightTooltip title="Hapus Lampiran">
+            <IconButton
+              size="small"
+              className={classes.deleteIconButton}
+              onClick={(e) => {
+                handleLampiranDelete(e, i);
+              }}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </LightTooltip>
         </ListItem>
       </Paper>
     </Grid>
@@ -199,37 +227,49 @@ class EditTask extends Component {
       classChanged: false,
       focused: false,
       description: "",
+      originalFileLampiran: [],
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
+      fileLimitSnackbar: false,
+      over_limit: [],
       anchorEl: null,
       openUploadDialog: null,
+      openDeleteDialog: null,
       errors: {},
+      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
+      subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
+      success: null
     };
   }
 
   tugasUploader = React.createRef(null);
 
   componentDidMount() {
-    this.props.getOneTask(this.props.match.params.id);
+    const { id } = this.props.match.params;
+    this.props.getOneTask(id);
     this.props.getAllClass();
     this.props.getAllSubjects();
+    this.props.getFileTasks(id).then((res) => {
+      this.setState({
+        fileLampiran: res,
+        originalFileLampiran: res,
+      });
+    });
+    this.props.refreshTeacher(this.props.auth.user._id);
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
-    this.props.clearSuccess()
+  componentWillUnmount() {
+    this.props.clearErrors();
+    this.props.clearSuccess();
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { tasksCollection, errors } = nextProps;
+    const { tasksCollection } = nextProps;
 
-    // pass errorsnya false makanya berhasil
-    if (!nextProps.errors) {
-      this.handleOpenUploadDialog();
-    }
-
-    if (Boolean(tasksCollection) && errors) {
+    if (Boolean(tasksCollection)) {
       this.setState({
         name: tasksCollection.name,
         subject: tasksCollection.subject,
@@ -238,14 +278,81 @@ class EditTask extends Component {
           ? tasksCollection.class_assigned
           : [],
         description: tasksCollection.description,
-        fileLampiran: Boolean(tasksCollection.lampiran)
-          ? tasksCollection.lampiran
-          : [],
+        // fileLampiran: Boolean(tasksCollection.lampiran) ? tasksCollection.lampiran : []
         // fileLampiran must made like above soalnya because maybe nextProps.tasksCollection is still a plain object.
         // so need to check if nextProps.tasksCollection is undefined or not because when calling fileLAmpiran.length, there will be an error.
       });
     }
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas dan mata pelajaran
+    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
+      const selectedTaskProps = this.props.tasksCollection;
+
+      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
+      selectedTaskProps && selectedTaskProps.constructor === Object && (Object.keys(selectedTaskProps).length !== 0)) {
+        
+        let all_classes_obj = {};
+        this.props.classesCollection.all_classes.forEach((classInfo) => {
+          all_classes_obj[classInfo._id] = classInfo.name; 
+        });
+
+        // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
+        let newClassOptions = [];
+        if (this.props.auth.user.class_to_subject) {
+          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+            if (subjectIdArray.includes(selectedTaskProps.subject)) {
+              newClassOptions.push({ _id: classId, name: all_classes_obj[classId] });
+            }
+          }
+        }
+        
+        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+      }
+    }
+
+    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
+      const selectedTaskProps = this.props.tasksCollection;
+
+      if ( this.props.subjectsCollection.all_subjects && ( this.props.subjectsCollection.all_subjects.length !== 0) &&
+      selectedTaskProps && selectedTaskProps.constructor === Object && (Object.keys(selectedTaskProps).length !== 0)) {
+        
+        let all_subjects_obj = {};
+         this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
+          all_subjects_obj[subjectInfo._id] = subjectInfo.name; 
+        });
+  
+        // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
+        let subjectMatrix = [];
+        if (this.props.auth.user.class_to_subject) {
+          for (let classId of selectedTaskProps.class_assigned) {
+            if (this.props.auth.user.class_to_subject[classId]) {
+              subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+            }
+          }
+        }
+        let subjects = [];
+        if (subjectMatrix.length !== 0) {
+          subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+            return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
+          });
+        }
+
+        // menambahkan matpel tersebut ke opsi matpel
+        let newSubjectOptions = [];
+        subjects.forEach((subjectId) => {
+          newSubjectOptions.push({ _id: subjectId, name: all_subjects_obj[subjectId] });
+        })
+
+        this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
+      }
+    }
+  }
+
+  onDateChange = (date) => {
+    this.setState({ deadline: date });
+  };
 
   onSubmit = (e, classesOptions) => {
     e.preventDefault();
@@ -275,49 +382,80 @@ class EditTask extends Component {
       deadline: this.state.deadline,
       subject: this.state.subject,
       description: this.state.description,
+      class_assigned: this.state.class_assigned,
+      lampiran: Array.from(this.state.fileLampiran),
       errors: {},
     };
-
-    if (classChanged) taskObject.class_assigned = classesSelected;
-    // When the classes is changed
-    else taskObject.class_assigned = class_assigned; // When it has no change
 
     let formData = new FormData();
     for (var i = 0; i < fileLampiranToAdd.length; i++) {
       console.log(this.state.fileLampiran[i]);
       formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i]);
     }
-    this.props.updateTask(
-      formData,
-      fileLampiranToDelete,
-      this.props.tasksCollection.lampiran,
-      taskObject,
-      id,
-      this.props.history
-    );
-
-    this.setState({ fileLampiranToDelete: [] });
+    console.log(taskObject);
+    this.handleOpenUploadDialog()
+    this.props
+      .updateTask(
+        formData,
+        fileLampiranToDelete,
+        this.props.tasksCollection.lampiran,
+        taskObject,
+        id,
+        this.props.history
+      )
+      .then((res) => this.setState({ success: res }))
+      .catch((err) => {
+        this.handleCloseUploadDialog()
+        this.setState({
+          errors: err,
+          fileLampiran: [
+            ...this.state.originalFileLampiran,
+            ...this.state.fileLampiranToAdd,
+          ],
+          fileLampiranToDelete: [],
+        })
+      }
+      );
   };
 
   handleLampiranUpload = (e) => {
-    const files = e.target.files;
-    let temp;
-    let tempToAdd;
-
-    if (this.state.fileLampiran.length === 0)
-      this.setState({fileLampiran: Array.from(files), fileLampiranToAdd: Array.from(files)})
-    else {
+    const files = Array.from(e.target.files);
+    if (this.state.fileLampiran.length === 0) {
+      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+      let allowed_file = files.filter(
+        (file) => file.size / Math.pow(10, 6) <= 10
+      );
+      this.setState({
+        fileLampiran: allowed_file,
+        fileLampiranToAdd: allowed_file,
+        over_limit: over_limit,
+        fileLimitSnackbar: over_limit.length > 0,
+      });
+    } else {
       if (files.length !== 0) {
-        temp = [...this.state.fileLampiran, ...Array.from(files)];
-        tempToAdd = [...this.state.fileLampiranToAdd, ...Array.from(files)]
-        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
+        let allowed_file = files.filter(
+          (file) => file.size / Math.pow(10, 6) <= 10
+        );
+        let over_limit = files.filter(
+          (file) => file.size / Math.pow(10, 6) > 10
+        );
+
+        let temp = [...this.state.fileLampiran, ...allowed_file];
+        let file_to_upload = [...this.state.fileLampiranToAdd, ...allowed_file];
+        allowed_file = temp;
+        this.setState({
+          fileLampiran: allowed_file,
+          fileLampiranToAdd: file_to_upload,
+          over_limit: over_limit,
+          fileLimitSnackbar: over_limit.length > 0,
+        });
       }
     }
     document.getElementById("file_control").value = null;
   };
 
   handleLampiranDelete = (e, i, name) => {
-    e.preventDefault()
+    e.preventDefault();
     // console.log("Index is: ", i)
     let temp = Array.from(this.state.fileLampiran);
     let tempToDelete = this.state.fileLampiranToDelete;
@@ -355,33 +493,109 @@ class EditTask extends Component {
     this.setState({ anchorEl: null });
   };
 
+  handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ fileLimitSnackbar: false });
+  };
+
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
   };
 
-  onChange = (e, otherfield) => {
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  }
+
+  handleOpenDeleteDialog = () => {
+    this.setState({ openDeleteDialog: true });
+  };
+
+  handleCloseDeleteDialog = () => {
+    this.setState({ openDeleteDialog: false });
+  };
+
+  onChange = (e, otherfield=null) => {
+    let field = otherfield ? otherfield : e.target.id;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+    
     if(otherfield){
-      // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
-      this.setState({ [otherfield]: e.target.value });
+      if (otherfield === "subject") { // jika guru memilih mata pelajaran
+        // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
+        let newClassOptions = [];
+        if (this.props.auth.user.class_to_subject) {
+          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+            if (subjectIdArray.includes(e.target.value)) {
+              newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+            }
+          }
+        }
+
+        this.setState({ subject: e.target.value, classOptions: newClassOptions });
+
+      } else if (otherfield === "class_assigned") { // jika guru memilih kelas
+        let selectedClasses = e.target.value;
+
+        if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
+          this.setState((prevState, props) => {
+            return {
+              class_assigned: selectedClasses,
+              // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
+              subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
+            }
+          });
+        } else { // jika guru menambahkan atau mengurangi pilihan kelas
+          // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
+          let subjectMatrix = [];
+          if (this.props.auth.user.class_to_subject) {
+            for (let classId of selectedClasses) {
+              if (this.props.auth.user.class_to_subject[classId]) {
+                subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+              }
+            }
+          }
+          let subjects = [];
+          if (subjectMatrix.length !== 0) {
+            subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
+              return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
+            });
+          }
+
+          // menambahkan matpel tersebut ke opsi matpel
+          let newSubjectOptions = [];
+          subjects.forEach((subjectId) => {
+            newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
+          })
+
+          this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
+        }
+      } else {
+        // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
+        this.setState({ [otherfield]: e.target.value });
+      }
     } else {
+      // let field = e.target.id ? e.target.id : otherfield;
+      // if (this.state.errors[field]) {
+      //   this.setState({ errors: { ...this.state.errors, [field]: null } });
+      // }
+      // this.setState({ [field]: e.target.value });
+
       this.setState({ [e.target.id]: e.target.value });
     }
   };
 
-  onDateChange = (date) => {
-    this.setState({ deadline: date})
-  }
-
   render() {
-    const { fileLampiran, class_assigned } = this.state;
-    const { classes, errors, success } = this.props;
+    const { fileLampiran, class_assigned, errors, success } = this.state;
+    const { classes } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
+    // const task_id = this.props.match.params.id;
 
-    const task_id = this.props.match.params.id;
-
-    let classIds = []
+    let classIds = [];
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {
@@ -466,7 +680,17 @@ class EditTask extends Component {
             success={success}
             messageUploading="Tugas sedang disunting"
             messageSuccess="Tugas telah disunting"
-            redirectLink="/daftar-tugas"
+            redirectLink={`/tugas-guru/${this.props.match.params.id}`}
+          />
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType={"Sunting"}
+            itemName={this.state.name}
+            // isLink={true}
+            // redirectLink="/daftar-kuis"
+            redirectLink={`/daftar-tugas`}
+            isWarning={false}
           />
           <Paper>
             <div className={classes.content}>
@@ -496,11 +720,17 @@ class EditTask extends Component {
                         value={this.state.name}
                         error={errors.name}
                         type="text"
-                        helperText={errors.name}
+                        // helperText={errors.name}
                         className={classnames("", {
                           invalid: errors.name,
                         })}
                       />
+                      {errors.name
+                        ?
+                        <div className={classes.zeroHeightHelperText}>
+                          <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
+                        </div>
+                        : null}
                     </Grid>
                     <Grid item>
                       <Typography
@@ -521,11 +751,17 @@ class EditTask extends Component {
                         value={this.state.description}
                         error={errors.description}
                         type="text"
-                        helperText={errors.description}
+                        // helperText={errors.description}
                         className={classnames("", {
                           invalid: errors.description,
                         })}
                       />
+                      {errors.description
+                        ?
+                        <div className={classes.zeroHeightHelperText}>
+                          <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                        </div>
+                        : null}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -558,18 +794,25 @@ class EditTask extends Component {
                               this.onChange(event, "subject");
                             }}
                           >
-                            {all_subjects.map((subject) => (
-                              <MenuItem value={subject._id}>
+                          {(this.state.subjectOptions !== null) ? (
+                            this.state.subjectOptions.map((subject) => (
+                              <MenuItem key={subject._id} value={subject._id}>
                                 {subject.name}
                               </MenuItem>
-                            ))}
+                            ))
+                          ) : (
+                            null
+                          )}
                           </Select>
-                          <FormHelperText>
-                            {Boolean(errors.subject) ? errors.subject : null}
-                          </FormHelperText>
+                          {Boolean(errors.subject)
+                            ?
+                            <div className={classes.zeroHeightHelperText}>
+                              <FormHelperText variant="outlined" error>{errors.subject}</FormHelperText>
+                            </div>
+                            : null}
                         </FormControl>
                       </Grid>
-                      <Grid item xs={12} md={6}>
+                      <Grid item xs={12} md={6} className={classes.customSpacing}>
                         <Typography
                           component="label"
                           for="deadline"
@@ -589,12 +832,24 @@ class EditTask extends Component {
                             ampm={false}
                             okLabel="Simpan"
                             cancelLabel="Batal"
-                            minDateMessage="Batas waktu harus waktu yang akan datang"
+                            minDateMessage="Harus waktu yang akan datang"
                             invalidDateMessage="Format tanggal tidak benar"
                             id="deadline"
                             value={this.state.deadline}
-                            onChange={(date) => this.onChange(date, "deadline")}
+                            helperText={null}
+                            onChange={(date) => this.onDateChange(date)}
+                            onError={(err) => {
+                              if (errors.deadline !== err) {
+                                this.setState({ errors: { ...errors, deadline: err } });
+                              }
+                            }}
                           />
+                          {errors.deadline
+                            ?
+                            <div className={classes.zeroHeightHelperText}>
+                              <FormHelperText variant="outlined" error>{errors.deadline}</FormHelperText>
+                            </div>
+                            : null}
                         </MuiPickersUtilsProvider>
                       </Grid>
                     </Grid>
@@ -621,19 +876,11 @@ class EditTask extends Component {
                           }}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
-                              {selected.map((id) => {
-                                let name;
-                                for (var i in all_classes) {
-                                  // i is the index
-                                  if (all_classes[i]._id === id) {
-                                    name = all_classes[i].name;
-                                    break;
-                                  }
-                                }
+                              {selected.map((classId) => {
                                 return (
                                   <Chip
-                                    key={id}
-                                    label={name}
+                                    key={classId}
+                                    label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
                                     className={classes.chip}
                                   />
                                 );
@@ -641,20 +888,22 @@ class EditTask extends Component {
                             </div>
                           )}
                         >
-                          {!all_classes.length
-                            ? null
-                            : all_classes.map((kelas) => (
-                                <MenuItem value={kelas._id} selected>
-                                  {kelas.name}
-                                </MenuItem>
-                              ))}
+                          {(this.state.classOptions !== null) ? (
+                            this.state.classOptions.map((classInfo) => (
+                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
+                                {classInfo.name}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            null
+                          )}
                         </Select>
-                        <FormHelperText>
-                          {Boolean(errors.class_assigned) &&
-                          class_assigned.length === 0
-                            ? errors.class_assigned
-                            : null}
-                        </FormHelperText>
+                        {Boolean(errors.class_assigned)
+                          ?
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                          </div>
+                          : null}
                       </FormControl>
                     </Grid>
                     <Grid item>
@@ -690,7 +939,14 @@ class EditTask extends Component {
                 style={{ display: "flex", justifyContent: "flex-end" }}
                 className={classes.content}
               >
-                <div>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <Button
+                    variant="contained"
+                    className={classes.cancelButton}
+                    onClick={this.handleOpenDeleteDialog}
+                  >
+                    Batal
+                  </Button>
                   <Button
                     variant="contained"
                     type="submit"
@@ -702,6 +958,21 @@ class EditTask extends Component {
               </div>
             </form>
           </Paper>
+          <Snackbar
+            open={this.state.fileLimitSnackbar}
+            autoHideDuration={4000}
+            onClose={this.handleCloseErrorSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              onClose={this.handleCloseSnackbar}
+              severity="error"
+            >
+              {this.state.over_limit.length} file melebihi batas 10MB!
+            </MuiAlert>
+          </Snackbar>
         </div>
       );
     } else {
@@ -723,12 +994,6 @@ EditTask.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  getOneTask: PropTypes.func.isRequired,
-  updateTask: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  clearSuccess: PropTypes.func.isRequired,
-  getAllClass: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -740,6 +1005,13 @@ const mapStateToProps = (state) => ({
   subjectsCollection: state.subjectsCollection,
 });
 
-export default connect(
-    mapStateToProps, { getOneTask, updateTask, getAllClass, getAllSubjects, clearErrors, clearSuccess }
-) (withStyles(styles)(EditTask))
+export default connect(mapStateToProps, {
+  getOneTask,
+  updateTask,
+  getAllClass,
+  getAllSubjects,
+  clearErrors,
+  clearSuccess,
+  getFileTasks,
+  refreshTeacher
+})(withStyles(styles)(EditTask));

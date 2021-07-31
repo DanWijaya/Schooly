@@ -8,13 +8,19 @@ import {
   Grid,
   IconButton,
   Typography,
+  Snackbar,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import CloseIcon from "@material-ui/icons/Close";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-
+import {
+  uploadFileAvatar,
+  getFileAvatar,
+} from "../../../actions/files/FileAvatarActions";
+import { connect } from "react-redux";
+import MuiAlert from "@material-ui/lab/Alert";
 const useStyles = makeStyles((theme) => ({
   avatar: {
     width: theme.spacing(25),
@@ -82,25 +88,38 @@ function ProfilePictureEditorDialog(props) {
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
+
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setProfileImg(null);
   };
 
-  const { user } = props;
-  const { updateAvatar } = props;
+  const {
+    user,
+    updateAvatar,
+    uploadFileAvatar,
+    avatar,
+    setFileLimitSnackbar,
+  } = props;
 
   const handleImageUpload = (e) => {
+    console.log(e.target.files);
     const [file] = e.target.files;
-    setProfileImg(e.target.files[0]);
     if (file) {
-      const reader = new FileReader();
-      const { current } = uploadedImage;
-      current.file = file;
-      reader.onload = (e) => {
-        current.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
+      if (file.size / Math.pow(10, 6) > 5) {
+        console.log("file size is over 5MB");
+        imageUploader.current.value = null;
+        setFileLimitSnackbar(true);
+      } else {
+        const reader = new FileReader();
+        const { current } = uploadedImage;
+        current.file = file;
+        reader.onload = (e) => {
+          current.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        setProfileImg(file);
+      }
     }
   };
 
@@ -109,27 +128,19 @@ function ProfilePictureEditorDialog(props) {
     let formData = new FormData();
     formData.append("avatar", profileImg);
 
-    let userData = user;
     let userId = user._id;
-
-    updateAvatar(userData, userId, formData);
-    props.handleOpenAlert();
-
-    handleCloseDialog();
+    uploadFileAvatar(userId, formData).then((res) => {
+      props.handleOpenAlert();
+      handleCloseDialog();
+    });
+    // Fitur_4 punya:
+    // updateAvatar(userData, userId, formData);
+    
   };
 
   function onImgLoad({ target: img }) {
     setAvatarDimensions({ height: img.offsetHeight, width: img.offsetWidth });
   }
-
-  console.log(
-    "width is smaller",
-    avatarDimensions.width < avatarDimensions.height
-  );
-  console.log(
-    "height is smaller",
-    avatarDimensions.height < avatarDimensions.width
-  );
 
   const imageUploadPreview = () => {
     let avatarImgClass;
@@ -141,13 +152,14 @@ function ProfilePictureEditorDialog(props) {
     }
 
     if (!profileImg) {
-      if (user.avatar) {
+      if (avatar) {
         return (
           <Avatar className={classes.avatar}>
             <img
               alt="profile"
               onLoad={onImgLoad}
-              src={`/api/upload/avatar/${user.avatar}`}
+              src={avatar}
+              // src={`/api/upload/avatar/${user.avatar}`}
               ref={uploadedImage}
               className={avatarImgClass}
             />
@@ -282,4 +294,11 @@ function ProfilePictureEditorDialog(props) {
   );
 }
 
-export default ProfilePictureEditorDialog;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  classesCollection: state.classesCollection,
+});
+
+export default connect(mapStateToProps, { uploadFileAvatar, getFileAvatar })(
+  ProfilePictureEditorDialog
+);

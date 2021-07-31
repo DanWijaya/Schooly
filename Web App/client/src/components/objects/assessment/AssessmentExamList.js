@@ -8,9 +8,11 @@ import {
   getAllAssessments,
   deleteAssessment,
 } from "../../../actions/AssessmentActions";
+import { getTeachers } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Divider,
@@ -63,7 +65,8 @@ function createData(
   class_assigned,
   type,
   createdAt,
-  submissions
+  submissions,
+  teacher_name
 ) {
   return {
     _id,
@@ -75,6 +78,7 @@ function createData(
     type,
     createdAt,
     submissions,
+    teacher_name
   };
 }
 
@@ -94,7 +98,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// ANCHOR stablesort function
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -174,7 +177,7 @@ function AssessmentListToolbar(props) {
     // <div className={classes.toolbar}>
     <div className={classes.toolbar}>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {searchBarFocus ? null : (
             <div
               style={{
@@ -188,7 +191,7 @@ function AssessmentListToolbar(props) {
             </div>
           )}
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <div
             style={{
               display: "flex",
@@ -200,7 +203,7 @@ function AssessmentListToolbar(props) {
             <Typography variant="h4">Daftar Ujian</Typography>
           </div>
         </Hidden>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {
             searchBarFocus ? (
               <div style={{ display: "flex" }}>
@@ -220,7 +223,7 @@ function AssessmentListToolbar(props) {
                   onChange={onChange}
                   autoFocus
                   onClick={(e) => setSearchBarFocus(true)}
-                  placeholder="Search Ujian"
+                  placeholder="Cari Ujian"
                   // onBlur={() => setSearchBarFocus(false)}
                   style={{
                     maxWidth: "200px",
@@ -279,8 +282,8 @@ function AssessmentListToolbar(props) {
           }
         </Hidden>
       </div>
-      <div style={{ display: "flex" }}>
-        <Hidden xsDown implementation="css">
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Hidden smDown implementation="css">
           <TextField
             // fullWidth
             variant="outlined"
@@ -289,7 +292,7 @@ function AssessmentListToolbar(props) {
             onChange={onChange}
             onClick={() => setSearchBarFocus(true)}
             onBlur={() => setSearchBarFocus(false)}
-            placeholder="Search Ujian"
+            placeholder="Cari Ujian"
             // onBlur={() => setSearchBarFocus(false)}
             style={{
               maxWidth: "250px",
@@ -332,28 +335,28 @@ function AssessmentListToolbar(props) {
             }}
           />
         </Hidden>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {role === "Student" ? null : (
-            <LightTooltip title="Buat Kuis/Ujian">
-              <Link to="/buat-kuis-ujian">
+            <LightTooltip title="Buat Ujian">
+              <Link to="/buat-ujian">
                 <Fab size="small" className={classes.newAssessmentButton}>
-                  <FaTasks className={classes.newAssessmentIconMobile} />
+                  <BsClipboardData className={classes.newAssessmentIconMobile}/>
+                  {/* <FaTasks className={classes.newAssessmentIconMobile} /> */}
                 </Fab>
               </Link>
             </LightTooltip>
           )}
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           {role === "Student" ? null : (
-            // ANCHOR contoh tombol round edge
-            <Link to="/buat-kuis-ujian">
+            <Link to="/buat-ujian">
               <Fab
                 size="medium"
                 variant="extended"
                 className={classes.newAssessmentButton}
               >
-                <FaTasks className={classes.newAssessmentIconDesktop} />
-                Buat Kuis/Ujian
+                <BsClipboardData className={classes.newAssessmentIconDesktop}/>
+                Buat Ujian
               </Fab>
             </Link>
           )}
@@ -384,11 +387,11 @@ function AssessmentListToolbar(props) {
             <MenuItem
               key={headCell.id}
               sortDirection={orderBy === headCell.id ? order : false}
+              onClick={createSortHandler(headCell.id)}
             >
               <TableSortLabel
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
               >
                 {headCell.label}
                 {orderBy === headCell.id ? (
@@ -419,7 +422,10 @@ AssessmentListToolbar.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     padding: "10px",
   },
   toolbar: {
@@ -457,13 +463,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   newAssessmentIconDesktop: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
+    width: theme.spacing(2.8),
+    height: theme.spacing(2.8),
     marginRight: "7.5px",
   },
   newAssessmentIconMobile: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
+    width: theme.spacing(2.8),
+    height: theme.spacing(2.8),
   },
   goSearchIconMobile: {
     width: theme.spacing(2.5),
@@ -529,8 +535,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "stretch",
-    justifyContent: "space-between",
-    flexWrap: "nowrap",
+    "&:hover": {
+      cursor: "pointer"
+    }
   },
   titleIcon: {
     fontSize: "28px",
@@ -551,6 +558,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
     marginRight: "10px",
   },
+  listItem: {
+    padding: "6px 16px"
+  }
 }));
 
 function AssessmentList(props) {
@@ -572,17 +582,19 @@ function AssessmentList(props) {
     deleteAssessment,
     getAllClass,
     getAllSubjects,
+    getTeachers
   } = props;
   const { all_assessments } = props.assessmentsCollection;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
-  const { user } = props.auth;
+  const { user, all_teachers_map } = props.auth;
   // Fitur 2 -- Dialog
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
+  const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
-  const handleOpenDialog = (title, subject, start_date, end_date) => {
-    setCurrentDialogInfo({ title, subject, start_date, end_date });
+  const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
+    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
     setOpenDialog(true);
     console.log(title);
   };
@@ -591,10 +603,9 @@ function AssessmentList(props) {
     setOpenDialog(false);
   };
 
-  // ANCHOR rows
   var rows = [];
   const assessmentRowItem = (data) => {
-    if (data.type === "Ujian") {
+    if (data.type === "Ujian" && all_teachers_map instanceof Map && all_teachers_map.get(data.author_id)) {
       rows.push(
         createData(
           data._id,
@@ -605,7 +616,8 @@ function AssessmentList(props) {
           data.class_assigned,
           data.type,
           data.createdAt,
-          data.submissions
+          data.submissions,
+          all_teachers_map.get(data.author_id).name
         )
       );
     }
@@ -616,10 +628,19 @@ function AssessmentList(props) {
       getAllAssessments();
       getAllClass("map");
       getAllSubjects("map");
+      getTeachers("map");
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+  
+  React.useEffect(() => {
+    // Untuk muculin delete snackbar pas didelete dari view page
+    if(props.location.openDeleteSnackbar){
+      handleOpenDeleteSnackbar()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const retrieveAssessments = () => {
     // If all_assessments is not undefined or an empty array
@@ -671,7 +692,12 @@ function AssessmentList(props) {
   retrieveAssessments();
 
   const onDeleteAssessment = (id, type) => {
-    deleteAssessment(id, type);
+    deleteAssessment(id, type).then((res) => {
+      console.log(res);
+      getAllAssessments();
+      handleOpenDeleteSnackbar();
+      handleCloseDeleteDialog();
+    });
   };
 
   // Delete Dialog
@@ -685,6 +711,7 @@ function AssessmentList(props) {
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
+  
 
   const handleOpenCopySnackBar = (type) => {
     console.log("Open di RUN");
@@ -709,6 +736,17 @@ function AssessmentList(props) {
     handleOpenCopySnackBar(type);
   };
 
+  const handleOpenDeleteSnackbar = () => {
+    setOpenDeleteSnackbar(true);
+  }
+
+  const handleCloseDeleteSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenDeleteSnackbar(false);
+  };
+  
   const workStatus = (assessment) => {
     console.log(assessment);
     let workStatus = !assessment.submissions
@@ -750,10 +788,16 @@ function AssessmentList(props) {
             align="center"
             style={{ marginTop: "25px" }}
           >
-            Mulai : {currentDialogInfo.start_date}
+            Guru: {currentDialogInfo.teacher_name}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
+          >
+            Mulai: {currentDialogInfo.start_date}
           </Typography>
           <Typography variant="subtitle1" align="center">
-            Selesai : {currentDialogInfo.end_date}
+            Selesai: {currentDialogInfo.end_date}
           </Typography>
           <Typography
             variant="subtitle2"
@@ -761,8 +805,8 @@ function AssessmentList(props) {
             color="textSecondary"
             style={{ marginTop: "10px", textAlign: "center" }}
           >
-            Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata
-            Pelajaran Terkait
+            Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
+            pelajaran terkait.
           </Typography>
         </div>
       </Dialog>
@@ -781,11 +825,8 @@ function AssessmentList(props) {
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
-        {/* REVIEW stablesort element*/}
         {rows.length === 0 ? (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
+          <Empty />
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
@@ -793,7 +834,8 @@ function AssessmentList(props) {
               user.role === "Student"
                 ? `/ujian-murid/${row._id}`
                 : `/ujian-guru/${row._id}`;
-            let linkToShare = `http://localhost:3000/ujian-murid/${row._id}`;
+                
+            let linkToShare = `http://${window.location.host}/ujian-murid/${row._id}`;
             return (
               <Grid item>
                 {user.role === "Teacher" ? (
@@ -860,7 +902,7 @@ function AssessmentList(props) {
                             </LightTooltip>
                           </Grid>
                           <Grid item>
-                            <LightTooltip title="Copy Link">
+                            <LightTooltip title="Salin Tautan">
                               <IconButton
                                 size="small"
                                 className={classes.copyToClipboardButton}
@@ -963,6 +1005,7 @@ function AssessmentList(props) {
                       handleOpenDialog(
                         row.assessmenttitle,
                         all_subjects_map.get(row.subject),
+                        row.teacher_name,
                         moment(row.start_date)
                           .locale("id")
                           .format("DD MMM YYYY, HH.mm"),
@@ -986,11 +1029,7 @@ function AssessmentList(props) {
                         horizontal: "right",
                       }}
                     >
-                      <ListItem
-                        button
-                        component="a"
-                        className={classes.listItem}
-                      >
+                      <ListItem className={classes.listItem}>
                         <Hidden smUp implementation="css">
                           <ListItemText
                             primary={
@@ -1056,14 +1095,34 @@ function AssessmentList(props) {
           })
         )}
       </Grid>
-      {/* </div> */}
+
+      {/* Snackbar untuk copy link murid */}
       <Snackbar
         open={copySnackbarOpen}
         autoHideDuration={3000}
         onClose={handleCloseCopySnackBar}
       >
         <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
-          Link {type} berhasil disalin ke Clipboard Anda!
+          Tautan {type} berhasil disalin ke Clipboard Anda!
+        </MuiAlert>
+      </Snackbar>
+
+      {/* Snackbar untuk delete assessment */}
+      <Snackbar
+        open={openDeleteSnackbar}
+        autoHideDuration={4000}
+        onClose={(event, reason) => {
+          handleCloseDeleteSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseDeleteSnackbar(event, reason);
+          }}
+        >
+          Ujian berhasil dihapus
         </MuiAlert>
       </Snackbar>
     </div>
@@ -1074,6 +1133,7 @@ AssessmentList.propTypes = {
   getAllAssessments: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   deleteAssessment: PropTypes.func.isRequired,
+  getTeachers: PropTypes.func.isRequired,
   assessmentsCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
@@ -1094,4 +1154,5 @@ export default connect(mapStateToProps, {
   deleteAssessment,
   getAllClass,
   getAllSubjects,
+  getTeachers
 })(AssessmentList);
