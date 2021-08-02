@@ -16,7 +16,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-// import UserMenuu from "../../misc/menu-user/UserMenuu";
+import UserMenuu from "../../misc/menu-user/UserMenuu";
 import {
   Avatar,
   Button,
@@ -177,73 +177,7 @@ function ManageUsersToolbar(props) {
   const onClear = (e) => {
     updateSearchFilter("");
   };
-  const Usermenu2 = (props) => {
-    const { options, row } = props
-    const { handleOpenDeleteDialog, handleOpenDisableDialog } = props
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-    const handleClose = (e) => {
-      setAnchorEl(null);
-    };
-    return (
-      <div>
-        <IconButton
-          aria-label="more"
-          aria-controls="long-menu"
-          aria-haspopup="true"
-          onClick={handleClick}
-        >
-          <MoreVertIcon />
-        </IconButton>
-        <Menu
-          id="long-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={open}
-          PaperProps={{
-            style: {
-              width: '20ch',
-            },
-          }}
-        >
-          {options.map((option) => {
-            return (
-              <MenuItem key={option} selected={option === 'Detail'}>
-                {option}
-                {option === "Nonaktifkan" ? (
-                  <Link
-                    to={{
-                      pathname: `/lihat-profil/${row._id}`,
-                    }}
-                  />
-                ) : (
-                  <IconButton
-                    onClick={(e) => {
-                      console.log("masuk")
-                      if (option == 'Hapus') {
-                        console.log("hapusss")
-                        handleOpenDeleteDialog(e, row._id, row.name);
-                      } else if (option == 'Detail') {
-                        console.log("Detail")
-                        handleOpenDisableDialog(e, row._id, row.name);
-                      } else {
-                        handleOpenDisableDialog(e, row._id, row.name);
-                      }
 
-                    }}
-                  />
-                )
-                }
-              </MenuItem>
-            )
-          })}
-        </Menu>
-      </div>
-    );
-  }
 
   return (
     <Toolbar className={classes.toolbar}>
@@ -369,14 +303,21 @@ function ManageUsersToolbar(props) {
         ) : null}
         <>
           {CheckboxDialog("Delete", "Student")}
-          <LightTooltip title="Hapus Pengguna Tercentang">
+          {/* <LightTooltip title="Hapus Pengguna Tercentang">
             <IconButton
               className={classes.profileDeleteButton}
               onClick={(e) => OpenDialogCheckboxDelete(e, "Student")}
             >
               <DeleteIcon fontSize="default" />
             </IconButton>
-          </LightTooltip>
+          </LightTooltip> */}
+          <UserMenuu
+            options={["Hapus"]}
+            row={null}
+            handleOpenDeleteDialog={OpenDialogCheckboxDelete}
+            handleOpenDisableDialog={null}
+
+          />
         </>
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -432,7 +373,8 @@ function ManageUsersToolbar(props) {
         </Hidden>
         {role === "Student" ? (
           <>
-            {lengthListCheckbox === 0 ? (
+            {
+              // lengthListCheckbox === 0 ? (
               <>
                 <LightTooltip
                   title={
@@ -501,19 +443,20 @@ function ManageUsersToolbar(props) {
                   ))}
                 </Menu>
               </>
-            ) : (
-              <>
-                {CheckboxDialog("Delete", "Student")}
-                <LightTooltip title="Hapus Pengguna Tercentang">
-                  <IconButton
-                    className={classes.profileDeleteButton}
-                    onClick={(e) => OpenDialogCheckboxDelete(e, "Student")}
-                  >
-                    <DeleteIcon fontSize="default" />
-                  </IconButton>
-                </LightTooltip>
-              </>
-            )}
+              // ) : (
+              //   <>
+              //     {CheckboxDialog("Delete", "Student")}
+              //     <LightTooltip title="Hapus Pengguna Tercentang">
+              //       <IconButton
+              //         className={classes.profileDeleteButton}
+              //         onClick={(e) => OpenDialogCheckboxDelete(e, "Student")}
+              //       >
+              //         <DeleteIcon fontSize="default" />
+              //       </IconButton>
+              //     </LightTooltip>
+              //   </>
+              // )
+            }
           </>
         ) : (
           <>
@@ -675,12 +618,10 @@ function ManageUsersToolbar(props) {
 
 function Usermenu(props) {
   const { options, row } = props
-  const { handleOpenDeleteDialog, handleOpenDisableDialog, handleLink } = props
+  const { handleOpenDeleteDialog, handleOpenDisableDialog } = props
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const handleDetail = (id) => {
-    Redirect(`/lihat-profil/${id}`);
-  }
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -1554,17 +1495,31 @@ function ManageUsers(props) {
                       </Hidden>
                       <Hidden xsDown implementation="css">
                         <Typography variant="h6" id={labelId}>
-                          {row.name}
+                          <Link
+                            style={{ color: 'black' }}
+                            to={{
+                              pathname: `/lihat-profil/${row._id}`,
+                            }}
+                          >
+                            {row.name}
+                          </Link>
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                          {row.email}
+                          <Link
+                            style={{ color: 'black' }}
+                            to={{
+                              pathname: `/lihat-profil/${row._id}`,
+                            }}
+                          >
+                            {row.email}
+                          </Link>
                         </Typography>
                       </Hidden>
                     </Grid>
 
                     <Grid item xs container spacing={1} justify="flex-end">
-                      <Usermenu
-                        options={["Nonaktifkan", "Detail", "Hapus"]}
+                      <UserMenuu
+                        options={["Nonaktifkan", "Hapus"]}
                         row={row}
                         handleOpenDeleteDialog={handleOpenDeleteDialog}
                         handleOpenDisableDialog={handleOpenDisableDialog}
@@ -1658,6 +1613,17 @@ function ManageUsers(props) {
                       </Grid>
                     </Grid>
                     <Grid item>
+                      {!row.avatar ? (
+                        <ListItemAvatar>
+                          <Avatar />
+                        </ListItemAvatar>
+                      ) : (
+                        <ListItemAvatar>
+                          <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                        </ListItemAvatar>
+                      )}
+                    </Grid>
+                    <Grid item>
                       <Hidden smUp implementation="css">
                         <Typography variant="subtitle1" id={labelId}>
                           {row.name}
@@ -1668,18 +1634,32 @@ function ManageUsers(props) {
                       </Hidden>
                       <Hidden xsDown implementation="css">
                         <Typography variant="h6" id={labelId}>
-                          {row.name}
+                          <Link
+                            style={{ color: 'black' }}
+                            to={{
+                              pathname: `/lihat-profil/${row._id}`,
+                            }}
+                          >
+                            {row.name}
+                          </Link>
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                          {row.email}
+                          <Link
+                            style={{ color: 'black' }}
+                            to={{
+                              pathname: `/lihat-profil/${row._id}`,
+                            }}
+                          >
+                            {row.email}
+                          </Link>
                         </Typography>
                       </Hidden>
                     </Grid>
                     {!checkboxModeTeacher ? (
                       <Grid item xs container spacing={1} justify="flex-end">
                         <Grid item>
-                          <Usermenu
-                            options={["Nonaktifkan", "Detail", "Hapus"]}
+                          <UserMenuu
+                            options={["Nonaktifkan", "Hapus"]}
                             row={row}
                             handleOpenDeleteDialog={handleOpenDeleteDialog}
                             handleOpenDisableDialog={handleOpenDisableDialog}

@@ -1,5 +1,5 @@
 import React from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -8,7 +8,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 function UserMenuu(props) {
 
-    const { options } = props
+    const { options, row } = props
+    const { handleOpenDeleteDialog, handleOpenDisableDialog } = props
     const [anchorEl, setAnchorEl] = React.useState(null);
     // const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
     // const [selectedUserId, setSelectedUserId] = React.useState(null);
@@ -17,10 +18,8 @@ function UserMenuu(props) {
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
-
-    const handle = (e) => {
+    const handleClose = (e) => {
         setAnchorEl(null);
-        console.log(e.target.name);
     };
 
     // const handleOpenDeleteDialog = (e, id, name) => {
@@ -46,43 +45,61 @@ function UserMenuu(props) {
                 anchorEl={anchorEl}
                 keepMounted
                 open={open}
-                onClose={handle}
+                onClose={handleClose}
                 PaperProps={{
                     style: {
                         width: '20ch',
                     },
                 }}
             >
-
                 {options.map((option) => {
-                    // let content;
-                    // if (option === "Detail") {
-                    //     content = (
-                    //         <Link
-                    //             to={{
-                    //                 pathname: `/lihat-profil/${row._id}`,
-                    //             }}
-                    //         />
-
-
-                    //     );
-                    // } else {
-                    //     content = (
-                    //         <div>
-                    //             {option}
-                    //         </div>
-                    //     )
-                    // }
                     return (
-                        <MenuItem key={option} selected={option === 'Detail'} onClick={handle}>
+                        <MenuItem key={option} selected={option === 'Detail'}
+                            onClick={
+                                option === 'Hapus' ?
+                                    handleOpenDisableDialog !== null ?
+                                        (e) => handleOpenDeleteDialog(e, row._id, row.name)
+                                        : (e) => handleOpenDeleteDialog(e, "Student")
+                                    : option === 'Nonaktifkan' ?
+                                        (e) => handleOpenDisableDialog(e, row._id, row.name)
+                                        : () => { }
+                            }x
+
+                        >
                             {option}
-                            <IconButton
-                            // onClick={(e) => {
-                            //     if (option === "Hapus") {
-                            //         handleOpenDeleteDialog(e, row._id, row.name);
-                            //     }
-                            // }}
-                            />
+                            {/* {option === 'Detail' ?
+                                <Link
+                                    style={{ color: 'black' }}
+                                    to={{
+                                        pathname: `/lihat-profil/${row._id}`,
+                                    }}
+                                >
+                                    Detail
+                                </Link> : option
+
+                            } */}
+                            {/* {option === "Detail" ? (
+                  <Link
+                    to={{
+                      pathname: `/lihat-profil/${row._id}`,
+                    }}
+                  />
+                ) : option === 'Hapus' ? (
+                  <IconButton
+                    onClick={(e) => {
+                      console.log("hapusss")
+                      handleOpenDeleteDialog(e, row._id, row.name);
+                    }}
+                  />
+                ) : (
+                  <IconButton
+                    onClick={(e) => {
+                      console.log("Nonaktifkan")
+                      handleOpenDisableDialog(e, row._id, row.name);
+                    }}
+                  />
+                )
+                } */}
                         </MenuItem>
                     )
                 })}
