@@ -55,7 +55,7 @@ const db = require("./config/keys").mongoURI;
 mongoose.set("useUnifiedTopology", true);
 mongoose.set("useNewUrlParser", true);
 mongoose
-  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect('mongodb://localhost:27017/schooly', {useNewUrlParser: true}, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("MongoDB successfully connected");
   })
