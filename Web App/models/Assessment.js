@@ -5,6 +5,10 @@ const { ObjectId } = require("mongodb");
 // Create AssessmentSchema
 const AssessmentSchema = new Schema(
   {
+    unit: {
+      type: ObjectId,
+      default: null
+    },
     name: {
       type: String,
       required: true,

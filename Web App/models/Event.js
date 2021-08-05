@@ -4,6 +4,10 @@ const { ObjectId } = require("mongodb");
 
 const EventSchema = new Schema(
 	{
+		unit: {
+			type: ObjectId,
+			default: null
+		},
 		name: {
 			type: String,
 			required: true

@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 const User = require("./User");
 
 const Admin = User.discriminator(
-  "Admin",
+  "SuperAdmin",
   new mongoose.Schema({
-    unit: { type: ObjectId, ref: "units", default: null }
+    full_access: { type: Boolean, default: true },
     // class_teached: [{ type: Object, ref: "classes"}],
   })
 );
 
-module.exports = mongoose.model("Admin");
+module.exports = mongoose.model("SuperAdmin");

@@ -5,6 +5,10 @@ const { ObjectId } = require("mongodb");
 // Create Task Schema
 const TaskSchema = new Schema(
   {
+    unit: {
+      type: ObjectId,
+      default: null
+    },  
     name: {
       type: String,
       required: true,
@@ -67,8 +71,9 @@ const TaskSchema = new Schema(
           required: true
         }
       },
-    ]  
+    ],
   },
+  
   { timestamps: true }
 );
 

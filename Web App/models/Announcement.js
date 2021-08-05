@@ -8,6 +8,10 @@ const Schema = mongoose.Schema;
 // Create Schema
 const AnnoucementSchema = new Schema(
   {
+    unit: {
+      type: ObjectId,
+      default: null
+    },
     title: {
       type: String,
       required: true,
@@ -28,17 +32,12 @@ const AnnoucementSchema = new Schema(
     class_assigned: [
       {
         type: ObjectId,
-        // required: true,
       },
     ],
     author_id: {
       type: ObjectId,
       required: true,
     },
-    // date_announced: {
-    //     type: Date,
-    //     required: true
-    // }
 
 		// elemen pada array ini bernilai: "Student" atau "Teacher"
     to: {

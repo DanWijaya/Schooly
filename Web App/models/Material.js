@@ -5,6 +5,10 @@ const { ObjectId } = require("mongodb");
 // Create MaterialSchema
 const MaterialSchema = new Schema(
   {
+    unit: {
+      type: ObjectId,
+      default: null
+    },
     name: {
       type: String,
       required: true,
