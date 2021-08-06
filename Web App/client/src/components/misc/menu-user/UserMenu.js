@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 
-function UserMenuu(props) {
+function UserMenu(props) {
 
     const { options, row } = props
     const { handleOpenDeleteDialog, handleOpenDisableDialog } = props
@@ -63,43 +63,9 @@ function UserMenuu(props) {
                                     : option === 'Nonaktifkan' ?
                                         (e) => handleOpenDisableDialog(e, row._id, row.name)
                                         : () => { }
-                            }x
-
+                            }
                         >
                             {option}
-                            {/* {option === 'Detail' ?
-                                <Link
-                                    style={{ color: 'black' }}
-                                    to={{
-                                        pathname: `/lihat-profil/${row._id}`,
-                                    }}
-                                >
-                                    Detail
-                                </Link> : option
-
-                            } */}
-                            {/* {option === "Detail" ? (
-                  <Link
-                    to={{
-                      pathname: `/lihat-profil/${row._id}`,
-                    }}
-                  />
-                ) : option === 'Hapus' ? (
-                  <IconButton
-                    onClick={(e) => {
-                      console.log("hapusss")
-                      handleOpenDeleteDialog(e, row._id, row.name);
-                    }}
-                  />
-                ) : (
-                  <IconButton
-                    onClick={(e) => {
-                      console.log("Nonaktifkan")
-                      handleOpenDisableDialog(e, row._id, row.name);
-                    }}
-                  />
-                )
-                } */}
                         </MenuItem>
                     )
                 })}
@@ -107,4 +73,4 @@ function UserMenuu(props) {
         </div>
     );
 }
-export default UserMenuu
+export default UserMenu
