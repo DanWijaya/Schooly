@@ -84,6 +84,10 @@ import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUse
 import SubjectList from "./components/objects/admin-only/SubjectList";
 import EditClassTeacher from "./components/objects/classes/EditClassTeacher";
 import TeacherList from "./components/objects/admin-only/TeacherList";
+
+//Unit
+import UnitList from "./components/objects/admin-only/UnitList";
+
 //Prototypes
 import Tester from "./prototypes/Tester";
 import CSV from "./prototypes/contoh-tugas/CSV";
@@ -92,6 +96,7 @@ import Timer from "./prototypes/Timer";
 import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
 import { Fragment } from "react";
 import ScheduleCalendar from "./prototypes/schedule-calendar/ScheduleCalendar";
+
 
 //Dropbox
 // import DropboxConnect from "./components/dropbox/DropboxConnect";
@@ -275,12 +280,16 @@ class App extends Component {
                           />
                         )}
                       />
-                      {/* <Route exact path="/dropbox-auth" component={DropboxAuth} />
                     <Route
-                      exact
-                      path="/dropbox-connect"
-                      component={DropboxConnect}
-                    /> */}
+                        exact
+                        path="/daftar-unit"
+                        render={(props) => (
+                          <UnitList
+                            {...props}
+                            handleNavbar={(data) => this.handleNavbar(data)}
+                          />
+                        )}
+                      />
                       <Route
                         exact
                         path="/daftar"

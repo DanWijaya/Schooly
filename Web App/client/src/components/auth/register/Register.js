@@ -125,6 +125,7 @@ class Register extends Component {
       password: "",
       password2: "",
       errors: {},
+      unit: null,
       // kelas: "", // Student Data
       // subject_teached: "", // Teacher Data
       tanggal_lahir: new Date(),
@@ -317,13 +318,40 @@ class Register extends Component {
                   >
                     <MenuItem value="Student">Murid</MenuItem>
                     <MenuItem value="Teacher">Guru</MenuItem>
-                    <MenuItem value="Admin">Pengelola</MenuItem>
+                    <MenuItem value="Admin">Pengelola Unit</MenuItem>
+                    <MenuItem value="SuperAdmin">Pengelola Sekolah</MenuItem>
                   </Select>
                   <FormHelperText>
                     {Boolean(errors.role) ? errors.role : null}
                   </FormHelperText>
                 </FormControl>
               </Grid>
+              {this.state.role == "SuperAdmin" ? null : 
+              <Grid item>
+                <FormControl
+                  id="unit"
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  error={Boolean(errors.unit)}
+                  >
+                  <InputLabel id="unit-label">Unit</InputLabel>
+                  <Select
+                    labelId="unit-label"
+                    label="Unit"
+                    value={this.state.unit}
+                    onChange={(event) => {
+                      this.onChange(event, "unit");
+                    }}
+                  >
+                    {/* {units.map((u) => <MenuItem value={u._id}>{u.name}</MenuItem>)} */}
+                  </Select>
+                  <FormHelperText>
+                    {Boolean(errors.unit) ? errors.unit : null}
+                  </FormHelperText>
+                  </FormControl>
+              </Grid>
+              }
               <Grid item>
                 <TextField
                   fullWidth
