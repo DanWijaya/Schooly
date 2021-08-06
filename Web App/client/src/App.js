@@ -9,7 +9,6 @@ import { Provider } from "react-redux"; //provide state from Store to the compon
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import store from "./Store";
-import Error from "./prototypes/Error";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 //Routing and Actions
@@ -85,17 +84,11 @@ import SubjectList from "./components/objects/admin-only/SubjectList";
 import EditClassTeacher from "./components/objects/classes/EditClassTeacher";
 import TeacherList from "./components/objects/admin-only/TeacherList";
 //Prototypes
-import Tester from "./prototypes/Tester";
 import CSV from "./prototypes/contoh-tugas/CSV";
 import Graph from "./prototypes/Graph";
 import Timer from "./prototypes/Timer";
 import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
 import { Fragment } from "react";
-import ScheduleCalendar from "./prototypes/schedule-calendar/ScheduleCalendar";
-
-//Dropbox
-// import DropboxConnect from "./components/dropbox/DropboxConnect";
-// import DropboxAuth from "./components/dropbox/DropboxAuth";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -137,7 +130,6 @@ class App extends Component {
       desktopOpen: false,
       loggedIn: false,
       showNavBar: true,
-      marginTopValue: 20,
       posts: [],
       sideDrawerExist: true,
       showProgressIndicator: false,
@@ -161,10 +153,6 @@ class App extends Component {
   //Drawer at Desktop View Hooks
   handleDrawerDesktop = () => {
     this.setState((prevState) => ({ desktopOpen: !prevState.desktopOpen }));
-  };
-
-  handleMarginTopValue = (dataFromChild) => {
-    this.setState({ marginTopValue: dataFromChild });
   };
 
   // Bascically run this whenever user logs in or logs out.
@@ -232,12 +220,8 @@ class App extends Component {
                         render={(props) => (
                           <Landing
                             {...props}
-                            handleMarginTopValue={(data) =>
-                              this.handleMarginTopValue(data)
-                            }
                           />
                         )}
-                        // component={Tester}
                       />
                       <Route
                         exact
@@ -245,9 +229,6 @@ class App extends Component {
                         render={(props) => (
                           <Help
                             {...props}
-                            handleMarginTopValue={(data) =>
-                              this.handleMarginTopValue(data)
-                            }
                           />
                         )}
                       />
@@ -257,9 +238,6 @@ class App extends Component {
                         render={(props) => (
                           <About
                             {...props}
-                            handleMarginTopValue={(data) =>
-                              this.handleMarginTopValue(data)
-                            }
                           />
                         )}
                       />
@@ -269,9 +247,6 @@ class App extends Component {
                         render={(props) => (
                           <Policy
                             {...props}
-                            handleMarginTopValue={(data) =>
-                              this.handleMarginTopValue(data)
-                            }
                           />
                         )}
                       />
@@ -580,15 +555,11 @@ class App extends Component {
                             render={(props) => (
                               <ProblemEncountered
                                 {...props}
-                                handleMarginTopValue={(data) =>
-                                  this.handleMarginTopValue(data)
-                                }
                               />
                             )}
                           /> */}
-                      {/* <Route exact path="/tester" component={Tester} />{" "} */}
                       {/*prototype*/}
-                      {/* <Route exact path="/sc" component={ScheduleCalendar} />
+                      {/*
                       <Route exact path="/csv" component={CSV} />
                       <Route exact path="/timer" component={Timer} />{" "}
                       <Route exact path="/graph" component={Graph} />{" "} */}
@@ -611,9 +582,6 @@ class App extends Component {
                         render={(props) => (
                           <NotFound
                             {...props}
-                            handleMarginTopValue={(data) =>
-                              this.handleMarginTopValue(data)
-                            }
                           />
                         )}
                       />
