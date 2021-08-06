@@ -92,15 +92,6 @@ const useStyles = makeStyles((theme) => ({
 
 function About(props) {
   const classes = useStyles();
-  const { handleMarginTopValue } = props;
-
-  useEffect(() => {
-    handleMarginTopValue(0);
-    return () => {
-      handleMarginTopValue(20);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   document.title = "Schooly | Tentang Schooly";
   document.body.style = "background: #FFFFFF";
