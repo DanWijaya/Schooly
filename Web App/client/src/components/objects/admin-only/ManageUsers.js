@@ -113,11 +113,11 @@ function stableSort(array, comparator) {
 
 function ManageUsersToolbar(props) {
   const {
-    classes, 
-    order, 
-    orderBy, 
-    onRequestSort, 
-    role, 
+    classes,
+    order,
+    orderBy,
+    onRequestSort,
+    role,
     heading,
     currentCheckboxMode,
     rowCount,
@@ -292,17 +292,17 @@ function ManageUsersToolbar(props) {
         {/* {currentCheckboxMode && rowCount !== 0 ? ( */}
         {rowCount !== 0 ? (
           listCheckbox.length === 0 ? (
-            <IconButton size="small" onClick={() => selectAllData(role)}>
+            <IconButton style={{ marginLeft: "25%" }} size="small" onClick={() => selectAllData(role)}>
               <CheckBoxOutlineBlankIcon
                 className={classes.checkboxIconPrimary}
               />
             </IconButton>
           ) : listCheckbox.length === rowCount ? (
-            <IconButton size="small" onClick={() => deSelectAllData(role)}>
+            <IconButton style={{ marginLeft: "25%" }} size="small" onClick={() => deSelectAllData(role)}>
               <CheckBoxIcon className={classes.checkboxIconPrimary} />
             </IconButton>
           ) : (
-            <IconButton size="small" onClick={() => deSelectAllData(role)}>
+            <IconButton style={{ marginLeft: "25%" }} size="small" onClick={() => deSelectAllData(role)}>
               <IndeterminateCheckBoxIcon
                 className={classes.checkboxIconPrimary}
               />
@@ -755,6 +755,7 @@ const useStyles = makeStyles((theme) => ({
   },
   checkboxIconPrimary: {
     color: theme.palette.primary.main,
+    borderColor: "black"
   },
 }));
 
@@ -1363,25 +1364,25 @@ function ManageUsers(props) {
                           <FormGroup>
                             <FormControlLabel
                               control={
-                                booleanCheckboxStudent[index] ? 
-                                <Checkbox
-                                  onChange={(e) => {
-                                    handleChangeListStudent(e, index, row);
-                                    autoReloader();
-                                  }}
-                                  color="primary"
-                                  checked={booleanCheckboxStudent[index]} 
-                                /> 
-                                :
-                                <Checkbox
-                                  onChange={(e) => {
-                                    handleChangeListStudent(e, index, row);
-                                    autoReloader();
-                                  }}
-                                  color="primary"
-                                  checked={false} 
-                                /> 
-                               
+                                booleanCheckboxStudent[index] ?
+                                  <Checkbox
+                                    onChange={(e) => {
+                                      handleChangeListStudent(e, index, row);
+                                      autoReloader();
+                                    }}
+                                    color="primary"
+                                    checked={booleanCheckboxStudent[index]}
+                                  />
+                                  :
+                                  <Checkbox
+                                    onChange={(e) => {
+                                      handleChangeListStudent(e, index, row);
+                                      autoReloader();
+                                    }}
+                                    color="primary"
+                                    checked={false}
+                                  />
+
                               }
                             />
                           </FormGroup>
@@ -1512,24 +1513,24 @@ function ManageUsers(props) {
                           <FormGroup>
                             <FormControlLabel
                               control={
-                                booleanCheckboxTeacher[index] ? 
-                                <Checkbox
-                                  onChange={(e) => {
-                                    handleChangeListTeacher(e, index, row);
-                                    autoReloader();
-                                  }}
-                                  color="primary"
-                                  checked={booleanCheckboxTeacher[index]}
-                                />
-                                :
-                                <Checkbox
-                                  onChange={(e) => {
-                                    handleChangeListTeacher(e, index, row);
-                                    autoReloader();
-                                  }}
-                                  color="primary"
-                                  checked={false}
-                                />
+                                booleanCheckboxTeacher[index] ?
+                                  <Checkbox
+                                    onChange={(e) => {
+                                      handleChangeListTeacher(e, index, row);
+                                      autoReloader();
+                                    }}
+                                    color="primary"
+                                    checked={booleanCheckboxTeacher[index]}
+                                  />
+                                  :
+                                  <Checkbox
+                                    onChange={(e) => {
+                                      handleChangeListTeacher(e, index, row);
+                                      autoReloader();
+                                    }}
+                                    color="primary"
+                                    checked={false}
+                                  />
                               }
                             />
                           </FormGroup>
@@ -1592,27 +1593,27 @@ function ManageUsers(props) {
                         </Grid>
                       </Grid>
                     ) : ( */}
-                      <Grid item xs container spacing={1} justify="flex-end">
-                        <Grid item>
-                          <LightTooltip title="Aktifkan">
-                            <FormGroup>
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    onChange={(e) => {
-                                      handleChangeListTeacher(e, index, row);
-                                      autoReloader();
-                                    }}
-                                    color="primary"
-                                    checked={booleanCheckboxTeacher[index]}
-                                  />
-                                }
-                              />
-                            </FormGroup>
-                          </LightTooltip>
-                        </Grid>
+                    <Grid item xs container spacing={1} justify="flex-end">
+                      <Grid item>
+                        <LightTooltip title="Aktifkan">
+                          <FormGroup>
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  onChange={(e) => {
+                                    handleChangeListTeacher(e, index, row);
+                                    autoReloader();
+                                  }}
+                                  color="primary"
+                                  checked={booleanCheckboxTeacher[index]}
+                                />
+                              }
+                            />
+                          </FormGroup>
+                        </LightTooltip>
                       </Grid>
-                    
+                    </Grid>
+
                   </Grid>
                 </ExpansionPanelSummary>
                 <Divider />
