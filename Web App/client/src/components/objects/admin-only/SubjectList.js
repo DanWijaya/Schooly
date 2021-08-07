@@ -598,7 +598,7 @@ function SubjectList(props) {
       content += "dibuat"
       setSnackbarContent(content);
     } else if(action == "Edit"){
-      content += "disuntung"
+      content += "disunting"
       setSnackbarContent(content);
     } else if(action == "Delete"){
       content += "dihapus"

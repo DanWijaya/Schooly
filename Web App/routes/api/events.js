@@ -15,7 +15,8 @@ router.post("/create", (req, res) => {
 		start_date: req.body.start_date,
 		end_date: req.body.end_date,
 		to: req.body.to,
-		description: req.body.description
+		description: req.body.description,
+		author_id: req.body.author_id
 	});
 
 	newEvent

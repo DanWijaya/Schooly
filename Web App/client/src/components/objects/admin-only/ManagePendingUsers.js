@@ -12,6 +12,7 @@ import {
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import PendingUserMenu from "../../misc/menu-user/PendingUserMenu";
 import {
   Avatar,
   Button,
@@ -34,6 +35,9 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
+  Tab,
+  Tabs,
+  AppBar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
@@ -48,6 +52,8 @@ import RecentActorsIcon from "@material-ui/icons/RecentActors";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from "@material-ui/icons/Clear";
+import { FaUserClock } from "react-icons/fa";
+
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(
@@ -288,7 +294,8 @@ const ManageUsersToolbar = (props) => {
             </LightTooltip>
           )}
         </Hidden>
-        {currentCheckboxMode && rowCount !== 0 ? (
+        {/* {currentCheckboxMode && rowCount !== 0 ? ( */}
+        {rowCount !== 0 ? (
           listCheckbox.length === 0 ? (
             <IconButton size="small" onClick={() => selectAllData(role)}>
               <CheckBoxOutlineBlankIcon
@@ -307,6 +314,16 @@ const ManageUsersToolbar = (props) => {
             </IconButton>
           )
         ) : null}
+        <>
+        {CheckboxDialog("Delete", "Student")}
+        {/* More menu Toolbar */}
+        <PendingUserMenu
+            options={["Hapus"]}
+            row={null}
+            handleOpenDeleteDialog={OpenDialogCheckboxDelete}
+            handleOpenApproveDialog={null}
+          />
+        </>
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
         <Hidden smDown implementation="css">
@@ -363,7 +380,9 @@ const ManageUsersToolbar = (props) => {
           <>
             {lengthListCheckbox === 0 ? (
               <>
-                <LightTooltip
+
+              {/* =========== MODE KOTAK CENTANG ================ */}
+                {/* <LightTooltip
                   title={
                     !currentCheckboxMode
                       ? "Mode Kotak Centang"
@@ -384,7 +403,7 @@ const ManageUsersToolbar = (props) => {
                       <RecentActorsIcon />
                     )}
                   </IconButton>
-                </LightTooltip>
+                </LightTooltip> */}
                 <LightTooltip title="Urutkan Akun">
                   <IconButton
                     onClick={handleOpenSortMenu}
@@ -458,7 +477,8 @@ const ManageUsersToolbar = (props) => {
           <>
             {lengthListCheckbox === 0 ? (
               <>
-                <LightTooltip
+                {/* =========== MODE KOTAK CENTANG ================ */}
+                {/* <LightTooltip
                   title={
                     !currentCheckboxMode
                       ? "Mode Kotak Centang"
@@ -479,7 +499,7 @@ const ManageUsersToolbar = (props) => {
                       <RecentActorsIcon />
                     )}
                   </IconButton>
-                </LightTooltip>
+                </LightTooltip> */}
                 <LightTooltip title="Urutkan Akun">
                   <IconButton
                     onClick={handleOpenSortMenu}
@@ -684,6 +704,10 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: "ellipsis",
     overflow: "hidden",
     whiteSpace: "nowrap",
+  },
+  titleTab: {
+    fontSize: "16px",
+    minWidth: "10%"
   },
 }));
 
@@ -1284,6 +1308,19 @@ function ManageUsers(props) {
       </>
     );
   }
+  // ============ TAB ====================
+  const [value,setValue] = React.useState(0)
+  const handleTabs = (e,val)=>{
+    setValue(val)
+  }
+  function TabPanel(props){
+    const { children,value,index } = props;
+    return (<div>
+      {value === index && (
+        <div>{children}</div>
+      )}
+    </div>)
+  }
 
   console.log(pending_users);
   return (
@@ -1302,17 +1339,32 @@ function ManageUsers(props) {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "left",
           minHeight: "46.5px",
+          margin: "2rem 0",
+          columnGap: "40px",
         }}
       >
+        <FaUserClock fontSize="30px" />
         <Typography variant="h4" align="left">
-          Daftar Pengguna Tertunda
+          Pengguna Tertunda
         </Typography>
       </div>
-      <Divider className={classes.titleDivider} />
+      {/* <Divider className={classes.titleDivider} /> */}
+      <AppBar position="static"
+        style={{
+          margin: "0 0 2rem 0",
+        }}
+      >
+        <Tabs value={value} onChange={handleTabs}>
+          <Tab className={classes.titleTab} label="Murid" />
+          <Tab className={classes.titleTab} label="Guru" />
+        </Tabs>
+      </AppBar>
+      <TabPanel value={value} index={0}>
+
       <ManageUsersToolbar
-        heading="Daftar Murid"
+        heading=""
         searchFilterHint="Cari Murid"
         role="Student"
         deleteUser={deleteUser}
@@ -1370,6 +1422,37 @@ function ManageUsers(props) {
                       justify="space-between"
                       alignItems="center"
                     >
+                      <Grid item justify="flex-start">
+                      <Grid item>
+                        <LightTooltip title="Aktifkan">
+                          <FormGroup>
+                            <FormControlLabel
+                              control={
+                                booleanCheckboxStudent[index] ? 
+                                <Checkbox
+                                  onChange={(e) => {
+                                    handleChangeListStudent(e, index, row);
+                                    autoReloader();
+                                  }}
+                                  color="primary"
+                                  checked={booleanCheckboxStudent[index]} 
+                                /> 
+                                :
+                                <Checkbox
+                                  onChange={(e) => {
+                                    handleChangeListStudent(e, index, row);
+                                    autoReloader();
+                                  }}
+                                  color="primary"
+                                  checked={false} 
+                                /> 
+                               
+                              }
+                            />
+                          </FormGroup>
+                        </LightTooltip>
+                      </Grid>
+                    </Grid>
                       <Grid item>
                         {!row.avatar ? (
                           <ListItemAvatar>
@@ -1401,7 +1484,14 @@ function ManageUsers(props) {
                       </Grid>
                       {!checkboxModeStudent ? (
                         <Grid item xs container spacing={1} justify="flex-end">
-                          <Grid item>
+                          <PendingUserMenu
+                        options={["Aktifkan", "Hapus"]}
+                        row={row}
+                        handleOpenDeleteDialog={handleOpenDeleteDialog}
+                        handleOpenApproveDialog={handleOpenApproveDialog}
+                      />
+                          {/* ========== TOMBOL AKTIF SAMPING USER ============= */}
+                          {/* <Grid item>
                             <LightTooltip title="Aktifkan">
                               <IconButton
                                 size="small"
@@ -1413,8 +1503,11 @@ function ManageUsers(props) {
                                 <CheckCircleIcon fontSize="small" />
                               </IconButton>
                             </LightTooltip>
-                          </Grid>
-                          <Grid item>
+                          </Grid> */}
+
+                          {/* ========== TOMBOL HAPUS SAMPING USER ============= */}
+                         
+                          {/* <Grid item>
                             <LightTooltip title="Hapus">
                               <IconButton
                                 size="small"
@@ -1426,7 +1519,7 @@ function ManageUsers(props) {
                                 <DeleteIcon fontSize="small" />
                               </IconButton>
                             </LightTooltip>
-                          </Grid>
+                          </Grid> */}
                         </Grid>
                       ) : (
                         <Grid item xs container spacing={1} justify="flex-end">
@@ -1486,8 +1579,11 @@ function ManageUsers(props) {
           })
         )}
       </Grid>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+
       <ManageUsersToolbar
-        heading="Daftar Guru"
+        heading=""
         searchFilterHint="Cari Guru"
         role="Teacher"
         deleteUser={deleteUser}
@@ -1540,6 +1636,36 @@ function ManageUsers(props) {
                       justify="space-between"
                       alignItems="center"
                     >
+                      <Grid item justify="flex-start">
+                      <Grid item>
+                        <LightTooltip title="Aktifkan">
+                          <FormGroup>
+                            <FormControlLabel
+                              control={
+                                booleanCheckboxTeacher[index] ? 
+                                <Checkbox
+                                  onChange={(e) => {
+                                    handleChangeListTeacher(e, index, row);
+                                    autoReloader();
+                                  }}
+                                  color="primary"
+                                  checked={booleanCheckboxTeacher[index]}
+                                />
+                                :
+                                <Checkbox
+                                  onChange={(e) => {
+                                    handleChangeListTeacher(e, index, row);
+                                    autoReloader();
+                                  }}
+                                  color="primary"
+                                  checked={false}
+                                />
+                              }
+                            />
+                          </FormGroup>
+                        </LightTooltip>
+                      </Grid>
+                    </Grid>
                       <Grid item>
                         {!row.avatar ? (
                           <ListItemAvatar>
@@ -1571,7 +1697,14 @@ function ManageUsers(props) {
                       </Grid>
                       {!checkboxModeTeacher ? (
                         <Grid item xs container spacing={1} justify="flex-end">
-                          <Grid item>
+                          <PendingUserMenu
+                        options={["Aktifkan", "Hapus"]}
+                        row={row}
+                        handleOpenDeleteDialog={handleOpenDeleteDialog}
+                        handleOpenApproveDialog={handleOpenApproveDialog}
+                      />
+                          {/* =============  TOMBOL AKTIFKAN SAMPING USER ================= */}
+                          {/* <Grid item>
                             <LightTooltip title="Aktifkan">
                               <IconButton
                                 size="small"
@@ -1583,8 +1716,10 @@ function ManageUsers(props) {
                                 <CheckCircleIcon fontSize="small" />
                               </IconButton>
                             </LightTooltip>
-                          </Grid>
-                          <Grid item>
+                          </Grid> */}
+
+                          {/* =============  TOMBOL AKTIFKAN SAMPING USER ================= */}
+                          {/* <Grid item>
                             <LightTooltip title="Hapus">
                               <IconButton
                                 size="small"
@@ -1596,7 +1731,7 @@ function ManageUsers(props) {
                                 <DeleteIcon fontSize="small" />
                               </IconButton>
                             </LightTooltip>
-                          </Grid>
+                          </Grid> */}
                         </Grid>
                       ) : (
                         <Grid item xs container spacing={1} justify="flex-end">
@@ -1656,6 +1791,7 @@ function ManageUsers(props) {
           })
         )}
       </Grid>
+      </TabPanel>
     </div>
   );
 }

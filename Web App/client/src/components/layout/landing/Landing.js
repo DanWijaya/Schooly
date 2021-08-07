@@ -148,15 +148,8 @@ const styles = (theme) => ({
 class Landing extends Component {
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
-      this.props.handleMarginTopValue(20);
       this.props.history.push("/beranda");
-    } else {
-      this.props.handleMarginTopValue(0);
     }
-  }
-
-  componentWillUnmount() {
-    this.props.handleMarginTopValue(20);
   }
 
   copyToClipboard(text) {
