@@ -6,10 +6,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 
-function UserMenu(props) {
+function PendingUserMenu(props) {
 
     const { options, row } = props
-    const { handleOpenDeleteDialog, handleOpenDisableDialog } = props
+    const { handleOpenDeleteDialog, handleOpenApproveDialog } = props
     const [anchorEl, setAnchorEl] = React.useState(null);
     // const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
     // const [selectedUserId, setSelectedUserId] = React.useState(null);
@@ -54,16 +54,15 @@ function UserMenu(props) {
             >
                 {options.map((option) => {
                     return (
-                        <MenuItem key={option} selected={option === 'Detail'}
+                        <MenuItem key={option}  selected={option === 'Detail'}
                             onClick={
                                 option === 'Hapus' ?
-                                    handleOpenDisableDialog !== null ?
+                                    handleOpenApproveDialog !== null ?
                                         (e) => handleOpenDeleteDialog(e, row._id, row.name)
                                         : (e) => handleOpenDeleteDialog(e, "Student")
-                                    : option === 'Nonaktifkan' ?
-                                        (e) => handleOpenDisableDialog(e, row._id, row.name)
+                                    : option === 'Aktifkan' ?
+                                        (e) => handleOpenApproveDialog(e, row._id, row.name)
                                         : () => { }
-                                        // : (e) => handleOpenApproveDialog(e, row._id, row.name)
                             }
                         >
                             {option}
@@ -74,4 +73,4 @@ function UserMenu(props) {
         </div>
     );
 }
-export default UserMenu
+export default PendingUserMenu

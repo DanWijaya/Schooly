@@ -702,7 +702,7 @@ class CreateTask extends Component {
                             ampm={false}
                             okLabel="Simpan"
                             cancelLabel="Batal"
-                            minDateMessage="Batas waktu harus waktu yang akan datang"
+                            minDateMessage="Harus waktu yang akan datang"
                             invalidDateMessage="Format tanggal tidak benar"
                             id="deadline"
                             value={this.state.deadline}

@@ -242,8 +242,6 @@ function ReportView(props) {
   const classes = useStyles();
 
   const {
-    getTasks,
-    getAssessments,
     getAllAssessments,
     getAllClass,
     getAllSubjects,
@@ -1290,11 +1288,15 @@ function ReportView(props) {
         .then(() => {
           return getAssessments("Kuis", valueMatpel, valueKelas).then((kuisArray) => {
             addScore(kuisArray, "kuis");
+          }).catch((err) => {
+            console.log(err);
           });
         })
         .then(() => {
           return getAssessments("Ujian", valueMatpel, valueKelas).then((ujianArray) => {
             addScore(ujianArray, "ujian");
+          }).catch((err) => {
+            console.log(err);
           });
         })
         .then(() => {
@@ -1804,8 +1806,6 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getStudentsByClass,
-  getTasks,
-  getAssessments,
   getAllAssessments,
   getAllClass,
   getAllSubjects,

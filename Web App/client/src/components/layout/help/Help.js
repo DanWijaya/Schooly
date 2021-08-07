@@ -115,15 +115,6 @@ function Help(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
-  const { handleMarginTopValue } = props;
-
-  useEffect(() => {
-    handleMarginTopValue(0);
-    return () => {
-      handleMarginTopValue(20);
-    }; // dirun pas komponennya diunmount.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   document.title = "Schooly | Bantuan";
   document.body.style = "background: #FFFFFF";
