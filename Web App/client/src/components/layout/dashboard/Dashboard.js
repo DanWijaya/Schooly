@@ -114,7 +114,7 @@ const styles = (theme) => ({
       },
       color: "black"
   },
-  
+
   manageTaskButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -1241,7 +1241,6 @@ class Dashboard extends Component {
     }
 
     document.title = "Schooly | Dashboard";
-    document.body.style = "background: #FFFFFF";
 
     return (
       <div className={classes.root}>

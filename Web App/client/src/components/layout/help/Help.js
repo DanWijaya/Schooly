@@ -117,7 +117,6 @@ function Help(props) {
   const { user } = props.auth;
 
   document.title = "Schooly | Bantuan";
-  document.body.style = "background: #FFFFFF";
 
   return (
     <div className={classes.root}>

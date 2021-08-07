@@ -9,7 +9,6 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import { registerUser } from "../../../actions/UserActions";
 // import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import authBackground from "../AuthBackground.png";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import PolicyContent from "../../layout/policy/PolicyContent";
 import RegisterStepIcon from "./RegisterStepIcon";
@@ -46,19 +45,10 @@ const styles = (theme) => ({
     flexDirection: "column",
     alignItems: "center",
     margin: "auto",
-    maxWidth: "80%",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
-    },
-    minHeight: "500px",
     padding: "10px",
-    backgroundImage: `url(${authBackground})`,
-    backgroundPosition: "center",
+    background: "linear-gradient(#2196F3, #FFFFFF)",
+    backgroundSize: "100% 300px",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    [theme.breakpoints.up("sm")]: {
-      backgroundSize: "contain",
-    },
   },
   schoolyLogo: {
     width: "250px",
@@ -528,8 +518,6 @@ class Register extends Component {
     };
 
     document.title = "Daftar ke Schooly";
-    document.body.style =
-      "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     return (
       <div className={classes.root}>

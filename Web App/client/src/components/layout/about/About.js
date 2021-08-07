@@ -94,7 +94,6 @@ function About(props) {
   const classes = useStyles();
 
   document.title = "Schooly | Tentang Schooly";
-  document.body.style = "background: #FFFFFF";
 
   return (
     <div className={classes.root}>

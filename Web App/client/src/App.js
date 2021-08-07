@@ -1,23 +1,15 @@
-import React, { Component } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from "react-router-dom";
-import { Provider } from "react-redux"; //provide state from Store to the component
+import React, { Component, Fragment } from "react";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { Provider } from "react-redux";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import store from "./Store";
-import { ThemeProvider } from "@material-ui/core/styles";
-import Toolbar from "@material-ui/core/Toolbar";
-//Routing and Actions
-import {
-  setCurrentUser,
-  logoutUser,
+import { setCurrentUser, logoutUser,
   // setDropboxToken,
 } from "./actions/UserActions";
 import PrivateRoute from "./components/private-route/PrivateRoute";
+import { ThemeProvider } from "@material-ui/core/styles";
+import Toolbar from "@material-ui/core/Toolbar";
 //Auth
 import Register from "./components/auth/register/Register";
 import Login from "./components/auth/login/Login";
@@ -27,8 +19,8 @@ import ResetPassword from "./components/auth/reset-password/ResetPassword";
 import About from "./components/layout/about/About";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
-import ProfileView from "./components/layout/profile/ProfileView";
 import Profile from "./components/layout/profile/Profile";
+import ProfileView from "./components/layout/profile/ProfileView";
 import ReportView from "./components/layout/profile/ReportView";
 import Help from "./components/layout/help/Help";
 import Policy from "./components/layout/policy/Policy";
@@ -40,7 +32,7 @@ import NavBar from "./components/misc/nav-bar/NavBar";
 import SideDrawer from "./components/misc/side-drawer/SideDrawer";
 import Footer from "./components/misc/footer/Footer";
 import ProgressIndicator from "./components/misc/progress-indicator/ProgressIndicator";
-
+import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
 //Class
 import CreateClass from "./components/objects/classes/CreateClass";
 import EditClass from "./components/objects/classes/EditClass";
@@ -64,7 +56,6 @@ import ViewTaskStudent from "./components/objects/tasks/ViewTaskStudent";
 import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
 import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
 import TaskList from "./components/objects/tasks/TaskList";
-
 //Assessment
 import AssessmentList from "./components/objects/assessment/AssessmentQuizList";
 import AssessmentTestList from "./components/objects/assessment/AssessmentExamList";
@@ -74,7 +65,6 @@ import ViewAssessmentTeacher from "./components/objects/assessment/ViewAssessmen
 import ViewAssessmentStudent from "./components/objects/assessment/ViewAssessmentStudent";
 import SubmittedAssessmentList from "./components/objects/assessment/SubmittedAssessmentList";
 import ViewAssessmentAnswer from "./components/objects/assessment/ViewAssessmentAnswer";
-
 //Event
 import Calendar from "./components/objects/events/Calendar";
 //Admin Only
@@ -85,10 +75,6 @@ import EditClassTeacher from "./components/objects/classes/EditClassTeacher";
 import TeacherList from "./components/objects/admin-only/TeacherList";
 //Prototypes
 import CSV from "./prototypes/contoh-tugas/CSV";
-import Graph from "./prototypes/Graph";
-import Timer from "./prototypes/Timer";
-import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
-import { Fragment } from "react";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -105,7 +91,6 @@ if (localStorage.jwtToken) {
     if (decoded.exp < currentTime) {
       // Logout user
       store.dispatch(logoutUser());
-
       // Redirect to login
       window.location.href = "./masuk";
     }
@@ -141,16 +126,22 @@ class App extends Component {
     this.setState({ problemEncountered: true });
   }
 
+  handleNavbar = (showBool) => {
+    this.setState({ showNavBar: showBool });
+  };
+
   handleLoading = (value) => {
     this.setState({ showProgressIndicator: value });
   };
 
-  //Drawer at Mobile View Hooks
+  handleSideDrawerExist = (dataFromChild) => {
+    this.setState({ sideDrawerExist: dataFromChild });
+  };
+
   handleDrawerMobile = () => {
     this.setState((prevState) => ({ mobileOpen: !prevState.mobileOpen }));
   };
 
-  //Drawer at Desktop View Hooks
   handleDrawerDesktop = () => {
     this.setState((prevState) => ({ desktopOpen: !prevState.desktopOpen }));
   };
@@ -160,20 +151,13 @@ class App extends Component {
     this.setState({ loggedIn: dataFromChild });
   };
 
-  handleSideDrawerExist = (dataFromChild) => {
-    this.setState({ sideDrawerExist: dataFromChild });
-  };
-
-  handleNavbar = (showBool) => {
-    this.setState({ showNavBar: showBool });
-  };
-
   handleProblemEncountered = (dataFromChild) => {
     this.setState({ problemEncountered: dataFromChild });
   };
 
   render() {
     console.log(localStorage.getItem(`status`));
+
     return (
       <div>
         <Provider store={store}>
@@ -204,7 +188,6 @@ class App extends Component {
                   style={{
                     flexGrow: "1",
                     overflowX: "hidden",
-                    marginTop: `${this.state.marginTopValue}px`,
                   }}
                 >
                   {this.state.showNavBar ? <Toolbar /> : null}
@@ -339,7 +322,7 @@ class App extends Component {
                         path="/daftar-kelas"
                         component={ClassList}
                       />
-                      {/* Route Course Materials */}
+                      {/* Route Materials */}
                       <PrivateRoute
                         exact
                         access={["Teacher"]}
@@ -430,24 +413,17 @@ class App extends Component {
                       <PrivateRoute
                         exact
                         access={["Student", "Teacher"]}
-                        path="/buat-ujian"
+                        path="/buat-kuis"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={CreateAssessment}
                       />
                       <PrivateRoute
                         exact
                         access={["Student", "Teacher"]}
-                        path="/buat-kuis"
+                        path="/buat-ujian"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={CreateAssessment}
                       />
-                      {/* <PrivateRoute
-                        exact
-                        access={["Student", "Teacher"]}
-                        path="/buat-kuis-ujian"
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        component={CreateAssessment}
-                      /> */}
                       <PrivateRoute
                         exact
                         access={["Student", "Teacher"]}
@@ -549,20 +525,8 @@ class App extends Component {
                         path="/atur-walikelas"
                         component={EditClassTeacher}
                       />
-                      {/* <Route
-                            exact
-                            path="/terdapat-masalah"
-                            render={(props) => (
-                              <ProblemEncountered
-                                {...props}
-                              />
-                            )}
-                          /> */}
                       {/*prototype*/}
-                      {/*
-                      <Route exact path="/csv" component={CSV} />
-                      <Route exact path="/timer" component={Timer} />{" "}
-                      <Route exact path="/graph" component={Graph} />{" "} */}
+                      {/*<Route exact path="/csv" component={CSV} />*/}
                       {/* Route Event */}
                       <PrivateRoute
                         exact

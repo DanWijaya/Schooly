@@ -92,9 +92,7 @@ class ResetPassword extends Component {
       savePassword(passwordReset);
     };
 
-    document.title = "Schooly | Lupa Akun";
-    document.body.style =
-      "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
+    document.title = "Schooly | Lupa Kata Sandi";
 
     return (
       <div className={classes.root}>

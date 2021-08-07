@@ -168,25 +168,26 @@ class Landing extends Component {
   render() {
     const { classes } = this.props;
 
-    document.title = "Schooly | Sistem Manajamen Persekolahan";
-    document.body.style = "background: #FFFFFF";
+    document.title = "Schooly | Sistem Manajamen Persekolahan Indonesia";
 
     return (
       <div className={classes.root}>
         <div className={classes.schoolyIntroductionBackground}>
           <div className={classes.schoolyIntroduction}>
             <Grid container justify="center" alignItems="center">
-              <Grid item xs={12} sm={6}>
-                <Typography variant="h4" gutterBottom>
-                  Schooly membuat pekerjaan sekolahmu lebih mudah.
-                </Typography>
-                <Typography variant="h6">
-                  Tidak pernah lupa lagi dengan tugas sekolah yang ada. <br />
-                  Berikan materi dan pekerjaan sekolah dengan mudah. <br />
-                  Periksa hasil kuis dan ujian secara otomatis.
-                </Typography>
+              <Grid item xs={12} md={6} container justify="flex-end">
+                <Grid item>
+                  <Typography variant="h4" gutterBottom>
+                    Schooly membuat pekerjaan sekolahmu lebih mudah.
+                  </Typography>
+                  <Typography variant="h6">
+                    Tidak pernah lupa lagi dengan tugas sekolah yang ada. <br />
+                    Berikan materi dan pekerjaan sekolah dengan mudah. <br />
+                    Periksa hasil kuis dan ujian secara otomatis.
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} md={6}>
                 <img
                   alt="Schooly Introduction"
                   src={schoolyIntroduction}

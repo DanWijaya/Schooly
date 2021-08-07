@@ -4,7 +4,6 @@ import PolicyContent from "./PolicyContent";
 function Policy(props) {
 
   document.title = "Schooly | Kebijakan Penggunaan";
-  document.body.style = "background: #FFFFFF";
 
   return <PolicyContent />;
 }

@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { createHash } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import authBackground from "../AuthBackground.png";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import {
   Button,
@@ -23,19 +22,10 @@ const styles = (theme) => ({
     flexDirection: "column",
     alignItems: "center",
     margin: "auto",
-    maxWidth: "80%",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
-    },
-    minHeight: "500px",
     padding: "10px",
-    backgroundImage: `url(${authBackground})`,
-    backgroundPosition: "center",
+    background: "linear-gradient(#2196F3, #FFFFFF)",
+    backgroundSize: "100% 300px",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    [theme.breakpoints.up("sm")]: {
-      backgroundSize: "contain",
-    },
   },
   schoolyLogo: {
     width: "250px",
@@ -106,8 +96,6 @@ class LoginForgot extends Component {
     const { isPasswordReset } = this.props.passwordMatters;
 
     document.title = "Schooly | Lupa Akun";
-    document.body.style =
-      "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     return (
       <div className={classes.root}>
@@ -183,7 +171,8 @@ class LoginForgot extends Component {
             </Grid>
             <Divider />
             <Grid item container justify="space-around">
-              <Link to="/masuk">Sudah ada Akun?</Link>|
+              <Link to="/masuk">Sudah ada Akun?</Link>
+              <Typography color="textSecondary">·</Typography>
               <Link to="/daftar">Belum ada Akun?</Link>
             </Grid>
           </Grid>
