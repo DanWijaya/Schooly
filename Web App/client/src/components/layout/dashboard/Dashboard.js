@@ -46,7 +46,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import WarningIcon from "@material-ui/icons/Warning";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import { FaTasks } from "react-icons/fa";
+import { FaTasks, FaSitemap } from "react-icons/fa";
 import { Bar } from "react-chartjs-2";
 
 const styles = (theme) => ({
@@ -653,39 +653,35 @@ function ListAssessments(props) {
 
 function WelcomePanel(props) {
   const { user, classes } = props;
+  let classToUse;
+
+  if(user.role === "SuperAdmin"){
+    classToUse = classes.timePaperAdmin;
+    // classToUse = classes.timePaperSuperAdmin;
+  } 
+  else if(user.role === "Admin"){
+    classToUse = classes.timePaperAdmin;
+  } 
+  else if(user.role === "Teacher"){
+    classToUse = classes.timePaperTeacher;
+  }
+  else if(user.role === "Student"){
+    classToUse = classes.timePaperStudent;
+  } 
+  else {
+    classToUse = null;
+  }
 
   return (
-    <Grid item>
-      {user.role === "Student" ? (
-        <Paper elevation={0} className={classes.timePaperStudent}>
-          <Typography variant="h4" gutterBottom>
-            <b>Selamat Datang, {user.name}</b>
-          </Typography>
-          <Typography variant="h6">
-            Apa yang ingin Anda kerjakan hari ini?
-          </Typography>
-        </Paper>
-      ) : user.role === "Teacher" ? (
-        <Paper elevation={0} className={classes.timePaperTeacher}>
-          <Typography variant="h4" gutterBottom>
-            <b>Selamat Datang, {user.name}</b>
-          </Typography>
-          <Typography variant="h6">
-            Apa yang ingin Anda kerjakan hari ini?
-          </Typography>
-        </Paper>
-      ) : (
-        <Paper elevation={0} className={classes.timePaperAdmin}>
-          <Typography variant="h4" gutterBottom>
-            <b>Selamat Datang, {user.name}</b>
-          </Typography>
-          <Typography variant="h6">
-            Apa yang ingin Anda kerjakan hari ini?
-          </Typography>
-        </Paper>
-      )}
-    </Grid>
-  );
+    <Paper elevation={0} className={classToUse}>
+      <Typography variant="h4" gutterBottom>
+        <b>Selamat Datang, {user.name}</b>
+      </Typography>
+      <Typography variant="h6">
+        Apa yang ingin Anda kerjakan hari ini?
+      </Typography>
+    </Paper>
+  )
 }
 
 class Dashboard extends Component {
@@ -1758,7 +1754,7 @@ class Dashboard extends Component {
                 </Grid>
               </Grid>
             </>
-          ) : (
+          ) : user.role === "Admin" ? (
             <Grid
               item
               container
@@ -1838,7 +1834,87 @@ class Dashboard extends Component {
                 </Menu>
               </Grid>
             </Grid>
-          )}
+          ) : user.role === "SuperAdmin" ? 
+          (<Grid
+            item
+            container
+            direction="row"
+            justify="flex-end"
+            alignItems="center"
+            spacing={1}
+          >
+          <Grid item>
+            <Link to="/pengelola-aktif">
+              <Fab
+                variant="extended"
+                className={classes.manageHomeroomTeacherButton}
+              >
+                <AiOutlineUserSwitch
+                  className={classes.manageHomeroomTeacherIcon}
+                />
+                Atur Pengelola
+              </Fab>
+            </Link>
+          </Grid>
+          <Grid item>
+            <Link to="/daftar-unit-sekolah">
+              <Fab variant="extended" className={classes.manageClassButton}>
+                <FaSitemap className={classes.manageClassIcon} />
+                Atur Unit sekolah
+              </Fab>
+            </Link>
+          </Grid>
+          <Grid item>
+            <Fab
+              className={classes.createButton}
+              onClick={(event) => this.handleMenuOpen(event)}
+            >
+              <AddIcon />
+            </Fab>
+            <Menu
+              keepMounted
+              anchorEl={this.state.anchorEl}
+              open={Boolean(this.state.anchorEl)}
+              onClose={this.handleMenuClose}
+              getContentAnchorEl={null}
+              style={{ marginTop: "10px" }}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              <MenuItem
+                button
+                component="a"
+                href="/buat-kelas"
+                className={classes.menuItem}
+              >
+                <ListItemIcon>
+                  <FaChalkboardTeacher
+                    className={classes.manageClassIcon}
+                  />
+                </ListItemIcon>
+                <ListItemText primary="Buat Kelas" />
+              </MenuItem>
+              <MenuItem
+                button
+                component="a"
+                href="/buat-pengumuman"
+                className={classes.menuItem}
+              >
+                <ListItemIcon>
+                  <AnnouncementIcon />
+                </ListItemIcon>
+                <ListItemText primary="Buat Pengumuman" />
+              </MenuItem>
+            </Menu>
+          </Grid>
+        </Grid>
+      ) : null}
         </div>
       </div>
     );

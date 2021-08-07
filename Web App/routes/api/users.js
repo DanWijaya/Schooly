@@ -16,6 +16,7 @@ const User = require("../../models/user_model/User");
 const Student = require("../../models/user_model/Student");
 const Teacher = require("../../models/user_model/Teacher");
 const Admin = require("../../models/user_model/Admin");
+const SuperAdmin = require("../../models/user_model/SuperAdmin");
 const { ObjectId } = require("mongodb");
 const Validator = require("validator");
 const isEmpty = require("is-empty");
@@ -44,8 +45,10 @@ router.post("/register", (req, res) => {
       var newUser;
       if (req.body.role === "Student") newUser = new Student(req.body);
       else if (req.body.role === "Teacher") newUser = new Teacher(req.body);
-      else {
-        newUser = new Admin(req.body);
+      else if(req.body.role === "Admin") newUser = new Admin(req.body);
+      else if(req.body.role === "SuperAdmin") newUser = new SuperAdmin(req.body);
+      else{
+        return res.status(400).json({ role : "Peran belum diisi"})
       }
 
       // Hash password before saving in database

@@ -14,6 +14,7 @@ import {
   Toolbar,
   Typography,
   Tooltip,
+  isWidthUp,
 } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
@@ -27,7 +28,7 @@ import { BsClipboardData } from "react-icons/bs";
 import {
   FaChalkboardTeacher,
   FaClipboardList,
-  // FaDropbox,
+  FaSitemap,
   FaUserCheck,
   FaUserClock,
 } from "react-icons/fa";
@@ -110,14 +111,42 @@ function DrawerContent(props) {
   if (user !== undefined) {
     if (user.role === "Student") {
       directedTo = `/kelas/${user.kelas}`;
-      // directedTo = "/daftar-kelas";
     } else {
       directedTo = "/daftar-kelas";
     }
   }
 
   let ListItemContents;
-  if (user.role === "Admin")
+  if(user.role === "SuperAdmin"){
+    ListItemContents = [
+      [
+        "/beranda",
+        <DashboardIcon className={classes.drawerListItemIcon} />,
+        "Beranda",
+      ],
+      [
+        "/daftar-unit-sekolah",
+        <FaSitemap className={classes.drawerListItemIcon} />,
+        "Unit Sekolah"
+      ],
+      [
+        "/pengelola-tertunda",
+        <FaUserClock className={classes.drawerListItemIcon} />,
+        "Pengelola Tertunda",
+      ],
+      [
+        "/pengelola-aktif",
+        <FaUserCheck className={classes.drawerListItemIcon} />,
+        "Pengelola Aktif",
+      ],
+      [
+        "/kalender",
+        <EventNoteIcon className={classes.drawerListItemIcon} />,
+        "Kalender",
+      ]
+    ];
+  }
+  else if (user.role === "Admin"){
     ListItemContents = [
       [
         "/beranda",
@@ -155,6 +184,7 @@ function DrawerContent(props) {
         "Kalender",
       ]
     ];
+  }
   else if (user.role === "Student") {
     ListItemContents = [
       [
@@ -204,7 +234,7 @@ function DrawerContent(props) {
         "Kalender",
       ]
     ];
-  } else {
+  } else if(user.role === "Teacher"){
     ListItemContents = [
       [
         "/beranda",
@@ -253,6 +283,9 @@ function DrawerContent(props) {
         "Kalender",
       ]
     ];
+  }
+  else{
+    ListItemContents = []
   }
 
   return (
