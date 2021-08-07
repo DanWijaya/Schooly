@@ -190,6 +190,7 @@ function ManageUsersToolbar(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   });
 
+  console.log(searchBarFocus);
   return (
     <Toolbar className={classes.toolbar}>
       <div
@@ -292,7 +293,6 @@ function ManageUsersToolbar(props) {
             </LightTooltip>
           )}
         </Hidden>
-        {/* {currentCheckboxMode && rowCount !== 0 ? ( */}
         {rowCount !== 0 ? (
           listCheckbox.length === 0 ? (
             <IconButton size="small" onClick={() => selectAllData(role)}>
@@ -1297,8 +1297,10 @@ function ManageUsers(props) {
     </div>)
   }
 
+  console.log(searchBarFocusS, searchBarFocusT);
   return (
     <div className={classes.root}>
+      
       {DisableDialog()}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
@@ -1351,16 +1353,10 @@ function ManageUsers(props) {
         deactivateCheckboxMode={handleDeactivateCheckboxMode}
         currentCheckboxMode={checkboxModeStudent}
         OpenDialogCheckboxDelete={handleOpenCheckboxDeleteDialog}
-        // OpenDialogCheckboxApprove={handleOpenCheckboxApproveDialog}
         CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
-        // CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
         CheckboxDialog={CheckboxDialog}
         lengthListCheckbox={listCheckboxStudent.length}
         listCheckbox={listCheckboxStudent}
-        // reloader={() => autoReloader}
-        // listBooleanCheckbox={currentListBooleanStudent}
-        // listBooleanCheckboxState={booleanCheckboxStudent}
-        // setListBooleanCheckboxState={setBooleanCheckboxStudent}
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
         user={user}
@@ -1482,7 +1478,6 @@ function ManageUsers(props) {
       <TabPanel value={value} index={1}>
 
       <ManageUsersToolbar
-        heading=""
         searchFilterHint="Cari Guru"
         role="Teacher"
         deleteUser={deleteUser}
