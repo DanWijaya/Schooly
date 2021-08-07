@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -16,6 +16,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import UserMenu from "../../misc/menu-user/UserMenu";
 import {
   Avatar,
   Button,
@@ -37,6 +38,9 @@ import {
   Checkbox,
   ExpansionPanel,
   ExpansionPanelSummary,
+  Tab,
+  Tabs,
+  AppBar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -55,6 +59,9 @@ import { BiSitemap } from "react-icons/bi";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from "@material-ui/icons/Clear";
+import { BsFillPersonCheckFill } from "react-icons/bs";
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(
@@ -108,8 +115,13 @@ function stableSort(array, comparator) {
 }
 
 function ManageUsersToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, role, heading } = props;
   const {
+    classes, 
+    order, 
+    orderBy, 
+    onRequestSort, 
+    role, 
+    heading,
     currentCheckboxMode,
     rowCount,
     user,
@@ -127,7 +139,6 @@ function ManageUsersToolbar(props) {
     searchFilterHint,
     updateSearchFilter,
   } = props;
-  // OpenDialogCheckboxApprove
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property, role);
@@ -173,6 +184,11 @@ function ManageUsersToolbar(props) {
   const onClear = (e) => {
     updateSearchFilter("");
   };
+
+  React.useEffect(() => {
+    console.log(lengthListCheckbox);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
 
   return (
     <Toolbar className={classes.toolbar}>
@@ -276,7 +292,8 @@ function ManageUsersToolbar(props) {
             </LightTooltip>
           )}
         </Hidden>
-        {currentCheckboxMode && rowCount !== 0 ? (
+        {/* {currentCheckboxMode && rowCount !== 0 ? ( */}
+        {rowCount !== 0 ? (
           listCheckbox.length === 0 ? (
             <IconButton size="small" onClick={() => selectAllData(role)}>
               <CheckBoxOutlineBlankIcon
@@ -295,6 +312,16 @@ function ManageUsersToolbar(props) {
             </IconButton>
           )
         ) : null}
+        <>
+          {CheckboxDialog("Delete", "Student")}
+          <UserMenu
+            options={["Hapus"]}
+            row={null}
+            handleOpenDeleteDialog={OpenDialogCheckboxDelete}
+            handleOpenDisableDialog={null}
+
+          />
+        </>
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
         <Hidden smDown implementation="css">
@@ -349,9 +376,11 @@ function ManageUsersToolbar(props) {
         </Hidden>
         {role === "Student" ? (
           <>
-            {lengthListCheckbox === 0 ? (
+            {
+              // lengthListCheckbox === 0 ? (
               <>
-                <LightTooltip
+                {/* =========== MODE KOTAK CENTANG ================ */}
+                {/* <LightTooltip
                   title={
                     !currentCheckboxMode
                       ? "Mode Kotak Centang"
@@ -372,7 +401,7 @@ function ManageUsersToolbar(props) {
                       <RecentActorsIcon />
                     )}
                   </IconButton>
-                </LightTooltip>
+                </LightTooltip> */}
                 <LightTooltip title="Urutkan Akun">
                   <IconButton
                     onClick={handleOpenSortMenu}
@@ -418,19 +447,20 @@ function ManageUsersToolbar(props) {
                   ))}
                 </Menu>
               </>
-            ) : (
-              <>
-                {CheckboxDialog("Delete", "Student")}
-                <LightTooltip title="Hapus Pengguna Tercentang">
-                  <IconButton
-                    className={classes.profileDeleteButton}
-                    onClick={(e) => OpenDialogCheckboxDelete(e, "Student")}
-                  >
-                    <DeleteIcon fontSize="default" />
-                  </IconButton>
-                </LightTooltip>
-              </>
-            )}
+              // ) : (
+              //   <>
+              //     {CheckboxDialog("Delete", "Student")}
+              //     <LightTooltip title="Hapus Pengguna Tercentang">
+              //       <IconButton
+              //         className={classes.profileDeleteButton}
+              //         onClick={(e) => OpenDialogCheckboxDelete(e, "Student")}
+              //       >
+              //         <DeleteIcon fontSize="default" />
+              //       </IconButton>
+              //     </LightTooltip>
+              //   </>
+              // )
+            }
           </>
         ) : (
           <>
@@ -445,7 +475,9 @@ function ManageUsersToolbar(props) {
                     </IconButton>
                   </Link>
                 </LightTooltip>
-                <LightTooltip
+                {/* =========== MODE KOTAK CENTANG ================ */}
+
+                {/* <LightTooltip
                   title={
                     !currentCheckboxMode
                       ? "Mode Kotak Centang"
@@ -466,7 +498,7 @@ function ManageUsersToolbar(props) {
                       <RecentActorsIcon />
                     )}
                   </IconButton>
-                </LightTooltip>
+                </LightTooltip> */}
                 <LightTooltip title="Urutkan Akun">
                   <IconButton
                     onClick={handleOpenSortMenu}
@@ -524,7 +556,7 @@ function ManageUsersToolbar(props) {
                     <CheckCircleIcon />
                   </IconButton>
                 </LightTooltip> */}
-                {CheckboxDialog("Delete", "Teacher")}
+                {/* {CheckboxDialog("Delete", "Teacher")}
                 <LightTooltip title="Hapus Pengguna Tercentang">
                   <IconButton
                     className={classes.profileDeleteButton}
@@ -532,7 +564,7 @@ function ManageUsersToolbar(props) {
                   >
                     <DeleteIcon />
                   </IconButton>
-                </LightTooltip>
+                </LightTooltip> */}
               </>
             )}
           </>
@@ -589,6 +621,7 @@ function ManageUsersToolbar(props) {
     // </Toolbar>
   );
 }
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -729,6 +762,10 @@ const useStyles = makeStyles((theme) => ({
   checkboxIconPrimary: {
     color: theme.palette.primary.main,
   },
+  titleTab: {
+    fontSize: "16px",
+    minWidth: "10%"
+  },
 }));
 
 function ManageUsers(props) {
@@ -794,7 +831,7 @@ function ManageUsers(props) {
 
   React.useEffect(() => {
     console.log(listCheckboxStudent.length);
-    console.log(listCheckboxTeacher.length);
+    console.log(listCheckboxTeacher.length)
     autoReloader();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listCheckboxTeacher, listCheckboxStudent]);
@@ -802,9 +839,9 @@ function ManageUsers(props) {
   const handleActivateCheckboxMode = (type) => {
     if (type === "Student") {
       setCheckboxModeStudent(true);
-      if (currentListBooleanStudent.length === student_rows.length) {
-        setBooleanCheckboxStudent(currentListBooleanStudent);
-      }
+      // if (currentListBooleanStudent.length === student_rows.length) {
+      //   setBooleanCheckboxStudent(currentListBooleanStudent);
+      // }
     } else if (type === "Teacher") {
       setCheckboxModeTeacher(true);
       if (currentListBooleanTeacher.length === teacher_rows.length) {
@@ -824,7 +861,7 @@ function ManageUsers(props) {
   const handleChangeListStudent = (e, index, row) => {
     let currentBooleanList = booleanCheckboxStudent;
     currentBooleanList[index] = !currentBooleanList[index];
-    setBooleanCheckboxStudent(currentBooleanList);
+    // setBooleanCheckboxStudent(currentBooleanList);
     let status = true;
     let result = [];
     let temp = { checkboxEvent: e, index: index, row: row };
@@ -882,6 +919,7 @@ function ManageUsers(props) {
   };
 
   const selectAllData = (type) => {
+    console.log("Select all data is runned", type);
     if (type === "Student") {
       let allDataStudent = [];
       let booleanAllDataStudent = [];
@@ -890,6 +928,8 @@ function ManageUsers(props) {
         allDataStudent.push(temp);
         booleanAllDataStudent.push(true);
       }
+      console.log(booleanAllDataStudent);
+      console.log(allDataStudent);
       setListCheckboxStudent(allDataStudent);
       setBooleanCheckboxStudent(booleanAllDataStudent);
     } else {
@@ -962,6 +1002,7 @@ function ManageUsers(props) {
 
   const autoReloader = () => {
     setTest(!test);
+    // console.log("Disable auto reloader")
   };
 
   const userRowItem = (data) => {
@@ -1153,11 +1194,6 @@ function ManageUsers(props) {
                   Hapus semua pengguna berikut?
                 </Typography>
               </Grid>
-              {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
-                  <Typography variant="h6" align="center" gutterBottom>
-                    <b>{selectedUserName}</b>
-                  </Typography>
-                </Grid> */}
               <Grid
                 container
                 direction="row"
@@ -1249,8 +1285,19 @@ function ManageUsers(props) {
     );
   }
 
-  console.log(all_teachers[0]);
-  console.log(pending_users);
+  // ============ TAB ====================
+  const [value,setValue] = React.useState(0)
+  const handleTabs = (e,val)=>{
+    setValue(val)
+  }
+  function TabPanel(props){
+    const { children,value,index } = props;
+    return (<div>
+      {value === index && (
+        <div>{children}</div>
+      )}
+    </div>)
+  }
 
   return (
     <div className={classes.root}>
@@ -1268,17 +1315,32 @@ function ManageUsers(props) {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "left",
           minHeight: "46.5px",
+          margin: "2rem 0",
+          columnGap: "40px",
         }}
       >
+        <BsFillPersonCheckFill fontSize="30px" />
         <Typography variant="h4" align="left">
-          Daftar Pengguna Aktif
+          Pengguna Aktif
         </Typography>
       </div>
-      <Divider className={classes.titleDivider} />
+      {/* <Divider className={classes.titleDivider} /> */}
+      <AppBar position="static"
+        style={{
+          margin: "0 0 2rem 0",
+        }}
+      >
+        <Tabs value={value} onChange={handleTabs}>
+          <Tab className={classes.titleTab} label="Murid" />
+          <Tab className={classes.titleTab} label="Guru" />
+        </Tabs>
+      </AppBar>
+      <TabPanel value={value} index={0}>
+
       <ManageUsersToolbar
-        heading="Daftar Murid"
+        heading=""
         searchFilterHint="Cari Murid"
         role="Student"
         deleteUser={deleteUser}
@@ -1297,10 +1359,10 @@ function ManageUsers(props) {
         CheckboxDialog={CheckboxDialog}
         lengthListCheckbox={listCheckboxStudent.length}
         listCheckbox={listCheckboxStudent}
-        reloader={() => autoReloader}
-        listBooleanCheckbox={currentListBooleanStudent}
-        listBooleanCheckboxState={booleanCheckboxStudent}
-        setListBooleanCheckboxState={setBooleanCheckboxStudent}
+        // reloader={() => autoReloader}
+        // listBooleanCheckbox={currentListBooleanStudent}
+        // listBooleanCheckboxState={booleanCheckboxStudent}
+        // setListBooleanCheckboxState={setBooleanCheckboxStudent}
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
         user={user}
@@ -1325,9 +1387,8 @@ function ManageUsers(props) {
             getComparator(order_student, orderBy_student)
           ).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
-
             let content = (
-              <ExpansionPanel button variant="outlined" expanded={false}>
+              <div>
                 <ExpansionPanelSummary className={classes.profilePanelSummary}>
                   <Grid
                     container
@@ -1335,6 +1396,37 @@ function ManageUsers(props) {
                     justify="space-between"
                     alignItems="center"
                   >
+                    <Grid item justify="flex-start">
+                      <Grid item>
+                        <LightTooltip title="Aktifkan">
+                          <FormGroup>
+                            <FormControlLabel
+                              control={
+                                booleanCheckboxStudent[index] ? 
+                                <Checkbox
+                                  onChange={(e) => {
+                                    handleChangeListStudent(e, index, row);
+                                    autoReloader();
+                                  }}
+                                  color="primary"
+                                  checked={booleanCheckboxStudent[index]} 
+                                /> 
+                                :
+                                <Checkbox
+                                  onChange={(e) => {
+                                    handleChangeListStudent(e, index, row);
+                                    autoReloader();
+                                  }}
+                                  color="primary"
+                                  checked={false} 
+                                /> 
+                               
+                              }
+                            />
+                          </FormGroup>
+                        </LightTooltip>
+                      </Grid>
+                    </Grid>
                     <Grid item>
                       {!row.avatar ? (
                         <ListItemAvatar>
@@ -1357,117 +1449,53 @@ function ManageUsers(props) {
                       </Hidden>
                       <Hidden xsDown implementation="css">
                         <Typography variant="h6" id={labelId}>
-                          {row.name}
+                          <Link
+                            style={{ color: 'black' }}
+                            to={{
+                              pathname: `/lihat-profil/${row._id}`,
+                            }}
+                          >
+                            {row.name}
+                          </Link>
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                          {row.email}
+                          <Link
+                            style={{ color: 'black' }}
+                            to={{
+                              pathname: `/lihat-profil/${row._id}`,
+                            }}
+                          >
+                            {row.email}
+                          </Link>
                         </Typography>
                       </Hidden>
                     </Grid>
-                    {!checkboxModeStudent ? (
-                      <Grid item xs container spacing={1} justify="flex-end">
-                        <Grid item>
-                          <LightTooltip title="Nonaktifkan">
-                            <IconButton
-                              size="small"
-                              style={{ display: "none" }}
-                              className={classes.profileDisableButton}
-                              onClick={(e) => {
-                                handleOpenDisableDialog(e, row._id, row.name);
-                              }}
-                            >
-                              <BlockIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Lihat Lebih Lanjut">
-                            <Link
-                              to={{
-                                pathname: `/lihat-profil/${row._id}`,
-                              }}
 
-                              // to={{
-                              //   pathname: "/lihat-profil",
-                              //   state: {
-                              //     avatar: row.avatar,
-                              //     nama: row.name,
-                              //     kelas: all_students[index].kelas,
-                              //     viewable_section: "with_karir",
-                              //     tanggal_lahir: moment(row.tanggal_lahir)
-                              //       .locale("id")
-                              //       .format("DD MMMM YYYY"),
-                              //     jenis_kelamin: all_students[index].jenis_kelamin,
-                              //     role: "Student",
-                              //     sekolah: row.sekolah,
-                              //     email: row.email,
-                              //     phone: row.phone,
-                              //     emergency_phone: row.emergency_phone,
-                              //     alamat: row.address,
-                              //     hobi: all_students[index].hobi_minat,
-                              //     ket: all_students[index].ket_non_teknis,
-                              //     cita: all_students[index].cita_cita,
-                              //     uni: all_students[index].uni_impian,
-                              //     admin: true,
-                              //   },
-                              // }}
-                            >
-                              <IconButton
-                                size="small"
-                                className={classes.viewMaterialButton}
-                              >
-                                <PageviewIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Hapus">
-                            <IconButton
-                              size="small"
-                              className={classes.profileDeleteButton}
-                              onClick={(e) => {
-                                handleOpenDeleteDialog(e, row._id, row.name);
-                              }}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
-                        </Grid>
-                      </Grid>
-                    ) : (
-                      <Grid item xs container spacing={1} justify="flex-end">
-                        <Grid item>
-                          <LightTooltip title="Aktifkan">
-                            <FormGroup>
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    onChange={(e) => {
-                                      handleChangeListStudent(e, index, row);
-                                      autoReloader();
-                                    }}
-                                    color="primary"
-                                    checked={booleanCheckboxStudent[index]}
-                                  />
-                                }
-                              />
-                            </FormGroup>
-                          </LightTooltip>
-                        </Grid>
-                      </Grid>
-                    )}
+                    <Grid item xs container spacing={1} justify="flex-end">
+                      <UserMenu
+                        options={["Nonaktifkan", "Hapus"]}
+                        row={row}
+                        handleOpenDeleteDialog={handleOpenDeleteDialog}
+                        handleOpenDisableDialog={handleOpenDisableDialog}
+                      />
+
+                    </Grid>
+
                   </Grid>
                 </ExpansionPanelSummary>
-              </ExpansionPanel>
+                <Divider />
+              </div>
             );
 
             return <Grid item>{content}</Grid>;
           })
         )}
       </Grid>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+
       <ManageUsersToolbar
-        heading="Daftar Guru"
+        heading=""
         searchFilterHint="Cari Guru"
         role="Teacher"
         deleteUser={deleteUser}
@@ -1512,7 +1540,7 @@ function ManageUsers(props) {
             console.log(all_teachers[index]);
 
             let content = (
-              <ExpansionPanel button variant="outlined" expanded={false}>
+              <>
                 <ExpansionPanelSummary className={classes.profilePanelSummary}>
                   <Grid
                     container
@@ -1520,6 +1548,36 @@ function ManageUsers(props) {
                     justify="space-between"
                     alignItems="center"
                   >
+                    <Grid item justify="flex-start">
+                      <Grid item>
+                        <LightTooltip title="Aktifkan">
+                          <FormGroup>
+                            <FormControlLabel
+                              control={
+                                booleanCheckboxTeacher[index] ? 
+                                <Checkbox
+                                  onChange={(e) => {
+                                    handleChangeListTeacher(e, index, row);
+                                    autoReloader();
+                                  }}
+                                  color="primary"
+                                  checked={booleanCheckboxTeacher[index]}
+                                />
+                                :
+                                <Checkbox
+                                  onChange={(e) => {
+                                    handleChangeListTeacher(e, index, row);
+                                    autoReloader();
+                                  }}
+                                  color="primary"
+                                  checked={false}
+                                />
+                              }
+                            />
+                          </FormGroup>
+                        </LightTooltip>
+                      </Grid>
+                    </Grid>
                     <Grid item>
                       {!row.avatar ? (
                         <ListItemAvatar>
@@ -1542,61 +1600,43 @@ function ManageUsers(props) {
                       </Hidden>
                       <Hidden xsDown implementation="css">
                         <Typography variant="h6" id={labelId}>
-                          {row.name}
+                          <Link
+                            style={{ color: 'black' }}
+                            to={{
+                              pathname: `/lihat-profil/${row._id}`,
+                            }}
+                          >
+                            {row.name}
+                          </Link>
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                          {row.email}
+                          <Link
+                            style={{ color: 'black' }}
+                            to={{
+                              pathname: `/lihat-profil/${row._id}`,
+                            }}
+                          >
+                            {row.email}
+                          </Link>
                         </Typography>
                       </Hidden>
                     </Grid>
-                    {!checkboxModeTeacher ? (
+                    {/* {!checkboxModeTeacher ? (
                       <Grid item xs container spacing={1} justify="flex-end">
                         <Grid item>
-                          <LightTooltip title="Lihat Lebih Lanjut">
-                            <Link
-                              to={{
-                                pathname: `/lihat-profil/${row._id}`,
-                              }}
-                            >
-                              <IconButton
-                                size="small"
-                                className={classes.viewMaterialButton}
-                              >
-                                <PageviewIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </LightTooltip>
-                          <LightTooltip title="Nonaktifkan">
-                            <IconButton
-                              size="small"
-                              style={{ display: "none" }}
-                              className={classes.profileDisableButton}
-                              onClick={(e) => {
-                                handleOpenDisableDialog(e, row._id, row.name);
-                              }}
-                            >
-                              <BlockIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Hapus">
-                            <IconButton
-                              size="small"
-                              className={classes.profileDeleteButton}
-                              onClick={(e) => {
-                                handleOpenDeleteDialog(e, row._id, row.name);
-                              }}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
+                          <UserMenu
+                            options={["Nonaktifkan", "Hapus"]}
+                            row={row}
+                            handleOpenDeleteDialog={handleOpenDeleteDialog}
+                            handleOpenDisableDialog={handleOpenDisableDialog}
+
+                          />
                         </Grid>
                       </Grid>
-                    ) : (
+                    ) : ( */}
                       <Grid item xs container spacing={1} justify="flex-end">
                         <Grid item>
-                          <LightTooltip title="Aktifkan">
+                          {/* <LightTooltip title="Aktifkan">
                             <FormGroup>
                               <FormControlLabel
                                 control={
@@ -1611,19 +1651,27 @@ function ManageUsers(props) {
                                 }
                               />
                             </FormGroup>
-                          </LightTooltip>
+                          </LightTooltip> */}
+                          <UserMenu
+                        options={["Nonaktifkan", "Hapus"]}
+                        row={row}
+                        handleOpenDeleteDialog={handleOpenDeleteDialog}
+                        handleOpenDisableDialog={handleOpenDisableDialog}
+                      />
                         </Grid>
                       </Grid>
-                    )}
+                    
                   </Grid>
                 </ExpansionPanelSummary>
-              </ExpansionPanel>
+                <Divider />
+              </>
             );
 
             return <Grid item>{content}</Grid>;
           })
         )}
       </Grid>
+      </TabPanel>
     </div>
   );
 }
