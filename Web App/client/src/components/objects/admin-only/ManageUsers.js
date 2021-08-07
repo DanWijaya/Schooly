@@ -851,14 +851,13 @@ function ManageUsers(props) {
   const handleChangeListStudent = (e, index, row) => {
     let currentBooleanList = booleanCheckboxStudent;
     currentBooleanList[index] = !currentBooleanList[index];
-    // setBooleanCheckboxStudent(currentBooleanList);
+
     let status = true;
     let result = [];
     let temp = { checkboxEvent: e, index: index, row: row };
     for (let i = 0; i < listCheckboxStudent.length; i++) {
       if (listCheckboxStudent[i].row._id === row._id) {
         result = listCheckboxStudent;
-        // result.splice(i, i + 1)
         result.splice(i, 1);
         status = false;
         break;
@@ -881,7 +880,6 @@ function ManageUsers(props) {
     for (let i = 0; i < listCheckboxTeacher.length; i++) {
       if (listCheckboxTeacher[i].row._id === row._id) {
         result = listCheckboxTeacher;
-        // result.splice(i, i + 1)
         result.splice(i, 1);
         status = false;
         break;
@@ -1363,25 +1361,14 @@ function ManageUsers(props) {
                           <FormGroup>
                             <FormControlLabel
                               control={
-                                booleanCheckboxStudent[index] ? 
                                 <Checkbox
                                   onChange={(e) => {
                                     handleChangeListStudent(e, index, row);
                                     autoReloader();
                                   }}
                                   color="primary"
-                                  checked={booleanCheckboxStudent[index]} 
+                                  checked={Boolean(booleanCheckboxStudent[index])} 
                                 /> 
-                                :
-                                <Checkbox
-                                  onChange={(e) => {
-                                    handleChangeListStudent(e, index, row);
-                                    autoReloader();
-                                  }}
-                                  color="primary"
-                                  checked={false} 
-                                /> 
-                               
                               }
                             />
                           </FormGroup>
@@ -1512,23 +1499,13 @@ function ManageUsers(props) {
                           <FormGroup>
                             <FormControlLabel
                               control={
-                                booleanCheckboxTeacher[index] ? 
                                 <Checkbox
                                   onChange={(e) => {
                                     handleChangeListTeacher(e, index, row);
                                     autoReloader();
                                   }}
                                   color="primary"
-                                  checked={booleanCheckboxTeacher[index]}
-                                />
-                                :
-                                <Checkbox
-                                  onChange={(e) => {
-                                    handleChangeListTeacher(e, index, row);
-                                    autoReloader();
-                                  }}
-                                  color="primary"
-                                  checked={false}
+                                  checked={Boolean(booleanCheckboxTeacher[index])}
                                 />
                               }
                             />
@@ -1604,7 +1581,7 @@ function ManageUsers(props) {
                                       autoReloader();
                                     }}
                                     color="primary"
-                                    checked={booleanCheckboxTeacher[index]}
+                                    checked={Boolean(booleanCheckboxTeacher[index])}
                                   />
                                 }
                               />
