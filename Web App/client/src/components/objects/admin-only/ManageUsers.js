@@ -38,6 +38,9 @@ import {
   Checkbox,
   ExpansionPanel,
   ExpansionPanelSummary,
+  Tab,
+  Tabs,
+  AppBar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -56,7 +59,7 @@ import { BiSitemap } from "react-icons/bi";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from "@material-ui/icons/Clear";
-
+import { BsFillPersonCheckFill } from "react-icons/bs";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 
@@ -376,7 +379,8 @@ function ManageUsersToolbar(props) {
             {
               // lengthListCheckbox === 0 ? (
               <>
-                <LightTooltip
+                {/* =========== MODE KOTAK CENTANG ================ */}
+                {/* <LightTooltip
                   title={
                     !currentCheckboxMode
                       ? "Mode Kotak Centang"
@@ -397,7 +401,7 @@ function ManageUsersToolbar(props) {
                       <RecentActorsIcon />
                     )}
                   </IconButton>
-                </LightTooltip>
+                </LightTooltip> */}
                 <LightTooltip title="Urutkan Akun">
                   <IconButton
                     onClick={handleOpenSortMenu}
@@ -471,7 +475,9 @@ function ManageUsersToolbar(props) {
                     </IconButton>
                   </Link>
                 </LightTooltip>
-                <LightTooltip
+                {/* =========== MODE KOTAK CENTANG ================ */}
+
+                {/* <LightTooltip
                   title={
                     !currentCheckboxMode
                       ? "Mode Kotak Centang"
@@ -492,7 +498,7 @@ function ManageUsersToolbar(props) {
                       <RecentActorsIcon />
                     )}
                   </IconButton>
-                </LightTooltip>
+                </LightTooltip> */}
                 <LightTooltip title="Urutkan Akun">
                   <IconButton
                     onClick={handleOpenSortMenu}
@@ -550,7 +556,7 @@ function ManageUsersToolbar(props) {
                     <CheckCircleIcon />
                   </IconButton>
                 </LightTooltip> */}
-                {CheckboxDialog("Delete", "Teacher")}
+                {/* {CheckboxDialog("Delete", "Teacher")}
                 <LightTooltip title="Hapus Pengguna Tercentang">
                   <IconButton
                     className={classes.profileDeleteButton}
@@ -558,7 +564,7 @@ function ManageUsersToolbar(props) {
                   >
                     <DeleteIcon />
                   </IconButton>
-                </LightTooltip>
+                </LightTooltip> */}
               </>
             )}
           </>
@@ -755,6 +761,10 @@ const useStyles = makeStyles((theme) => ({
   },
   checkboxIconPrimary: {
     color: theme.palette.primary.main,
+  },
+  titleTab: {
+    fontSize: "16px",
+    minWidth: "10%"
   },
 }));
 
@@ -1275,6 +1285,20 @@ function ManageUsers(props) {
     );
   }
 
+  // ============ TAB ====================
+  const [value,setValue] = React.useState(0)
+  const handleTabs = (e,val)=>{
+    setValue(val)
+  }
+  function TabPanel(props){
+    const { children,value,index } = props;
+    return (<div>
+      {value === index && (
+        <div>{children}</div>
+      )}
+    </div>)
+  }
+
   return (
     <div className={classes.root}>
       {DisableDialog()}
@@ -1291,15 +1315,30 @@ function ManageUsers(props) {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "left",
           minHeight: "46.5px",
+          margin: "2rem 0",
+          columnGap: "40px",
         }}
       >
+        <BsFillPersonCheckFill fontSize="30px" />
         <Typography variant="h4" align="left">
-          Daftar Pengguna Aktif
+          Pengguna Aktif
         </Typography>
       </div>
-      <Divider className={classes.titleDivider} />
+      {/* <Divider className={classes.titleDivider} /> */}
+      <AppBar position="static"
+        style={{
+          margin: "0 0 2rem 0",
+        }}
+      >
+        <Tabs value={value} onChange={handleTabs}>
+          <Tab className={classes.titleTab} label="Murid" />
+          <Tab className={classes.titleTab} label="Guru" />
+        </Tabs>
+      </AppBar>
+      <TabPanel value={value} index={0}>
+
       <ManageUsersToolbar
         heading=""
         searchFilterHint="Cari Murid"
@@ -1452,8 +1491,11 @@ function ManageUsers(props) {
           })
         )}
       </Grid>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+
       <ManageUsersToolbar
-        heading="Daftar Guru"
+        heading=""
         searchFilterHint="Cari Guru"
         role="Teacher"
         deleteUser={deleteUser}
@@ -1594,7 +1636,7 @@ function ManageUsers(props) {
                     ) : ( */}
                       <Grid item xs container spacing={1} justify="flex-end">
                         <Grid item>
-                          <LightTooltip title="Aktifkan">
+                          {/* <LightTooltip title="Aktifkan">
                             <FormGroup>
                               <FormControlLabel
                                 control={
@@ -1609,7 +1651,13 @@ function ManageUsers(props) {
                                 }
                               />
                             </FormGroup>
-                          </LightTooltip>
+                          </LightTooltip> */}
+                          <UserMenu
+                        options={["Nonaktifkan", "Hapus"]}
+                        row={row}
+                        handleOpenDeleteDialog={handleOpenDeleteDialog}
+                        handleOpenDisableDialog={handleOpenDisableDialog}
+                      />
                         </Grid>
                       </Grid>
                     
@@ -1623,6 +1671,7 @@ function ManageUsers(props) {
           })
         )}
       </Grid>
+      </TabPanel>
     </div>
   );
 }
