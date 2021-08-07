@@ -8,7 +8,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 function UserMenu(props) {
 
-    const { options, row } = props
+    const { options, row, rowCount} = props
     const { handleOpenDeleteDialog, handleOpenDisableDialog } = props
     const [anchorEl, setAnchorEl] = React.useState(null);
     // const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -37,6 +37,7 @@ function UserMenu(props) {
                 aria-controls="long-menu"
                 aria-haspopup="true"
                 onClick={handleClick}
+                disabled={rowCount}
             >
                 <MoreVertIcon />
             </IconButton>

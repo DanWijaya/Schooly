@@ -138,6 +138,7 @@ function ManageUsersToolbar(props) {
     searchFilter,
     searchFilterHint,
     updateSearchFilter,
+    tabValueCheck
   } = props;
 
   const createSortHandler = (property) => (event) => {
@@ -238,7 +239,9 @@ function ManageUsersToolbar(props) {
                 value={searchFilter}
                 onChange={onChange}
                 autoFocus
-                onClick={(e) => setSearchBarFocus(true)}
+                onClick={(e) => {
+                  setSearchBarFocus(true)
+                }}
                 placeholder={searchFilterHint}
                 style={{
                   maxWidth: "200px",
@@ -293,25 +296,27 @@ function ManageUsersToolbar(props) {
             </LightTooltip>
           )}
         </Hidden>
-        {rowCount !== 0 ? (
+        {
+          rowCount == 0 ? 
+          <IconButton size="small" onClick={() => selectAllData(role)} disabled={rowCount == 0} className={classes.checkboxIconPrimary}>
+            <CheckBoxOutlineBlankIcon/>
+          </IconButton>
+          :
           listCheckbox.length === 0 ? (
-            <IconButton size="small" onClick={() => selectAllData(role)}>
-              <CheckBoxOutlineBlankIcon
-                className={classes.checkboxIconPrimary}
-              />
+            <IconButton size="small" onClick={() => selectAllData(role)} className={classes.checkboxIconPrimary}>
+              <CheckBoxOutlineBlankIcon/>
             </IconButton>
           ) : listCheckbox.length === rowCount ? (
-            <IconButton size="small" onClick={() => deSelectAllData(role)}>
-              <CheckBoxIcon className={classes.checkboxIconPrimary} />
+            <IconButton size="small" onClick={() => deSelectAllData(role)}className={classes.checkboxIconPrimary}>
+              <CheckBoxIcon />
             </IconButton>
           ) : (
-            <IconButton size="small" onClick={() => deSelectAllData(role)}>
-              <IndeterminateCheckBoxIcon
-                className={classes.checkboxIconPrimary}
-              />
+            <IconButton size="small" onClick={() => deSelectAllData(role)} className={classes.checkboxIconPrimary}
+            >
+              <IndeterminateCheckBoxIcon/>
             </IconButton>
           )
-        ) : null}
+        }
         <>
           {CheckboxDialog("Delete", "Student")}
           <UserMenu
@@ -319,7 +324,7 @@ function ManageUsersToolbar(props) {
             row={null}
             handleOpenDeleteDialog={OpenDialogCheckboxDelete}
             handleOpenDisableDialog={null}
-
+            rowCount={rowCount == 0}
           />
         </>
       </div>
@@ -330,8 +335,13 @@ function ManageUsersToolbar(props) {
             id="searchFilterDesktop"
             value={searchFilter}
             onChange={onChange}
-            onClick={() => setSearchBarFocus(true)}
-            onBlur={() => setSearchBarFocus(false)}
+            autoFocus={searchFilter.length > 0}
+            // onClick={() => {
+            //   setSearchBarFocus(true)
+            // }}
+            // onBlur={() => {
+            //   setSearchBarFocus(false)
+            // }}
             placeholder={searchFilterHint}
             style={{
               maxWidth: "250px",
@@ -1365,6 +1375,7 @@ function ManageUsers(props) {
         //Two props added for search filter.
         searchFilter={searchFilterS}
         updateSearchFilter={updateSearchFilterS}
+        tabValueCheck={value === 0}
       />
       <Divider variant="inset" className={classes.subTitleDivider} />
       <Grid
@@ -1508,6 +1519,7 @@ function ManageUsers(props) {
         //Two props added for search filter.
         searchFilter={searchFilterT}
         updateSearchFilter={updateSearchFilterT}
+        tabValueCheck={value === 1}
       />
       <Divider variant="inset" className={classes.subTitleDivider} />
       <Grid container direction="column" spacing={2}>
