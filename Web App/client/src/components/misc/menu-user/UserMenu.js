@@ -8,7 +8,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 function UserMenu(props) {
 
-    const { options, row, rowCount} = props
+    const { options, row, rowCount } = props
     const { handleOpenDeleteDialog, handleOpenDisableDialog } = props
     const [anchorEl, setAnchorEl] = React.useState(null);
     // const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -16,6 +16,7 @@ function UserMenu(props) {
     const open = Boolean(anchorEl);
 
     const handleClick = (event) => {
+        event.stopPropagation();
         setAnchorEl(event.currentTarget);
     };
     const handleClose = (e) => {
@@ -31,7 +32,7 @@ function UserMenu(props) {
     // };
 
     return (
-        <div>
+        <div >
             <IconButton
                 aria-label="more"
                 aria-controls="long-menu"
@@ -64,7 +65,7 @@ function UserMenu(props) {
                                     : option === 'Nonaktifkan' ?
                                         (e) => handleOpenDisableDialog(e, row._id, row.name)
                                         : () => { }
-                                        // : (e) => handleOpenApproveDialog(e, row._id, row.name)
+                                // : (e) => handleOpenApproveDialog(e, row._id, row.name)
                             }
                         >
                             {option}
