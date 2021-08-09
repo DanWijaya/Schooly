@@ -105,7 +105,7 @@ class ResetPassword extends Component {
             </Grid>
             <Grid item>
               <form noValidate onSubmit={onSubmit}>
-                <Grid container direction="column" spacing={4}>
+                <Grid container direction="column" spacing={5}>
                   <Grid item>
                     <TextField
                       fullWidth
