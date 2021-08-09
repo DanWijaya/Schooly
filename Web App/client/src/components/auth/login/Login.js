@@ -5,9 +5,9 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { loginUser } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import schoolyLogo from "../../../images/SchoolyLogo.png";
 import loginArtLeft from "./LoginArtLeft.png";
 import loginArtRight from "./LoginArtRight.png";
-import schoolyLogo from "../../../images/SchoolyLogo.png";
 import {
   Button,
   Divider,
@@ -35,9 +35,13 @@ const styles = (theme) => ({
     backgroundRepeat: "no-repeat",
   },
   schoolyLogo: {
-    width: "250px",
-    height: "125px",
+    maxWidth: "250px",
+    maxHeight: "125px",
     marginBottom: "25px",
+  },
+  artThumbnail: {
+    maxWidth: "100%",
+    maxHeight: "100%",
   },
   loginPaper: {
     margin: "auto",
@@ -159,141 +163,136 @@ class Login extends Component {
       <div className={classes.root}>
         <Link to="/">
           <img
+            alt="Schooly Logo"
             src={schoolyLogo}
             className={classes.schoolyLogo}
           />
         </Link>
         <Grid container justify="space-between" alignItems="flex-end" spacing={2} style={{maxWidth: "80%"}}>
-        <Grid item item xs={3}>
-          <Hidden smDown>
-            <img
-              src={loginArtLeft}
-              style={{
-                maxWidth: "100%",
-                maxHeight: "100%",
-              }}
-            />
-          </Hidden>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper elevation={11} className={classes.loginPaper}>
-            <Grid container direction="column" spacing={5}>
-              <Grid item>
-                <Typography variant="h6" align="center">
-                  <b>Masuk ke Schooly</b>
-                </Typography>
-              </Grid>
-              <Grid item>
-                <form noValidate onSubmit={this.onSubmit}>
-                  <Grid container direction="column" spacing={4}>
-                    <Grid item>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        id="email"
-                        type="email"
-                        label="Email"
-                        onChange={this.onChange}
-                        value={this.state.email}
-                        helperText={
-                          errors.email || errors.emailnotfound || errors.notactive
-                        }
-                        error={Boolean(
-                          errors.email || errors.emailnotfound || errors.notactive
-                        )}
-                        className={classnames("", {
-                          invalid: errors.email || errors.emailnotfound,
-                        })}
-                      />
+          <Grid item xs={3}>
+            <Hidden smDown>
+              <img
+                src={loginArtLeft}
+                className={classes.artThumbnail}
+              />
+            </Hidden>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Paper elevation={11} className={classes.loginPaper}>
+              <Grid container direction="column" spacing={5}>
+                <Grid item>
+                  <Typography variant="h6" align="center">
+                    <b>Masuk ke Schooly</b>
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <form noValidate onSubmit={this.onSubmit}>
+                    <Grid container direction="column" spacing={4}>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          id="email"
+                          type="email"
+                          label="Email"
+                          onChange={this.onChange}
+                          value={this.state.email}
+                          helperText={
+                            errors.email || errors.emailnotfound || errors.notactive
+                          }
+                          error={Boolean(
+                            errors.email || errors.emailnotfound || errors.notactive
+                          )}
+                          className={classnames("", {
+                            invalid: errors.email || errors.emailnotfound,
+                          })}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          id="password"
+                          type={passwordIsMasked ? "password" : "text"}
+                          label="Kata Sandi"
+                          onChange={this.onChange}
+                          value={this.state.password}
+                          helperText={errors.password || errors.passwordincorrect}
+                          error={Boolean(
+                            errors.password || errors.passwordincorrect
+                          )}
+                          className={classnames("", {
+                            invalid: errors.password || errors.passwordincorrect,
+                          })}
+                          onFocus={() => {
+                            this.setIsFocused(true);
+                          }}
+                          onBlur={() => {
+                            this.setIsFocused(false);
+                          }}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  size="small"
+                                  onClick={this.togglePasswordVisibility}
+                                >
+                                  {icon ? (
+                                    <VisibilityIcon
+                                      className={
+                                        passwordtextfieldFocus ?
+                                        Boolean(errors.password || errors.passwordincorrect) ?
+                                        classes.toggleErrorShowPasswordButton
+                                          : classes.toggleShowPasswordButton
+                                          : null
+                                      }
+                                    />
+                                  ) : (
+                                    <VisibilityOffIcon
+                                      className={
+                                        passwordtextfieldFocus ?
+                                        Boolean(errors.password || errors.passwordincorrect) ?
+                                        classes.toggleErrorShowPasswordButton
+                                          : classes.toggleShowPasswordButton
+                                          : null
+                                      }
+                                    />
+                                  )}
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          className={classes.loginButton}
+                        >
+                          Masuk
+                        </Button>
+                      </Grid>
                     </Grid>
-                    <Grid item>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        id="password"
-                        type={passwordIsMasked ? "password" : "text"}
-                        label="Kata Sandi"
-                        onChange={this.onChange}
-                        value={this.state.password}
-                        helperText={errors.password || errors.passwordincorrect}
-                        error={Boolean(
-                          errors.password || errors.passwordincorrect
-                        )}
-                        className={classnames("", {
-                          invalid: errors.password || errors.passwordincorrect,
-                        })}
-                        onFocus={() => {
-                          this.setIsFocused(true);
-                        }}
-                        onBlur={() => {
-                          this.setIsFocused(false);
-                        }}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton
-                                size="small"
-                                onClick={this.togglePasswordVisibility}
-                              >
-                                {icon ? (
-                                  <VisibilityIcon
-                                    className={
-                                      passwordtextfieldFocus ?
-                                      Boolean(errors.password || errors.passwordincorrect) ?
-                                      classes.toggleErrorShowPasswordButton
-                                        : classes.toggleShowPasswordButton
-                                        : null
-                                    }
-                                  />
-                                ) : (
-                                  <VisibilityOffIcon
-                                    className={
-                                      passwordtextfieldFocus ?
-                                      Boolean(errors.password || errors.passwordincorrect) ?
-                                      classes.toggleErrorShowPasswordButton
-                                        : classes.toggleShowPasswordButton
-                                        : null
-                                    }
-                                  />
-                                )}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        className={classes.loginButton}
-                      >
-                        Masuk
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </form>
+                  </form>
+                </Grid>
+                <Divider />
+                <Grid item container justify="space-around">
+                  <Link to="/akun/lupa-katasandi">Lupa kata sandi?</Link>
+                  <Typography color="textSecondary">·</Typography>
+                  <Link to="/daftar">Belum ada akun?</Link>
+                </Grid>
               </Grid>
-              <Divider />
-              <Grid item container justify="space-around">
-                <Link to="/akun/lupa-katasandi">Lupa Kata Sandi?</Link>
-                <Typography color="textSecondary">·</Typography>
-                <Link to="/daftar">Belum ada Akun?</Link>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Hidden smDown>
-            <img
-              src={loginArtRight}
-              style={{
-                maxWidth: "100%",
-                maxHeight: "100%",
-              }}
-            />
-          </Hidden>
-        </Grid>
+            </Paper>
+          </Grid>
+          <Grid item xs={3}>
+            <Hidden smDown>
+              <img
+                src={loginArtRight}
+                className={classes.artThumbnail}
+              />
+            </Hidden>
+          </Grid>
         </Grid>
       </div>
     );
