@@ -89,6 +89,9 @@ import TeacherList from "./components/objects/admin-only/TeacherList";
 import UnitList from "./components/objects/superadmin-only/UnitList";
 import ManageAdmins from "./components/objects/superadmin-only/ManageAdmins"
 import ManagePendingAdmins from "./components/objects/superadmin-only/ManagePendingAdmins"
+import CreateUnit from "./components/objects/superadmin-only/CreateUnit";
+import EditUnit from "./components/objects/superadmin-only/CreateUnit";
+
 
 //Prototypes
 import Tester from "./prototypes/Tester";
@@ -98,6 +101,7 @@ import Timer from "./prototypes/Timer";
 import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
 import { Fragment } from "react";
 import ScheduleCalendar from "./prototypes/schedule-calendar/ScheduleCalendar";
+
 
 
 //Dropbox
@@ -470,13 +474,6 @@ class App extends Component {
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={CreateAssessment}
                       />
-                      {/* <PrivateRoute
-                        exact
-                        access={[Role.STUDENT, Role.TEACHER]}
-                        path="/buat-kuis-ujian"
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        component={CreateAssessment}
-                      /> */}
                       <PrivateRoute
                         exact
                         access={[Role.STUDENT, Role.TEACHER]}
@@ -596,7 +593,27 @@ class App extends Component {
                       access={[Role.SUPERADMIN]}
                       path="/daftar-unit-sekolah"
                       component={UnitList}/>
-
+                      <PrivateRoute
+                      exact
+                      access={[Role.SUPERADMIN]}
+                      path="/buat-unit"
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      component={CreateUnit}
+                      />
+                      <PrivateRoute
+                      exact
+                      access={[Role.SUPERADMIN]}
+                      path="/sunting-unit"
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      component={EditUnit}
+                      />
+                      <PrivateRoute
+                      exact
+                      access={[Role.SUPERADMIN]}
+                      path="/lihat-unit"
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      component={CreateAssessment}
+                      />
                       {/* Route Event */}
                       <PrivateRoute
                         exact

@@ -14,7 +14,6 @@ import {
   Toolbar,
   Typography,
   Tooltip,
-  isWidthUp,
 } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
@@ -297,14 +296,6 @@ function DrawerContent(props) {
           generateList(item[0], item[1], item[2], item[3])
         )}
       </List>
-      {/* <Divider />
-      <List>
-        {generateList(
-          "/dropbox-connect",
-          <FaDropbox className={classes.dropboxIcon} />,
-          "Dropbox"
-        )}
-      </List> */}
     </div>
   );
 }
