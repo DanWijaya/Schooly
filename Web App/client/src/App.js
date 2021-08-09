@@ -22,7 +22,7 @@ import PrivateRoute from "./components/private-route/PrivateRoute";
 //Auth
 import Register from "./components/auth/register/Register";
 import Login from "./components/auth/login/Login";
-import LoginForgot from "./components/auth/login/LoginForgot";
+import ForgotPassword from "./components/auth/reset-password/ForgotPassword";
 import ResetPassword from "./components/auth/reset-password/ResetPassword";
 //Layout
 import About from "./components/layout/about/About";
@@ -314,7 +314,7 @@ class App extends Component {
                         exact
                         path="/akun/lupa-katasandi"
                         render={(props) => (
-                          <LoginForgot
+                          <ForgotPassword
                             {...props}
                             handleNavbar={(data) => this.handleNavbar(data)}
                           />
