@@ -1210,11 +1210,6 @@ function ManageUsers(props) {
                   Hapus semua pengguna berikut?
                 </Typography>
               </Grid>
-              {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
-                  <Typography variant="h6" align="center" gutterBottom>
-                    <b>{selectedUserName}</b>
-                  </Typography>
-                </Grid> */}
               <Grid
                 container
                 direction="row"
@@ -1386,31 +1381,6 @@ function ManageUsers(props) {
                               to={{
                                 pathname: `/lihat-profil/${row._id}`,
                               }}
-
-                              // to={{
-                              //   pathname: "/lihat-profil",
-                              //   state: {
-                              //     avatar: row.avatar,
-                              //     nama: row.name,
-                              //     kelas: all_students[index].kelas,
-                              //     viewable_section: "with_karir",
-                              //     tanggal_lahir: moment(row.tanggal_lahir)
-                              //       .locale("id")
-                              //       .format("DD MMMM YYYY"),
-                              //     jenis_kelamin: all_students[index].jenis_kelamin,
-                              //     role: "Student",
-                              //     sekolah: row.sekolah,
-                              //     email: row.email,
-                              //     phone: row.phone,
-                              //     emergency_phone: row.emergency_phone,
-                              //     alamat: row.address,
-                              //     hobi: all_students[index].hobi_minat,
-                              //     ket: all_students[index].ket_non_teknis,
-                              //     cita: all_students[index].cita_cita,
-                              //     uni: all_students[index].uni_impian,
-                              //     admin: true,
-                              //   },
-                              // }}
                             >
                               <IconButton
                                 size="small"

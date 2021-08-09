@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const User = require("./User");
 
-const Admin = User.discriminator(
+const SuperAdmin = User.discriminator(
   "SuperAdmin",
   new mongoose.Schema({
     full_access: { type: Boolean, default: true },
