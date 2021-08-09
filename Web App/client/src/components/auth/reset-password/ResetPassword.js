@@ -6,7 +6,8 @@ import classnames from "classnames";
 import { savePassword } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
-import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
+import resetPasswordArt from "./ResetPasswordArt.png";
+import { Button, Grid, Hidden, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -25,14 +26,20 @@ const styles = (theme) => ({
     height: "125px",
     marginBottom: "25px",
   },
+  artThumbnail: {
+    maxWidth: "100%",
+    maxHeight: "100%",
+  },
   resetPasswordPaper: {
     margin: "auto",
-    maxWidth: "350px",
     padding: "40px",
+    width: "650px",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "360px",
+    },
   },
   changePasswordButton: {
-    width: "100%",
-    marginTop: "30px",
+    marginTop: "15px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -82,7 +89,7 @@ class ResetPassword extends Component {
       savePassword(passwordReset);
     };
 
-    document.title = "Schooly | Ganti Kata Sandi";
+    document.title = "Schooly | Ubah Kata Sandi";
 
     return (
       <div className={classes.root}>
@@ -94,62 +101,74 @@ class ResetPassword extends Component {
           />
         </Link>
         <Paper elevation={11} className={classes.resetPasswordPaper}>
-          <Grid container direction="column" spacing={5}>
-            <Grid item>
-              <Typography variant="h6" align="center" gutterBottom>
-                <b>Ubah Kata Sandi</b>
-              </Typography>
-              <Typography variant="body1" align="center" color="textSecondary">
-                Masukkan Kata Sandi baru Anda
-              </Typography>
-            </Grid>
-            <Grid item>
-              <form noValidate onSubmit={onSubmit}>
-                <Grid container direction="column" spacing={5}>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      id="password"
-                      label="Kata Sandi"
-                      onChange={this.onChange}
-                      value={password}
-                      error={Boolean(errors.password_entry)}
-                      type="password"
-                      helperText={errors.password_entry}
-                      classname={classnames("", {
-                        invalid: errors.email || errors.emailnotfound,
-                      })}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      id="password2"
-                      label="Konfirmasi Kata Sandi"
-                      onChange={this.onChange}
-                      value={password2}
-                      error={Boolean(errors.password_match)}
-                      type="password"
-                      helperText={errors.password_match}
-                      classname={classnames("", {
-                        invalid: errors.email || errors.emailnotfound,
-                      })}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      type="submit"
-                      className={classes.changePasswordButton}
-                    >
-                      Ubah Kata Sandi
-                    </Button>
-                  </Grid>
+          <Grid container spacing={6} alignItems="center">
+            <Grid item xs={12} lg={7}>
+              <Grid container direction="column" spacing={5}>
+                <Grid item>
+                  <Typography variant="h6" align="center" gutterBottom>
+                    <b>Ubah Kata Sandi</b>
+                  </Typography>
+                  <Typography variant="body1" align="center" color="textSecondary">
+                    Masukkan Kata Sandi baru Anda
+                  </Typography>
                 </Grid>
-              </form>
+                <Grid item>
+                  <form noValidate onSubmit={onSubmit}>
+                    <Grid container direction="column" spacing={5}>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          id="password"
+                          label="Kata Sandi"
+                          onChange={this.onChange}
+                          value={password}
+                          error={Boolean(errors.password_entry)}
+                          type="password"
+                          helperText={errors.password_entry}
+                          classname={classnames("", {
+                            invalid: errors.email || errors.emailnotfound,
+                          })}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          id="password2"
+                          label="Konfirmasi Kata Sandi"
+                          onChange={this.onChange}
+                          value={password2}
+                          error={Boolean(errors.password_match)}
+                          type="password"
+                          helperText={errors.password_match}
+                          classname={classnames("", {
+                            invalid: errors.email || errors.emailnotfound,
+                          })}
+                        />
+                      </Grid>
+                      <Grid item container justify="flex-end">
+                        <Button
+                          variant="contained"
+                          type="submit"
+                          className={classes.changePasswordButton}
+                        >
+                          Ubah Kata Sandi
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </form>
+                </Grid>
+              </Grid>
             </Grid>
+            <Hidden mdDown>
+              <Grid item xs={5}>
+                  <img
+                    src={resetPasswordArt}
+                    className={classes.artThumbnail}
+                  />
+              </Grid>
+            </Hidden>
           </Grid>
         </Paper>
       </div>

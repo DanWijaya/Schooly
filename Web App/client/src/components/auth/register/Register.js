@@ -11,6 +11,7 @@ import { registerUser } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import PolicyContent from "../../layout/policy/PolicyContent";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
 import {
@@ -31,13 +32,9 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
 import MuiAlert from "@material-ui/lab/Alert";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
-import UploadDialog from "../../misc/dialog/UploadDialog";
 
 const styles = (theme) => ({
   root: {

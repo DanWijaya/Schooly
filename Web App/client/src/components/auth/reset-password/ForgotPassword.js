@@ -40,11 +40,17 @@ const styles = (theme) => ({
   },
   forgotPasswordPaper: {
     margin: "auto",
+    padding: "40px",
     width: "650px",
     [theme.breakpoints.down("md")]: {
       maxWidth: "360px",
     },
-    padding: "40px",
+  },
+  buttonsContainer: {
+    marginTop: "15px",
+  },
+  backButton: {
+    color: theme.palette.primary.main,
   },
   changePasswordButton: {
     backgroundColor: theme.palette.primary.main,
@@ -125,7 +131,7 @@ class ForgotPassword extends Component {
                       variant="body1"
                       color="textSecondary"
                     >
-                      Masukkan email akun Anda untuk melanjutkan.
+                      Tautan untuk mengganti kata sandi Anda akan dikirimkan kepada email untuk akun bersangkutan.
                     </Typography>
                   </Grid>
                 ) : (
@@ -145,49 +151,50 @@ class ForgotPassword extends Component {
                 <Grid item>
                   {!isPasswordReset ? (
                     <form noValidate onSubmit={this.onSubmit}>
-                      <Grid container direction="column" spacing={5}>
-                        <Grid item>
-                          <TextField
-                            fullWidth
-                            variant="outlined"
-                            id="email"
-                            label="Email"
-                            onChange={this.onChange}
-                            value={email}
-                            error={Boolean(errors.problem)}
-                            type="email"
-                            helperText={errors.problem}
-                            className={classnames("", {
-                              invalid: errors.email || errors.emailnotfound,
-                            })}
-                              />
-                        </Grid>
-                        <Grid item container justify="space-between">
-                        <Grid item>
-                          <Link to="/masuk">
-                            <Button>
-                              Kembali
-                            </Button>
-                          </Link>
-                        </Grid>
-                        <Grid item>
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            className={classes.changePasswordButton}
-                          >
-                            Ubah Kata Sandi
-                          </Button>
-                        </Grid>
-                        </Grid>
-                      </Grid>
+                    <Grid container direction="column" spacing={5}>
+                    <Grid item>
+                    <TextField
+                    fullWidth
+                    variant="outlined"
+                    id="email"
+                    label="Email"
+                    onChange={this.onChange}
+                    value={email}
+                    error={Boolean(errors.problem)}
+                    type="email"
+                    helperText={errors.problem}
+                    className={classnames("", {
+                      invalid: errors.email || errors.emailnotfound,
+                    })}
+                    />
+                    </Grid>
+                    <Grid item container justify="space-between" className={classes.buttonsContainer}>
+                    <Grid item>
+                    <Link to="/masuk">
+                    <Button className={classes.backButton}>
+                    Kembali
+                    </Button>
+                    </Link>
+                    </Grid>
+                    <Grid item>
+                    <Button
+                    type="submit"
+                    variant="contained"
+                    className={classes.changePasswordButton}
+                    >
+                    Kirim
+                    </Button>
+                    </Grid>
+                    </Grid>
+                    </Grid>
                     </form>
                   ) : (
                     <Button
-                      onClick={() => window.location.reload()}
-                      className={classes.resendEmailButton}
+                    variant="contained"
+                    className={classes.resendEmailButton}
+                    onClick={() => window.location.reload()}
                     >
-                      Kirim Ulang Email
+                    Kirim Ulang Email
                     </Button>
                   )}
                 </Grid>

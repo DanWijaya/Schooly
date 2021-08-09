@@ -273,7 +273,12 @@ class App extends Component {
                       <Route
                         exact
                         path="/akun/ubah-katasandi/:hash"
-                        component={ResetPassword}
+                        render={(props) => (
+                          <ResetPassword
+                            {...props}
+                            handleNavbar={(data) => this.handleNavbar(data)}
+                          />
+                        )}
                       />
                       <PrivateRoute
                         exact
