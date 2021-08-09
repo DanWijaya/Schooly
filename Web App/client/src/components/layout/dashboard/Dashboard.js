@@ -38,6 +38,7 @@ import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import UnitIcon from '@material-ui/icons/Web';
 import { AiOutlineUserSwitch } from "react-icons/ai";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
@@ -1859,7 +1860,7 @@ class Dashboard extends Component {
           <Grid item>
             <Link to="/daftar-unit-sekolah">
               <Fab variant="extended" className={classes.manageClassButton}>
-                <FaSitemap className={classes.manageClassIcon} />
+                <UnitIcon className={classes.manageClassIcon} />
                 Atur Unit sekolah
               </Fab>
             </Link>

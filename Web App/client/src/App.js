@@ -130,12 +130,6 @@ if (localStorage.jwtToken) {
   }
 }
 
-// if (localStorage.dropbox_token) {
-//   const dropbox_token = localStorage.dropbox_token;
-//   console.log(dropbox_token);
-//   store.dispatch(setDropboxToken(dropbox_token));
-// }
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -153,7 +147,7 @@ class App extends Component {
   }
 
   componentDidCatch() {
-    this.setState({ problemEncountered: true });
+    // this.setState({ problemEncountered: true });
   }
 
   handleLoading = (value) => {

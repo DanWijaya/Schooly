@@ -25,6 +25,8 @@ import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import { BsClipboardData } from "react-icons/bs";
+// import UnitIcon from '@material-ui/icons/Storage';
+import UnitIcon from '@material-ui/icons/Web';
 import {
   FaChalkboardTeacher,
   FaClipboardList,
@@ -126,7 +128,7 @@ function DrawerContent(props) {
       ],
       [
         "/daftar-unit-sekolah",
-        <FaSitemap className={classes.drawerListItemIcon} />,
+        <UnitIcon className={classes.drawerListItemIcon} />,
         "Unit Sekolah"
       ],
       [
