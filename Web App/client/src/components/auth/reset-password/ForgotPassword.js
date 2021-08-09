@@ -42,7 +42,7 @@ const styles = (theme) => ({
     height: "125px",
     marginBottom: "25px",
   },
-  loginForgotPaper: {
+  forgotPasswordPaper: {
     margin: "auto",
     maxWidth: "350px",
     padding: "40px",
@@ -69,7 +69,7 @@ const styles = (theme) => ({
   },
 });
 
-class LoginForgot extends Component {
+class ForgotPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -118,7 +118,7 @@ class LoginForgot extends Component {
             className={classes.schoolyLogo}
           />
         </Link>
-        <Paper elevation={11} className={classes.loginForgotPaper}>
+        <Paper elevation={11} className={classes.forgotPasswordPaper}>
           <Grid container direction="column" spacing={5}>
             {!isPasswordReset ? (
               <Grid item>
@@ -193,7 +193,7 @@ class LoginForgot extends Component {
   }
 }
 
-LoginForgot.propTypes = {
+ForgotPassword.propTypes = {
   createHash: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
@@ -208,6 +208,6 @@ const mapStateToProps = (state) => ({
 
 export default withRouter(
   connect(mapStateToProps, { createHash, clearErrors })(
-    withStyles(styles)(LoginForgot)
+    withStyles(styles)(ForgotPassword)
   )
 );
