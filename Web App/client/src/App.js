@@ -23,7 +23,7 @@ import Profile from "./components/layout/profile/Profile";
 import ProfileView from "./components/layout/profile/ProfileView";
 import ReportView from "./components/layout/profile/ReportView";
 import Help from "./components/layout/help/Help";
-import Policy from "./components/layout/policy/Policy";
+import TermsOfService from "./components/layout/terms-of-service/TermsOfService";
 import NotFound from "./components/layout/not-found/NotFound";
 import ProblemEncountered from "./components/layout/problem-encountered/ProblemEncountered";
 //Misc
@@ -226,9 +226,9 @@ class App extends Component {
                       />
                       <Route
                         exact
-                        path="/kebijakan-penggunaan"
+                        path="/ketentuan-penggunaan"
                         render={(props) => (
-                          <Policy
+                          <TermsOfService
                             {...props}
                           />
                         )}

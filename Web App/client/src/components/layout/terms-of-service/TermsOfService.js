@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Divider, Link, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -7,10 +7,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
   },
-  policyBackground: {
+  termsOfServiceBackground: {
     backgroundColor: theme.palette.primary.light,
   },
-  policy: {
+  termsOfServiceTitle: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -42,15 +42,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function PolicyContent() {
+function TermsOfService(props) {
   const classes = useStyles();
+
+  document.title = "Schooly | Ketentuan Penggunaan";
 
   return (
     <div className={classes.root}>
-      <div className={classes.policyBackground}>
-        <div className={classes.policy}>
+      <div className={classes.termsOfServiceBackground}>
+        <div className={classes.termsOfServiceTitle}>
           <Typography variant="h3" align="center">
-            Kebijakan Penggunaan Schooly
+            Ketentuan Penggunaan Schooly
           </Typography>
         </div>
       </div>
@@ -450,7 +452,7 @@ function PolicyContent() {
         <div className={classes.contentSection}>
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
-            <b>10. Tentang Kebijakan Ini</b>
+            <b>10. Tentang Ketentuan Ini</b>
           </Typography>
           <Typography align="justify" paragraph>
             Ketentuan ini dan Kebijakan Privasi kami adalah keseluruhan dan
@@ -503,4 +505,4 @@ function PolicyContent() {
   );
 }
 
-export default PolicyContent;
+export default TermsOfService;

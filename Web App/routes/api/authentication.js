@@ -104,7 +104,7 @@ router.post("/savepassword", async (req, res) => {
       );
     } else if (!Validator.equals(req.body.password, req.body.password2)) {
       result = res.send(
-        JSON.stringify({ password_match: "Konfirmasi kata sandi harus sama" })
+        JSON.stringify({ password_match: "Kata sandi dan konfirmasinya harus sama" })
       );
     } else if (minute_difference > 5) {
       console.log("Link has expired (exceed 5 mins)");
@@ -172,7 +172,7 @@ router.post("/changepassword", (req, res) => {
   } else if (!Validator.equals(new_password, new_password2)) {
     return res
       .status(404)
-      .json({ new_password: "Konfirmasi Kata sandi harus sama" });
+      .json({ new_password: "Kata sandi dan konfirmasinya harus sama" });
   }
 
   User.findOne({ email }).then((user) => {

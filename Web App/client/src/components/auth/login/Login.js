@@ -43,13 +43,20 @@ const styles = (theme) => ({
     maxWidth: "100%",
     maxHeight: "100%",
   },
+  loginContainer: {
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
+  },
   loginPaper: {
     margin: "auto",
-    maxWidth: "360px",
+    maxWidth: "400px",
     padding: "40px",
   },
   loginButton: {
     width: "100%",
+    marginTop: "15px",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -168,7 +175,7 @@ class Login extends Component {
             className={classes.schoolyLogo}
           />
         </Link>
-        <Grid container justify="space-between" alignItems="flex-end" spacing={2} style={{maxWidth: "80%"}}>
+        <Grid container justify="space-between" alignItems="flex-end" className={classes.loginContainer}>
           <Grid item xs={3}>
             <Hidden smDown>
               <img
@@ -179,7 +186,7 @@ class Login extends Component {
           </Grid>
           <Grid item xs={12} md={6}>
             <Paper elevation={11} className={classes.loginPaper}>
-              <Grid container direction="column" spacing={5}>
+              <Grid container direction="column" spacing={6}>
                 <Grid item>
                   <Typography variant="h6" align="center">
                     <b>Masuk ke Schooly</b>
@@ -187,7 +194,7 @@ class Login extends Component {
                 </Grid>
                 <Grid item>
                   <form noValidate onSubmit={this.onSubmit}>
-                    <Grid container direction="column" spacing={4}>
+                    <Grid container direction="column" spacing={5}>
                       <Grid item>
                         <TextField
                           fullWidth

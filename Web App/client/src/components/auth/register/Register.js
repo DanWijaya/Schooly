@@ -7,20 +7,18 @@ import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { registerUser } from "../../../actions/UserActions";
-// import { getAllClass } from "../../../actions/ClassActions";
-import { getAllSubjects } from "../../../actions/SubjectActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
-import PolicyContent from "../../layout/policy/PolicyContent";
+import registerStepperArt from "./RegisterStepperArt.png";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
 import {
   Button,
-  Dialog,
   Divider,
   FormControl,
   FormHelperText,
   Grid,
+  Hidden,
   InputLabel,
   MenuItem,
   Paper,
@@ -54,21 +52,24 @@ const styles = (theme) => ({
   },
   registerPaper: {
     margin: "auto",
-    maxWidth: "350px",
     padding: "40px",
+    maxWidth: "800px",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "400px",
+    },
   },
-  instructions: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+  combinedHelperText: {
+    marginLeft: "14px",
+  },
+  buttonsContainer: {
+    marginTop: "15px",
+  },
+  loginButton: {
+    color: theme.palette.primary.main,
   },
   backButton: {
-    backgroundColor: "#DCDCDC",
-    color: "black",
+    color: theme.palette.primary.main,
     width: "90px",
-    "&:focus, &:hover": {
-      backgroundColor: "#DCDCDC",
-      color: "black",
-    },
   },
   continueButton: {
     backgroundColor: theme.palette.primary.main,
@@ -88,14 +89,12 @@ const styles = (theme) => ({
       color: "white",
     },
   },
-  closeDialogButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    width: "90px",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
+  artThumbnail: {
+    maxWidth: "100%",
+    maxHeight: "100%",
+  },
+  registerStepper: {
+    padding: "0px",
   },
 });
 
@@ -112,12 +111,9 @@ class Register extends Component {
       password: "",
       password2: "",
       errors: {},
-      // kelas: "", // Student Data
-      // subject_teached: "", // Teacher Data
       tanggal_lahir: new Date(),
       activeStep: 0,
       snackbarOpen: false,
-      dialogOpen: false,
       submitButtonClicked: false,
       openUploadDialog: false,
     };
@@ -125,9 +121,6 @@ class Register extends Component {
 
   componentDidMount() {
     // If logged in and user navigates to Register page, should redirect them to dashboard
-    // this.props.getAllClass();
-
-    this.props.getAllSubjects();
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");
     }
@@ -166,13 +159,6 @@ class Register extends Component {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
     this.setState({ [field]: e.target.value });
-    // if (otherfield === "role") {
-    //   this.setState({ role: e.target.value });
-    // } else if (otherfield === "subject") {
-    //   this.setState({ subject_teached: e.target.value });
-    // } else {
-    //   this.setState({ [e.target.id]: e.target.value });
-    // }
   };
 
   onSubmit = (e) => {
@@ -189,17 +175,12 @@ class Register extends Component {
       tanggal_lahir: this.state.tanggal_lahir,
     };
 
-    // if (role === "Teacher") {
-    //   newUser.subject_teached = this.state.subject_teached;
-    // }
-
     if (this.state.activeStep === 2) {
       this.setState({ submitButtonClicked: true });
     }
 
     console.log(newUser);
     if (this.state.submitButtonClicked) {
-      // this.props.registerUser(newUser, this.props.history);
       this.props
         .registerUser(newUser)
         .then((res) => {
@@ -220,18 +201,33 @@ class Register extends Component {
 
   render() {
     const { classes } = this.props;
-    // const { all_classes } = this.props.classesCollection;
-    const { all_subjects } = this.props.subjectsCollection;
     const { errors } = this.state;
 
     const getSteps = () => {
       return ["Kredensial Masuk", "Informasi Pribadi", "Konfirmasi Registrasi"];
     };
+
     const getStepContent = (stepIndex) => {
       switch (stepIndex) {
         case 0:
           return (
-            <Grid container direction="column" spacing={4}>
+            <Grid container direction="column" spacing={5}>
+              <Grid item>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="name"
+                  label="Nama Lengkap"
+                  onChange={this.onChange}
+                  value={this.state.name}
+                  error={errors.name}
+                  type="text"
+                  helperText={errors.name}
+                  className={classnames("", {
+                    invalid: errors.name,
+                  })}
+                />
+              </Grid>
               <Grid item>
                 <TextField
                   fullWidth
@@ -242,49 +238,56 @@ class Register extends Component {
                   value={this.state.email}
                   error={errors.email}
                   type="email"
-                  helperText={errors.email}
+                  helperText={errors.email ? errors.email : "Isi dengan email sekolah Anda jika ada"}
                   className={classnames("", {
                     invalid: errors.email,
                   })}
                 />
               </Grid>
               <Grid item>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  id="password"
-                  label="Kata Sandi"
-                  onChange={this.onChange}
-                  value={this.state.password}
-                  error={errors.password}
-                  type="password"
-                  helperText={errors.password}
-                  className={classnames("", {
-                    invalid: errors.password,
-                  })}
-                />
-              </Grid>
-              <Grid item>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  id="password2"
-                  label="Konfirmasi Kata Sandi"
-                  onChange={this.onChange}
-                  value={this.state.password2}
-                  error={errors.password2}
-                  type="password"
-                  helperText={errors.password2}
-                  className={classnames("", {
-                    invalid: errors.password2,
-                  })}
-                />
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="password"
+                      label="Kata Sandi"
+                      onChange={this.onChange}
+                      value={this.state.password}
+                      error={errors.password}
+                      type="password"
+                      className={classnames("", {
+                        invalid: errors.password,
+                      })}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="password2"
+                      label="Konfirmasi"
+                      onChange={this.onChange}
+                      value={this.state.password2}
+                      error={errors.password2}
+                      type="password"
+                      className={classnames("", {
+                        invalid: errors.password2,
+                      })}
+                    />
+                  </Grid>
+                </Grid>
+                <FormHelperText error={errors.password || errors.password2} className={classes.combinedHelperText}>
+                  {errors.password ? errors.password : errors.password2 ? errors.password2 :
+                    "Gunakan 8 karakter atau lebih dengan kombinasi huruf kapital dan angka"
+                  }
+                </FormHelperText>
               </Grid>
             </Grid>
           );
         case 1:
           return (
-            <Grid container direction="column" spacing={4}>
+            <Grid container direction="column" spacing={5}>
               <Grid item>
                 <FormControl
                   id="role"
@@ -306,92 +309,79 @@ class Register extends Component {
                     <MenuItem value="Teacher">Guru</MenuItem>
                     <MenuItem value="Admin">Pengelola</MenuItem>
                   </Select>
-                  <FormHelperText>
-                    {Boolean(errors.role) ? errors.role : null}
-                  </FormHelperText>
+                  {Boolean(errors.role) ?
+                    <FormHelperText>
+                      {errors.role}
+                    </FormHelperText>
+                  : null}
                 </FormControl>
               </Grid>
               <Grid item>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  id="name"
-                  label="Nama"
-                  onChange={this.onChange}
-                  value={this.state.name}
-                  error={errors.name}
-                  type="text"
-                  helperText={errors.name}
-                  className={classnames("", {
-                    invalid: errors.name,
-                  })}
-                />
+                <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    fullWidth
+                    disableFuture
+                    label="Tanggal Lahir"
+                    inputVariant="outlined"
+                    maxDateMessage="Harus waktu yang akan datang"
+                    invalidDateMessage="Format tanggal tidak benar"
+                    format="dd MMMM yyyy"
+                    okLabel="Simpan"
+                    cancelLabel="Batal"
+                    id="tanggal_lahir"
+                    defaultValue={null}
+                    error={errors.tanggal_lahir}
+                    helperText={errors.tanggal_lahir}
+                    value={this.state.tanggal_lahir}
+                    onChange={(date) => this.handleDateChange(date)}
+                  />
+                </MuiPickersUtilsProvider>
               </Grid>
-              {
-                // this.state.role === "Student" ? (
-                //   <Grid item>
-                //     <FormControl
-                //       id="kelas"
-                //       variant="outlined"
-                //       color="primary"
-                //       fullWidth
-                //       error={Boolean(errors.kelas)}
-                //     >
-                //       <InputLabel id="kelas-label">Kelas</InputLabel>
-                //       <Select
-                //         labelId="kelas-label"
-                //         label="Kelas"
-                //         value={this.state.kelas}
-                //         onChange={(event) => {
-                //           this.onChange(event, "kelas");
-                //         }}
-                //       >
-                //         {all_classes.map((kelas) => (
-                //           <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
-                //         ))}
-                //       </Select>
-                //       <FormHelperText>
-                //         {Boolean(errors.kelas) ? errors.kelas : null}
-                //       </FormHelperText>
-                //     </FormControl>
-                //   </Grid>
-                // ) :
-              }
               <Grid item>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  id="phone"
-                  label="Nomor Telepon"
-                  onChange={this.onChange}
-                  value={this.state.phone}
-                  error={errors.phone}
-                  type="tel"
-                  helperText={errors.phone}
-                  className={classnames("", {
-                    invalid: errors.phone,
-                  })}
-                />
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="phone"
+                      label="Nomor Telepon"
+                      onChange={this.onChange}
+                      value={this.state.phone}
+                      error={errors.phone}
+                      type="tel"
+                      className={classnames("", {
+                        invalid: errors.phone,
+                      })}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="emergency_phone"
+                      label="Nomor Telepon Darurat"
+                      onChange={this.onChange}
+                      value={this.state.emergency_phone}
+                      error={errors.emergency_phone}
+                      type="tel"
+                      className={classnames("", {
+                        invalid: errors.emergency_phone,
+                      })}
+                    />
+                  </Grid>
+                </Grid>
+                <FormHelperText error={errors.phone || errors.emergency_phone} className={classes.combinedHelperText}>
+                  {errors.phone ? errors.phone : errors.emergency_phone ? errors.emergency_phone :
+                    "Nomor telepon darurat harus diisi dengan nomor yang dapat dihubungi sewaktu keadaan darurat"
+                  }
+                </FormHelperText>
               </Grid>
               <Grid item>
                 <TextField
                   fullWidth
-                  variant="outlined"
-                  id="emergency_phone"
-                  label="Nomor Telepon Darurat"
-                  onChange={this.onChange}
-                  value={this.state.emergency_phone}
-                  error={errors.emergency_phone}
-                  type="tel"
-                  helperText={errors.emergency_phone}
-                  className={classnames("", {
-                    invalid: errors.emergency_phone,
-                  })}
-                />
-              </Grid>
-              <Grid item>
-                <TextField
-                  fullWidth
+                  multiline
+                  rows="2"
+                  rowsMax="3"
                   variant="outlined"
                   id="address"
                   label="Alamat"
@@ -405,77 +395,27 @@ class Register extends Component {
                   })}
                 />
               </Grid>
-              <Grid item>
-                <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                    fullWidth
-                    disableFuture
-                    label="Tanggal Lahir"
-                    inputVariant="outlined"
-                    maxDateMessage="Harus waktu yang akan datang"
-                    invalidDateMessage="Format tanggal tidak benar"
-                    format="dd/MMMM/yyyy"
-                    okLabel="Simpan"
-                    cancelLabel="Batal"
-                    id="tanggal_lahir"
-                    defaultValue={null}
-                    error={errors.tanggal_lahir}
-                    helperText={errors.tanggal_lahir}
-                    value={this.state.tanggal_lahir}
-                    onChange={(date) => this.handleDateChange(date)}
-                  />
-                </MuiPickersUtilsProvider>
-              </Grid>
             </Grid>
           );
         case 2:
           return (
-            <Grid container direction="column" spacing={4}>
+            <Grid container direction="column" spacing={3}>
               <Grid item>
-                <Typography align="center">
-                  Setelah registrasi selesai, silahkan hubungi pengelola sekolah
+                <Typography>
+                  Setelah pendaftaran selesai, silahkan hubungi pengelola sekolah
                   Anda untuk mengaktifkan akun Anda.
                 </Typography>
-                <Dialog
-                  fullWidth
-                  maxWidth="lg"
-                  open={this.state.dialogOpen}
-                  onClose={handleToggleDialog}
-                >
-                  <Grid
-                    container
-                    direction="column"
-                    alignItems="center"
-                    style={{ padding: "15px" }}
-                  >
-                    <Grid item>
-                      <PolicyContent />
-                    </Grid>
-                    <Grid item style={{ marginTop: "50px" }}>
-                      <Button
-                        size="large"
-                        className={classes.closeDialogButton}
-                        onClick={handleToggleDialog}
-                      >
-                        Tutup
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Dialog>
+              </Grid>
+              <Grid item>
                 <Typography
                   variant="body2"
                   color="textSecondary"
-                  align="center"
-                  style={{ marginTop: "20px" }}
                 >
-                  Dengan mendaftar, Anda telah membaca dan menyetujui{" "}
-                  <Link
-                    onClick={handleToggleDialog}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Kebijakan Penggunaan Schooly
+                  Dengan mendaftar, Anda dan sekolah Anda telah menyetujui{" "}
+                  <Link to="/ketentuan-penggunaan" target="_blank" rel="noopener noreferrer">
+                    Ketentuan Penggunaan
                   </Link>
-                  .
+                  {" "} Schooly System.
                 </Typography>
               </Grid>
             </Grid>
@@ -484,7 +424,9 @@ class Register extends Component {
           return "Unknown stepIndex";
       }
     };
+
     const steps = getSteps();
+
     const handleNext = () => {
       if (this.state.activeStep !== 2 || this.state.errors === null)
         this.setState((prevState) => ({
@@ -492,6 +434,7 @@ class Register extends Component {
           submitButtonClicked: false,
         }));
     };
+
     const handleBack = () => {
       if (this.state.snackbarOpen) {
         this.setState({ snackbarOpen: false });
@@ -499,11 +442,6 @@ class Register extends Component {
       this.setState((prevState) => ({
         activeStep: prevState.activeStep - 1,
       }));
-    };
-
-    // Policy Dialog
-    const handleToggleDialog = () => {
-      this.setState((prevState) => ({ dialogOpen: !prevState.dialogOpen }));
     };
 
     // Error Snackbar
@@ -518,13 +456,6 @@ class Register extends Component {
 
     return (
       <div className={classes.root}>
-        <UploadDialog
-          openUploadDialog={this.state.openUploadDialog}
-          success={!errors}
-          messageUploading="Akun baru sedang dibuat"
-          messageSuccess="Akun baru telah terdaftar"
-          redirectLink="/masuk"
-        />
         <Link to="/">
           <img
             alt="Schooly Introduction"
@@ -532,81 +463,90 @@ class Register extends Component {
             className={classes.schoolyLogo}
           />
         </Link>
-        <Paper elevation={11} className={classes.registerPaper}>
-          <Grid container direction="column" spacing={5}>
-            <Grid item>
-              <Typography variant="h6" align="center">
-                <b>Daftar ke Schooly</b>
-              </Typography>
-            </Grid>
-            <Stepper
-              alternativeLabel
-              activeStep={this.state.activeStep}
-              connector={<RegisterStepConnector />}
-            >
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel StepIconComponent={RegisterStepIcon}>
-                    {label}
-                  </StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-            <Grid item>
-              <form
-                noValidate
-                onSubmit={this.onSubmit}
-                style={{ width: "100%" }}
-              >
-                {getStepContent(this.state.activeStep)}
-                <Grid
-                  container
-                  justify="space-between"
-                  style={{ marginTop: "40px" }}
-                >
+          <Paper elevation={11} className={classes.registerPaper}>
+            <Grid container spacing={6}>
+              <Grid item xs={12} md={7}>
+                <Grid container direction="column" spacing={6}>
                   <Grid item>
-                    {this.state.activeStep === 0 ? null : (
-                      <Button
-                        variant="contained"
-                        onClick={handleBack}
-                        className={classes.backButton}
-                      >
-                        Kembali
-                      </Button>
-                    )}
+                    <Typography variant="h6">
+                      <b>Daftar ke Schooly</b>
+                    </Typography>
                   </Grid>
                   <Grid item>
-                    {this.state.activeStep === steps.length - 1 ? (
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        className={classes.registerButton}
-                      >
-                        Daftar
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="contained"
-                        onClick={handleNext}
-                        className={classes.continueButton}
-                      >
-                        Lanjut
-                      </Button>
-                    )}
+                    <form noValidate onSubmit={this.onSubmit}>
+                      <Grid container direction="column" spacing={6}>
+                        <Grid item>
+                          {getStepContent(this.state.activeStep)}
+                        </Grid>
+                        <Grid item container justify="space-between" className={classes.buttonsContainer}>
+                          <Grid item>
+                            {this.state.activeStep === 0 ? (
+                              <Link to="/masuk">
+                                <Button className={classes.loginButton}>
+                                  Masuk saja
+                                </Button>
+                              </Link>
+                            ) : (
+                              <Button
+                                onClick={handleBack}
+                                className={classes.backButton}
+                              >
+                                Kembali
+                              </Button>
+                            )}
+                          </Grid>
+                          <Grid item>
+                            {this.state.activeStep === steps.length - 1 ? (
+                              <Button
+                                type="submit"
+                                variant="contained"
+                                className={classes.registerButton}
+                              >
+                                Daftar
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="contained"
+                                onClick={handleNext}
+                                className={classes.continueButton}
+                              >
+                                Lanjut
+                              </Button>
+                            )}
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </form>
                   </Grid>
                 </Grid>
-              </form>
+              </Grid>
+              <Hidden smDown>
+                <Grid item xs={12} md={5}>
+                  <Typography variant="body1" align="center" paragraph style={{ marginTop: "50px"}}>
+                    Buat akun hanya dengan tiga langkah
+                  </Typography>
+                  <img
+                    src={registerStepperArt}
+                    className={classes.artThumbnail}
+                  />
+                  <Stepper
+                    alternativeLabel
+                    activeStep={this.state.activeStep}
+                    connector={<RegisterStepConnector />}
+                    className={classes.registerStepper}
+                  >
+                    {steps.map((label) => (
+                      <Step key={label}>
+                        <StepLabel StepIconComponent={RegisterStepIcon}>
+                          <Typography variant="caption">{label}</Typography>
+                        </StepLabel>
+                      </Step>
+                    ))}
+                  </Stepper>
+                </Grid>
+              </Hidden>
             </Grid>
-            <Divider />
-            <Grid item>
-              <Typography align="center">
-                <Link to="/masuk" style={{ marginTop: "20px" }}>
-                  Sudah ada Akun?
-                </Link>
-              </Typography>
-            </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
         <Snackbar
           open={this.state.snackbarOpen}
           autoHideDuration={6000}
@@ -622,6 +562,13 @@ class Register extends Component {
             Terdapat kesalahan dalam pengisian!
           </MuiAlert>
         </Snackbar>
+        <UploadDialog
+          openUploadDialog={this.state.openUploadDialog}
+          success={!errors}
+          messageUploading="Akun baru sedang dibuat"
+          messageSuccess="Akun baru telah terdaftar"
+          redirectLink="/masuk"
+        />
       </div>
     );
   }
@@ -631,23 +578,16 @@ Register.propTypes = {
   registerUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  subjectsCollection: PropTypes.object.isRequired,
-  // getAllClass: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
-  subjectsCollection: state.subjectsCollection,
-  // classesCollection: state.classesCollection,
 });
 
 export default withRouter(
   connect(mapStateToProps, {
     registerUser,
-    // getAllClass,
-    getAllSubjects,
     clearErrors,
   })(withStyles(styles)(Register))
 );

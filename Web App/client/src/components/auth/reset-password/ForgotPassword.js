@@ -41,9 +41,9 @@ const styles = (theme) => ({
   forgotPasswordPaper: {
     margin: "auto",
     padding: "40px",
-    width: "650px",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "360px",
+    maxWidth: "650px",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "400px",
     },
   },
   buttonsContainer: {
@@ -62,6 +62,7 @@ const styles = (theme) => ({
   },
   resendEmailButton: {
     width: "100%",
+    marginTop: "15px",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -96,6 +97,7 @@ class ForgotPassword extends Component {
   componentDidMount() {
     this.props.handleNavbar(false);
   }
+
   componentWillUnmount() {
     this.props.clearErrors();
     this.props.handleNavbar(true);
@@ -120,8 +122,8 @@ class ForgotPassword extends Component {
         </Link>
         <Paper elevation={11} className={classes.forgotPasswordPaper}>
           <Grid container spacing={6} alignItems="center">
-            <Grid item xs={12} lg={7}>
-              <Grid container direction="column" spacing={5}>
+            <Grid item xs={12} md={7}>
+              <Grid container direction="column" spacing={6}>
                 {!isPasswordReset ? (
                   <Grid item>
                     <Typography variant="h6" gutterBottom>
@@ -131,17 +133,16 @@ class ForgotPassword extends Component {
                       variant="body1"
                       color="textSecondary"
                     >
-                      Tautan untuk mengganti kata sandi Anda akan dikirimkan kepada email untuk akun bersangkutan.
+                      Tautan untuk mengganti kata sandi Anda akan dikirimkan kepada email untuk akun yang bersangkutan.
                     </Typography>
                   </Grid>
                 ) : (
                   <Grid item>
-                    <Typography variant="h6" align="center" gutterBottom>
+                    <Typography variant="h6" gutterBottom>
                       <b>Email telah dikirim</b>
                     </Typography>
                     <Typography
                       variant="body1"
-                      align="center"
                       color="textSecondary"
                     >
                       Silahkan buka email tersebut untuk melanjutkan.
@@ -151,56 +152,56 @@ class ForgotPassword extends Component {
                 <Grid item>
                   {!isPasswordReset ? (
                     <form noValidate onSubmit={this.onSubmit}>
-                    <Grid container direction="column" spacing={5}>
-                    <Grid item>
-                    <TextField
-                    fullWidth
-                    variant="outlined"
-                    id="email"
-                    label="Email"
-                    onChange={this.onChange}
-                    value={email}
-                    error={Boolean(errors.problem)}
-                    type="email"
-                    helperText={errors.problem}
-                    className={classnames("", {
-                      invalid: errors.email || errors.emailnotfound,
-                    })}
-                    />
-                    </Grid>
-                    <Grid item container justify="space-between" className={classes.buttonsContainer}>
-                    <Grid item>
-                    <Link to="/masuk">
-                    <Button className={classes.backButton}>
-                    Kembali
-                    </Button>
-                    </Link>
-                    </Grid>
-                    <Grid item>
-                    <Button
-                    type="submit"
-                    variant="contained"
-                    className={classes.changePasswordButton}
-                    >
-                    Kirim
-                    </Button>
-                    </Grid>
-                    </Grid>
-                    </Grid>
+                      <Grid container direction="column" spacing={6}>
+                        <Grid item>
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            id="email"
+                            label="Email"
+                            onChange={this.onChange}
+                            value={email}
+                            error={Boolean(errors.problem)}
+                            type="email"
+                            helperText={errors.problem}
+                            className={classnames("", {
+                              invalid: errors.email || errors.emailnotfound,
+                            })}
+                          />
+                        </Grid>
+                        <Grid item container justify="space-between" className={classes.buttonsContainer}>
+                          <Grid item>
+                            <Link to="/masuk">
+                              <Button className={classes.backButton}>
+                                Kembali
+                              </Button>
+                            </Link>
+                          </Grid>
+                          <Grid item>
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              className={classes.changePasswordButton}
+                            >
+                              Kirim
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </Grid>
                     </form>
                   ) : (
                     <Button
-                    variant="contained"
-                    className={classes.resendEmailButton}
-                    onClick={() => window.location.reload()}
+                      variant="contained"
+                      className={classes.resendEmailButton}
+                      onClick={() => window.location.reload()}
                     >
-                    Kirim Ulang Email
+                      Kirim Ulang Email
                     </Button>
                   )}
                 </Grid>
               </Grid>
             </Grid>
-            <Hidden mdDown>
+            <Hidden smDown>
               <Grid item xs={5}>
                   <img
                     src={resetPasswordArt}

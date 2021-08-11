@@ -8,9 +8,9 @@ import StorageIcon from "@material-ui/icons/Storage";
 
 const useRegisterStepIconStyles = makeStyles({
   root: {
-    backgroundColor: "#ccc",
+    backgroundColor: "#CCC",
+    color: "#FFF",
     zIndex: 1,
-    color: "#fff",
     width: 50,
     height: 50,
     display: "flex",

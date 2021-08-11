@@ -33,13 +33,14 @@ const styles = (theme) => ({
   resetPasswordPaper: {
     margin: "auto",
     padding: "40px",
-    width: "650px",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "360px",
+    maxWidth: "650px",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "400px",
     },
   },
   changePasswordButton: {
     marginTop: "15px",
+    width: "100%",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -62,10 +63,13 @@ class ResetPassword extends Component {
     this.setState({ [e.target.id]: e.target.value });
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.handleNavbar(false);
+  }
 
   componentWillUnmount() {
     this.props.clearErrors();
+    this.props.handleNavbar(true);
   }
 
   //Dispatch is used as a callback which gets invoked once some async action is complete.
@@ -102,25 +106,25 @@ class ResetPassword extends Component {
         </Link>
         <Paper elevation={11} className={classes.resetPasswordPaper}>
           <Grid container spacing={6} alignItems="center">
-            <Grid item xs={12} lg={7}>
-              <Grid container direction="column" spacing={5}>
+            <Grid item xs={12} md={7}>
+              <Grid container direction="column" spacing={6}>
                 <Grid item>
-                  <Typography variant="h6" align="center" gutterBottom>
+                  <Typography variant="h6" gutterBottom>
                     <b>Ubah Kata Sandi</b>
                   </Typography>
-                  <Typography variant="body1" align="center" color="textSecondary">
-                    Masukkan Kata Sandi baru Anda
+                  <Typography variant="body1" color="textSecondary">
+                    Masukkan kata sandi baru Anda. Kata sandi harus terdiri dari minimal 8 karakter dengan kombinasi huruf kapital dan angka.
                   </Typography>
                 </Grid>
                 <Grid item>
                   <form noValidate onSubmit={onSubmit}>
-                    <Grid container direction="column" spacing={5}>
+                    <Grid container direction="column" spacing={6}>
                       <Grid item>
                         <TextField
                           fullWidth
                           variant="outlined"
                           id="password"
-                          label="Kata Sandi"
+                          label="Kata Sandi Baru"
                           onChange={this.onChange}
                           value={password}
                           error={Boolean(errors.password_entry)}
@@ -136,7 +140,7 @@ class ResetPassword extends Component {
                           fullWidth
                           variant="outlined"
                           id="password2"
-                          label="Konfirmasi Kata Sandi"
+                          label="Konfirmasi Kata Sandi Baru"
                           onChange={this.onChange}
                           value={password2}
                           error={Boolean(errors.password_match)}
@@ -147,7 +151,7 @@ class ResetPassword extends Component {
                           })}
                         />
                       </Grid>
-                      <Grid item container justify="flex-end">
+                      <Grid item>
                         <Button
                           variant="contained"
                           type="submit"
@@ -161,7 +165,7 @@ class ResetPassword extends Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Hidden mdDown>
+            <Hidden smDown>
               <Grid item xs={5}>
                   <img
                     src={resetPasswordArt}

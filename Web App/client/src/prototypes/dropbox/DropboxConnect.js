@@ -525,11 +525,11 @@ function DropboxConnect(props) {
                 Dengan menghubungkan akun Dropbox Anda ke Schooly, Anda telah
                 menyetujui{" "}
                 <a href="https://www.dropbox.com/terms">
-                  Kebijakan Penggunan Dropbox
+                  Ketentuan Penggunaan Dropbox
                 </a>{" "}
                 dan{" "}
-                <Link to="/kebijakan-penggunaan">
-                  Kebijakan Penggunaan Schooly
+                <Link to="/ketentuan-penggunaan">
+                  Ketentuan Penggunaan Schooly
                 </Link>{" "}
                 untuk penggunaan aplikasi pihak ketiga di Schooly.
               </Typography>
