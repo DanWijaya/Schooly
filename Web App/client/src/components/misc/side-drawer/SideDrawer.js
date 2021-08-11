@@ -126,7 +126,7 @@ function DrawerContent(props) {
         "Beranda",
       ],
       [
-        "/daftar-unit-sekolah",
+        "/daftar-unit",
         <UnitIcon className={classes.drawerListItemIcon} />,
         "Unit Sekolah"
       ],

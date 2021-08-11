@@ -1858,7 +1858,7 @@ class Dashboard extends Component {
             </Link>
           </Grid>
           <Grid item>
-            <Link to="/daftar-unit-sekolah">
+            <Link to="/daftar-unit">
               <Fab variant="extended" className={classes.manageClassButton}>
                 <UnitIcon className={classes.manageClassIcon} />
                 Atur Unit sekolah

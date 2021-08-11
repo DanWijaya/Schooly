@@ -591,7 +591,7 @@ class App extends Component {
                       <PrivateRoute
                       exact
                       access={[Role.SUPERADMIN]}
-                      path="/daftar-unit-sekolah"
+                      path="/daftar-unit"
                       component={UnitList}/>
                       <PrivateRoute
                       exact

@@ -33,6 +33,7 @@ const announcements = require("./routes/api/announcements");
 const materials = require("./routes/api/materials");
 const assessments = require("./routes/api/assessments");
 const events = require("./routes/api/events");
+const units = require("./routes/api/units");
 
 const app = express();
 
@@ -71,7 +72,6 @@ app.use(passport.initialize());
 require("./passport")(passport);
 console.log("Check routes");
 // Routes
-
 app.use("/api/users", users);
 app.use("/api/tasks", tasks);
 app.use("/api/classes", classes);
@@ -100,7 +100,7 @@ app.use("/api/announcements", announcements);
 app.use("/api/materials", materials);
 app.use("/api/assessments", assessments);
 app.use("/api/events", events);
-
+app.use("/api/units", units);
 // Always put this in the end
 const port = process.env.PORT || 5000;
 

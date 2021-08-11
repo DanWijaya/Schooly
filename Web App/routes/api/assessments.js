@@ -15,7 +15,6 @@ const passport = require("passport");
 const validateAssessmentInput = require("../../validation/AssessmentData");
 const Assessment = require("../../models/Assessment");
 const { Double } = require("mongodb");
-const { update } = require("../../models/Assessment");
 
 router.post("/create", (req, res) => {
   const { errors, isValid } = validateAssessmentInput(req.body);

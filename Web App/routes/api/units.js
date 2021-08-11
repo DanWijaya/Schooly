@@ -19,7 +19,7 @@ router.post("/create", (req,res) => {
     const newUnit = new Unit(req.body);
     newUnit
         .save()
-        .then((unit) => res.json(material))
+        .then((unit) => res.json(unit))
         .catch((err) => res.status(400).send("Unable to create unit"));  
 })
 
@@ -57,3 +57,11 @@ router.delete("/delete/:id", (req,res) => {
         }
     })
 })
+
+router.get("/viewall", (req,res) => {
+    Unit.find({}, (err, units) => {
+        return res.json(units)
+    })
+})
+
+module.exports = router;

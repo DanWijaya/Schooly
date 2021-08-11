@@ -2,24 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { getAllSubjects } from "../../../actions/SubjectActions";
-import { refreshTeacher } from "../../../actions/UserActions";
+import { createUnit } from "../../../actions/UnitActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
-  Avatar,
   Button,
-  Chip,
   Divider,
-  FormControl,
   FormHelperText,
   Grid,
-  IconButton,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  MenuItem,
   Paper,
   Select,
   TextField,
@@ -29,16 +19,6 @@ import {
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import MuiAlert from "@material-ui/lab/Alert";
-import DeleteIcon from "@material-ui/icons/Delete";
-import {
-  FaFile,
-  FaFileAlt,
-  FaFileExcel,
-  FaFileImage,
-  FaFilePdf,
-  FaFilePowerpoint,
-  FaFileWord,
-} from "react-icons/fa";
 
 const path = require("path");
 
@@ -59,51 +39,6 @@ const styles = (theme) => ({
       width: "100%",
       height: "1px",
     },
-  },
-  chips: {
-    display: "flex",
-    flexWrap: "wrap",
-  },
-  chip: {
-    marginRight: 2,
-  },
-  addFileButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-  },
-  deleteIconButton: {
-    marginLeft: "7.5px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
-  wordFileTypeIcon: {
-    backgroundColor: "#16B0DD",
-  },
-  excelFileTypeIcon: {
-    backgroundColor: "#68C74F",
-  },
-  imageFileTypeIcon: {
-    backgroundColor: "#974994",
-  },
-  pdfFileTypeIcon: {
-    backgroundColor: "#E43B37",
-  },
-  textFileTypeIcon: {
-    backgroundColor: "#F7BC24",
-  },
-  presentationFileTypeIcon: {
-    backgroundColor: "#FD931D",
-  },
-  otherFileTypeIcon: {
-    backgroundColor: "#808080",
   },
   createUnitButton: {
     backgroundColor: theme.palette.success.main,
@@ -127,73 +62,6 @@ const styles = (theme) => ({
     display: "flex" // untuk men-disable "collapsing margin"
   }
 });
-
-function LampiranFile(props) {
-  const { classes, name, filetype, i, handleLampiranDelete } = props;
-
-  return (
-    <Grid item xs={12}>
-      <Paper variant="outlined">
-        <ListItem disableRipple>
-          <ListItemAvatar>
-            {filetype === "Word" ? (
-              <Avatar className={classes.wordFileTypeIcon}>
-                <FaFileWord />
-              </Avatar>
-            ) : filetype === "Excel" ? (
-              <Avatar className={classes.excelFileTypeIcon}>
-                <FaFileExcel />
-              </Avatar>
-            ) : filetype === "Gambar" ? (
-              <Avatar className={classes.imageFileTypeIcon}>
-                <FaFileImage />
-              </Avatar>
-            ) : filetype === "PDF" ? (
-              <Avatar className={classes.pdfFileTypeIcon}>
-                <FaFilePdf />
-              </Avatar>
-            ) : filetype === "Teks" ? (
-              <Avatar className={classes.textFileTypeIcon}>
-                <FaFileAlt />
-              </Avatar>
-            ) : filetype === "Presentasi" ? (
-              <Avatar className={classes.presentationFileTypeIcon}>
-                <FaFilePowerpoint />
-              </Avatar>
-            ) : filetype === "File Lainnya" ? (
-              <Avatar className={classes.otherFileTypeIcon}>
-                <FaFile />
-              </Avatar>
-            ) : null}
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <LightTooltip title={name} placement="top">
-                <Typography>
-                  {name.length < 21
-                    ? name
-                    : `${name.slice(0, 15)}..${path.extname(name)}`}
-                </Typography>
-              </LightTooltip>
-            }
-            secondary={filetype}
-          />
-          <LightTooltip title="Hapus Lampiran">
-            <IconButton
-              size="small"
-              className={classes.deleteIconButton}
-              onClick={(e) => {
-                handleLampiranDelete(e, i);
-              }}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </LightTooltip>
-        </ListItem>
-      </Paper>
-    </Grid>
-  );
-}
 
 class CreateUnit extends Component {
   constructor() {
@@ -248,160 +116,24 @@ class CreateUnit extends Component {
   };
 
   onChange = (e, otherfield=null) => {
-
-    // dipindahkan (kode yg dari merge_fitur_4_cdn ada di bawah dan dikomen) 
-    let field = otherfield ? otherfield : e.target.id;
-    if (this.state.errors[field]) {
-      this.setState({ errors: { ...this.state.errors, [field]: null } });
-    }
-    // this.setState({ [field]: e.target.value }); // di sini jadi dikomen
-
-    if (otherfield) {
-      if (otherfield === "deadline") {
-        this.setState({ [otherfield]: e });
-        // e is the date value itself for KeyboardDatePicker
-      } else if (otherfield === "subject") { // jika guru memilih mata pelajaran
-        // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
-        let newClassOptions = [];
-        if (this.props.auth.user.class_to_subject) {
-          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
-            if (subjectIdArray.includes(e.target.value)) {
-              newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
-            }
-          }
-        }
-
-        this.setState({ subject: e.target.value, classOptions: newClassOptions });
-
-      } else if (otherfield === "class_assigned") { // jika guru memilih kelas
-        let selectedClasses = e.target.value;
-
-        if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
-          this.setState((prevState, props) => {
-            return {
-              class_assigned: selectedClasses,
-              // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
-              subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
-            }
-          });
-        } else { // jika guru menambahkan atau mengurangi pilihan kelas
-          // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
-          let subjectMatrix = [];
-          if (this.props.auth.user.class_to_subject) {
-            for (let classId of selectedClasses) {
-              if (this.props.auth.user.class_to_subject[classId]) {
-                subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
-              }
-            }
-          }
-          let subjects = [];
-          if (subjectMatrix.length !== 0) {
-            subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
-              return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
-            });
-          }
-
-          // menambahkan matpel tersebut ke opsi matpel
-          let newSubjectOptions = [];
-          subjects.forEach((subjectId) => {
-            newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
-          })
-
-          this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
-        }
-      } else {
-        this.setState({ [otherfield]: e.target.value });
-      }
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
-    }
-
-    // dari merge_fitur_4_cdn
-    // let field = e.target.id ? e.target.id : otherfield;
-    // if (this.state.errors[field]) {
-    //   this.setState({ errors: { ...this.state.errors, [field]: null } });
-    // }
-    // this.setState({ [field]: e.target.value });
+      this.setState({ [e.target.id]: e.target.value })
   };
 
   onSubmit = (e, id) => {
     e.preventDefault();
-    let formData = new FormData();
 
     //Check if there is any lampiran uploaded or not.
-    if (this.state.fileLampiran)
-      for (var i = 0; i < this.state.fileLampiran.length; i++) {
-        console.log(this.state.fileLampiran[i]);
-        formData.append("lampiran_materi", this.state.fileLampiran[i]);
-      }
-    console.log(formData.getAll("lampiran_materi"), this.state.fileLampiran);
-
-    const materialData = {
+    const unitData = {
       name: this.state.name,
-      subject: this.state.subject,
-      class_assigned: this.state.class_assigned,
       description: this.state.description,
-      lampiran: Array.from(this.state.fileLampiran),
-      author_id: id,
-      errors: {},
     };
+    console.log(unitData);
 
-    console.log(this.state.fileLampiran);
-    
     this.handleOpenUploadDialog();
+
+    createUnit(unitData).then((res) => {
+      this.setState({ success: res})})
   };
-
-  componentDidUpdate(prevProps, prevState) {
-    if (!this.props.errors && this.props.errors !== prevProps.errors) {
-      this.handleOpenUploadDialog();
-    }
-
-    // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas dan mata pelajaran
-    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
-      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
-
-        let all_classes_obj = {};
-        this.props.classesCollection.all_classes.forEach((classInfo) => {
-          all_classes_obj[classInfo._id] = classInfo.name;
-        });
-
-        let newClassOptions = [];
-        if (this.props.auth.user.class_teached) {
-          newClassOptions = this.props.auth.user.class_teached.map((classId) => {
-            return { _id: classId, name: all_classes_obj[classId] };
-          });
-        }
-        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
-      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
-    }
-
-    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
-      if (this.props.subjectsCollection.all_subjects && (this.props.subjectsCollection.all_subjects.length !== 0)) {
-
-        let all_subjects_obj = {};
-        this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
-          all_subjects_obj[subjectInfo._id] = subjectInfo.name;
-        });
-
-        let newSubjectOptions = [];
-        if (this.props.auth.user.subject_teached) {
-          newSubjectOptions = this.props.auth.user.subject_teached.map((subjectId) => {
-            return { _id: subjectId, name: all_subjects_obj[subjectId] };
-          });
-        }
-
-        this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
-      } // jika memang belum ada matpel yang tercatat di sistem, opsi matpel akan tetap null
-    }
-  }
-
-  componentDidMount() {
-    this.props.getAllSubjects();
-    this.props.refreshTeacher(this.props.auth.user._id);
-  }
-
-  componentWillUnmount() {
-  }
 
   handleLampiranDelete = (e, i) => {
     e.preventDefault();
@@ -483,35 +215,6 @@ class CreateUnit extends Component {
       }
     };
 
-    const listFileChosen = () => {
-      let temp = [];
-      if (fileLampiran.length > 0) {
-        for (var i = 0; i < fileLampiran.length; i++) {
-          console.log(i);
-          temp.push(
-            <LampiranFile
-              classes={classes}
-              name={fileLampiran[i].name}
-              filetype={fileType(fileLampiran[i].name)}
-              handleLampiranDelete={this.handleLampiranDelete}
-              i={i}
-            />
-          );
-        }
-      }
-      return temp;
-    };
-
-    const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
-    const MenuProps = {
-      PaperProps: {
-        style: {
-          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-          width: 250,
-        },
-      },
-    };
 
     document.title = "Schooly | Buat Unit";
 
@@ -521,17 +224,16 @@ class CreateUnit extends Component {
           <UploadDialog
             openUploadDialog={this.state.openUploadDialog}
             success={success}
-            messageUploading="Materi sedang dibuat"
-            messageSuccess="Materi telah dibuat"
-            redirectLink={`/materi/${success}`}
+            messageUploading="Unit sedang dibuat"
+            messageSuccess="Unit telah dibuat"
+            // redirectLink={`/unit/${success}`}
+            redirectLink={`/daftar-unit`}
           />
           <DeleteDialog
             openDeleteDialog={this.state.openDeleteDialog}
             handleCloseDeleteDialog={this.handleCloseDeleteDialog}
             itemType={"Materi"}
             itemName={this.state.name}
-            // isLink={true}
-            // redirectLink="/daftar-kuis"
             redirectLink={`/daftar-materi`}
             isWarning={false}
           />
@@ -593,7 +295,6 @@ class CreateUnit extends Component {
                         value={this.state.description}
                         error={errors.description}
                         type="text"
-                        // helperText={errors.description}
                         className={classnames("", {
                           invalid: errors.description,
                         })}
@@ -676,6 +377,4 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  getAllSubjects,
-  refreshTeacher
 })(withStyles(styles)(CreateUnit));

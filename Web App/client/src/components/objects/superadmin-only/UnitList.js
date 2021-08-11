@@ -4,13 +4,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import {
-  getAllMaterials,
-  getMaterial,
-  deleteMaterial,
-} from "../../../actions/MaterialActions";
-import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
-import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getTeachers } from "../../../actions/UserActions";
+  getAllUnits
+} from "../../../actions/UnitActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -86,7 +81,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function MaterialListToolbar(props) {
+function UnitListToolbar(props) {
   const {
     classes,
     order,
@@ -382,7 +377,7 @@ function MaterialListToolbar(props) {
   );
 }
 
-MaterialListToolbar.propTypes = {
+UnitListToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -503,7 +498,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function MaterialList(props) {
+function UnitList(props) {
   const classes = useStyles();
 
   const [order, setOrder] = React.useState("asc");
@@ -528,13 +523,12 @@ function MaterialList(props) {
   };
 
   const {
-    getAllSubjects,
     getMaterial,
     deleteMaterial,
     getAllClass,
     getTeachers,
   } = props;
-  const { all_materials, selectedMaterials } = props.materialsCollection;
+  const { all_units, selectedUnits } = props.unitsCollection;
   const { all_classes_map } = props.classesCollection;
   const { user, all_teachers_map } = props.auth;
 
@@ -557,15 +551,7 @@ function MaterialList(props) {
 
   React.useEffect(() => {
     //
-    getAllSubjects("map");
-    getAllClass("map");
-    getTeachers("map");
-    if (user.role === "Teacher") {
-      getMaterial(user._id, "by_author");
-    } else {
-      // for student
-      getMaterial(user.kelas, "by_class");
-    }
+    getAllUnits();
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -580,24 +566,24 @@ function MaterialList(props) {
 
   console.log(all_teachers_map);
   const retrieveMaterials = () => {
-    // If all_materials is not undefined or an empty array
+    // If all_units is not undefined or an empty array
     rows = [];
 
     if (user.role === "Admin") {
-      all_materials
+      all_units
         .filter((item) =>
           item.name.toLowerCase().includes(searchFilter.toLowerCase())
         )
         .map((data) => materialRowItem(data));
-      // all_materials.map(data =>  materialRowItem(data))
+      // all_units.map(data =>  materialRowItem(data))
     } else {
-      if (selectedMaterials.length) {
-        selectedMaterials
+      if (selectedUnits.length) {
+        selectedUnits
           .filter((item) =>
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )
           .map((data) => materialRowItem(data));
-        // selectedMaterials.map(data => materialRowItem(data))
+        // selectedUnits.map(data => materialRowItem(data))
       }
     }
   };
@@ -650,7 +636,7 @@ function MaterialList(props) {
           onDeleteMaterial(selectedMaterialId);
         }}
       />
-      <MaterialListToolbar
+      <UnitListToolbar
         role={user.role}
         deleteMaterial={deleteMaterial}
         classes={classes}
@@ -904,37 +890,20 @@ function MaterialList(props) {
   );
 }
 
-MaterialList.propTypes = {
-  deleteMaterial: PropTypes.func.isRequired,
-  getAllMaterials: PropTypes.func.isRequired,
-  getMaterial: PropTypes.func.isRequired,
-  getTeachers: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
-  getSelectedClasses: PropTypes.func.isRequired,
-  getAllClass: PropTypes.func.isRequired,
-
-  classesCollection: PropTypes.object.isRequired,
-  materialsCollection: PropTypes.object.isRequired,
-  subjectsCollection: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
+UnitList.propTypes = {
+  getAllUnits: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
+  all_units: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  errors: state.errors,
   auth: state.auth,
+  unitsCollection: state.unitsCollection,
   classesCollection: state.classesCollection,
-  materialsCollection: state.materialsCollection,
-  subjectsCollection: state.subjectsCollection,
+  subjectsCollection: state.subjectsCollection
 });
 
 // parameter 1 : reducer , parameter 2 : actions
 export default connect(mapStateToProps, {
-  deleteMaterial,
-  getAllMaterials,
-  getAllSubjects,
-  getMaterial,
-  getTeachers,
-  getAllClass,
-  getSelectedClasses,
-})(MaterialList);
+  getAllUnits
+})(UnitList);

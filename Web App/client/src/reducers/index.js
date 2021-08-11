@@ -11,6 +11,7 @@ import AnnouncementReducer from "./AnnouncementReducer";
 import SuccessReducer from "./SuccessReducer";
 import AssessmentReducer from "./AssessmentReducer";
 import EventReducer from "./EventReducer";
+import UnitReducer from "./UnitReducer";
 
 export default combineReducers({
   auth: UserReducer,
@@ -24,5 +25,6 @@ export default combineReducers({
   subjectsCollection: SubjectReducer,
   success: SuccessReducer,
   tasksCollection: TasksReducer,
-  eventsCollection: EventReducer
+  eventsCollection: EventReducer,
+  unitsCollection: UnitReducer
 });
