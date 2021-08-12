@@ -8,7 +8,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 function PendingUserMenu(props) {
 
-    const { options, row } = props
+    const { options, row, rowCount } = props
     const { handleOpenDeleteDialog, handleOpenApproveDialog } = props
     const [anchorEl, setAnchorEl] = React.useState(null);
     // const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -37,6 +37,7 @@ function PendingUserMenu(props) {
                 aria-controls="long-menu"
                 aria-haspopup="true"
                 onClick={handleClick}
+                disabled={rowCount}
             >
                 <MoreVertIcon />
             </IconButton>
@@ -54,7 +55,7 @@ function PendingUserMenu(props) {
             >
                 {options.map((option) => {
                     return (
-                        <MenuItem key={option}  selected={option === 'Detail'}
+                        <MenuItem key={option} selected={option === 'Detail'}
                             onClick={
                                 option === 'Hapus' ?
                                     handleOpenApproveDialog !== null ?

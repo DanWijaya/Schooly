@@ -328,7 +328,7 @@ function ManageUsersToolbar(props) {
         <>
           {CheckboxDialog("Delete", "Student")}
           <UserMenu
-            options={["Hapus"]}
+            options={["Nonaktifkan", "Hapus"]}
             row={null}
             handleOpenDeleteDialog={OpenDialogCheckboxDelete}
             handleOpenDisableDialog={null}
@@ -1503,7 +1503,7 @@ function ManageUsers(props) {
 
                         </Grid>
                       </ExpansionPanelSummary>
-
+                      <Divider />
                     </ListItem>
                     <Divider />
                   </div>
