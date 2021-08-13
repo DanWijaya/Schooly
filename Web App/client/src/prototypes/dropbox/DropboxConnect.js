@@ -528,7 +528,7 @@ function DropboxConnect(props) {
                   Ketentuan Penggunaan Dropbox
                 </a>{" "}
                 dan{" "}
-                <Link to="/ketentuan-penggunaan">
+                <Link to="/legal/ketentuan-penggunaan">
                   Ketentuan Penggunaan Schooly
                 </Link>{" "}
                 untuk penggunaan aplikasi pihak ketiga di Schooly.

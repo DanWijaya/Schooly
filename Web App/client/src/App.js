@@ -23,7 +23,8 @@ import Profile from "./components/layout/profile/Profile";
 import ProfileView from "./components/layout/profile/ProfileView";
 import ReportView from "./components/layout/profile/ReportView";
 import Help from "./components/layout/help/Help";
-import TermsOfService from "./components/layout/terms-of-service/TermsOfService";
+import TermsOfService from "./components/layout/legal/terms-of-service/TermsOfService";
+import PrivacyPolicy from "./components/layout/legal/privacy-policy/PrivacyPolicy";
 import NotFound from "./components/layout/not-found/NotFound";
 import ProblemEncountered from "./components/layout/problem-encountered/ProblemEncountered";
 //Misc
@@ -226,9 +227,18 @@ class App extends Component {
                       />
                       <Route
                         exact
-                        path="/ketentuan-penggunaan"
+                        path="/legal/ketentuan-penggunaan"
                         render={(props) => (
                           <TermsOfService
+                            {...props}
+                          />
+                        )}
+                      />
+                      <Route
+                        exact
+                        path="/legal/kebijakan-privasi"
+                        render={(props) => (
+                          <PrivacyPolicy
                             {...props}
                           />
                         )}

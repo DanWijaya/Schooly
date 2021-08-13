@@ -92,6 +92,7 @@ const styles = (theme) => ({
   artThumbnail: {
     maxWidth: "100%",
     maxHeight: "100%",
+    marginBottom: "10px",
   },
   registerStepper: {
     padding: "0px",
@@ -401,21 +402,61 @@ class Register extends Component {
           return (
             <Grid container direction="column" spacing={3}>
               <Grid item>
-                <Typography>
+                <Typography paragraph>
                   Setelah pendaftaran selesai, silahkan hubungi pengelola sekolah
                   Anda untuk mengaktifkan akun Anda.
                 </Typography>
-              </Grid>
-              <Grid item>
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                >
-                  Dengan mendaftar, Anda dan sekolah Anda telah menyetujui{" "}
-                  <Link to="/ketentuan-penggunaan" target="_blank" rel="noopener noreferrer">
+                <Typography>
+                  Dengan mendaftar, Anda dan sekolah Anda telah menyetujui {" "}
+                  <Link to="/legal/ketentuan-penggunaan" target="_blank" rel="noopener noreferrer">
                     Ketentuan Penggunaan
                   </Link>
                   {" "} Schooly System.
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography>
+                  Informasi yang Anda berikan pada pendaftaran ini serta penggunaan yang akan
+                  Anda gunakan pada aplikasi ini diatur dalam {" "}
+                  <Link to="/legal/kebijakan-privasi" target="_blank" rel="noopener noreferrer">
+                    Kebijakan Privasi
+                  </Link>
+                  {" "} Schooly System, yang dimana telah dirangkum dalam beberapa
+                  poin-poin utama berikut:
+                </Typography>
+                <Typography>
+                  <ul style={{ paddingLeft: "40px" }}>
+                    <li style={{ listStyleType: "disc" }}>
+                      Kami peduli dengan privasi Anda. Kami tidak dan tidak akan
+                      menjual atau menyewakan data Anda kepada pihak ketiga
+                      kecuali jika diperlukan dalam konteks perubahan struktur
+                      bisnis kami seperti merger atau akuisisi.
+                    </li>
+                    <li style={{ listStyleType: "disc" }}>
+                      Informasi pribadi yang anda berikan hanya kami gunakan untuk
+                      memberikan produk dan layanan yang lebih baik serta analitik untuk
+                      pemasaran yang ada dalam lingkup Schooly sendiri, institusi Anda, serta
+                      vendor dan mitra kami.
+                    </li>
+                    <li style={{ listStyleType: "disc" }}>
+                      Kami membatasi dan berusaha untuk menyamarkan informasi
+                      kami bagikan kepada vendor atau mitra untuk keamanan bersama.
+                    </li>
+                    <li style={{ listStyleType: "disc" }}>
+                      Jika Anda adalah pengguna produk dan layanan kami yang kami sediakan
+                      atas nama institusi Anda, hubungi institusi Anda terlebih dahulu karena
+                      kebijkan privasi institusi Anda dan praktik privasi data akan
+                      menentukan bagaimana Schooly menggunakan informasi pribadi
+                      atas nama institusi Anda. Jika Anda memiliki masalah teknis atau
+                      dukungan, silakan hubungi meja bantuan institusi Anda.
+                      Mereka akan dapat membantu.
+                    </li>
+                    <li style={{ listStyleType: "disc" }}>
+                      Jika Anda memiliki pertanyaan atau kekhawatiran tentang kebijakan
+                      privasi kami atau praktik privasi data kami sendiri, hubungi kami
+                      di <a href="mailto:schoolysystem@gmail.com">schoolysystem@gmail.com</a>.
+                    </li>
+                  </ul>
                 </Typography>
               </Grid>
             </Grid>
@@ -522,8 +563,8 @@ class Register extends Component {
               </Grid>
               <Hidden smDown>
                 <Grid item xs={12} md={5}>
-                  <Typography variant="body1" align="center" paragraph style={{ marginTop: "50px"}}>
-                    Buat akun hanya dengan tiga langkah
+                  <Typography variant="body2" align="center" paragraph style={{ marginTop: "50px"}}>
+                    Buat akun Anda dengan tiga langkah mudah
                   </Typography>
                   <img
                     src={registerStepperArt}

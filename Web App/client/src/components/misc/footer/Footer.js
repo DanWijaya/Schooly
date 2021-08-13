@@ -78,7 +78,7 @@ function Footer(props) {
                     <Link to="/tentang-schooly">Tentang Schooly</Link>
                   </Typography>
                   <Typography gutterBottom className={classes.mobileFont}>
-                    <Link to="/ketentuan-penggunaan">Ketentuan Pengunaan</Link>
+                    <Link to="/legal/ketentuan-penggunaan">Ketentuan Pengunaan</Link>
                   </Typography>
                 </div>
               </Grid>
@@ -114,7 +114,7 @@ function Footer(props) {
                   <Link to="/bantuan">Bantuan</Link>
                 </Grid>
                 <Grid item>
-                  <Link to="/ketentuan-penggunaan">Ketentuan Pengunaan</Link>
+                  <Link to="/legal/ketentuan-penggunaan">Ketentuan Pengunaan</Link>
                 </Grid>
               </Grid>
               <img

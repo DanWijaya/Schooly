@@ -52,7 +52,7 @@ function TermsOfService(props) {
       <div className={classes.termsOfServiceBackground}>
         <div className={classes.termsOfServiceTitle}>
           <Typography variant="h3" align="center">
-            Ketentuan Penggunaan Schooly
+            Ketentuan Penggunaan Schooly System
           </Typography>
         </div>
       </div>
