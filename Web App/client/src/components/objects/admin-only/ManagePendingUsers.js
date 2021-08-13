@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -38,7 +39,10 @@ import {
   Tab,
   Tabs,
   AppBar,
+  List,
   ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
@@ -191,13 +195,32 @@ const ManageUsersToolbar = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   });
 
+
+  let searchRef = useRef();
+
+  useEffect(() => {
+    let handler = (event) => {
+      if(!searchRef.current.contains(event.target)){
+        setSearchBarFocus(false);
+      }
+    }
+    document.addEventListener("mousedown", handler)
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    }
+  });
+
   console.log(rowCount);
 
   return (
     <Toolbar className={classes.toolbar}>
-      <div
-        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+      <Grid container
+        style={{justifyContent: "space-between" }}
       >
+        <Grid
+        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+        >
+      
         <Hidden mdUp implementation="css">
           {searchBarFocus ? null : (
             <div
@@ -222,79 +245,7 @@ const ManageUsersToolbar = (props) => {
             <Typography variant="h4">{heading}</Typography>
           </div>
         </Hidden>
-        <Hidden mdUp implementation="css">
-          {searchBarFocus ? (
-            <div style={{ display: "flex" }}>
-              <IconButton
-                onClick={() => {
-                  setSearchBarFocus(false);
-                  updateSearchFilter("");
-                }}
-              >
-                <ArrowBackIcon />
-              </IconButton>
-              <TextField
-                fullWidth
-                variant="outlined"
-                id="searchFilterMobile"
-                value={searchFilter}
-                onChange={onChange}
-                autoFocus
-                onClick={(e) => setSearchBarFocus(true)}
-                placeholder={searchFilterHint}
-                style={{
-                  maxWidth: "200px",
-                  marginLeft: "10px",
-                }}
-                InputProps={{
-                  startAdornment: searchBarFocus ? null : (
-                    <InputAdornment
-                      position="start"
-                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
-                    >
-                      <IconButton size="small">
-                        <GoSearch />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment
-                      position="end"
-                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                    >
-                      <IconButton
-                        size="small"
-                        id="searchFilterMobile"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onClear(e);
-                        }}
-                        style={{
-                          opacity: 0.5,
-                          visibility: !searchFilter ? "hidden" : "visible",
-                        }}
-                      >
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  style: {
-                    borderRadius: "22.5px",
-                  },
-                }}
-              />
-            </div>
-          ) : (
-            <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
-              <IconButton
-                className={classes.goSearchButton}
-                onClick={() => setSearchBarFocus(true)}
-              >
-                <GoSearch className={classes.goSearchIconMobile} />
-              </IconButton>
-            </LightTooltip>
-          )}
-        </Hidden>
+        
         {
           rowCount == 0 ?
             <IconButton size="small" onClick={() => selectAllData(role)} disabled={rowCount == 0} className={classes.checkboxIconPrimary}>
@@ -331,19 +282,19 @@ const ManageUsersToolbar = (props) => {
             rowCount={listCheckbox.length === 0}
           />
         </>
-      </div>
-      <div style={{ display: "flex", alignItems: "center" }}>
+      </Grid>
+      <Grid style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", width: "70%"}}>
         <Hidden smDown implementation="css">
           <TextField
             variant="outlined"
             id="searchFilterDesktop"
             value={searchFilter}
             onChange={onChange}
-            onClick={() => setSearchBarFocus(true)}
-            onBlur={() => setSearchBarFocus(false)}
+            // onClick={() => setSearchBarFocus(true)}
+            // onBlur={() => setSearchBarFocus(false)}
             placeholder={searchFilterHint}
             style={{
-              maxWidth: "250px",
+              maxWidth: "500px",
               marginRight: "10px",
             }}
             InputProps={{
@@ -379,13 +330,98 @@ const ManageUsersToolbar = (props) => {
               ),
               style: {
                 borderRadius: "22.5px",
-              },
+                background: "#F1F3F4",
+                boxShadow: "none",
+              },   
+            }}
+            // styling di dalam input searchnya
+            inputProps={{
+              style: { boxShadow: "none", margin: "0 15px", borderBottom:"none" },
             }}
           />
         </Hidden>
+        <Hidden mdUp implementation="css">
+          {searchBarFocus ? (
+            <div style={{ display: "flex" }}>
+              {/* <IconButton
+                onClick={() => {
+                  setSearchBarFocus(false);
+                  updateSearchFilter("");
+                }}
+              >
+                <ArrowBackIcon />
+              </IconButton> */}
+              <TextField
+                fullWidth
+                variant="outlined"
+                id="searchFilterMobile"
+                value={searchFilter}
+                onChange={onChange}
+                autoFocus
+                onClick={(e) => setSearchBarFocus(true)}
+                placeholder={searchFilterHint}
+                style={{
+                  maxWidth: "200px",
+                  marginLeft: "10px",
+                }}
+                ref={searchRef}
+                inputProps={{
+                  style: { boxShadow: "none", margin: "0 15px", borderBottom:"none" },
+                }}
+                InputProps={{
+                  startAdornment: searchBarFocus ? null : (
+                    <InputAdornment
+                      position="start"
+                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                    >
+                      <IconButton size="small">
+                        <GoSearch />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                    >
+                      <IconButton
+                        size="small"
+                        id="searchFilterMobile"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onClear(e);
+                        }}
+                        style={{
+                          opacity: 0.5,
+                          visibility: !searchFilter ? "hidden" : "visible",
+                        }}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  style: {
+                    borderRadius: "22.5px",
+                    background: "#F1F3F4",
+                  },
+                }}
+              />
+            </div>
+          ) : (
+            <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
+              <IconButton
+                className={classes.goSearchButton}
+                onClick={() => setSearchBarFocus(true)}
+              >
+                <GoSearch className={classes.goSearchIconMobile} />
+              </IconButton>
+            </LightTooltip>
+          )}
+        </Hidden>
         {role === "Student" ? (
           <>
-            {lengthListCheckbox === 0 ? (
+            {
+            // lengthListCheckbox === 0 ? (
               <>
 
                 {/* =========== MODE KOTAK CENTANG ================ */}
@@ -415,6 +451,9 @@ const ManageUsersToolbar = (props) => {
                   <IconButton
                     onClick={handleOpenSortMenu}
                     className={classes.sortButton}
+                    style={{
+                      display: searchBarFocus ? "none" : "block"
+                    }}
                   >
                     <SortIcon />
                   </IconButton>
@@ -456,29 +495,30 @@ const ManageUsersToolbar = (props) => {
                   ))}
                 </Menu>
               </>
-            ) : (
-              <>
-                {CheckboxDialog("Approve", "Student")}
-                <LightTooltip title="Aktifkan Pengguna Tercentang">
-                  <IconButton
-                    style={{ marginRight: "3px" }}
-                    className={classes.profileApproveButton}
-                    onClick={(e) => OpenDialogCheckboxApprove(e, "Student")}
-                  >
-                    <CheckCircleIcon fontSize="default" />
-                  </IconButton>
-                </LightTooltip>
-                {CheckboxDialog("Delete", "Student")}
-                <LightTooltip title="Hapus Pengguna Tercentang">
-                  <IconButton
-                    className={classes.profileDeleteButton}
-                    onClick={(e) => OpenDialogCheckboxDelete(e, "Student")}
-                  >
-                    <DeleteIcon fontSize="default" />
-                  </IconButton>
-                </LightTooltip>
-              </>
-            )}
+            // ) : (
+            //   <>
+            //     {CheckboxDialog("Approve", "Student")}
+            //     <LightTooltip title="Aktifkan Pengguna Tercentang">
+            //       <IconButton
+            //         style={{ marginRight: "3px" }}
+            //         className={classes.profileApproveButton}
+            //         onClick={(e) => OpenDialogCheckboxApprove(e, "Student")}
+            //       >
+            //         <CheckCircleIcon fontSize="default" />
+            //       </IconButton>
+            //     </LightTooltip>
+            //     {CheckboxDialog("Delete", "Student")}
+            //     <LightTooltip title="Hapus Pengguna Tercentang">
+            //       <IconButton
+            //         className={classes.profileDeleteButton}
+            //         onClick={(e) => OpenDialogCheckboxDelete(e, "Student")}
+            //       >
+            //         <DeleteIcon fontSize="default" />
+            //       </IconButton>
+            //     </LightTooltip>
+            //   </>
+            // )
+            }
           </>
         ) : (
           <>
@@ -511,6 +551,9 @@ const ManageUsersToolbar = (props) => {
                   <IconButton
                     onClick={handleOpenSortMenu}
                     className={classes.sortButton}
+                    style={{
+                      display: searchBarFocus ? "none" : "block"
+                    }}
                   >
                     <SortIcon />
                   </IconButton>
@@ -577,7 +620,8 @@ const ManageUsersToolbar = (props) => {
             )}
           </>
         )}
-      </div>
+      </Grid>
+      </Grid>
     </Toolbar>
   );
 };
@@ -671,10 +715,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   sortButton: {
-    backgroundColor: theme.palette.action.selected,
-    color: "black",
+    color: "#757575",
+    backgroundColor: "rgb(241 243 244)",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.divider,
+      backgroundColor: theme.palette.action.disabledBackground,
       color: "black",
     },
   },
@@ -696,10 +740,10 @@ const useStyles = makeStyles((theme) => ({
     width: "100%"
   },
   checkboxModeButton: {
-    backgroundColor: theme.palette.action.selected,
-    color: "black",
+    color: "#757575",
+    backgroundColor: "rgb(241 243 244)",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.divider,
+      backgroundColor: theme.palette.action.disabledBackground,
       color: "black",
     },
     marginRight: "3px",
@@ -717,6 +761,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "16px",
     minWidth: "10%"
   },
+  headerIcon: {
+    color: theme.palette.primary.main,
+  }
 }));
 
 function ManageUsers(props) {
@@ -1350,25 +1397,38 @@ function ManageUsers(props) {
           justifyContent: "left",
           minHeight: "46.5px",
           margin: "2rem 0",
-          columnGap: "40px",
+          columnGap: "20px",
         }}
       >
-        <FaUserClock fontSize="30px" />
+        <FaUserClock 
+          fontSize="30px"
+          className={classes.headerIcon}
+        />
         <Typography variant="h4" align="left">
           Pengguna Tertunda
         </Typography>
       </div>
       {/* <Divider className={classes.titleDivider} /> */}
-      <AppBar position="static"
+      {/* <AppBar position="static"
         style={{
           margin: "0 0 2rem 0",
         }}
-      >
-        <Tabs value={value} onChange={handleTabs}>
-          <Tab className={classes.titleTab} label="Murid" />
-          <Tab className={classes.titleTab} label="Guru" />
+      > */}
+        <Tabs 
+          value={value}
+          indicatorColor="primary"
+          textColor="primary"
+          onChange={handleTabs}
+          variant="fullWidth"
+          style={{
+            marginBottom: "1rem",
+            borderBottom: "1px solid #E0E0E0",
+          }}
+        >
+          <Tab className={classes.titleTab} label={<span style={{alignSelf:"flex-start"}}>Murid</span>} />
+          <Tab className={classes.titleTab} label={<span style={{alignSelf:"flex-start"}}>Guru</span>} />
         </Tabs>
-      </AppBar>
+      {/* </AppBar> */}
       <TabPanel value={value} index={0}>
 
         <ManageUsersToolbar
@@ -1418,7 +1478,13 @@ function ManageUsers(props) {
               getComparator(order_student, orderBy_student)
             ).map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;
-              return (
+              let content = (
+                // <Link
+                //   style={{ color: 'black' }}
+                //   to={{
+                //     pathname: `/lihat-profil/${row._id}`,
+                //   }}
+                // >
                 <div>
                   <ListItem key={row} role={undefined} button>
                     <ExpansionPanelSummary
@@ -1461,6 +1527,7 @@ function ManageUsers(props) {
                             </LightTooltip>
                           </Grid>
                         </Grid>
+                        <Hidden xsDown>
                         <Grid item>
                           {!row.avatar ? (
                             <ListItemAvatar>
@@ -1472,32 +1539,47 @@ function ManageUsers(props) {
                             </ListItemAvatar>
                           )}
                         </Grid>
+
+                        </Hidden>
                         <Grid item>
-                          <Hidden smUp implementation="css">
-                            <Typography variant="subtitle1" id={labelId}>
-                              {row.name}
-                            </Typography>
-                            <Typography variant="caption" color="textSecondary">
-                              {row.email}
-                            </Typography>
-                          </Hidden>
+                        <Hidden smUp implementation="css">
+                            <div style={{overflow: "hidden", textOverflow: "ellipsis", width: '11rem'}}>
+                              <Typography variant="subtitle1" id={labelId} noWrap>
+                                {row.name}
+                              </Typography>
+                              <Typography variant="caption" color="textSecondary" noWrap>
+                                {row.email}
+                              </Typography>
+                            </div>
+                            </Hidden>
                           <Hidden xsDown implementation="css">
-                            <Typography variant="h6" id={labelId}>
+                            <Typography variant="h6" id={labelId} noWrap>
                               {row.name}
                             </Typography>
-                            <Typography variant="body2" color="textSecondary">
+                            <Typography variant="body2" color="textSecondary" noWrap>
                               {row.email}
                             </Typography>
                           </Hidden>
                         </Grid>
-                        {!checkboxModeStudent ? (
+                        {/* {!checkboxModeStudent ? ( */}
                           <Grid item xs container spacing={1} justify="flex-end">
+                          <ListItemSecondaryAction
+                              button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                              }}
+                              onChange={(e) => {
+                                e.stopPropagation()
+                              }}
+                            >
                             <PendingUserMenu
                               options={["Aktifkan", "Hapus"]}
                               row={row}
                               handleOpenDeleteDialog={handleOpenDeleteDialog}
                               handleOpenApproveDialog={handleOpenApproveDialog}
                             />
+                            </ListItemSecondaryAction>
+
                             {/* ========== TOMBOL AKTIF SAMPING USER ============= */}
                             {/* <Grid item>
                             <LightTooltip title="Aktifkan">
@@ -1529,7 +1611,7 @@ function ManageUsers(props) {
                             </LightTooltip>
                           </Grid> */}
                           </Grid>
-                        ) : (
+                        {/* ) : (
                           <Grid item xs container spacing={1} justify="flex-end">
                             <Grid item>
                               <LightTooltip title="Aktifkan">
@@ -1550,7 +1632,7 @@ function ManageUsers(props) {
                               </LightTooltip>
                             </Grid>
                           </Grid>
-                        )}
+                        )} */}
                       </Grid>
                     </ExpansionPanelSummary>
                     <Divider />
@@ -1582,8 +1664,17 @@ function ManageUsers(props) {
                       </Grid>
                     </ExpansionPanelDetails> */}
                   </ListItem>
+                  <Divider />
                 </div>
-              );
+                // </Link>
+                );
+                return (
+                  <List dense>
+                    <Grid item>
+                      {content}
+                    </Grid>
+                  </List>
+                );
             })
           )}
         </Grid>
@@ -1632,7 +1723,9 @@ function ManageUsers(props) {
               getComparator(order_teacher, orderBy_teacher)
             ).map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;
-              return (
+              let content = (
+
+      
                 <div>
                   <ListItem key={row} role={undefined} button>
                     <ExpansionPanelSummary
@@ -1675,6 +1768,7 @@ function ManageUsers(props) {
                           </Grid>
                         </Grid>
                         <Grid item>
+                        <Hidden xsDown>
                           {!row.avatar ? (
                             <ListItemAvatar>
                               <Avatar />
@@ -1684,15 +1778,20 @@ function ManageUsers(props) {
                               <Avatar src={`/api/upload/avatar/${row.avatar}`} />
                             </ListItemAvatar>
                           )}
+                        </Hidden>
                         </Grid>
+
                         <Grid item>
                           <Hidden smUp implementation="css">
-                            <Typography variant="subtitle1" id={labelId}>
+                          <div style={{overflow: "hidden", textOverflow: "ellipsis", width: '11rem'}}>
+
+                            <Typography variant="subtitle1" id={labelId} noWrap>
                               {row.name}
                             </Typography>
-                            <Typography variant="caption" color="textSecondary">
+                            <Typography variant="caption" color="textSecondary" noWrap>
                               {row.email}
                             </Typography>
+                          </div>
                           </Hidden>
                           <Hidden xsDown implementation="css">
                             <Typography variant="h6" id={labelId}>
@@ -1703,14 +1802,14 @@ function ManageUsers(props) {
                             </Typography>
                           </Hidden>
                         </Grid>
-                        {!checkboxModeTeacher ? (
+                        {/* {!checkboxModeTeacher ? (
                           <Grid item xs container spacing={1} justify="flex-end">
                             <PendingUserMenu
                               options={["Aktifkan", "Hapus"]}
                               row={row}
                               handleOpenDeleteDialog={handleOpenDeleteDialog}
                               handleOpenApproveDialog={handleOpenApproveDialog}
-                            />
+                            /> */}
                             {/* =============  TOMBOL AKTIFKAN SAMPING USER ================= */}
                             {/* <Grid item>
                             <LightTooltip title="Aktifkan">
@@ -1740,11 +1839,11 @@ function ManageUsers(props) {
                               </IconButton>
                             </LightTooltip>
                           </Grid> */}
-                          </Grid>
-                        ) : (
+                          {/* </Grid>
+                        ) : ( */}
                           <Grid item xs container spacing={1} justify="flex-end">
                             <Grid item>
-                              <LightTooltip title="Aktifkan">
+                              {/* <LightTooltip title="Aktifkan">
                                 <FormGroup>
                                   <FormControlLabel
                                     control={
@@ -1759,13 +1858,19 @@ function ManageUsers(props) {
                                     }
                                   />
                                 </FormGroup>
-                              </LightTooltip>
+                              </LightTooltip> */}
+                              <ListItemSecondaryAction>
+                              <PendingUserMenu
+                              options={["Aktifkan", "Hapus"]}
+                              row={row}
+                              handleOpenDeleteDialog={handleOpenDeleteDialog}
+                              handleOpenApproveDialog={handleOpenApproveDialog}
+                            /> 
+                              </ListItemSecondaryAction>
                             </Grid>
                           </Grid>
-                        )}
                       </Grid>
                     </ExpansionPanelSummary>
-                    <Divider />
                     {/* <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
                       <Grid container direction="column">
                         <Grid item>
@@ -1794,8 +1899,15 @@ function ManageUsers(props) {
                       </Grid>
                     </ExpansionPanelDetails> */}
                   </ListItem>
+                  <Divider />
+
                 </div>
               );
+              return <List>
+                <Grid item>
+                  {content}
+                </Grid>
+              </List>
             })
           )}
         </Grid>

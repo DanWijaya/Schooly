@@ -313,17 +313,11 @@ function ManageUsersToolbar(props) {
               marginRight: "10px",  
             }}
             
-            InputProps={{
-              
-              className: classes.input,
+            InputProps={{              
               startAdornment: (
                 <InputAdornment
                   position="start"
-                  inputStyle={
-                    {boxShadow: "none"}
-                  }
-
-                  style={{ marginLeft: "-5px", marginRight: "-5px",  boxShadow: "none",}}
+                  style={{ marginLeft: "-5px", marginRight: "-5px"}}
                 >
                   <IconButton size="small">
                     <GoSearch />
@@ -333,7 +327,7 @@ function ManageUsersToolbar(props) {
               endAdornment: (
                 <InputAdornment
                   position="end"
-                  style={{ marginLeft: "-10px", marginRight: "-10px", boxShadow: "none", }}
+                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
                 >
                   <IconButton
                     size="small"
@@ -342,7 +336,6 @@ function ManageUsersToolbar(props) {
                       onClear(e);
                     }}
                     style={{
-                      boxShadow: "none",
                       opacity: 0.5,
                       visibility: !searchFilter ? "hidden" : "visible",
                     }}
@@ -1702,6 +1695,7 @@ function ManageUsers(props) {
                           </Grid>
                         </Grid>
                         <Grid item>
+                          <Hidden xsDown>
                           {!row.avatar ? (
                             <ListItemAvatar>
                               <Avatar />
@@ -1711,6 +1705,8 @@ function ManageUsers(props) {
                               <Avatar src={`/api/upload/avatar/${row.avatar}`} />
                             </ListItemAvatar>
                           )}
+
+                          </Hidden>
                         </Grid>
                         <Link
                           style={{ color: 'black' }}
@@ -1720,12 +1716,15 @@ function ManageUsers(props) {
                         >
                           <Grid item>
                             <Hidden smUp implementation="css">
-                              <Typography variant="subtitle1" id={labelId}>
+                            <div style={{overflow: "hidden", textOverflow: "ellipsis", width: '11rem'}}>
+
+                              <Typography variant="subtitle1" id={labelId} noWrap>
                                 {row.name}
                               </Typography>
-                              <Typography variant="caption" color="textSecondary">
+                              <Typography variant="caption" color="textSecondary" noWrap>
                                 {row.email}
                               </Typography>
+                            </div>
                             </Hidden>
                             <Hidden xsDown implementation="css">
                               <Typography variant="h6" id={labelId}>
