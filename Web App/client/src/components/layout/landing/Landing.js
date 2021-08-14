@@ -4,14 +4,6 @@ import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import schoolyIntroduction from "./SchoolyIntroduction.png";
 import schoolyAccess from "./SchoolyAccess.png";
-import schoolyFeatureBackground1 from "./SchoolyFeatureBackground1.png";
-import schoolyFeatureBackground2 from "./SchoolyFeatureBackground2.png";
-import schoolyFeatureBackground3 from "./SchoolyFeatureBackground3.png";
-import schoolyFeatureBackground4 from "./SchoolyFeatureBackground4.png";
-import schoolyFeatureBackground5 from "./SchoolyFeatureBackground5.png";
-import schoolyFeatureBackground6 from "./SchoolyFeatureBackground6.png";
-import schoolyFeatureBackground7 from "./SchoolyFeatureBackground7.png";
-import schoolyFeatureBackground8 from "./SchoolyFeatureBackground8.png";
 import {
   Avatar,
   Button,
@@ -70,13 +62,13 @@ const styles = (theme) => ({
   schoolyFeatures: {
     textAlign: "center",
     margin: "auto",
+    marginTop: "30px",
+    marginBottom: "75px",
+    padding: "20px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    marginTop: "50px",
-    marginBottom: "75px",
-    padding: "20px",
   },
   featuresPaper: {
     display: "flex",
@@ -119,6 +111,13 @@ const styles = (theme) => ({
       maxWidth: "100%",
     },
   },
+  useSchoolyButtonsContainer: {
+    justifyContent: "center",
+    [theme.breakpoints.down("md")]: {
+      flexDirection: "column",
+      alignItems: "center",
+    },
+  },
   sendMessageButton: {
     width: "160px",
     backgroundColor: theme.palette.primary.main,
@@ -126,12 +125,6 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
-    },
-    [theme.breakpoints.up("sm")]: {
-      marginRight: "30px",
-    },
-    [theme.breakpoints.down("xs")]: {
-      marginBottom: "16px",
     },
   },
   copyLinkButton: {
@@ -230,15 +223,7 @@ class Landing extends Component {
               </Grid>
               <Grid item xs={6} sm={3}>
                 <Paper variant="outlined" className={classes.featuresPaper}>
-                  <Avatar
-                    className={classes.featuresAvatar}
-                    style={{
-                      backgroundImage: `url(${schoolyFeatureBackground1})`,
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover",
-                    }}
-                  >
+                  <Avatar className={classes.featuresAvatar}>
                     <PeopleIcon className={classes.featuresIcon} />
                   </Avatar>
                   <Typography gutterBottom>Akun Pengelola</Typography>
@@ -250,15 +235,7 @@ class Landing extends Component {
               </Grid>
               <Grid item xs={6} sm={3}>
                 <Paper variant="outlined" className={classes.featuresPaper}>
-                  <Avatar
-                    className={classes.featuresAvatar}
-                    style={{
-                      backgroundImage: `url(${schoolyFeatureBackground2})`,
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover",
-                    }}
-                  >
+                  <Avatar className={classes.featuresAvatar}>
                     <FaceIcon className={classes.featuresIcon} />
                   </Avatar>
                   <Typography gutterBottom>Pendataan Pengguna</Typography>
@@ -270,15 +247,7 @@ class Landing extends Component {
               </Grid>
               <Grid item xs={6} sm={3}>
                 <Paper variant="outlined" className={classes.featuresPaper}>
-                  <Avatar
-                    className={classes.featuresAvatar}
-                    style={{
-                      backgroundImage: `url(${schoolyFeatureBackground3})`,
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover",
-                    }}
-                  >
+                  <Avatar className={classes.featuresAvatar}>
                     <FaChalkboardTeacher className={classes.featuresIcon} />
                   </Avatar>
                   <Typography gutterBottom>Kelas</Typography>
@@ -290,15 +259,7 @@ class Landing extends Component {
               </Grid>
               <Grid item xs={6} sm={3}>
                 <Paper variant="outlined" className={classes.featuresPaper}>
-                  <Avatar
-                    className={classes.featuresAvatar}
-                    style={{
-                      backgroundImage: `url(${schoolyFeatureBackground4})`,
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover",
-                    }}
-                  >
+                  <Avatar className={classes.featuresAvatar}>
                     <AnnouncementIcon className={classes.featuresIcon} />
                   </Avatar>
                   <Typography gutterBottom>Pengumuman</Typography>
@@ -310,15 +271,7 @@ class Landing extends Component {
               </Grid>
               <Grid item xs={6} sm={3}>
                 <Paper variant="outlined" className={classes.featuresPaper}>
-                  <Avatar
-                    className={classes.featuresAvatar}
-                    style={{
-                      backgroundImage: `url(${schoolyFeatureBackground5})`,
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover",
-                    }}
-                  >
+                  <Avatar className={classes.featuresAvatar}>
                     <MenuBookIcon className={classes.featuresIcon} />
                   </Avatar>
                   <Typography gutterBottom>Materi</Typography>
@@ -330,15 +283,7 @@ class Landing extends Component {
               </Grid>
               <Grid item xs={6} sm={3}>
                 <Paper variant="outlined" className={classes.featuresPaper}>
-                  <Avatar
-                    className={classes.featuresAvatar}
-                    style={{
-                      backgroundImage: `url(${schoolyFeatureBackground6})`,
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover",
-                    }}
-                  >
+                  <Avatar className={classes.featuresAvatar}>
                     <AssignmentIcon className={classes.featuresIcon} />
                   </Avatar>
                   <Typography gutterBottom>Tugas</Typography>
@@ -350,15 +295,7 @@ class Landing extends Component {
               </Grid>
               <Grid item xs={6} sm={3}>
                 <Paper variant="outlined" className={classes.featuresPaper}>
-                  <Avatar
-                    className={classes.featuresAvatar}
-                    style={{
-                      backgroundImage: `url(${schoolyFeatureBackground7})`,
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover",
-                    }}
-                  >
+                  <Avatar className={classes.featuresAvatar}>
                     <BsClipboardData className={classes.featuresIcon} />
                   </Avatar>
                   <Typography gutterBottom>Kuis & Ujian</Typography>
@@ -370,15 +307,7 @@ class Landing extends Component {
               </Grid>
               <Grid item xs={6} sm={3}>
                 <Paper variant="outlined" className={classes.featuresPaper}>
-                  <Avatar
-                    className={classes.featuresAvatar}
-                    style={{
-                      backgroundImage: `url(${schoolyFeatureBackground8})`,
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover",
-                    }}
-                  >
+                  <Avatar  className={classes.featuresAvatar}>
                     <AssessmentIcon className={classes.featuresIcon} />
                   </Avatar>
                   <Typography gutterBottom>Rapor</Typography>
@@ -393,22 +322,24 @@ class Landing extends Component {
         </div>
         <div className={classes.useSchooly}>
           <Typography variant="h4" color="primary" gutterBottom>
-            Siap untuk Schooly?
+            Siap untuk masuk ke era baru pembelajaran?
           </Typography>
           <Typography paragraph>
             Klik tombol "Kirim Pesan" untuk menghubungi kami atau tombol "Salin
             Tautan" untuk mengirim tautan ini ke sekolah Anda.
           </Typography>
-          <Hidden xsDown>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Grid container spacing={2} className={classes.useSchoolyButtonsContainer}>
+            <Grid item>
               <Button
                 variant="contained"
                 href="mailto:schoolysystem@gmail.com"
                 startIcon={<ContactMailIcon />}
                 className={classes.sendMessageButton}
               >
-                KIRIM PESAN
+                Kirim Pesan
               </Button>
+            </Grid>
+            <Grid item>
               <Button
                 variant="contained"
                 startIcon={<FilterNoneIcon />}
@@ -417,38 +348,10 @@ class Landing extends Component {
                   this.copyToClipboard("http://www.schoolysystem.com")
                 }
               >
-                SALIN TAUTAN
+                Salin Tautan
               </Button>
-            </div>
-          </Hidden>
-          <Hidden smUp>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Button
-                variant="contained"
-                href="mailto:schoolysystem@gmail.com"
-                startIcon={<ContactMailIcon />}
-                className={classes.sendMessageButton}
-              >
-                KIRIM PESAN
-              </Button>
-              <Button
-                variant="contained"
-                startIcon={<FilterNoneIcon />}
-                className={classes.copyLinkButton}
-                onClick={() =>
-                  this.copyToClipboard("http://www.schoolysystem.com")
-                }
-              >
-                SALIN TAUTAN
-              </Button>
-            </div>
-          </Hidden>
+            </Grid>
+          </Grid>
         </div>
       </div>
     );

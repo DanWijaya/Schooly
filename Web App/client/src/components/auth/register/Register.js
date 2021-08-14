@@ -563,7 +563,7 @@ class Register extends Component {
               </Grid>
               <Hidden smDown>
                 <Grid item xs={12} md={5}>
-                  <Typography variant="body2" align="center" paragraph style={{ marginTop: "50px"}}>
+                  <Typography variant="body2" align="center" paragraph style={{ marginTop: "80px"}}>
                     Buat akun Anda dengan tiga langkah mudah
                   </Typography>
                   <img
