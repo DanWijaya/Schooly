@@ -6,7 +6,7 @@ export const globalStyles = responsiveFontSizes(
     palette: {
       primary: {
         main: "#2196f3",
-        light: "#64b5f6",
+        light: "#64B5F6",
         dark: "#1976d2",
         fade: fade("#2196f3", 0.15),
       },

@@ -14,7 +14,6 @@ import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
 import {
   Button,
-  Divider,
   FormControl,
   FormHelperText,
   Grid,
@@ -567,6 +566,7 @@ class Register extends Component {
                     Buat akun Anda dengan tiga langkah mudah
                   </Typography>
                   <img
+                    alt="Register Art"
                     src={registerStepperArt}
                     className={classes.artThumbnail}
                   />

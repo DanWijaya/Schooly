@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter, Link, Redirect } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
@@ -40,12 +40,13 @@ const styles = (theme) => ({
     marginBottom: "25px",
   },
   artThumbnail: {
-    maxWidth: "100%",
-    maxHeight: "100%",
+    width: "100%",
+    height: "100%",
+    maxWidth: "300px",
   },
   loginContainer: {
     maxWidth: "80%",
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("sm")]: {
       maxWidth: "100%",
     },
   },
@@ -175,15 +176,16 @@ class Login extends Component {
             className={classes.schoolyLogo}
           />
         </Link>
-        <Grid container justify="space-between" alignItems="flex-end" className={classes.loginContainer}>
-          <Grid item xs={3}>
-            <Hidden smDown>
+        <Grid container alignItems="flex-end" spacing={3} className={classes.loginContainer}>
+          <Hidden smDown>
+            <Grid item container justify="flex-end" xs={3}>
               <img
+                alt="Login Art Left"
                 src={loginArtLeft}
                 className={classes.artThumbnail}
               />
-            </Hidden>
-          </Grid>
+            </Grid>
+          </Hidden>
           <Grid item xs={12} md={6}>
             <Paper elevation={11} className={classes.loginPaper}>
               <Grid container direction="column" spacing={6}>
@@ -286,20 +288,21 @@ class Login extends Component {
                 <Divider />
                 <Grid item container justify="space-around">
                   <Link to="/akun/lupa-katasandi">Lupa kata sandi?</Link>
-                  <Typography color="textSecondary">·</Typography>
+                    <Typography color="textSecondary">·</Typography>
                   <Link to="/daftar">Belum ada akun?</Link>
                 </Grid>
               </Grid>
             </Paper>
           </Grid>
-          <Grid item xs={3}>
-            <Hidden smDown>
-              <img
-                src={loginArtRight}
-                className={classes.artThumbnail}
-              />
-            </Hidden>
-          </Grid>
+          <Hidden smDown>
+            <Grid item container justify="flex-start" xs={3}>
+                <img
+                  alt="Login Art Right"
+                  src={loginArtRight}
+                  className={classes.artThumbnail}
+                />
+            </Grid>
+          </Hidden>
         </Grid>
       </div>
     );

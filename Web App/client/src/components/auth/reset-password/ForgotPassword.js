@@ -9,7 +9,6 @@ import schoolyLogo from "../../../images/SchoolyLogo.png";
 import resetPasswordArt from "./ResetPasswordArt.png";
 import {
   Button,
-  Divider,
   Grid,
   Hidden,
   Paper,
@@ -204,6 +203,7 @@ class ForgotPassword extends Component {
             <Hidden smDown>
               <Grid item xs={5}>
                   <img
+                    alt="Reset Password Art"
                     src={resetPasswordArt}
                     className={classes.artThumbnail}
                   />

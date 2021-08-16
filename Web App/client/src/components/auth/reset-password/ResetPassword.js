@@ -168,6 +168,7 @@ class ResetPassword extends Component {
             <Hidden smDown>
               <Grid item xs={5}>
                   <img
+                    alt="Reset Password Art"
                     src={resetPasswordArt}
                     className={classes.artThumbnail}
                   />
