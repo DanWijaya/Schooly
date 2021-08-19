@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Divider, Link, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ScrollToTopFab from "../../../misc/scroll-to-top/ScrollToTopFab";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,7 +51,7 @@ function PrivacyPolicy(props) {
 
   return (
     <div className={classes.root}>
-      <div className={classes.privacyPolicyBackground}>
+      <div className={classes.privacyPolicyBackground} id="back-to-top-anchor">
         <div className={classes.privacyPolicyTitle}>
           <Typography variant="h3" align="center">
             Kebijakan Privasi Schooly System
@@ -769,6 +770,7 @@ function PrivacyPolicy(props) {
           </Typography>
         </div>
       </div>
+      <ScrollToTopFab/>
     </div>
   );
 }

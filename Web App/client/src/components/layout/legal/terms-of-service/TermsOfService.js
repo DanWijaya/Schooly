@@ -1,6 +1,15 @@
 import React, { useEffect } from "react";
 import { Divider, Link, Typography } from "@material-ui/core";
+import PropTypes from 'prop-types';
 import { makeStyles } from "@material-ui/core/styles";
+import { useScrollTrigger } from "@material-ui/core";
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
+import Fab from '@material-ui/core/Fab';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import Zoom from '@material-ui/core/Zoom';
+import ScrollToTopFab from "../../../misc/scroll-to-top/ScrollToTopFab";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   contentSectionTitle: {
     marginTop: "25px",
     marginBottom: "25px",
-  },
+  }
 }));
 
 function TermsOfService(props) {
@@ -49,7 +58,7 @@ function TermsOfService(props) {
 
   return (
     <div className={classes.root}>
-      <div className={classes.termsOfServiceBackground}>
+      <div className={classes.termsOfServiceBackground} id="back-to-top-anchor">
         <div className={classes.termsOfServiceTitle}>
           <Typography variant="h3" align="center">
             Ketentuan Penggunaan Schooly System
@@ -501,7 +510,8 @@ function TermsOfService(props) {
           </Typography>
         </div>
       </div>
-    </div>
+      <ScrollToTopFab/>
+    </div>  
   );
 }
 
