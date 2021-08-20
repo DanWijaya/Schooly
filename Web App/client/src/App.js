@@ -76,7 +76,7 @@ import EditClassTeacher from "./components/objects/classes/EditClassTeacher";
 import TeacherList from "./components/objects/admin-only/TeacherList";
 //Prototypes
 import CSV from "./prototypes/contoh-tugas/CSV";
-
+import BackToTop from "./prototypes/scroll-top";
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -425,6 +425,10 @@ class App extends Component {
                         component={TaskList}
                       />
                       {/* Route Assessment - Prototype */}
+                      <Route
+                      exact 
+                      path="/scrolltop"
+                      component={BackToTop}/>
                       <PrivateRoute
                         exact
                         access={["Student", "Teacher"]}

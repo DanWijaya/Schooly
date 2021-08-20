@@ -19,6 +19,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import EmailIcon from "@material-ui/icons/Email";
 import InstagramIcon from "@material-ui/icons/Instagram";
+import ScrollToTopFab from "../../misc/scroll-to-top/ScrollToTopFab";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -120,7 +121,7 @@ function Help(props) {
 
   return (
     <div className={classes.root}>
-      <div className={classes.helpTopicsBackground}>
+      <div className={classes.helpTopicsBackground} id="back-to-top-anchor">
         <div className={classes.helpTopics}>
           <Typography variant="h3">
             <b>CARI TOPIK BANTUAN</b>
@@ -1320,6 +1321,7 @@ function Help(props) {
           </Grid>
         </Grid>
       </div>
+      <ScrollToTopFab/>
     </div>
   );
 }

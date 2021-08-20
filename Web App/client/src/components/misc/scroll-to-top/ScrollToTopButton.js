@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ScrollToTopButton(props) {
-  const { children, window } = props;
+  const { window } = props;
   const classes = useStyles();
   // Note that you normally won"t need to set the window ref as useScrollTrigger
   // will default to window.
@@ -42,5 +42,9 @@ function ScrollToTopButton(props) {
     </Zoom>
   );
 }
+
+ScrollToTopButton.propTypes = {
+  window: PropTypes.func,
+};
 
 export default ScrollToTopButton;

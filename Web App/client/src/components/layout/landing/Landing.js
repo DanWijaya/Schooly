@@ -27,6 +27,7 @@ import { AiFillNotification } from "react-icons/ai";
 import { BsClipboardData } from "react-icons/bs";
 import { FaChalkboardTeacher, FaSchool, FaUserCog } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
+import ScrollToTopFab from "../../misc/scroll-to-top/ScrollToTopFab";
 
 const styles = (theme) => ({
   root: {
@@ -208,7 +209,7 @@ class Landing extends Component {
 
     return (
       <div className={classes.root}>
-        <div className={classes.schoolyIntroductionBackground}>
+        <div className={classes.schoolyIntroductionBackground} id="back-to-top-anchor">
           <div className={classes.schoolyIntroduction}>
             <Grid container justify="center" alignItems="center">
               <Grid item xs={12} sm={6}>
@@ -485,6 +486,7 @@ class Landing extends Component {
             </Grid>
           </Grid>
         </div>
+        <ScrollToTopFab/>
       </div>
     );
   }
