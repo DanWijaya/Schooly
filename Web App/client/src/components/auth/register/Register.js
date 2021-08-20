@@ -406,21 +406,17 @@ class Register extends Component {
                   Anda untuk mengaktifkan akun Anda.
                 </Typography>
                 <Typography>
-                  Dengan mendaftar, Anda dan sekolah Anda telah menyetujui {" "}
-                  <Link to="/legal/ketentuan-penggunaan" target="_blank" rel="noopener noreferrer">
-                    Ketentuan Penggunaan
-                  </Link>
-                  {" "} Schooly System.
+                  Dengan mendaftar, Anda dan sekolah Anda telah
+                  menyetujui <Link to="/legal/ketentuan-penggunaan" target="_blank" rel="noopener noreferrer">
+                  Ketentuan Penggunaan </Link> Schooly System.
                 </Typography>
               </Grid>
               <Grid item>
                 <Typography>
-                  Informasi yang Anda berikan pada pendaftaran ini serta penggunaan yang akan
-                  Anda gunakan pada aplikasi ini diatur dalam {" "}
-                  <Link to="/legal/kebijakan-privasi" target="_blank" rel="noopener noreferrer">
-                    Kebijakan Privasi
-                  </Link>
-                  {" "} Schooly System, yang dimana telah dirangkum dalam beberapa
+                  Informasi yang Anda berikan pada pendaftaran ini serta
+                  penggunaan yang akan Anda gunakan pada aplikasi ini diatur
+                  dalam <Link to="/legal/kebijakan-privasi" target="_blank" rel="noopener noreferrer">
+                  Kebijakan Privasi </Link> Schooly System, yang dimana telah dirangkum dalam beberapa
                   poin-poin utama berikut:
                 </Typography>
                 <Typography>

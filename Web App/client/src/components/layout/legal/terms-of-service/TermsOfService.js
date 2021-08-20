@@ -237,24 +237,21 @@ function TermsOfService(props) {
             perjanjian antara Schooly dan lembaga pendidikan yang relevan dengan
             penggunaan Anda atas Produk. Di antara Schooly dan Anda, Anda
             dan/atau lembaga pendidikan memiliki semua hak, kepemilikan, dan
-            minat terhadap semua Data Siswa yang Anda berikan atau sediakan bagi
+            minat terhadap semua Data murid yang Anda berikan atau sediakan bagi
             kami, dan kami tidak memiliki, mengendalikan, atau melisensikan Data
-            Siswa tersebut, kecuali jika untuk menyediakan Produk kepada Anda
+            murid tersebut, kecuali jika untuk menyediakan Produk kepada Anda
             dan ke lembaga pendidikan yang menyediakan produk dan mengendalikan
-            Data Siswa dari catatan pendidikan, jika berlaku, dan sebagaimana
-            dijelaskan di sini. “Data Siswa” adalah segala informasi (dalam
-            format apa pun) yang secara langsung terkait dengan siswa saat ini
-            atau mantan siswa yang dikelola oleh sekolah, distrik sekolah, atau
+            Data murid dari catatan pendidikan, jika berlaku, dan sebagaimana
+            dijelaskan di sini. “Data murid” adalah segala informasi (dalam
+            format apa pun) yang secara langsung terkait dengan murid saat ini
+            atau mantan murid yang dikelola oleh sekolah, distrik sekolah, atau
             entitas atau organisasi terkait, atau oleh kami, sebagai bagian dari
             ketentuan Produk.
           </Typography>
           <Typography align="justify" paragraph>
             Jika Anda memiliki pertanyaan tentang privasi dan penggunaan
-            Informasi Anda, silakan hubungi kami di{" "}
-            <Link href="mailto:schoolysystem@gmail.com">
-              schoolysystem@gmail.com
-            </Link>
-            , atau lembaga pendidikan Anda.
+            Informasi Anda, silakan hubungi kami di <Link href="mailto:schoolysystem@gmail.com">
+            schoolysystem@gmail.com </Link>, atau lembaga pendidikan Anda.
           </Typography>
         </div>
         <div id="konten-dan-hak-anda" className={classes.contentSection}>
@@ -573,11 +570,9 @@ function TermsOfService(props) {
           </Typography>
           <Typography align="justify" paragraph>
             Kami dapat merevisi Ketentuan ini dari waktu ke waktu, versi terbaru
-            akan selalu tersedia di{" "}
-            <Link href="https://www.schoolysystem.com">
-              https://www.schoolysystem.com
-            </Link>
-            . Jika revisi, atas kebijakan kami sendiri, adalah materi, kami akan
+            akan selalu tersedia di <Link href="https://www.schoolysystem.com">
+            https://www.schoolysystem.com</Link>.
+            Jika revisi, atas kebijakan kami sendiri, adalah materi, kami akan
             memberi tahu Anda melalui Produk atau melalui email yang terkait
             dengan profil Anda. Dengan terus mengakses atau menggunakan Produk
             setelah revisi tersebut berlaku, Anda setuju untuk terikat oleh
@@ -591,11 +586,8 @@ function TermsOfService(props) {
           </Typography>
           <Typography align="justify" paragraph>
             Jika terdapat informasi yang masih kurang jelas atau ada pertanyaan
-            mengenai kebijakan penggunaan di atas, silahkan menghubungi kami di{" "}
-            <Link href="mailto:schoolysystem@gmail.com">
-              schoolysystem@gmail.com
-            </Link>
-            .
+            mengenai kebijakan penggunaan di atas, silahkan menghubungi kami di <Link href="mailto:schoolysystem@gmail.com">
+            schoolysystem@gmail.com</Link>.
           </Typography>
         </div>
       </div>
