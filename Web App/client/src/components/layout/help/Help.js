@@ -137,7 +137,7 @@ function Help(props) {
               <ExpansionPanel variant="outlined" defaultExpanded>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography variant="h5" color="primary">
-                    Akun, Registrasi, dan Masuk
+                    Akun, Pendaftaran, dan Masuk
                   </Typography>
                 </ExpansionPanelSummary>
                 <Divider />
@@ -190,12 +190,12 @@ function Help(props) {
                     <Grid item>
                       <Typography variant="h6" align="justify" gutterBottom>
                         <b>
-                          Bagaimana cara untuk meregistrasi suatu akun Schooly?
+                          Bagaimana cara untuk mendaftarkan suatu akun Schooly?
                         </b>
                       </Typography>
                       <Typography  align="justify">
                         Silahkan hubungi pengelola Schooly pada sekolah Anda
-                        untuk memberikan tautan untuk registrasi akun Anda
+                        untuk memberikan tautan untuk mendaftar akun Anda
                         sesuai dengan kebutuhan Anda (Guru atau Murid).
                       </Typography>
                     </Grid>

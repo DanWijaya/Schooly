@@ -262,7 +262,7 @@ class Landing extends Component {
                   Schooly memudahkan pekerjaan hampir semua pihak dalam kegiatan belajar mengajar,
                   baik dari pihak <b>sekolah</b>, <b>guru</b>, maupun <b>murid</b>.
                 </Typography>
-                <Typography color="textSecondary">
+                <Typography color="textSecondary" paragraph>
                   Fitur yang kami sediakan pun selalu <u>bertambah</u> dan <u>berkembang</u> dari waktu ke waktu.
                 </Typography>
               </Grid>

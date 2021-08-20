@@ -1,44 +1,46 @@
-import React, { useEffect } from "react";
-import { Divider, Link, Typography } from "@material-ui/core";
+import React from "react";
+import { Link } from "react-router-dom";
+import termsOfServiceArt from "./TermsOfServiceArt.png";
+import ScrollToTopButton from "../../../misc/scroll-to-top/ScrollToTopButton";
+import { Divider, List, ListItem, ListItemIcon, ListItemText, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
-  },
-  termsOfServiceBackground: {
-    backgroundColor: theme.palette.primary.light,
+    margin: "auto",
+    padding: "20px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
   },
   termsOfServiceTitle: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    color: "white",
-    margin: "auto",
-    maxWidth: "80%",
+  },
+  termsOfServiceArt: {
+    maxHeight: "225px",
     [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
+      maxHeight: "200px",
     },
-    height: "100px",
-    padding: "10px",
+  },
+  termsOfServiceTitleText: {
+    fontSize: "13px",
   },
   content: {
-    margin: "auto",
-    maxWidth: "80%",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
-    },
-    marginTop: "50px",
-    padding: "20px",
-  },
-  contentSection: {
-    marginTop: "50px",
+    paddingTop: "75px",
   },
   contentSectionTitle: {
     marginTop: "25px",
     marginBottom: "25px",
+  },
+  contentSection: {
+    paddingTop: "50px",
   },
 }));
 
@@ -49,12 +51,18 @@ function TermsOfService(props) {
 
   return (
     <div className={classes.root}>
-      <div className={classes.termsOfServiceBackground}>
-        <div className={classes.termsOfServiceTitle}>
-          <Typography variant="h3" align="center">
-            Ketentuan Penggunaan Schooly System
-          </Typography>
-        </div>
+      <div className={classes.termsOfServiceTitle}>
+        <img
+          alt="Terms of Service Art"
+          src={termsOfServiceArt}
+          className={classes.termsOfServiceArt}
+        />
+        <Typography variant="overline" align="center" gutterBottom className={classes.termsOfServiceTitleText}>
+          Ketentuan Penggunaan Schooly System
+        </Typography>
+        <Typography>
+          Berlaku efektif: 1 Januari 2020
+        </Typography>
       </div>
       <div className={classes.content}>
         <Typography variant="h6" gutterBottom>
@@ -77,10 +85,94 @@ function TermsOfService(props) {
           Dengan mengakses atau menggunakan Produk, Anda setuju untuk terikat
           oleh Ketentuan ini.
         </Typography>
-        <div className={classes.contentSection}>
+        <div id="back-to-top-anchor" className={classes.contentSection}>
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
-            <b>1. Ketentuan Umum dan Akun</b>
+            <b>Daftar Isi</b>
+          </Typography>
+          <List>
+            <ListItem button component="a" href="#ketentuan-umum-dan-akun">
+              <ListItemIcon>
+                <KeyboardArrowRightIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="Ketentuan Umum dan Akun" />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem button component="a" href="#privasi-dan-penggunaan-informasi-pribadi">
+              <ListItemIcon>
+                <KeyboardArrowRightIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="Privasi dan Penggunaan Informasi Pribadi" />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem button component="a" href="#konten-dan-hak-anda">
+              <ListItemIcon>
+                <KeyboardArrowRightIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="Konten dan Hak Anda" />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem button component="a" href="#lisensi-anda-untuk-menggunakan-produk">
+              <ListItemIcon>
+                <KeyboardArrowRightIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="Lisensi Anda untuk menggunakan Produk" />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem button component="a" href="#hak-schooly">
+              <ListItemIcon>
+                <KeyboardArrowRightIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="Hak Schooly" />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem button component="a" href="#tanggung-jawab-pendaftaran-dan-kata-sandi">
+              <ListItemIcon>
+                <KeyboardArrowRightIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="Tanggung Jawab Pendaftaran dan Kata Sandi" />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem button component="a" href="#penghentian-penggunaan">
+              <ListItemIcon>
+                <KeyboardArrowRightIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="Penghentian Penggunaan" />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem button component="a" href="#tautan-dan-sumber-daya pihak-ketiga">
+              <ListItemIcon>
+                <KeyboardArrowRightIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="Tautan dan Sumber Daya Pihak Ketiga" />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem button component="a" href="#batasan-pertanggung-jawaban">
+              <ListItemIcon>
+                <KeyboardArrowRightIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="Batasan Pertanggung Jawaban" />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem button component="a" href="#tentang-ketentuan-ini">
+              <ListItemIcon>
+                <KeyboardArrowRightIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="Tentang Ketentuan Ini" />
+            </ListItem>
+            <Divider variant="middle" />
+            <ListItem button component="a" href="#informasi-lebih-lanjut">
+              <ListItemIcon>
+                <KeyboardArrowRightIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="Informasi Lebih Lanjut" />
+            </ListItem>
+          </List>
+        </div>
+        <div id="ketentuan-umum-dan-akun" className={classes.contentSection}>
+          <Divider />
+          <Typography variant="h6" className={classes.contentSectionTitle}>
+            <b>Ketentuan Umum dan Akun</b>
           </Typography>
           <Typography align="justify" paragraph>
             Anda bertanggung jawab atas penggunaan Produk yang ada. Anda dapat
@@ -119,10 +211,10 @@ function TermsOfService(props) {
             untuk tindakan atau kelalaian Pengguna apa pun.
           </Typography>
         </div>
-        <div className={classes.contentSection}>
+        <div id="privasi-dan-penggunaan-informasi-pribadi" className={classes.contentSection}>
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
-            <b>2. Privasi dan Penggunaan Privasi Pribadi</b>
+            <b>Privasi dan Penggunaan Informasi Pribadi</b>
           </Typography>
           <Typography align="justify" paragraph>
             Setiap informasi yang Anda berikan kepada Schooly, termasuk nama
@@ -130,12 +222,18 @@ function TermsOfService(props) {
             informasi pribadi yang Anda berikan, dapat berikan, atau dapat
             dikumpulkan oleh kami sehubungan dengan penggunaan Anda terhadap
             Produk (“Informasi Anda "), akan dikumpulkan, dijaga, dan digunakan
-            untuk menyediakan Produk kepada Anda atau lembaga Anda.
+            untuk menyediakan Produk kepada Anda atau lembaga Anda. Ada pun persyaratan
+            tambahan yang berlaku untuk Produk individual, dan
+            perjanjian apa pun yang dibuat oleh institusi Anda terkait dengan Produk.
+            Anda memahami bahwa, melalui penggunaan Produk oleh Anda, Anda
+            menyetujui pengumpulan dan penggunaan informasi Anda (sebagaimana diatur dalam
+            Ketentuan ini, <Link to="/legal/kebijakan-privasi">Kebijakan Privasi</Link>,
+            dan perjanjian apa pun yang dibuat oleh institusi Anda terkait dengan Produk).
           </Typography>
           <Typography align="justify" paragraph>
             Untuk menghindari keraguan, informasi pribadi yang mencakup Data
             Pelajar (didefinisikan di bawah) yang diberikan kepada Schooly
-            melalui penggunaan Produk-produk ini diatur oleh ketentuan
+            melalui penggunaan Produk-produk ini diatur oleh
             perjanjian antara Schooly dan lembaga pendidikan yang relevan dengan
             penggunaan Anda atas Produk. Di antara Schooly dan Anda, Anda
             dan/atau lembaga pendidikan memiliki semua hak, kepemilikan, dan
@@ -159,10 +257,10 @@ function TermsOfService(props) {
             , atau lembaga pendidikan Anda.
           </Typography>
         </div>
-        <div className={classes.contentSection}>
+        <div id="konten-dan-hak-anda" className={classes.contentSection}>
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
-            <b>3. Konten dan Hak Anda</b>
+            <b>Konten dan Hak Anda</b>
           </Typography>
           <Typography align="justify" paragraph>
             Anda bertanggung jawab atas Konten yang Anda bagikan ke Produk, dan
@@ -247,10 +345,10 @@ function TermsOfService(props) {
             tanggung jawab kepada Anda.
           </Typography>
         </div>
-        <div className={classes.contentSection}>
+        <div id="lisensi-anda-untuk-menggunakan-produk" className={classes.contentSection}>
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
-            <b>4. Lisensi Anda untuk menggunakan Produk</b>
+            <b>Lisensi Anda untuk menggunakan Produk</b>
           </Typography>
           <Typography align="justify" paragraph>
             Schooly memberi Anda lisensi pribadi, di seluruh dunia, bebas
@@ -328,10 +426,10 @@ function TermsOfService(props) {
             dapat mengambil tindakan lain yang kami anggap pantas.
           </Typography>
         </div>
-        <div className={classes.contentSection}>
+        <div id="hak-schooly" className={classes.contentSection}>
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
-            <b>5. Hak Schooly</b>
+            <b>Hak Schooly</b>
           </Typography>
           <Typography align="justify" paragraph>
             Produk selalu berevolusi dimana bentuk, sifat, dan/atau fungsi
@@ -359,10 +457,10 @@ function TermsOfService(props) {
             tanpa kewajiban apa pun kepada Anda.
           </Typography>
         </div>
-        <div className={classes.contentSection}>
+        <div id="tanggung-jawab-pendaftaran-dan-kata-sandi" className={classes.contentSection}>
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
-            <b>6. Tanggung Jawab Registrasi dan Kata Sandi</b>
+            <b>Tanggung Jawab Pendaftaran dan Kata Sandi</b>
           </Typography>
           <Typography align="justify" paragraph>
             Anda tidak boleh menggunakan akun Pengguna lain tanpa izin dari
@@ -383,10 +481,10 @@ function TermsOfService(props) {
             Anda keluar dari akun Anda di akhir setiap sesi.
           </Typography>
         </div>
-        <div className={classes.contentSection}>
+        <div id="penghentian-penggunaan" className={classes.contentSection}>
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
-            <b>7. Penghentian Penggunaan</b>
+            <b>Penghentian Penggunaan</b>
           </Typography>
           <Typography align="justify" paragraph>
             Kami dapat menangguhkan atau menghentikan akun Anda atau berhenti
@@ -404,10 +502,10 @@ function TermsOfService(props) {
             dalam Ketentuan ini.
           </Typography>
         </div>
-        <div className={classes.contentSection}>
+        <div id="tautan-dan-sumber-daya pihak-ketiga" className={classes.contentSection}>
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
-            <b>8. Tautan dan Sumber Daya Pihak Ketiga</b>
+            <b>Tautan dan Sumber Daya Pihak Ketiga</b>
           </Typography>
           <Typography align="justify" paragraph>
             Produk dapat berisi tautan ke situs web atau sumber daya pihak
@@ -428,10 +526,10 @@ function TermsOfService(props) {
             berlaku untuk Anda menggunakan situs-situs tersebut.
           </Typography>
         </div>
-        <div className={classes.contentSection}>
+        <div id="batasan-pertanggung-jawaban" className={classes.contentSection}>
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
-            <b>9. Batasan Pertanggung Jawaban</b>
+            <b>Batasan Pertanggung Jawaban</b>
           </Typography>
           <Typography align="justify" paragraph>
             SAMPAI KEPADA BATAS MAKSIMUM YANG DIIZINKAN OLEH UNDANG-UNDANG YANG
@@ -449,10 +547,10 @@ function TermsOfService(props) {
             MENGGUNAKAN ATAU MENGUBAH TRANSMISI ANDA ATAU KONTEN.
           </Typography>
         </div>
-        <div className={classes.contentSection}>
+        <div id="tentang-ketentuan-ini" className={classes.contentSection}>
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
-            <b>10. Tentang Ketentuan Ini</b>
+            <b>Tentang Ketentuan Ini</b>
           </Typography>
           <Typography align="justify" paragraph>
             Ketentuan ini dan Kebijakan Privasi kami adalah keseluruhan dan
@@ -486,10 +584,10 @@ function TermsOfService(props) {
             Persyaratan yang direvisi.
           </Typography>
         </div>
-        <div className={classes.contentSection}>
+        <div id="informasi-lebih-lanjut" className={classes.contentSection}>
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
-            <b>11. Informasi Lebih Lanjut</b>
+            <b>Informasi Lebih Lanjut</b>
           </Typography>
           <Typography align="justify" paragraph>
             Jika terdapat informasi yang masih kurang jelas atau ada pertanyaan
@@ -501,6 +599,7 @@ function TermsOfService(props) {
           </Typography>
         </div>
       </div>
+      <ScrollToTopButton />
     </div>
   );
 }

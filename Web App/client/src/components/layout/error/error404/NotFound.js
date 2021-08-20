@@ -1,8 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import notFoundBackground from "./NotFoundBackground.png";
 import { Button, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,22 +12,21 @@ const useStyles = makeStyles((theme) => ({
   notFoundBackground: {
     backgroundColor: "#0d2330",
   },
-  notFoundContainer: {
+  notFound: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    textAlign: "center",
-    margin: "auto",
-    maxWidth: "80%",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
-    },
-    height: "350px",
     backgroundImage: `url(${notFoundBackground})`,
     backgroundPosition: "bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
+    margin: "auto",
+    height: "350px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
   },
   notFoundText: {
     color: "white",
@@ -56,9 +55,9 @@ function NotFound(props) {
   return (
     <div className={classes.root}>
       <div className={classes.notFoundBackground}>
-        <div className={classes.notFoundContainer}>
+        <div className={classes.notFound}>
           <Typography variant="h4" className={classes.notFoundText}>
-            <b>404 ERROR</b>
+            <b>ERROR 404</b>
           </Typography>
           <Typography variant="h5" className={classes.notFoundText}>
             Maaf, halaman ini tidak ditemukan

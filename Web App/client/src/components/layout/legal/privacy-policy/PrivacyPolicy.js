@@ -1,45 +1,47 @@
-import React, { useEffect } from "react";
-import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Divider, Link, Typography } from "@material-ui/core";
+import React from "react";
+import { Link } from "react-router-dom";
+import privacyPolicyArt from "./PrivacyPolicyArt.png";
+import ScrollToTopButton from "../../../misc/scroll-to-top/ScrollToTopButton";
+import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
-  },
-  privacyPolicyBackground: {
-    backgroundColor: theme.palette.primary.light,
+    margin: "auto",
+    padding: "20px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
   },
   privacyPolicyTitle: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    color: "white",
-    margin: "auto",
-    maxWidth: "80%",
+  },
+  privacyPolicyArt: {
+    maxHeight: "225px",
     [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
+      maxHeight: "200px",
     },
-    height: "100px",
-    padding: "10px",
+  },
+  privacyPolicyTitleText: {
+    fontSize: "13px",
   },
   content: {
-    margin: "auto",
-    maxWidth: "80%",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
-    },
-    marginTop: "50px",
-    padding: "20px",
-  },
-  contentSection: {
-    marginTop: "50px",
+    paddingTop: "75px",
   },
   contentSectionTitle: {
     marginTop: "25px",
     marginBottom: "25px",
+  },
+  contentSection: {
+    paddingTop: "50px",
   },
 }));
 
@@ -50,12 +52,18 @@ function PrivacyPolicy(props) {
 
   return (
     <div className={classes.root}>
-      <div className={classes.privacyPolicyBackground}>
-        <div className={classes.privacyPolicyTitle}>
-          <Typography variant="h3" align="center">
-            Kebijakan Privasi Schooly System
-          </Typography>
-        </div>
+      <div className={classes.privacyPolicyTitle}>
+        <img
+          alt="Privacy Policy Art"
+          src={privacyPolicyArt}
+          className={classes.privacyPolicyArt}
+        />
+        <Typography variant="overline" align="center" gutterBottom className={classes.privacyPolicyTitleText}>
+          Kebijakan Privasi Schooly System
+        </Typography>
+        <Typography>
+          Berlaku efektif: 1 Januari 2020
+        </Typography>
       </div>
       <div className={classes.content}>
         <Typography variant="h6" gutterBottom>
@@ -82,7 +90,7 @@ function PrivacyPolicy(props) {
         </Typography>
         <Typography align="justify" paragraph>
           Saat kami merujuk pada “kami”, “milik kami”, atau “Schooly” dalam
-          kebijakan ini, yang kami maksud adalah Schooly System dan afiliasinya.
+          Kebijakan ini, yang kami maksud adalah Schooly System dan afiliasinya.
         </Typography>
         <Typography align="justify" paragraph>
           Kebijakan ini mengatur semua layanan kami yang kami berikan langsung
@@ -95,18 +103,18 @@ function PrivacyPolicy(props) {
           kami dianggap sebagai "pengolah data". Dalam hal ini, kebijakan
           privasi institusi Anda mengatur penggunaan data pribadi. Pada kasus ini
           kebijakan privasi institusi Anda mengatur penggunaan informasi pribadi.
-          Kebijakan privasi kami tidak menggantikan ketentuan perjanjian apa pun
+          Kebijakan Privasi kami tidak menggantikan ketentuan perjanjian apa pun
           antara kami dan institusi Anda (atau klien lain atau pihak ketiga mana pun),
           juga tidak memengaruhi ketentuan perjanjian apa pun antara Anda
           dan institusi Anda.
         </Typography>
         <Typography align="justify" paragraph>
-          Dari waktu ke waktu, kami perlu memperbarui kebijakan ini untuk
+          Dari waktu ke waktu, kami perlu memperbarui Kebijakan ini untuk
           mencerminkan perubahan pada produk dan layanan kami, cara kami beroperasi,
           atau untuk memenuhi persyaratan hukum dan peraturan baru.
-          Anda akan menemukan versi terbaru kebijakan ini di {" "}
+          Anda akan menemukan versi terbaru Kebijakan ini di {" "}
           <a href="http://www.schoolysystem.com/legal/kebijakan-privasi">
-          http://www.schoolysystem.com/legal/kebijakan-privasi</a>.
+          halaman ini</a>.
         </Typography>
         <div className={classes.contentSection}>
           <Divider />
@@ -534,7 +542,7 @@ function PrivacyPolicy(props) {
             Perubahan struktur bisnis kami. Jika diizinkan oleh hukum yang
             berlaku dan kontrak dengan klien kami, kami dapat mengungkapkan
             informasi Anda dalam kasus berikut. Kami akan selalu bertujuan
-            untuk terus menerapkan komitmen yang kami buat dalam kebijakan
+            untuk terus menerapkan komitmen yang kami buat dalam Kebijakan
             ini dalam kasus seperti itu. Jika ini tidak memungkinkan,
             kami akan memberi tahu klien kami dan kami tidak akan memberikan
             informasi pribadi tentang klien kami (termasuk Data Siswa)
@@ -763,12 +771,13 @@ function PrivacyPolicy(props) {
             Mereka akan dapat membantu.
           </Typography>
           <Typography align="justify" paragraph>
-            Jika Anda memiliki pertanyaan atau kekhawatiran tentang kebijakan
-            privasi kami atau praktik privasi data kami sendiri, hubungi kami
+            Jika Anda memiliki pertanyaan atau kekhawatiran tentang Kebijakan
+            Privasi kami atau praktik privasi data kami sendiri, hubungi kami
             di <a href="mailto:schoolysystem@gmail.com">schoolysystem@gmail.com</a>.
           </Typography>
         </div>
       </div>
+      <ScrollToTopButton />
     </div>
   );
 }

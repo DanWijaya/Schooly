@@ -25,8 +25,8 @@ import ReportView from "./components/layout/profile/ReportView";
 import Help from "./components/layout/help/Help";
 import TermsOfService from "./components/layout/legal/terms-of-service/TermsOfService";
 import PrivacyPolicy from "./components/layout/legal/privacy-policy/PrivacyPolicy";
-import NotFound from "./components/layout/not-found/NotFound";
-import ProblemEncountered from "./components/layout/problem-encountered/ProblemEncountered";
+import NotFound from "./components/layout/error/error404/NotFound";
+import ProblemEncountered from "./components/layout/error/error500/ProblemEncountered";
 //Misc
 import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import NavBar from "./components/misc/nav-bar/NavBar";

@@ -1,9 +1,13 @@
 import React, { useEffect } from "react";
 import whatIsSchooly from "./WhatIsSchooly.png";
+import backpackStudent from "./BackpackStudent-MateseFields.jpg";
+import computerClass from "./ComputerClass-MimiThian.jpg";
+import discussionWork from "./DiscussionWork-ScottGraham.jpg";
+import onlineLearning from "./OnlineLearning-CompareFibre.jpg";
 import schoolyFeature1 from "./SchoolyFeature1.png";
 import schoolyFeature2 from "./SchoolyFeature2.png";
 import schoolyFeature3 from "./SchoolyFeature3.png";
-import { Button, Grid, Typography, Hidden } from "@material-ui/core";
+import { Button, Grid, Typography, Hidden, Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import EmailIcon from "@material-ui/icons/Email";
 
@@ -21,12 +25,12 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "flex-end",
     margin: "auto",
+    padding: "20px",
+    color: "white",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
-    color: "white",
   },
   schoolyDefinition: {
     maxWidth: "70%",
@@ -39,17 +43,76 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       maxWidth: "80%",
     },
-    margin: "20px 0px 25px 0px",
   },
-  schoolyFeatures: {
+  whySchooly: {
     margin: "auto",
+    marginTop: "10px",
+    marginBottom: "10px",
+    padding: "20px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
+  },
+  whySchooly1: {
+    display: "flex",
+    alignItems: "center",
+    backgroundImage: `url(${backpackStudent})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    paddingLeft: "10%",
+    borderRadius: "7.5px",
+    height: "500px",
+    [theme.breakpoints.down("sm")]: {
+      height: "300px",
+    },
+  },
+  whySchooly2: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundImage: `url(${computerClass})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    paddingLeft: "10%",
+    borderRadius: "7.5px",
+    width: "100%",
+  },
+  whySchooly3: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundImage: `url(${discussionWork})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    paddingLeft: "10%",
+    borderRadius: "7.5px",
+    width: "100%",
+  },
+  whySchooly4: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundImage: `url(${onlineLearning})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    paddingLeft: "10%",
+    borderRadius: "7.5px",
+    width: "100%",
+  },
+  schoolyFeatures: {
+    margin: "auto",
     marginTop: "10px",
     marginBottom: "10px",
     padding: "20px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
   },
   supportSchoolyBackground: {
     backgroundColor: theme.palette.primary.fade,
@@ -60,11 +123,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "flex-end",
     margin: "auto",
+    padding: "20px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "20px",
   },
   supportSchoolyButton: {
     backgroundColor: theme.palette.primary.main,
@@ -108,8 +171,8 @@ function About(props) {
               marginBottom: "20px",
             }}
           />
-          <Typography variant="h3" align="center" gutterBottom>
-            Apa itu Schooly?
+          <Typography style={{ fontFamily: "Caveat-SemiBold" }} variant="h3" align="center" gutterBottom>
+            Schooly makes your school work easy!
           </Typography>
           <Typography
             variant="h6"
@@ -126,6 +189,18 @@ function About(props) {
             kegiatan persekolahan akan menjadi lebih efektif dan efisien."
           </Typography>
         </div>
+      </div>
+      <div className={classes.whySchooly}>
+        <Grid container spacing={5}>
+          <Grid item container>
+          <Grid item xs={6}>
+            test
+          </Grid>
+          <Grid item xs={6}>
+            test
+          </Grid>
+          </Grid>
+        </Grid>
       </div>
       <div className={classes.schoolyFeatures}>
         <Grid container spacing={5} direction="column">
@@ -227,7 +302,7 @@ function About(props) {
       <div className={classes.supportSchoolyBackground}>
         <div className={classes.supportSchooly}>
           <Typography variant="h4" align="center" color="primary" gutterBottom>
-            Sudah menggunakan Schooly tetapi masih belum puas?
+            Ada masukan atau saran?
           </Typography>
           <Typography align="center" paragraph>
             Bantu Schooly berkembang dengan pendapat Anda. Saran maupun kritik

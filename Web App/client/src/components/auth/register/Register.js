@@ -204,7 +204,7 @@ class Register extends Component {
     const { errors } = this.state;
 
     const getSteps = () => {
-      return ["Kredensial Masuk", "Informasi Pribadi", "Konfirmasi Registrasi"];
+      return ["Kredensial Masuk", "Informasi Pribadi", "Konfirmasi Pendaftaran"];
     };
 
     const getStepContent = (stepIndex) => {

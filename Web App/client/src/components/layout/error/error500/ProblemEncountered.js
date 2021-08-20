@@ -13,7 +13,7 @@ const styles = (theme) => ({
   problemEncounteredBackground: {
     backgroundColor: theme.palette.primary.main,
   },
-  problemEncounteredContainer: {
+  problemEncountered: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -38,7 +38,7 @@ const styles = (theme) => ({
     justifyContent: "center",
     marginTop: "30px",
   },
-  backButton: {
+  reportButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -66,18 +66,14 @@ class ProblemEncountered extends Component {
       handleProblemEncountered,
     } = this.props;
 
-    document.title = "Schooly | Problem Encountered";
+    document.title = "Schooly | Error 500";
 
     return (
       <div className={classes.root}>
         <div className={classes.problemEncounteredBackground}>
-          <div className={classes.problemEncounteredContainer}>
-            <Typography
-              variant="h2"
-              gutterBottom
-              className={classes.problemEncounteredText}
-            >
-              <b>:(</b>
+          <div className={classes.problemEncountered}>
+            <Typography variant="h4" className={classes.problemEncounteredText}>
+              <b>ERROR 500</b>
             </Typography>
             <Typography variant="h6" className={classes.problemEncounteredText}>
               Maaf, terdapat masalah dalam memproses permintaan Anda.
@@ -90,7 +86,7 @@ class ProblemEncountered extends Component {
             size="large"
             href="mailto:schoolysystem@gmail.com"
             startIcon={<EmailIcon />}
-            className={classes.backButton}
+            className={classes.reportButton}
           >
             Laporkan Masalah
           </Button>
