@@ -13,7 +13,7 @@ import {
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import PendingUserMenu from "../../misc/menu-user/PendingUserMenu";
+import UserMenu from "../../misc/menu-user/UserMenu";
 import {
   Avatar,
   Button,
@@ -271,17 +271,21 @@ const ManageUsersToolbar = (props) => {
                 </IconButton>
               )
           }
-          <>
-            {CheckboxDialog("Delete", "Student")}
+          <div
+            style={listCheckbox.length !== 0 ? { marginLeft: "13%" } : {}}
+          >
+            {CheckboxDialog("Delete", role)}
+            {/* {CheckboxDialog("Approve", role)} */}
             {/* More menu Toolbar */}
-            <PendingUserMenu
+            <UserMenu
               options={["Aktifkan", "Hapus"]}
+              role={role}
               row={null}
               handleOpenDeleteDialog={OpenDialogCheckboxDelete}
-              handleOpenApproveDialog={null}
+              handleOpenDisableApproveDialog={OpenDialogCheckboxApprove}
               rowCount={listCheckbox.length === 0}
             />
-          </>
+          </div>
         </Grid>
         <Grid style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", width: "70%" }}>
           <Hidden smDown implementation="css">
@@ -1476,118 +1480,120 @@ function ManageUsers(props) {
           spacing={2}
           style={{ marginBottom: "100px" }}
         >
-          {student_rows.length === 0 ? (
-            <Empty />
-          ) : (
-            stableSort(
-              student_rows,
-              getComparator(order_student, orderBy_student)
-            ).map((row, index) => {
-              const labelId = `enhanced-table-checkbox-${index}`;
-              let content = (
-                // <Link
-                //   style={{ color: 'black' }}
-                //   to={{
-                //     pathname: `/lihat-profil/${row._id}`,
-                //   }}
-                // >
-                <div>
-                  <ListItem key={row} role={undefined} button>
-                    <ExpansionPanelSummary
-                      className={classes.profilePanelSummary} style={{ cursor: "pointer" }}
-                    >
-                      <Grid
-                        container
-                        spacing={1}
-                        justify="space-between"
-                        alignItems="center"
+          <List dense>
+            {student_rows.length === 0 ? (
+              <Empty />
+            ) : (
+              stableSort(
+                student_rows,
+                getComparator(order_student, orderBy_student)
+              ).map((row, index) => {
+                const labelId = `enhanced-table-checkbox-${index}`;
+                let content = (
+                  // <Link
+                  //   style={{ color: 'black' }}
+                  //   to={{
+                  //     pathname: `/lihat-profil/${row._id}`,
+                  //   }}
+                  // >
+                  <div>
+                    <ListItem key={row} role={undefined} button>
+                      <ExpansionPanelSummary
+                        className={classes.profilePanelSummary} style={{ cursor: "pointer" }}
                       >
-                        <Grid item justify="flex-start">
-                          <Grid item>
-                            <LightTooltip title="Aktifkan">
-                              <FormGroup>
-                                <FormControlLabel
-                                  control={
-                                    booleanCheckboxStudent[index] ?
-                                      <Checkbox
-                                        onChange={(e) => {
-                                          handleChangeListStudent(e, index, row);
-                                          autoReloader();
-                                        }}
-                                        color="primary"
-                                        checked={booleanCheckboxStudent[index]}
-                                      />
-                                      :
-                                      <Checkbox
-                                        onChange={(e) => {
-                                          handleChangeListStudent(e, index, row);
-                                          autoReloader();
-                                        }}
-                                        color="primary"
-                                        checked={false}
-                                      />
+                        <Grid
+                          container
+                          spacing={1}
+                          justify="space-between"
+                          alignItems="center"
+                        >
+                          <Grid item justify="flex-start">
+                            <Grid item>
+                              <LightTooltip title="Aktifkan">
+                                <FormGroup>
+                                  <FormControlLabel
+                                    control={
+                                      booleanCheckboxStudent[index] ?
+                                        <Checkbox
+                                          onChange={(e) => {
+                                            handleChangeListStudent(e, index, row);
+                                            autoReloader();
+                                          }}
+                                          color="primary"
+                                          checked={booleanCheckboxStudent[index]}
+                                        />
+                                        :
+                                        <Checkbox
+                                          onChange={(e) => {
+                                            handleChangeListStudent(e, index, row);
+                                            autoReloader();
+                                          }}
+                                          color="primary"
+                                          checked={false}
+                                        />
 
-                                  }
-                                />
-                              </FormGroup>
-                            </LightTooltip>
+                                    }
+                                  />
+                                </FormGroup>
+                              </LightTooltip>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                        <Hidden xsDown>
-                          <Grid item>
-                            {!row.avatar ? (
-                              <ListItemAvatar>
-                                <Avatar />
-                              </ListItemAvatar>
-                            ) : (
-                              <ListItemAvatar>
-                                <Avatar src={`/api/upload/avatar/${row.avatar}`} />
-                              </ListItemAvatar>
-                            )}
-                          </Grid>
+                          <Hidden xsDown>
+                            <Grid item>
+                              {!row.avatar ? (
+                                <ListItemAvatar>
+                                  <Avatar />
+                                </ListItemAvatar>
+                              ) : (
+                                <ListItemAvatar>
+                                  <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                                </ListItemAvatar>
+                              )}
+                            </Grid>
 
-                        </Hidden>
-                        <Grid item>
-                          <Hidden smUp implementation="css">
-                            <div style={{ overflow: "hidden", textOverflow: "ellipsis", width: '11rem' }}>
-                              <Typography variant="subtitle1" id={labelId} noWrap>
+                          </Hidden>
+                          <Grid item>
+                            <Hidden smUp implementation="css">
+                              <div style={{ overflow: "hidden", textOverflow: "ellipsis", width: '11rem' }}>
+                                <Typography variant="subtitle1" id={labelId} noWrap>
+                                  {row.name}
+                                </Typography>
+                                <Typography variant="caption" color="textSecondary" noWrap>
+                                  {row.email}
+                                </Typography>
+                              </div>
+                            </Hidden>
+                            <Hidden xsDown implementation="css">
+                              <Typography variant="h6" id={labelId} noWrap>
                                 {row.name}
                               </Typography>
-                              <Typography variant="caption" color="textSecondary" noWrap>
+                              <Typography variant="body2" color="textSecondary" noWrap>
                                 {row.email}
                               </Typography>
-                            </div>
-                          </Hidden>
-                          <Hidden xsDown implementation="css">
-                            <Typography variant="h6" id={labelId} noWrap>
-                              {row.name}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary" noWrap>
-                              {row.email}
-                            </Typography>
-                          </Hidden>
-                        </Grid>
-                        {/* {!checkboxModeStudent ? ( */}
-                        <Grid item xs container spacing={1} justify="flex-end">
-                          <ListItemSecondaryAction
-                            button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                            }}
-                            onChange={(e) => {
-                              e.stopPropagation()
-                            }}
-                          >
-                            <PendingUserMenu
-                              options={["Aktifkan", "Hapus"]}
-                              row={row}
-                              handleOpenDeleteDialog={handleOpenDeleteDialog}
-                              handleOpenApproveDialog={handleOpenApproveDialog}
-                            />
-                          </ListItemSecondaryAction>
+                            </Hidden>
+                          </Grid>
+                          {/* {!checkboxModeStudent ? ( */}
+                          <Grid item xs container spacing={1} justify="flex-end">
+                            <ListItemSecondaryAction
+                              button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                              }}
+                              onChange={(e) => {
+                                e.stopPropagation()
+                              }}
+                            >
+                              <UserMenu
+                                options={["Aktifkan", "Hapus"]}
+                                role={null}
+                                row={row}
+                                handleOpenDeleteDialog={handleOpenDeleteDialog}
+                                handleOpenDisableApproveDialog={handleOpenApproveDialog}
+                              />
+                            </ListItemSecondaryAction>
 
-                          {/* ========== TOMBOL AKTIF SAMPING USER ============= */}
-                          {/* <Grid item>
+                            {/* ========== TOMBOL AKTIF SAMPING USER ============= */}
+                            {/* <Grid item>
                             <LightTooltip title="Aktifkan">
                               <IconButton
                                 size="small"
@@ -1601,9 +1607,9 @@ function ManageUsers(props) {
                             </LightTooltip>
                           </Grid> */}
 
-                          {/* ========== TOMBOL HAPUS SAMPING USER ============= */}
+                            {/* ========== TOMBOL HAPUS SAMPING USER ============= */}
 
-                          {/* <Grid item>
+                            {/* <Grid item>
                             <LightTooltip title="Hapus">
                               <IconButton
                                 size="small"
@@ -1616,8 +1622,8 @@ function ManageUsers(props) {
                               </IconButton>
                             </LightTooltip>
                           </Grid> */}
-                        </Grid>
-                        {/* ) : (
+                          </Grid>
+                          {/* ) : (
                           <Grid item xs container spacing={1} justify="flex-end">
                             <Grid item>
                               <LightTooltip title="Aktifkan">
@@ -1639,10 +1645,10 @@ function ManageUsers(props) {
                             </Grid>
                           </Grid>
                         )} */}
-                      </Grid>
-                    </ExpansionPanelSummary>
-                    <Divider />
-                    {/* <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
+                        </Grid>
+                      </ExpansionPanelSummary>
+                      <Divider />
+                      {/* <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
                       <Grid container direction="column">
                         <Grid item>
                           <Typography variant="body1">
@@ -1669,20 +1675,21 @@ function ManageUsers(props) {
                         </Grid>
                       </Grid>
                     </ExpansionPanelDetails> */}
-                  </ListItem>
-                  <Divider />
-                </div>
-                // </Link>
-              );
-              return (
-                <List dense>
+                    </ListItem>
+                    <Divider />
+                  </div>
+                  // </Link>
+                );
+                return (
+
                   <Grid item className={classes.content}>
                     {content}
                   </Grid>
-                </List>
-              );
-            })
-          )}
+
+                );
+              })
+            )}
+          </List>
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -1721,103 +1728,104 @@ function ManageUsers(props) {
         />
         <Divider className={classes.subTitleDivider} />
         <Grid container direction="column" spacing={2}>
-          {teacher_rows.length === 0 ? (
-            <Empty />
-          ) : (
-            stableSort(
-              teacher_rows,
-              getComparator(order_teacher, orderBy_teacher)
-            ).map((row, index) => {
-              const labelId = `enhanced-table-checkbox-${index}`;
-              let content = (
+          <List>
+            {teacher_rows.length === 0 ? (
+              <Empty />
+            ) : (
+              stableSort(
+                teacher_rows,
+                getComparator(order_teacher, orderBy_teacher)
+              ).map((row, index) => {
+                const labelId = `enhanced-table-checkbox-${index}`;
+                let content = (
 
 
-                <div>
-                  <ListItem key={row} role={undefined} button>
-                    <ExpansionPanelSummary
-                      className={classes.profilePanelSummary} style={{ cursor: "pointer" }}
-                    >
-                      <Grid
-                        container
-                        spacing={1}
-                        justify="space-between"
-                        alignItems="center"
+                  <div>
+                    <ListItem key={row} role={undefined} button>
+                      <ExpansionPanelSummary
+                        className={classes.profilePanelSummary} style={{ cursor: "pointer" }}
                       >
-                        <Grid item justify="flex-start">
-                          <Grid item>
-                            <LightTooltip title="Aktifkan">
-                              <FormGroup>
-                                <FormControlLabel
-                                  control={
-                                    booleanCheckboxTeacher[index] ?
-                                      <Checkbox
-                                        onChange={(e) => {
-                                          handleChangeListTeacher(e, index, row);
-                                          autoReloader();
-                                        }}
-                                        color="primary"
-                                        checked={booleanCheckboxTeacher[index]}
-                                      />
-                                      :
-                                      <Checkbox
-                                        onChange={(e) => {
-                                          handleChangeListTeacher(e, index, row);
-                                          autoReloader();
-                                        }}
-                                        color="primary"
-                                        checked={false}
-                                      />
-                                  }
-                                />
-                              </FormGroup>
-                            </LightTooltip>
+                        <Grid
+                          container
+                          spacing={1}
+                          justify="space-between"
+                          alignItems="center"
+                        >
+                          <Grid item justify="flex-start">
+                            <Grid item>
+                              <LightTooltip title="Aktifkan">
+                                <FormGroup>
+                                  <FormControlLabel
+                                    control={
+                                      booleanCheckboxTeacher[index] ?
+                                        <Checkbox
+                                          onChange={(e) => {
+                                            handleChangeListTeacher(e, index, row);
+                                            autoReloader();
+                                          }}
+                                          color="primary"
+                                          checked={booleanCheckboxTeacher[index]}
+                                        />
+                                        :
+                                        <Checkbox
+                                          onChange={(e) => {
+                                            handleChangeListTeacher(e, index, row);
+                                            autoReloader();
+                                          }}
+                                          color="primary"
+                                          checked={false}
+                                        />
+                                    }
+                                  />
+                                </FormGroup>
+                              </LightTooltip>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                        <Grid item>
-                          <Hidden xsDown>
-                            {!row.avatar ? (
-                              <ListItemAvatar>
-                                <Avatar />
-                              </ListItemAvatar>
-                            ) : (
-                              <ListItemAvatar>
-                                <Avatar src={`/api/upload/avatar/${row.avatar}`} />
-                              </ListItemAvatar>
-                            )}
-                          </Hidden>
-                        </Grid>
+                          <Grid item>
+                            <Hidden xsDown>
+                              {!row.avatar ? (
+                                <ListItemAvatar>
+                                  <Avatar />
+                                </ListItemAvatar>
+                              ) : (
+                                <ListItemAvatar>
+                                  <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                                </ListItemAvatar>
+                              )}
+                            </Hidden>
+                          </Grid>
 
-                        <Grid item>
-                          <Hidden smUp implementation="css">
-                            <div style={{ overflow: "hidden", textOverflow: "ellipsis", width: '11rem' }}>
+                          <Grid item>
+                            <Hidden smUp implementation="css">
+                              <div style={{ overflow: "hidden", textOverflow: "ellipsis", width: '11rem' }}>
 
-                              <Typography variant="subtitle1" id={labelId} noWrap>
+                                <Typography variant="subtitle1" id={labelId} noWrap>
+                                  {row.name}
+                                </Typography>
+                                <Typography variant="caption" color="textSecondary" noWrap>
+                                  {row.email}
+                                </Typography>
+                              </div>
+                            </Hidden>
+                            <Hidden xsDown implementation="css">
+                              <Typography variant="h6" id={labelId}>
                                 {row.name}
                               </Typography>
-                              <Typography variant="caption" color="textSecondary" noWrap>
+                              <Typography variant="body2" color="textSecondary">
                                 {row.email}
                               </Typography>
-                            </div>
-                          </Hidden>
-                          <Hidden xsDown implementation="css">
-                            <Typography variant="h6" id={labelId}>
-                              {row.name}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              {row.email}
-                            </Typography>
-                          </Hidden>
-                        </Grid>
-                        {/* {!checkboxModeTeacher ? (
+                            </Hidden>
+                          </Grid>
+                          {/* {!checkboxModeTeacher ? (
                           <Grid item xs container spacing={1} justify="flex-end">
-                            <PendingUserMenu
+                            <UserMenu
                               options={["Aktifkan", "Hapus"]}
                               row={row}
                               handleOpenDeleteDialog={handleOpenDeleteDialog}
                               handleOpenApproveDialog={handleOpenApproveDialog}
                             /> */}
-                        {/* =============  TOMBOL AKTIFKAN SAMPING USER ================= */}
-                        {/* <Grid item>
+                          {/* =============  TOMBOL AKTIFKAN SAMPING USER ================= */}
+                          {/* <Grid item>
                             <LightTooltip title="Aktifkan">
                               <IconButton
                                 size="small"
@@ -1831,8 +1839,8 @@ function ManageUsers(props) {
                             </LightTooltip>
                           </Grid> */}
 
-                        {/* =============  TOMBOL AKTIFKAN SAMPING USER ================= */}
-                        {/* <Grid item>
+                          {/* =============  TOMBOL AKTIFKAN SAMPING USER ================= */}
+                          {/* <Grid item>
                             <LightTooltip title="Hapus">
                               <IconButton
                                 size="small"
@@ -1845,11 +1853,11 @@ function ManageUsers(props) {
                               </IconButton>
                             </LightTooltip>
                           </Grid> */}
-                        {/* </Grid>
+                          {/* </Grid>
                         ) : ( */}
-                        <Grid item xs container spacing={1} justify="flex-end">
-                          <Grid item>
-                            {/* <LightTooltip title="Aktifkan">
+                          <Grid item xs container spacing={1} justify="flex-end">
+                            <Grid item>
+                              {/* <LightTooltip title="Aktifkan">
                                 <FormGroup>
                                   <FormControlLabel
                                     control={
@@ -1865,19 +1873,20 @@ function ManageUsers(props) {
                                   />
                                 </FormGroup>
                               </LightTooltip> */}
-                            <ListItemSecondaryAction>
-                              <PendingUserMenu
-                                options={["Aktifkan", "Hapus"]}
-                                row={row}
-                                handleOpenDeleteDialog={handleOpenDeleteDialog}
-                                handleOpenApproveDialog={handleOpenApproveDialog}
-                              />
-                            </ListItemSecondaryAction>
+                              <ListItemSecondaryAction>
+                                <UserMenu
+                                  options={["Aktifkan", "Hapus"]}
+                                  role={null}
+                                  row={row}
+                                  handleOpenDeleteDialog={handleOpenDeleteDialog}
+                                  handleOpenDisableApproveDialog={handleOpenApproveDialog}
+                                />
+                              </ListItemSecondaryAction>
+                            </Grid>
                           </Grid>
                         </Grid>
-                      </Grid>
-                    </ExpansionPanelSummary>
-                    {/* <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
+                      </ExpansionPanelSummary>
+                      {/* <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
                       <Grid container direction="column">
                         <Grid item>
                           <Typography variant="body1">
@@ -1904,18 +1913,19 @@ function ManageUsers(props) {
                         </Grid>
                       </Grid>
                     </ExpansionPanelDetails> */}
-                  </ListItem>
-                  <Divider />
+                    </ListItem>
+                    <Divider />
 
-                </div>
-              );
-              return <List>
-                <Grid item className={classes.content}>
-                  {content}
-                </Grid>
-              </List>
-            })
-          )}
+                  </div>
+                );
+                return (
+                  <Grid item className={classes.content}>
+                    {content}
+                  </Grid>
+                )
+              })
+            )}
+          </List>
         </Grid>
       </TabPanel>
     </div>

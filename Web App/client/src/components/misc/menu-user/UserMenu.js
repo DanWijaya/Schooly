@@ -8,8 +8,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 function UserMenu(props) {
 
-    const { options, row, rowCount } = props
-    const { handleOpenDeleteDialog, handleOpenDisableDialog } = props
+    const { options, row, rowCount, role } = props
+    const { handleOpenDeleteDialog, handleOpenDisableApproveDialog, CheckboxDialog } = props
     const [anchorEl, setAnchorEl] = React.useState(null);
     // const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
     // const [selectedUserId, setSelectedUserId] = React.useState(null);
@@ -22,14 +22,6 @@ function UserMenu(props) {
     const handleClose = (e) => {
         setAnchorEl(null);
     };
-
-    // const handleOpenDeleteDialog = (e, id, name) => {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //     setOpenDeleteDialog(true);
-    //     setSelectedUserId(id);
-    //     setSelectedUserName(name);
-    // };
 
     return (
         <div >
@@ -55,15 +47,26 @@ function UserMenu(props) {
                 }}
             >
                 {options.map((option) => {
+                    // if (role === "Student" && option === "Hapus") {
+                    //     CheckboxDialog("Delete", "Student");
+                    // } else if (role === "Teacher" && option === "Hapus") {
+                    //     CheckboxDialog("Delete", "Teacher");
+                    // }
                     return (
                         <MenuItem key={option} selected={option === 'Detail'}
                             onClick={
                                 option === 'Hapus' ?
-                                    handleOpenDisableDialog !== null ?
-                                        (e) => handleOpenDeleteDialog(e, row._id, row.name)
-                                        : (e) => handleOpenDeleteDialog(e, "Student")
-                                    : option === 'Nonaktifkan' ?
-                                        (e) => handleOpenDisableDialog(e, row._id, row.name)
+                                    role !== null ?
+                                        role === "Student" ?
+                                            (e) => handleOpenDeleteDialog(e, "Student")
+                                            : (e) => handleOpenDeleteDialog(e, "Teacher")
+                                        : (e) => handleOpenDeleteDialog(e, row._id, row.name)
+                                    : option === 'Nonaktifkan' || option === "Aktifkan" ?
+                                        role !== null ?
+                                            role === "Student" ?
+                                                (e) => handleOpenDisableApproveDialog(e, "Student")
+                                                : (e) => handleOpenDisableApproveDialog(e, "Teacher")
+                                            : (e) => handleOpenDisableApproveDialog(e, row._id, row.name)
                                         : () => { }
                                 // : (e) => handleOpenApproveDialog(e, row._id, row.name)
                             }
