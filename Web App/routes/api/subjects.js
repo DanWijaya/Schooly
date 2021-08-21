@@ -24,7 +24,7 @@ router.post("/create", (req, res) => {
       const newSubject = new Subject({
         name: req.body.name,
       });
-
+      
       newSubject
         .save()
         .then((subject) => res.json(subject))

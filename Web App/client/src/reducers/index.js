@@ -25,4 +25,5 @@ export default combineReducers({
   success: SuccessReducer,
   tasksCollection: TasksReducer,
   eventsCollection: EventReducer
+  // tambahin collectionnya di sini. <nama-object>Collection : <nama-object>Reducer
 });

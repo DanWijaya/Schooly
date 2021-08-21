@@ -443,7 +443,7 @@ class CreateMaterial extends Component {
   handleLampiranUpload = (e) => {
     const files = e.target.files;
     let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-    let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > 10);
+    let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > 10); //10MB
     let file_to_upload = temp.filter(
       (file) => file.size / Math.pow(10, 6) <= 10
     );
