@@ -358,3 +358,13 @@ export const refreshTeacher = (teacherId) => (dispatch) => {
     console.log(err);
   });    
 };
+
+export const bulkRegisterUsers = (data) => {
+  return (
+    axios
+      .post("/api/users/register_students_bulk", data)
+      .then((res) => {
+        return res;
+      })
+  )
+}

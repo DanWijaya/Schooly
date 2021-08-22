@@ -13,6 +13,7 @@ const validateLoginInput = require("../../validation/Login");
 
 // Load User model
 const User = require("../../models/user_model/User");
+const Class = require("../../models/Class");
 const Student = require("../../models/user_model/Student");
 const Teacher = require("../../models/user_model/Teacher");
 const Admin = require("../../models/user_model/Admin");
@@ -505,22 +506,35 @@ router.put("/teacher/:teacherId", (req, res) => {
 });
 
 router.post("/register_students_bulk", (req,res) => {
-  let { class_list, user_list } = req.body;
+  let { classes, users } = req.body;
   // terima req.body.classes 
   let class_map = new Map();
   
   // isi dari classes_map (key,value) = (nama kelas, ObjectId)
-  // class_list.forEach((class) => class.findOne({name: class}, (err, result) => {
-  //   class_map.set(result.name, result._id);
-  // }))
-  
-  // hasil yang didapatkan dari classes, disimpan kedalam Map function. 
-  
-  // users_to_add = user_list.map((user) => {
-  //   let class_id = class_map.get(user.kelas);
-  //   return {...user, kelas: class_map.get(user.kelas)}; 
-  // })
+  Class.find( {name: {$in: classes}}).then((result) => {
+    result.forEach((item) => class_map.set(item.name, item._id));
+    let user_list = users.map((u) => {
+      u.kelas = class_map.get(u.kelas);
+      u.active = true;
 
+      // bcrypt.genSalt(10, (err, salt) => {
+      //   bcrypt.hash(u.password, salt, (err, hash) => {
+      //     if (err) throw err;
+      //     u.password = hash;
+      //   });
+      // });
+
+      return u;
+      
+    });
+
+    
+
+    return User.insertMany(user_list);
+  }).then((results) => {
+    console.log("All users are created successfully");
+    return res.json(results);
+  })
   // User.insertMany(user_lists).then((results) => {
   //   console.log("All users are created successfully");
   //   return results;
