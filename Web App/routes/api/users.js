@@ -504,4 +504,27 @@ router.put("/teacher/:teacherId", (req, res) => {
   });
 });
 
+router.post("/register_students_bulk", (req,res) => {
+  let { class_list, user_list } = req.body;
+  // terima req.body.classes 
+  let class_map = new Map();
+  
+  // isi dari classes_map (key,value) = (nama kelas, ObjectId)
+  // class_list.forEach((class) => class.findOne({name: class}, (err, result) => {
+  //   class_map.set(result.name, result._id);
+  // }))
+  
+  // hasil yang didapatkan dari classes, disimpan kedalam Map function. 
+  
+  // users_to_add = user_list.map((user) => {
+  //   let class_id = class_map.get(user.kelas);
+  //   return {...user, kelas: class_map.get(user.kelas)}; 
+  // })
+
+  // User.insertMany(user_lists).then((results) => {
+  //   console.log("All users are created successfully");
+  //   return results;
+  // })
+})
+
 module.exports = router;

@@ -77,6 +77,7 @@ import TeacherList from "./components/objects/admin-only/TeacherList";
 //Prototypes
 import CSV from "./prototypes/contoh-tugas/CSV";
 import BackToTop from "./prototypes/scroll-top";
+import BulkRegister from "./prototypes/bulk-register/BulkRegister";
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -547,6 +548,10 @@ class App extends Component {
                       {/*prototype*/}
                       {/*<Route exact path="/csv" component={CSV} />*/}
                       {/* Route Event */}
+                      <Route 
+                      exact
+                      path="/bulk-register"
+                      component={BulkRegister}/>
                       <PrivateRoute
                         exact
                         path="/kalender"
