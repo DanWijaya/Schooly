@@ -21,7 +21,7 @@ import {
 } from "@material-ui/core";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import { withStyles } from "@material-ui/core/styles";
-import { Autocomplete }from '@material-ui/lab';
+import { Autocomplete } from '@material-ui/lab';
 
 const styles = (theme) => ({
   root: {
@@ -81,6 +81,8 @@ class CreateClass extends Component {
         this.setState({ teacherOptions });
       }
     }
+    console.log("state");
+    console.log(this.state);
   };
 
   handleOpenUploadDialog = () => {
@@ -94,17 +96,17 @@ class CreateClass extends Component {
   onChange = (e, otherfield = null) => {
     // otherfield ini adalah yang untuk field controllers Select atau variannya. 
     // Karena Select ini tidak memiliki nilai e.target.id, maka awalnya kita lakukan check dulu jika
-    
+
     let field = otherfield ? otherfield : e.target.id;
-      
+
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
-    
+
 
     if (field === "mata_pelajaran") {
       this.setState({ [field]: e });
-    } 
+    }
     else {
       this.setState({ [field]: e.target.value });
     }
@@ -123,6 +125,8 @@ class CreateClass extends Component {
       errors: {},
       mata_pelajaran: this.state.mata_pelajaran.map((matpel) => (matpel._id))
     };
+    console.log("classObject")
+    console.log(classObject);
 
     this.props
       .createClass(classObject, this.props.history)

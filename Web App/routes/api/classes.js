@@ -30,8 +30,8 @@ router.post("/create", (req, res) => {
         subject_assigned: req.body.mata_pelajaran.map((id) => (new ObjectId(id)))
       }
 
-      if(req.body.walikelas){
-        dataKelas.walikeas = req.body.walikeas;
+      if (req.body.walikelas) {
+        dataKelas.walikelas = req.body.walikelas;
       }
       const newKelas = new Class(dataKelas)
 
@@ -129,15 +129,15 @@ router.put("/update/:id", (req, res) => {
     }
     // Initially there is else block
     classData.name = req.body.name;
-    classData.ketua_kelas = req.body.ketua_kelas ? req.body.ketua_kelas  :null;
+    classData.ketua_kelas = req.body.ketua_kelas ? req.body.ketua_kelas : null;
     classData.walikelas = req.body.walikelas ? req.body.walikelas : null;
-    classData.sekretaris = req.body.sekretaris ? req.body.sekretaris: null;
+    classData.sekretaris = req.body.sekretaris ? req.body.sekretaris : null;
     classData.bendahara = req.body.bendahara ? req.body.bendahara : null;
     classData.ukuran = req.body.ukuran;
     classData.subject_assigned = req.body.mata_pelajaran.map((id) => (new ObjectId(id)));
 
     //Karena field walikelas ini optional.
-    
+
     // if(req.body.walikelas){
     //   console.log("Have", req.body.walikeas)
     //   //Kalau walikelas field ada isi, diupdate.

@@ -168,6 +168,7 @@ function ProfileDataItem(props) {
 }
 
 function ProfileView(props) {
+
   const classes = useStyles();
 
   const { user, selectedUser } = props.auth;
@@ -247,103 +248,196 @@ function ProfileView(props) {
           <Typography variant="h4" align="center">
             {name}
           </Typography>
-          <Typography variant="h6" align="center">
+          {/* <Typography variant="h6" align="center">
             {role === "Student"
               ? "Murid"
               : role === "Teacher"
-              ? "Guru"
-              : "Pengelola"}
+                ? "Guru"
+                : "Pengelola"}
           </Typography>
           <Typography variant="body1" align="center" color="textSecondary">
-            {!namakelas ? null : `Kelas ${namakelas}`}
-          </Typography>
+            {namakelas !== "" ? `Kelas ${namakelas}` : null}
+          </Typography> */}
+          {role === "Student" ?
+            namakelas ?
+              <>
+                <Typography variant="h6" align="center">
+                  Murid
+                </Typography>
+                <Typography variant="body1" align="center" color="textSecondary">
+                  Kelas {namakelas}
+                </Typography>
+              </>
+              : <Typography variant="h6" align="center">
+                Murid
+              </Typography>
+
+            : role === "Teacher"
+              ? <Typography variant="h6" align="center">
+                Guru
+              </Typography>
+              : <Typography variant="h6" align="center">
+                Pengelola
+              </Typography>}
         </Grid>
       </Grid>
       <Divider className={classes.profileDivider} />
       {role === "Student" && user.role === "Teacher" ? (
-        (classesCollection.kelas.walikelas) ? 
-        (classesCollection.kelas.walikelas === user._id) ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginBottom: "20px",
-            }}
-          >
-            <Link
-              to={{
-                pathname: `/lihat-rapor/${_id}`,
+        (classesCollection.kelas.walikelas) ?
+          (classesCollection.kelas.walikelas === user._id) ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginBottom: "20px",
               }}
             >
-              <LightTooltip title="Klik Untuk Melihat Rapor">
-                <Button
-                  variant="contained"
-                  className={classes.buttonRapor}
-                  startIcon={<AssessmentOutlinedIcon />}
-                >
-                  Lihat Rapor
-                </Button>
-              </LightTooltip>
-            </Link>
-          </div>
-        ) : (user.class_teached).includes(classesCollection.kelas._id) ? (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginBottom: "20px",
+              <Link
+                to={{
+                  pathname: `/lihat-rapor/${_id}`,
                 }}
               >
-                <Link
-                  to={{
-                    pathname: `/lihat-rapor/${_id}`,
-                  }}
-                >
-                  <LightTooltip title="Klik Untuk Melihat Rapor">
-                    <Button
-                      variant="contained"
-                      className={classes.buttonRapor}
-                      startIcon={<AssessmentOutlinedIcon />}
-                    >
-                      Lihat Rapor
-                    </Button>
-                  </LightTooltip>
-                </Link>
-              </div>
-            )
-          : null
-        : (user.class_teached).includes(classesCollection.kelas._id) ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginBottom: "20px",
-            }}
-          >
-            <Link
-              to={{
-                pathname: `/lihat-rapor/${_id}`,
+                <LightTooltip title="Klik Untuk Melihat Rapor">
+                  <Button
+                    variant="contained"
+                    className={classes.buttonRapor}
+                    startIcon={<AssessmentOutlinedIcon />}
+                  >
+                    Lihat Rapor
+                  </Button>
+                </LightTooltip>
+              </Link>
+            </div>
+          ) : (user.class_teached).includes(classesCollection.kelas._id) ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginBottom: "20px",
               }}
             >
-              <LightTooltip title="Klik Untuk Melihat Rapor">
-                <Button
-                  variant="contained"
-                  className={classes.buttonRapor}
-                  startIcon={<AssessmentOutlinedIcon />}
-                >
-                  Lihat Rapor
-                </Button>
-              </LightTooltip>
-            </Link>
-          </div>
-        )
-      : null
+              <Link
+                to={{
+                  pathname: `/lihat-rapor/${_id}`,
+                }}
+              >
+                <LightTooltip title="Klik Untuk Melihat Rapor">
+                  <Button
+                    variant="contained"
+                    className={classes.buttonRapor}
+                    startIcon={<AssessmentOutlinedIcon />}
+                  >
+                    Lihat Rapor
+                  </Button>
+                </LightTooltip>
+              </Link>
+            </div>
+          )
+            : null
+          : (user.class_teached).includes(classesCollection.kelas._id) ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginBottom: "20px",
+              }}
+            >
+              <Link
+                to={{
+                  pathname: `/lihat-rapor/${_id}`,
+                }}
+              >
+                <LightTooltip title="Klik Untuk Melihat Rapor">
+                  <Button
+                    variant="contained"
+                    className={classes.buttonRapor}
+                    startIcon={<AssessmentOutlinedIcon />}
+                  >
+                    Lihat Rapor
+                  </Button>
+                </LightTooltip>
+              </Link>
+            </div>
+          )
+            : null
       ) : null}
       <Grid container direction="column" spacing={4}>
         {user.role === "Teacher" ||
-        user.role === "Student" ||
-        user.role === "Admin"
+          user.role === "Student" ||
+          user.role === "Admin"
           ? [
+            <Grid item>
+              <Paper className={classes.informationPaper}>
+                <div className={classes.backgroundGradient}>
+                  <Typography
+                    variant="h5"
+                    gutterBottom
+                    style={{ color: "white" }}
+                  >
+                    Informasi Pengguna
+                  </Typography>
+                  <Typography
+                    variant="h7"
+                    color="textSecondary"
+                    gutterBottom
+                    className={classes.descriptionText}
+                  >
+                    Berikut adalah informasi pribadi dari pengguna terkait.
+                  </Typography>
+                </div>
+                <List style={{ padding: "20px" }}>
+                  <ProfileDataItem
+                    profile_data_icon={<PersonIcon />}
+                    profile_data_category="Nama"
+                    profile_data_info={name}
+                  />
+                  <Divider variant="inset" />
+                  <ProfileDataItem
+                    profile_data_icon={<CakeIcon />}
+                    profile_data_category="Tanggal Lahir"
+                    profile_data_info={moment(tanggal_lahir)
+                      .locale("id")
+                      .format("DD-MM-YYYY")}
+                  />
+                  <Divider variant="inset" />
+                  <ProfileDataItem
+                    profile_data_icon={<WcIcon />}
+                    profile_data_category="Jenis Kelamin"
+                    profile_data_info={jenis_kelamin}
+                  />
+                  <Divider variant="inset" />
+                  <ProfileDataItem
+                    profile_data_icon={<EmailIcon />}
+                    profile_data_category="Email"
+                    profile_data_info={email}
+                  />
+                  <Divider variant="inset" />
+                  <ProfileDataItem
+                    profile_data_icon={<PhoneIcon />}
+                    profile_data_category="Nomor Telepon"
+                    profile_data_info={phone}
+                  />
+                  <Divider variant="inset" />
+                  <ProfileDataItem
+                    profile_data_icon={<ContactPhoneIcon />}
+                    profile_data_category="Nomor Telepon Darurat"
+                    profile_data_info={emergency_phone}
+                  />
+                  {admin === true ? (
+                    <div>
+                      <Divider variant="inset" />
+                      <ProfileDataItem
+                        profile_data_icon={<HomeIcon />}
+                        profile_data_category="Alamat"
+                        profile_data_info={address}
+                      />
+                    </div>
+                  ) : null}
+                </List>
+              </Paper>
+            </Grid>,
+          ].concat(
+            !(role === "Student") ? null : (
               <Grid item>
                 <Paper className={classes.informationPaper}>
                   <div className={classes.backgroundGradient}>
@@ -352,7 +446,7 @@ function ProfileView(props) {
                       gutterBottom
                       style={{ color: "white" }}
                     >
-                      Informasi Pengguna
+                      Karir
                     </Typography>
                     <Typography
                       variant="h7"
@@ -360,111 +454,39 @@ function ProfileView(props) {
                       gutterBottom
                       className={classes.descriptionText}
                     >
-                      Berikut adalah informasi pribadi dari pengguna terkait.
+                      Berikut adalah pilihan karir yang diinginkan dari
+                      pengguna terkait.
                     </Typography>
                   </div>
-                  <List style={{ padding: "20px" }}>
+                  <List style={{ padding: "20px", marginBottom: "30px" }}>
                     <ProfileDataItem
-                      profile_data_icon={<PersonIcon />}
-                      profile_data_category="Nama"
-                      profile_data_info={name}
+                      profile_data_icon={<SportsEsportsIcon />}
+                      profile_data_category="Hobi dan Minat"
+                      profile_data_info={hobi_minat}
                     />
                     <Divider variant="inset" />
                     <ProfileDataItem
-                      profile_data_icon={<CakeIcon />}
-                      profile_data_category="Tanggal Lahir"
-                      profile_data_info={moment(tanggal_lahir)
-                        .locale("id")
-                        .format("DD-MM-YYYY")}
+                      profile_data_icon={<ColorLensIcon />}
+                      profile_data_category="Keterampilan Non-Akademik"
+                      profile_data_info={ket_non_teknis}
                     />
                     <Divider variant="inset" />
                     <ProfileDataItem
-                      profile_data_icon={<WcIcon />}
-                      profile_data_category="Jenis Kelamin"
-                      profile_data_info={jenis_kelamin}
+                      profile_data_icon={<WorkIcon />}
+                      profile_data_category="Cita-Cita"
+                      profile_data_info={cita_cita}
                     />
                     <Divider variant="inset" />
                     <ProfileDataItem
-                      profile_data_icon={<EmailIcon />}
-                      profile_data_category="Email"
-                      profile_data_info={email}
+                      profile_data_icon={<AccountBalanceIcon />}
+                      profile_data_category="Perguruan Tinggi Impian"
+                      profile_data_info={uni_impian}
                     />
-                    <Divider variant="inset" />
-                    <ProfileDataItem
-                      profile_data_icon={<PhoneIcon />}
-                      profile_data_category="Nomor Telepon"
-                      profile_data_info={phone}
-                    />
-                    <Divider variant="inset" />
-                    <ProfileDataItem
-                      profile_data_icon={<ContactPhoneIcon />}
-                      profile_data_category="Nomor Telepon Darurat"
-                      profile_data_info={emergency_phone}
-                    />
-                    {admin === true ? (
-                      <div>
-                        <Divider variant="inset" />
-                        <ProfileDataItem
-                          profile_data_icon={<HomeIcon />}
-                          profile_data_category="Alamat"
-                          profile_data_info={address}
-                        />
-                      </div>
-                    ) : null}
                   </List>
                 </Paper>
-              </Grid>,
-            ].concat(
-              !(role === "Student") ? null : (
-                <Grid item>
-                  <Paper className={classes.informationPaper}>
-                    <div className={classes.backgroundGradient}>
-                      <Typography
-                        variant="h5"
-                        gutterBottom
-                        style={{ color: "white" }}
-                      >
-                        Karir
-                      </Typography>
-                      <Typography
-                        variant="h7"
-                        color="textSecondary"
-                        gutterBottom
-                        className={classes.descriptionText}
-                      >
-                        Berikut adalah pilihan karir yang diinginkan dari
-                        pengguna terkait.
-                      </Typography>
-                    </div>
-                    <List style={{ padding: "20px", marginBottom: "30px" }}>
-                      <ProfileDataItem
-                        profile_data_icon={<SportsEsportsIcon />}
-                        profile_data_category="Hobi dan Minat"
-                        profile_data_info={hobi_minat}
-                      />
-                      <Divider variant="inset" />
-                      <ProfileDataItem
-                        profile_data_icon={<ColorLensIcon />}
-                        profile_data_category="Keterampilan Non-Akademik"
-                        profile_data_info={ket_non_teknis}
-                      />
-                      <Divider variant="inset" />
-                      <ProfileDataItem
-                        profile_data_icon={<WorkIcon />}
-                        profile_data_category="Cita-Cita"
-                        profile_data_info={cita_cita}
-                      />
-                      <Divider variant="inset" />
-                      <ProfileDataItem
-                        profile_data_icon={<AccountBalanceIcon />}
-                        profile_data_category="Perguruan Tinggi Impian"
-                        profile_data_info={uni_impian}
-                      />
-                    </List>
-                  </Paper>
-                </Grid>
-              )
+              </Grid>
             )
+          )
           : null}
       </Grid>
     </div>
