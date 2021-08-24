@@ -206,6 +206,24 @@ export const getTasks = (subjectId, classId) => {
     });
 };
 
+export const getSubmittedTasks = (subjectId, classId) => {
+  return axios
+    .get(`/api/tasks/view`, { params: { subjectId, classId } })
+    .then((res) => {
+      return axios.get(`/api/files/submit_tasks`, {params: {id_list : res.data}})
+    })
+    .then((res) => {
+      let {file_submit_tasks , tasks_id} = res.data;
+      
+      let tasks_set_ids = new Set();
+      res.data.forEach((i) => tasks_set_ids.add(i._id));
+      console.log("All submitted tasks ", res.data);
+      return res.data;
+    })
+    .catch(() => {
+      throw new Error("getTasks error has occured");
+    });
+}
 export const getTaskAtmpt = (user_id) => (dispatch) => {
   return axios
     .get(`/api/files/submit_tasks/noatmpt/${user_id}`)
