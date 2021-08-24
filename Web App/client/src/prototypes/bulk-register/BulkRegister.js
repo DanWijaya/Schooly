@@ -1,8 +1,37 @@
 import React from "react"
 import * as XLSX from 'xlsx';
 import { bulkRegisterUsers } from "../../actions/UserActions";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+    Button
+  } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      margin: "auto",
+      padding: "10px",
+      background: "linear-gradient(#2196F3, #FFFFFF)",
+      backgroundSize: "100% 300px",
+      backgroundRepeat: "no-repeat",
+    },
+    loginButton: {
+      width: "20%",
+      marginTop: "15px",
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+      "&:focus, &:hover": {
+        backgroundColor: theme.palette.success.main,
+        color: "white",
+        }
+    },
+  }));
 
 function BulkRegister() {
+
+    const cl = useStyles();
 
     const [items, setItems] = React.useState([]);
     const [classes, setClasses] = React.useState([]);
@@ -44,11 +73,11 @@ function BulkRegister() {
                     let students = XLSX.utils.sheet_to_json(workSheet);
 
                     class_list.push(workSheetName);
-
+                    
                     students = students.map((d, idx) => {
                         d.name = d.NAMA;
                         d.role = "Student";
-                        d.email =  `murid${workSheetName.replace(/\s/g, "")}${idx}@gmail.com`;
+                        d.email =  `murid${workSheetName.replace(/\s/g, "")}${idx+1}@gmail.com`.toLowerCase();
                         d.phone = "12341234";
                         d.emergency_phone = "911911";
                         d.address = "Jalan Contoh raya";
@@ -73,7 +102,7 @@ function BulkRegister() {
                         return d;
                     })
                     user_list = user_list.concat(students);
-                    break;
+                    // break;
                 }
                 
                 // tambahin data-data lainnya ke masing masing entry sebelum diresolve. 
@@ -112,10 +141,17 @@ function BulkRegister() {
     return (
         <div>
             <form onSubmit={onSubmit}>
-            <button type="submit" title="Bulk register">
-                Register in bulk
-            </button>
-            <input type="file" onChange={(e) => readExcel(e.target.files[0])}/>
+                <div style={{marginBottom: "20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <input type="file" onChange={(e) => readExcel(e.target.files[0])}/>
+                    {items.length > 0 ? 
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        className={cl.loginButton}
+                    >
+                        Register In Bulk
+                    </Button> : null }
+                </div>
             <table class="table container">
                 <thead>
                 <tr>
