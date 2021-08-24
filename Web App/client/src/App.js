@@ -124,9 +124,9 @@ class App extends Component {
     };
   }
 
-  componentDidCatch() {
-    // this.setState({ problemEncountered: true }) ;
-  }
+  // componentDidCatch() {
+  //   this.setState({ problemEncountered: true });
+  // }
 
   handleNavbar = (showBool) => {
     this.setState({ showNavBar: showBool });

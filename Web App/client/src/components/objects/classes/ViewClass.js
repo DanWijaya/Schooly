@@ -13,6 +13,7 @@ import {
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import {
   getAllTask,
+  getSubmittedTasks,
   getTaskAtmpt,
   getTaskByClass,
 } from "../../../actions/TaskActions";
@@ -1117,6 +1118,12 @@ function ViewClass(props) {
       // setWalikelas(all_teachers_map.get(kelas.walikelas));
     });
   }, [students_by_class.length, kelas.walikelas]);
+
+  React.useEffect(() => {
+    if(kelas){
+      getSubmittedTasks(kelas._id)  
+    }
+  }, [kelas._id])
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
