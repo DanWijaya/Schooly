@@ -249,9 +249,9 @@ class CreateAssessment extends Component {
       description: "",
       subject: "",
       class_assigned: [],
-      start_date: new Date(),
-      end_date: new Date(),
-      post_date: new Date(),
+      start_date: null,
+      end_date: null,
+      post_date: null,
       posted: false,
       isScheduled: false,
       type: "",
@@ -1665,11 +1665,11 @@ class CreateAssessment extends Component {
                               onChange={(date) =>
                                 this.onChange(date, "start_date")
                               }
-                              onError={(err) => {
-                                if (errors.start_date !== err) {
-                                  this.setState({ errors: { ...errors, start_date: err } });
-                                }
-                              }}
+                              // onError={(err) => {
+                              //   if (errors.start_date !== err) {
+                              //     this.setState({ errors: { ...errors, start_date: err } });
+                              //   }
+                              // }}
                               error={errors.start_date_custom || errors.start_date}
                             />
                               <div className={classes.zeroHeightHelperText}>

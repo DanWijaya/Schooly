@@ -111,7 +111,7 @@ class Register extends Component {
       password: "",
       password2: "",
       errors: {},
-      tanggal_lahir: new Date(),
+      tanggal_lahir: null,
       activeStep: 0,
       snackbarOpen: false,
       submitButtonClicked: false,
@@ -150,7 +150,7 @@ class Register extends Component {
   }
 
   handleDateChange = (date) => {
-    this.setState({ tanggal_lahir: date });
+    this.setState({ tanggal_lahir: date , errors: {...this.state.errors, tanggal_lahir: ""}});
   };
 
   onChange = (e, otherfield) => {
