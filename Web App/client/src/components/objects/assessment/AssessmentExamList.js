@@ -602,6 +602,7 @@ function AssessmentList(props) {
     start_date = moment(start_date).locale("id").format("DD MMM YYYY, HH.mm");
     end_date = moment(end_date).locale("id").format("DD MMM YYYY, HH.mm");
     if(grades){
+      // No need to check if it is student cause only student use dialog.
       grades = grades[user._id].total_grade;
     }
 
@@ -949,6 +950,7 @@ function AssessmentList(props) {
                               </IconButton>
                             </LightTooltip>
                           </Grid>
+                          {!row.submissions ?
                           <Grid item>
                             <LightTooltip title="Sunting">
                               <Link to={`/sunting-ujian/${row._id}`}>
@@ -960,7 +962,9 @@ function AssessmentList(props) {
                                 </IconButton>
                               </Link>
                             </LightTooltip>
-                          </Grid>
+                          </Grid> 
+                          : null
+                        }
                           <Grid item>
                             <LightTooltip title="Hapus">
                               <IconButton
