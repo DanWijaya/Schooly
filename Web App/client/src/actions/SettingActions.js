@@ -45,10 +45,10 @@ export const getSetting = () => (dispatch) => {
     })
     .catch((err) => {
       console.log("Error in retrieving setting");
-      // dispatch({
-      //   type: GET_ERRORS,
-      //   payload: err.response.data,
-      // })
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
     })
 }
 

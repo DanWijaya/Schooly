@@ -24,7 +24,7 @@ router.post("/create", (req,res) => {
 
 router.get("/view", (req,res) => {
   console.log("viewing setting");
-  Setting.findOne().then((setting) => {
+  Setting.findOne({}).then((setting) => {
     if (!setting) return res.status(400).json("setting is not found");
     else {
       console.log("setting viewed : " , setting);
