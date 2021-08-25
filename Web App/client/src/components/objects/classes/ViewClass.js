@@ -67,6 +67,11 @@ const TASK_STATUS = {
   NOT_SUBMITTED : "Belum Dikumpulkan"
 }
 
+const ASSESSMENT_STATUS = {
+  SUBMITTED : "Sudah Ditempuh",
+  NOT_SUBMITTED: "Belum Ditempuh"
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
@@ -331,7 +336,7 @@ function AssessmentListItem(props) {
           <Badge
             style={{ display: "flex", flexDirection: "row" }}
             badgeContent={
-              props.work_status === "Belum Ditempuh" ? (
+              props.work_status === ASSESSMENT_STATUS.SUBMITTED ? (
                 <WarningIcon className={classes.warningIcon} />
               ) : (
                 <CheckCircleIcon className={classes.checkIcon} />
@@ -391,7 +396,7 @@ function AssessmentListItem(props) {
         >
           <Badge
             badgeContent={
-              props.work_status === "Belum Ditempuh" ? (
+              props.work_status === ASSESSMENT_STATUS.SUBMITTED ? (
                 <WarningIcon className={classes.warningIcon} />
               ) : (
                 <CheckCircleIcon className={classes.checkIcon} />
@@ -584,6 +589,7 @@ function ViewClass(props) {
     assessmentsCollection,
     getFileAvatar,
     getMultipleFileAvatar,
+    getTaskByClass
   } = props;
   // const { all_user_files } = props.filesCollection;
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
@@ -745,16 +751,18 @@ function ViewClass(props) {
           </Avatar>
         );
 
-        let workStatus = TASK_STATUS.NOT_SUBMITTED;
+        let workStatus;
         if(submittedTaskIds.has(task._id)){
           workStatus = TASK_STATUS.SUBMITTED;
+        } else {
+          workStatus = TASK_STATUS.NOT_SUBMITTED;
         }
 
         if (tab === "pekerjaan_kelas") {
           if (
             (!category ||
               (category === "subject" && task.subject === subject._id)) &&
-            workStatus === TASK_STATUS.NOT_SUBMITTED
+            (workStatus && workStatus === TASK_STATUS.NOT_SUBMITTED)
           ) {
             result.push({
               _id: task._id,
@@ -823,21 +831,8 @@ function ViewClass(props) {
             </Avatar>
           );
 
-        // console.log(all_user_files)
-        // for (var j = 0; j < all_user_files.length; j++){
-        //     if(all_user_files[j].for_task_object === task._id){
-        //     workStatus = "Telah Dikumpulkan"
-        //     workCategoryAvatar = (
-        //       <Avatar className={classes.assignmentTurnedIn}>
-        //         <AssignmentTurnedInIcon/>
-        //       </Avatar>
-        //     )
-        //     break;
-        //   }
-        // }
-        // console.log(Object.values(assessment.submissions)[0])
         if (tab === "pekerjaan_kelas") {
-          let workStatus = "Belum Ditempuh";
+          let workStatus = ASSESSMENT_STATUS.SUBMITTED;
           if (type === "Kuis") {
             if (
               (!category ||
@@ -926,8 +921,8 @@ function ViewClass(props) {
           if (category === "subject" && result.length === 3) break;
         } else if (tab === "mata_pelajaran") {
           let workStatus = !assessment.submissions
-            ? "Belum Ditempuh"
-            : "Sudah Ditempuh";
+            ? ASSESSMENT_STATUS.SUBMITTED
+            : ASSESSMENT_STATUS.SUBMITTED;
           if (type === "Kuis") {
             if (
               (!category ||
@@ -989,25 +984,6 @@ function ViewClass(props) {
                 objectType: "Ujian",
                 category: category,
               });
-              // result.push(
-              //   <AssessmentListItem
-              //     work_title={assessment.name}
-              //     work_category_avatar={workCategoryAvatar}
-              //     work_subject={
-              //       category === "subject"
-              //         ? null
-              //         : all_subjects_map.get(assessment.subject)
-              //     }
-              //     work_status={workStatus}
-              //     work_starttime={moment(assessment.start_date)
-              //       .locale("id")
-              //       .format("DD MMM YYYY, HH:mm")}
-              //     work_endtime={moment(assessment.end_date)
-              //       .locale("id")
-              //       .format("DD MMM YYYY, HH:mm")}
-              //     work_dateposted={assessment.createdAt}
-              //   />
-              // );
             }
           }
         }
@@ -1063,7 +1039,8 @@ function ViewClass(props) {
         // jika murid ini sudah ditempatkan ke suatu kelas dan
         // id kelas yang dimasukan sebagai parameter adalah id milik kelas yang ditempati murid ini,
         getMaterial(user.kelas, "by_class");
-        getAllTask(); // get the tasksCollection
+        getTaskByClass(user.kelas)
+        //getAllTask(); // get the tasksCollection
       } else {
         // jika murid ini belum ditempatkan di kelas manapun atau mencoba membuka halaman untuk kelas lain,
         // tidak load data apa-apa dan langsung redirect ke halaman yang sesuai (di bawah)
@@ -1636,6 +1613,7 @@ ViewClass.propTypes = {
   filesCollection: PropTypes.object.isRequired,
   assessmentsCollection: PropTypes.object.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
+  getTaskByClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getAllTask: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
@@ -1668,4 +1646,5 @@ export default connect(mapStateToProps, {
   getTaskAtmpt,
   getFileAvatar,
   getMultipleFileAvatar,
+  getTaskByClass
 })(ViewClass);
