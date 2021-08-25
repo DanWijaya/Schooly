@@ -74,6 +74,7 @@ import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUse
 import SubjectList from "./components/objects/admin-only/SubjectList";
 import EditClassTeacher from "./components/objects/classes/EditClassTeacher";
 import TeacherList from "./components/objects/admin-only/TeacherList";
+import Setting from "./components/objects/settings/Settings";
 //Prototypes
 import CSV from "./prototypes/contoh-tugas/CSV";
 import BackToTop from "./prototypes/scroll-top";
@@ -123,9 +124,9 @@ class App extends Component {
     };
   }
 
-  componentDidCatch() {
-    this.setState({ problemEncountered: true });
-  }
+  // componentDidCatch() {
+  //   this.setState({ problemEncountered: true });
+  // }
 
   handleNavbar = (showBool) => {
     this.setState({ showNavBar: showBool });
@@ -558,6 +559,12 @@ class App extends Component {
                         access={["Admin"]}
                         path="/sunting-guru"
                         component={TeacherList}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={["Admin"]}
+                        path="/setting"
+                        component={Setting}
                       />
                       <Route
                         exact

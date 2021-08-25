@@ -11,6 +11,7 @@ import AnnouncementReducer from "./AnnouncementReducer";
 import SuccessReducer from "./SuccessReducer";
 import AssessmentReducer from "./AssessmentReducer";
 import EventReducer from "./EventReducer";
+import SettingReducer from "./SettingReducer";
 
 export default combineReducers({
   auth: UserReducer,
@@ -24,6 +25,6 @@ export default combineReducers({
   subjectsCollection: SubjectReducer,
   success: SuccessReducer,
   tasksCollection: TasksReducer,
-  eventsCollection: EventReducer
-  // tambahin collectionnya di sini. <nama-object>Collection : <nama-object>Reducer
+  eventsCollection: EventReducer,
+  settingsCollection: SettingReducer,
 });

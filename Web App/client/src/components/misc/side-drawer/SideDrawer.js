@@ -23,6 +23,7 @@ import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import EventNoteIcon from '@material-ui/icons/EventNote';
+import SettingsIcon from '@material-ui/icons/Settings';
 import { BsClipboardData } from "react-icons/bs";
 import {
   FaChalkboardTeacher,
@@ -153,6 +154,11 @@ function DrawerContent(props) {
         "/kalender",
         <EventNoteIcon className={classes.drawerListItemIcon} />,
         "Kalender",
+      ],
+      [
+        "/setting",
+        <SettingsIcon className={classes.drawerListItemIcon} />,
+        "Setting",
       ]
     ];
   else if (user.role === "Student") {

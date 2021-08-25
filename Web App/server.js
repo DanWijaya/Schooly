@@ -34,6 +34,9 @@ const materials = require("./routes/api/materials");
 const assessments = require("./routes/api/assessments");
 const events = require("./routes/api/events");
 
+// untuk setting
+const settings = require("./routes/api/settings");
+
 const app = express();
 
 // Bodyparser middleware
@@ -100,6 +103,9 @@ app.use("/api/announcements", announcements);
 app.use("/api/materials", materials);
 app.use("/api/assessments", assessments);
 app.use("/api/events", events);
+
+//Handle setting routing
+app.use("/api/settings", settings);
 
 // Always put this in the end
 const port = process.env.PORT || 5000;
