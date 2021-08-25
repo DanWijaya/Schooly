@@ -66,7 +66,8 @@ function createData(
   type,
   createdAt,
   submissions,
-  teacher_name
+  teacher_name,
+  grades
 ) {
   return {
     _id,
@@ -78,7 +79,8 @@ function createData(
     type,
     createdAt,
     submissions,
-    teacher_name
+    teacher_name,
+    grades
   };
 }
 
@@ -593,8 +595,20 @@ function AssessmentList(props) {
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
-  const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
-    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
+  const handleOpenDialog = (data) => {
+    let { assessmenttitle, subject, teacher_name, start_date, end_date, grades } = data;
+
+    subject = all_subjects_map.get(subject);
+    start_date = moment(start_date).locale("id").format("DD MMM YYYY, HH.mm");
+    end_date = moment(end_date).locale("id").format("DD MMM YYYY, HH.mm");
+    if(grades){
+      grades = grades[user._id].total_grade;
+    }
+
+    let title = assessmenttitle;
+    console.log(data);
+
+    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date, grades});
     setOpenDialog(true);
     console.log(title);
   };
@@ -617,7 +631,8 @@ function AssessmentList(props) {
           data.type,
           data.createdAt,
           data.submissions,
-          all_teachers_map.get(data.author_id).name
+          all_teachers_map.get(data.author_id).name,
+          data.grades
         )
       );
     }
@@ -799,6 +814,21 @@ function AssessmentList(props) {
           <Typography variant="subtitle1" align="center">
             Selesai: {currentDialogInfo.end_date}
           </Typography>
+          {currentDialogInfo.grades ? 
+          <Typography variant="subtitle1" align="center">
+            Nilai: {currentDialogInfo.grades}/100
+          </Typography>
+          : 
+          null}
+          {currentDialogInfo.grades ? 
+          <Typography
+          variant="subtitle2"
+          align="center"
+          color="textSecondary"
+          style={{ marginTop: "10px", textAlign: "center" }}
+        >
+          Anda telah menempuh ujian ini
+        </Typography> : 
           <Typography
             variant="subtitle2"
             align="center"
@@ -808,6 +838,7 @@ function AssessmentList(props) {
             Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
             pelajaran terkait.
           </Typography>
+        }
         </div>
       </Dialog>
       <AssessmentListToolbar
@@ -1002,17 +1033,7 @@ function AssessmentList(props) {
                     variant="outlined"
                     className={classes.assessmentPaper}
                     onClick={() =>
-                      handleOpenDialog(
-                        row.assessmenttitle,
-                        all_subjects_map.get(row.subject),
-                        row.teacher_name,
-                        moment(row.start_date)
-                          .locale("id")
-                          .format("DD MMM YYYY, HH.mm"),
-                        moment(row.end_date)
-                          .locale("id")
-                          .format("DD MMM YYYY, HH.mm")
-                      )
+                      handleOpenDialog(row)
                     }
                   >
                     <Badge
