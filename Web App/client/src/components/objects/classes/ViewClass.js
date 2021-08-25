@@ -60,6 +60,12 @@ import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import ErrorIcon from "@material-ui/icons/Error";
 import WarningIcon from "@material-ui/icons/Warning";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
+
+const TASK_STATUS = {
+  SUBMITTED : "Sudah Dikumpulkan",
+  NOT_SUBMITTED : "Belum Dikumpulkan"
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -198,7 +204,7 @@ function AssignmentListItem(props) {
             <Badge
               style={{ display: "flex", flexDirection: "row" }}
               badgeContent={
-                props.work_status === "Belum Dikumpulkan" ? (
+                props.work_status === TASK_STATUS.NOT_SUBMITTED ? (
                   <ErrorIcon className={classes.errorIcon} />
                 ) : (
                   <CheckCircleIcon className={classes.checkIcon} />
@@ -248,7 +254,7 @@ function AssignmentListItem(props) {
             <Badge
               style={{ display: "flex", flexDirection: "row" }}
               badgeContent={
-                props.work_status === "Belum Dikumpulkan" ? (
+                props.work_status === TASK_STATUS.NOT_SUBMITTED ? (
                   <ErrorIcon className={classes.errorIcon} />
                 ) : (
                   <CheckCircleIcon className={classes.checkIcon} />
@@ -589,6 +595,7 @@ function ViewClass(props) {
   const [walikelas, setWalikelas] = React.useState({});
   const [taskAtmpt, setTaskAtmpt] = React.useState([]);
   const [avatar, setAvatar] = React.useState({});
+  const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
 
   const all_assessments = assessmentsCollection.all_assessments;
 
@@ -738,31 +745,16 @@ function ViewClass(props) {
           </Avatar>
         );
 
-        let workStatus = "Belum Dikumpulkan";
-        for (let i = 0; i < user.tugas.length; i++) {
-          if (user.tugas[i].for_task_object === task._id) {
-            workStatus = "Sudah Dikumpulkan";
-            break;
-          }
+        let workStatus = TASK_STATUS.NOT_SUBMITTED;
+        if(submittedTaskIds.has(task._id)){
+          workStatus = TASK_STATUS.SUBMITTED;
         }
 
-        // console.log(all_user_files)
-        // for (var j = 0; j < all_user_files.length; j++){
-        //     if(all_user_files[j].for_task_object === task._id){
-        //     workStatus = "Telah Dikumpulkan"
-        //     workCategoryAvatar = (
-        //       <Avatar className={classes.assignmentTurnedIn}>
-        //         <AssignmentTurnedInIcon/>
-        //       </Avatar>
-        //     )
-        //     break;
-        //   }
-        // }
         if (tab === "pekerjaan_kelas") {
           if (
             (!category ||
               (category === "subject" && task.subject === subject._id)) &&
-            workStatus === "Belum Dikumpulkan"
+            workStatus === TASK_STATUS.NOT_SUBMITTED
           ) {
             result.push({
               _id: task._id,
@@ -1120,16 +1112,25 @@ function ViewClass(props) {
   }, [students_by_class.length, kelas.walikelas]);
 
   React.useEffect(() => {
-    if(kelas){
-      getSubmittedTasks(kelas._id)  
+    if(user.role === "Student"){
+      let submittedTaskIdSet = new Set();
+      getFileSubmitTasksByAuthor(user._id).then((response) => {
+        for (let file of response.data) {
+          submittedTaskIdSet.add(file.task_id);
+        }
+      }).finally(() => {
+        // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
+        setSubmittedTaskIds(submittedTaskIdSet);
+      });
     }
-  }, [kelas._id])
+  }, [])
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  console.log(submittedTaskIds);
   // console.log(selectedMaterials)
   console.log("Avatars: ", avatar, user._id);
   document.title = !kelas.name

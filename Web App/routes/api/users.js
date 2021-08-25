@@ -350,7 +350,6 @@ router.put(
 );
 
 router.get("/getteachers", (req, res) => {
-  // console.log("GET teachers runned")
   Teacher.find({ active: true }).sort({name: 1}).then((users, err) => {
     if (!users) console.log("No teachers yet in Schooly System");
     else return res.json(users);
