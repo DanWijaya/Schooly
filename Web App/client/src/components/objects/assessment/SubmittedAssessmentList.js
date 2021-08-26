@@ -290,7 +290,7 @@ function SubmittedAssessmentList(props) {
   }, [selectedAssessments]);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [order, setOrder] = React.useState("desc");
+  const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
 
   const rows = React.useRef([]); // akan menyimpan object-object yang berisi id dan nama murid (1 object = 1 murid) untuk semua murid yang mendapatkan assessment ini
