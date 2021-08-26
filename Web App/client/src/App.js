@@ -308,7 +308,7 @@ class App extends Component {
                       />
                       <PrivateRoute
                         exact
-                        path="/rapor/:id"
+                        path="/lihat-rapor/:id"
                         component={Report}
                       />
                       {/* Route Class */}
