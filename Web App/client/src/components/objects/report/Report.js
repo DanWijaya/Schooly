@@ -238,7 +238,7 @@ function ScoreGraph(props) {
   );
 }
 
-function ReportView(props) {
+function Report(props) {
   const classes = useStyles();
 
   const {
@@ -1785,7 +1785,7 @@ function ReportView(props) {
   );
 }
 
-ReportView.propTypes = {
+Report.propTypes = {
   auth: PropTypes.object.isRequired,
   getOneUser: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
@@ -1813,4 +1813,4 @@ export default connect(mapStateToProps, {
   getOneUser,
   setCurrentClass,
   refreshTeacher
-})(ReportView);
+})(Report);
