@@ -950,7 +950,8 @@ function AssessmentList(props) {
                               </IconButton>
                             </LightTooltip>
                           </Grid>
-                          {!row.submissions ?
+                          {row.submissions && Object.keys(row.submissions).length !== 0 ? 
+                          null :
                           <Grid item>
                             <LightTooltip title="Sunting">
                               <Link to={`/sunting-ujian/${row._id}`}>
@@ -963,8 +964,7 @@ function AssessmentList(props) {
                               </Link>
                             </LightTooltip>
                           </Grid> 
-                          : null
-                        }
+                          }
                           <Grid item>
                             <LightTooltip title="Hapus">
                               <IconButton

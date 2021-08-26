@@ -1625,11 +1625,16 @@ class EditAssessment extends Component {
     document.title = `Schooly | Sunting ${this.state.type} `;
     if(Boolean(selectedAssessments.submissions)){
       return (
-        <div className={classes.root}>
-          <Typography variant="h5" align="center" className={classes.title}>
-          Tidak dapat disunting karena ada sudah ada yang mengumpulkan
-        </Typography>
-        </div>
+      <Grid
+        container
+        alignItems="center"
+        justify="center"
+        style={{ height: "20vh" }}
+      >
+      <Typography variant="h5" color="textSecondary" align="center">
+        Tidak dapat disunting karena sudah ada yang mengumpulkan
+      </Typography>
+      </Grid>
       )
     } else{
     return (
