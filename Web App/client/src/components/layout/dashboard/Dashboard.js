@@ -196,7 +196,7 @@ const styles = (theme) => ({
     textAlign: "center",
     height: "100%",
     padding: "15px",
-    backgroundColor: "#e3e5e5",
+    backgroundColor: "#E3E5E5",
   },
 });
 
@@ -311,7 +311,7 @@ function DashboardGraph(props) {
     datasets: [
       {
         label: [1, 2],
-        backgroundColor: "#1976d2",
+        backgroundColor: "#1976D2",
         borderColor: "rgba(0,0,0,0)",
         borderWidth: 2,
         data: scores,

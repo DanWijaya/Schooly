@@ -5,38 +5,38 @@ export const globalStyles = responsiveFontSizes(
   createMuiTheme({
     palette: {
       primary: {
-        main: "#2196f3",
+        main: "#2196F3",
         light: "#64B5F6",
-        dark: "#1976d2",
-        fade: fade("#2196f3", 0.15),
+        dark: "#1976D2",
+        fade: fade("#2196F3", 0.15),
       },
       secondary: {
-        main: "#dc004e",
-        light: "#e33371",
-        dark: "#9a0036",
+        main: "#DC004E",
+        light: "#E33371",
+        dark: "#9A0036",
       },
       success: {
         main: "#61BD4F",
-        light: "#81c784",
-        dark: "#388e3c",
+        light: "#81C784",
+        dark: "#388E3C",
       },
       info: {
-        main: "#1976d2",
-        light: "#4791db",
+        main: "#1976D2",
+        light: "#4791DB",
         dark: "#115293",
       },
       warning: {
-        main: "#ff9800",
-        light: "#ffb74d",
-        dark: "#f57c00",
+        main: "#FF9800",
+        light: "#FFB74D",
+        dark: "#F57C00",
       },
       error: {
-        main: "#f44336",
-        light: "#e57373",
-        dark: "#d32f2f",
+        main: "#F44336",
+        light: "#E57373",
+        dark: "#D32F2F",
       },
       dropbox: {
-        main: "#0d2481",
+        main: "#0D2481",
       },
       radio: {
         main: "#02AFF8",
@@ -65,7 +65,7 @@ export const globalStyles = responsiveFontSizes(
       MuiFab: {
         root: {
           "&:focus": {
-            backgroundColor: "#2196f3",
+            backgroundColor: "#2196F3",
           },
           "&:hover": {
             backgroundColor: "transparent",
@@ -89,7 +89,7 @@ export const globalStyles = responsiveFontSizes(
       MuiPickersDay: {
         daySelected: {
           "&:focus, &:hover": {
-            backgroundColor: "#2196f3",
+            backgroundColor: "#2196F3",
           },
         },
       },

@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   profileDataItemAvatar: {
-    backgroundColor: "#00b7ff",
+    backgroundColor: "#00B7FF",
   },
   emptyProfileData: {
     display: "flex",
@@ -133,12 +133,12 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     justifyContent: "center",
     padding: "15px",
-    backgroundColor: "#e3e5e5",
+    backgroundColor: "#E3E5E5",
     height: "21vw",
     width: "60vw",
     [theme.breakpoints.down("sm")]: {
-      height:"200px", 
-    }    
+      height:"200px",
+    }
   },
   customMargin: {
     [theme.breakpoints.down("sm")]: {
@@ -172,7 +172,7 @@ function ScoreGraph(props) {
     datasets: [
       {
         label: [1, 2],
-        backgroundColor: "#1976d2",
+        backgroundColor: "#1976D2",
         borderColor: "rgba(0,0,0,0)",
         borderWidth: 2,
         data: scores,
@@ -352,7 +352,7 @@ function ReportView(props) {
       setAllowedSubjectIndex(allowedIndexes)
       let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
       setGraphSubject(randomNumber);
-      
+
       // if (
       //   taskGraphCurrentSubject === null &&
       //   all_subjects.length !== 0
@@ -376,7 +376,7 @@ function ReportView(props) {
       // }
     }
   }, [all_subjects]);
-  
+
 
   function graphTask(subjectIndex) {
     if (all_subjects[subjectIndex]) {
@@ -1441,7 +1441,7 @@ function ReportView(props) {
             justify="center"
             // spacing={4}
             alignItems="center"
-          >           
+          >
             {/* {createGraph()} */}
             <Paper style={{ padding: "20px", width: "100%"}}>
               {createGraph()}
