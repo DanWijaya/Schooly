@@ -272,7 +272,7 @@ function ProfileView(props) {
           >
             <Link
               to={{
-                pathname: `/lihat-rapor/${_id}`,
+                pathname: `/rapor/${_id}`,
               }}
             >
               <LightTooltip title="Klik Untuk Melihat Rapor">
@@ -296,7 +296,7 @@ function ProfileView(props) {
               >
                 <Link
                   to={{
-                    pathname: `/lihat-rapor/${_id}`,
+                    pathname: `/rapor/${_id}`,
                   }}
                 >
                   <LightTooltip title="Klik Untuk Melihat Rapor">
@@ -322,7 +322,7 @@ function ProfileView(props) {
           >
             <Link
               to={{
-                pathname: `/lihat-rapor/${_id}`,
+                pathname: `/rapor/${_id}`,
               }}
             >
               <LightTooltip title="Klik Untuk Melihat Rapor">

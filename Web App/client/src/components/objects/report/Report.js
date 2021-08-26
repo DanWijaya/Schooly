@@ -238,7 +238,7 @@ function ScoreGraph(props) {
   );
 }
 
-function ReportView(props) {
+function Report(props) {
   const classes = useStyles();
 
   const {
@@ -739,7 +739,7 @@ function ReportView(props) {
     return menuItems;
   }
 
-  // ini hanya digunakan untuk membuat tabel halaman lihat-rapor yang dibuka dari side drawer
+  // ini hanya digunakan untuk membuat tabel halaman rapor yang dibuka dari side drawer
   // tipe argumen = Map (pakai Map biar urutan value sel tetap terjaga sesuai dengan urutan nama kolom)
   function generateRowCellFormat1(row) {
     let emptyCellSymbol = "-"; // jika sel kosong, masukkan "-"
@@ -771,7 +771,7 @@ function ReportView(props) {
     return <TableRow key={row.get("idMurid")}>{cells}</TableRow>;
   }
 
-  // ini digunakan untuk membuat tabel halaman lihat-rapor yang dibuka dari profile view murid atau profile
+  // ini digunakan untuk membuat tabel halaman rapor yang dibuka dari profile view murid atau profile
   // tipe argumen = Object (bisa pakai Object karena urutan nama kolom dan jumlah kolomnya fix)
   function generateRowCellFormat2(row) {
     let trueSubject = false;
@@ -1149,7 +1149,7 @@ function ReportView(props) {
   }
 
   // ini dipanggil setelah selesai mount.
-  // ditambahkan dependency "role" untuk mengurus kasus ketika guru yang sedang berada di halaman lihat-rapor untuk suatu murid
+  // ditambahkan dependency "role" untuk mengurus kasus ketika guru yang sedang berada di halaman rapor untuk suatu murid
   // mengklik tombol rapor di side drawer.
   React.useEffect(() => {
     if (role === "Teacher") {
@@ -1713,7 +1713,7 @@ function ReportView(props) {
                         : null}
                       <TableBody>
                         {
-                          // jika guru klik icon rapor side drawer ketika sedang melihat halaman lihat-rapor murid,
+                          // jika guru klik icon rapor side drawer ketika sedang melihat halaman rapor murid,
                           // isi elemen array "rows" ("rows" merupakan state) berubah dari Object menjadi Map.
                           rows.length !== 0 && rows[0].constructor === Map
                             ? rows.map((row) => {
@@ -1762,7 +1762,7 @@ function ReportView(props) {
                         : null}
                       <TableBody>
                         {
-                          // jika guru klik icon rapor side drawer ketika sedang melihat halaman lihat-rapor murid,
+                          // jika guru klik icon rapor side drawer ketika sedang melihat halaman rapor murid,
                           // isi elemen array "rows" ("rows" merupakan state) berubah dari Object menjadi Map.
                           rows.length !== 0 && rows[0].constructor === Map
                             ? rows.map((row) => {
@@ -1785,7 +1785,7 @@ function ReportView(props) {
   );
 }
 
-ReportView.propTypes = {
+Report.propTypes = {
   auth: PropTypes.object.isRequired,
   getOneUser: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
@@ -1813,4 +1813,4 @@ export default connect(mapStateToProps, {
   getOneUser,
   setCurrentClass,
   refreshTeacher
-})(ReportView);
+})(Report);
