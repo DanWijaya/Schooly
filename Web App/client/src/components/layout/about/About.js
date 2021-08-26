@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
-import whatIsSchooly from "./WhatIsSchooly.png";
+import React from "react";
+import { Link } from "react-router-dom";
 import backpackStudent from "./BackpackStudent-MateseFields.jpg";
 import computerClass from "./ComputerClass-MimiThian.jpg";
 import discussionWork from "./DiscussionWork-ScottGraham.jpg";
 import onlineLearning from "./OnlineLearning-CompareFibre.jpg";
-import schoolyFeature1 from "./SchoolyFeature1.png";
-import schoolyFeature2 from "./SchoolyFeature2.png";
-import schoolyFeature3 from "./SchoolyFeature3.png";
-import { Button, Grid, Typography, Hidden, Paper } from "@material-ui/core";
+import aboutArt1 from "./AboutArt1.png";
+import aboutArt2 from "./AboutArt2.png";
+import aboutArt3 from "./AboutArt3.png";
+import { Button, Divider, Grid, Typography, Hidden } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import EmailIcon from "@material-ui/icons/Email";
 
@@ -15,25 +15,27 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
-  },
-  whatIsSchoolyBackground: {
-    backgroundColor: theme.palette.primary.light,
-  },
-  whatIsSchooly: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "flex-end",
     margin: "auto",
     padding: "20px",
-    color: "white",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
   },
+  whatIsSchooly: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    paddingTop: "130px",
+    paddingBottom: "130px",
+  },
+  schoolyMotto: {
+    fontFamily: "Caveat",
+    fontWeight: "bold",
+    color: theme.palette.primary.main,
+  },
   schoolyDefinition: {
-    maxWidth: "70%",
+    maxWidth: "80%",
     [theme.breakpoints.down("sm")]: {
       maxWidth: "90%",
     },
@@ -44,87 +46,107 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "80%",
     },
   },
-  whySchooly: {
-    margin: "auto",
-    marginTop: "10px",
-    marginBottom: "10px",
-    padding: "20px",
-    maxWidth: "80%",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
+  whatIsSchoolyDivider: {
+    backgroundColor: theme.palette.primary.main,
+    height: "3px",
+    width: "20%",
+    margin: "40px 0px 40px 0px",
+    [theme.breakpoints.down("sm")]: {
+      width: "30%",
+      margin: "25px 0px 25px 0px",
     },
   },
-  whySchooly1: {
-    display: "flex",
-    alignItems: "center",
+  introduction: {
     backgroundImage: `url(${backpackStudent})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
-    paddingLeft: "10%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
     borderRadius: "7.5px",
-    height: "500px",
+    height: "550px",
     [theme.breakpoints.down("sm")]: {
       height: "300px",
     },
   },
-  whySchooly2: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+  introductionText: {
+    maxWidth: "40%",
+    marginLeft: "5%",
+  },
+  story: {
+    marginTop: "40px",
+    marginBottom: "40px",
+  },
+  worldChanges: {
     backgroundImage: `url(${computerClass})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
-    paddingLeft: "10%",
-    borderRadius: "7.5px",
-    width: "100%",
-  },
-  whySchooly3: {
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    borderRadius: "7.5px",
+    height: "300px",
+  },
+  techWorld: {
     backgroundImage: `url(${discussionWork})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
-    paddingLeft: "10%",
-    borderRadius: "7.5px",
-    width: "100%",
-  },
-  whySchooly4: {
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    borderRadius: "7.5px",
+    height: "300px",
+  },
+  solution: {
     backgroundImage: `url(${onlineLearning})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
-    paddingLeft: "10%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
     borderRadius: "7.5px",
-    width: "100%",
-  },
-  schoolyFeatures: {
-    margin: "auto",
-    marginTop: "10px",
-    marginBottom: "10px",
-    padding: "20px",
-    maxWidth: "80%",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
+    height: "550px",
+    [theme.breakpoints.down("sm")]: {
+      height: "300px",
     },
   },
-  supportSchoolyBackground: {
-    backgroundColor: theme.palette.primary.fade,
+  solutionContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
+  solutionTitle: {
+    fontSize: "14px",
+    color: theme.palette.primary.main,
+    margin: "20px 0px 20px 0px",
+  },
+  solutionText: {
+    maxWidth: "80%",
+  },
+  whySchooly: {
+    marginTop: "130px",
+    marginBottom: "130px",
+  },
+  whySchoolyThumbnailContainer: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  whySchoolyThumbnail: {
+    maxWidth: "60%",
+    maxHeight: "60%",
+    [theme.breakpoints.up("sm")]: {
+      maxWidth: "90%",
+      maxHeight: "90%",
+    },
   },
   supportSchooly: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "flex-end",
-    margin: "auto",
-    padding: "20px",
-    maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
@@ -137,20 +159,6 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  centerImage: {
-    display: "flex",
-    justifyContent: "center",
-  },
-  imageSize: {
-    [theme.breakpoints.down("xs")]: {
-      maxWidth: "60%",
-      maxHeight: "60%",
-    },
-    [theme.breakpoints.up("sm")]: {
-      maxWidth: "100%",
-      maxHeight: "100%",
-    },
-  },
 }));
 
 function About(props) {
@@ -160,56 +168,96 @@ function About(props) {
 
   return (
     <div className={classes.root}>
-      <div className={classes.whatIsSchoolyBackground}>
-        <div className={classes.whatIsSchooly}>
-          <img
-            alt="What is Schooly"
-            src={whatIsSchooly}
-            style={{
-              maxWidth: "100%",
-              maxHeight: "100%",
-              marginBottom: "20px",
-            }}
-          />
-          <Typography style={{ fontFamily: "Caveat-SemiBold" }} variant="h3" align="center" gutterBottom>
-            Schooly makes your school work easy!
+      <div className={classes.whatIsSchooly}>
+        <Typography variant="h2" align="center" paragraph className={classes.schoolyMotto}>
+          Schooly makes your school work easy!
+        </Typography>
+        <Typography variant="h6" align="center" className={classes.schoolyDefinition}>
+          Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang
+          dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang
+          ada di sekolah.
+        </Typography>
+        <Divider className={classes.whatIsSchoolyDivider} />
+        <Typography variant="h6" color="textSecondary" align="center" className={classes.schoolyQuotes}>
+          ❝Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk
+          kegiatan persekolahan akan menjadi lebih efektif dan efisien.❞
+        </Typography>
+      </div>
+      <div className={classes.introduction}>
+        <div className={classes.introductionText}>
+          <Typography variant="overline" paragraph>
+            Layanan Kami
           </Typography>
-          <Typography
-            variant="h6"
-            align="center"
-            paragraph
-            className={classes.schoolyDefinition}
-          >
-            Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang
-            dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang
-            ada di sekolah.
+          <Typography gutterBottom>
+            Apa pentingnya teknologi di dunia pendidikan?
           </Typography>
-          <Typography align="center" className={classes.schoolyQuotes}>
-            "Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk
-            kegiatan persekolahan akan menjadi lebih efektif dan efisien."
+          <Typography variant="body2" color="textSecondary">
+            Pelajari lebih lanjut di bawah.
+          </Typography>
+        </div>
+      </div>
+      <div className={classes.story}>
+        <Grid container spacing={5}>
+          <Grid item xs={12} md={6} container direction="column">
+            <div className={classes.worldChanges} />
+            <Grid item>
+              <Typography variant="h6" style={{ marginTop: "10px", marginBottom: "10px" }}>
+                Dunia berubah, begitu juga seharusnya pendidikan
+              </Typography>
+              <Typography>
+                Di kegiatan sehari-hari sekarang, tidak terlepas dengan namanya teknologi.
+                Hampir segala sesuatu yang kita butuhkan dan inginkan dapat terpenuhi melalui
+                perangkat komputer dan ponsel yang selalu kita bawa kemana-mana.
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} md={6} container direction="column">
+            <div className={classes.techWorld} />
+            <Grid item>
+              <Typography variant="h6" style={{ marginTop: "10px", marginBottom: "10px" }}>
+                Apa kata perkuliahan dan pekerjaan zaman sekarang?
+              </Typography>
+              <Typography>
+                Pengaruh teknologi ini juga dapat dilihat baik di perkuliahan dan pekerjaan
+                zaman sekarang. Sekarang, hampir semua tugas dan ujian di perkuliahan
+                membutuhkan komputer dan dikumpul dalam bentuk digital. Begitu juga di
+                dunia kerja. Kegiatan pemasaran, perhitungan keuangan, dan pekerjaan lainnya
+                sekarang membutuhkan bantuan komputer ataupun ponsel. Lantas, mengapa
+                sekolah-sekolah pada umumnya malah melarang penggunaan perangkat digital ini?
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </div>
+      <div>
+        <div className={classes.solution} />
+        <div className={classes.solutionContainer}>
+          <Typography variant="overline" align="center" className={classes.solutionTitle}>
+            Schooly adalah solusinya!
+          </Typography>
+          <Typography align="center" className={classes.solutionText}>
+            Kami mengerti akan masalah-masalah yang dihadapi sekolah-sekolah yang ada
+            untuk beradaptasi di era digital ini. Terutama dalam mengatur murid-murid yang ada,
+            agar tidak terdistraksi atau menyalahgunakan teknologi yang ada bukan untuk belajar.
+            Schooly memiliki visi dimana membawa perangkat ke sekolah bukanlah sebuah tantangan,
+            melainkan hal yang dapat membantu kegiatan belajar-mengajar.
           </Typography>
         </div>
       </div>
       <div className={classes.whySchooly}>
-        <Grid container spacing={5}>
-          <Grid item container>
-          <Grid item xs={6}>
-            test
-          </Grid>
-          <Grid item xs={6}>
-            test
-          </Grid>
-          </Grid>
-        </Grid>
-      </div>
-      <div className={classes.schoolyFeatures}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Mengapa Schooly?
+        </Typography>
+        <Typography align="center" paragraph>
+          Fitur lengkap dari Schooly dapat dilihat pada <Link to="/" style={{ color: "grey" }}><u>halaman utama</u></Link> kami.
+        </Typography>
         <Grid container spacing={5} direction="column">
           <Grid item container spacing={5} justify="center" alignItems="center">
-            <Grid item xs={12} sm={6} className={classes.centerImage}>
+            <Grid item xs={12} sm={6} className={classes.whySchoolyThumbnailContainer}>
               <img
                 alt="Schooly Feature 1"
-                src={schoolyFeature1}
-                className={classes.imageSize}
+                src={aboutArt1}
+                className={classes.whySchoolyThumbnail}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -242,11 +290,11 @@ function About(props) {
                   bisa diakses perangkat apa saja dengan mudah.
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={6} className={classes.centerImage}>
+              <Grid item xs={12} sm={6} className={classes.whySchoolyThumbnailContainer}>
                 <img
                   alt="Schooly Feature 2"
-                  src={schoolyFeature2}
-                  className={classes.imageSize}
+                  src={aboutArt2}
+                  className={classes.whySchoolyThumbnail}
                 />
               </Grid>
             </Grid>
@@ -259,11 +307,11 @@ function About(props) {
               justify="center"
               alignItems="center"
             >
-              <Grid item xs={12} sm={6} className={classes.centerImage}>
+              <Grid item xs={12} sm={6} className={classes.whySchoolyThumbnailContainer}>
                 <img
                   alt="Schooly Feature 2"
-                  src={schoolyFeature2}
-                  className={classes.imageSize}
+                  src={aboutArt2}
+                  className={classes.whySchoolyThumbnail}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -279,11 +327,11 @@ function About(props) {
             </Grid>
           </Hidden>
           <Grid item container spacing={5} justify="center" alignItems="center">
-            <Grid item xs={12} sm={6} className={classes.centerImage}>
+            <Grid item xs={12} sm={6} className={classes.whySchoolyThumbnailContainer}>
               <img
                 alt="Schooly Feature 3"
-                src={schoolyFeature3}
-                className={classes.imageSize}
+                src={aboutArt3}
+                className={classes.whySchoolyThumbnail}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -292,32 +340,30 @@ function About(props) {
               </Typography>
               <Typography variant="h6">
                 Temukan kontak orang-orang sepersekolahan dengan mudah di
-                Schooly. Sebarkan informasi mengenai kegiatan sekolah hanya
+                Schooly. Sebarkan informasi mengenai kegiatan persekolahan hanya
                 dengan beberapa ketuk.
               </Typography>
             </Grid>
           </Grid>
         </Grid>
       </div>
-      <div className={classes.supportSchoolyBackground}>
-        <div className={classes.supportSchooly}>
-          <Typography variant="h4" align="center" color="primary" gutterBottom>
-            Ada masukan atau saran?
-          </Typography>
-          <Typography align="center" paragraph>
-            Bantu Schooly berkembang dengan pendapat Anda. Saran maupun kritik
-            Anda sangat berarti bagi kami.
-          </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            href="mailto:schoolysystem@gmail.com"
-            startIcon={<EmailIcon />}
-            className={classes.supportSchoolyButton}
-          >
-            Kirim Pesan
-          </Button>
-        </div>
+      <div className={classes.supportSchooly}>
+        <Typography variant="h4" align="center" color="textSecondary" gutterBottom>
+          Ada masukan atau saran?
+        </Typography>
+        <Typography align="center" paragraph>
+          Bantu Schooly berkembang dengan pendapat Anda. Saran maupun kritik
+          Anda sangat berarti bagi kami!
+        </Typography>
+        <Button
+          variant="contained"
+          size="large"
+          href="mailto:schoolysystem@gmail.com"
+          startIcon={<EmailIcon />}
+          className={classes.supportSchoolyButton}
+        >
+          Kirim Pesan
+        </Button>
       </div>
     </div>
   );

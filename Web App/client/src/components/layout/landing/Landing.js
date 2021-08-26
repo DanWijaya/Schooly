@@ -93,12 +93,6 @@ const styles = (theme) => ({
     height: "80px",
     color: theme.palette.primary.main,
   },
-  featuresText: {
-    fontSize: "12px",
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "11px",
-    },
-  },
   useSchooly: {
     display: "flex",
     flexDirection: "column",
@@ -126,9 +120,7 @@ const styles = (theme) => ({
     flexDirection: "column",
     alignItems: "center",
     color: "white",
-    padding: "20px",
-    paddingTop: "50px",
-    paddingBottom: "50px",
+    padding: "50px 30px 50px 30px",
   },
   trySchoolyItemMiddle: {
     display: "flex",
@@ -136,9 +128,7 @@ const styles = (theme) => ({
     alignItems: "center",
     backgroundColor: "#61ADEB",
     color: "white",
-    padding: "20px",
-    paddingTop: "50px",
-    paddingBottom: "50px",
+    padding: "50px 30px 50px 30px",
   },
   trySchoolyStepIcon: {
     width: "30px",
@@ -272,7 +262,7 @@ class Landing extends Component {
                     <FaUserCog className={classes.featuresIcon} />
                   </Avatar>
                   <Typography paragraph>Akun Pengelola</Typography>
-                  <Typography className={classes.featuresText}>
+                  <Typography variant="body2">
                     Atur dan kelola pengguna yang ada dengan mudah dan terstruktur.
                   </Typography>
                 </Paper>
@@ -283,7 +273,7 @@ class Landing extends Component {
                     <FaceIcon className={classes.featuresIcon} />
                   </Avatar>
                   <Typography paragraph>Pendataan Pengguna</Typography>
-                  <Typography className={classes.featuresText}>
+                  <Typography variant="body2">
                     Temukan kontak orang sepersekolahanmu. Perbarui pendataan
                     data pribadi kepada sekolah dengan mudah.
                   </Typography>
@@ -295,7 +285,7 @@ class Landing extends Component {
                     <FaSchool className={classes.featuresIcon} />
                   </Avatar>
                   <Typography paragraph>Unit</Typography>
-                  <Typography className={classes.featuresText}>
+                  <Typography variant="body2">
                     Atur pengguna yang ada sesuai dengan unit-unit sekolahmu.
                   </Typography>
                 </Paper>
@@ -306,7 +296,7 @@ class Landing extends Component {
                     <FaChalkboardTeacher className={classes.featuresIcon} />
                   </Avatar>
                   <Typography paragraph>Kelas</Typography>
-                  <Typography className={classes.featuresText}>
+                  <Typography variant="body2">
                     Kelompokkan murid-murid yang ada sesuai dengan kelas
                     dan mata pelajaran masing-masing.
                   </Typography>
@@ -318,7 +308,7 @@ class Landing extends Component {
                     <EventNoteIcon className={classes.featuresIcon} />
                   </Avatar>
                   <Typography paragraph>Kalender</Typography>
-                  <Typography className={classes.featuresText}>
+                  <Typography variant="body2">
                     Jadwal persekolahanmu terangkum secara otomatis, mulai dari
                     tugas, ujian, hingga kegiatan lainnya.
                   </Typography>
@@ -330,7 +320,7 @@ class Landing extends Component {
                     <AiFillNotification className={classes.featuresIcon} />
                   </Avatar>
                   <Typography paragraph>Kegiatan</Typography>
-                  <Typography className={classes.featuresText}>
+                  <Typography variant="body2">
                     Umumkan kegiatan akademik dan non-akademik baik ke pihak
                     Guru, Murid, ataupun keduanya.
                   </Typography>
@@ -342,7 +332,7 @@ class Landing extends Component {
                     <AnnouncementIcon className={classes.featuresIcon} />
                   </Avatar>
                   <Typography paragraph>Pengumuman</Typography>
-                  <Typography className={classes.featuresText}>
+                  <Typography variant="body2">
                     Sebarkan informasi persekolahan dengan mudah dan cepat.
                   </Typography>
                 </Paper>
@@ -353,7 +343,7 @@ class Landing extends Component {
                     <QuestionAnswerIcon className={classes.featuresIcon} />
                   </Avatar>
                   <Typography paragraph>Komentar</Typography>
-                  <Typography className={classes.featuresText}>
+                  <Typography variant="body2">
                     Diskusikan tugasmu baik bersama teman-teman sekelas ataupun
                     sang guru pemberi tugas.
                   </Typography>
@@ -365,7 +355,7 @@ class Landing extends Component {
                     <MenuBookIcon className={classes.featuresIcon} />
                   </Avatar>
                   <Typography paragraph>Materi</Typography>
-                  <Typography className={classes.featuresText}>
+                  <Typography variant="body2">
                     Kertas tidak ada, tas pun jadi ringan. Berikan materi kepada murid dengan beberapa
                     ketuk saja, tanpa harus dicetak.
                   </Typography>
@@ -377,7 +367,7 @@ class Landing extends Component {
                     <AssignmentIcon className={classes.featuresIcon} />
                   </Avatar>
                   <Typography paragraph>Tugas</Typography>
-                  <Typography className={classes.featuresText}>
+                  <Typography variant="body2">
                     Tidak perlu lupa akan tugas-tugas yang ada dan kumpulkan
                     dengan mudah.
                   </Typography>
@@ -389,7 +379,7 @@ class Landing extends Component {
                     <BsClipboardData className={classes.featuresIcon} />
                   </Avatar>
                   <Typography paragraph>Kuis & Ujian</Typography>
-                  <Typography className={classes.featuresText}>
+                  <Typography variant="body2">
                     Buat kuis atau ujian dengan berbagai jenis tipe soal,
                     hasilnya pun dapat diperiksa secara otomatis.
                   </Typography>
@@ -401,7 +391,7 @@ class Landing extends Component {
                     <AssessmentIcon className={classes.featuresIcon} />
                   </Avatar>
                   <Typography paragraph>Rapor</Typography>
-                  <Typography className={classes.featuresText}>
+                  <Typography variant="body2">
                     Pantau perubahan nilai-nilai yang ada secara cepat dan
                     dinamis dalam bentuk tabel ataupun grafik.
                   </Typography>
@@ -443,11 +433,11 @@ class Landing extends Component {
             <Grid item xs={12} md={4} className={classes.trySchoolyItem}>
               <Looks3Icon className={classes.trySchoolyStepIcon} />
               <Typography align="center" gutterBottom>
-                Pemakaian
+                Penggunaan
               </Typography>
               <Typography variant="body2" align="center">
-                Setelah dokumen administrasi dan penggunaan sudah dilengkapi,
-                maka Schooly siap dipakai di sekolah Anda.
+                Setelah semua dokumen administrasi sudah dilengkapi,
+                maka Schooly siap digunakan di sekolah Anda.
               </Typography>
             </Grid>
           </Grid>
@@ -456,7 +446,7 @@ class Landing extends Component {
           <Typography variant="h6" align="center">
             Hanya satu ketukan lagi untuk mulai mencoba Schooly!
           </Typography>
-          <Typography align="center" paragraph>
+          <Typography color="textSecondary" align="center" paragraph>
             Klik tombol "Kirim Pesan" untuk menghubungi kami atau tombol "Salin
             Tautan" untuk mengirim tautan ini ke sekolah Anda.
           </Typography>

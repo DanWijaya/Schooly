@@ -22,18 +22,3 @@ html {
   font-family: "Caveat";
   src: local("Caveat"), url(./fonts/Caveat/Caveat-Regular.ttf) format("truetype");
 }
-
-@font-face {
-  font-family: "Caveat-Medium";
-  src: local("Caveat-Medium"), url(./fonts/Caveat/Caveat-Medium.ttf) format("truetype");
-}
-
-@font-face {
-  font-family: "Caveat-SemiBold";
-  src: local("Caveat-SemiBold"), url(./fonts/Caveat/Caveat-SemiBold.ttf) format("truetype");
-}
-
-@font-face {
-  font-family: "Caveat-Bold";
-  src: local("Caveat-Bold"), url(./fonts/Caveat/Caveat-Bold.ttf) format("truetype");
-}

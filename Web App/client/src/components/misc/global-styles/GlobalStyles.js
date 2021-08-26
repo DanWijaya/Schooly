@@ -16,7 +16,7 @@ export const globalStyles = responsiveFontSizes(
         dark: "#9a0036",
       },
       success: {
-        main: "#4caf50",
+        main: "#61BD4F",
         light: "#81c784",
         dark: "#388e3c",
       },
