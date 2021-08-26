@@ -34,6 +34,8 @@ import SideDrawer from "./components/misc/side-drawer/SideDrawer";
 import Footer from "./components/misc/footer/Footer";
 import ProgressIndicator from "./components/misc/progress-indicator/ProgressIndicator";
 import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
+import Combined from "./components/misc/combined-navigation/Combined";
+
 //Class
 import CreateClass from "./components/objects/classes/CreateClass";
 import EditClass from "./components/objects/classes/EditClass";
@@ -77,6 +79,7 @@ import TeacherList from "./components/objects/admin-only/TeacherList";
 //Prototypes
 import CSV from "./prototypes/contoh-tugas/CSV";
 import BackToTop from "./prototypes/scroll-top";
+
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -123,9 +126,9 @@ class App extends Component {
     };
   }
 
-  componentDidCatch() {
-    this.setState({ problemEncountered: true });
-  }
+  // componentDidCatch() {
+  //   this.setState({ problemEncountered: true });
+  // }
 
   handleNavbar = (showBool) => {
     this.setState({ showNavBar: showBool });
@@ -169,7 +172,10 @@ class App extends Component {
                 {this.state.showProgressIndicator ? (
                   <ProgressIndicator />
                 ) : null}
-                {this.state.showNavBar ? (
+                <Combined 
+                  showNavBar={this.state.showNavBar}
+                  sideDrawerExist={this.state.sideDrawerExist}/>
+                {/* {this.state.showNavBar ? (
                   <NavBar
                     handleDrawerDesktop={this.handleDrawerDesktop}
                     handleDrawerMobile={this.handleDrawerMobile}
@@ -184,7 +190,7 @@ class App extends Component {
                     desktopOpen={this.state.desktopOpen}
                     handleDrawerMobile={this.handleDrawerMobile}
                   />
-                ) : null}
+                ) : null} */}
                 <div
                   style={{
                     flexGrow: "1",

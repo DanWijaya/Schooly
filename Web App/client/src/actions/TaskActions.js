@@ -194,17 +194,33 @@ export const deleteTask = (taskId, history=null) => (dispatch) => {
     });
 };
 
-export const getTasks = (subjectId, classId) => {
+export const getTasksBySubjectClass = (subjectId, classId) => {
   return axios
     .get(`/api/tasks/view`, { params: { subjectId, classId } })
     .then((res) => {
-      console.log("getTasks completed");
+      console.log("getTasksBySubjectClass completed");
       return res.data;
     })
     .catch(() => {
-      throw new Error("getTasks error has occured");
+      throw new Error("getTasksBySubjectClass error has occured");
     });
 };
+
+export const getTaskByClass = (classId) => (dispatch) => {
+  return axios
+  .get(`/api/tasks/view`, { params: { classId } })
+  .then((res) => {
+    dispatch({
+      type: GET_ALL_TASKS,
+      payload: res.data,
+    });
+    console.log("getTaskByClass completed");
+    return res.data;
+  })
+  .catch(() => {
+    throw new Error("getTaskByClass error has occured");
+  });
+}
 
 export const getTaskAtmpt = (user_id) => (dispatch) => {
   return axios

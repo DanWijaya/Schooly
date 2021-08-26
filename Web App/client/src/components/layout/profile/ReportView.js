@@ -25,7 +25,7 @@ import TableRow from "@material-ui/core/TableRow";
 import FormControl from "@material-ui/core/FormControl";
 import { Bar } from "react-chartjs-2";
 import { getStudentsByClass, getOneUser, refreshTeacher } from "../../../actions/UserActions";
-import { getTasks, getAllTask } from "../../../actions/TaskActions";
+import { getTasksBySubjectClass, getAllTask } from "../../../actions/TaskActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import {
   getAssessments,
@@ -1281,7 +1281,7 @@ function ReportView(props) {
         } // jika items kosong, hasGrade akan tetap bernilai false
       };
 
-      getTasks(valueMatpel, valueKelas)
+      getTasksBySubjectClass(valueMatpel, valueKelas)
         .then((taskArray) => {
           addScore(taskArray, "tugas");
         })
