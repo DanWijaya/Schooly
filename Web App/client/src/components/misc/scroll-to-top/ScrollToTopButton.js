@@ -13,13 +13,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ScrollToTopButton(props) {
-  const { window } = props;
   const classes = useStyles();
 
   const trigger = useScrollTrigger({
-    target: window ? window() : undefined,
     disableHysteresis: true,
-    threshold: 100,
+    threshold: 900,
   });
 
   const handleClick = (event) => {
@@ -40,9 +38,5 @@ function ScrollToTopButton(props) {
     </Zoom>
   );
 }
-
-ScrollToTopButton.propTypes = {
-  window: PropTypes.func,
-};
 
 export default ScrollToTopButton;

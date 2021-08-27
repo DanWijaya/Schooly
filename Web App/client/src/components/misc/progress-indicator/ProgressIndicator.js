@@ -24,7 +24,7 @@ function ProgressIndicator() {
   return (
     <div className={classes.loadingBackground}>
       <CircularProgress size="3rem" disableShrink />
-      <Typography variant="h4" style={{ marginTop: "1rem" }}>
+      <Typography variant="h4" style={{ marginTop: "15px" }}>
         Memuat...
       </Typography>
     </div>

@@ -194,7 +194,7 @@ function DrawerContent(props) {
         "Ujian",
       ],
       [
-        `/lihat-rapor/${user._id}`,
+        `/rapor/${user._id}`,
         <AssessmentIcon className={classes.drawerListItemIcon} />,
         "Rapor",
       ],
@@ -243,7 +243,7 @@ function DrawerContent(props) {
         "Ujian",
       ],
       [
-        "/lihat-rapor/semua",
+        "/rapor/semua",
         <AssessmentIcon className={classes.drawerListItemIcon} />,
         "Rapor",
       ],

@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   notFoundBackground: {
-    backgroundColor: "#0d2330",
+    backgroundColor: "#0D2330",
   },
   notFound: {
     display: "flex",

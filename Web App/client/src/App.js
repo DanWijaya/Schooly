@@ -21,7 +21,6 @@ import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
 import Profile from "./components/layout/profile/Profile";
 import ProfileView from "./components/layout/profile/ProfileView";
-import ReportView from "./components/layout/profile/ReportView";
 import Help from "./components/layout/help/Help";
 import TermsOfService from "./components/layout/legal/terms-of-service/TermsOfService";
 import PrivacyPolicy from "./components/layout/legal/privacy-policy/PrivacyPolicy";
@@ -35,7 +34,6 @@ import Footer from "./components/misc/footer/Footer";
 import ProgressIndicator from "./components/misc/progress-indicator/ProgressIndicator";
 import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
 import Combined from "./components/misc/combined-navigation/Combined";
-
 //Class
 import CreateClass from "./components/objects/classes/CreateClass";
 import EditClass from "./components/objects/classes/EditClass";
@@ -68,6 +66,8 @@ import ViewAssessmentTeacher from "./components/objects/assessment/ViewAssessmen
 import ViewAssessmentStudent from "./components/objects/assessment/ViewAssessmentStudent";
 import SubmittedAssessmentList from "./components/objects/assessment/SubmittedAssessmentList";
 import ViewAssessmentAnswer from "./components/objects/assessment/ViewAssessmentAnswer";
+//Report
+import Report from "./components/objects/report/Report";
 //Event
 import Calendar from "./components/objects/events/Calendar";
 //Admin Only
@@ -78,7 +78,6 @@ import EditClassTeacher from "./components/objects/classes/EditClassTeacher";
 import TeacherList from "./components/objects/admin-only/TeacherList";
 //Prototypes
 import CSV from "./prototypes/contoh-tugas/CSV";
-import BackToTop from "./prototypes/scroll-top";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -172,7 +171,7 @@ class App extends Component {
                 {this.state.showProgressIndicator ? (
                   <ProgressIndicator />
                 ) : null}
-                <Combined 
+                <Combined
                   showNavBar={this.state.showNavBar}
                   sideDrawerExist={this.state.sideDrawerExist}/>
                 {/* {this.state.showNavBar ? (
@@ -309,8 +308,8 @@ class App extends Component {
                       />
                       <PrivateRoute
                         exact
-                        path="/lihat-rapor/:id"
-                        component={ReportView}
+                        path="/rapor/:id"
+                        component={Report}
                       />
                       {/* Route Class */}
                       <PrivateRoute
@@ -430,11 +429,7 @@ class App extends Component {
                         path="/daftar-tugas"
                         component={TaskList}
                       />
-                      {/* Route Assessment - Prototype */}
-                      <Route
-                      exact 
-                      path="/scrolltop"
-                      component={BackToTop}/>
+                      {/* Route Assessment */}
                       <PrivateRoute
                         exact
                         access={["Student", "Teacher"]}
@@ -569,6 +564,12 @@ class App extends Component {
                         access={["Admin"]}
                         path="/sunting-guru"
                         component={TeacherList}
+                      />
+                      {/* Route Event */}
+                      <PrivateRoute
+                        exact
+                        path="/kalender"
+                        component={Calendar}
                       />
                       <Route
                         exact
