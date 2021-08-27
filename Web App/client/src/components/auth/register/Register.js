@@ -60,6 +60,13 @@ const styles = (theme) => ({
   combinedHelperText: {
     marginLeft: "14px",
   },
+  list: {
+    margin: "0px 0px 0px 40px",
+    padding: "0px",
+    [theme.breakpoints.down("sm")]: {
+      margin: "0px 0px 0px 16px",
+    },
+  },
   buttonsContainer: {
     marginTop: "15px",
   },
@@ -420,7 +427,7 @@ class Register extends Component {
                   poin-poin utama berikut:
                 </Typography>
                 <Typography>
-                  <ul style={{ paddingLeft: "40px" }}>
+                  <ul className={classes.list}>
                     <li style={{ listStyleType: "disc" }}>
                       Kami peduli dengan privasi Anda. Kami tidak dan tidak akan
                       menjual atau menyewakan data Anda kepada pihak ketiga
