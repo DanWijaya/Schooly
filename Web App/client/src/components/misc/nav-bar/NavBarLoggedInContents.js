@@ -48,7 +48,9 @@ function NavBarLoggedInContents(props) {
 
   const { isMobileView, logoutUser, getFileAvatar } = props;
   const { user } = props.auth;
-  const [avatar, setAvatar] = React.useState(avatar);
+  const [avatar, setAvatar] = React.useState(null);
+
+  console.log("Avatar navbar:", avatar)
 
   React.useEffect(() => {
     getFileAvatar(user._id)
@@ -57,7 +59,7 @@ function NavBarLoggedInContents(props) {
         setAvatar(result);
       })
       .catch((err) => console.log(err));
-  }, [user.avatar]);
+  }, [user._id]);
   // Menu items in Mobile
   const [mobileAnchorEl, setMobileAnchorEl] = React.useState(null);
   const handleMobileMenuClose = () => {
