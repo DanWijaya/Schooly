@@ -391,11 +391,11 @@ function Profile(props) {
                 userData={user}
               />
             </Grid>
-            <Grid item>
+            {/* <Grid item>
               <ProfilePasswordEditorDialog
                 handleOpenAlert={handleOpenPasswordEditorAlert}
               />
-            </Grid>
+            </Grid> */}
           </Hidden>
           <Hidden xsDown>
             {/* Desktop = Mini Variant Drawer */}
@@ -426,11 +426,12 @@ function Profile(props) {
                 userData={user}
               />
             </Grid>
-            <Grid item>
+            {/* Di hide untuk simulation */}
+            {/* <Grid item>
               <ProfilePasswordEditorDialog
                 handleOpenAlert={handleOpenPasswordEditorAlert}
               />
-            </Grid>
+            </Grid> */}
           </Hidden>
         </Grid>
         <Grid item container direction="column" spacing={4}>

@@ -71,6 +71,9 @@ const styles = (theme) => ({
   toggleErrorShowPasswordButton: {
     color: theme.palette.error.main,
   },
+  disabledLink : {
+    pointerEvents: "none"
+  }
 });
 
 class Login extends Component {
@@ -287,7 +290,7 @@ class Login extends Component {
                 </Grid>
                 <Divider />
                 <Grid item container justify="space-around">
-                  <Link to="/akun/lupa-katasandi">Lupa kata sandi?</Link>
+                  <Link to="/akun/lupa-katasandi" className={classes.disabledLink}>Lupa kata sandi?</Link>
                     <Typography color="textSecondary">·</Typography>
                   <Link to="/daftar">Belum ada akun?</Link>
                 </Grid>
