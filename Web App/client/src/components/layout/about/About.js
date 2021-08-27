@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import backpackStudent from "./BackpackStudent-MateseFields.jpg";
 import computerClass from "./ComputerClass-MimiThian.jpg";
 import discussionWork from "./DiscussionWork-ScottGraham.jpg";
@@ -249,7 +248,7 @@ function About(props) {
           Mengapa Schooly?
         </Typography>
         <Typography align="center" paragraph>
-          Fitur lengkap dari Schooly dapat dilihat pada <Link to="/" style={{ color: "grey" }}><u>halaman utama</u></Link> kami.
+          Secara singkat, berikut adalah alasan keuntungan penggunaan Schooly.
         </Typography>
         <Grid container spacing={5} direction="column">
           <Grid item container spacing={5} justify="center" alignItems="center">

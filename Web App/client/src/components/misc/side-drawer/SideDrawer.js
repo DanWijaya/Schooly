@@ -125,7 +125,7 @@ function DrawerContent(props) {
         "Beranda",
       ],
       [
-        "/pending-users",
+        "/pengguna-tidakaktif",
         <FaUserClock className={classes.drawerListItemIcon} />,
         "Pengguna Tertunda",
       ],
