@@ -60,7 +60,7 @@ class ResetPassword extends Component {
     };
   }
   onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value });
+    this.setState({ [e.target.id]: e.target.value , errors: { ...this.state.errors, [e.target.id]: null } });
   };
 
   componentDidMount() {

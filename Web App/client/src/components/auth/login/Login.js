@@ -133,8 +133,12 @@ class Login extends Component {
     }
   }
 
-  onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value });
+  onChange = (e, otherfield) => {
+    let field = otherfield ? otherfield : e.target.id;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+    this.setState({ [field]: e.target.value });
   };
 
   onSubmit = (e) => {

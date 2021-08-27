@@ -82,7 +82,7 @@ class ForgotPassword extends Component {
   }
 
   onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value });
+    this.setState({ [e.target.id]: e.target.value , errors: {} });
   };
 
   // Dispatch is used as a callback which gets invoked once some async action is complete.
@@ -90,7 +90,9 @@ class ForgotPassword extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     console.log("Submitted");
-    this.props.createHash(this.state.email.toLowerCase());
+    this.props.createHash(this.state.email.toLowerCase()).catch((err) => {
+      this.setState({ errors: err});
+    });
   };
 
   componentDidMount() {
@@ -103,11 +105,11 @@ class ForgotPassword extends Component {
   }
 
   render() {
-    const { classes, errors } = this.props;
+    const { classes } = this.props;
 
-    const { email } = this.state;
+    const { email ,errors } = this.state;
     const { isPasswordReset } = this.props.passwordMatters;
-
+    console.log(this.state.errors);
     document.title = "Schooly | Lupa Kata Sandi";
 
     return (
