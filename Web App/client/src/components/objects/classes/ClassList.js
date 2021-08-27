@@ -670,8 +670,8 @@ function ClassListToolbar(props) {
                 horizontal: "left",
               }}
             >
-              <MenuItem onClick={handleClickExport}>Export Data Kelas</MenuItem>
-              <MenuItem onClick={handleClickImport}>Import Data Kelas</MenuItem>
+              <MenuItem onClick={handleClickExport}>Unduh Data Kelas</MenuItem>
+              <MenuItem onClick={handleClickImport}>Unggah Data Kelas</MenuItem>
             </Menu>
 
             <LightTooltip title="Atur Wali Kelas">

@@ -530,7 +530,7 @@ class App extends Component {
                       <PrivateRoute
                         exact
                         access={["Admin"]}
-                        path="/pending-users"
+                        path="/pengguna-tidakaktif"
                         component={ManagePendingUsers}
                       />
                       <PrivateRoute

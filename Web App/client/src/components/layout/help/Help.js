@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import helpCenter from "./HelpCenter.png";
@@ -47,6 +48,10 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
+  },
+  list: {
+    margin: "0px 0px 0px 16px",
+    padding: "0px",
   },
   moreHelp: {
     margin: "auto",
@@ -108,25 +113,21 @@ function Help(props) {
                   </Grid>
                   <Grid item>
                     <Typography variant="h6" align="justify" gutterBottom>
-                      <b>Bagaimana cara mengubah kata sandi?</b>
-                    </Typography>
-                    <Typography align="justify">
-                      Kata sandi dapat diubah dengan menekan tombol "Ganti
-                      Kata Sandi" pada halaman profil, yang dapat diakses
-                      dengan menekan foto profil pada bagian kanan atas
-                      aplikasi.
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h6" align="justify" gutterBottom>
                       <b>
-                        Bagaimana cara untuk mendaftarkan suatu akun Schooly?
+                        Bagaimana cara mendaftarkan suatu akun Schooly?
                       </b>
                     </Typography>
                     <Typography  align="justify">
-                      Silahkan hubungi pengelola Schooly pada sekolah Anda
-                      untuk memberikan tautan untuk mendaftar akun Anda
-                      sesuai dengan kebutuhan Anda (Guru atau Murid).
+                      <ul className={classes.list}>
+                        <li style={{ listStyleType: "disc" }}>
+                          Anda dapat mendaftarkan akun Anda pada <Link to="/daftar">halaman Pendaftaran Schooly</Link>.
+                          Masukkan jenis akun yang sesuai, dan setelah mendaftar Anda dapat menghubungi pengelola sekolah
+                          Anda untuk mengaktifkan akun Anda.
+                        </li>
+                        <li style={{ listStyleType: "disc" }}>
+                          Anda juga dapat menghubungi pengelola Anda untuk mendaftarkan akun Anda.
+                        </li>
+                      </ul>
                     </Typography>
                   </Grid>
                   <Grid item>
@@ -137,7 +138,7 @@ function Help(props) {
                       </b>
                     </Typography>
                     <Typography align="justify">
-                      Silahkan hubungi pengelola Schooly pada sekolah Anda
+                      Silahkan hubungi pengelola Schooly sekolah Anda
                       untuk mendapatkan email akun Anda.
                     </Typography>
                   </Grid>
@@ -149,13 +150,20 @@ function Help(props) {
                       </b>
                     </Typography>
                     <Typography align="justify">
-                      Masuk ke halaman masuk schooly. Pada bagian bawah
-                      formulir masuk, tekan tautan "Lupa Kata Sandi" yang akan
-                      mengarah kepada halaman untuk mengganti kata sandi. Pada
-                      halaman tersebut, masukkan alamat email akun Anda,
-                      kemudian sistem akan mengirimkan pesan yang hanya
-                      berlaku selama 5 menit jika tidak diklik kepada alamat
-                      email yang bersangkutan untuk mengganti kata sandi Anda.
+                      <ol className={classes.list}>
+                        <li>
+                          Masuk ke <Link to="/lupa-katasandi">halaman Lupa Kata Sandi Schooly</Link>,
+                          yang dapat ditemukan di bagian bawah <Link to="/masuk">halaman Masuk Schooly</Link>.
+                        </li>
+                        <li>
+                          Masukkan alamat email akun Anda.
+                        </li>
+                        <li>
+                          Sistem akan mengirimkan pesan yang hanya
+                          berlaku selama 5 menit jika tidak diklik kepada alamat
+                          email yang bersangkutan untuk mengganti kata sandi Anda.
+                        </li>
+                      </ol>
                     </Typography>
                   </Grid>
                   <Grid item>
@@ -166,12 +174,27 @@ function Help(props) {
                       </b>
                     </Typography>
                     <Typography align="justify">
-                      Hubungi pengelola sekolah Anda untuk mengaktifkan akun
-                      Anda.
+                      Hubungi pengelola sekolah Anda untuk mengonfirmasi akun yang
+                      telah Anda daftarkan.
                     </Typography>
                   </Grid>
-                  {user.role === "Admin" ? (
+                  {user.role === "Student" || user.role === "Student" ? (
                     <Grid item container spacing={4}>
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>Bagaimana cara mengubah kata sandi?</b>
+                        </Typography>
+                        <Typography align="justify">
+                          <ol className={classes.list}>
+                            <li>
+                              Buka <Link to="/profil">halaman profil</Link>.
+                            </li>
+                            <li>
+                              Tekan tombol "Ganti Kata Sandi" yang memiliki simbol gembok.
+                            </li>
+                          </ol>
+                        </Typography>
+                      </Grid>
                       <Grid item>
                         <Typography variant="h6" align="justify" gutterBottom>
                           <b>
@@ -180,10 +203,14 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography  align="justify">
-                          Keterangan akun dapat diubah dengan menekan tombol
-                          "Sunting Profil" pada halaman profil, yang dapat diakses
-                          dengan menekan foto profil pada bagian kanan atas
-                          aplikasi.
+                          <ol className={classes.list}>
+                            <li>
+                              Buka <Link to="/profil">halaman profil</Link>.
+                            </li>
+                            <li>
+                              Tekan tombol "Sunting Profil" yang memiliki simbol gembok.
+                            </li>
+                          </ol>
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -191,10 +218,65 @@ function Help(props) {
                           <b>Bagaimana cara mengubah foto akun?</b>
                         </Typography>
                         <Typography  align="justify">
-                          Foto akun dapat diubah dengan menekan tombol dengan
-                          gambar "Kamera" pada halaman profil, yang dapat diakses
-                          dengan menekan foto profil pada bagian kanan atas
-                          aplikasi.
+                        <ol className={classes.list}>
+                          <li>
+                            Buka <Link to="/profil">halaman profil</Link>.
+                          </li>
+                          <li>
+                            Tekan tombol "Ganti Foto Profil" yang memiliki simbol kamera.
+                          </li>
+                        </ol>
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  ) : user.role === "Admin" ? (
+                    <Grid item container spacing={4}>
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>Bagaimana cara mengubah kata sandi?</b>
+                        </Typography>
+                        <Typography align="justify">
+                          <ol className={classes.list}>
+                            <li>
+                              Buka <Link to="/profil">halaman profil</Link>.
+                            </li>
+                            <li>
+                              Tekan tombol "Ganti Kata Sandi" yang memiliki simbol gembok.
+                            </li>
+                          </ol>
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>
+                            Bagaimana cara untuk melengkapi keterangan profil atau
+                            mengubah keterangan profil?
+                          </b>
+                        </Typography>
+                        <Typography  align="justify">
+                          <ol className={classes.list}>
+                            <li>
+                              Buka <Link to="/profil">halaman profil</Link>.
+                            </li>
+                            <li>
+                              Tekan tombol "Sunting Profil" yang memiliki simbol gembok.
+                            </li>
+                          </ol>
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>Bagaimana cara mengubah foto akun?</b>
+                        </Typography>
+                        <Typography  align="justify">
+                        <ol className={classes.list}>
+                          <li>
+                            Buka <Link to="/profil">halaman profil</Link>.
+                          </li>
+                          <li>
+                            Tekan tombol "Ganti Foto Profil" yang memiliki simbol kamera.
+                          </li>
+                        </ol>
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -205,73 +287,44 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          <ol>
-                            <li>Masuk dengan akun pengelola sekolah Anda.</li>
+                          <ol className={classes.list}>
                             <li>
                               Ajak guru-guru dan murid-murid di sekolah Anda
-                              untuk mendaftar ke Schooly, kemudian aktifkan
-                              akun-akun tersebut di halaman "Pengguna Tertunda",
-                              yang dapat ditemukan pada bagian kiri aplikasi
-                              (Anda akan diarahkan ke suatu halaman yang berisi
-                              daftar pengguna yang mendaftar). Kemudian klik
-                              tombol "Aktifkan" untuk mengaktifkan suatu akun
+                              untuk mendaftar ke Schooly. Atau Anda dapat
+                              membuatkan akun Schooly bagi pengguna Anda.
+                            </li>
+                            <li>
+                              Aktifkan akun-akun tersebut pada <Link to="/pengguna-tidakaktif">halaman Pengguna Tidak Aktif</Link>.
+                              Kemudian klik tombol "Aktifkan" untuk mengaktifkan suatu akun
                               atau tombol "Hapus" untuk menghapus suatu akun.
                             </li>
                             <li>
-                              Buat semua kelas yang Anda butuhkan pada halaman
-                              "Kelas", yang dapat ditemukan pada bagian kiri
-                              aplikasi (Anda akan diarahkan ke suatu halaman
-                              yang berisi daftar kelas Anda), kemudian klik
-                              tombol "Buat Kelas".
+                              Buat <Link to="/daftar-mata-pelajaran">halaman Mata Pelajaran
+                              </Link>, kemudian tekan tombol "Buat Mata Pelajaran" untuk membuat
+                              mata pelajarna yang Anda inginkan.
                             </li>
                             <li>
-                              Setelah Anda membuat semua kelas yang Anda
-                              butuhkan, kelompokkan murid-murid dan berikan
-                              peran wali kelas kepada guru-guru yang ada
-                              inginkan. Tombol-tombol tersebut dapat ditemukan
-                              di halaman "Kelas", di samping kanan tombol "Buat
-                              Kelas".
+                              Buat semua kelas-kelas yang Anda butuhkan pada <Link to="/buat-kelas">halaman
+                              Buat Kelas</Link>. Masukkan mata pelajaran apa saja untuk kelas yang bersangkutan.
+                            </li>
+                            <li>
+                              Kelompokkan murid-murid dengan menggunakan tombol "Atur Kelas Murid"
+                              pada <Link to="/daftar-kelas">halaman Kelas</Link>.
+                            </li>
+                            <li>
+                              Atur mata pelajaran dan kelas yang diajar masing-masing guru
+                              pada <Link to="/sunting-guru">halaman Sunting Data Ajar Guru</Link>.
                             </li>
                             <li>
                               Lakukan penyuntingan kelas untuk memberikan peran
                               murid seperti Ketua Kelas, Sekretaris, dan
-                              Bendahara. (Dapat dilakukan juga oleh wali kelas
-                              masing-masing).
+                              Bendahara.
                             </li>
                           </ol>
                         </Typography>
                       </Grid>
                     </Grid>
-                  ) : user.role === "Teacher" ||
-                    user.role === "Student" ? (
-                    <Grid item container spacing={4}>
-                      <Grid item>
-                        <Typography variant="h6" align="justify" gutterBottom>
-                          <b>
-                            Bagaimana cara untuk melengkapi keterangan profil atau
-                            mengubah keterangan profil?
-                          </b>
-                        </Typography>
-                        <Typography  align="justify">
-                          Keterangan akun dapat diubah dengan menekan tombol
-                          "Sunting Profil" pada halaman profil, yang dapat diakses
-                          dengan menekan foto profil pada bagian kanan atas
-                          aplikasi.
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="h6" align="justify" gutterBottom>
-                          <b>Bagaimana cara mengubah foto akun?</b>
-                        </Typography>
-                        <Typography  align="justify">
-                          Foto akun dapat diubah dengan menekan tombol dengan
-                          gambar "Kamera" pada halaman profil, yang dapat diakses
-                          dengan menekan foto profil pada bagian kanan atas
-                          aplikasi.
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  ) : (
+                    ) : (
                     <Grid item>
                       <Typography color="textSecondary">
                         Silahkan masuk untuk mendapatkan bantuan lebih lanjut mengenai topik ini.
@@ -308,23 +361,27 @@ function Help(props) {
                         </b>
                       </Typography>
                       <Typography align="justify">
-                        <ol>
+                        <ol className={classes.list}>
                           <li>
-                            Buka halaman daftar mata pelajaran dengan menekan tombol
-                            "Mata Pelajaran" yang dapat ditemukan pada bagian kiri
-                            aplikasi.
+                            Buka <Link to="/daftar-mata-pelajaran">halaman Mata Pelajaran</Link>.
                           </li>
                           <li>
-                            Klik tombol "Buat Mata Pelajaran" untuk membuat mata pelajaran.
+                            Tekan tombol "Buat Mata Pelajaran" untuk membuat mata pelajaran.
                           </li>
                           <li>
-                            Masukkan nama mata pelajaran yang diinginkan, jika sudah klik tombol
+                            Masukkan nama mata pelajaran yang diinginkan, jika sudah tekan tombol
                             "Buat".
                           </li>
                         </ol>
                       </Typography>
                     </Grid>
-                  ) : null }
+                  ) : (
+                    <Grid item>
+                      <Typography color="textSecondary">
+                        Silahkan masuk untuk mendapatkan bantuan lebih lanjut mengenai topik ini.
+                      </Typography>
+                    </Grid>
+                  )}
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -384,14 +441,12 @@ function Help(props) {
                       <Grid item>
                         <Typography variant="h6" align="justify" gutterBottom>
                           <b>
-                            Apakah mata pelajaran secara spesifik dapat
-                            dilihat?
+                            Apakah mata pelajaran dapat dilihat secara spesifik?
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          Dapat. Mata pelajaran secara spesifik dapat dilihat
-                          dengan membuka panel mata pelajaran dalam suatu
-                          kelas dan menekan tombol "Lihat Mata Pelajaran".
+                          Iya. Mata pelajaran secara spesifik dapat dilihat
+                          dengan menekan panel mata pelajaran yang bersangkutan.
                         </Typography>
                       </Grid>
                     </Grid>
@@ -404,9 +459,8 @@ function Help(props) {
                         </b>
                       </Typography>
                       <Typography align="justify">
-                        Dapat. Guru dapat melihat kelas yang ada dengan
-                        menekan tombol "Kelas" yang dapat ditemukan pada
-                        bagian kiri aplikasi.
+                        Iya. Guru dapat melihat kelas-kelas yang ada pada <Link to="/daftar-kelas">
+                        halaman Kelas</Link>.
                       </Typography>
                     </Grid>
                   ) : user.role === "Admin" ? (
@@ -414,15 +468,14 @@ function Help(props) {
                       <Grid item>
                         <Typography variant="h6" align="justify" gutterBottom>
                           <b>
-                            Apakah keterangan suatu kelas dapat disunting atau
+                            Apakah keterangan suatu kelas dapat disunting dan
                             dihapus?
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          Dapat. Masing-masing kelas yang telah dibuat dapat
-                          disunting dan dihapus pada halaman daftar kelas yang
-                          dapat ditemukan pada dengan menekan tombol "Kelas"
-                          pada bagian kiri aplikasi.
+                          Iya. Setiap kelas yang telah dibuat dapat
+                          disunting dan dihapus pada <Link to="daftar-kelas">halaman Kelas
+                          </Link>.
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -433,12 +486,11 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          Dapat. Murid-murid yang ada pada suatu kelas dapat
-                          diatur dengan menekan tombol "Atur Kelas Murid",
-                          sedangkan wali kelas yang ada dapat diatur dengan
-                          menekan tombol "Atur Wali Kelas". Kedua tombol
-                          tersebut dapat ditemukan di samping tombol "Buat
-                          Kelas".
+                          Iya. Murid-murid yang ada pada suatu kelas dapat
+                          diatur dengan menekan tombol "Atur Kelas Murid"
+                          pada <Link to="/daftar-kelas">halaman Kelas</Link>,
+                          sedangkan wali kelas yang ada dapat diatur
+                          pada halaman <Link to="/atur-walikelas">halaman Atur Wali Kelas</Link>.
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -449,18 +501,18 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          <ol>
+                          <ol className={classes.list}>
                             <li>
-                              Buka halaman daftar kelas dengan menekan tombol
-                              “Kelas” yang dapat ditemukan pada bagian kiri
-                              aplikasi.
+                              Buka <Link to="/daftar-kelas">halaman Kelas</Link>.
                             </li>
-                            <li>Tekan tombol “Atur Kelas Murid”.</li>
                             <li>
-                              Pilih opsi “Export Data Kelas” untuk mengunduh
-                              file data kelas dalam format comma-separated
-                              values (CSV). Untuk memudahkan pembacaan dan
-                              pengubahan isi file, kami menyarankan Anda
+                              Tekan tombol "Atur Kelas Murid”.
+                            </li>
+                            <li>
+                              Tekan tombol “Unduh Data Kelas” untuk mengunduh
+                              file data kelas dalam format <i>Comma-Separated
+                              Values</i> (CSV). Untuk memudahkan pembacaan dan
+                              pengubahan isi file, disarankan untuk
                               menggunakan aplikasi spreadsheet yang dapat
                               menampilkan isi file CSV dalam bentuk tabular.
                             </li>
@@ -468,12 +520,11 @@ function Help(props) {
                             <li>
                               Baris pertama file data kelas berisi semua nama
                               kelas, sedangkan baris dua dan seterusnya berisi
-                              username email murid. Username email milik murid
-                              yang ditempatkan pada suatu kelas akan berada
-                              pada kolom kelas tersebut, sedangkan username
-                              email murid yang belum ditempatkan ke kelas
-                              manapun akan berada pada kolom “belum
-                              ditempatkan”. Untuk memindahkan murid, pindahkan
+                              email murid. Email milik murid yang ditempatkan
+                              pada suatu kelas akan berada pada kolom kelas tersebut,
+                              sedangkan username email murid yang belum ditempatkan ke kelas
+                              manapun akan berada pada kolom “Belum
+                              Ditempatkan”. Untuk memindahkan murid, pindahkan
                               username email setiap murid yang ingin
                               dipindahkan ke kolom kelas yang sesuai.
                             </li>
@@ -485,11 +536,9 @@ function Help(props) {
                               Kembali ke halaman daftar kelas. Tekan tombol
                               “Atur Kelas Murid”.
                             </li>
-                            <li>Pilih opsi “Import Data Kelas”.</li>
                             <li>
-                              Pada kotak dialog yang terbuka, pilih file data
-                              kelas dari langkah sebelumnya, lalu tekan tombol
-                              “Open”.
+                              Tekan tombol “Unggah Data Kelas” untuk mengunggah
+                              data kelas yang terbaru.
                             </li>
                           </ol>
                         </Typography>
@@ -559,7 +608,48 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          <ol>
+                          <ol className={classes.list}>
+                            <li>
+                              Buka <Link to="/buat-pengumuman">halaman Buat Pengumuman
+                              </Link>.
+                            </li>
+                            <li>
+                              Lengkapi pengumuman dengan keterangan seperti
+                              deskripsi dan/atau lampiran berkas.
+                            </li>
+                            <li>
+                              Tekan tombol buat untuk menyelesaikan pembuatan
+                              pengumuman.
+                            </li>
+                          </ol>
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>
+                            Apakah pengumuman yang dibuat dapat disunting dan
+                            dihapus?
+                          </b>
+                        </Typography>
+                        <Typography align="justify">
+                          Iya. Pengumuman yang telah dibuat dapat disunting
+                          dan dihapus pada <Link to="/daftar-pengumuman">halaman Pengumuman</Link>,
+                          dengan cara menekan tombol "Sunting" untuk menyunting suatu
+                          pengumuman dan menekan tombol "Hapus" untuk menghapus suatu
+                          pengumuman. Penyuntingan dan penghapusan suatu pengumuman juga
+                          dapat dilakukan dengan membuka halaman masing-masing pengumuman,
+                          baru menyunting ataupun menghapus pengumuman tersebut.
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  ) : user.role === "Admin" ? (
+                    <Grid item container spacing={4}>
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>Bagaimana cara untuk membuat suatu pengumuman?</b>
+                        </Typography>
+                        <Typography>
+                          <ol className={classes.list}>
                             <li>
                               Buka halaman daftar pengumuman dengan menekan
                               tombol "Pengumuman" yang dapat ditemukan pada
@@ -573,56 +663,30 @@ function Help(props) {
                               Lengkapi pengumuman dengan keterangan seperti
                               deskripsi dan/atau lampiran berkas.
                             </li>
+                            <li>
+                              Pilih pihak yang ingin ditujukkan, murid saja,
+                              guru saja, ataupun keduanya.
+                            </li>
                           </ol>
                         </Typography>
                       </Grid>
                       <Grid item>
                         <Typography variant="h6" align="justify" gutterBottom>
                           <b>
-                            Apakah pengumuman yang dibuat dapat disunting atau
+                            Apakah pengumuman yang dibuat dapat disunting dan
                             dihapus?
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          Dapat. Pengumuman yang telah dibuat dapat disunting
-                          atau dihapus pada halaman daftar pengumuman, dengan
-                          cara menekan tombol "Hapus" untuk menghapus suatu
-                          pengumuman atau menekan tombol "Sunting" untuk
-                          menyunting suatu pengumuman. Atau dengan menekan
-                          tombol "Lihat Lebih Lanjut" untuk melihat hasil
-                          pengumuman yang telah dibuat, kemudian pada bagian
-                          bawah halaman tersebut tekan tombol "Hapus" untuk
-                          menghapus pengumuman tersebut atau tekan tombol
-                          "Sunting" untuk menyunting pengumuman tersebut.
+                          Iya. Pengumuman yang telah dibuat dapat disunting
+                          dan dihapus pada <Link to="/daftar-pengumuman">halaman Pengumuman</Link>,
+                          dengan cara menekan tombol "Sunting" untuk menyunting suatu
+                          pengumuman dan menekan tombol "Hapus" untuk menghapus suatu
+                          pengumuman. Penyuntingan dan penghapusan suatu pengumuman juga
+                          dapat dilakukan dengan membuka halaman masing-masing pengumuman,
+                          baru menyunting ataupun menghapus pengumuman tersebut.
                         </Typography>
                       </Grid>
-                    </Grid>
-                  ) : user.role === "Admin" ? (
-                    <Grid item>
-                      <Typography variant="h6" align="justify" gutterBottom>
-                        <b>Bagaimana cara untuk membuat suatu pengumuman?</b>
-                      </Typography>
-                      <Typography>
-                        <ol>
-                          <li>
-                            Buka halaman daftar pengumuman dengan menekan
-                            tombol "Pengumuman" yang dapat ditemukan pada
-                            bagian kiri aplikasi.
-                          </li>
-                          <li>
-                            Klik tombol "Buat Pengumuman" untuk membuat
-                            pengumuman.
-                          </li>
-                          <li>
-                            Lengkapi pengumuman dengan keterangan seperti
-                            deskripsi dan/atau lampiran berkas.
-                          </li>
-                          <li>
-                            Pilih pihak yang ingin ditujukkan, murid saja,
-                            guru saja, ataupun keduanya.
-                          </li>
-                        </ol>
-                      </Typography>
                     </Grid>
                   ) : (
                     <Grid item>
@@ -664,26 +728,25 @@ function Help(props) {
                       materi, mata pelajaran, dan lampiran berkas.
                     </Typography>
                   </Grid>
-                  {user.role === "Student" ? null : user.role ===
-                    "Teacher" ? (
+                  {user.role === "Student" ? null : user.role === "Teacher" ? (
                     <Grid item container spacing={4}>
                       <Grid item>
                         <Typography variant="h6" align="justify" gutterBottom>
                           <b>Bagaimana cara untuk membuat suatu materi?</b>
                         </Typography>
                         <Typography align="justify">
-                          <ol>
+                          <ol className={classes.list}>
                             <li>
-                              Buka halaman daftar materi dengan menekan tombol
-                              "Materi" yang dapat ditemukan pada bagian kiri
-                              aplikasi.
-                            </li>
-                            <li>
-                              Klik tombol "Buat Materi" untuk membuat materi.
+                              Buka <Link to="/buat-materi">halaman Buat Materi
+                              </Link>.
                             </li>
                             <li>
                               Lengkapi materi dengan keterangan seperti
                               deskripsi, mata pelajaran, dan lampiran berkas.
+                            </li>
+                            <li>
+                              Tekan tombol buat untuk menyelesaikan pembuatan
+                              materi.
                             </li>
                           </ol>
                         </Typography>
@@ -691,32 +754,29 @@ function Help(props) {
                       <Grid item>
                         <Typography variant="h6" align="justify" gutterBottom>
                           <b>
-                            Apakah materi yang dibuat dapat disunting atau
+                            Apakah materi yang dibuat dapat disunting dan
                             dihapus?
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          Dapat. Materi yang telah dibuat dapat disunting atau
-                          dihapus pada halaman daftar materi, dengan cara
-                          menekan tombol "Hapus" untuk menghapus suatu
-                          pengumuman atau menekan tombol "Sunting" untuk
-                          menyunting suatu materi. Atau dengan menekan tombol
-                          "Lihat Lebih Lanjut" untuk melihat hasil materi yang
-                          telah dibuat, kemudian pada bagian bawah halaman
-                          tersebut tekan tombol "Hapus" untuk menghapus materi
-                          tersebut atau tekan tombol "Sunting" untuk
-                          menyunting materi tersebut.
+                          Iya. Materi yang telah dibuat dapat disunting
+                          dan dihapus pada <Link to="/daftar-materi">halaman Materi</Link>,
+                          dengan cara menekan tombol "Sunting" untuk menyunting suatu
+                          materi dan menekan tombol "Hapus" untuk menghapus suatu
+                          materi. Penyuntingan dan penghapusan suatu materi juga
+                          dapat dilakukan dengan membuka halaman masing-masing materi,
+                          baru menyunting ataupun menghapus materi tersebut.
                         </Typography>
                       </Grid>
                       <Grid item>
                         <Typography variant="h6" align="justify" gutterBottom>
                           <b>
-                            Siapa saja yang dapat menyunting atau menghapus
+                            Siapa saja yang dapat menyunting dan menghapus
                             suatu materi?
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          Suatu materi hanya dapat disunting atau dihapus oleh
+                          Suatu materi hanya dapat disunting dan dihapus oleh
                           guru yang membuat materi tersebut.
                         </Typography>
                       </Grid>
@@ -730,7 +790,7 @@ function Help(props) {
                         </b>
                       </Typography>
                       <Typography align="justify">
-                        Tidak, akun pengelola tidak memiliki wewenang akan
+                        Tidak. Akun pengelola tidak memiliki wewenang akan
                         materi apapun. Suatu materi hanya dapat diubah oleh
                         guru yang membuat materi tersebut.
                       </Typography>
@@ -783,7 +843,7 @@ function Help(props) {
                           <b>Bagaimana cara untuk mengumpulkan tugas?</b>
                         </Typography>
                         <Typography align="justify">
-                          <ol>
+                          <ol className={classes.list}>
                             <li>
                               Tekan tombol "Pilih File" pada halaman tugas
                               yang bersangkutan.
@@ -791,7 +851,7 @@ function Help(props) {
                             <li>
                               Pilih file-file yang ingin Anda kumpulkan.
                               <br />
-                              Tips: Tahan tombol "CTRL" dan menekan klik kiri
+                              Tips: Tahan tombol "CTRL" pada keyboard dan klik kiri
                               pada mouse untuk memilih file dalam jumlah
                               banyak.
                             </li>
@@ -802,7 +862,7 @@ function Help(props) {
                             <li>
                               Tekan tombol "Kumpul Tugas" untuk mengunggah
                               file Anda. File Anda yang terkumpul akan muncul
-                              pada daftar di bagian hasil pekeraan.
+                              pada daftar di bagian hasil pekerjaan.
                             </li>
                           </ol>
                         </Typography>
@@ -815,10 +875,10 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          Dapat. File yang sudah dikumpulkan dapat diunduh
+                          Iya. File yang sudah dikumpulkan dapat diunduh
                           dengan menekan tombol unduh pada file tersebut dan
                           dapat dihapus dengan menekan tombol hapus pada file
-                          tersebut. Perlu diperhatikan apabila suatu file yang
+                          tersebut. Perlu diperhatikan apabila <u>suatu file</u> yang
                           diunggah setelah batas waktu terlewati akan dianggap
                           sebagai telat.
                         </Typography>
@@ -831,18 +891,18 @@ function Help(props) {
                           <b>Bagaimana cara untuk membuat suatu tugas?</b>
                         </Typography>
                         <Typography align="justify">
-                          <ol>
+                          <ol className={classes.list}>
                             <li>
-                              Buka halaman daftar tugas dengan menekan tombol
-                              "Tugas" yang dapat ditemukan pada bagian kiri
-                              aplikasi.
-                            </li>
-                            <li>
-                              Klik tombol "Buat Tugas" untuk membuat tugas.
+                              Buka <Link to="/buat-tugas">halaman Buat Tugas
+                              </Link>.
                             </li>
                             <li>
                               Lengkapi tugas dengan keterangan seperti
                               deskripsi, batas waktu, dan lampiran berkas.
+                            </li>
+                            <li>
+                              Tekan tombol buat untuk menyelesaikan pembuatan
+                              tugas.
                             </li>
                           </ol>
                         </Typography>
@@ -850,32 +910,29 @@ function Help(props) {
                       <Grid item>
                         <Typography variant="h6" align="justify" gutterBottom>
                           <b>
-                            Apakah tugas yang dibuat dapat disunting atau
+                            Apakah tugas yang dibuat dapat disunting dan
                             dihapus?
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          Dapat. Tugas yang telah dibuat dapat disunting atau
-                          dihapus pada halaman daftar tugas, dengan cara
-                          menekan tombol "Hapus" untuk menghapus suatu tugas
-                          atau menekan tombol "Sunting" untuk menyunting suatu
-                          tugas. Atau dengan menekan tombol "Lihat Lebih
-                          Lanjut" untuk melihat hasil tugas yang telah dibuat,
-                          kemudian pada bagian bawah halaman tersebut tekan
-                          tombol "Hapus" untuk menghapus tugas tersebut atau
-                          tekan tombol "Sunting" untuk menyunting tugas
-                          tersebut.
+                          Iya. Tugas yang telah dibuat dapat disunting
+                          dan dihapus pada <Link to="/daftar-tugas">halaman Materi</Link>,
+                          dengan cara menekan tombol "Sunting" untuk menyunting suatu
+                          tugas dan menekan tombol "Hapus" untuk menghapus suatu
+                          tugas. Penyuntingan dan penghapusan suatu tugas juga
+                          dapat dilakukan dengan membuka halaman masing-masing tugas,
+                          baru menyunting ataupun menghapus tugas tersebut.
                         </Typography>
                       </Grid>
                       <Grid item>
                         <Typography variant="h6" align="justify" gutterBottom>
                           <b>
-                            Siapa saja yang dapat menyunting atau menghapus
+                            Siapa saja yang dapat menyunting dan menghapus
                             suatu tugas?
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          Suatu tugas hanya dapat disunting atau dihapus oleh
+                          Suatu tugas hanya dapat disunting dan dihapus oleh
                           guru yang membuat tugas tersebut.
                         </Typography>
                       </Grid>
@@ -889,7 +946,7 @@ function Help(props) {
                         </b>
                       </Typography>
                       <Typography align="justify">
-                        Tidak, akun pengelola tidak memiliki wewenang akan
+                        Tidak. Akun pengelola tidak memiliki wewenang akan
                         tugas apapun. Suatu tugas hanya dapat diubah oleh guru
                         yang membuat tugas tersebut.
                       </Typography>
@@ -956,10 +1013,11 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography>
-                          <ol>
+                          <ol className={classes.list}>
                             <li>
                               Lihat waktu mulai pengerjaan dari kuis dan ujian
-                              yang bersangkutan.
+                              yang bersangkutan pada <Link to="/daftar-kuis">halaman
+                              Kuis</Link> dan <Link to="/daftar-ujian"> halaman Ujian</Link>.
                             </li>
                             <li>
                               Beberapa waktu sebelum mulai, guru pemberi
@@ -971,6 +1029,74 @@ function Help(props) {
                               diberikan.
                             </li>
                           </ol>
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>
+                            Bagaimana sistem penilaian soal jenis pilihan ganda?
+                          </b>
+                        </Typography>
+                        <Typography align="justify">
+                          Setiap soal yang dijawab benar, murid akan mendapatkan poin
+                          sebesar bobot untuk soal pilihan ganda tersebut.
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>
+                            Bagaimana sistem penilaian soal jenis kotak
+                            centang?
+                          </b>
+                        </Typography>
+                        <Typography align="justify">
+                          Untuk setiap pilihan yang di jawab benar, murid
+                          mendapat +1 poin per jumlah pilihan yang benar.
+                          Untuk setiap pilihan yang di jawab salah, murid
+                          mendapatkan penailti -2 poin per jumlah pilihan yang
+                          benar. Untuk pilihan yang seharusnya benar namun
+                          dikosongkan, murid tidak mendapatkan poin (0 poin).
+                          Kemudian poin tersebut dijumlahkan dan dikalikan
+                          dengan nilai bobot 1 soal untuk soal jenis kotak
+                          centang. <br />
+                          <b>Contoh:</b> Terdapat suatu soal dengan 5 pilihan yaitu
+                          A, B, C, D, dan E, dimana 4 pilihannya benar yaitu
+                          A, B, C, dan D. Asumsi soal tersebut memiliki bobot
+                          5 poin per soalnya. Murid menjawab A, B, C, dan E
+                          sebagai pilihan yang benar. <br />
+                          Karena terdapat 3 pilihan yang benar dijawab yaitu
+                          A, B, dan C, maka murid mendapatkan 3 poin. Pilihan
+                          D yang dikosongkan tidak memberikan poin apa-apa (0
+                          poin). Pilihan E yang seharusnya tidak dijawab namun
+                          dijawab memberikan penalti sebesar -2 poin. Kemudian
+                          poin-poin ini ditotalkan menjadi 1 poin dibagi
+                          dengan jumlah pilihan yang benar yaitu 4 pilihan,
+                          menjadi 0,25. Kemudian nilai ini dikallikan bobot
+                          soal tersebut yaitu 5, menghasilkan 1,25. <br />
+                          Kesimpulan, murid mendapatkan 1,25 poin dari 5 poin.
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>
+                            Bagaimana sistem penilaian soal jenis isian pendek?
+                          </b>
+                        </Typography>
+                        <Typography align="justify">
+                          Untuk setiap isian pendek yang dijawab benar, murid akan
+                          mendapatkan poin sebesar jumlah isian yang benar dibagi dengan
+                          jumlah isian dikalikan bobot untuk soal isian pendek tersebut.
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>
+                            Bagaimana sistem penilaian soal jenis uraian?
+                          </b>
+                        </Typography>
+                        <Typography align="justify">
+                          Penilaian soal jenis uraian dilakukan secara objektif
+                          oleh Guru yang bersangkutan.
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -995,28 +1121,28 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          <ol>
+                          <ol className={classes.list}>
                             <li>
-                              Buka halaman daftar kuis atau daftar ujian
-                              dengan menekan tombol "Kuis" atau tombol "Ujian"
-                              yang dapat ditemukan pada bagian kiri aplikasi.
+                              Buka <Link to="/buat-kuis">halaman Buat Kuis</Link> untuk
+                              membuat kuis atau <Link to="/buat-ujian">halaman Buat Ujian
+                              </Link> untuk membuat ujian.
                             </li>
                             <li>
-                              Klik tombol "Buat Kuis/Ujian" untuk membuat
-                              kuis dan ujian.
-                            </li>
-                            <li>
-                              Lengkapi kuis dan ujian dengan keterangan seperti
+                              Lengkapi kuis atau ujian dengan keterangan seperti
                               deskripsi, mata pelajaran, waktu mulai
                               pengerjaan, dan waktu selesai pengerjaan.
                             </li>
                             <li>
-                              Pilih tipe penilaian apakah sebagai kuis atau
-                              ujian.
-                            </li>
-                            <li>
                               Buat soal yang Anda inginkan sesuai dengan jenis
                               soal yang tersedia.
+                            </li>
+                            <li>
+                              Jangan lupa untuk menampilkan kuis atau ujian yang telah dibuat
+                              jika sudah yakin melengkapi deskripsi dan waktu pelaksanaannya.
+                            </li>
+                            <li>
+                              Tekan tombol buat untuk menyelesaikan pembuatan
+                              kuis atau ujian.
                             </li>
                           </ol>
                         </Typography>
@@ -1024,33 +1150,30 @@ function Help(props) {
                       <Grid item>
                         <Typography variant="h6" align="justify" gutterBottom>
                           <b>
-                            Apakah kuis dan ujian yang dibuat dapat disunting atau
+                            Apakah kuis atau ujian yang dibuat dapat disunting dan
                             dihapus?
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          Dapat. Kuis/ujian yang telah dibuat dapat disunting
-                          atau dihapus pada halaman daftar kuis atau daftar
-                          ujian, dengan cara menekan tombol "Hapus" untuk
-                          menghapus suatu kuis dan ujian atau menekan tombol
-                          "Sunting" untuk menyunting suatu kuis dan ujian. Atau
-                          dengan menekan tombol "Lihat Lebih Lanjut" untuk
-                          melihat hasil kuis dan ujian yang telah dibuat, kemudian
-                          pada bagian bawah halaman tersebut tekan tombol
-                          "Hapus" untuk menghapus kuis dan ujian tersebut atau
-                          tekan tombol "Sunting" untuk menyunting kuis dan ujian
-                          tersebut.
+                          Iya. Kuis dan ujian yang telah dibuat dapat disunting
+                          dan dihapus pada <Link to="/daftar-kuis">halaman Kuis
+                          </Link> dan <Link to="/daftar-ujian">halaman Ujian</Link>,
+                          dengan cara menekan tombol "Sunting" untuk menyunting suatu
+                          kuis atau ujian dan menekan tombol "Hapus" untuk menghapus suatu
+                          kuis atau ujian. Penyuntingan dan penghapusan suatu kuis dan ujian juga
+                          dapat dilakukan dengan membuka halaman masing-masing kuis atau ujian,
+                          baru menyunting ataupun menghapus kuis atau ujian tersebut.
                         </Typography>
                       </Grid>
                       <Grid item>
                         <Typography variant="h6" align="justify" gutterBottom>
                           <b>
-                            Siapa saja yang dapat menyunting atau menghapus
+                            Siapa saja yang dapat menyunting dan menghapus
                             suatu kuis dan ujian?
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          Suatu kuis dan ujian hanya dapat disunting atau dihapus
+                          Suatu kuis dan ujian hanya dapat disunting dan dihapus
                           oleh guru yang membuat kuis dan ujian tersebut.
                         </Typography>
                       </Grid>
@@ -1059,10 +1182,9 @@ function Help(props) {
                           <b>Bagaimana cara menambahkan soal baru?</b>
                         </Typography>
                         <Typography>
-                          Pada halaman paling bawah "Buat Kuis/Ujian" atau
-                          "Sunting Kuis/Ujian" terdapat 4 buah tombol "Tambah
-                          Soal" untuk masing-masing jenis soal. Tambahkan soal
-                          sesuai keinginan.
+                          Pada bagian bawah halaman kuis atau ujian yang bersangkutan
+                          terdapat 4 buah tombol "Tambah Soal" untuk masing-masing jenis soal.
+                          Tambahkan soal sesuai keinginan.
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -1075,6 +1197,17 @@ function Help(props) {
                           Jenis soal pilihan ganda, kotak centang, dan isilah
                           dinilai secara otomatis. Sedangkan untuk jenis soal
                           uraian harus diperiksa secara manual.
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>
+                            Bagaimana sistem penilaian soal jenis pilihan ganda?
+                          </b>
+                        </Typography>
+                        <Typography align="justify">
+                          Setiap soal yang dijawab benar, murid akan mendapatkan poin
+                          sebesar bobot untuk soal pilihan ganda tersebut.
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -1094,7 +1227,7 @@ function Help(props) {
                           Kemudian poin tersebut dijumlahkan dan dikalikan
                           dengan nilai bobot 1 soal untuk soal jenis kotak
                           centang. <br />
-                          Contoh: Terdapat suatu soal dengan 5 pilihan yaitu
+                          <b>Contoh:</b> Terdapat suatu soal dengan 5 pilihan yaitu
                           A, B, C, D, dan E, dimana 4 pilihannya benar yaitu
                           A, B, C, dan D. Asumsi soal tersebut memiliki bobot
                           5 poin per soalnya. Murid menjawab A, B, C, dan E
@@ -1106,9 +1239,32 @@ function Help(props) {
                           dijawab memberikan penalti sebesar -2 poin. Kemudian
                           poin-poin ini ditotalkan menjadi 1 poin dibagi
                           dengan jumlah pilihan yang benar yaitu 4 pilihan,
-                          menjadi 1/4. Kemudian nilai ini dikallikan bobot
-                          soal tersebut yaitu 5, menghasilkan 1.25. <br />
-                          Kesimpulan, murid mendapatkan 1.25 poin dari 5 poin.
+                          menjadi 0,25. Kemudian nilai ini dikallikan bobot
+                          soal tersebut yaitu 5, menghasilkan 1,25. <br />
+                          Kesimpulan, murid mendapatkan 1,25 poin dari 5 poin.
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>
+                            Bagaimana sistem penilaian soal jenis isian pendek?
+                          </b>
+                        </Typography>
+                        <Typography align="justify">
+                          Untuk setiap isian pendek yang dijawab benar, murid akan
+                          mendapatkan poin sebesar jumlah isian yang benar dibagi dengan
+                          jumlah isian dikalikan bobot untuk soal isian pendek tersebut.
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h6" align="justify" gutterBottom>
+                          <b>
+                            Bagaimana sistem penilaian soal jenis uraian?
+                          </b>
+                        </Typography>
+                        <Typography align="justify">
+                          Penilaian soal jenis uraian dilakukan secara objektif
+                          oleh Guru yang bersangkutan.
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -1116,9 +1272,9 @@ function Help(props) {
                           <b>Apakah suatu soal dapat dilampirkan gambar?</b>
                         </Typography>
                         <Typography align="justify">
-                          Dapat. Suatu soal dapat dilampirkan gambar dengan
+                          Iya. Suatu soal dapat dilampirkan gambar dengan
                           menekan tombol "Tambahkan Gambar" pada bagian kanan
-                          soal.
+                          sebuah soal.
                         </Typography>
                       </Grid>
                     </Grid>
@@ -1131,7 +1287,7 @@ function Help(props) {
                         </b>
                       </Typography>
                       <Typography align="justify">
-                        Tidak, akun pengelola tidak memiliki wewenang akan
+                        Tidak. Akun pengelola tidak memiliki wewenang akan
                         kuis dan ujian apapun. Suatu kuis dan ujian hanya dapat diubah
                         oleh guru yang membuat kuis dan ujian tersebut.
                       </Typography>
@@ -1167,23 +1323,7 @@ function Help(props) {
                     </Typography>
                   </Grid>
                   {user.role === "Student" ? (
-                    <Grid item>
-                      <Typography variant="h6" align="justify" gutterBottom>
-                        <b>Bagaimana cara untuk melihat rapor?</b>
-                      </Typography>
-                      <Typography align="justify">
-                        <ol>
-                          <li>
-                            Buka halaman profil Anda, dengan menekan tombol
-                            foto anda pada bagian kanan atas aplikasi dan
-                            tekan tombol "Profil Saya".
-                          </li>
-                          <li>
-                            Tekan tombol "Lihat Rapor" untuk melihat rapor.
-                          </li>
-                        </ol>
-                      </Typography>
-                    </Grid>
+                    null
                   ) : user.role === "Teacher" ? (
                     <Grid item container spacing={4}>
                       <Grid item>
@@ -1207,7 +1347,7 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          Dapat. Guru dengan peran wali kelas dapat melihat
+                          Iya. Guru dengan peran wali kelas dapat melihat
                           semua nilai mata pelajaran dari murid pada kelasnya.
                         </Typography>
                       </Grid>
