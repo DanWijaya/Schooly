@@ -192,7 +192,15 @@ function WorkFile(props) {
     file_type,
     onDownloadFile,
     onPreviewFile,
+    isLate
   } = props;
+
+  let name_to_show;
+  if(isLate){
+    name_to_show = <Typography color="error"> {`${file_name} (TELAT)` }</Typography>
+  } else {
+    name_to_show = <Typography color="textPrimary"> {file_name}</Typography>
+  }
 
   return (
     <Paper variant="outlined" className={classes.listItemPaper}>
@@ -236,11 +244,7 @@ function WorkFile(props) {
           ) : null}
         </ListItemAvatar>
         <ListItemText
-          primary={
-            <Typography variant="h6" color="textPrimary">
-              {file_name}
-            </Typography>
-          }
+          primary={name_to_show}
           secondary={
             <Typography variant="body2" color="textSecondary">
               {file_type}
@@ -598,15 +602,23 @@ function SubmittedTaskList(props) {
 
           if (students_files.length > 0) {
             isClassSubmissionEmpty = false;
-            task_list_on_panel = students_files.map((file) => (
+            let isLate = false;
+            task_list_on_panel = students_files.map((file) => {
+              if(file.createdAt > tasksCollection.deadline){
+                isLate=true;
+              }
+              console.log("Ini filenya:", file);
+              return (
               <WorkFile
+                isLate={isLate}
                 file_id={file._id}
                 file_name={file.filename}
                 file_type={fileType(file.filename)}
                 onPreviewFile={viewFileSubmitTasks}
                 // onDownloadFile={onDownloadFile}
               />
-            ));
+            );
+          })
           } else {
             task_list_on_panel = [
               <Typography
