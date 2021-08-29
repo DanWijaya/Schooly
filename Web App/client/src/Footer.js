@@ -1,5 +1,5 @@
 import React from "react";
-import schoolySymbolLogo from "../../../images/SchoolySymbolLogo.png";
+import schoolySymbolLogo from "./images/SchoolySymbolLogo.png";
 import { Divider, Grid, Hidden, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";

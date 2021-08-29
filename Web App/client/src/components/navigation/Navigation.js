@@ -1,8 +1,8 @@
-import React, {useState} from 'react'
-import NavBar from '../nav-bar/NavBar'
-import SideDrawer from '../side-drawer/SideDrawer'
+import React, {useState} from "react"
+import NavBar from "./nav-bar/NavBar"
+import SideDrawer from "./side-drawer/SideDrawer"
 
-function Combined(props) {
+function Navigation(props) {
     const {showNavBar, sideDrawerExist } = props;
     // const [showNavBar, setShowNavBar] = useState(true);
     // const [sideDrawerExist, setSideDrawerExist] = useState(true);
@@ -19,7 +19,7 @@ function Combined(props) {
 
     return (
         <>
-        {showNavBar ? 
+        {showNavBar ?
          <NavBar
           handleDrawerDesktop={handleDrawerDesktop}
           handleDrawerMobile={handleDrawerMobile}
@@ -27,7 +27,7 @@ function Combined(props) {
           assessmentState={localStorage.getItem(`status`)}
         /> : null }
 
-        {sideDrawerExist && localStorage.getItem(`status`) !== "ujian" ? 
+        {sideDrawerExist && localStorage.getItem(`status`) !== "ujian" ?
          <SideDrawer
           mobileOpen={mobileOpen}
           desktopOpen={desktopOpen}
@@ -38,4 +38,4 @@ function Combined(props) {
     )
 }
 
-export default Combined;
+export default Navigation;

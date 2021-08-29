@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { logoutUser } from "../../../actions/UserActions";
 import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
-
-import LightTooltip from "../light-tooltip/LightTooltip";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Grid,

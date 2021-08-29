@@ -7,9 +7,12 @@ import store from "./Store";
 import { setCurrentUser, logoutUser,
   // setDropboxToken,
 } from "./actions/UserActions";
-import PrivateRoute from "./components/private-route/PrivateRoute";
-import { ThemeProvider } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
+import { ThemeProvider } from "@material-ui/core/styles";
+import Footer from "./Footer";
+import Navigation from "./components/navigation/Navigation";
+import PrivateRoute from "./components/private-route/PrivateRoute";
+import { Styles } from "./Styles";
 //Auth
 import Register from "./components/auth/register/Register";
 import Login from "./components/auth/login/Login";
@@ -27,13 +30,8 @@ import PrivacyPolicy from "./components/layout/legal/privacy-policy/PrivacyPolic
 import NotFound from "./components/layout/error/error404/NotFound";
 import ProblemEncountered from "./components/layout/error/error500/ProblemEncountered";
 //Misc
-import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
-import NavBar from "./components/misc/nav-bar/NavBar";
-import SideDrawer from "./components/misc/side-drawer/SideDrawer";
-import Footer from "./components/misc/footer/Footer";
 import ProgressIndicator from "./components/misc/progress-indicator/ProgressIndicator";
 import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
-import Combined from "./components/misc/combined-navigation/Combined";
 //Class
 import CreateClass from "./components/objects/classes/CreateClass";
 import EditClass from "./components/objects/classes/EditClass";
@@ -164,14 +162,14 @@ class App extends Component {
     return (
       <div>
         <Provider store={store}>
-          <ThemeProvider theme={globalStyles}>
+          <ThemeProvider theme={Styles}>
             <Router>
               <ScrollToTop />
               <div style={{ display: "flex" }}>
                 {this.state.showProgressIndicator ? (
                   <ProgressIndicator />
                 ) : null}
-                <Combined
+                <Navigation
                   showNavBar={this.state.showNavBar}
                   sideDrawerExist={this.state.sideDrawerExist}/>
                 {/* {this.state.showNavBar ? (
