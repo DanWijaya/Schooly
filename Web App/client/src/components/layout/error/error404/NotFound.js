@@ -19,9 +19,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     backgroundImage: `url(${notFoundBackground})`,
     backgroundPosition: "bottom",
+    backgroundOrigin: "content-box",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
     margin: "auto",
+    padding: "0px 5px 0px 5px",
     height: "350px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
@@ -29,8 +31,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   notFoundText: {
+    paddingLeft: "20px",
+    paddingRight: "20px",
     color: "white",
-    fontFamily: "Arial",
   },
   buttonContainer: {
     display: "flex",
@@ -60,7 +63,7 @@ function NotFound(props) {
             <b>ERROR 404</b>
           </Typography>
           <Typography variant="h5" className={classes.notFoundText}>
-            Maaf, halaman ini tidak ditemukan
+            Halaman ini tidak ditemukan
           </Typography>
         </div>
       </div>

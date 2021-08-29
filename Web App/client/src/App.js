@@ -548,7 +548,7 @@ class App extends Component {
                       {/*prototype*/}
                       {/*<Route exact path="/csv" component={CSV} />*/}
                       {/* Route Event */}
-                      <PrivateRoute 
+                      <PrivateRoute
                       exact
                       access={["Admin"]}
                       path="/bulk-register"
