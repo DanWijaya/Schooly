@@ -83,14 +83,6 @@ import CreateUnit from "./components/objects/superadmin-only/CreateUnit";
 import EditUnit from "./components/objects/superadmin-only/CreateUnit";
 
 
-//Prototypes
-import CSV from "./prototypes/contoh-tugas/CSV";
-import Graph from "./prototypes/Graph";
-import Timer from "./prototypes/Timer";
-import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
-import { Fragment } from "react";
-import ScheduleCalendar from "./prototypes/schedule-calendar/ScheduleCalendar";
-
 
 
 //Dropbox
