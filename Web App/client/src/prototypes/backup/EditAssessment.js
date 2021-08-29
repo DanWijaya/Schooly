@@ -885,7 +885,7 @@ class EditAssessment extends Component {
           },
         },
         "&$focusVisible $thumb": {
-          color: "#52d869",
+          color: "#52D869",
           border: "6px solid #fff",
         },
       },

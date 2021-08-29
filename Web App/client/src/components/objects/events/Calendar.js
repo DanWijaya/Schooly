@@ -93,7 +93,7 @@ import {
 } from "../../../actions/files/FileEventActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getStudents, getTeachers } from "../../../actions/UserActions";
-import { getTasks, getAllTask } from "../../../actions/TaskActions";
+import { getTasksBySubjectClass, getAllTask } from "../../../actions/TaskActions";
 import {
   getAssessments,
   getAllAssessments,
@@ -167,17 +167,17 @@ const useStyles = makeStyles((theme) => ({
     border: "none",
   },
   dayAgendaContainer: {
-    display: "flex", 
-    flexDirection: "column", 
+    display: "flex",
+    flexDirection: "column",
     height: "600px",
     overflow: "auto",
     flex: 1,
   },
   dayTableCell: {
-    display: "flex", 
-    flexDirection: "row", 
-    alignItems: "center", 
-    borderBottom: "none", 
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottom: "none",
     overflow: "none"
   },
   todayTile: {
@@ -224,7 +224,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   holidayTile: {
-    color: "#d10000",
+    color: "#D10000",
     "&:hover": {
       display: "flex",
       justifyContent: "center",
@@ -246,7 +246,7 @@ const useStyles = makeStyles((theme) => ({
   monthDateTile: {
     padding: "2px 5px",
     "&:focus, &:hover, &:active": {
-      background: "#e6e6e6",
+      background: "#E6E6E6",
       cursor: "pointer"
     },
   },
@@ -254,7 +254,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px 5px",
     background: "#C9DCFD",
     "&:focus, &:hover, &:active": {
-      background: "#e6e6e6",
+      background: "#E6E6E6",
       cursor: "pointer"
     },
   },
@@ -263,7 +263,7 @@ const useStyles = makeStyles((theme) => ({
     background: "#195DE5",
     color: "white",
     "&:focus, &:hover, &:active": {
-      background: "#e6e6e6",
+      background: "#E6E6E6",
       cursor: "pointer"
     },
     marginBlockStart: 0,
@@ -271,10 +271,10 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px 4px"
   },
   holidayMonthDateTile: {
-    color: "#d10000",
+    color: "#D10000",
     padding: "2px 5px",
     "&:focus, &:hover, &:active": {
-      background: "#e6e6e6",
+      background: "#E6E6E6",
       cursor: "pointer"
     },
   },
@@ -282,8 +282,8 @@ const useStyles = makeStyles((theme) => ({
     width: "14.2875%",
     maxWidth: "14.2875%",
     minWidth: "14.2875%",
-    border: "1px solid rgba(224, 224, 224, 1)", 
-    verticalAlign: "top", 
+    border: "1px solid rgba(224, 224, 224, 1)",
+    verticalAlign: "top",
     padding: "10px 3px"
   },
   monthAgendaChip: {
@@ -312,7 +312,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "100%",
   },
   moreMonthAgendaChip: {
-    background: "#e6e6e6",
+    background: "#E6E6E6",
     padding: "2px 3px",
     borderRadius: "4px",
     margin: "2px 0",
@@ -463,7 +463,7 @@ function AgendaToolbar(props) {
       let nextMonthDate;
       if (currentDate.getMonth() === 11) {
         nextMonthDate = new Date(currentDate.getFullYear() + 1, 0, currentDate.getDate());
-      } 
+      }
       else {
         nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, currentDate.getDate());
       }
@@ -473,7 +473,7 @@ function AgendaToolbar(props) {
       let prevMonthDate;
       if (currentDate.getMonth() === 0) {
         prevMonthDate = new Date(currentDate.getFullYear() - 1, 11, currentDate.getDate());
-      } 
+      }
       else {
         prevMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate());
       }
@@ -540,8 +540,8 @@ function AgendaToolbar(props) {
       </div>
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
         {
-          role === "Admin" 
-          ? 
+          role === "Admin"
+          ?
             <Fab className={classes.greenFab} aria-label="add" size="small" onClick={() => { handleOpenCreateDialog() }}>
               <AddIcon fontSize="small"/>
             </Fab>
@@ -605,9 +605,9 @@ function ListAssessments(props) {
 
     return (
       <>
-        <Typography 
-          variant="body2" 
-          className={classes.monthAgendaChip} 
+        <Typography
+          variant="body2"
+          className={classes.monthAgendaChip}
           align="left"
           onClick={() =>
             handleOpenDialog(
@@ -671,7 +671,7 @@ function ListAssessments(props) {
   let result = [];
 
   let tempSelectedDate = new Date(date);
-      
+
   if (Boolean(all_assessments.length)) {
     var i;
     for (i = all_assessments.length - 1; i >= 0; i--) {
@@ -680,7 +680,7 @@ function ListAssessments(props) {
       .locale("id"));
       let class_assigned = assessment.class_assigned;
 
-      if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+      if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
       tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
       tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
       class_assigned.indexOf(classId) !== -1) {
@@ -710,7 +710,7 @@ function ListAssessments(props) {
         if (
           (!category ||
             (category === "subject" && assessment.subject === subject._id)) &&
-          
+
           assessment.type === "Kuis" &&
           assessment.posted
         ) {
@@ -743,7 +743,7 @@ function ListAssessments(props) {
         if (
           (!category ||
             (category === "subject" && assessment.subject === subject._id)) &&
-          
+
           assessment.type === "Ujian" &&
           assessment.posted
         ) {
@@ -1006,7 +1006,7 @@ function EventDialog(props) {
 
   // LAMPIRAN
   const [fileLampiran, setFileLampiran] = React.useState([]);
-  const [fileLampiranToAdd, setFileLampiranToAdd] = React.useState([]); 
+  const [fileLampiranToAdd, setFileLampiranToAdd] = React.useState([]);
   const [fileLampiranToDelete, setFileLampiranToDelete] = React.useState([]);
   const [originalFileLampiran, setOriginalFileLampiran] = React.useState([]);
   const lampiranUploader = React.useRef(null);
@@ -1050,8 +1050,8 @@ function EventDialog(props) {
           setFileLampiran(result);
           setOriginalFileLampiran(result)
         });
-  
-        // pada datetime picker, pengguna tidak bisa menset detik. jadi, pukul 23:59:59 hanya dapat 
+
+        // pada datetime picker, pengguna tidak bisa menset detik. jadi, pukul 23:59:59 hanya dapat
         // diset dengan menyentang checkbox sepanjang hari
         if (end_date.getHours() === 23 && end_date.getMinutes() === 59 && end_date.getSeconds() === 59) {
           setAllDay(true);
@@ -1152,17 +1152,17 @@ function EventDialog(props) {
     let newStatus = !isAllDay;
     if (newStatus) {
       // jika diset ke sepanjang hari, ...
-      
+
       setErrors({ ...errors, start_date_custom: undefined, end_date_custom: undefined });
 
-      // di mode sepanjang hari, hanya tanggal yang ditampilkan di datetime picker. 
+      // di mode sepanjang hari, hanya tanggal yang ditampilkan di datetime picker.
       // waktu tidak ditampilkan dan akan diset menjadi 00:00 (untuk start date) - 23:59 (untuk end date)
 
       lastSelectedTime.current = {};
       if (isValidDateTime(start_date)) {
         // jika tanggal dan waktu valid
 
-        // set waktu mulai ke 00:00:00. tanggal tidak diubah 
+        // set waktu mulai ke 00:00:00. tanggal tidak diubah
         setStartDate(getDayStart(start_date));
 
         // simpan waktu
@@ -1181,17 +1181,17 @@ function EventDialog(props) {
           let parsedStr = startDatePicker.current.getAttribute("value").split(" ");
           let dateStr = parsedStr[0];
           let timeStr = parsedStr[2];
-  
+
           // mencoba mem-parse tanggal
           let [day, month, year] = dateStr.split("/");
-  
+
           // menyusun ulang tanggal karena parser js akan memparse tanggal dalam format "dd/MM/yyyy" menjadi "MM/dd/yyyy".
           // ga pakai new Date(int year, int month, int day) karena nilai month > 11, month < 0, day < 1, dan day > 31 atau 30 masih
           // diterima dan menghasilkan Date yang valid
           let parsedDate = new Date(`${year}-${month}-${day}`);
           // let parsedDate = new Date(Number(year), Number(month) - 1, Number(day));
 
-          // jika tanggal tidak valid, set tanggal mulai menjadi tanggal sekarang 
+          // jika tanggal tidak valid, set tanggal mulai menjadi tanggal sekarang
           setStartDate(isValidDateTime(parsedDate) ? parsedDate : new Date());
 
           // mencoba mem-parse waktu
@@ -1220,7 +1220,7 @@ function EventDialog(props) {
       if (isValidDateTime(end_date)) {
         // jika tanggal dan waktu valid
 
-        // set waktu selesai ke 23:59:59. tanggal tidak diubah 
+        // set waktu selesai ke 23:59:59. tanggal tidak diubah
         setEndDate(getDayEnd(end_date));
 
         // simpan waktu
@@ -1248,13 +1248,13 @@ function EventDialog(props) {
           // diterima dan menghasilkan Date yang valid
           let parsedDate = new Date(`${year}-${month}-${day}`);
 
-          // jika tanggal tidak valid, set tanggal mulai menjadi tanggal sekarang 
+          // jika tanggal tidak valid, set tanggal mulai menjadi tanggal sekarang
           setEndDate(isValidDateTime(parsedDate) ? parsedDate : new Date());
 
           // mencoba mem-parse waktu
           let [hour, minute] = timeStr.split(":");
           let parsedTime = new Date(0, 0, 0, Number(hour), Number(minute), 0);
-  
+
           if (isValidDateTime(parsedTime)) {
             // simpan waktu
             lastSelectedTime.current.end_date = {
@@ -1278,11 +1278,11 @@ function EventDialog(props) {
 
       if (isValidDateTime(start_date)) {
         // pada mode sepanjang hari, waktu mulai sudah dibuat agar tetap berisi 00:00:00 sehingga nilai waktu mulai pasti valid.
-        // jika tanggal mulai juga valid, 
+        // jika tanggal mulai juga valid,
 
         let start = new Date(start_date.getTime()); // membuat salinan
 
-        if (lastSelectedTime.current !== null) { 
+        if (lastSelectedTime.current !== null) {
           // lastSelectedTime.current === null ketika form ini dimuat untuk mode edit
 
           let startDate = lastSelectedTime.current.start_date;
@@ -1300,13 +1300,13 @@ function EventDialog(props) {
         }
         setStartDate(start);
       } else {
-        // jika tanggal mulai tidak valid, set tanggal dan waktu mulai jadi tanggal dan waktu sekarang 
+        // jika tanggal mulai tidak valid, set tanggal dan waktu mulai jadi tanggal dan waktu sekarang
         // (belum ada alasan khusus kenapa waktunya tidak diset menjadi 00:00:00)
         setStartDate(new Date());
       }
 
       if (isValidDateTime(end_date)) {
-        // pada mode sepanjang hari, waktu selesai sudah dibuat agar tetap berisi 23:59:59 sehingga nilai waktu selesai pasti valid. 
+        // pada mode sepanjang hari, waktu selesai sudah dibuat agar tetap berisi 23:59:59 sehingga nilai waktu selesai pasti valid.
         // jika tanggal selesai juga valid,
 
         let end = new Date(end_date.getTime()); // membuat salinan
@@ -1317,8 +1317,8 @@ function EventDialog(props) {
           let endDate = lastSelectedTime.current.end_date;
           if (endDate === null) {
             // jika waktu simpanan null, berarti waktu yang sebelumnya akan disimpan itu tidak valid.
-            // reset waktu jadi 23:59:00 
-            // (tidak diset jadi 23:59:59 karena 23:59:59 digunakan sebagai kriteria untuk menentukan apakah event yang diretrieve dari db itu   
+            // reset waktu jadi 23:59:00
+            // (tidak diset jadi 23:59:59 karena 23:59:59 digunakan sebagai kriteria untuk menentukan apakah event yang diretrieve dari db itu
             // all day apa tidak / ada kode ky gini saat load form edit: if (time === 23:59:59) {all_day = true})
             end.setHours(23, 59, 0);
           } else {
@@ -1342,7 +1342,7 @@ function EventDialog(props) {
 
   const handleStartDateChange = (date) => {
     setErrors({ ...errors, start_date_submission: undefined });
-    
+
     let startDate = date;
     if (isValidDateTime(startDate) && isValidDateTime(end_date)) {
       if (end_date.getTime() < startDate.getTime()) {
@@ -1366,7 +1366,7 @@ function EventDialog(props) {
     if (isValidDateTime(start_date) && isValidDateTime(endDate)) {
       if (endDate.getTime() < start_date.getTime()) {
         setErrors({ ...errors, end_date_custom: "Harus setelah Waktu Mulai" });
-      } else { 
+      } else {
         setErrors({ ...errors, start_date_custom: undefined, end_date_custom: undefined });
       }
     } else {
@@ -1467,13 +1467,13 @@ function EventDialog(props) {
       let file_to_upload = temp.filter(
         (file) => file.size / Math.pow(10, 6) <= 10
       );
-  
+
       if (errors.lampiran_materi) {
         // karena errornya ini berupa lampiran_materi
         setErrors({ ...errors, lampiran_materi: null });
       }
       setFileLampiran(file_to_upload);
-  
+
       if (over_limit.length > 0) {
         showSnackbar("error", over_limit.length + " file melebihi batas 10MB!");
       }
@@ -1582,7 +1582,7 @@ function EventDialog(props) {
 
   return (
     <Dialog
-      onExited={() => { 
+      onExited={() => {
         if (changeDialog) {
           // open edit dialog
           setChangeDialog(false);
@@ -1629,9 +1629,9 @@ function EventDialog(props) {
                 </>
                 : null
             }
-            <IconButton 
-              edge="end" 
-              className={classes.dialogTopIconButtons} 
+            <IconButton
+              edge="end"
+              className={classes.dialogTopIconButtons}
               onClick={() => { handleCloseEventDialog() }}
             >
               <CloseIcon className={classes.dialogTopIcons} />
@@ -1645,7 +1645,7 @@ function EventDialog(props) {
               handleDelete={() => { handleDelete(selectedEventInfo._id) }}
             />
             <div className={classes.viewDialogScrollableDiv}>
-                
+
               <Grid container direction="column" spacing="4" style={{ marginTop: "0", marginBottom: "0" }}>
                 <Grid item xs={12} style={{ paddingTop: "0", paddingBottom: "0" }}>
                   <Typography variant="h5" gutterBottom style={{ wordBreak: "break-word" }}>
@@ -1734,7 +1734,7 @@ function EventDialog(props) {
                 <DragHandleIcon className={classes.dialogTopIcons} />
               </IconButton>
             </Hidden>
-            <IconButton 
+            <IconButton
               edge="end"
               className={classes.dialogTopIconButtons}
               style={(openUploadDialog && !uploadSuccess) ? { visibility: "hidden" } : undefined}
@@ -1749,7 +1749,7 @@ function EventDialog(props) {
             </Typography>
             <Typography color="textSecondary">
               {eventDialogMode === "create"
-                ? "Tambahkan keterangan untuk membuat kegiatan." 
+                ? "Tambahkan keterangan untuk membuat kegiatan."
                 : "Ganti keterangan untuk menyunting kegiatan."}
             </Typography>
           </DialogTitle>
@@ -1757,7 +1757,7 @@ function EventDialog(props) {
             dividers
             className={classes.dialogContent}
           >
-            <CustomUploadDialog 
+            <CustomUploadDialog
               // handleWheel={handleUploadDialogWheel}
               openUploadDialog={openUploadDialog}
               handleUploadSuccess={handleCloseEventDialog}
@@ -1862,7 +1862,7 @@ function EventDialog(props) {
                           : errors.start_date_picker
                             ? <FormHelperText variant="outlined" error>{errors.start_date_picker}</FormHelperText>
                             : null}
-                        {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang 
+                        {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang
                           untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
                         <FormGroup style={{ width: "fit-content" }}>
                           <FormControlLabel
@@ -1974,7 +1974,7 @@ function EventDialog(props) {
                       renderValue={(selected) => (
                         <div className={classes.chips}>
                           {selected.length === 0
-                            ? 
+                            ?
                             // input ini hanya digunakan sebagai placeholder
                             <Input
                               disableUnderline
@@ -1982,7 +1982,7 @@ function EventDialog(props) {
                               readOnly
                               classes={{ input: classes.dummyInput }}
                             />
-                            : 
+                            :
                             selected.map((role) => {
                               return (
                                 <Chip
@@ -2103,7 +2103,7 @@ function CustomUploadDialog(props) {
       justifyContent: "center",
       alignItems: "center",
       overflow: "hidden",
-      width: "100%", 
+      width: "100%",
       height: "100%"
     },
     uploadSuccessIcon: {
@@ -2123,7 +2123,7 @@ function CustomUploadDialog(props) {
     },
   }));
   const classes = useStyles();
-  const { 
+  const {
     // handleWheel,
     openUploadDialog,
     messageUploading,
@@ -2281,7 +2281,7 @@ function LampiranFile(props) {
   return (
     <Grid item xs={12}>
       <Paper variant="outlined">
-        <ListItem 
+        <ListItem
           button={eventDialogMode === "view"}
           disableRipple
           className={classes.listItem}
@@ -2394,7 +2394,7 @@ function Calendar(props) {
   const { selectedClasses, all_classes } = props.classesCollection;
   const { allEvents } = props.eventsCollection;
 
-  const [activeStartDate, setActiveStartDate] = React.useState(new Date(new Date().getFullYear(), new Date().getMonth())); // set ke awal bulan sekarang 
+  const [activeStartDate, setActiveStartDate] = React.useState(new Date(new Date().getFullYear(), new Date().getMonth())); // set ke awal bulan sekarang
 
   // EVENT DIALOG
   const [selectedEventInfo, setSelectedEventInfo] = React.useState({});
@@ -2419,7 +2419,7 @@ function Calendar(props) {
 
   const [scrollbarNode, setScrollbarNode] = React.useState(null);
   const [scrollbarWidth, setScrollbarWidth] = React.useState(0);
-  
+
   const holiday = {
     [new Date(2021, 0, 1)]: ["Tahun Baru 2021 Masehi"],
     [new Date(2021, 1, 12)]: ["Tahun Baru Imlek 2572 Kongzili"],
@@ -2523,7 +2523,7 @@ function Calendar(props) {
   function generateTiles(currentDate) {
     let start = getDayStart(currentDate).getTime();
     let end = getDayEnd(currentDate).getTime();
-  
+
     // memisahkan tile yang sepanjang hari dengan yang tidak sepanjang hari
     let allDayItems = [];
     let filteredData = generateDayModeList(currentDate).filter((item) => {
@@ -2543,7 +2543,7 @@ function Calendar(props) {
   }
 
   function placeDayModeTiles(arrayOfObject, currentDate) {
-    /*  
+    /*
       bentuk arrayOfObject:
       {
         _id: <Assessment/Task/Event>._id,
@@ -2555,7 +2555,7 @@ function Calendar(props) {
         end_date: <Assessment/Event>.end_date, // masih dalam bentuk string
         // kedua nilai untuk atribut ini akan diubah dan nilainya bisa berbeda dengan nilai "end_date" dan "start_date" pada atribut "data".
         // kedua nilai atribut ini akan digunakan untuk menghitung tinggi tile untuk object ini.
-        
+
         // jika type === "Tugas"
         deadline: <Task>.deadline, // masih dalam bentuk string
         // object tugas akan ditambahkan atribut "start_date" dan "end_date" yang dihitung berdasarkan atribut ini
@@ -2566,7 +2566,7 @@ function Calendar(props) {
       let end_date;
 
       if (elm.type === "Tugas") {
-        // karena tugas tidak memiliki durasi, 
+        // karena tugas tidak memiliki durasi,
         let offset = TASK_DURATION_MILLISECOND / 2;
         start_date = substractTime(new Date(elm.deadline), offset);
         end_date = addTime(new Date(elm.deadline), offset);
@@ -2643,7 +2643,7 @@ function Calendar(props) {
             data[i].startColumn = col;
             foundSpace = true;
           } else {
-            // jika intersect, cek kolom selanjutnya (kolom di kanan kolom ini)  
+            // jika intersect, cek kolom selanjutnya (kolom di kanan kolom ini)
             col++;
           }
         }
@@ -2651,8 +2651,8 @@ function Calendar(props) {
     }
 
     let columns = [];
-    /* 
-    akan berisi: 
+    /*
+    akan berisi:
       [
         [{ tile pertama pada kolom 1 }, { tile kedua dari atas pada kolom 1 }],
         [{ tile pertama pada kolom 2 }],
@@ -2668,7 +2668,7 @@ function Calendar(props) {
       }
     }
 
-    /* 
+    /*
       menentukan lebar setiap tile. ide:
       - tile = node pada tree
       - setiap tile paling kiri = root sebuah tree
@@ -2688,14 +2688,14 @@ function Calendar(props) {
         if (firstRoot === false) {
           for (let column of columns.slice(1)) {
             for (let tile of column) {
-              // jika tile yang sedang dicek sudah sepenuhnya berada di bawah titik terbawah dari tile root, 
+              // jika tile yang sedang dicek sudah sepenuhnya berada di bawah titik terbawah dari tile root,
               // akhiri loop karena tile-tile ini dan seterusnya pasti tidak intersect dengan tile root
               if (tile.start_date_epoch >= data[i].end_date_epoch) {
                 break;
               }
 
               if (isIntersectExclusive(tile.start_date_epoch, tile.end_date_epoch, data[i].start_date_epoch, data[i].end_date_epoch) && tile.width) {
-                // jika root ini intersect dengan salah satu node dari tree sebelumnya, gunakan lebar tile pada tree tersebut 
+                // jika root ini intersect dengan salah satu node dari tree sebelumnya, gunakan lebar tile pada tree tersebut
                 width = tile.width;
                 break;
               }
@@ -2707,7 +2707,7 @@ function Calendar(props) {
         if (treeHeight > maxTreeHeight) {
           maxTreeHeight = treeHeight;
 
-          // treeHeight ini akan dipakai untuk menghitung width jika root ini 
+          // treeHeight ini akan dipakai untuk menghitung width jika root ini
           // tidak intersect dengan salah satu node dari tree sebelumnya
           highestTreeWidth = width ?? (100 / ((treeHeight > 3 ? 3 : treeHeight) + 1));
         }
@@ -2729,7 +2729,7 @@ function Calendar(props) {
 
     setHighestTreeWidth(highestTreeWidth);
     setMaxTreeHeight(maxTreeHeight);
-    
+
     let tileRows = [];
     for (let d of data) {
       if (isSameDate(d.start_date, currentDate)) {
@@ -2748,7 +2748,7 @@ function Calendar(props) {
     }
     return tileRows;
   }
-  
+
   function getTreeHeight(data, columns, currentCol, currentNode) {
     if (currentCol === columns.length - 1) {
       return currentCol;
@@ -2815,8 +2815,8 @@ function Calendar(props) {
   };
 
   const handleTileContent = (selectedDate) => {
-    // untuk mengurangi jumlah pengecekan now === selectedDate, 
-    // pengecekan ini hanya dilakukan ketika selectedDate ada 
+    // untuk mengurangi jumlah pengecekan now === selectedDate,
+    // pengecekan ini hanya dilakukan ketika selectedDate ada
     if (selectedDate) {
       return function ({ activeStartDate, date, view }) {
         if (view === 'month') {
@@ -2831,7 +2831,7 @@ function Calendar(props) {
               </div>
             );
           }
-          
+
           // jika tanggal yang sedang dicek adalah tanggal yang pernah terakhir diklik oleh pengguna
           if (isSameDate(selectedDate, date)) {
             return (
@@ -2865,7 +2865,7 @@ function Calendar(props) {
               </div>
             );
           }
-        
+
         }
         return (
           <div className={classes.notSelectedTile}>
@@ -2970,7 +2970,7 @@ function Calendar(props) {
           return tasksByClass;
         });
       } else if (user.role === "Teacher") {
-        
+
       }
     }
 
@@ -2986,7 +2986,7 @@ function Calendar(props) {
 
       // Untuk sekarang yang ditampilkan adalah tugas dengan deadline pada tanggal yang sama
       // dengan selectedDate (tidak memperhitungkan jam, menit, detik)
-      if(tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+      if(tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
       tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
       tempSelectedDate.getYear() === tempDeadlineDate.getYear()) {
         if(mode === "Month") {
@@ -3044,9 +3044,9 @@ function Calendar(props) {
         }
       }
     });
-  
+
     if (mode === "Month") {
-      handleChangeCounter(localCounter);  
+      handleChangeCounter(localCounter);
     }
     return result;
   }
@@ -3073,7 +3073,7 @@ function Calendar(props) {
           }
         }
         if (tasksCollection[i].person_in_charge_id === user._id &&
-          tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+          tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
           tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
           tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
           classFound) {
@@ -3143,7 +3143,7 @@ function Calendar(props) {
           }
         }
         if (
-          tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+          tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
           tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
           tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
           classFound) {
@@ -3198,7 +3198,7 @@ function Calendar(props) {
     let AssessmentsList = [];
     let TeacherList = []
     let result = [];
-        
+
     if (Boolean(all_assessments.length)) {
       var i;
       for (i = all_assessments.length - 1; i >= 0; i--) {
@@ -3207,9 +3207,9 @@ function Calendar(props) {
 
         if (
           isIntersectInclusive(
-            new Date(assessment.start_date).getTime(), 
-            new Date(assessment.end_date).getTime(), 
-            getDayStart(tempSelectedDate).getTime(), 
+            new Date(assessment.start_date).getTime(),
+            new Date(assessment.end_date).getTime(),
+            getDayStart(tempSelectedDate).getTime(),
             getDayEnd(tempSelectedDate).getTime()
           ) &&
         class_assigned.indexOf(classId) !== -1) {
@@ -3228,7 +3228,7 @@ function Calendar(props) {
           if (
             (!category ||
               (category === "subject" && assessment.subject === subject._id)) &&
-            
+
             assessment.type === "Kuis" &&
             assessment.posted
           ) {
@@ -3238,14 +3238,14 @@ function Calendar(props) {
                 end_date: assessment.end_date,
                 type: type,
                 data: assessment,
-              });  
+              });
           }
         }
         if (type === "Ujian") {
           if (
             (!category ||
               (category === "subject" && assessment.subject === subject._id)) &&
-            
+
             assessment.type === "Ujian" &&
             assessment.posted
           ) {
@@ -3328,9 +3328,9 @@ function Calendar(props) {
         return result.map((row) => {
           return (
             <Link to={`/daftar-${lowerCaseType}-terkumpul/${row._id}`}>
-              <Typography 
-                variant="body2" 
-                className={classes.monthAgendaChip} 
+              <Typography
+                variant="body2"
+                className={classes.monthAgendaChip}
                 align="left"
               >
                 {row.title}
@@ -3406,9 +3406,9 @@ function Calendar(props) {
         return result.map((row) => {
           return (
             <Link to={`/daftar-${lowerCaseType}-terkumpul/${row._id}`}>
-              <Typography 
-                variant="body2" 
-                className={classes.monthAgendaChip} 
+              <Typography
+                variant="body2"
+                className={classes.monthAgendaChip}
                 align="left"
               >
                 {row.title}
@@ -3432,7 +3432,7 @@ function Calendar(props) {
           end_date.getTime(),
           getDayStart(date).getTime(),
           getDayEnd(date).getTime()
-        ) && 
+        ) &&
         eventInfo.to.includes(role)
       );
     });
@@ -3441,9 +3441,9 @@ function Calendar(props) {
       if(mode === "Month") {
         if(localCounter < 3) {
           result.push(
-            <Typography 
-              variant="body2" 
-              className={classes.monthAgendaChip} 
+            <Typography
+              variant="body2"
+              className={classes.monthAgendaChip}
               align="left"
               onClick={() => {
                 handleOpenViewDialog(eventInfo)
@@ -3562,8 +3562,8 @@ function Calendar(props) {
   }
 
   const timeRows = [
-    '00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', 
-    '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', 
+    '00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00',
+    '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00',
     '20:00', '21:00', '22:00', '23:00'
   ]
 
@@ -3612,7 +3612,7 @@ function Calendar(props) {
     if (tasksCollection && Array.isArray(tasksCollection)) {
       let startEpoch = start.getTime();
       let endEpoch = end.getTime();
-      
+
       if (role === "Student") {
         count = tasksCollection.filter((taskInfo) => (
           taskInfo.class_assigned.includes(user.kelas) &&
@@ -3787,8 +3787,8 @@ function Calendar(props) {
     let result = []
     if(mode === "Day") {
       if(
-        tasksCollection && 
-        all_assessments && 
+        tasksCollection &&
+        all_assessments &&
         allEvents
         ) {
         let taskList = [];
@@ -3844,7 +3844,7 @@ function Calendar(props) {
     }
     return result;
   }
-  
+
   const hasHoliday = (currentDate) => {
     return (new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) in holiday);
   };
@@ -3856,10 +3856,10 @@ function Calendar(props) {
   const generateDayModeCalendar = () => {
     return (
       <div className={classes.dayAgendaContainer}>
-        <div 
+        <div
           className={
             showShadow(currentDate, allDayItems) ? `${classes.shadow} ${classes.holidayContainer}` : classes.holidayContainer
-          } 
+          }
           style={
             showShadow(currentDate, allDayItems)
               ? mdDown
@@ -3885,8 +3885,8 @@ function Calendar(props) {
             }
             {
               allDayItems.map((item) => (
-                <div 
-                  key={item._id} 
+                <div
+                  key={item._id}
                   className={item.type === "Event" ? `${classes.hoverPointerCursor} ${classes.staticBlueChip}` : classes.staticBlueChip}
                   onClick={item.type === "Event" ? () => { handleOpenViewDialog(item.data) } : undefined}
                 >
@@ -3909,7 +3909,7 @@ function Calendar(props) {
                       <div className={classes.horizontalLine}>
                         <div
                           style={{
-                            paddingRight: maxTreeHeight <= 3 ? undefined : "16px", 
+                            paddingRight: maxTreeHeight <= 3 ? undefined : "16px",
                             width:
                               maxTreeHeight <= 3
                                 ? '100%'
@@ -3924,7 +3924,7 @@ function Calendar(props) {
                             }}
                           />
                         </div>
-                        
+
                         {
                           tileRows[index] ?
                             tileRows[index].map((obj) => {
@@ -3946,7 +3946,7 @@ function Calendar(props) {
                                   onClick={obj.type === "Event" ? () => { handleOpenViewDialog(obj.data) } : undefined}
                                   className={obj.type === "Event" ? `${classes.hoverPointerCursor} ${classes.blueChip}` : classes.blueChip}
                                   style={{
-                                    transform: 
+                                    transform:
                                       `translate(calc(100% * ${obj.startColumn} + ${obj.startColumn * TILE_HORIZONTAL_MARGIN}px), ${!isSameDate(obj.start_date, currentDate) && isSameDate(obj.end_date, currentDate)
                                         ? (-1 * getMillisecondDiff(obj.start_date, getDayStart(obj.end_date)) / (1000 * 60)) / 60 * ROW_HEIGHT
                                         : obj.start_date.getMinutes() / 60 * ROW_HEIGHT
@@ -4031,7 +4031,7 @@ function Calendar(props) {
             const handleChangeCounter = (count) => {mainCounter = count}
 
             let today = new Date();
-            
+
             let taskList = null;
             if(agendaCheckboxState.checkedTask) {
               if(role === "Student") {
@@ -4048,7 +4048,7 @@ function Calendar(props) {
             let quizList = null;
             if(agendaCheckboxState.checkedQuiz) {
               if(role === "Student") {
-                quizList = 
+                quizList =
                   <ListAssessments
                     category={null}
                     subject={{}}
@@ -4072,11 +4072,11 @@ function Calendar(props) {
                 quizList = listAssessmentsAdmin(new Date(column), "Kuis", mainCounter, handleChangeCounter)
               }
             }
-            
+
             let examList = null;
             if(agendaCheckboxState.checkedExam) {
               if(role === "Student") {
-                examList = 
+                examList =
                   <ListAssessments
                     category={null}
                     subject={{}}
@@ -4100,7 +4100,7 @@ function Calendar(props) {
                 examList = listAssessmentsAdmin(new Date(column), "Ujian", mainCounter, handleChangeCounter)
               }
             }
-            
+
 
             let eventList = {result: null}
             if(agendaCheckboxState.checkedEvent) {
@@ -4110,15 +4110,15 @@ function Calendar(props) {
                 eventList = listEvent(new Date(column), mainCounter, handleChangeCounter);
               }
             }
-            
+
             return (
               <TableCell className={classes.monthAgendaCell}>
                 {(index === 0) ?
                   (columnIndex === 6) ?
                     <Hidden xsDown>
-                      <Typography color="textSecondary" variant="body2" align="center" style={{color: "#d10000"}}>{dayNames[columnIndex]}</Typography>
+                      <Typography color="textSecondary" variant="body2" align="center" style={{color: "#D10000"}}>{dayNames[columnIndex]}</Typography>
                     </Hidden>
-                  : 
+                  :
                     <Hidden xsDown>
                       <Typography color="textSecondary" variant="body2" align="center">{dayNames[columnIndex]}</Typography>
                     </Hidden>
@@ -4189,7 +4189,7 @@ function Calendar(props) {
                 {agendaCheckboxState.checkedEvent ? eventList.result : null}
                 {
                   (mainCounter > 3) ?
-                    <Typography 
+                    <Typography
                       variant="body2"
                       className={classes.moreMonthAgendaChip}
                       align="left"
@@ -4269,7 +4269,7 @@ function Calendar(props) {
                 </div>
               </Hidden>
               <Hidden smUp>
-                <div 
+                <div
                   className={
                     showShadow(currentDate, allDayItems) ? undefined : classes.shadow
                   }
@@ -4358,7 +4358,7 @@ function Calendar(props) {
             activeStartDate={activeStartDate}
             tileContent={handleTileContent(selectedDateReactCalendar)}
             formatShortWeekday={(locale, date) => {
-              // mengubah nama hari dalam satu minggu jadi satu huruf 
+              // mengubah nama hari dalam satu minggu jadi satu huruf
               return new Date(date).toLocaleDateString(locale, { weekday: 'long' })[0];
             }}
             view="month"
@@ -4374,7 +4374,7 @@ function Calendar(props) {
                     color="primary"
                   />
                 }
-                label={`Tugas (${itemCount.task})`} 
+                label={`Tugas (${itemCount.task})`}
               />
               <FormControlLabel
                 control={
@@ -4527,7 +4527,7 @@ export default connect(mapStateToProps, {
   getAllSubjects,
   getAllTaskFilesByUser,
   getAllAssessments,
-  getTasks,
+  getTasksBySubjectClass,
   getAssessments,
   getStudents,
   getTeachers,

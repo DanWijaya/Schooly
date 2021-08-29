@@ -1,16 +1,18 @@
 import React, { Component } from "react";
-import { withRouter, Link, Redirect } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { loginUser } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import authBackground from "../AuthBackground.png";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
+import loginArtLeft from "./LoginArtLeft.png";
+import loginArtRight from "./LoginArtRight.png";
 import {
   Button,
   Divider,
   Grid,
+  Hidden,
   IconButton,
   InputAdornment,
   Paper,
@@ -27,32 +29,35 @@ const styles = (theme) => ({
     flexDirection: "column",
     alignItems: "center",
     margin: "auto",
-    maxWidth: "80%",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
-    },
-    minHeight: "500px",
     padding: "10px",
-    backgroundImage: `url(${authBackground})`,
-    backgroundPosition: "center",
+    background: "linear-gradient(#2196F3, #FFFFFF)",
+    backgroundSize: "100% 300px",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    [theme.breakpoints.up("sm")]: {
-      backgroundSize: "contain",
-    },
   },
   schoolyLogo: {
-    width: "250px",
-    height: "125px",
+    maxWidth: "250px",
+    maxHeight: "125px",
     marginBottom: "25px",
+  },
+  artThumbnail: {
+    width: "100%",
+    height: "100%",
+    maxWidth: "300px",
+  },
+  loginContainer: {
+    maxWidth: "80%",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "100%",
+    },
   },
   loginPaper: {
     margin: "auto",
-    maxWidth: "350px",
+    maxWidth: "400px",
     padding: "40px",
   },
   loginButton: {
     width: "100%",
+    marginTop: "15px",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -60,9 +65,15 @@ const styles = (theme) => ({
       color: "white",
     },
   },
-  primary: {
+  toggleShowPasswordButton: {
     color: theme.palette.primary.main,
   },
+  toggleErrorShowPasswordButton: {
+    color: theme.palette.error.main,
+  },
+  disabledLink : {
+    pointerEvents: "none"
+  }
 });
 
 class Login extends Component {
@@ -80,9 +91,8 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    // untuk handle kalau misalnya usernya udah logged in lalu buka login pagenya. Langusng ke beranda
     // If logged in and user navigates to Login page, should redirect them to dashboard
-    // this.props.auth.isAuthenticated = true, berarti udah logged in dan masuk ke beranda langsung
+    // this.props.auth.isAuthenticated = true, means that the user is logged in dan moved into the Landing page instantly.
 
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");
@@ -97,13 +107,13 @@ class Login extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    // Function static ini belongs to the class secara keseluruhan, bukan instance of the class.
-    //  Makanya gak ada this keyword.
+    // This static function belongs to the class as a whole thing, not as a instance of the class.
+    //  That's why there is no this keyword.
     if (nextProps.auth.isAuthenticated)
       // nextProps.auth.isAuthenticated = kalau true,
       return { isAuthenticated: nextProps.auth.isAuthenticated };
-    // ini sama dengan this.setState({ isAuthenticated : nextProps.auth.isAuthenticated })
-    else return null; // gak ngapa ngapain
+    // This is the same with this.setState({ isAuthenticated : nextProps.auth.isAuthenticated })
+    else return null;
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -111,20 +121,24 @@ class Login extends Component {
       this.state.isAuthenticated &&
       this.props.auth.isAuthenticated !== prevProps.auth.isAuthenticated
     ) {
-      // jika murid yang belum login membuka link assessment (/kuis-murid/:id),
-      // setelah login, murid akan diarahkan ke halaman assessment tersebut
+      // When students who haven't logged in open the assessment page,
+      // The page will be redirected to the assessment page after that student logged in.
       if (this.props.location.state && this.props.location.state.url) {
         window.location.href = `.${this.props.location.state.url}`;
       } else {
-        // untuk redirect ke page lain.
+        // to redirect to the Landing page.
         window.location.href = "./beranda";
       }
       this.props.handleLoading(true);
     }
   }
 
-  onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value });
+  onChange = (e, otherfield) => {
+    let field = otherfield ? otherfield : e.target.id;
+    if (this.state.errors[field]) {
+      this.setState({ errors: { ...this.state.errors, [field]: null } });
+    }
+    this.setState({ [field]: e.target.value });
   };
 
   onSubmit = (e) => {
@@ -159,119 +173,144 @@ class Login extends Component {
     } = this.state;
 
     document.title = "Masuk ke Schooly";
-    document.body.style =
-      "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     return (
       <div className={classes.root}>
         <Link to="/">
           <img
-            alt="Schooly Introduction"
+            alt="Schooly Logo"
             src={schoolyLogo}
             className={classes.schoolyLogo}
           />
         </Link>
-        <Paper elevation={11} className={classes.loginPaper}>
-          <Grid container direction="column" spacing={5}>
-            <Grid item>
-              <Typography variant="h6" align="center">
-                <b>Masuk ke Schooly</b>
-              </Typography>
+        <Grid container alignItems="flex-end" spacing={3} className={classes.loginContainer}>
+          <Hidden smDown>
+            <Grid item container justify="flex-end" xs={3}>
+              <img
+                alt="Login Art Left"
+                src={loginArtLeft}
+                className={classes.artThumbnail}
+              />
             </Grid>
-            <Grid item>
-              <form noValidate onSubmit={this.onSubmit}>
-                <Grid container direction="column" spacing={4}>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      id="email"
-                      label="Email"
-                      onChange={this.onChange}
-                      value={this.state.email}
-                      error={Boolean(
-                        errors.email || errors.emailnotfound || errors.notactive
-                      )}
-                      type="email"
-                      helperText={
-                        errors.email || errors.emailnotfound || errors.notactive
-                      }
-                      className={classnames("", {
-                        invalid: errors.email || errors.emailnotfound,
-                      })}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      id="password"
-                      label="Kata Sandi"
-                      onChange={this.onChange}
-                      value={this.state.password}
-                      error={Boolean(
-                        errors.password || errors.passwordincorrect
-                      )}
-                      type={passwordIsMasked ? "password" : "text"}
-                      helperText={errors.password || errors.passwordincorrect}
-                      className={classnames("", {
-                        invalid: errors.password || errors.passwordincorrect,
-                      })}
-                      onFocus={() => {
-                        this.setIsFocused(true);
-                      }}
-                      onBlur={() => {
-                        this.setIsFocused(false);
-                      }}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              size="small"
-                              onClick={this.togglePasswordVisibility}
-                            >
-                              {icon ? (
-                                <VisibilityIcon
-                                  className={
-                                    passwordtextfieldFocus
-                                      ? classes.primary
-                                      : null
-                                  }
-                                />
-                              ) : (
-                                <VisibilityOffIcon
-                                  className={
-                                    passwordtextfieldFocus
-                                      ? classes.primary
-                                      : null
-                                  }
-                                />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      className={classes.loginButton}
-                    >
-                      Masuk
-                    </Button>
-                  </Grid>
+          </Hidden>
+          <Grid item xs={12} md={6}>
+            <Paper elevation={11} className={classes.loginPaper}>
+              <Grid container direction="column" spacing={6}>
+                <Grid item>
+                  <Typography variant="h6" align="center">
+                    <b>Masuk ke Schooly</b>
+                  </Typography>
                 </Grid>
-              </form>
-            </Grid>
-            <Divider />
-            <Grid item container justify="space-around">
-              <Link to="/akun/lupa-katasandi">Lupa Kata Sandi?</Link>·
-              <Link to="/daftar">Belum ada Akun?</Link>
-            </Grid>
+                <Grid item>
+                  <form noValidate onSubmit={this.onSubmit}>
+                    <Grid container direction="column" spacing={5}>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          id="email"
+                          type="email"
+                          label="Email"
+                          onChange={this.onChange}
+                          value={this.state.email}
+                          helperText={
+                            errors.email || errors.emailnotfound || errors.notactive
+                          }
+                          error={Boolean(
+                            errors.email || errors.emailnotfound || errors.notactive
+                          )}
+                          className={classnames("", {
+                            invalid: errors.email || errors.emailnotfound,
+                          })}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          id="password"
+                          type={passwordIsMasked ? "password" : "text"}
+                          label="Kata Sandi"
+                          onChange={this.onChange}
+                          value={this.state.password}
+                          helperText={errors.password || errors.passwordincorrect}
+                          error={Boolean(
+                            errors.password || errors.passwordincorrect
+                          )}
+                          className={classnames("", {
+                            invalid: errors.password || errors.passwordincorrect,
+                          })}
+                          onFocus={() => {
+                            this.setIsFocused(true);
+                          }}
+                          onBlur={() => {
+                            this.setIsFocused(false);
+                          }}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  size="small"
+                                  onClick={this.togglePasswordVisibility}
+                                >
+                                  {icon ? (
+                                    <VisibilityIcon
+                                      className={
+                                        passwordtextfieldFocus ?
+                                        Boolean(errors.password || errors.passwordincorrect) ?
+                                        classes.toggleErrorShowPasswordButton
+                                          : classes.toggleShowPasswordButton
+                                          : null
+                                      }
+                                    />
+                                  ) : (
+                                    <VisibilityOffIcon
+                                      className={
+                                        passwordtextfieldFocus ?
+                                        Boolean(errors.password || errors.passwordincorrect) ?
+                                        classes.toggleErrorShowPasswordButton
+                                          : classes.toggleShowPasswordButton
+                                          : null
+                                      }
+                                    />
+                                  )}
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          className={classes.loginButton}
+                        >
+                          Masuk
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </form>
+                </Grid>
+                <Divider />
+                <Grid item container justify="space-around">
+                  <Link to="/akun/lupa-katasandi" className={classes.disabledLink}>Lupa kata sandi?</Link>
+                    <Typography color="textSecondary">·</Typography>
+                  <Link to="/daftar">Belum ada akun?</Link>
+                </Grid>
+              </Grid>
+            </Paper>
           </Grid>
-        </Paper>
+          <Hidden smDown>
+            <Grid item container justify="flex-start" xs={3}>
+                <img
+                  alt="Login Art Right"
+                  src={loginArtRight}
+                  className={classes.artThumbnail}
+                />
+            </Grid>
+          </Hidden>
+        </Grid>
       </div>
     );
   }

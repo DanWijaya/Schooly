@@ -218,7 +218,7 @@ class CreateTask extends Component {
     this.state = {
       name: "",
       subject: "",
-      deadline: new Date(),
+      deadline: null,
       focused: false,
       class_assigned: [],
       description: "",
@@ -342,8 +342,7 @@ class CreateTask extends Component {
   };
 
   onDateChange = (date) => {
-    console.log(date);
-    this.setState({ deadline: date });
+    this.setState({ deadline: date , errors: {...this.state.errors, deadline: ""}});
   };
 
   onSubmit = (e, id) => {
@@ -362,16 +361,15 @@ class CreateTask extends Component {
     //Check if there is any lampiran_tugas uploaded or not.
     if (this.state.fileLampiran)
       for (var i = 0; i < this.state.fileLampiran.length; i++) {
-        console.log(this.state.fileLampiran[i]);
         formData.append("lampiran_tugas", this.state.fileLampiran[i]);
       }
-    console.log(formData.getAll("lampiran_tugas"), this.state.fileLampiran);
-    console.log(taskData);
+
     this.handleOpenUploadDialog();
     this.props
       .createTask(formData, taskData, this.props.history)
       .then((res) => this.setState({success: res}))
       .catch((err) => {
+        console.log(err);
         this.handleCloseUploadDialog();
         this.setState({ errors: err })
       });
@@ -542,7 +540,7 @@ class CreateTask extends Component {
     };
 
     document.title = "Schooly | Buat Tugas";
-
+    console.log(errors);
     if (user.role === "Teacher") {
       return (
         <div className={classes.root}>
@@ -708,19 +706,18 @@ class CreateTask extends Component {
                             value={this.state.deadline}
                             helperText={null}
                             onChange={(date) => this.onDateChange(date)}
-                            onError={(err) => {
-                              if (errors.deadline !== err) {
-                                this.setState({errors: { ...errors, deadline: err }});
-                              }
-                            }}
-                            
+                            // onError={(err) => {
+                            //   if (errors.deadline !== err) {
+                            //     this.setState({errors: { ...errors, deadline: err }});
+                            //   }
+                            // }}
+                            error={Boolean(errors.deadline)}
                           />
-                          {errors.deadline
-                            ?
+                          
                             <div className={classes.zeroHeightHelperText}>
                               <FormHelperText variant="outlined" error>{errors.deadline}</FormHelperText>
+                              
                             </div>
-                            : null}
                         </MuiPickersUtilsProvider>
                       </Grid>
                     </Grid>

@@ -1615,62 +1615,28 @@ class EditAssessment extends Component {
     const { classes } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
+    const { selectedAssessments } = this.props.assessmentsCollection;
 
     const linkToShare =
       this.state.type === "Kuis"
         ? `http://${window.location.host}/kuis-murid/${this.props.match.params.id}`
         : `http://${window.location.host}/ujian-murid/${this.props.match.params.id}`;
-    const ToggleViewQuiz = withStyles((theme) => ({
-      root: {
-        width: 42,
-        height: 26,
-        padding: 0,
-        margin: theme.spacing(1),
-      },
-      switchBase: {
-        padding: 2.5,
-        color: theme.palette.warning.light,
-        "&$checked": {
-          transform: "translateX(16px)",
-          color: theme.palette.common.white,
-          "& + $track": {
-            backgroundColor: theme.palette.warning.light,
-            opacity: 1,
-            border: "none",
-          },
-        },
-        "&$focusVisible $thumb": {
-          color: "#52d869",
-          border: "6px solid #fff",
-        },
-      },
-      thumb: {
-        width: 24,
-        height: 24,
-      },
-      track: {
-        borderRadius: 26 / 2,
-        border: `1px solid ${theme.palette.grey[400]}`,
-        backgroundColor: theme.palette.grey[50],
-        opacity: 1,
-        transition: theme.transitions.create(["background-color", "border"]),
-      },
-      checked: {},
-    }))(Switch);
 
-    // const ToggleViewQuizMobile = withStyles((theme) => ({
-    //   root: {
-    //     width: 0,
-    //     height: 0,
-    //     padding: 0,
-    //     margin: theme.spacing(1),
-    //   },
-    //   checked: {},
-    // }))(Switch);
-
-    // console.log("QUESTIONS : ", this.state.questions);
     document.title = `Schooly | Sunting ${this.state.type} `;
-
+    if(Boolean(selectedAssessments.submissions)){
+      return (
+      <Grid
+        container
+        alignItems="center"
+        justify="center"
+        style={{ height: "20vh" }}
+      >
+      <Typography variant="h5" color="textSecondary" align="center">
+        Tidak dapat disunting karena sudah ada yang mengumpulkan
+      </Typography>
+      </Grid>
+      )
+    } else{
     return (
       <div className={classes.root}>
         <DeleteDialog
@@ -2310,6 +2276,7 @@ class EditAssessment extends Component {
         </Snackbar>
       </div>
     );
+    }
   }
 }
 

@@ -17,3 +17,8 @@ code {
 html {
   height: 100%;
 }
+
+@font-face {
+  font-family: "Caveat";
+  src: local("Caveat"), url(./fonts/Caveat/Caveat-Regular.ttf) format("truetype");
+}

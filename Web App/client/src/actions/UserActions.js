@@ -23,10 +23,6 @@ export const registerUser = (userData, history) => (dispatch) => {
   return (
     axios
       .post("/api/users/register", userData)
-      // .then((res) => {
-      // alert("Akun baru telah terdaftar");
-      // history.push("/masuk");
-      // })
       .then(() => {
         dispatch({
           type: GET_ERRORS,
@@ -362,3 +358,13 @@ export const refreshTeacher = (teacherId) => (dispatch) => {
     console.log(err);
   });    
 };
+
+export const bulkRegisterUsers = (data) => {
+  return (
+    axios
+      .post("/api/users/register_students_bulk", data)
+      .then((res) => {
+        return res;
+      })
+  )
+}

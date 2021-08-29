@@ -370,7 +370,7 @@ function Profile(props) {
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   <Link
                     to={{
-                      pathname: `/lihat-rapor/${user._id}`,
+                      pathname: `/rapor/${user._id}`,
                     }}
                   >
                     <LightTooltip title="Klik Untuk Melihat Rapor">
@@ -391,11 +391,11 @@ function Profile(props) {
                 userData={user}
               />
             </Grid>
-            <Grid item>
+            {/* <Grid item>
               <ProfilePasswordEditorDialog
                 handleOpenAlert={handleOpenPasswordEditorAlert}
               />
-            </Grid>
+            </Grid> */}
           </Hidden>
           <Hidden xsDown>
             {/* Desktop = Mini Variant Drawer */}
@@ -404,7 +404,7 @@ function Profile(props) {
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   <Link
                     to={{
-                      pathname: `/lihat-rapor/${user._id}`,
+                      pathname: `/rapor/${user._id}`,
                     }}
                   >
                     <LightTooltip title="Klik Untuk Melihat Rapor">
@@ -426,11 +426,12 @@ function Profile(props) {
                 userData={user}
               />
             </Grid>
-            <Grid item>
+            {/* Di hide untuk simulation */}
+            {/* <Grid item>
               <ProfilePasswordEditorDialog
                 handleOpenAlert={handleOpenPasswordEditorAlert}
               />
-            </Grid>
+            </Grid> */}
           </Hidden>
         </Grid>
         <Grid item container direction="column" spacing={4}>

@@ -5,9 +5,9 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { savePassword } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import authBackground from "../AuthBackground.png";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
-import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
+import resetPasswordArt from "./ResetPasswordArt.png";
+import { Button, Grid, Hidden, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -16,33 +16,31 @@ const styles = (theme) => ({
     flexDirection: "column",
     alignItems: "center",
     margin: "auto",
-    maxWidth: "80%",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
-    },
-    minHeight: "500px",
     padding: "10px",
-    backgroundImage: `url(${authBackground})`,
-    backgroundPosition: "center",
+    background: "linear-gradient(#2196F3, #FFFFFF)",
+    backgroundSize: "100% 300px",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    [theme.breakpoints.up("sm")]: {
-      backgroundSize: "contain",
-    },
   },
   schoolyLogo: {
     width: "250px",
     height: "125px",
     marginBottom: "25px",
   },
+  artThumbnail: {
+    maxWidth: "100%",
+    maxHeight: "100%",
+  },
   resetPasswordPaper: {
     margin: "auto",
-    maxWidth: "350px",
     padding: "40px",
+    maxWidth: "650px",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "400px",
+    },
   },
   changePasswordButton: {
+    marginTop: "15px",
     width: "100%",
-    marginTop: "30px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -62,13 +60,16 @@ class ResetPassword extends Component {
     };
   }
   onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value });
+    this.setState({ [e.target.id]: e.target.value , errors: { ...this.state.errors, [e.target.id]: null } });
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.handleNavbar(false);
+  }
 
   componentWillUnmount() {
     this.props.clearErrors();
+    this.props.handleNavbar(true);
   }
 
   //Dispatch is used as a callback which gets invoked once some async action is complete.
@@ -92,9 +93,7 @@ class ResetPassword extends Component {
       savePassword(passwordReset);
     };
 
-    document.title = "Schooly | Lupa Akun";
-    document.body.style =
-      "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
+    document.title = "Schooly | Ubah Kata Sandi";
 
     return (
       <div className={classes.root}>
@@ -106,62 +105,75 @@ class ResetPassword extends Component {
           />
         </Link>
         <Paper elevation={11} className={classes.resetPasswordPaper}>
-          <Grid container direction="column" spacing={5}>
-            <Grid item>
-              <Typography variant="h6" align="center" gutterBottom>
-                <b>Ubah Kata Sandi</b>
-              </Typography>
-              <Typography variant="body1" align="center" color="textSecondary">
-                Masukkan Kata Sandi baru Anda
-              </Typography>
-            </Grid>
-            <Grid item>
-              <form noValidate onSubmit={onSubmit}>
-                <Grid container direction="column" spacing={4}>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      id="password"
-                      label="Kata Sandi"
-                      onChange={this.onChange}
-                      value={password}
-                      error={Boolean(errors.password_entry)}
-                      type="password"
-                      helperText={errors.password_entry}
-                      classname={classnames("", {
-                        invalid: errors.email || errors.emailnotfound,
-                      })}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      id="password2"
-                      label="Konfirmasi Kata Sandi"
-                      onChange={this.onChange}
-                      value={password2}
-                      error={Boolean(errors.password_match)}
-                      type="password"
-                      helperText={errors.password_match}
-                      classname={classnames("", {
-                        invalid: errors.email || errors.emailnotfound,
-                      })}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      type="submit"
-                      className={classes.changePasswordButton}
-                    >
-                      Ubah Kata Sandi
-                    </Button>
-                  </Grid>
+          <Grid container spacing={6} alignItems="center">
+            <Grid item xs={12} md={7}>
+              <Grid container direction="column" spacing={6}>
+                <Grid item>
+                  <Typography variant="h6" gutterBottom>
+                    <b>Ubah Kata Sandi</b>
+                  </Typography>
+                  <Typography variant="body1" color="textSecondary">
+                    Masukkan kata sandi baru Anda. Kata sandi harus terdiri dari minimal 8 karakter dengan kombinasi huruf kapital dan angka.
+                  </Typography>
                 </Grid>
-              </form>
+                <Grid item>
+                  <form noValidate onSubmit={onSubmit}>
+                    <Grid container direction="column" spacing={6}>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          id="password"
+                          label="Kata Sandi Baru"
+                          onChange={this.onChange}
+                          value={password}
+                          error={Boolean(errors.password_entry)}
+                          type="password"
+                          helperText={errors.password_entry}
+                          classname={classnames("", {
+                            invalid: errors.email || errors.emailnotfound,
+                          })}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          id="password2"
+                          label="Konfirmasi Kata Sandi Baru"
+                          onChange={this.onChange}
+                          value={password2}
+                          error={Boolean(errors.password_match)}
+                          type="password"
+                          helperText={errors.password_match}
+                          classname={classnames("", {
+                            invalid: errors.email || errors.emailnotfound,
+                          })}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          variant="contained"
+                          type="submit"
+                          className={classes.changePasswordButton}
+                        >
+                          Ubah Kata Sandi
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </form>
+                </Grid>
+              </Grid>
             </Grid>
+            <Hidden smDown>
+              <Grid item xs={5}>
+                  <img
+                    alt="Reset Password Art"
+                    src={resetPasswordArt}
+                    className={classes.artThumbnail}
+                  />
+              </Grid>
+            </Hidden>
           </Grid>
         </Paper>
       </div>

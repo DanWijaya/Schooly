@@ -13,6 +13,7 @@ const validateLoginInput = require("../../validation/Login");
 
 // Load User model
 const User = require("../../models/user_model/User");
+const Class = require("../../models/Class");
 const Student = require("../../models/user_model/Student");
 const Teacher = require("../../models/user_model/Teacher");
 const Admin = require("../../models/user_model/Admin");
@@ -83,7 +84,9 @@ router.post("/login", (req, res) => {
   const password = req.body.password;
 
   // Find user by email
-  User.findOne({ email }).then((user) => {
+  User.findOne({ email: email }).then((user) => {
+    console.log(email);
+    console.log(user);
     // Check if user exists
     if (!user) {
       return res.status(404).json({ emailnotfound: "Email tidak ditemukan" });
@@ -352,14 +355,14 @@ router.put(
 
 router.get("/getteachers", (req, res) => {
   // console.log("GET teachers runned")
-  User.find({ role: "Teacher", active: true }).then((users, err) => {
+  Teacher.find({ active: true }).sort({name: 1}).then((users, err) => {
     if (!users) console.log("No teachers yet in Schooly System");
     else return res.json(users);
   });
 });
 
 router.get("/getstudents", (req, res) => {
-  User.find({ role: "Student", active: true }).then((users, err) => {
+  Student.find({ active: true }).sort({name: 1}).then((users, err) => {
     if (!users) console.log("No students yet in Schooly System");
     else return res.json(users);
   });
@@ -393,7 +396,7 @@ router.get("/getUsers", (req, res) => {
 
 router.get("/getstudentsbyclass/:id", (req, res) => {
   let id = req.params.id;
-  Student.find({ kelas: id, active: true }).then((users, err) => {
+  Student.find({ kelas: id, active: true}).sort({name: 1}).then((users, err) => {
     if (!users) console.log("No students with this class ID");
     else {
       // console.log("Users by class : ", users)
@@ -403,7 +406,7 @@ router.get("/getstudentsbyclass/:id", (req, res) => {
 });
 
 router.get("/all_users", (req, res) => {
-  User.find({ active: true }).then((users, err) => {
+  User.find({ active: true }).sort({name: 1}).then((users, err) => {
     if (!users)
       return res.status(404).json("No students yet in Schooly system");
     else return res.json(users);
@@ -412,14 +415,14 @@ router.get("/all_users", (req, res) => {
 
 // for admin only
 router.get("/getpendingstudents", (req, res) => {
-  User.find({ role: "Student", active: false }).then((users, err) => {
+  Student.find({ active: false }).sort({name: 1}).then((users, err) => {
     if (!users) return res.json([]);
     else return res.json(users);
   });
 });
 
 router.get("/getpendingteachers", (req, res) => {
-  User.find({ role: "Teacher", active: false }).then((users, err) => {
+  Teacher.find({ active: false }).sort({name: 1}).then((users, err) => {
     if (!users) return res.json([]);
     else return res.json(users);
   });
@@ -507,4 +510,29 @@ router.put("/teacher/:teacherId", (req, res) => {
   });
 });
 
+router.post("/register_students_bulk", (req,res) => {
+  let { classes, users } = req.body;
+  // terima req.body.classes 
+  let class_map = new Map();
+  
+  // isi dari classes_map (key,value) = (nama kelas, ObjectId)
+  Class.find( {name: {$in: classes}}).then((result) => {
+    result.forEach((item) => class_map.set(item.name, item._id));
+    let user_list = users.map((u) => {
+      u.kelas = class_map.get(u.kelas);
+      u.active = true;
+      
+      const saltRounds = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(u.password, saltRounds)
+      
+      u.password = hash;
+      return u;
+    });
+    return User.insertMany(user_list);
+  }).then((results) => {
+    return res.json(results);
+  })
+})
+
 module.exports = router;
+

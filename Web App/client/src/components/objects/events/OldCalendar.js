@@ -35,7 +35,7 @@ import {
 } from "../../../actions/EventActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getStudents, getStudentsByClass, getTeachers } from "../../../actions/UserActions";
-import { getTasks, getAllTask } from "../../../actions/TaskActions";
+import { getTasksBySubjectClass, getAllTask } from "../../../actions/TaskActions";
 import {
   getAssessments,
   getAllAssessments,
@@ -1347,7 +1347,7 @@ export default connect(mapStateToProps, {
   getAllSubjects,
   getAllTaskFilesByUser,
   getAllAssessments,
-  getTasks,
+  getTasksBySubjectClass,
   getAssessments,
   getStudents,
   getTeachers

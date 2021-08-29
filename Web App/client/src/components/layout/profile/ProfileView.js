@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   profileDataItemAvatar: {
-    backgroundColor: "#00b7ffg",
+    backgroundColor: "#00B7FFG",
   },
   buttonRapor: {
     backgroundColor: theme.palette.warning.main,
@@ -261,7 +261,7 @@ function ProfileView(props) {
       </Grid>
       <Divider className={classes.profileDivider} />
       {role === "Student" && user.role === "Teacher" ? (
-        (classesCollection.kelas.walikelas) ? 
+        (classesCollection.kelas.walikelas) ?
         (classesCollection.kelas.walikelas === user._id) ? (
           <div
             style={{
@@ -272,7 +272,7 @@ function ProfileView(props) {
           >
             <Link
               to={{
-                pathname: `/lihat-rapor/${_id}`,
+                pathname: `/rapor/${_id}`,
               }}
             >
               <LightTooltip title="Klik Untuk Melihat Rapor">
@@ -296,7 +296,7 @@ function ProfileView(props) {
               >
                 <Link
                   to={{
-                    pathname: `/lihat-rapor/${_id}`,
+                    pathname: `/rapor/${_id}`,
                   }}
                 >
                   <LightTooltip title="Klik Untuk Melihat Rapor">
@@ -322,7 +322,7 @@ function ProfileView(props) {
           >
             <Link
               to={{
-                pathname: `/lihat-rapor/${_id}`,
+                pathname: `/rapor/${_id}`,
               }}
             >
               <LightTooltip title="Klik Untuk Melihat Rapor">

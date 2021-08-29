@@ -4,7 +4,7 @@ const isEmpty = require("is-empty");
 module.exports = function validateAssessmentInput(data) {
   let errors = {};
   // data keys: name, subject, description, type
-
+  console.log(data);
   for (let key of Object.keys(data)) {
     if (key !== "posted") {
       if (isEmpty(data[key])) {

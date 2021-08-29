@@ -249,9 +249,9 @@ class CreateAssessment extends Component {
       description: "",
       subject: "",
       class_assigned: [],
-      start_date: new Date(),
-      end_date: new Date(),
-      post_date: new Date(),
+      start_date: null,
+      end_date: null,
+      post_date: null,
       posted: false,
       isScheduled: false,
       type: "",
@@ -288,12 +288,12 @@ class CreateAssessment extends Component {
       over_limit: [],
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
-      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
       allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
       inputHeight: null, // menyimpan tinggi textfield
       customHeight: null, // menyimpan tinggi label + textfield
       errors: {},
-      success: null    
+      success: null
     };
     this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
     this.customHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi label "Judul" dan textfield
@@ -520,7 +520,7 @@ class CreateAssessment extends Component {
         questions: this.state.questions,
         type: this.state.type,
       };
-      validateAssessment(assessmentData).catch((err) => { 
+      validateAssessment(assessmentData).catch((err) => {
         this.setState({ errors: err });
       }).finally(() => {
         this.handleOpenErrorSnackbar();
@@ -557,7 +557,7 @@ class CreateAssessment extends Component {
 
     if (otherfield) {
       if (otherfield === "end_date" || otherfield === "start_date" || otherfield === "post_date") {
-        
+
         if (otherfield === "start_date") {
           if (this.isValidDateTime(e) && this.isValidDateTime(this.state.end_date)) {
             if (this.state.end_date.getTime() < e.getTime()) {
@@ -1034,7 +1034,7 @@ class CreateAssessment extends Component {
         }
 
         this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
-      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
+      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null
     }
 
     if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
@@ -1076,7 +1076,7 @@ class CreateAssessment extends Component {
     if (this.inputHeightRef.current && this.customHeightRef.current) {
       this.setState({
         inputHeight: this.inputHeightRef.current.offsetHeight,
-        customHeight: this.customHeightRef.current.offsetHeight + this.inputHeightRef.current.offsetHeight + 32 // tinggi (label + textfield) + (textfield) + (space antara textfield dan label di bawahnya)  
+        customHeight: this.customHeightRef.current.offsetHeight + this.inputHeightRef.current.offsetHeight + 32 // tinggi (label + textfield) + (textfield) + (space antara textfield dan label di bawahnya)
         // customHeight: document.getElementById("top").getBoundingClientRect().top - document.getElementById("bottom").getBoundingClientRect().bottom // hasilnya salah
       });
     }
@@ -1173,7 +1173,7 @@ class CreateAssessment extends Component {
           <Divider className={classes.dividerMargin} />
         </>
       ];
-      
+
       for (let i = 0; i < filteredtypeCount.length; i++) {
         let type = filteredtypeCount[i];
         let weight = this.state.weights[type];
@@ -1184,7 +1184,7 @@ class CreateAssessment extends Component {
           <Grid container>
             <Grid container>
               {/* untuk menambahkan margin */}
-              <FormHelperText>{"\u200B"}</FormHelperText> 
+              <FormHelperText>{"\u200B"}</FormHelperText>
             </Grid>
             <div /* tidak pakai grid container agar widthnya tidak diset 100% */
               style={{
@@ -1451,7 +1451,7 @@ class CreateAssessment extends Component {
           },
         },
         "&$focusVisible $thumb": {
-          color: "#52d869",
+          color: "#52D869",
           border: "6px solid #fff",
         },
       },
@@ -1665,11 +1665,11 @@ class CreateAssessment extends Component {
                               onChange={(date) =>
                                 this.onChange(date, "start_date")
                               }
-                              onError={(err) => {
-                                if (errors.start_date !== err) {
-                                  this.setState({ errors: { ...errors, start_date: err } });
-                                }
-                              }}
+                              // onError={(err) => {
+                              //   if (errors.start_date !== err) {
+                              //     this.setState({ errors: { ...errors, start_date: err } });
+                              //   }
+                              // }}
                               error={errors.start_date_custom || errors.start_date}
                             />
                               <div className={classes.zeroHeightHelperText}>
@@ -1767,7 +1767,7 @@ class CreateAssessment extends Component {
                             {errors.post_date
                               ? <FormHelperText variant="outlined" error>{errors.post_date}</FormHelperText>
                               : null}
-                            {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang 
+                            {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang
                               untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
                             <FormGroup style={{ width: "fit-content" }}>
                               <FormControlLabel

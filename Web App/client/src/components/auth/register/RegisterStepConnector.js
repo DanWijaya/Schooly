@@ -18,7 +18,7 @@ const RegisterStepConnector = withStyles((theme) => ({
   line: {
     height: 3,
     border: 0,
-    backgroundColor: "#eaeaf0",
+    backgroundColor: "#EAEAF0",
     borderRadius: 1,
   },
 }))(StepConnector);

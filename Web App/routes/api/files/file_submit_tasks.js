@@ -120,6 +120,14 @@ router.get("/download/:id", (req, res) => {
   });
 });
 
+router.get("/by_multiple_tasks", (req,res) => {
+  let { id_list } = req.query;
+
+  FileSubmitTask.find({ _id: { $in: id_list}}).then((results) => {
+    return res.status(200).json({file_submit_tasks: results, tasks_id: id_list});
+  })
+})
+
 // Router to delete a DOCUMENT file
 router.delete("/:id", (req, res) => {
   const { delete_all } = req.body;

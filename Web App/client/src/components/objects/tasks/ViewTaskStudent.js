@@ -225,7 +225,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   checkButton: {
-    borderRadius: "100%",
     backgroundColor: theme.palette.success.main,
     color: "white",
     marginTop: "6px",

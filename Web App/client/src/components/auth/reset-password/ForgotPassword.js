@@ -3,18 +3,11 @@ import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { createHash } from "../../../actions/AuthActions";
+import { savePassword } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import authBackground from "../AuthBackground.png";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
-import {
-  Button,
-  Divider,
-  Grid,
-  Paper,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import resetPasswordArt from "./ResetPasswordArt.png";
+import { Button, Grid, Hidden, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -23,32 +16,30 @@ const styles = (theme) => ({
     flexDirection: "column",
     alignItems: "center",
     margin: "auto",
-    maxWidth: "80%",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
-    },
-    minHeight: "500px",
     padding: "10px",
-    backgroundImage: `url(${authBackground})`,
-    backgroundPosition: "center",
+    background: "linear-gradient(#2196F3, #FFFFFF)",
+    backgroundSize: "100% 300px",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    [theme.breakpoints.up("sm")]: {
-      backgroundSize: "contain",
-    },
   },
   schoolyLogo: {
     width: "250px",
     height: "125px",
     marginBottom: "25px",
   },
-  forgotPasswordPaper: {
+  artThumbnail: {
+    maxWidth: "100%",
+    maxHeight: "100%",
+  },
+  resetPasswordPaper: {
     margin: "auto",
-    maxWidth: "350px",
     padding: "40px",
+    maxWidth: "650px",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "400px",
+    },
   },
   changePasswordButton: {
-    marginTop: "30px",
+    marginTop: "15px",
     width: "100%",
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -57,57 +48,52 @@ const styles = (theme) => ({
       color: "white",
     },
   },
-  resendEmailButton: {
-    marginTop: "30px",
-    width: "100%",
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.main,
-      color: "white",
-    },
-  },
 });
 
-class ForgotPassword extends Component {
+class ResetPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
       errors: {},
-      activeStep: 0,
-      email: "",
+      password: "",
+      password2: "",
     };
   }
-
   onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value });
-  };
-
-  // Dispatch is used as a callback which gets invoked once some async action is complete.
-  // In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
-  onSubmit = (e) => {
-    e.preventDefault();
-    console.log("Submitted");
-    this.props.createHash(this.state.email.toLowerCase());
+    this.setState({ [e.target.id]: e.target.value , errors: { ...this.state.errors, [e.target.id]: null } });
   };
 
   componentDidMount() {
     this.props.handleNavbar(false);
   }
+
   componentWillUnmount() {
     this.props.clearErrors();
     this.props.handleNavbar(true);
   }
 
+  //Dispatch is used as a callback which gets invoked once some async action is complete.
+  //In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
+
   render() {
-    const { classes, errors } = this.props;
+    const { password, password2 } = this.state;
+    const { errors } = this.props;
+    const { classes, savePassword } = this.props;
+    const { hash } = this.props.match.params;
 
-    const { email } = this.state;
-    const { isPasswordReset } = this.props.passwordMatters;
+    const onSubmit = (e) => {
+      e.preventDefault();
+      console.log("Submitted");
 
-    document.title = "Schooly | Lupa Akun";
-    document.body.style =
-      "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
+      let passwordReset = {
+        password: password,
+        password2: password2,
+        hash: hash,
+      };
+      savePassword(passwordReset);
+    };
+
+    document.title = "Schooly | Ubah Kata Sandi";
 
     return (
       <div className={classes.root}>
@@ -118,74 +104,76 @@ class ForgotPassword extends Component {
             className={classes.schoolyLogo}
           />
         </Link>
-        <Paper elevation={11} className={classes.forgotPasswordPaper}>
-          <Grid container direction="column" spacing={5}>
-            {!isPasswordReset ? (
-              <Grid item>
-                <Typography variant="h6" align="center" gutterBottom>
-                  <b>Lupa Kata Sandi?</b>
-                </Typography>
-                <Typography
-                  variant="body1"
-                  align="center"
-                  color="textSecondary"
-                >
-                  Masukkan email akun Anda untuk melanjutkan.
-                </Typography>
+        <Paper elevation={11} className={classes.resetPasswordPaper}>
+          <Grid container spacing={6} alignItems="center">
+            <Grid item xs={12} md={7}>
+              <Grid container direction="column" spacing={6}>
+                <Grid item>
+                  <Typography variant="h6" gutterBottom>
+                    <b>Ubah Kata Sandi</b>
+                  </Typography>
+                  <Typography variant="body1" color="textSecondary">
+                    Masukkan kata sandi baru Anda. Kata sandi harus terdiri dari minimal 8 karakter dengan kombinasi huruf kapital dan angka.
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <form noValidate onSubmit={onSubmit}>
+                    <Grid container direction="column" spacing={6}>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          id="password"
+                          label="Kata Sandi Baru"
+                          onChange={this.onChange}
+                          value={password}
+                          error={Boolean(errors.password_entry)}
+                          type="password"
+                          helperText={errors.password_entry}
+                          classname={classnames("", {
+                            invalid: errors.email || errors.emailnotfound,
+                          })}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          id="password2"
+                          label="Konfirmasi Kata Sandi Baru"
+                          onChange={this.onChange}
+                          value={password2}
+                          error={Boolean(errors.password_match)}
+                          type="password"
+                          helperText={errors.password_match}
+                          classname={classnames("", {
+                            invalid: errors.email || errors.emailnotfound,
+                          })}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          variant="contained"
+                          type="submit"
+                          className={classes.changePasswordButton}
+                        >
+                          Ubah Kata Sandi
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </form>
+                </Grid>
               </Grid>
-            ) : (
-              <Grid item>
-                <Typography variant="h6" align="center" gutterBottom>
-                  <b>Email telah dikirim</b>
-                </Typography>
-                <Typography
-                  variant="body1"
-                  align="center"
-                  color="textSecondary"
-                >
-                  Silahkan buka email tersebut untuk melanjutkan.
-                </Typography>
-              </Grid>
-            )}
-            <Grid item>
-              {!isPasswordReset ? (
-                <form noValidate onSubmit={this.onSubmit}>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    id="email"
-                    label="Email"
-                    onChange={this.onChange}
-                    value={email}
-                    error={Boolean(errors.problem)}
-                    type="email"
-                    helperText={errors.problem}
-                    className={classnames("", {
-                      invalid: errors.email || errors.emailnotfound,
-                    })}
+            </Grid>
+            <Hidden smDown>
+              <Grid item xs={5}>
+                  <img
+                    alt="Reset Password Art"
+                    src={resetPasswordArt}
+                    className={classes.artThumbnail}
                   />
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    className={classes.changePasswordButton}
-                  >
-                    Ubah Kata Sandi
-                  </Button>
-                </form>
-              ) : (
-                <Button
-                  onClick={() => window.location.reload()}
-                  className={classes.resendEmailButton}
-                >
-                  Kirim Ulang Email
-                </Button>
-              )}
-            </Grid>
-            <Divider />
-            <Grid item container justify="space-around">
-              <Link to="/masuk">Sudah ada Akun?</Link>|
-              <Link to="/daftar">Belum ada Akun?</Link>
-            </Grid>
+              </Grid>
+            </Hidden>
           </Grid>
         </Paper>
       </div>
@@ -193,8 +181,8 @@ class ForgotPassword extends Component {
   }
 }
 
-ForgotPassword.propTypes = {
-  createHash: PropTypes.func.isRequired,
+ResetPassword.propTypes = {
+  savePassword: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   passwordMatters: PropTypes.object.isRequired,
@@ -207,7 +195,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { createHash, clearErrors })(
-    withStyles(styles)(ForgotPassword)
+  connect(mapStateToProps, { savePassword, clearErrors })(
+    withStyles(styles)(ResetPassword)
   )
 );
