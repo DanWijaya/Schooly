@@ -892,7 +892,6 @@ function ManageUsers(props) {
   };
 
   const selectAllData = (type) => {
-    console.log("Select all data is runned", type);
     if (type === "Student") {
       let allDataStudent = [];
       let booleanAllDataStudent = [];

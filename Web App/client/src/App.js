@@ -90,6 +90,7 @@ import EditUnit from "./components/objects/superadmin-only/CreateUnit";
 // import DropboxAuth from "./components/dropbox/DropboxAuth";
 
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
+import ViewUnit from "./components/objects/superadmin-only/ViewUnit";
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -188,22 +189,6 @@ class App extends Component {
                 <Navigation
                   showNavBar={this.state.showNavBar}
                   sideDrawerExist={this.state.sideDrawerExist}/>
-                {/* {this.state.showNavBar ? (
-                  <NavBar
-                    handleDrawerDesktop={this.handleDrawerDesktop}
-                    handleDrawerMobile={this.handleDrawerMobile}
-                    sideDrawerExist={this.state.sideDrawerExist}
-                    assessmentState={localStorage.getItem(`status`)}
-                  />
-                ) : null}
-                {this.state.sideDrawerExist &&
-                localStorage.getItem(`status`) !== "ujian" ? (
-                  <SideDrawer
-                    mobileOpen={this.state.mobileOpen}
-                    desktopOpen={this.state.desktopOpen}
-                    handleDrawerMobile={this.handleDrawerMobile}
-                  />
-                ) : null} */}
                 <div
                   style={{
                     flexGrow: "1",
@@ -581,16 +566,16 @@ class App extends Component {
                       <PrivateRoute
                       exact
                       access={[Role.SUPERADMIN]}
-                      path="/sunting-unit"
+                      path="/sunting-unit/:id"
                       handleSideDrawerExist={this.handleSideDrawerExist}
                       component={EditUnit}
                       />
                       <PrivateRoute
                       exact
                       access={[Role.SUPERADMIN]}
-                      path="/lihat-unit"
+                      path="/unit/:id"
                       handleSideDrawerExist={this.handleSideDrawerExist}
-                      component={CreateAssessment}
+                      component={ViewUnit}
                       />
                       {/* Route Event */}
                       <PrivateRoute

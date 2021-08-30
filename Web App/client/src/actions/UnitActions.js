@@ -16,8 +16,10 @@ export const createUnit = (unitData) => { // try not to use dispatch
 }
 
 export const getAllUnits = () => (dispatch) => {
+    console.log("get All Units di panggil")
     return axios.get("/api/units/viewall")
             .then((res) => {
+                console.log(res.data);
                 dispatch({
                     type: GET_ALL_UNITS,
                     payload: res.data
@@ -27,5 +29,19 @@ export const getAllUnits = () => (dispatch) => {
             .catch((err) => {
                 throw err;
             })
+}
+
+export const getOneUnit = (id) => (dispatch) => {
+    return axios.get(`/api/units/view/${id}`)
+        .then((res) => {
+            dispatch({
+                type: GET_UNIT,
+                payload: res.data
+            })
+            return res.data;
+        })
+        .catch((err) => {
+            throw err;
+        })
 }
 

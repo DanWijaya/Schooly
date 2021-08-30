@@ -1,7 +1,7 @@
 import { GET_ALL_UNITS, GET_UNIT } from "../actions/Types";
 
 const initialState = {
-  selectedUnits: [],
+  selectedUnits: {},
   all_units: [],
 };
 

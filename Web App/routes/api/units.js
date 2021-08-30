@@ -60,7 +60,18 @@ router.delete("/delete/:id", (req,res) => {
 
 router.get("/viewall", (req,res) => {
     Unit.find({}, (err, units) => {
+        console.log(units);
         return res.json(units)
+    })
+})
+
+router.get("/view/:id", (req,res) => {
+    let { id } = req.params;
+    Unit.findById(id, (err, unit) => {
+        if(!unit){
+            return res.status(400).json("Unit to delete is not found");
+        }
+        return res.json(unit);
     })
 })
 

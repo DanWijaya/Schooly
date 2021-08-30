@@ -550,7 +550,7 @@ function UnitList(props) {
   };
 
   React.useEffect(() => {
-    //
+    const { getAllUnits } = props;
     getAllUnits();
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -565,11 +565,11 @@ function UnitList(props) {
   }, [])
 
   console.log(all_teachers_map);
-  const retrieveMaterials = () => {
+  const retrieveUnits = () => {
     // If all_units is not undefined or an empty array
     rows = [];
-
-    if (user.role === "Admin") {
+    console.log(all_units);
+    if (user.role === "SuperAdmin") {
       all_units
         .filter((item) =>
           item.name.toLowerCase().includes(searchFilter.toLowerCase())
@@ -594,9 +594,9 @@ function UnitList(props) {
     setOrderBy(property);
   };
 
-  // Call the function to view the Materials on tablerows.
+  // Call the function to view the Units on tablerows.
   // This function is defined above.
-  retrieveMaterials();
+  retrieveUnits();
 
   const onDeleteMaterial = (id) => {
     deleteMaterial(id).then((res) => {
@@ -657,7 +657,7 @@ function UnitList(props) {
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
-            let viewpage = `/unit /${row._id}`;
+            let viewpage = `/unit/${row._id}`;
             return (
               <Grid item>
                 {user.role === "Teacher" ? (
@@ -893,7 +893,7 @@ function UnitList(props) {
 UnitList.propTypes = {
   getAllUnits: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  all_units: PropTypes.object.isRequired
+  unitsCollection: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
