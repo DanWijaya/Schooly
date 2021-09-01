@@ -11,8 +11,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Footer from "./Footer";
 import Navigation from "./components/navigation/Navigation";
-import PrivateRoute from "./components/private-route/PrivateRoute";
-import { Styles } from "./Styles";
+import Styles from "./Styles";
 //Auth
 import Register from "./components/auth/register/Register";
 import Login from "./components/auth/login/Login";
@@ -30,6 +29,7 @@ import PrivacyPolicy from "./components/layout/legal/privacy-policy/PrivacyPolic
 import NotFound from "./components/layout/error/error404/NotFound";
 import ProblemEncountered from "./components/layout/error/error500/ProblemEncountered";
 //Misc
+import PrivateRoute from "./components/misc/private-route/PrivateRoute";
 import ProgressIndicator from "./components/misc/progress-indicator/ProgressIndicator";
 import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
 //Class
@@ -77,6 +77,7 @@ import TeacherList from "./components/objects/admin-only/TeacherList";
 //Prototypes
 import CSV from "./prototypes/contoh-tugas/CSV";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
+
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -95,10 +96,10 @@ if (localStorage.jwtToken) {
       // Redirect to login
       window.location.href = "./masuk";
     }
-    // valid token format
+    // Valid token format
   } catch (error) {
     console.log("Error in getting the token");
-    // invalid token format
+    // Invalid token format
   }
 }
 
@@ -171,23 +172,8 @@ class App extends Component {
                 ) : null}
                 <Navigation
                   showNavBar={this.state.showNavBar}
-                  sideDrawerExist={this.state.sideDrawerExist}/>
-                {/* {this.state.showNavBar ? (
-                  <NavBar
-                    handleDrawerDesktop={this.handleDrawerDesktop}
-                    handleDrawerMobile={this.handleDrawerMobile}
-                    sideDrawerExist={this.state.sideDrawerExist}
-                    assessmentState={localStorage.getItem(`status`)}
-                  />
-                ) : null}
-                {this.state.sideDrawerExist &&
-                localStorage.getItem(`status`) !== "ujian" ? (
-                  <SideDrawer
-                    mobileOpen={this.state.mobileOpen}
-                    desktopOpen={this.state.desktopOpen}
-                    handleDrawerMobile={this.handleDrawerMobile}
-                  />
-                ) : null} */}
+                  sideDrawerExist={this.state.sideDrawerExist}
+                />
                 <div
                   style={{
                     flexGrow: "1",

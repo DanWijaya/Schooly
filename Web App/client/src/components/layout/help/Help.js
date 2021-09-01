@@ -178,7 +178,7 @@ function Help(props) {
                       telah Anda daftarkan.
                     </Typography>
                   </Grid>
-                  {user.role === "Student" || user.role === "Student" ? (
+                  {user.role === "Student" || user.role === "Teacher" ? (
                     <Grid item container spacing={4}>
                       <Grid item>
                         <Typography variant="h6" align="justify" gutterBottom>
@@ -522,10 +522,10 @@ function Help(props) {
                               kelas, sedangkan baris dua dan seterusnya berisi
                               email murid. Email milik murid yang ditempatkan
                               pada suatu kelas akan berada pada kolom kelas tersebut,
-                              sedangkan username email murid yang belum ditempatkan ke kelas
+                              sedangkan email murid yang belum ditempatkan ke kelas
                               manapun akan berada pada kolom “Belum
                               Ditempatkan”. Untuk memindahkan murid, pindahkan
-                              username email setiap murid yang ingin
+                              email setiap murid yang ingin
                               dipindahkan ke kolom kelas yang sesuai.
                             </li>
                             <li>

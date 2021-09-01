@@ -1,7 +1,7 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 
-export const Styles = responsiveFontSizes(
+const Styles = responsiveFontSizes(
   createMuiTheme({
     palette: {
       primary: {
@@ -184,3 +184,5 @@ export const Styles = responsiveFontSizes(
     },
   })
 );
+
+export default Styles;

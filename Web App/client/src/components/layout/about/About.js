@@ -108,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     borderRadius: "7.5px",
-    height: "550px",
+    height: "450px",
     [theme.breakpoints.down("sm")]: {
       height: "300px",
     },
@@ -135,11 +135,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   whySchoolyThumbnail: {
-    maxWidth: "60%",
-    maxHeight: "60%",
-    [theme.breakpoints.up("sm")]: {
-      maxWidth: "90%",
-      maxHeight: "90%",
+    maxWidth: "40%",
+    maxHeight: "40%",
+    [theme.breakpoints.up("md")]: {
+      maxWidth: "75%",
+      maxHeight: "75%",
     },
   },
   supportSchooly: {
@@ -244,22 +244,22 @@ function About(props) {
         </div>
       </div>
       <div className={classes.whySchooly}>
-        <Typography variant="h4" align="center" gutterBottom>
+        <Typography variant="h3" align="center" gutterBottom>
           Mengapa Schooly?
         </Typography>
-        <Typography align="center" paragraph>
-          Secara singkat, berikut adalah alasan keuntungan penggunaan Schooly.
+        <Typography variant="h6" align="center" style={{ marginBottom: "50px" }}>
+          Berikut adalah keuntungan dari penggunaan Schooly.
         </Typography>
         <Grid container spacing={5} direction="column">
           <Grid item container spacing={5} justify="center" alignItems="center">
-            <Grid item xs={12} sm={6} className={classes.whySchoolyThumbnailContainer}>
+            <Grid item xs={12} md={6} className={classes.whySchoolyThumbnailContainer}>
               <img
                 alt="Schooly Feature 1"
                 src={aboutArt1}
                 className={classes.whySchoolyThumbnail}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h4" color="primary" gutterBottom>
                 Semua kegiatan persekolahanmu ada di tanganmu
               </Typography>
@@ -271,7 +271,7 @@ function About(props) {
               </Typography>
             </Grid>
           </Grid>
-          <Hidden xsDown>
+          <Hidden smDown>
             <Grid
               item
               container
@@ -279,7 +279,7 @@ function About(props) {
               justify="center"
               alignItems="center"
             >
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} md={6}>
                 <Typography variant="h4" color="primary" gutterBottom>
                   Akses dengan mudah
                 </Typography>
@@ -289,7 +289,7 @@ function About(props) {
                   bisa diakses perangkat apa saja dengan mudah.
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={6} className={classes.whySchoolyThumbnailContainer}>
+              <Grid item xs={12} md={6} className={classes.whySchoolyThumbnailContainer}>
                 <img
                   alt="Schooly Feature 2"
                   src={aboutArt2}
@@ -298,7 +298,7 @@ function About(props) {
               </Grid>
             </Grid>
           </Hidden>
-          <Hidden smUp>
+          <Hidden mdUp>
             <Grid
               item
               container
@@ -306,14 +306,14 @@ function About(props) {
               justify="center"
               alignItems="center"
             >
-              <Grid item xs={12} sm={6} className={classes.whySchoolyThumbnailContainer}>
+              <Grid item xs={12} md={6} className={classes.whySchoolyThumbnailContainer}>
                 <img
                   alt="Schooly Feature 2"
                   src={aboutArt2}
                   className={classes.whySchoolyThumbnail}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} md={6}>
                 <Typography variant="h4" color="primary" gutterBottom>
                   Akses dengan mudah
                 </Typography>
@@ -326,14 +326,14 @@ function About(props) {
             </Grid>
           </Hidden>
           <Grid item container spacing={5} justify="center" alignItems="center">
-            <Grid item xs={12} sm={6} className={classes.whySchoolyThumbnailContainer}>
+            <Grid item xs={12} md={6} className={classes.whySchoolyThumbnailContainer}>
               <img
                 alt="Schooly Feature 3"
                 src={aboutArt3}
                 className={classes.whySchoolyThumbnail}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h4" color="primary" gutterBottom>
                 Media sosial persekolahan
               </Typography>
