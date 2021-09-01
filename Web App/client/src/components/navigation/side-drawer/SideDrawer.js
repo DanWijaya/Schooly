@@ -7,6 +7,7 @@ import {
   Drawer,
   Hidden,
   Toolbar,
+  useMediaQuery,
 } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
@@ -45,6 +46,8 @@ function SideDrawer(props) {
   const { desktopOpen, mobileOpen, handleDrawerMobile } = props;
   const { user } = props.auth;
 
+  const isMobileView = useMediaQuery("(max-width:960px)");
+
   if (user.name !== undefined) {
     return (
       <div>
@@ -68,22 +71,24 @@ function SideDrawer(props) {
           </Drawer>
         </Hidden>
         <Hidden smDown implementation="css">
-          <Drawer
-            variant="permanent"
-            className={clsx(classes.drawerDesktop, {
-              [classes.drawerDesktopOpen]: desktopOpen,
-              [classes.drawerDesktopClose]: !desktopOpen,
-            })}
-            classes={{
-              paper: clsx({
+          {isMobileView ? null : 
+            <Drawer
+              variant="permanent"
+              className={clsx(classes.drawerDesktop, {
                 [classes.drawerDesktopOpen]: desktopOpen,
                 [classes.drawerDesktopClose]: !desktopOpen,
-              }),
-            }}
-          >
-            <Toolbar />
-            <DrawerContent user={user} />
-          </Drawer>
+              })}
+              classes={{
+                paper: clsx({
+                  [classes.drawerDesktopOpen]: desktopOpen,
+                  [classes.drawerDesktopClose]: !desktopOpen,
+                }),
+              }}
+            >
+              <Toolbar />
+              <DrawerContent user={user} />
+            </Drawer>
+          }
         </Hidden>
       </div>
     );

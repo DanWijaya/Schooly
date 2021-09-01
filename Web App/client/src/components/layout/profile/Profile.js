@@ -186,15 +186,14 @@ function Profile(props) {
   const [avatar, setAvatar] = React.useState(null);
   const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
 
-  console.log(user);
+  console.log("Avatarnya: ", avatar);
   React.useEffect(() => {
-    console.log("use effect");
+
     // let id = user._id ? user._id : user._id
-    let id = user._id;
-    getFileAvatar(id)
+    getFileAvatar(user._id)
       .then((result) => setAvatar(result))
       .catch((err) => console.log(err));
-  }, [user.avatar]);
+  }, [user._id]);
 
   // Alert control for ProfilePictureEditorDialog
   const [openAlert, setOpenAlert] = React.useState(false);

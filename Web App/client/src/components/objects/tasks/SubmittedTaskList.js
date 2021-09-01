@@ -632,7 +632,7 @@ function SubmittedTaskList(props) {
           }
 
           students_in_class.push(
-            <ExpansionPanel>
+            <ExpansionPanel defaultExpanded={true}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <ListItem className={classes.personListContainer}>
                   <ListItemAvatar>
