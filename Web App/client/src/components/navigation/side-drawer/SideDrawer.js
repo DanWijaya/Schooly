@@ -14,6 +14,7 @@ import {
   Toolbar,
   Typography,
   Tooltip,
+  useMediaQuery
 } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
@@ -281,9 +282,32 @@ function SideDrawer(props) {
   const { desktopOpen, mobileOpen, handleDrawerMobile } = props;
   const { user } = props.auth;
 
+  const isMobileView = useMediaQuery("(max-width:960px)");
+
   if (user.name !== undefined) {
     return (
       <div className={classes.drawerMobile}>
+        <Hidden smDown implementation="css">
+          {/* Desktop = Mini Variant Drawer */}
+          {isMobileView ? null : 
+          <Drawer
+            variant="permanent"
+            className={clsx(classes.drawerDesktop, {
+              [classes.drawerDesktopOpen]: desktopOpen,
+              [classes.drawerDesktopClose]: !desktopOpen,
+            })}
+            classes={{
+              paper: clsx({
+                [classes.drawerDesktopOpen]: desktopOpen,
+                [classes.drawerDesktopClose]: !desktopOpen,
+              }),
+            }}
+          >
+            <Toolbar />
+            <DrawerContent user={user} />
+          </Drawer>
+    }
+        </Hidden>
         <Hidden mdUp implementation="css">
           {/* Mobile = Backdrop Drawer */}
           <Drawer
@@ -302,25 +326,6 @@ function SideDrawer(props) {
               user={user}
               handleDrawerMobile={handleDrawerMobile}
             />
-          </Drawer>
-        </Hidden>
-        <Hidden smDown implementation="css">
-          {/* Desktop = Mini Variant Drawer */}
-          <Drawer
-            variant="permanent"
-            className={clsx(classes.drawerDesktop, {
-              [classes.drawerDesktopOpen]: desktopOpen,
-              [classes.drawerDesktopClose]: !desktopOpen,
-            })}
-            classes={{
-              paper: clsx({
-                [classes.drawerDesktopOpen]: desktopOpen,
-                [classes.drawerDesktopClose]: !desktopOpen,
-              }),
-            }}
-          >
-            <Toolbar />
-            <DrawerContent user={user} />
           </Drawer>
         </Hidden>
       </div>
