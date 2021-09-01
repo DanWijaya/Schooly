@@ -51,7 +51,7 @@ function SideDrawer(props) {
   if (user.name !== undefined) {
     return (
       <div>
-        <Hidden mdUp implementation="css">
+        {isMobileView ?
           <Drawer
             variant="temporary"
             anchor={theme.direction === "rtl" ? "right" : "left"}
@@ -69,27 +69,24 @@ function SideDrawer(props) {
               handleDrawerMobile={handleDrawerMobile}
             />
           </Drawer>
-        </Hidden>
-        <Hidden smDown implementation="css">
-          {isMobileView ? null : 
-            <Drawer
-              variant="permanent"
-              className={clsx(classes.drawerDesktop, {
+          :
+          <Drawer
+            variant="permanent"
+            className={clsx(classes.drawerDesktop, {
+              [classes.drawerDesktopOpen]: desktopOpen,
+              [classes.drawerDesktopClose]: !desktopOpen,
+            })}
+            classes={{
+              paper: clsx({
                 [classes.drawerDesktopOpen]: desktopOpen,
                 [classes.drawerDesktopClose]: !desktopOpen,
-              })}
-              classes={{
-                paper: clsx({
-                  [classes.drawerDesktopOpen]: desktopOpen,
-                  [classes.drawerDesktopClose]: !desktopOpen,
-                }),
-              }}
-            >
-              <Toolbar />
-              <DrawerContent user={user} />
-            </Drawer>
-          }
-        </Hidden>
+              }),
+            }}
+          >
+            <Toolbar />
+            <DrawerContent user={user} />
+          </Drawer>
+        }
       </div>
     );
   } else {
