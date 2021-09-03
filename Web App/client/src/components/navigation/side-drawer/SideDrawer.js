@@ -3,12 +3,9 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import DrawerContent from "./DrawerContent";
-import {
-  Drawer,
-  Hidden,
-  Toolbar,
-  useMediaQuery,
-} from "@material-ui/core";
+import Drawer from "@material-ui/core/Drawer";
+import Toolbar from "@material-ui/core/Toolbar";
+import { useMediaQuery } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -18,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
   drawerDesktop: {
     width: "240px",
     flexShrink: 0,
+    whiteSpace: "nowrap"
   },
   drawerDesktopOpen: {
     width: "240px",
@@ -27,16 +25,12 @@ const useStyles = makeStyles((theme) => ({
     }),
   },
   drawerDesktopClose: {
+    width: "70px",
+    overflowX: "hidden",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    overflowX: "hidden",
-    width: "70px",
-  },
-  drawerListItemIcon: {
-    width: "22.5px",
-    height: "22.5px",
   },
 }));
 

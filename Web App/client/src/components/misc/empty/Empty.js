@@ -1,15 +1,16 @@
 import React from "react";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core/";
 
 const useStyles = makeStyles((theme) => ({
-  greyBackground: {
+  empty: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
-    padding: "15px",
-    height: "100%",
+    height: "200px",
+    width: "100%",
+    padding: "10px",
     backgroundColor: "#E3E5E5",
   },
 }));
@@ -18,14 +19,10 @@ function Empty(props) {
   const classes = useStyles();
 
   return (
-    <div
-      style={{ height: "200px", width: "100%", padding: "0px 10px 0px 10px" }}
-    >
-      <div className={classes.greyBackground}>
-        <Typography align="center" color="textSecondary">
-          Kosong
-        </Typography>
-      </div>
+    <div className={classes.empty}>
+      <Typography align="center" color="textSecondary">
+        Kosong
+      </Typography>
     </div>
   );
 }

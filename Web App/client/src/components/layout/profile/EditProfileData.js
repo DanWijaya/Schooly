@@ -6,30 +6,27 @@ import "date-fns";
 import lokal from "date-fns/locale/id";
 import { updateUserData } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import {
-  Avatar,
-  Button,
-  Box,
-  Dialog,
-  FormControl,
-  Grid,
-  Hidden,
-  IconButton,
-  InputLabel,
-  List,
-  ListItem,
-  ListItemAvatar,
-  MenuItem,
-  Select,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-} from "@material-ui/core";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
+import Dialog from "@material-ui/core/Dialog";
+import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
+import Hidden from "@material-ui/core/Hidden";
+import IconButton from "@material-ui/core/IconButton";
+import InputLabel from "@material-ui/core/InputLabel";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import MenuItem from "@material-ui/core/MenuItem";
+import Paper from "@material-ui/core/Paper";
+import Select from "@material-ui/core/Select";
+import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import MuiAlert from "@material-ui/lab/Alert";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CakeIcon from "@material-ui/icons/Cake";
@@ -48,22 +45,19 @@ import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WcIcon from "@material-ui/icons/Wc";
 import WorkIcon from "@material-ui/icons/Work";
 
-const Validator = require("validator");
-const isEmpty = require("is-empty");
-
 const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: "20px",
+  },
   editProfileButton: {
     paddingLeft: "10px",
     paddingRight: "10px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: theme.palette.primary.main,
       color: "white",
     },
-  },
-  root: {
-    padding: "15px",
   },
   tabTitle: {
     fontSize: "10px",
@@ -83,6 +77,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
+const Validator = require("validator");
+const isEmpty = require("is-empty");
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -109,7 +106,7 @@ function TabIndex(index) {
 function ProfileDataItemEdit(props) {
   const classes = useStyles();
   const { errors } = props;
-  console.log(errors);
+
   return (
     <ListItem style={{ margin: "5px 0px 5px 0px" }}>
       <Grid container alignItems="center">
@@ -117,27 +114,27 @@ function ProfileDataItemEdit(props) {
           <Hidden xsDown implementation="css">
             <ListItemAvatar>
               <Avatar className={classes.profileDataItemAvatar}>
-                {props.profile_data_icon}
+                {props.icon}
               </Avatar>
             </ListItemAvatar>
           </Hidden>
         </Grid>
         <Grid item xs={12} sm={10}>
-          {props.is_textfield ? (
+          {props.isTextField ? (
             <div>
               <TextField
                 fullWidth
                 variant="outlined"
                 id={props.id}
-                label={props.profile_data_category}
-                onChange={props.on_change}
+                label={props.type}
+                onChange={props.onChange}
                 value={props.value}
                 error={!errors ? null : errors.email}
                 helperText={!errors ? null : errors.email}
               />
             </div>
           ) : (
-            props.non_textfield_content
+            props.nonTextFieldContent
           )}
         </Grid>
       </Grid>
@@ -145,13 +142,12 @@ function ProfileDataItemEdit(props) {
   );
 }
 
-function ProfileDataEditorDialog(props) {
+function EditProfileData(props) {
   const classes = useStyles();
-  
+
   const { user } = props.auth;
   const { updateUserData, clearErrors, errors, handleOpenAlert } = props;
-  // handleOpenAlert()
-  //Dialog
+
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -163,7 +159,6 @@ function ProfileDataEditorDialog(props) {
     setOpen(false);
   };
 
-  //Tabs
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     clearErrors();
@@ -193,7 +188,7 @@ function ProfileDataEditorDialog(props) {
 
   const [dataProfil, setDataProfil] = React.useState(defaultUserData);
 
-  //pas submit formnya
+  //Pass the submit form
   const onSubmit = (e) => {
     e.preventDefault();
     let userId = user._id;
@@ -229,25 +224,14 @@ function ProfileDataEditorDialog(props) {
 
   return (
     <div>
-      <Hidden smUp>
-        <Button
-          variant="contained"
-          onClick={handleClickOpen}
-          className={classes.editProfileButton}
-        >
-          <EditIcon />
-        </Button>
-      </Hidden>
-      <Hidden xsDown>
-        <Button
-          variant="contained"
-          onClick={handleClickOpen}
-          startIcon={<EditIcon />}
-          className={classes.editProfileButton}
-        >
-          Sunting Profil
-        </Button>
-      </Hidden>
+      <Button
+        variant="contained"
+        startIcon={<EditIcon />}
+        onClick={handleClickOpen}
+        className={classes.editProfileButton}
+      >
+        Sunting Profil
+      </Button>
       <Dialog fullWidth open={open} onClose={handleClose}>
         <Grid
           container
@@ -308,17 +292,17 @@ function ProfileDataEditorDialog(props) {
             <TabPanel value={value} index={0}>
               <List>
                 <ProfileDataItemEdit
-                  profile_data_icon={<PersonIcon />}
-                  profile_data_category="Nama"
-                  is_textfield
+                  icon={<PersonIcon />}
+                  type="Nama"
+                  isTextField
                   value={dataProfil.nama}
                   id="nama"
-                  on_change={handleChangeDataProfil}
+                  onChange={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
-                  profile_data_icon={<CakeIcon />}
-                  profile_data_category="Tanggal Lahir"
-                  non_textfield_content={
+                  icon={<CakeIcon />}
+                  type="Tanggal Lahir"
+                  nonTextFieldContent={
                     <div>
                       <MuiPickersUtilsProvider
                         locale={lokal}
@@ -347,9 +331,9 @@ function ProfileDataEditorDialog(props) {
                   }
                 />
                 <ProfileDataItemEdit
-                  profile_data_icon={<WcIcon />}
-                  profile_data_category="Jenis Kelamin"
-                  non_textfield_content={
+                  icon={<WcIcon />}
+                  type="Jenis Kelamin"
+                  nonTextFieldContent={
                     <FormControl
                       id="jenis_kelamin"
                       variant="outlined"
@@ -372,49 +356,49 @@ function ProfileDataEditorDialog(props) {
                   }
                 />
                 {/*<ProfileDataItemEdit
-                  profile_data_icon={<SchoolIcon />}
-                  profile_data_category="Sekolah"
-                  is_textfield
+                  icon={<SchoolIcon />}
+                  type="Sekolah"
+                  isTextField
                   value={dataProfil.sekolah}
                   id="sekolah"
-                  on_change={handleChangeDataProfil}
+                  onChange={handleChangeDataProfil}
                 />*/}
               </List>
             </TabPanel>
             <TabPanel value={value} index={1}>
               <List>
                 <ProfileDataItemEdit
-                  profile_data_icon={<EmailIcon />}
-                  profile_data_category="Email"
-                  is_textfield
+                  icon={<EmailIcon />}
+                  type="Email"
+                  isTextField
                   value={dataProfil.email}
                   errors={errors}
                   id="email"
-                  on_change={handleChangeDataProfil}
+                  onChange={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
-                  profile_data_icon={<PhoneIcon />}
-                  profile_data_category="Nomor Telepon"
-                  is_textfield
+                  icon={<PhoneIcon />}
+                  type="Nomor Telepon"
+                  isTextField
                   value={dataProfil.no_telp}
                   id="no_telp"
-                  on_change={handleChangeDataProfil}
+                  onChange={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
-                  profile_data_icon={<ContactPhoneIcon />}
-                  profile_data_category="Nomor Telepon Darurat"
-                  is_textfield
+                  icon={<ContactPhoneIcon />}
+                  type="Nomor Telepon Darurat"
+                  isTextField
                   value={dataProfil.no_telp_darurat}
                   id="no_telp_darurat"
-                  on_change={handleChangeDataProfil}
+                  onChange={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
-                  profile_data_icon={<HomeIcon />}
-                  profile_data_category="Alamat"
-                  is_textfield
+                  icon={<HomeIcon />}
+                  type="Alamat"
+                  isTextField
                   value={dataProfil.alamat}
                   id="alamat"
-                  on_change={handleChangeDataProfil}
+                  onChange={handleChangeDataProfil}
                 />
               </List>
             </TabPanel>
@@ -422,36 +406,36 @@ function ProfileDataEditorDialog(props) {
               <TabPanel value={value} index={2}>
                 <List>
                   <ProfileDataItemEdit
-                    profile_data_icon={<SportsEsportsIcon />}
-                    profile_data_category="Hobi dan Minat"
-                    is_textfield
+                    icon={<SportsEsportsIcon />}
+                    type="Hobi dan Minat"
+                    isTextField
                     value={dataProfil.hobi_minat}
                     id="hobi_minat"
-                    on_change={handleChangeDataProfil}
+                    onChange={handleChangeDataProfil}
                   />
                   <ProfileDataItemEdit
-                    profile_data_icon={<ColorLensIcon />}
-                    profile_data_category="Keterampilan Non-Akademik"
-                    is_textfield
+                    icon={<ColorLensIcon />}
+                    type="Keterampilan Non-Akademik"
+                    isTextField
                     value={dataProfil.ket_non_teknis}
                     id="ket_non_teknis"
-                    on_change={handleChangeDataProfil}
+                    onChange={handleChangeDataProfil}
                   />
                   <ProfileDataItemEdit
-                    profile_data_icon={<WorkIcon />}
-                    profile_data_category="Cita-Cita"
-                    is_textfield
+                    icon={<WorkIcon />}
+                    type="Cita-Cita"
+                    isTextField
                     value={dataProfil.cita_cita}
                     id="cita_cita"
-                    on_change={handleChangeDataProfil}
+                    onChange={handleChangeDataProfil}
                   />
                   <ProfileDataItemEdit
-                    profile_data_icon={<AccountBalanceIcon />}
-                    profile_data_category="Universitas Impian"
-                    is_textfield
+                    icon={<AccountBalanceIcon />}
+                    type="Perguruan Tinggi Impian"
+                    isTextField
                     value={dataProfil.uni_impian}
                     id="uni_impian"
-                    on_change={handleChangeDataProfil}
+                    onChange={handleChangeDataProfil}
                   />
                 </List>
               </TabPanel>
@@ -473,7 +457,7 @@ function ProfileDataEditorDialog(props) {
   );
 }
 
-ProfileDataEditorDialog.propTypes = {
+EditProfileData.propTypes = {
   auth: PropTypes.object.isRequired,
   updateUserData: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
@@ -486,5 +470,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { updateUserData, clearErrors })(
-  ProfileDataEditorDialog
+  EditProfileData
 );

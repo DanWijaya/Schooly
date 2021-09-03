@@ -2,10 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import privacyPolicyArt from "./PrivacyPolicyArt.png";
 import ScrollToTopButton from "../../../misc/scroll-to-top/ScrollToTopButton";
-import { Divider, List, ListItem, ListItemIcon, ListItemText, Typography } from "@material-ui/core";
+import Divider from "@material-ui/core/Divider";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 
 const useStyles = makeStyles((theme) => ({
   root: {

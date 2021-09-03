@@ -1,27 +1,25 @@
 import React from "react";
-import schoolySymbolLogo from "./images/SchoolySymbolLogo.png";
-import { Divider, Grid, Hidden, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import schoolySymbolLogo from "./images/SchoolySymbolLogo.png";
+import Divider from "@material-ui/core/Divider";
+import Grid from "@material-ui/core/Grid";
+import Hidden from "@material-ui/core/Hidden";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    margin: "auto",
+    marginTop: "100px",
+    padding: "10px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    margin: "auto",
-    marginTop: "100px",
-    padding: "10px",
   },
   schoolySymbolDesktop: {
     width: "10%",
     height: "10%",
-  },
-  schoolySymbolDesktopAssessment: {
-    width: "20%",
-    height: "20%",
-    objectFit: "contain",
   },
   schoolySymbolMobile: {
     width: "50px",
@@ -48,8 +46,7 @@ function Footer(props) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <Hidden mdUp implementation="css">
-        {/* Mobile = Column View */}
+      <Hidden mdUp>
         {props.assessmentState !== "ujian" ? (
           <div>
             <Divider style={{ marginBottom: "10px" }} />
@@ -100,8 +97,7 @@ function Footer(props) {
           </div>
         ) : null}
       </Hidden>
-      <Hidden smDown implementation="css">
-        {/* Desktop = Row View */}
+      <Hidden smDown>
         {props.assessmentState !== "ujian" ? (
           <div>
             <Divider style={{ marginBottom: "10px" }} />

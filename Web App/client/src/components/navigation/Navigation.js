@@ -4,8 +4,6 @@ import SideDrawer from "./side-drawer/SideDrawer"
 
 function Navigation(props) {
     const {showNavBar, sideDrawerExist } = props;
-    // const [showNavBar, setShowNavBar] = useState(true);
-    // const [sideDrawerExist, setSideDrawerExist] = useState(true);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [desktopOpen, setDesktopOpen] = useState(false);
 
@@ -18,23 +16,23 @@ function Navigation(props) {
     }
 
     return (
-        <>
-        {showNavBar ?
-         <NavBar
-          handleDrawerDesktop={handleDrawerDesktop}
-          handleDrawerMobile={handleDrawerMobile}
-          sideDrawerExist={sideDrawerExist}
-          assessmentState={localStorage.getItem(`status`)}
-        /> : null }
-
-        {sideDrawerExist && localStorage.getItem(`status`) !== "ujian" ?
-         <SideDrawer
-          mobileOpen={mobileOpen}
-          desktopOpen={desktopOpen}
-          handleDrawerMobile={handleDrawerMobile}
-        /> : null}
-
-        </>
+        <div>
+          {showNavBar ?
+            <NavBar
+              handleDrawerDesktop={handleDrawerDesktop}
+              handleDrawerMobile={handleDrawerMobile}
+              sideDrawerExist={sideDrawerExist}
+              assessmentState={localStorage.getItem(`status`)}
+            />
+          : null }
+          {sideDrawerExist && localStorage.getItem(`status`) !== "ujian" ?
+            <SideDrawer
+              mobileOpen={mobileOpen}
+              desktopOpen={desktopOpen}
+              handleDrawerMobile={handleDrawerMobile}
+            /> 
+          : null}
+        </div>
     )
 }
 

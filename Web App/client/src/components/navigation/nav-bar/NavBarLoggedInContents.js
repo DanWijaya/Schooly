@@ -49,8 +49,6 @@ function NavBarLoggedInContents(props) {
   const { user } = props.auth;
   const [avatar, setAvatar] = React.useState(null);
 
-  console.log("Avatar navbar:", avatar)
-
   React.useEffect(() => {
     getFileAvatar(user._id)
       .then((result) => {
@@ -59,16 +57,13 @@ function NavBarLoggedInContents(props) {
       })
       .catch((err) => console.log(err));
   }, [user._id]);
-  // Menu items in Mobile
-  const [mobileAnchorEl, setMobileAnchorEl] = React.useState(null);
-  const handleMobileMenuClose = () => {
-    setMobileAnchorEl(null);
-  };
-  const handleMobileMenuOpen = (event) => {
-    setMobileAnchorEl(event.currentTarget);
+
+  const onLogoutClick = (e) => {
+    e.preventDefault();
+    handleProfileMenuClose();
+    logoutUser();
   };
 
-  //Profile Menu
   const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
   const handleProfileMenu = (event) => {
     setProfileAnchorEl(event.currentTarget);
@@ -77,14 +72,14 @@ function NavBarLoggedInContents(props) {
     setProfileAnchorEl(null);
   };
 
-  // Logout Click
-  const onLogoutClick = (e) => {
-    e.preventDefault();
-    handleProfileMenuClose();
-    logoutUser();
+  const [mobileAnchorEl, setMobileAnchorEl] = React.useState(null);
+  const handleMobileMenuClose = () => {
+    setMobileAnchorEl(null);
+  };
+  const handleMobileMenuOpen = (event) => {
+    setMobileAnchorEl(event.currentTarget);
   };
 
-  // Desktop Menu (will rendered when in desktop mode / width >= 600px)
   const renderDesktopMenu = (
     <Grid container className={classes.navbarContents}>
       <LightTooltip title={user.name}>
@@ -132,7 +127,6 @@ function NavBarLoggedInContents(props) {
     </Grid>
   );
 
-  // Mobile menu (will rendered when in mobile mode / width < 600px)
   const renderMobileMenu = (
     <Grid container className={classes.navbarContents}>
       <IconButton edge="end" color="inherit" onClick={handleMobileMenuOpen}>

@@ -4,13 +4,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import schoolyIntroduction from "./SchoolyIntroduction.png";
 import schoolyAccess from "./SchoolyAccess.png";
-import {
-  Avatar,
-  Button,
-  Grid,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
@@ -243,7 +241,7 @@ class Landing extends Component {
         </div>
         <div className={classes.schoolyFeaturesBackground}>
           <div className={classes.schoolyFeatures}>
-            <Grid container spacing={3} justify="center" alignItems="stretch">
+            <Grid container justify="center" alignItems="stretch" spacing={3}>
               <Grid item xs={12}>
                 <Typography variant="h4" color="textSecondary" paragraph>
                   Schooly selalu berkembang
@@ -447,7 +445,7 @@ class Landing extends Component {
             Hanya satu ketukan lagi untuk mulai mencoba Schooly!
           </Typography>
           <Typography color="textSecondary" align="center" paragraph>
-            Klik tombol "Kirim Pesan" untuk menghubungi kami atau tombol "Salin
+            Tekan tombol "Kirim Pesan" untuk menghubungi kami atau tombol "Salin
             Tautan" untuk mengirim tautan ini ke sekolah Anda.
           </Typography>
           <Grid container spacing={2} className={classes.contactSchoolyButtonsContainer}>

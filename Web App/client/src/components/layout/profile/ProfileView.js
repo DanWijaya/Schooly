@@ -8,22 +8,18 @@ import "moment/locale/id";
 import { updateAvatar, getOneUser } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
-import {
-  Avatar,
-  Badge,
-  Divider,
-  Grid,
-  Hidden,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Paper,
-  Typography,
-  Button,
-} from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
+import Grid from "@material-ui/core/Grid";
+import Hidden from "@material-ui/core/Hidden";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import ListItemText from "@material-ui/core/ListItemText";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 import CakeIcon from "@material-ui/icons/Cake";
@@ -33,131 +29,92 @@ import EmailIcon from "@material-ui/icons/Email";
 import HomeIcon from "@material-ui/icons/Home";
 import PersonIcon from "@material-ui/icons/Person";
 import PhoneIcon from "@material-ui/icons/Phone";
-import WcIcon from "@material-ui/icons/Wc";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
+import WcIcon from "@material-ui/icons/Wc";
 import WorkIcon from "@material-ui/icons/Work";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "10px",
+    paddingTop: "20px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
   avatar: {
-    margin: "auto",
-    width: theme.spacing(20),
-    height: theme.spacing(20),
+    width: "150px",
+    height: "150px",
   },
-  profileDivider: {
-    backgroundColor: theme.palette.primary.main,
-    margin: "15px 0px 15px 0px",
+  profileButtonContainer: {
+    paddingTop: "25px",
+    paddingBottom: "15px",
   },
-  informationPaper: {
-    backgroundColor: "white",
-  },
-  informationPictureContainer: {
-    display: "flex",
-    justifyContent: "center",
-    [theme.breakpoints.up("sm")]: {
-      justifyContent: "flex-end",
-    },
-  },
-  informationPicture: {
-    height: "100px",
-    [theme.breakpoints.up("sm")]: {
-      height: "125px",
-    },
-  },
-  profileDataItemAvatar: {
-    backgroundColor: "#00B7FFG",
-  },
-  buttonRapor: {
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
+  reportButton: {
+    backgroundColor: theme.palette.action.selected,
+    color: "black",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.warning.dark,
-      color: "white",
+      backgroundColor: theme.palette.divider,
+      color: "black",
     },
   },
-  emptyProfileData: {
-    display: "flex",
-    justifyContent: "center",
-    maxWidth: "150px",
-    padding: "5px",
-    paddingLeft: "10px",
-    paddingRight: "10px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-  },
-  descriptionText: {
-    color: "white",
-    marginTop: "10px",
-    fontWeight: "300",
-  },
-  backgroundGradient: {
-    padding: "20px",
+  dataCategoryHeader: {
+    padding: "25px",
     backgroundColor: theme.palette.primary.main,
+    color: "white",
+  },
+  dataCategoryContent: {
+    padding: "0px 25px 22.5px 25px",
   },
 }));
-
-const StyledBadge = withStyles((theme) => ({
-  badge: {
-    right: theme.spacing(2),
-    top: theme.spacing(16),
-  },
-}))(Badge);
 
 function ProfileDataItem(props) {
   const classes = useStyles();
 
   return (
     <div>
-      <Hidden smUp implementation="css">
+      <Hidden smUp>
         <ListItem>
           <ListItemAvatar>
-            <Avatar className={classes.profileDataItemAvatar}>
-              {props.profile_data_icon}
+            <Avatar>
+              {props.icon}
             </Avatar>
           </ListItemAvatar>
           <ListItemText
             primary={
               <Typography variant="overline" color="textSecondary">
-                <b>{props.profile_data_category}</b>
+                <b>{props.type}</b>
               </Typography>
             }
             secondary={
-              !props.profile_data_info ? (
-                <Typography>-</Typography>
+              !props.value ? (
+                <Typography variant="body2" color="textSecondary">Kosong</Typography>
               ) : (
-                <Typography variant="body1">
-                  {props.profile_data_info}
-                </Typography>
+                <Typography>{props.value}</Typography>
               )
             }
           />
         </ListItem>
       </Hidden>
-      <Hidden xsDown implementation="css">
+      <Hidden xsDown>
         <ListItem>
           <ListItemAvatar>
-            <Avatar className={classes.profileDataItemAvatar}>
-              {props.profile_data_icon}
+            <Avatar>
+              {props.icon}
             </Avatar>
           </ListItemAvatar>
-          <Grid container spacing={2}>
+          <Grid container alignItems="center" spacing={2}>
             <Grid item xs={5}>
               <Typography variant="overline" color="textSecondary">
-                <b>{props.profile_data_category}</b>
+                <b>{props.type}</b>
               </Typography>
             </Grid>
             <Grid item xs={7}>
-              {!props.profile_data_info ? (
-                <Typography>-</Typography>
+              {!props.value ? (
+                <Typography variant="body2" color="textSecondary">Kosong</Typography>
               ) : (
-                <Typography>{props.profile_data_info}</Typography>
+                <Typography>{props.value}</Typography>
               )}
             </Grid>
           </Grid>
@@ -169,7 +126,6 @@ function ProfileDataItem(props) {
 
 function ProfileView(props) {
   const classes = useStyles();
-
   const { user, selectedUser } = props.auth;
   const {
     setCurrentClass,
@@ -203,10 +159,6 @@ function ProfileView(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classesCollection]);
 
-  // if (location.state === undefined) {
-  //   return <Redirect to="/tidak-ditemukan" />;
-  // }
-
   const {
     name,
     role,
@@ -225,247 +177,185 @@ function ProfileView(props) {
     _id,
     tanggal_lahir,
   } = selectedUser;
+
   document.title = selectedUser.name
     ? `Schooly | ${selectedUser.name}`
     : "Schooly";
 
   return (
     <div className={classes.root}>
-      <Grid container direction="column" spacing={1} alignItems="center">
+      <Grid container direction="column" alignItems="center" spacing={2}>
         <Grid item>
           {avatar ? (
-            <StyledBadge>
-              <Avatar src={avatar} className={classes.avatar} />
-            </StyledBadge>
+            <Avatar src={avatar} className={classes.avatar} />
           ) : (
-            <StyledBadge>
-              <Avatar className={classes.avatar} />
-            </StyledBadge>
+            <Avatar className={classes.avatar} />
           )}
         </Grid>
         <Grid item>
           <Typography variant="h4" align="center">
             {name}
           </Typography>
-          <Typography variant="h6" align="center">
-            {role === "Student"
-              ? "Murid"
-              : role === "Teacher"
-              ? "Guru"
-              : "Pengelola"}
-          </Typography>
-          <Typography variant="body1" align="center" color="textSecondary">
-            {!namakelas ? null : `Kelas ${namakelas}`}
+          <Typography variant="h6" color="textSecondary" align="center">
+            {role === "Student"  ? "Murid"
+              : role === "Teacher" ? "Guru"
+              : role === "Admin" ? "Pengelola"
+              : null}
+            {!namakelas ? null : ` ${namakelas}`}
           </Typography>
         </Grid>
       </Grid>
-      <Divider className={classes.profileDivider} />
-      {role === "Student" && user.role === "Teacher" ? (
-        (classesCollection.kelas.walikelas) ?
-        (classesCollection.kelas.walikelas === user._id) ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginBottom: "20px",
-            }}
-          >
-            <Link
-              to={{
-                pathname: `/rapor/${_id}`,
-              }}
-            >
-              <LightTooltip title="Klik Untuk Melihat Rapor">
-                <Button
-                  variant="contained"
-                  className={classes.buttonRapor}
-                  startIcon={<AssessmentOutlinedIcon />}
-                >
-                  Lihat Rapor
-                </Button>
-              </LightTooltip>
-            </Link>
-          </div>
-        ) : (user.class_teached).includes(classesCollection.kelas._id) ? (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginBottom: "20px",
-                }}
-              >
-                <Link
-                  to={{
-                    pathname: `/rapor/${_id}`,
-                  }}
-                >
-                  <LightTooltip title="Klik Untuk Melihat Rapor">
+      <Grid container justify="flex-end" className={classes.profileButtonContainer}>
+        {role === "Student" && user.role === "Teacher" ? (
+          (classesCollection.kelas.walikelas) ?
+          (classesCollection.kelas.walikelas === user._id) ? (
+              <Grid item>
+                <Link to={{pathname: `/rapor/${_id}`}}>
+                  <Button
+                    variant="contained"
+                    className={classes.reportButton}
+                    startIcon={<AssessmentOutlinedIcon />}
+                  >
+                    Lihat Rapor
+                  </Button>
+                </Link>
+              </Grid>
+          ) : (user.class_teached).includes(classesCollection.kelas._id) ? (
+                <Grid item>
+                  <Link to={{pathname: `/rapor/${_id}`}}>
                     <Button
                       variant="contained"
-                      className={classes.buttonRapor}
                       startIcon={<AssessmentOutlinedIcon />}
+                      className={classes.reportButton}
                     >
                       Lihat Rapor
                     </Button>
-                  </LightTooltip>
-                </Link>
-              </div>
-            )
-          : null
-        : (user.class_teached).includes(classesCollection.kelas._id) ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginBottom: "20px",
-            }}
-          >
-            <Link
-              to={{
-                pathname: `/rapor/${_id}`,
-              }}
-            >
-              <LightTooltip title="Klik Untuk Melihat Rapor">
-                <Button
-                  variant="contained"
-                  className={classes.buttonRapor}
-                  startIcon={<AssessmentOutlinedIcon />}
-                >
-                  Lihat Rapor
-                </Button>
-              </LightTooltip>
-            </Link>
-          </div>
-        )
-      : null
-      ) : null}
-      <Grid container direction="column" spacing={4}>
-        {user.role === "Teacher" ||
-        user.role === "Student" ||
-        user.role === "Admin"
-          ? [
-              <Grid item>
-                <Paper className={classes.informationPaper}>
-                  <div className={classes.backgroundGradient}>
-                    <Typography
-                      variant="h5"
-                      gutterBottom
-                      style={{ color: "white" }}
-                    >
-                      Informasi Pengguna
-                    </Typography>
-                    <Typography
-                      variant="h7"
-                      color="textSecondary"
-                      gutterBottom
-                      className={classes.descriptionText}
-                    >
-                      Berikut adalah informasi pribadi dari pengguna terkait.
-                    </Typography>
-                  </div>
-                  <List style={{ padding: "20px" }}>
-                    <ProfileDataItem
-                      profile_data_icon={<PersonIcon />}
-                      profile_data_category="Nama"
-                      profile_data_info={name}
-                    />
-                    <Divider variant="inset" />
-                    <ProfileDataItem
-                      profile_data_icon={<CakeIcon />}
-                      profile_data_category="Tanggal Lahir"
-                      profile_data_info={moment(tanggal_lahir)
-                        .locale("id")
-                        .format("DD-MM-YYYY")}
-                    />
-                    <Divider variant="inset" />
-                    <ProfileDataItem
-                      profile_data_icon={<WcIcon />}
-                      profile_data_category="Jenis Kelamin"
-                      profile_data_info={jenis_kelamin}
-                    />
-                    <Divider variant="inset" />
-                    <ProfileDataItem
-                      profile_data_icon={<EmailIcon />}
-                      profile_data_category="Email"
-                      profile_data_info={email}
-                    />
-                    <Divider variant="inset" />
-                    <ProfileDataItem
-                      profile_data_icon={<PhoneIcon />}
-                      profile_data_category="Nomor Telepon"
-                      profile_data_info={phone}
-                    />
-                    <Divider variant="inset" />
-                    <ProfileDataItem
-                      profile_data_icon={<ContactPhoneIcon />}
-                      profile_data_category="Nomor Telepon Darurat"
-                      profile_data_info={emergency_phone}
-                    />
-                    {admin === true ? (
-                      <div>
-                        <Divider variant="inset" />
-                        <ProfileDataItem
-                          profile_data_icon={<HomeIcon />}
-                          profile_data_category="Alamat"
-                          profile_data_info={address}
-                        />
-                      </div>
-                    ) : null}
-                  </List>
-                </Paper>
-              </Grid>,
-            ].concat(
-              !(role === "Student") ? null : (
-                <Grid item>
-                  <Paper className={classes.informationPaper}>
-                    <div className={classes.backgroundGradient}>
-                      <Typography
-                        variant="h5"
-                        gutterBottom
-                        style={{ color: "white" }}
-                      >
-                        Karir
-                      </Typography>
-                      <Typography
-                        variant="h7"
-                        color="textSecondary"
-                        gutterBottom
-                        className={classes.descriptionText}
-                      >
-                        Berikut adalah pilihan karir yang diinginkan dari
-                        pengguna terkait.
-                      </Typography>
-                    </div>
-                    <List style={{ padding: "20px", marginBottom: "30px" }}>
-                      <ProfileDataItem
-                        profile_data_icon={<SportsEsportsIcon />}
-                        profile_data_category="Hobi dan Minat"
-                        profile_data_info={hobi_minat}
-                      />
-                      <Divider variant="inset" />
-                      <ProfileDataItem
-                        profile_data_icon={<ColorLensIcon />}
-                        profile_data_category="Keterampilan Non-Akademik"
-                        profile_data_info={ket_non_teknis}
-                      />
-                      <Divider variant="inset" />
-                      <ProfileDataItem
-                        profile_data_icon={<WorkIcon />}
-                        profile_data_category="Cita-Cita"
-                        profile_data_info={cita_cita}
-                      />
-                      <Divider variant="inset" />
-                      <ProfileDataItem
-                        profile_data_icon={<AccountBalanceIcon />}
-                        profile_data_category="Perguruan Tinggi Impian"
-                        profile_data_info={uni_impian}
-                      />
-                    </List>
-                  </Paper>
+                  </Link>
                 </Grid>
               )
+            : null
+          : (user.class_teached).includes(classesCollection.kelas._id) ? (
+              <Grid item>
+                <Link to={{pathname: `/rapor/${_id}`}}>
+                  <Button
+                    variant="contained"
+                    startIcon={<AssessmentOutlinedIcon />}
+                    className={classes.reportButton}
+                  >
+                    Lihat Rapor
+                  </Button>
+                </Link>
+              </Grid>
             )
-          : null}
+            : null
+        ) : null}
+      </Grid>
+      <Grid container direction="column" spacing={4}>
+        <Grid item>
+          <Paper elevation={2}>
+            <div className={classes.dataCategoryHeader}>
+              <Typography variant="h5" gutterBottom>
+                Informasi Pengguna
+              </Typography>
+              <Typography gutterBottom>
+                Berikut adalah informasi dari pengguna terkait.
+              </Typography>
+            </div>
+            <div className={classes.dataCategoryContent}>
+              <List>
+                <ProfileDataItem
+                  icon={<PersonIcon />}
+                  type="Nama"
+                  value={name}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  icon={<CakeIcon />}
+                  type="Tanggal Lahir"
+                  value={moment(tanggal_lahir)
+                    .locale("id")
+                    .format("DD-MM-YYYY")}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  icon={<WcIcon />}
+                  type="Jenis Kelamin"
+                  value={jenis_kelamin}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  icon={<EmailIcon />}
+                  type="Email"
+                  value={email}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  icon={<PhoneIcon />}
+                  type="Nomor Telepon"
+                  value={phone}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  icon={<ContactPhoneIcon />}
+                  type="Nomor Telepon Darurat"
+                  value={emergency_phone}
+                />
+                {admin === true ? (
+                  <div>
+                    <Divider variant="inset" />
+                    <ProfileDataItem
+                      icon={<HomeIcon />}
+                      type="Alamat"
+                      value={address}
+                    />
+                  </div>
+                ) : null}
+              </List>
+            </div>
+          </Paper>
+        </Grid>
+        {!(role === "Student") ? null : (
+            <Grid item>
+              <Paper elevation={2}>
+                <div className={classes.dataCategoryHeader}>
+                  <Typography variant="h5" gutterBottom>
+                    Karir
+                  </Typography>
+                  <Typography gutterBottom>
+                    Berikut adalah pilihan karir yang diinginkan dari
+                    murid terkait.
+                  </Typography>
+                </div>
+                <div className={classes.dataCategoryContent}>
+                  <List>
+                    <ProfileDataItem
+                      icon={<SportsEsportsIcon />}
+                      type="Hobi dan Minat"
+                      value={hobi_minat}
+                    />
+                    <Divider variant="inset" />
+                    <ProfileDataItem
+                      icon={<ColorLensIcon />}
+                      type="Keterampilan Non-Akademik"
+                      value={ket_non_teknis}
+                    />
+                    <Divider variant="inset" />
+                    <ProfileDataItem
+                      icon={<WorkIcon />}
+                      type="Cita-Cita"
+                      value={cita_cita}
+                    />
+                    <Divider variant="inset" />
+                    <ProfileDataItem
+                      icon={<AccountBalanceIcon />}
+                      type="Perguruan Tinggi Impian"
+                      value={uni_impian}
+                    />
+                  </List>
+                </div>
+              </Paper>
+            </Grid>
+          )}
       </Grid>
     </div>
   );

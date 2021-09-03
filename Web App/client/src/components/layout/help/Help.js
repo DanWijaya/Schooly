@@ -4,16 +4,14 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import helpCenter from "./HelpCenter.png";
 import helpCenterSmall from "./HelpCenterSmall.png";
-import {
-  Avatar,
-  Divider,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-  Grid,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
+import Divider from "@material-ui/core/Divider";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import ContactSupportIcon from "@material-ui/icons/ContactSupport";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";

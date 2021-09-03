@@ -7,7 +7,12 @@ import { savePassword } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import resetPasswordArt from "./ResetPasswordArt.png";
-import { Button, Grid, Hidden, Paper, TextField, Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import Hidden from "@material-ui/core/Hidden";
+import Paper from "@material-ui/core/Paper";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -105,7 +110,7 @@ class ResetPassword extends Component {
           />
         </Link>
         <Paper elevation={11} className={classes.resetPasswordPaper}>
-          <Grid container spacing={6} alignItems="center">
+          <Grid container alignItems="center" spacing={6}>
             <Grid item xs={12} md={7}>
               <Grid container direction="column" spacing={6}>
                 <Grid item>

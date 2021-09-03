@@ -1,11 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Fab, Zoom, useScrollTrigger } from "@material-ui/core";
+import Fab from "@material-ui/core/Fab";
+import Zoom from "@material-ui/core/Zoom";
+import { useScrollTrigger } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 const useStyles = makeStyles((theme) => ({
-  scrollToTop: {
+  scrollToTopButton: {
     position: "fixed",
     bottom: "15px",
     right: "15px",
@@ -30,7 +32,7 @@ function ScrollToTopButton(props) {
 
   return (
     <Zoom in={trigger}>
-      <div onClick={handleClick} className={classes.scrollToTop}>
+      <div onClick={handleClick} className={classes.scrollToTopButton}>
         <Fab color="primary" size="small">
           <KeyboardArrowUpIcon />
         </Fab>

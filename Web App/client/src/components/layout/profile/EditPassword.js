@@ -1,23 +1,23 @@
 import React, { useEffect } from "react";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import {
-  Button,
-  Dialog,
-  Grid,
-  IconButton,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { changePassword } from "../../../actions/AuthActions";
+import { clearErrors } from "../../../actions/ErrorActions";
+import { logoutUser } from "../../../actions/UserActions";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import LockIcon from "@material-ui/icons/Lock";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { changePassword } from "../../../actions/AuthActions";
-import { logoutUser } from "../../../actions/UserActions";
-import { clearErrors } from "../../../actions/ErrorActions";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: "20px",
+  },
   editPasswordButton: {
     backgroundColor: theme.palette.action.selected,
     color: "black",
@@ -25,9 +25,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.divider,
       color: "black",
     },
-  },
-  root: {
-    padding: "15px",
   },
   content: {
     padding: "0px 10px 0px 10px",
@@ -69,7 +66,7 @@ function EditPasswordField(props) {
   );
 }
 
-function ProfilePasswordEditorDialog(props) {
+function EditPassword(props) {
   const [old_password, setOldPassword] = React.useState("");
   const [new_password, setNewPassword] = React.useState("");
   const [new_password2, setNewPassword2] = React.useState("");
@@ -137,15 +134,13 @@ function ProfilePasswordEditorDialog(props) {
 
   return (
     <div>
-      <LightTooltip title="Ganti Kata Sandi">
-        <Button
-          variant="contained"
-          onClick={handleClickOpen}
-          className={classes.editPasswordButton}
-        >
-          <LockIcon fontSize="default" />
-        </Button>
-      </LightTooltip>
+      <Button
+        variant="contained"
+        onClick={handleClickOpen}
+        className={classes.editPasswordButton}
+      >
+        <LockIcon fontSize="default" />
+      </Button>
       <Dialog open={open} onClose={handleClose}>
         <Grid
           container
@@ -214,7 +209,7 @@ function ProfilePasswordEditorDialog(props) {
   );
 }
 
-ProfilePasswordEditorDialog.propTypes = {
+EditPassword.propTypes = {
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
@@ -233,4 +228,4 @@ export default connect(mapStateToProps, {
   changePassword,
   logoutUser,
   clearErrors,
-})(ProfilePasswordEditorDialog);
+})(EditPassword);

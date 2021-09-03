@@ -1,36 +1,29 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../../../actions/UserActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import NavBarLoggedInContents from "./NavBarLoggedInContents";
-import {
-  AppBar,
-  Button,
-  Grid,
-  IconButton,
-  Toolbar,
-  useMediaQuery,
-} from "@material-ui/core";
-import { Link } from "react-router-dom";
+import AppBar from "@material-ui/core/AppBar";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import Toolbar from "@material-ui/core/Toolbar";
+import { useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
-  },
-  appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
-  navbarContainer: {
+  startButtonContainer: {
     flex: "1",
-    justifyContent: "flex-start",
-    alignItems: "center",
   },
   navbarProfilePicture: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
+    width: "25px",
+    height: "25px",
   },
   schoolyLogo: {
     width: "100px",
@@ -61,95 +54,76 @@ const useStyles = makeStyles((theme) => ({
 
 function NavBar(props) {
   const classes = useStyles();
-
+  const { handleDrawerDesktop, handleDrawerMobile, sideDrawerExist } = props;
   const { user } = props.auth;
 
   const isMobileView = useMediaQuery("(max-width:960px)");
-  const { handleDrawerDesktop, handleDrawerMobile, sideDrawerExist } = props;
-
-  // NavBar Contents
-  let leftNavBarContents;
-  let middleNavBarContents;
-  let rightNavBarContents;
-
-  if (user.name) {
-    leftNavBarContents = (
-      <div
-        className={classes.navbarContainer}
-        style={{ display: !sideDrawerExist ? "none" : "block" }}
-      >
-        {isMobileView ? (
-          <IconButton edge="start" color="inherit" onClick={handleDrawerMobile}>
-            <MenuIcon />
-          </IconButton>
-        ) : (
-          <IconButton
-            edge="start"
-            color="inherit"
-            onClick={handleDrawerDesktop}
-          >
-            <MenuIcon />
-          </IconButton>
-        )}
-      </div>
-    );
-    middleNavBarContents = (
-      <Link to="/beranda">
-        <img
-          alt="SchoolyLogoNavBar"
-          src={schoolyLogo}
-          className={classes.schoolyLogo}
-        />
-      </Link>
-    );
-    rightNavBarContents = (
-      <NavBarLoggedInContents isMobileView={isMobileView} />
-    );
-  } else {
-    leftNavBarContents = (
-      <Grid className={classes.navbarContainer}>
-        <Link to="/">
-          <img
-            alt="SchoolyLogoNavBar"
-            src={schoolyLogo}
-            className={classes.schoolyLogo}
-          />
-        </Link>
-      </Grid>
-    );
-    middleNavBarContents = null;
-    rightNavBarContents = (
-      <div>
-        <Link to="/daftar">
-          <Button
-            variant="contained"
-            size="small"
-            className={classes.signupButton}
-          >
-            Daftar
-          </Button>
-        </Link>
-        <Link to="/masuk">
-          <Button
-            variant="contained"
-            size="small"
-            className={classes.loginButton}
-          >
-            Masuk
-          </Button>
-        </Link>
-      </div>
-    );
-  }
 
   return (
-    <AppBar position="fixed" className={classes.appBar}>
+    <AppBar position="fixed" className={classes.root}>
       {props.assessmentState !== "ujian" ? (
-        <Toolbar>
-          {leftNavBarContents}
-          {middleNavBarContents}
-          {rightNavBarContents}
-        </Toolbar>
+          user.name ? (
+            <Toolbar>
+              <div
+                className={classes.startButtonContainer}
+                style={{ display: !sideDrawerExist ? "none" : "block" }}
+              >
+                {isMobileView ? (
+                  <IconButton edge="start" color="inherit" onClick={handleDrawerMobile}>
+                    <MenuIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    edge="start"
+                    color="inherit"
+                    onClick={handleDrawerDesktop}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                )}
+              </div>
+              <Link to="/beranda">
+                <img
+                  alt="Schooly Logo"
+                  src={schoolyLogo}
+                  className={classes.schoolyLogo}
+                />
+              </Link>
+              <NavBarLoggedInContents isMobileView={isMobileView} />
+            </Toolbar>
+          ) : (
+            <Toolbar>
+              <div className={classes.startButtonContainer}>
+                <Link to="/">
+                  <img
+                    alt="Schooly Logo"
+                    src={schoolyLogo}
+                    className={classes.schoolyLogo}
+                  />
+                </Link>
+              </div>
+              <div>
+                <Link to="/daftar">
+                  <Button
+                    variant="contained"
+                    size="small"
+                    className={classes.signupButton}
+                  >
+                    Daftar
+                  </Button>
+                </Link>
+                <Link to="/masuk">
+                  <Button
+                    variant="contained"
+                    size="small"
+                    className={classes.loginButton}
+                  >
+                    Masuk
+                  </Button>
+                </Link>
+              </div>
+            </Toolbar>
+          )
       ) : (
         <Toolbar>
           <img

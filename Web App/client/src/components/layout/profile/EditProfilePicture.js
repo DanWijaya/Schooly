@@ -1,57 +1,54 @@
 import React from "react";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { connect } from "react-redux";
+import { uploadFileAvatar, getFileAvatar } from "../../../actions/files/FileAvatarActions";
 import defaultAvatar from "./DefaultAvatar.svg";
-import {
-  Avatar,
-  Button,
-  Dialog,
-  Grid,
-  IconButton,
-  Typography,
-  Snackbar,
-} from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import Fab from "@material-ui/core/Fab";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import CloseIcon from "@material-ui/icons/Close";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import {
-  uploadFileAvatar,
-  getFileAvatar,
-} from "../../../actions/files/FileAvatarActions";
-import { connect } from "react-redux";
-import MuiAlert from "@material-ui/lab/Alert";
+import PersonIcon from "@material-ui/icons/Person";
+
 const useStyles = makeStyles((theme) => ({
-  avatar: {
-    width: theme.spacing(25),
-    height: theme.spacing(25),
-  },
-  avatarImg1: {
-    // If width is smaller than height
-    width: theme.spacing(25),
-  },
-  avatarImg2: {
-    //If height is smaller than width
-    height: theme.spacing(25),
-  },
-  profilePictureGrid: {
+  root: {
     maxWidth: "350px",
-    padding: "10px",
+    padding: "20px",
   },
-  addPhotoIconButton: {
+  editProfilePictureButton: {
+    backgroundColor: "#F1F1F1",
     color: theme.palette.primary.main,
-    backgroundColor: "#DCDCDC",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
-    transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
-    "&:focus": {
-      backgroundColor: "#DCDCDC",
+    "&:focus, &:hover": {
+      backgroundColor: "#EDEDED",
+      color: theme.palette.primary.main,
     },
-    "&:hover": {
-      backgroundColor: "#DCDCDC",
-      boxShadow: "0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.15)",
-    },
+  },
+  avatar: {
+    width: "200px",
+    height: "200px",
+  },
+  avatarSizeWidth: {
+    width: "200px",
+  },
+  avatarSizeHeight: {
+    height: "200px",
   },
   uploadButton: {
+    width: "160px",
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
+  submitPhotoButton: {
     width: "160px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -60,21 +57,10 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  submitPhotoButton: {
-    width: "160px",
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.main,
-      color: "white",
-    },
-  },
 }));
 
-function ProfilePictureEditorDialog(props) {
+function EditProfilePicture(props) {
   const classes = useStyles();
-
-  // Function Hooks and Ref Declaration
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const [profileImg, setProfileImg] = React.useState(null);
@@ -84,7 +70,14 @@ function ProfilePictureEditorDialog(props) {
     width: null,
   });
 
-  // Dialog
+  const {
+    user,
+    updateAvatar,
+    uploadFileAvatar,
+    avatar,
+    setFileLimitSnackbar,
+  } = props;
+
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -94,20 +87,10 @@ function ProfilePictureEditorDialog(props) {
     setProfileImg(null);
   };
 
-  const {
-    user,
-    updateAvatar,
-    uploadFileAvatar,
-    avatar,
-    setFileLimitSnackbar,
-  } = props;
-
   const handleImageUpload = (e) => {
-    console.log(e.target.files);
     const [file] = e.target.files;
     if (file) {
       if (file.size / Math.pow(10, 6) > 5) {
-        console.log("file size is over 5MB");
         imageUploader.current.value = null;
         setFileLimitSnackbar(true);
       } else {
@@ -135,7 +118,6 @@ function ProfilePictureEditorDialog(props) {
     });
     // Fitur_4 punya:
     // updateAvatar(userData, userId, formData);
-    
   };
 
   function onImgLoad({ target: img }) {
@@ -146,9 +128,9 @@ function ProfilePictureEditorDialog(props) {
     let avatarImgClass;
 
     if (avatarDimensions.width < avatarDimensions.height) {
-      avatarImgClass = classes.avatarImg1;
+      avatarImgClass = classes.avatarSizeWidth;
     } else {
-      avatarImgClass = classes.avatarImg2;
+      avatarImgClass = classes.avatarSizeHeight;
     }
 
     if (!profileImg) {
@@ -156,7 +138,7 @@ function ProfilePictureEditorDialog(props) {
         return (
           <Avatar className={classes.avatar}>
             <img
-              alt="profile"
+              alt="Profile"
               onLoad={onImgLoad}
               src={avatar}
               // src={`/api/upload/avatar/${user.avatar}`}
@@ -169,7 +151,7 @@ function ProfilePictureEditorDialog(props) {
         return (
           <Avatar className={classes.avatar}>
             <img
-              alt="profile"
+              alt="Profile"
               onLoad={onImgLoad}
               src={defaultAvatar}
               ref={uploadedImage}
@@ -182,7 +164,7 @@ function ProfilePictureEditorDialog(props) {
       return (
         <Avatar className={classes.avatar}>
           <img
-            alt="current profile"
+            alt="Current Profile"
             onLoad={onImgLoad}
             ref={uploadedImage}
             className={avatarImgClass}
@@ -194,34 +176,12 @@ function ProfilePictureEditorDialog(props) {
 
   return (
     <div>
-      <LightTooltip title="Ganti Foto Profil">
-        <IconButton
-          disableRipple
-          onClick={handleOpenDialog}
-          className={classes.addPhotoIconButton}
-        >
-          <CameraAltIcon
-            style={{
-              height: "35px",
-              width: "35px",
-            }}
-          />
-        </IconButton>
-      </LightTooltip>
+      <Fab onClick={handleOpenDialog} className={classes.editProfilePictureButton}>
+        <CameraAltIcon fontSize="large" />
+      </Fab>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <Grid
-          container
-          direction="column"
-          alignItems="center"
-          className={classes.profilePictureGrid}
-        >
-          <Grid
-            item
-            container
-            justify="flex-end"
-            alignItems="flex-start"
-            style={{ marginBottom: "10px" }}
-          >
+        <Grid container direction="column" alignItems="center" className={classes.root}>
+          <Grid item container justify="flex-end" alignItems="flex-start" style={{ marginBottom: "10px" }}>
             <IconButton size="small" onClick={handleCloseDialog}>
               <CloseIcon />
             </IconButton>
@@ -243,12 +203,7 @@ function ProfilePictureEditorDialog(props) {
                   display: "none",
                 }}
               />
-              <Grid
-                container
-                direction="column"
-                spacing={2}
-                alignItems="center"
-              >
+              <Grid container direction="column" alignItems="center" spacing={2}>
                 <Grid item style={{ marginBottom: "20px" }}>
                   {imageUploadPreview()}
                 </Grid>
@@ -261,7 +216,7 @@ function ProfilePictureEditorDialog(props) {
                     }}
                     className={classes.uploadButton}
                   >
-                    Unggah Foto
+                    Pilih Foto
                   </Button>
                 </Grid>
                 <Grid item>
@@ -272,7 +227,7 @@ function ProfilePictureEditorDialog(props) {
                     disabled={!profileImg}
                     className={classes.submitPhotoButton}
                   >
-                    Simpan
+                    Unggah
                   </Button>
                 </Grid>
               </Grid>
@@ -300,5 +255,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { uploadFileAvatar, getFileAvatar })(
-  ProfilePictureEditorDialog
+  EditProfilePicture
 );

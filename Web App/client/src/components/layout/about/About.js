@@ -6,7 +6,11 @@ import onlineLearning from "./OnlineLearning-CompareFibre.jpg";
 import aboutArt1 from "./AboutArt1.png";
 import aboutArt2 from "./AboutArt2.png";
 import aboutArt3 from "./AboutArt3.png";
-import { Button, Divider, Grid, Typography, Hidden } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
+import Grid from "@material-ui/core/Grid";
+import Hidden from "@material-ui/core/Hidden";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import EmailIcon from "@material-ui/icons/Email";
 
@@ -250,8 +254,8 @@ function About(props) {
         <Typography variant="h6" align="center" style={{ marginBottom: "50px" }}>
           Berikut adalah keuntungan dari penggunaan Schooly.
         </Typography>
-        <Grid container spacing={5} direction="column">
-          <Grid item container spacing={5} justify="center" alignItems="center">
+        <Grid container direction="column" spacing={5}>
+          <Grid item container justify="center" alignItems="center" spacing={5}>
             <Grid item xs={12} md={6} className={classes.whySchoolyThumbnailContainer}>
               <img
                 alt="Schooly Feature 1"
@@ -302,9 +306,9 @@ function About(props) {
             <Grid
               item
               container
-              spacing={5}
               justify="center"
               alignItems="center"
+              spacing={5}
             >
               <Grid item xs={12} md={6} className={classes.whySchoolyThumbnailContainer}>
                 <img
@@ -325,7 +329,7 @@ function About(props) {
               </Grid>
             </Grid>
           </Hidden>
-          <Grid item container spacing={5} justify="center" alignItems="center">
+          <Grid item container justify="center" alignItems="center" spacing={5}>
             <Grid item xs={12} md={6} className={classes.whySchoolyThumbnailContainer}>
               <img
                 alt="Schooly Feature 3"
