@@ -152,8 +152,6 @@ function ProfileView(props) {
     setCurrentClass(selectedUser.kelas)
   }, [selectedUser]);
 
-  console.log(selectedUser)
-
   React.useEffect(() => {
     setNamaKelas(classesCollection.kelas.name);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -274,7 +272,7 @@ function ProfileView(props) {
                   type="Tanggal Lahir"
                   value={moment(tanggal_lahir)
                     .locale("id")
-                    .format("DD-MM-YYYY")}
+                    .format("DD MMM YYYY")}
                 />
                 <Divider variant="inset" />
                 <ProfileDataItem

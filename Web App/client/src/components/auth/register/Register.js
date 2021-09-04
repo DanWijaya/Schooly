@@ -146,7 +146,6 @@ class Register extends Component {
     }
 
     if (Object.keys(nextProps.errors).length > 0) {
-      console.log(this.state.snackbarOpen);
       this.setState({
         errors: nextProps.errors,
         snackbarOpen: true,
@@ -184,7 +183,6 @@ class Register extends Component {
       this.setState({ submitButtonClicked: true });
     }
 
-    console.log(newUser);
     if (this.state.submitButtonClicked) {
       this.props
         .registerUser(newUser)

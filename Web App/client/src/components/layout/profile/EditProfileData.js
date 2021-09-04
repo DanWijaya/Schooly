@@ -153,7 +153,6 @@ function EditProfileData(props) {
     setOpen(true);
   };
   const handleClose = (simpan) => {
-    console.log(simpan);
     if (simpan !== "simpan") setDataProfil(defaultUserData);
     clearErrors();
     setOpen(false);
@@ -165,7 +164,6 @@ function EditProfileData(props) {
     setValue(newValue);
   };
 
-  console.log(user.tanggal_lahir instanceof Date);
   const defaultUserData = {
     // Informasi Pribadi
     nama: user.name,
@@ -315,7 +313,7 @@ function EditProfileData(props) {
                           inputVariant="outlined"
                           maxDateMessage="Harus waktu yang akan datang"
                           invalidDateMessage="Format tanggal tidak benar"
-                          format="dd/MM/yyyy"
+                          format="dd MMM yyyy"
                           okLabel="Simpan"
                           cancelLabel="Batal"
                           id="tanggal_lahir"

@@ -130,7 +130,6 @@ function EditPassword(props) {
         break;
     }
   };
-  console.log(success);
 
   return (
     <div>

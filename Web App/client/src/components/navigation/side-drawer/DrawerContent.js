@@ -33,7 +33,7 @@ function DrawerContent(props) {
   const classes = useStyles();
   const { user, handleDrawerMobile } = props;
 
-  const generateList = (linkto, icon, itemText, subheader = false) => {
+  const generateList = (linkto, icon, itemText) => {
     return (
       <Link to={linkto} onClick={handleDrawerMobile}>
         <Tooltip title={itemText} placement="right" enterDelay={300}>
@@ -48,9 +48,7 @@ function DrawerContent(props) {
     );
   };
 
-  let ListItemContents;
   let classLink;
-
   if (user !== undefined) {
     if (user.role === "Student") {
       classLink = `/kelas/${user.kelas}`;
@@ -59,6 +57,7 @@ function DrawerContent(props) {
     }
   }
 
+  let ListItemContents;
   if (user.role === "Admin")
     ListItemContents = [
       [
@@ -199,7 +198,7 @@ function DrawerContent(props) {
     <div>
       <List>
         {ListItemContents.map((item) =>
-          generateList(item[0], item[1], item[2], item[3])
+          generateList(item[0], item[1], item[2])
         )}
       </List>
     </div>

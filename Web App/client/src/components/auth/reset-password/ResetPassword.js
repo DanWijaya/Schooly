@@ -88,7 +88,6 @@ class ResetPassword extends Component {
 
     const onSubmit = (e) => {
       e.preventDefault();
-      console.log("Submitted");
 
       let passwordReset = {
         password: password,

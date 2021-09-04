@@ -287,8 +287,8 @@ function Profile(props) {
                   Informasi Pribadi
                 </Typography>
                 <Typography variant="subtitle1" color="textSecondary">
-                  Jangan lupa untuk mengisi semua informasi profil Anda untuk
-                  melengkapi database sekolah Anda.
+                  Jangan lupa untuk mengisi semua informasi pribadi Anda untuk
+                  melengkapi pendataan sekolah Anda.
                 </Typography>
               </Grid>
               <Grid item xs={12} md={6}>
