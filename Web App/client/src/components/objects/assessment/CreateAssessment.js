@@ -251,7 +251,7 @@ class CreateAssessment extends Component {
       class_assigned: [],
       start_date: null,
       end_date: null,
-      post_date: null,
+      post_date: new Date(),
       posted: false,
       isScheduled: false,
       type: "",
@@ -636,6 +636,10 @@ class CreateAssessment extends Component {
     } else {
       this.setState({ [e.target.id]: e.target.value });
     }
+
+    console.log("Start date:", this.state.start_date)
+    console.log("End date:", this.state.start_date)
+
   };
 
   // onDateChange = (date) => {
