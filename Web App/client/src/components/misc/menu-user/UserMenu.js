@@ -15,9 +15,10 @@ function UserMenu(props) {
     // const [selectedUserId, setSelectedUserId] = React.useState(null);
     const open = Boolean(anchorEl);
 
-    const handleClick = (event) => {
-        event.stopPropagation();
-        setAnchorEl(event.currentTarget);
+    const handleClick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setAnchorEl(e.currentTarget);
     };
     const handleClose = (e) => {
         setAnchorEl(null);
@@ -26,9 +27,6 @@ function UserMenu(props) {
     return (
         <div >
             <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
                 onClick={handleClick}
                 disabled={rowCount}
             >

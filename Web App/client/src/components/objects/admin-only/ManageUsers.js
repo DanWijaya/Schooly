@@ -1740,8 +1740,7 @@ function ManageUsers(props) {
                             </Grid>
 
 
-                            <Grid item xs container spacing={1} justify="flex-end"
-                            >
+                            <Grid item xs container spacing={1} justify="flex-end">
 
                               <ListItemSecondaryAction
                                 button
@@ -1752,7 +1751,9 @@ function ManageUsers(props) {
                                   e.stopPropagation()
                                 }}
                               >
-
+                                {/* <IconButton type="button" onClick={(e) => e.preventDefault()}>
+                                  More
+                                  </IconButton> */}
                                 <UserMenu
                                   options={["Nonaktifkan", "Hapus"]}
                                   role={null}
