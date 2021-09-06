@@ -328,7 +328,7 @@ class Register extends Component {
                     inputVariant="outlined"
                     maxDateMessage="Harus waktu yang akan datang"
                     invalidDateMessage="Format tanggal tidak benar"
-                    format="dd MMMM yyyy"
+                    format="dd MMM yyyy"
                     okLabel="Simpan"
                     cancelLabel="Batal"
                     id="tanggal_lahir"

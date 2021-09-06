@@ -1,25 +1,21 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { useLocation, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { updateAvatar, getOneUser } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
+import ProfileDataItem from "./ProfileDataItem";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemText from "@material-ui/core/ListItemText";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 import CakeIcon from "@material-ui/icons/Cake";
@@ -69,61 +65,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ProfileDataItem(props) {
-  const classes = useStyles();
-
-  return (
-    <div>
-      <Hidden smUp>
-        <ListItem>
-          <ListItemAvatar>
-            <Avatar>
-              {props.icon}
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <Typography variant="overline" color="textSecondary">
-                <b>{props.type}</b>
-              </Typography>
-            }
-            secondary={
-              !props.value ? (
-                <Typography variant="body2" color="textSecondary">Kosong</Typography>
-              ) : (
-                <Typography>{props.value}</Typography>
-              )
-            }
-          />
-        </ListItem>
-      </Hidden>
-      <Hidden xsDown>
-        <ListItem>
-          <ListItemAvatar>
-            <Avatar>
-              {props.icon}
-            </Avatar>
-          </ListItemAvatar>
-          <Grid container alignItems="center" spacing={2}>
-            <Grid item xs={5}>
-              <Typography variant="overline" color="textSecondary">
-                <b>{props.type}</b>
-              </Typography>
-            </Grid>
-            <Grid item xs={7}>
-              {!props.value ? (
-                <Typography variant="body2" color="textSecondary">Kosong</Typography>
-              ) : (
-                <Typography>{props.value}</Typography>
-              )}
-            </Grid>
-          </Grid>
-        </ListItem>
-      </Hidden>
-    </div>
-  );
-}
-
 function ProfileView(props) {
   const classes = useStyles();
   const { user, selectedUser } = props.auth;
@@ -143,7 +84,6 @@ function ProfileView(props) {
       }
       getFileAvatar(selectedUser._id)
         .then((result) => setAvatar(result))
-        .catch((err) => console.log(err));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

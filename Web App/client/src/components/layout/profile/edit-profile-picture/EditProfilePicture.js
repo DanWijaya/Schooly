@@ -1,12 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
-import { uploadFileAvatar, getFileAvatar } from "../../../actions/files/FileAvatarActions";
+import { uploadFileAvatar, getFileAvatar } from "../../../../actions/files/FileAvatarActions";
 import defaultAvatar from "./DefaultAvatar.svg";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import Fab from "@material-ui/core/Fab";
 import Grid from "@material-ui/core/Grid";
+import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -19,7 +23,9 @@ import PersonIcon from "@material-ui/icons/Person";
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "350px",
-    padding: "20px",
+    [theme.breakpoints.down("xs")]: {
+      maxWidth: "100%",
+    },
   },
   editProfilePictureButton: {
     backgroundColor: "#F1F1F1",
@@ -61,31 +67,31 @@ const useStyles = makeStyles((theme) => ({
 
 function EditProfilePicture(props) {
   const classes = useStyles();
-  const uploadedImage = React.useRef(null);
-  const imageUploader = React.useRef(null);
-  const [profileImg, setProfileImg] = React.useState(null);
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const [avatarDimensions, setAvatarDimensions] = React.useState({
-    height: null,
-    width: null,
-  });
-
   const {
     user,
     updateAvatar,
     uploadFileAvatar,
     avatar,
     setFileLimitSnackbar,
+    fullScreen
   } = props;
 
+  const [openDialog, setOpenDialog] = React.useState(false);
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
-
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setProfileImg(null);
   };
+
+  const uploadedImage = React.useRef(null);
+  const imageUploader = React.useRef(null);
+  const [profileImg, setProfileImg] = React.useState(null);
+  const [avatarDimensions, setAvatarDimensions] = React.useState({
+    height: null,
+    width: null,
+  });
 
   const handleImageUpload = (e) => {
     const [file] = e.target.files;
@@ -179,19 +185,19 @@ function EditProfilePicture(props) {
       <Fab onClick={handleOpenDialog} className={classes.editProfilePictureButton}>
         <CameraAltIcon fontSize="large" />
       </Fab>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <Grid container direction="column" alignItems="center" className={classes.root}>
-          <Grid item container justify="flex-end" alignItems="flex-start" style={{ marginBottom: "10px" }}>
+      <Dialog open={openDialog} onClose={handleCloseDialog} fullScreen={fullScreen}>
+        <div className={classes.root}>
+          <DialogActions>
             <IconButton size="small" onClick={handleCloseDialog}>
               <CloseIcon />
             </IconButton>
-          </Grid>
-          <Grid item style={{ marginBottom: "20px" }}>
+          </DialogActions>
+          <DialogTitle>
             <Typography variant="h5" align="center">
-              <b>Perbarui Foto Profil</b>
+              <b>Ganti Foto Profil</b>
             </Typography>
-          </Grid>
-          <Grid item style={{ marginBottom: "40px" }}>
+          </DialogTitle>
+          <DialogContent>
             <form onSubmit={onSubmitForm}>
               <input
                 accept="image/*"
@@ -204,7 +210,7 @@ function EditProfilePicture(props) {
                 }}
               />
               <Grid container direction="column" alignItems="center" spacing={2}>
-                <Grid item style={{ marginBottom: "20px" }}>
+                <Grid item>
                   {imageUploadPreview()}
                 </Grid>
                 <Grid item>
@@ -230,20 +236,21 @@ function EditProfilePicture(props) {
                     Unggah
                   </Button>
                 </Grid>
+                <Grid item>
+                  <Typography
+                    variant="subtitle2"
+                    align="center"
+                    color="textSecondary"
+                    paragraph
+                  >
+                    Gunakan foto profil yang jelas sehingga pengguna lain dapat
+                    mengenali Anda.
+                  </Typography>
+                </Grid>
               </Grid>
             </form>
-          </Grid>
-          <Grid item>
-            <Typography
-              variant="subtitle2"
-              align="center"
-              color="textSecondary"
-            >
-              Foto profil Anda dapat dilihat oleh semua orang yang menggunakan
-              layanan Schooly.
-            </Typography>
-          </Grid>
-        </Grid>
+          </DialogContent>
+        </div>
       </Dialog>
     </div>
   );

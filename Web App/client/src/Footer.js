@@ -37,12 +37,15 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   socialMediaIcons: {
-    color: "grey",
     width: "30px",
     height: "30px",
     [theme.breakpoints.down("xs")]: {
       width: "25px",
       height: "25px",
+    },
+    color: "#A9A9A9",
+    "&:focus, &:hover": {
+      color: "#808080",
     },
   },
 }));
@@ -85,46 +88,36 @@ function Footer(props) {
             </Grid>
           </Grid>
         </Grid>
-        <Hidden mdUp>
-          <List dense>
+        <Hidden smUp>
+          <div style={{ paddingLeft: "15px" }}>
+            <Typography gutterBottom>
             <Link to="/tentang-schooly">
-              <ListItem>
-                <Typography>
-                  Tentang Schooly
-                </Typography>
-              </ListItem>
-            </Link>
-            <Link to="/bantuan">
-              <ListItem>
-                <Typography>
-                  Bantuan
-                </Typography>
-              </ListItem>
-            </Link>
-            <a href="mailto:schoolysystem@gmail.com">
-              <ListItem>
-                <Typography>
-                  Hubungi Kami
-                </Typography>
-              </ListItem>
-            </a>
-            <Link to="/legal/ketentuan-penggunaan">
-              <ListItem>
-                <Typography>
-                  Ketentuan Pengunaan
-                </Typography>
-              </ListItem>
-            </Link>
-            <Link to="/legal/kebijakan-privasi">
-              <ListItem>
-                <Typography>
-                  Kebijakan Privasi
-                </Typography>
-              </ListItem>
-            </Link>
-          </List>
+              Tentang Schooly
+              </Link>
+            </Typography>
+            <Typography gutterBottom>
+              <Link to="/bantuan">
+                Bantuan
+              </Link>
+            </Typography>
+            <Typography gutterBottom>
+              <a href="mailto:schoolysystem@gmail.com">
+                Hubungi Kami
+              </a>
+            </Typography>
+            <Typography gutterBottom>
+              <Link to="/legal/ketentuan-penggunaan">
+                Ketentuan Pengunaan
+              </Link>
+            </Typography>
+            <Typography gutterBottom>
+              <Link to="/legal/kebijakan-privasi">
+                Kebijakan Privasi
+              </Link>
+            </Typography>
+          </div>
         </Hidden>
-        <Hidden smDown>
+        <Hidden xsDown>
           <Grid container justify="space-between">
             <Grid item>
               <Grid container spacing={2} justify="flex-start">
