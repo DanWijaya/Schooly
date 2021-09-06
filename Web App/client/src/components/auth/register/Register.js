@@ -7,6 +7,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { registerUser } from "../../../actions/UserActions";
+import { getAllUnits } from "../../../actions/UnitActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import registerStepperArt from "./RegisterStepperArt.png";
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -32,6 +33,7 @@ import {
 import MuiAlert from "@material-ui/lab/Alert";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
+import UnitList from "../../objects/superadmin-only/UnitList";
 
 const styles = (theme) => ({
   root: {
@@ -135,6 +137,7 @@ class Register extends Component {
       this.props.history.push("/beranda");
     }
     this.props.handleNavbar(false);
+    this.props.getAllUnits();
   }
 
   componentWillUnmount() {
@@ -212,7 +215,7 @@ class Register extends Component {
   render() {
     const { classes } = this.props;
     const { errors } = this.state;
-
+    const { all_units } = this.props.unitsCollection;
     const getSteps = () => {
       return ["Kredensial Masuk", "Informasi Pribadi", "Konfirmasi Pendaftaran"];
     };
@@ -345,7 +348,9 @@ class Register extends Component {
                       this.onChange(event, "unit");
                     }}
                   >
-                    {/* {units.map((u) => <MenuItem value={u._id}>{u.name}</MenuItem>)} */}
+                    {all_units.map((unit) => (
+                      <MenuItem value={unit._id}>{unit.name}</MenuItem>
+                    ))}
                   </Select>
                   <FormHelperText>
                     {Boolean(errors.unit) ? errors.unit : null}
@@ -650,18 +655,22 @@ class Register extends Component {
 
 Register.propTypes = {
   registerUser: PropTypes.func.isRequired,
+  getAllUnits: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
+  unitsCollection: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
+  unitsCollection: state.unitsCollection
 });
 
 export default withRouter(
   connect(mapStateToProps, {
     registerUser,
     clearErrors,
+    getAllUnits
   })(withStyles(styles)(Register))
 );
