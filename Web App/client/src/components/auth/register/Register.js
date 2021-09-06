@@ -121,8 +121,6 @@ class Register extends Component {
       password2: "",
       errors: {},
       unit: null,
-      // kelas: "", // Student Data
-      // subject_teached: "", // Teacher Data
       tanggal_lahir: new Date(),
       activeStep: 0,
       snackbarOpen: false,
@@ -186,6 +184,7 @@ class Register extends Component {
       password: this.state.password,
       password2: this.state.password2,
       tanggal_lahir: this.state.tanggal_lahir,
+      unit: this.state.unit
     };
 
     if (this.state.activeStep === 2) {

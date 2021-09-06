@@ -1,5 +1,6 @@
 // Require Mongoose
 const mongoose = require("mongoose");
+const { ObjectId } = require("mongodb");
 // API dari mongoose MongoDb.
 
 // Define a Schema
@@ -84,6 +85,10 @@ const UserSchema = new Schema(
       type: Date,
       select: true,
     },
+    unit: {
+      type: ObjectId,
+      default: null
+    }
   },
   options
 );

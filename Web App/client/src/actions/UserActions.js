@@ -9,11 +9,13 @@ import {
   GET_USERS,
   GET_ALL_STUDENTS,
   GET_ALL_TEACHERS,
+  GET_ALL_ADMINS,
   GET_ALL_TEACHERS_MAP,
   GET_ONE_USER,
   GET_STUDENTS_BY_CLASS,
   GET_PENDING_STUDENTS,
   GET_PENDING_TEACHERS,
+  GET_PENDING_ADMINS,
   // SET_DROPBOX_TOKEN,
   GET_SUCCESS_RESPONSE
 } from "./Types";
@@ -164,7 +166,7 @@ export const setUserLoading = () => {
 
 export const getStudents = () => (dispatch) => {
   axios
-    .get("/api/users/getstudents")
+    .get("/api/users/getStudents")
     .then((res) => {
       console.log(res.data);
       dispatch({
@@ -181,7 +183,7 @@ export const getStudents = () => (dispatch) => {
 export const getTeachers = (data = "array") => (dispatch) => {
   // console.log('getTeacher start')
   return axios
-    .get("/api/users/getteachers")
+    .get("/api/users/getTeachers")
     .then((res) => {
       // console.log(res.data)
       if (data === "map") {
@@ -283,6 +285,34 @@ export const getPendingTeachers = () => (dispatch) => {
       console.log("Error in getting Students by class");
     });
 };
+
+export const getAllAdmins = () => (dispatch) => {
+  axios.get("/api/users/getAdmins")
+      .then((res) => {
+        dispatch({
+          type: GET_ALL_ADMINS,
+          payload: res.data,
+        });
+      })
+      .catch((err) => {
+        console.log("Error in getting Students by class");
+      });
+}
+
+export const getPendingAdmins = () => (dispatch) => {
+  console.log("Get pending users are runned");
+  axios.get("/api/users/getpendingadmins")
+      .then((res) => {
+        console.log(res.data);
+        dispatch({
+          type: GET_PENDING_ADMINS,
+          payload: res.data,
+        });
+      })
+      .catch((err) => {
+        console.log("Error in getting Students by class");
+      });
+}
 
 export const setUserActive = (userId) => (dispatch) => {
   axios

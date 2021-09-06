@@ -353,20 +353,26 @@ router.put(
   }
 );
 
-router.get("/getteachers", (req, res) => {
-  // console.log("GET teachers runned")
+router.get("/getTeachers", (req, res) => {
   Teacher.find({ active: true }).sort({name: 1}).then((users, err) => {
     if (!users) console.log("No teachers yet in Schooly System");
     else return res.json(users);
   });
 });
 
-router.get("/getstudents", (req, res) => {
+router.get("/getStudents", (req, res) => {
   Student.find({ active: true }).sort({name: 1}).then((users, err) => {
     if (!users) console.log("No students yet in Schooly System");
     else return res.json(users);
   });
 });
+
+router.get("/getAdmins", (req,res) => {
+  Admin.find({ active: true }).sort({name: 1}).then((users, err) => {
+    if (!users) console.log("No unit admins yet in Schooly System");
+    else return res.json(users);
+  });
+})
 
 router.get("/getOneUser/:id", (req, res) => {
   // console.log("getOneUser is runned");
@@ -428,6 +434,12 @@ router.get("/getpendingteachers", (req, res) => {
   });
 });
 
+router.get("/getpendingadmins", (req,res) => {
+  Admin.find({ active: false}).sort({ name: 1}).then((users, err) => {
+    if (!users) return res.json([]);
+    else return res.json(users);
+  })
+})
 router.put("/setuseractive/:id", (req, res) => {
   let id = req.params.id;
 
