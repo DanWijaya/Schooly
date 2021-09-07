@@ -34,11 +34,13 @@ import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
 //Dashboard
 import Dashboard from "./components/objects/dashboard/Dashboard";
 //Class
-import CreateClass from "./components/objects/classes/CreateClass";
-import EditClass from "./components/objects/classes/EditClass";
-import ViewClass from "./components/objects/classes/ViewClass";
-import ViewSubject from "./components/objects/classes/ViewSubject";
-import ClassList from "./components/objects/classes/ClassList";
+import CreateClass from "./components/objects/class/CreateClass";
+import EditClass from "./components/objects/class/EditClass";
+import ViewClass from "./components/objects/class/ViewClass";
+import ClassList from "./components/objects/class/ClassList";
+//Subject
+import ViewSubject from "./components/objects/subject/ViewSubject";
+import SubjectList from "./components/objects/subject/SubjectList";
 //Material
 import CreateMaterial from "./components/objects/material/CreateMaterial";
 import EditMaterial from "./components/objects/material/EditMaterial";
@@ -50,12 +52,12 @@ import EditAnnouncement from "./components/objects/announcement/EditAnnouncement
 import ViewAnnouncement from "./components/objects/announcement/ViewAnnouncement";
 import AnnouncementList from "./components/objects/announcement/AnnouncementList";
 //Task
-import CreateTask from "./components/objects/tasks/CreateTask";
-import EditTask from "./components/objects/tasks/EditTask";
-import ViewTaskStudent from "./components/objects/tasks/ViewTaskStudent";
-import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
-import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
-import TaskList from "./components/objects/tasks/TaskList";
+import CreateTask from "./components/objects/task/CreateTask";
+import EditTask from "./components/objects/task/EditTask";
+import ViewTaskStudent from "./components/objects/task/ViewTaskStudent";
+import ViewTaskTeacher from "./components/objects/task/ViewTaskTeacher";
+import SubmittedTaskList from "./components/objects/task/SubmittedTaskList";
+import TaskList from "./components/objects/task/TaskList";
 //Assessment
 import AssessmentList from "./components/objects/assessment/AssessmentQuizList";
 import AssessmentTestList from "./components/objects/assessment/AssessmentExamList";
@@ -68,11 +70,10 @@ import ViewAssessmentAnswer from "./components/objects/assessment/ViewAssessment
 //Report
 import Report from "./components/objects/report/Report";
 //Event
-import Calendar from "./components/objects/events/Calendar";
+import Calendar from "./components/objects/event/Calendar";
 //Admin Only
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
-import SubjectList from "./components/objects/admin-only/SubjectList";
 import EditClassTeacher from "./components/objects/classes/EditClassTeacher";
 import TeacherList from "./components/objects/admin-only/TeacherList";
 //Prototypes

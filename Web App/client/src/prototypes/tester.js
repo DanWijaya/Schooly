@@ -162,21 +162,28 @@ function Tester(props) {
                   <ProfileDataItem
                     icon={<SportsEsportsIcon />}
                     type="Hobi dan Minat"
+                    value="Test"
                   />
                   <Divider variant="inset" />
                   <ProfileDataItem
                     icon={<ColorLensIcon />}
                     type="Keterampilan Non-Akademik"
+                    value="Test"
+
                   />
                   <Divider variant="inset" />
                   <ProfileDataItem
                     icon={<WorkIcon />}
                     type="Cita-Cita"
+                    value="Test"
+
                   />
                   <Divider variant="inset" />
                   <ProfileDataItem
                     icon={<AccountBalanceIcon />}
                     type="Perguruan Tinggi Impian"
+                    value="Test"
+
                   />
                 </List>
               </div>
