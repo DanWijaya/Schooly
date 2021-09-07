@@ -19,7 +19,6 @@ import ForgotPassword from "./components/auth/reset-password/ForgotPassword";
 import ResetPassword from "./components/auth/reset-password/ResetPassword";
 //Layout
 import About from "./components/layout/about/About";
-import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
 import Profile from "./components/layout/profile/Profile";
 import ProfileView from "./components/layout/profile/ProfileView";
@@ -32,6 +31,8 @@ import ProblemEncountered from "./components/layout/error/error500/ProblemEncoun
 import PrivateRoute from "./components/misc/private-route/PrivateRoute";
 import ProgressIndicator from "./components/misc/progress-indicator/ProgressIndicator";
 import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
+//Dashboard
+import Dashboard from "./components/objects/dashboard/Dashboard";
 //Class
 import CreateClass from "./components/objects/classes/CreateClass";
 import EditClass from "./components/objects/classes/EditClass";
@@ -75,7 +76,7 @@ import SubjectList from "./components/objects/admin-only/SubjectList";
 import EditClassTeacher from "./components/objects/classes/EditClassTeacher";
 import TeacherList from "./components/objects/admin-only/TeacherList";
 //Prototypes
-import CSV from "./prototypes/contoh-tugas/CSV";
+import Tester from "./prototypes/tester";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
 
 // Check for token to keep user logged in
@@ -530,7 +531,7 @@ class App extends Component {
                         component={EditClassTeacher}
                       />
                       {/*prototype*/}
-                      {/*<Route exact path="/csv" component={CSV} />*/}
+                      <Route exact path="/tester" component={Tester} />
                       {/* Route Event */}
                       <PrivateRoute
                       exact

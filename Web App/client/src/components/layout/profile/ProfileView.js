@@ -239,16 +239,12 @@ function ProfileView(props) {
                   type="Nomor Telepon Darurat"
                   value={emergency_phone}
                 />
-                {admin === true ? (
-                  <div>
                     <Divider variant="inset" />
                     <ProfileDataItem
                       icon={<HomeIcon />}
                       type="Alamat"
                       value={address}
                     />
-                  </div>
-                ) : null}
               </List>
             </div>
           </Paper>
