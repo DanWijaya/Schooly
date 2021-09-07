@@ -90,27 +90,27 @@ function Footer(props) {
         </Grid>
         <Hidden smUp>
           <div style={{ paddingLeft: "15px" }}>
-            <Typography gutterBottom>
+            <Typography variant="body2" gutterBottom>
             <Link to="/tentang-schooly">
               Tentang Schooly
               </Link>
             </Typography>
-            <Typography gutterBottom>
+            <Typography variant="body2" gutterBottom>
               <Link to="/bantuan">
                 Bantuan
               </Link>
             </Typography>
-            <Typography gutterBottom>
+            <Typography variant="body2" gutterBottom>
               <a href="mailto:schoolysystem@gmail.com">
                 Hubungi Kami
               </a>
             </Typography>
-            <Typography gutterBottom>
+            <Typography variant="body2" gutterBottom>
               <Link to="/legal/ketentuan-penggunaan">
                 Ketentuan Pengunaan
               </Link>
             </Typography>
-            <Typography gutterBottom>
+            <Typography variant="body2" gutterBottom>
               <Link to="/legal/kebijakan-privasi">
                 Kebijakan Privasi
               </Link>

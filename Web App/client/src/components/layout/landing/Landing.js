@@ -182,7 +182,7 @@ class Landing extends Component {
     // Cant copy when adding below this code
     // Dummy.style.display = "none"
     document.body.appendChild(dummy);
-    // Be careful if you use texarea. setAttribute("value", value), which works with "input" does not work with "textarea".
+    // Be careful if you use texarea. setAttribute("value", value), which works with "input" but does not work with "textarea".
     dummy.value = text;
     dummy.select();
     document.execCommand("copy");
@@ -442,7 +442,7 @@ class Landing extends Component {
         </div>
         <div className={classes.contactSchooly}>
           <Typography variant="h6" align="center">
-            Hanya satu ketukan lagi untuk mulai mencoba Schooly!
+            Mulai coba Schooly sekarang!
           </Typography>
           <Typography color="textSecondary" align="center" paragraph>
             Tekan tombol "Kirim Pesan" untuk menghubungi kami atau tombol "Salin

@@ -74,6 +74,7 @@ function ProfileView(props) {
     getFileAvatar,
     getOneUser,
   } = props;
+
   const [avatar, setAvatar] = React.useState(null);
   const [namakelas, setNamaKelas] = React.useState("");
 
@@ -118,7 +119,7 @@ function ProfileView(props) {
 
   document.title = selectedUser.name
     ? `Schooly | ${selectedUser.name}`
-    : "Schooly";
+    : "Schooly | Lihat Profil";
 
   return (
     <div className={classes.root}>

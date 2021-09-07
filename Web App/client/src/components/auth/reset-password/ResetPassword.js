@@ -81,10 +81,9 @@ class ResetPassword extends Component {
   //In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
 
   render() {
-    const { password, password2 } = this.state;
-    const { errors } = this.props;
-    const { classes, savePassword } = this.props;
+    const { classes, errors, savePassword } = this.props;
     const { hash } = this.props.match.params;
+    const { password, password2 } = this.state;
 
     const onSubmit = (e) => {
       e.preventDefault();

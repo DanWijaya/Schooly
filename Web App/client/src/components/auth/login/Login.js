@@ -183,7 +183,7 @@ class Login extends Component {
         </Link>
         <Grid container alignItems="flex-end" spacing={3} className={classes.loginContainer}>
           <Hidden smDown>
-            <Grid item container justify="flex-end" xs={3}>
+            <Grid item xs={3} container justify="flex-end">
               <img
                 alt="Login Art Left"
                 src={loginArtLeft}
@@ -300,7 +300,7 @@ class Login extends Component {
             </Paper>
           </Grid>
           <Hidden smDown>
-            <Grid item container justify="flex-start" xs={3}>
+            <Grid item xs={3} container justify="flex-start">
                 <img
                   alt="Login Art Right"
                   src={loginArtRight}

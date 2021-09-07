@@ -49,7 +49,6 @@ import WorkIcon from "@material-ui/icons/Work";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "600px",
     [theme.breakpoints.down("xs")]: {
       maxWidth: "100%",
     },
@@ -198,7 +197,7 @@ function EditProfileData(props) {
       >
         Sunting Profil
       </Button>
-      <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
+      <Dialog open={open} onClose={handleClose} fullWidth fullScreen={fullScreen}>
         <div className={classes.root}>
           <DialogActions>
             <IconButton size="small" onClick={handleClose}>

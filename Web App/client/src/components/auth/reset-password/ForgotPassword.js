@@ -103,8 +103,8 @@ class ForgotPassword extends Component {
 
   render() {
     const { classes } = this.props;
-    const { email ,errors } = this.state;
     const { isPasswordReset } = this.props.passwordMatters;
+    const { email ,errors } = this.state;
 
     document.title = "Schooly | Lupa Kata Sandi";
 

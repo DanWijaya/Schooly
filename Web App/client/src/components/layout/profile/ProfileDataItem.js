@@ -12,54 +12,45 @@ function ProfileDataItem(props) {
   const { iconStyle, icon, type, value } = props;
 
   return (
-    <div>
+    <ListItem>
+      <ListItemAvatar>
+        <Avatar className={iconStyle}>
+          {icon}
+        </Avatar>
+      </ListItemAvatar>
       <Hidden smUp>
-        <ListItem>
-          <ListItemAvatar>
-            <Avatar className={iconStyle}>
-              {icon}
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <Typography variant="overline" color="textSecondary">
-                <b>{type}</b>
-              </Typography>
-            }
-            secondary={
-              !value ? (
-                <Typography variant="body2" color="textSecondary">Kosong</Typography>
-              ) : (
-                <Typography>{value}</Typography>
-              )
-            }
-          />
-        </ListItem>
+        <ListItemText
+          primary={
+            <Typography variant="overline" color="textSecondary">
+              <b>{type}</b>
+            </Typography>
+          }
+          secondary={
+            !value ? (
+              <Typography variant="body2" color="textSecondary">Kosong</Typography>
+            ) : (
+              <Typography>{value}</Typography>
+            )
+          }
+        />
       </Hidden>
       <Hidden xsDown>
-        <ListItem>
-          <ListItemAvatar>
-            <Avatar className={iconStyle}>
-              {icon}
-            </Avatar>
-          </ListItemAvatar>
-          <Grid container alignItems="center" spacing={2}>
-            <Grid item xs={5}>
-              <Typography variant="overline" color="textSecondary">
-                <b>{type}</b>
-              </Typography>
-            </Grid>
-            <Grid item xs={7}>
-              {!value ? (
-                <Typography variant="body2" color="textSecondary">Kosong</Typography>
-              ) : (
-                <Typography>{value}</Typography>
-              )}
-            </Grid>
+        <Grid container alignItems="center" spacing={2}>
+          <Grid item xs={5}>
+            <Typography variant="overline" color="textSecondary">
+              <b>{type}</b>
+            </Typography>
           </Grid>
-        </ListItem>
+          <Grid item xs={7}>
+            {!value ? (
+              <Typography variant="body2" color="textSecondary">Kosong</Typography>
+            ) : (
+              <Typography>{value}</Typography>
+            )}
+          </Grid>
+        </Grid>
       </Hidden>
-    </div>
+    </ListItem>
   );
 }
 

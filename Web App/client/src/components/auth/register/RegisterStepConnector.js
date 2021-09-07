@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 const RegisterStepConnector = withStyles((theme) => ({
   alternativeLabel: {
-    top: 22,
+    top: "22px",
   },
   active: {
     "& $line": {
@@ -16,10 +16,10 @@ const RegisterStepConnector = withStyles((theme) => ({
     },
   },
   line: {
-    height: 3,
+    height: "3px",
     border: 0,
     backgroundColor: "#EAEAF0",
-    borderRadius: 1,
+    borderRadius: "1px",
   },
 }))(StepConnector);
 
