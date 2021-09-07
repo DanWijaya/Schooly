@@ -125,7 +125,7 @@ const Styles = responsiveFontSizes(
       MuiInputLabel: {
         shrink: true,
         style: {
-          backgroundColor: "white",
+          backgroundColor: "transparent",
         },
       },
       MuiSelect: {

@@ -1378,7 +1378,7 @@ function Help(props) {
                   <ContactSupportIcon fontSize="small" />
                 </Avatar>
               </Grid>
-              <Grid item>
+              <Grid item xs>
                 <Typography align="left">
                   <b>Hubungi Kami</b>
                 </Typography>
