@@ -253,8 +253,7 @@ function ManageUsersToolbar(props) {
           <UserMenu
             actions={["Hapus"]}
             row={null}
-            handleOpenDeleteDialog={OpenDialogCheckboxDelete}
-            handleOpenDisableDialog={null}
+            handleActionOnClick={[OpenDialogCheckboxDelete]}
             rowCount={listCheckbox.length === 0}
           />
         </>
@@ -725,10 +724,10 @@ function ManagePendingAdmins(props) {
 
   const classes = useStyles();
 
-  const [order_student, setOrderStudent] = React.useState("asc");
+  const [order, setOrderStudent] = React.useState("asc");
   const [order_teacher, setOrderTeacher] = React.useState("asc");
 
-  const [orderBy_student, setOrderByStudent] = React.useState("name");
+  const [orderBy, setOrderByStudent] = React.useState("name");
   const [orderBy_teacher, setOrderByTeacher] = React.useState("name");
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -959,7 +958,7 @@ function ManagePendingAdmins(props) {
 
   const handleRequestSort = (event, property, role) => {
     if (role === "Student") {
-      const isAsc = orderBy_student === property && order_student === "asc";
+      const isAsc = orderBy === property && order === "asc";
       setOrderStudent(isAsc ? "desc" : "asc");
       setOrderByStudent(property);
     } else if (role === "Teacher") {
@@ -1019,7 +1018,7 @@ function ManagePendingAdmins(props) {
             style={{ marginBottom: "20px" }}
           >
             <Typography variant="h6" gutterBottom>
-              Nonaktifkan Pengelola berikut?
+              Aktifkan Pengelola berikut?
             </Typography>
           </Grid>
           <Grid
@@ -1045,7 +1044,7 @@ function ManagePendingAdmins(props) {
                 onClick={() => {
                   onApproveUser(selectedUserId);
                 }}
-                startIcon={<BlockIcon />}
+                startIcon={<CheckCircleIcon />}
                 className={classes.dialogApproveButton}
               >
                 Aktifkan
@@ -1198,8 +1197,8 @@ function ManagePendingAdmins(props) {
           role="Admin"
           deleteUser={deleteUser}
           classes={classes}
-          order={order_student}
-          orderBy={orderBy_student}
+          order={order}
+          orderBy={orderBy}
           onRequestSort={handleRequestSort}
           rowCount={rows ? rows.length : 0}
           activateCheckboxMode={handleActivateCheckboxMode}
@@ -1231,7 +1230,7 @@ function ManagePendingAdmins(props) {
           ) : (
             stableSort(
               rows,
-              getComparator(order_student, orderBy_student)
+              getComparator(order, orderBy)
             ).map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;
               let content = (

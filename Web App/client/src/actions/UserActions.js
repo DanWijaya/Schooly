@@ -287,7 +287,7 @@ export const getPendingTeachers = () => (dispatch) => {
     });
 };
 
-export const getAllAdmins = () => (dispatch) => {
+export const getAdmins = () => (dispatch) => {
   axios.get("/api/users/getAdmins")
       .then((res) => {
         dispatch({
