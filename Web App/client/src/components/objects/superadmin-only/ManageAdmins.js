@@ -334,7 +334,7 @@ function ManageUsersToolbar(props) {
         <>
           {CheckboxDialog("Delete", "Student")}
           <UserMenu
-            options={["Hapus"]}
+            actions={["Hapus"]}
             row={null}
             handleOpenDeleteDialog={OpenDialogCheckboxDelete}
             handleOpenDisableDialog={null}
@@ -1409,7 +1409,7 @@ function ManageUsers(props) {
 
                               <UserMenu
                                 event
-                                options={["Nonaktifkan", "Hapus"]}
+                                actions={["Nonaktifkan", "Hapus"]}
                                 row={row}
                                 handleOpenDeleteDialog={handleOpenDeleteDialog}
                                 handleOpenDisableDialog={handleOpenDisableDialog}

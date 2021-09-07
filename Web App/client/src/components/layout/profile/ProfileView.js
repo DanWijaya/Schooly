@@ -189,6 +189,7 @@ function ProfileView(props) {
         .then((result) => setAvatar(result))
         .catch((err) => console.log(err));
     });
+  
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -229,6 +230,12 @@ function ProfileView(props) {
     ? `Schooly | ${selectedUser.name}`
     : "Schooly";
 
+  const roleMap = new Map();
+  roleMap.set("Student", "Murid")
+  roleMap.set("Teacher", "Guru")
+  roleMap.set("Admin", "Pengelola Unit")
+  roleMap.set("SuperAdmin", "Pengelola Sekolah")
+
   return (
     <div className={classes.root}>
       <Grid container direction="column" spacing={1} alignItems="center">
@@ -248,11 +255,7 @@ function ProfileView(props) {
             {name}
           </Typography>
           <Typography variant="h6" align="center">
-            {role === "Student"
-              ? "Murid"
-              : role === "Teacher"
-              ? "Guru"
-              : "Pengelola"}
+            {roleMap.get(role)}
           </Typography>
           <Typography variant="body1" align="center" color="textSecondary">
             {!namakelas ? null : `Kelas ${namakelas}`}

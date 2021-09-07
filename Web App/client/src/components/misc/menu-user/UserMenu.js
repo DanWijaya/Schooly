@@ -8,28 +8,18 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 function UserMenu(props) {
 
-    const { options, row, rowCount } = props
-    const { handleOpenDeleteDialog, handleOpenDisableDialog } = props
+    const { actions, row, rowCount, handleActionOnClick } = props
     const [anchorEl, setAnchorEl] = React.useState(null);
-    // const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-    // const [selectedUserId, setSelectedUserId] = React.useState(null);
     const open = Boolean(anchorEl);
 
-    const handleClick = (event) => {
-        event.stopPropagation();
-        setAnchorEl(event.currentTarget);
+    const handleClick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setAnchorEl(e.currentTarget);
     };
     const handleClose = (e) => {
         setAnchorEl(null);
     };
-
-    // const handleOpenDeleteDialog = (e, id, name) => {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //     setOpenDeleteDialog(true);
-    //     setSelectedUserId(id);
-    //     setSelectedUserName(name);
-    // };
 
     return (
         <div >
@@ -54,20 +44,10 @@ function UserMenu(props) {
                     },
                 }}
             >
-                {options.map((option) => {
+                {actions.map((option, idx) => {
                     return (
-                        <MenuItem key={option} selected={option === 'Detail'}
-                            onClick={
-                                option === 'Hapus' ?
-                                    handleOpenDisableDialog !== null ?
-                                        (e) => handleOpenDeleteDialog(e, row._id, row.name)
-                                        : (e) => handleOpenDeleteDialog(e, "Student")
-                                    : option === 'Nonaktifkan' ?
-                                        (e) => handleOpenDisableDialog(e, row._id, row.name)
-                                        : () => { }
-                                // : (e) => handleOpenApproveDialog(e, row._id, row.name)
-                            }
-                        >
+                        <MenuItem key={option} selected={option === "Detail"}
+                            onClick={(e) => handleActionOnClick[idx](e, row._id, row.name)}>
                             {option}
                         </MenuItem>
                     )

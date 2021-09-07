@@ -251,7 +251,7 @@ function ManageUsersToolbar(props) {
         <>
           {CheckboxDialog("Delete", "Student")}
           <UserMenu
-            options={["Hapus"]}
+            actions={["Hapus"]}
             row={null}
             handleOpenDeleteDialog={OpenDialogCheckboxDelete}
             handleOpenDisableDialog={null}
@@ -732,7 +732,7 @@ function ManagePendingAdmins(props) {
   const [orderBy_teacher, setOrderByTeacher] = React.useState("name");
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [openDisableDialog, setOpenDisableDialog] = React.useState(null);
+  const [openApproveDialog, setOpenApproveDialog] = React.useState(null);
   const [selectedUserId, setSelectedUserId] = React.useState(null);
   const [selectedUserName, setSelectedUserName] = React.useState(null);
   const [searchFilterS, updateSearchFilterS] = React.useState("");
@@ -988,9 +988,10 @@ function ManagePendingAdmins(props) {
     setSelectedUserName(name);
   };
 
-  const handleOpenDisableDialog = (e, id, name) => {
+  const handleOpenApproveDialog = (e, id, name) => {
+    console.log("Di panggill")
     e.stopPropagation();
-    setOpenDisableDialog(true);
+    setOpenApproveDialog(true);
     setSelectedUserId(id);
     setSelectedUserName(name);
   };
@@ -1000,12 +1001,12 @@ function ManagePendingAdmins(props) {
   };
 
   const handleCloseDisableDialog = () => {
-    setOpenDisableDialog(false);
+    setOpenApproveDialog(false);
   };
 
   function ApproveDialog() {
     return (
-      <Dialog open={openDisableDialog} onClose={handleCloseDisableDialog}>
+      <Dialog open={openApproveDialog} onClose={handleCloseDisableDialog}>
         <Grid
           container
           direction="column"
@@ -1234,12 +1235,12 @@ function ManagePendingAdmins(props) {
             ).map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;
               let content = (
-                // <Link
-                //   style={{ color: 'black' }}
-                //   to={{
-                //     pathname: `/lihat-profil/${row._id}`,
-                //   }}
-                // >
+                <Link
+                  style={{ color: 'black' }}
+                  to={{
+                    pathname: `/lihat-profil/${row._id}`,
+                  }}
+                >
                   <div>
                     <ListItem key={row} role={undefined} button>
 
@@ -1321,11 +1322,9 @@ function ManagePendingAdmins(props) {
                             >
 
                               <UserMenu
-                                event
-                                options={["Aktifkan", "Hapus"]}
+                                actions={["Aktifkan", "Hapus"]}
                                 row={row}
-                                handleOpenDeleteDialog={handleOpenDeleteDialog}
-                                handleOpenDisableDialog={handleOpenDisableDialog}
+                                handleActionOnClick={[handleOpenApproveDialog, handleOpenDeleteDialog]}
                               />
 
                             </ListItemSecondaryAction>
@@ -1337,7 +1336,7 @@ function ManagePendingAdmins(props) {
                     </ListItem>
                     <Divider />
                   </div>
-                // </Link>
+                  </Link>
               );
 
               return (

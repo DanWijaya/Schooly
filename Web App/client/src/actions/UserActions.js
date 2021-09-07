@@ -211,6 +211,7 @@ export const getTeachers = (data = "array") => (dispatch) => {
 };
 
 export const getOneUser = (userId) => (dispatch) => {
+  console.log(userId)
   return axios
     .get("/api/users/getOneUser/" + userId)
     .then((res) => {

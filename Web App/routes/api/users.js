@@ -375,10 +375,10 @@ router.get("/getAdmins", (req,res) => {
 })
 
 router.get("/getOneUser/:id", (req, res) => {
-  // console.log("getOneUser is runned");
   let id = req.params.id;
   User.findById(id, (err, user) => {
-    if (!user || !user.active)
+    console.log(user);
+    if (!user)
       return res.status(404).json("No user is found in Database");
     else return res.json(user);
   });

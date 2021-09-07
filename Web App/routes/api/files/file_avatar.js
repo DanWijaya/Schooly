@@ -232,7 +232,7 @@ router.get("/by_user/:id", (req, res) => {
     console.log(result, err);
     if (!result) {
       console.log("No avatar added");
-      return res.status(400).json(err);
+      return res.json("No avatar is added");
     }
     // let params = {
     //   Bucket: keys.awsKey.AWS_BUCKET_NAME,
