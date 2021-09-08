@@ -207,19 +207,19 @@ function ManageUsersToolbar(props) {
 
   // }
 
-  let searchRef = useRef();
+  // let searchRef = useRef();
 
-  useEffect(() => {
-    let handler = (event) => {
-      if (!searchRef.current.contains(event.target)) {
-        setSearchBarFocus(false);
-      }
-    }
-    document.addEventListener("mousedown", handler)
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    }
-  });
+  // useEffect(() => {
+  //   let handler = (event) => {
+  //     if (!searchRef.current.contains(event.target)) {
+  //       setSearchBarFocus(false);
+  //     }
+  //   }
+  //   document.addEventListener("mousedown", handler)
+  //   return () => {
+  //     document.removeEventListener("mousedown", handler);
+  //   }
+  // },[]);
 
 
 
@@ -390,7 +390,7 @@ function ManageUsersToolbar(props) {
                     maxWidth: "200px",
                     marginLeft: "10px",
                   }}
-                  ref={searchRef}
+                  // ref={searchRef}
                   inputProps={{
                     style: { boxShadow: "none", margin: "0 15px", borderBottom: "none" },
                   }}

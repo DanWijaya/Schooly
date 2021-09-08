@@ -95,9 +95,7 @@ function ProfileView(props) {
   }, [selectedUser]);
 
   React.useEffect(() => {
-    if(user.role === "Student"){
     setNamaKelas(classesCollection.kelas.name);
-  }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classesCollection]);
 
@@ -143,7 +141,7 @@ function ProfileView(props) {
               : role === "Teacher" ? "Guru"
               : role === "Admin" ? "Pengelola"
               : null}
-            {!namakelas ? null : ` ${namakelas}`}
+            {!namakelas || !role !== "Student"? null : ` ${namakelas}`}
           </Typography>
         </Grid>
       </Grid>
