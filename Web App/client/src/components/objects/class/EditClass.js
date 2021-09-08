@@ -25,14 +25,14 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { Autocomplete }from '@material-ui/lab';
+import { Autocomplete } from '@material-ui/lab';
 import { withStyles } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
   overrides: {
     MuiOutlinedInput: {
       input: {
-        
+
       }
     },
     MuiInputBase: {
@@ -113,11 +113,11 @@ class EditClass extends Component {
   onChange = (e, otherfield = null) => {
     // otherfield ini adalah yang untuk field controllers Select atau variannya. 
     // Karena Select ini tidak memiliki nilai e.target.id, maka awalnya kita lakukan check dulu jika
-    let field = otherfield? otherfield : e.target.id;
+    let field = otherfield ? otherfield : e.target.id;
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
-    
+
     if (field === "mata_pelajaran") {
       this.setState({ [field]: e });
     } else {
@@ -147,6 +147,8 @@ class EditClass extends Component {
         }),
       })
     }
+    console.log("state");
+    console.log(this.state);
   };
 
   handleOpenUploadDialog = () => {
@@ -369,7 +371,7 @@ class EditClass extends Component {
                           options={this.state.allSubjectObject ? this.state.allSubjectObject : []}
                           getOptionLabel={(option) => option.name}
                           filterSelectedOptions
-                          classes={{input: classes.underline, inputRoot: classes.underline}}
+                          classes={{ input: classes.underline, inputRoot: classes.underline }}
                           value={this.state.mata_pelajaran ? this.state.mata_pelajaran : []}
                           onChange={(event, value) => {
                             this.onChange(value, "mata_pelajaran");

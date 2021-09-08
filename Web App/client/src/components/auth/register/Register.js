@@ -122,6 +122,7 @@ class Register extends Component {
       submitButtonClicked: false,
       openUploadDialog: false,
     };
+
   }
 
   componentDidMount() {
@@ -130,6 +131,8 @@ class Register extends Component {
       this.props.history.push("/beranda");
     }
     this.props.handleNavbar(false);
+
+
   }
 
   componentWillUnmount() {
@@ -472,6 +475,8 @@ class Register extends Component {
           activeStep: prevState.activeStep + 1,
           submitButtonClicked: false,
         }));
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     };
 
     const handleBack = () => {
@@ -481,6 +486,8 @@ class Register extends Component {
       this.setState((prevState) => ({
         activeStep: prevState.activeStep - 1,
       }));
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     };
 
     // Error Snackbar

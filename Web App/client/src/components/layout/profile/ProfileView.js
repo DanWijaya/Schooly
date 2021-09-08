@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ProfileView(props) {
+
   const classes = useStyles();
   const { user, selectedUser } = props.auth;
   const {
@@ -94,7 +95,9 @@ function ProfileView(props) {
   }, [selectedUser]);
 
   React.useEffect(() => {
+    if(user.role === "Student"){
     setNamaKelas(classesCollection.kelas.name);
+  }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classesCollection]);
 

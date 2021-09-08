@@ -444,7 +444,7 @@ router.put("/setuserdisabled/:id", (req, res) => {
 
   User.findById(id, (err, user) => {
     if (!user) return res.status(404).json("User to be disabled is not found");
-
+    console.log(user)
     user.active = false;
     user
       .save()
