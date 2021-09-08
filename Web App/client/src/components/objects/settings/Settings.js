@@ -27,17 +27,16 @@ import MuiAlert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-
 const styles = (theme) => ({
   root: {
     display: "flex",
     margin: "auto",
-    marginTop: "20px",
+    padding: "10px",
+    paddingTop: "20px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -55,7 +54,6 @@ const styles = (theme) => ({
   },
   buttonSave: {
     textTransform: "none",
-    marginTop: "5px",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -63,14 +61,12 @@ const styles = (theme) => ({
       color: "white",
     },
   },
-  titlePengaturan: {
-    marginTop: "9px",
-    color: "#000000",
-    opacity: "54%",
-  },
   drawer: {
     width: "150px",
     flexShrink: 0,
+  },
+  drawerPaper: {
+    width: "150px",
   },
   drawerItem: {
     width: "150px",
@@ -82,16 +78,15 @@ const styles = (theme) => ({
   settingContainer: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    margin: "auto",
+    flexGrow: "1",
   },
   paper: {
-    width: "65vw",
     marginBottom: "20px",
     padding: "20px",
   },
   textField: {
-    width: "150px",
+    maxWidth: "150px",
+    width: "100%",
   },
 });
 
@@ -100,12 +95,13 @@ class FileSetting extends Component {
     const {classes, fileUploadLimit, setIsChanged, setfileUploadLimit} = this.props;
     return (
       <Paper variant="outlined" className={classes.paper}>
-        <Typography variant="h4" color="primary">File</Typography>
-        <br></br>
+        <Typography variant="h4" color="primary" paragraph>File</Typography>
         <Grid container justify="space-between" alignItems="center">
-          <Typography>Batas Ukuran 1 File</Typography>
-          <div className={classes.textField}>
-            <TextField 
+          <Grid item>
+            <Typography>Batas Ukuran 1 File</Typography>
+          </Grid>
+          <Grid itemv className={classes.textField}>
+            <TextField
               type = "number"
               variant = "outlined"
               value = {fileUploadLimit}
@@ -117,7 +113,7 @@ class FileSetting extends Component {
                 endAdornment: <InputAdornment position="end">MB</InputAdornment>,
               }}
             />
-          </div>
+          </Grid>
         </Grid>
       </Paper>
     );
@@ -206,17 +202,15 @@ class Setting extends Component {
     return (
       <div className={classes.root}>
         <AppBar position="fixed" className={classes.appBar}>
-          <Grid container justify="space-between">
-            <Grid item>
-              <Grid container spacing={2}>
-                <Grid item>
-                  <IconButton onClick={() => this.goBack()} className={classes.arrowBack}>
-                    <ArrowBackIcon/>
-                  </IconButton>
-                </Grid>
-                <Grid item className={classes.titlePengaturan}>
-                  <Typography variant="h5">Pengaturan</Typography>
-                </Grid>
+          <Grid container justify="space-between" alignItems="center">
+            <Grid item xs container alignItems="center" spacing={2}>
+              <Grid item>
+                <IconButton onClick={() => this.goBack()} className={classes.arrowBack}>
+                  <ArrowBackIcon/>
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <Typography variant="h5" color="textSecondary">Pengaturan</Typography>
               </Grid>
             </Grid>
             <Grid item>
@@ -227,20 +221,24 @@ class Setting extends Component {
           </Grid>
         </AppBar>
         <Hidden smDown>
-          <Grid item>
-            <Drawer variant="permanent" className={classes.drawer}>
-                <div className={classes.toolbar}/>
-                <ListItem button key="File" className={classes.drawerItem} onClick={() => this.setSettingView("file")}>
-                  <ListItemText primary="File" />
-                </ListItem>
-                <Divider/>  
-            </Drawer>
-          </Grid>
+          <Drawer
+            variant="permanent"
+            className={classes.drawer}
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+          >
+            <div className={classes.toolbar}/>
+            <ListItem button key="File" className={classes.drawerItem} onClick={() => this.setSettingView("file")}>
+              <ListItemText primary="File" />
+            </ListItem>
+            <Divider/>
+          </Drawer>
         </Hidden>
         <div className={classes.settingContainer}>
           <div className={classes.toolbar}/>
           {/* FILE SETTING */}
-          {(this.state.settingView == "file") ? 
+          {(this.state.settingView == "file") ?
             <FileSetting
               classes = {classes}
               fileUploadLimit = {this.state.fileUploadLimit}
@@ -249,7 +247,7 @@ class Setting extends Component {
             />
           : null}
           {/* MOBILE VIEW */}
-          {(this.state.settingView == "mobile") ? 
+          {(this.state.settingView == "mobile") ?
             <div>
               <FileSetting
                 classes = {classes}
