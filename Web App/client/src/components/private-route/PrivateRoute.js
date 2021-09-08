@@ -6,6 +6,8 @@ import PropTypes from "prop-types";
 const PrivateRoute = ({
   component: Component,
   handleSideDrawerExist,
+  handleNavbar,
+  handleFooter,
   auth,
   access,
   loginRedirect,
@@ -20,6 +22,8 @@ const PrivateRoute = ({
             <Component
               {...props}
               handleSideDrawerExist={handleSideDrawerExist}
+              handleNavbar={handleNavbar}
+              handleFooter={handleFooter}
             />
           ) : (
             <Redirect to="/tidak-ditemukan" />

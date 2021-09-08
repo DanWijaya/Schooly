@@ -119,6 +119,7 @@ class App extends Component {
       showNavBar: true,
       posts: [],
       sideDrawerExist: true,
+      footerExist: true,
       showProgressIndicator: false,
       problemEncountered: false,
     };
@@ -138,6 +139,10 @@ class App extends Component {
 
   handleSideDrawerExist = (dataFromChild) => {
     this.setState({ sideDrawerExist: dataFromChild });
+  };
+
+  handleFooter = (dataFromChild) => {
+    this.setState({ footerExist: dataFromChild });
   };
 
   handleDrawerMobile = () => {
@@ -564,6 +569,9 @@ class App extends Component {
                         exact
                         access={["Admin"]}
                         path="/setting"
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                         component={Setting}
                       />
                       <Route
@@ -578,7 +586,9 @@ class App extends Component {
                       <Redirect to="/tidak-ditemukan" />
                     </Switch>
                   )}
-                  <Footer assessmentState={localStorage.getItem(`status`)} />
+                  {this.state.footerExist ? (
+                    <Footer assessmentState={localStorage.getItem(`status`)} />
+                  ) : null}
                 </div>
               </div>
             </Router>

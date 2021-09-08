@@ -36,7 +36,6 @@ export const getSetting = () => (dispatch) => {
   return axios
     .get("/api/settings/view")
     .then((res) => {
-      console.log(res);
       console.log("Run get setting");
       dispatch({
         type: GET_SETTING,
@@ -52,9 +51,9 @@ export const getSetting = () => (dispatch) => {
     })
 }
 
-export const editSetting = (settingData) => (dispatch) => {
+export const editSetting = (bodyData) => (dispatch) => {
   return axios
-    .put("/api/settings/update")
+    .put("/api/settings/update", bodyData)
     .then((res) => {
       console.log("Edited setting", res.data);
       dispatch({
