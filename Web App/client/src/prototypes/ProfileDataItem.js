@@ -12,45 +12,31 @@ function ProfileDataItem(props) {
   const { iconStyle, icon, type, value } = props;
 
   return (
-    <ListItem>
-      <ListItemAvatar>
-        <Avatar className={iconStyle}>
-          {icon}
-        </Avatar>
-      </ListItemAvatar>
-      <Hidden smUp>
-        <ListItemText
-          primary={
-            <Typography variant="overline" color="textSecondary">
-              <b>{type}</b>
-            </Typography>
-          }
-          secondary={
-            !value ? (
-              <Typography variant="body2" color="textSecondary">Kosong</Typography>
-            ) : (
-              <Typography>{value}</Typography>
-            )
-          }
-        />
-      </Hidden>
-      <Hidden xsDown>
-        <Grid container alignItems="center" spacing={2}>
-          <Grid item xs={5}>
-            <Typography variant="overline" color="textSecondary">
-              <b>{type}</b>
-            </Typography>
-          </Grid>
-          <Grid item xs={7}>
-            {!value ? (
-              <Typography variant="body2" color="textSecondary">Kosong</Typography>
-            ) : (
-              <Typography>{value}</Typography>
-            )}
+      <Grid container>
+        <Grid item>
+          <Avatar className={iconStyle}>
+            {icon}
+          </Avatar>
+        </Grid>
+        <Grid item xs container alignItems="center">
+            <Grid item xs={12} sm={5}>
+              <Typography>
+                <b>{type}</b>
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={7}>
+              {!value ? (
+                <Typography variant="body1">
+                  "Kosong"
+                </Typography>
+              ) : (
+                <Typography variant="body2">
+                  {value}
+                </Typography>
+              )}
           </Grid>
         </Grid>
-      </Hidden>
-    </ListItem>
+      </Grid>
   );
 }
 

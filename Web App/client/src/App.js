@@ -74,7 +74,7 @@ import Calendar from "./components/objects/event/Calendar";
 //Admin Only
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
-import EditClassTeacher from "./components/objects/classes/EditClassTeacher";
+import EditClassTeacher from "./components/objects/class/EditClassTeacher";
 import TeacherList from "./components/objects/admin-only/TeacherList";
 //Prototypes
 import Tester from "./prototypes/tester";

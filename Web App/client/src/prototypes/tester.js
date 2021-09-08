@@ -100,24 +100,166 @@ function Tester(props) {
               </Typography>
             </div>
             <div className={classes.dataCategoryContent}>
-              <List>
-                <ProfileDataItem
-                  icon={<PersonIcon />}
-                  type="Nama"
-                  value="Test"
-                />
+              <Grid container direction="column">
+                <Grid item container spacing={2} style={{padding: "10px"}}>
+                  <Grid item>
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center" spacing={2}>
+                      <Grid item xs={12} sm={5}>
+                        <Typography>
+                          <b>Nama</b>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={7}>
+                        <Typography variant="body2">
+                          test
+                        </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
                 <Divider variant="inset" />
+                <Grid item container spacing={2} style={{padding: "10px"}}>
+                  <Grid item>
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center" spacing={2}>
+                      <Grid item xs={12} sm={5}>
+                        <Typography>
+                          <b>Nama</b>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={7}>
+                        <Typography variant="body2">
+                          test
+                        </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Divider variant="inset" />
+                <Grid item container spacing={2} style={{padding: "10px"}}>
+                  <Grid item>
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center" spacing={2}>
+                      <Grid item xs={12} sm={5}>
+                        <Typography>
+                          <b>Nama</b>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={7}>
+                        <Typography variant="body2">
+                          test
+                        </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Divider variant="inset" />
+                <Grid item container spacing={2} style={{padding: "10px"}}>
+                  <Grid item>
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center" spacing={2}>
+                      <Grid item xs={12} sm={5}>
+                        <Typography>
+                          <b>Nama</b>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={7}>
+                        <Typography variant="body2">
+                          test
+                        </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Divider variant="inset" />
+                <Grid item container spacing={2} style={{padding: "10px"}}>
+                  <Grid item>
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center" spacing={2}>
+                      <Grid item xs={12} sm={5}>
+                        <Typography>
+                          <b>Nama</b>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={7}>
+                        <Typography variant="body2">
+                          test
+                        </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Divider variant="inset" />
+                <Grid item container spacing={2} style={{padding: "10px"}}>
+                  <Grid item>
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center" spacing={2}>
+                      <Grid item xs={12} sm={5}>
+                        <Typography>
+                          <b>Nama</b>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={7}>
+                        <Typography variant="body2">
+                          test
+                        </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Divider variant="inset" />
+                <Grid item container spacing={2} style={{padding: "10px"}}>
+                  <Grid item>
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center" spacing={2}>
+                      <Grid item xs={12} sm={5}>
+                        <Typography>
+                          <b>Nama</b>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={7}>
+                        <Typography variant="body2">
+                          test
+                        </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Divider variant="inset" />
+
+
+                <Grid item style={{padding: "10px"}}>
+
                 <ProfileDataItem
                   icon={<CakeIcon />}
                   type="Tanggal Lahir"
                   value="Test"
                 />
+                </Grid>
                 <Divider variant="inset" />
+                <Grid item style={{padding: "10px"}}>
+
                 <ProfileDataItem
                   icon={<WcIcon />}
                   type="Jenis Kelamin"
                   value="Test"
                 />
+                </Grid>
                 <Divider variant="inset" />
                 <ProfileDataItem
                   icon={<EmailIcon />}
@@ -142,7 +284,7 @@ function Tester(props) {
                   type="Alamat"
                   value="Test"
                 />
-              </List>
+              </Grid>
             </div>
           </Paper>
         </Grid>
@@ -158,7 +300,7 @@ function Tester(props) {
                 </Typography>
               </div>
               <div className={classes.dataCategoryContent}>
-                <List>
+                <Grid container direction="column">
                   <ProfileDataItem
                     icon={<SportsEsportsIcon />}
                     type="Hobi dan Minat"
@@ -185,7 +327,7 @@ function Tester(props) {
                     value="Test"
 
                   />
-                </List>
+                </Grid>
               </div>
             </Paper>
           </Grid>
