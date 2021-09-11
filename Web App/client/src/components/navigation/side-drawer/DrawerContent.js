@@ -97,7 +97,7 @@ function DrawerContent(props) {
         "Pengumuman",
       ],
       [
-        "/setting",
+        "/pengaturan",
         <SettingsIcon className={classes.drawerListItemIcon} />,
         "Setting",
       ],

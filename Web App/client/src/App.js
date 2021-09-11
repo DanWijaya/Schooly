@@ -76,7 +76,7 @@ import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
 import EditClassTeacher from "./components/objects/class/EditClassTeacher";
 import TeacherList from "./components/objects/admin-only/TeacherList";
-import Setting from "./components/objects/settings/Settings";
+import Setting from "./components/objects/setting/Setting";
 //Prototypes
 import Tester from "./prototypes/tester";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
@@ -560,7 +560,7 @@ class App extends Component {
                       <PrivateRoute
                         exact
                         access={["Admin"]}
-                        path="/setting"
+                        path="/pengaturan"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         handleFooter={this.handleFooter}
                         handleNavbar={(data) => this.handleNavbar(data)}
