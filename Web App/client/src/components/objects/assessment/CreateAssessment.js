@@ -58,6 +58,8 @@ import {
   Subject,
 } from "@material-ui/icons";
 import InfoIcon from "@material-ui/icons/Info";
+import {getSetting} from "../../../actions/SettingActions";
+
 
 const styles = (theme) => ({
   root: {
@@ -929,6 +931,7 @@ class CreateAssessment extends Component {
 
   handleQuestionImage = (e, qnsIndex, indexToDelete = null) => {
     let questions = this.state.questions;
+    const uploadLimit = this.props.settingsCollection.upload_limit;
     if (Number.isInteger(indexToDelete)) {
       // Untuk kasus pas mau nge delete foto
       questions[qnsIndex].lampiran.splice(indexToDelete, 1);
@@ -939,10 +942,10 @@ class CreateAssessment extends Component {
         // Untuk kasus pas mau upload foto
         const files = Array.from(e.target.files);
         let over_limit = files.filter(
-          (file) => file.size / Math.pow(10, 6) > 5
+          (file) => file.size / Math.pow(10, 6) > uploadLimit
         );
         let file_to_upload = files.filter(
-          (file) => file.size / Math.pow(10, 6) <= 5
+          (file) => file.size / Math.pow(10, 6) <= uploadLimit
         );
         let temp = questions[qnsIndex].lampiran.concat(file_to_upload);
         questions[qnsIndex].lampiran = temp;
@@ -1058,7 +1061,7 @@ class CreateAssessment extends Component {
   }
 
   componentDidMount() {
-    const { getAllClass, getAllSubjects, handleSideDrawerExist, refreshTeacher } = this.props;
+    const { getAllClass, getAllSubjects, handleSideDrawerExist, refreshTeacher, getSetting } = this.props;
     const { pathname } = this.props.location;
 
     if(pathname === "/buat-kuis"){
@@ -1073,6 +1076,7 @@ class CreateAssessment extends Component {
     getAllClass();
     getAllSubjects();
     refreshTeacher(this.props.auth.user._id);
+    getSetting();
     if (this.inputHeightRef.current && this.customHeightRef.current) {
       this.setState({
         inputHeight: this.inputHeightRef.current.offsetHeight,
@@ -2067,7 +2071,7 @@ class CreateAssessment extends Component {
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
           <MuiAlert elevation={6} variant="filled" severity="error">
-            {this.state.over_limit.length} file melebihi batas 5MB!
+            {this.state.over_limit.length} file melebihi batas {this.props.settingsCollection.upload_limit}MB!
           </MuiAlert>
         </Snackbar>
       </div>
@@ -2092,6 +2096,7 @@ const mapStateToProps = (state) => ({
   success: state.success,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
+  settingsCollection: state.settingsCollection
 });
 
 export default connect(mapStateToProps, {
@@ -2101,5 +2106,6 @@ export default connect(mapStateToProps, {
   validateAssessment,
   clearErrors,
   clearSuccess,
-  refreshTeacher
+  refreshTeacher,
+  getSetting
 })(withStyles(styles)(React.memo(CreateAssessment)));

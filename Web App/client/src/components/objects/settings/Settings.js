@@ -22,6 +22,7 @@ import {
   InputAdornment,
   Snackbar,
   Hidden,
+  useMediaQuery,
 } from "@material-ui/core/";
 import MuiAlert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
@@ -44,7 +45,6 @@ const styles = (theme) => ({
     backgroundColor: "white",
     color: "black",
   },
-  toolbar: theme.mixins.toolbar,
   arrowBack: {
     fill: "gray",
     margin: "auto",
@@ -68,6 +68,7 @@ const styles = (theme) => ({
   drawerPaper: {
     width: "150px",
   },
+  toolbar: theme.mixins.toolbar,
   drawerItem: {
     width: "150px",
     wordWrap: "break-word",
@@ -89,6 +90,12 @@ const styles = (theme) => ({
     width: "100%",
   },
 });
+
+// Media Query
+const withMediaQuery = (...args) => Component => props => {
+  const mediaQuery = useMediaQuery(...args);
+  return <Component isMobileView={mediaQuery} {...props} />;
+}
 
 class FileSetting extends Component {
   render() {
@@ -129,10 +136,11 @@ class Setting extends Component {
       isSnackBarOpen: false,
       isBackDialogOpen: false,
       settingView: "file", // when in mobile set to "mobile" thus will view all page at once
-      windowWidth: 0,
       fileUploadLimit: 0,
     };
   }
+
+  // isMobileView = this.props.mediaQuery("(max-width:960px)");
 
   // *** STATE SETTER ***
   setIsChanged = (newState) => {
@@ -154,12 +162,6 @@ class Setting extends Component {
     this.setState({ fileUploadLimit: newState });
   }
 
-  handleMobileView = () => {
-    this.setWindowWidth(window.innerWidth);
-    if (window.innerWidth <= 960) this.setSettingView("mobile");
-    else this.setSettingView("file");
-  }
-
   componentDidMount() {
     const { getSetting, handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
     getSetting().then(() => {
@@ -168,18 +170,12 @@ class Setting extends Component {
     handleNavbar(false);
     handleSideDrawerExist(false);
     handleFooter(false);
-
-    // add listener to update width when window resized
-    window.addEventListener('resize', this.handleMobileView);
   }
   componentWillUnmount(){
     const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
     handleNavbar(true);
     handleSideDrawerExist(true);
     handleFooter(true);
-
-    // remove window resize listener when out of this page
-    window.removeEventListener('resize', () => {this.setWindowWidth(window.innerWidth)});
   }
 
   // to save every changes
@@ -198,6 +194,7 @@ class Setting extends Component {
   }
 
   render(){
+    console.log(this.props);
     const { classes } = this.props;
     return (
       <div className={classes.root}>
@@ -205,7 +202,7 @@ class Setting extends Component {
           <Grid container justify="space-between" alignItems="center">
             <Grid item xs container alignItems="center" spacing={2}>
               <Grid item>
-                <IconButton onClick={() => this.goBack()} className={classes.arrowBack}>
+                <IconButton onClick={this.goBack} className={classes.arrowBack}>
                   <ArrowBackIcon/>
                 </IconButton>
               </Grid>
@@ -214,8 +211,8 @@ class Setting extends Component {
               </Grid>
             </Grid>
             <Grid item>
-              <Button variant="contained" className={classes.buttonSave} onClick={() => this.commitSave()}>
-                <Typography variant="subtitle1">Simpan</Typography>
+              <Button variant="contained" className={classes.buttonSave} onClick={this.commitSave}>
+                Simpan
               </Button>
             </Grid>
           </Grid>
@@ -237,32 +234,37 @@ class Setting extends Component {
         </Hidden>
         <div className={classes.settingContainer}>
           <div className={classes.toolbar}/>
-          {/* FILE SETTING */}
-          {(this.state.settingView == "file") ?
-            <FileSetting
-              classes = {classes}
-              fileUploadLimit = {this.state.fileUploadLimit}
-              setIsChanged = {this.setIsChanged}
-              setfileUploadLimit = {this.setfileUploadLimit}
-            />
-          : null}
-          {/* MOBILE VIEW */}
-          {(this.state.settingView == "mobile") ?
-            <div>
-              <FileSetting
-                classes = {classes}
-                fileUploadLimit = {this.state.fileUploadLimit}
-                setIsChanged = {this.setIsChanged}
-                setfileUploadLimit = {this.setfileUploadLimit}
-              />
+            {!this.props.isMobileView ? 
+              // *** DESKTOP VIEW ***
+              (
+                // FILE SETTING
+                (this.state.settingView == "file") ?
+                <FileSetting
+                  classes = {classes}
+                  fileUploadLimit = {this.state.fileUploadLimit}
+                  setIsChanged = {this.setIsChanged}
+                  setfileUploadLimit = {this.setfileUploadLimit}
+                /> 
+                : null
+              )
+            :  // *** MOBILE VIEW ***
+              (
+                <div>
+                  <FileSetting
+                    classes = {classes}
+                    fileUploadLimit = {this.state.fileUploadLimit}
+                    setIsChanged = {this.setIsChanged}
+                    setfileUploadLimit = {this.setfileUploadLimit}
+                  />
 
-              <Paper variant="outlined" className={classes.paper}>
-                <Typography variant="h4" color="primary">And More</Typography>
-                <br></br>
-              </Paper>
-            </div>
-          : null}
-        </div>
+                  <Paper variant="outlined" className={classes.paper}>
+                    <Typography variant="h4" color="primary">And More</Typography>
+                    <br></br>
+                  </Paper>
+                </div>
+              )
+            }
+          </div>
         <Snackbar
           open={this.state.isSnackBarOpen}
           autoHideDuration={6000}
@@ -302,4 +304,4 @@ export default withRouter(connect(mapStateToProps, {
   getSetting,
   createSetting,
   editSetting,
-})(withStyles(styles)(Setting)));
+})(withStyles(styles)(withMediaQuery('(max-width:960px)')(Setting))));

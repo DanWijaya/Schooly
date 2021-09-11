@@ -104,6 +104,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Draggable from 'react-draggable';
 import Path from "path";
 import CustomLinkify from "../../misc/linkify/Linkify";
+import {getSetting} from "../../../actions/SettingActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -985,7 +986,8 @@ function EventDialog(props) {
     getAllEvents,
     downloadFileEvent,
     viewFileEvent,
-    user
+    user,
+    uploadLimit
   } = props;
   const roleConverter = {
     Admin: "Pengelola",
@@ -1461,11 +1463,12 @@ function EventDialog(props) {
   // LAMPIRAN
   const handleLampiranUpload = (e) => {
     if (eventDialogMode === "create") {
+      console.log("handleLampiranUpload uploadLimit:" + uploadLimit);
       const files = e.target.files;
       let temp = [...Array.from(fileLampiran), ...Array.from(files)];
-      let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > 10);
+      let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > uploadLimit);
       let file_to_upload = temp.filter(
-        (file) => file.size / Math.pow(10, 6) <= 10
+        (file) => file.size / Math.pow(10, 6) <= uploadLimit
       );
   
       if (errors.lampiran_materi) {
@@ -1475,32 +1478,32 @@ function EventDialog(props) {
       setFileLampiran(file_to_upload);
   
       if (over_limit.length > 0) {
-        showSnackbar("error", over_limit.length + " file melebihi batas 10MB!");
+        showSnackbar("error", over_limit.length + " file melebihi batas " + uploadLimit + "MB!");
       }
 
       document.getElementById("file_control").value = null;
     } else if (eventDialogMode === "edit") {
       const files = Array.from(e.target.files);
       if (fileLampiran.length === 0) {
-        let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+        let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > uploadLimit);
         let allowed_file = files.filter(
-          (file) => file.size / Math.pow(10, 6) <= 10
+          (file) => file.size / Math.pow(10, 6) <= uploadLimit
         );
         setFileLampiran(allowed_file);
         setFileLampiranToAdd(allowed_file);
 
         if (over_limit.length > 0) {
-          showSnackbar("error", over_limit.length + " file melebihi batas 10MB!");
+          showSnackbar("error", over_limit.length + " file melebihi batas " + uploadLimit + "MB!");
         }
 
         document.getElementById("file_control").value = null;
       } else {
         if (files.length !== 0) {
           let allowed_file = files.filter(
-            (file) => file.size / Math.pow(10, 6) <= 10
+            (file) => file.size / Math.pow(10, 6) <= uploadLimit
           );
           let over_limit = files.filter(
-            (file) => file.size / Math.pow(10, 6) > 10
+            (file) => file.size / Math.pow(10, 6) > uploadLimit
           );
 
           let temp = [...fileLampiran, ...allowed_file];
@@ -1511,7 +1514,7 @@ function EventDialog(props) {
           setFileLampiranToAdd(file_to_upload);
 
           if (over_limit.length > 0) {
-            showSnackbar("error", over_limit.length + " file melebihi batas 10MB!");
+            showSnackbar("error", over_limit.length + " file melebihi batas " + uploadLimit + "MB!");
           }
         }
         document.getElementById("file_control").value = null;
@@ -2382,6 +2385,7 @@ function Calendar(props) {
     getStudents,
     getTeachers,
     tasksCollection,
+    getSetting
   } = props;
 
   const { user, all_students, all_teachers } = props.auth;
@@ -2393,6 +2397,7 @@ function Calendar(props) {
   const { all_assessments } = props.assessmentsCollection;
   const { selectedClasses, all_classes } = props.classesCollection;
   const { allEvents } = props.eventsCollection;
+  const  uploadLimit  = props.settingsCollection.upload_limit;
 
   const [activeStartDate, setActiveStartDate] = React.useState(new Date(new Date().getFullYear(), new Date().getMonth())); // set ke awal bulan sekarang 
 
@@ -2453,6 +2458,7 @@ function Calendar(props) {
     getTeachers();
     getAllTaskFilesByUser(user._id);
     getAllSubjects("map");
+    getSetting();
 
     if (role === "Teacher") {
       setClassCheckboxState(Object.assign({}, ...user.class_teached.map((class_id) => ({ [class_id]: true }))));
@@ -4217,6 +4223,7 @@ function Calendar(props) {
             downloadFileEvent={downloadFileEvent}
             selectedEventInfo={selectedEventInfo}
             getAllEvents={getAllEvents}
+            uploadLimit={uploadLimit}
             eventDialogMode={eventDialogMode}
             openEventDialog={openEventDialog}
             handleCloseEventDialog={handleCloseEventDialog}
@@ -4517,6 +4524,7 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
   filesCollection: state.filesCollection,
   assessmentsCollection: state.assessmentsCollection,
+  settingsCollection: state.settingsCollection
 });
 
 export default connect(mapStateToProps, {
@@ -4532,5 +4540,6 @@ export default connect(mapStateToProps, {
   getStudents,
   getTeachers,
   getOneEvent,
-  viewFileEvent
+  viewFileEvent,
+  getSetting,
 })(Calendar)
