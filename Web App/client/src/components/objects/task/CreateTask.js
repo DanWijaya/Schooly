@@ -50,6 +50,7 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import {getSetting} from "../../../actions/SettingActions";
 
 const path = require("path");
 
@@ -376,10 +377,11 @@ class CreateTask extends Component {
   };
 
   componentDidMount() {
-    const { getAllClass, getAllSubjects, refreshTeacher } = this.props;
+    const { getAllClass, getAllSubjects, refreshTeacher, getSetting } = this.props;
     getAllClass();
     getAllSubjects();
     refreshTeacher(this.props.auth.user._id);
+    getSetting();
   }
 
   componentWillUnmount() {
@@ -447,10 +449,11 @@ class CreateTask extends Component {
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
+    const uploadLimit = this.props.settingsCollection.upload_limit;
     let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-    let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > 10);
+    let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > uploadLimit);
     let file_to_upload = temp.filter(
-      (file) => file.size / Math.pow(10, 6) <= 10
+      (file) => file.size / Math.pow(10, 6) <= uploadLimit
     );
     this.setState({
       fileLampiran: file_to_upload,
@@ -838,7 +841,7 @@ class CreateTask extends Component {
               onClose={this.handleCloseSnackbar}
               severity="error"
             >
-              {this.state.over_limit.length} file melebihi batas 10MB!
+              {this.state.over_limit.length} file melebihi batas {this.props.settingsCollection.upload_limit}MB!
             </MuiAlert>
           </Snackbar>
         </div>
@@ -867,6 +870,7 @@ const mapStateToProps = (state) => ({
   success: state.success,
   subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
+  settingsCollection: state.settingsCollection
 });
 
 export default connect(mapStateToProps, {
@@ -876,5 +880,6 @@ export default connect(mapStateToProps, {
   getOneUser,
   clearErrors,
   clearSuccess,
-  refreshTeacher
+  refreshTeacher,
+  getSetting
 })(withStyles(styles)(CreateTask));

@@ -43,6 +43,7 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import {getSetting} from "../../../actions/SettingActions";
 
 const path = require("path");
 
@@ -415,6 +416,7 @@ class CreateMaterial extends Component {
     this.props.getAllClass();
     this.props.getAllSubjects();
     this.props.refreshTeacher(this.props.auth.user._id);
+    this.props.getSetting();
   }
 
   componentWillUnmount() {
@@ -442,10 +444,11 @@ class CreateMaterial extends Component {
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
+    const uploadLimit = this.props.settingsCollection.upload_limit;
     let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-    let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > 10);
+    let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > uploadLimit); //10MB
     let file_to_upload = temp.filter(
-      (file) => file.size / Math.pow(10, 6) <= 10
+      (file) => file.size / Math.pow(10, 6) <= uploadLimit
     );
 
     if (this.state.errors.lampiran_materi) {
@@ -790,7 +793,7 @@ class CreateMaterial extends Component {
               onClose={this.handleCloseSnackbar}
               severity="error"
             >
-              {this.state.over_limit.length} file melebihi batas 10MB!
+              {this.state.over_limit.length} file melebihi batas {this.props.settingsCollection.upload_limit}MB!
             </MuiAlert>
           </Snackbar>
         </div>
@@ -819,6 +822,7 @@ const mapStateToProps = (state) => ({
   success: state.success,
   subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
+  settingsCollection: state.settingsCollection
 });
 
 export default connect(mapStateToProps, {
@@ -827,5 +831,6 @@ export default connect(mapStateToProps, {
   createMaterial,
   clearErrors,
   clearSuccess,
-  refreshTeacher
+  refreshTeacher,
+  getSetting
 })(withStyles(styles)(CreateMaterial));

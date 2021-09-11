@@ -54,6 +54,7 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import {getSetting} from "../../../actions/SettingActions";
 
 const path = require("path");
 
@@ -259,6 +260,7 @@ class EditTask extends Component {
       });
     });
     this.props.refreshTeacher(this.props.auth.user._id);
+    this.props.getSetting();
   }
 
   componentWillUnmount() {
@@ -420,10 +422,11 @@ class EditTask extends Component {
 
   handleLampiranUpload = (e) => {
     const files = Array.from(e.target.files);
+    const uploadLimit = this.props.settingsCollection.upload_limit;
     if (this.state.fileLampiran.length === 0) {
-      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > uploadLimit);
       let allowed_file = files.filter(
-        (file) => file.size / Math.pow(10, 6) <= 10
+        (file) => file.size / Math.pow(10, 6) <= uploadLimit
       );
       this.setState({
         fileLampiran: allowed_file,
@@ -434,10 +437,10 @@ class EditTask extends Component {
     } else {
       if (files.length !== 0) {
         let allowed_file = files.filter(
-          (file) => file.size / Math.pow(10, 6) <= 10
+          (file) => file.size / Math.pow(10, 6) <= uploadLimit
         );
         let over_limit = files.filter(
-          (file) => file.size / Math.pow(10, 6) > 10
+          (file) => file.size / Math.pow(10, 6) > uploadLimit
         );
 
         let temp = [...this.state.fileLampiran, ...allowed_file];
@@ -970,7 +973,7 @@ class EditTask extends Component {
               onClose={this.handleCloseSnackbar}
               severity="error"
             >
-              {this.state.over_limit.length} file melebihi batas 10MB!
+              {this.state.over_limit.length} file melebihi batas {this.props.settingsCollection.upload_limit}MB!
             </MuiAlert>
           </Snackbar>
         </div>
@@ -1003,6 +1006,7 @@ const mapStateToProps = (state) => ({
   tasksCollection: state.tasksCollection,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
+  settingsCollection: state.settingsCollection
 });
 
 export default connect(mapStateToProps, {
@@ -1013,5 +1017,6 @@ export default connect(mapStateToProps, {
   clearErrors,
   clearSuccess,
   getFileTasks,
-  refreshTeacher
+  refreshTeacher,
+  getSetting
 })(withStyles(styles)(EditTask));

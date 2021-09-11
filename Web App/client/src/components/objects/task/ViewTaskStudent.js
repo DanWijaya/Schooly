@@ -76,6 +76,7 @@ import SendIcon from '@material-ui/icons/Send';
 import CreateIcon from '@material-ui/icons/Create';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
+import {getSetting} from "../../../actions/SettingActions";
 
 const path = require("path");
 
@@ -614,7 +615,8 @@ function ViewTaskStudent(props) {
     downloadFileTasks,
     getTeachers, 
     getStudents,
-    getMultipleFileAvatar
+    getMultipleFileAvatar,
+    getSetting
   } = props;
   const { all_subjects_map } = props.subjectsCollection;
   // console.log(tasksCollection)
@@ -662,6 +664,7 @@ function ViewTaskStudent(props) {
     getTeachers();
     clearErrors();
     clearSuccess();
+    getSetting();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
@@ -877,10 +880,10 @@ function ViewTaskStudent(props) {
 
   const handleTugasUpload = (e) => {
     const files = Array.from(e.target.files);
-
-    let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+    const uploadLimit = props.settingsCollection.upload_limit;
+    let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > uploadLimit);
     let allowed_file = files.filter(
-      (file) => file.size / Math.pow(10, 6) <= 10
+      (file) => file.size / Math.pow(10, 6) <= uploadLimit
     );
 
     let temp = [...fileToSubmit, ...allowed_file];
@@ -1634,7 +1637,7 @@ function ViewTaskStudent(props) {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <MuiAlert elevation={6} variant="filled" severity="error">
-          {over_limit.length} file melebihi batas 10MB!
+          {over_limit.length} file melebihi batas {props.settingsCollection.upload_limit}MB!
         </MuiAlert>
       </Snackbar>
       <Snackbar
@@ -1690,6 +1693,7 @@ const mapStateToProps = (state) => ({
   tasksCollection: state.tasksCollection,
   subjectsCollection: state.subjectsCollection,
   filesCollection: state.filesCollection,
+  settingsCollection: state.settingsCollection
 });
 
 export default connect(mapStateToProps, {
@@ -1711,5 +1715,6 @@ export default connect(mapStateToProps, {
   deleteFileSubmitTasks,
   getTeachers,
   getStudents,
-  getMultipleFileAvatar
+  getMultipleFileAvatar,
+  getSetting
 })(ViewTaskStudent);

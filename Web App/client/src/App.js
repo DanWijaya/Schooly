@@ -76,6 +76,7 @@ import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
 import EditClassTeacher from "./components/objects/class/EditClassTeacher";
 import TeacherList from "./components/objects/admin-only/TeacherList";
+import Setting from "./components/objects/settings/Settings";
 //Prototypes
 import Tester from "./prototypes/tester";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
@@ -121,14 +122,15 @@ class App extends Component {
       showNavBar: true,
       posts: [],
       sideDrawerExist: true,
+      footerExist: true,
       showProgressIndicator: false,
       problemEncountered: false,
     };
   }
 
-  componentDidCatch() {
-    this.setState({ problemEncountered: true });
-  }
+  // componentDidCatch() {
+  //   this.setState({ problemEncountered: true });
+  // }
 
   handleNavbar = (showBool) => {
     this.setState({ showNavBar: showBool });
@@ -140,6 +142,10 @@ class App extends Component {
 
   handleSideDrawerExist = (dataFromChild) => {
     this.setState({ sideDrawerExist: dataFromChild });
+  };
+
+  handleFooter = (dataFromChild) => {
+    this.setState({ footerExist: dataFromChild });
   };
 
   handleDrawerMobile = () => {
@@ -551,11 +557,14 @@ class App extends Component {
                         path="/sunting-guru"
                         component={TeacherList}
                       />
-                      {/* Route Event */}
                       <PrivateRoute
                         exact
-                        path="/kalender"
-                        component={Calendar}
+                        access={["Admin"]}
+                        path="/setting"
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
+                        component={Setting}
                       />
                       <Route
                         exact
@@ -569,7 +578,9 @@ class App extends Component {
                       <Redirect to="/tidak-ditemukan" />
                     </Switch>
                   )}
-                  <Footer assessmentState={localStorage.getItem(`status`)} />
+                  {this.state.footerExist ? (
+                    <Footer assessmentState={localStorage.getItem(`status`)} />
+                  ) : null}
                 </div>
               </div>
             </Router>

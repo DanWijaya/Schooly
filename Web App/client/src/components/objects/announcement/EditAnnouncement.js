@@ -48,6 +48,7 @@ import {
   FaFileWord,
 } from "react-icons/fa";
 import { truncate } from "fs";
+import {getSetting} from "../../../actions/SettingActions";
 
 const path = require("path");
 
@@ -238,7 +239,8 @@ class EditAnnouncement extends Component {
       getOneAnnouncement,
       getAllClass,
       getFileAnnouncements,
-      refreshTeacher
+      refreshTeacher,
+      getSetting
     } = this.props;
     const { id } = this.props.match.params;
 
@@ -247,6 +249,7 @@ class EditAnnouncement extends Component {
     getFileAnnouncements(id).then((result) => {
       this.setState({ fileLampiran: result, originalFileLampiran: result });
     });
+    getSetting();
 
     if (user.role === "Student") {
       setCurrentClass(user.kelas);
@@ -315,10 +318,11 @@ class EditAnnouncement extends Component {
 
   handleLampiranUpload = (e) => {
     const files = Array.from(e.target.files);
+    const uploadLimit = this.props.settingsCollection.upload_limit;
     if (this.state.fileLampiran.length === 0) {
-      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > uploadLimit);
       let allowed_file = files.filter(
-        (file) => file.size / Math.pow(10, 6) <= 10
+        (file) => file.size / Math.pow(10, 6) <= uploadLimit
       );
       this.setState({
         fileLampiran: allowed_file,
@@ -329,10 +333,10 @@ class EditAnnouncement extends Component {
     } else {
       if (files.length !== 0) {
         let allowed_file = files.filter(
-          (file) => file.size / Math.pow(10, 6) <= 10
+          (file) => file.size / Math.pow(10, 6) <= uploadLimit
         );
         let over_limit = files.filter(
-          (file) => file.size / Math.pow(10, 6) > 10
+          (file) => file.size / Math.pow(10, 6) > uploadLimit
         );
 
         let temp = [...this.state.fileLampiran, ...allowed_file];
@@ -839,7 +843,7 @@ class EditAnnouncement extends Component {
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
           <MuiAlert elevation={6} variant="filled" severity="error">
-            {this.state.over_limit.length} file melebihi batas 10MB!
+            {this.state.over_limit.length} file melebihi batas {this.props.settingsCollection.upload_limit}MB!
           </MuiAlert>
         </Snackbar>
       </div>
@@ -860,6 +864,7 @@ const mapStateToProps = (state) => ({
   success: state.success,
   announcements: state.announcementsCollection,
   classesCollection: state.classesCollection,
+  settingsCollection: state.settingsCollection
 });
 
 export default connect(mapStateToProps, {
@@ -870,5 +875,6 @@ export default connect(mapStateToProps, {
   clearErrors,
   clearSuccess,
   getFileAnnouncements,
-  refreshTeacher
+  refreshTeacher,
+  getSetting
 })(withStyles(styles)(EditAnnouncement));

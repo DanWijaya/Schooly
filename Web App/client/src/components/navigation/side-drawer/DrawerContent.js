@@ -14,6 +14,7 @@ import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import SettingsIcon from '@material-ui/icons/Settings';
 import { BsClipboardData } from "react-icons/bs";
 import { FaChalkboardTeacher, FaClipboardList, FaUserCheck, FaUserClock } from "react-icons/fa";
 
@@ -94,6 +95,11 @@ function DrawerContent(props) {
         "/daftar-pengumuman",
         <AnnouncementIcon className={classes.drawerListItemIcon} />,
         "Pengumuman",
+      ],
+      [
+        "/setting",
+        <SettingsIcon className={classes.drawerListItemIcon} />,
+        "Setting",
       ],
     ];
   else if (user.role === "Teacher") {

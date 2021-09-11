@@ -63,6 +63,7 @@ import {
   Subject,
 } from "@material-ui/icons";
 import InfoIcon from "@material-ui/icons/Info";
+import {getSetting} from "../../../actions/SettingActions";
 
 const styles = (theme) => ({
   root: {
@@ -350,7 +351,8 @@ class EditAssessment extends Component {
       getAllSubjects,
       handleSideDrawerExist,
       getFileAssessment,
-      refreshTeacher
+      refreshTeacher,
+      getSetting
     } = this.props;
     const { pathname } = this.props.location;
     const assessment_id = this.props.match.params.id;
@@ -367,6 +369,7 @@ class EditAssessment extends Component {
     getOneAssessment(assessment_id);
     getAllSubjects();
     refreshTeacher(this.props.auth.user._id);
+    getSetting();
     getFileAssessment(assessment_id)
       .then((result) => {
         this.setState({ lampiranUrls: result });
@@ -1095,6 +1098,7 @@ class EditAssessment extends Component {
 
   handleQuestionImage = (e, qnsIndex, indexToDelete = null) => {
     let questions = this.state.questions;
+    const uploadLimit = this.props.settingsCollection.upload_limit;
     if (Number.isInteger(indexToDelete)) {
       let item = questions[qnsIndex].lampiran[indexToDelete];
       // delete question lampiran nya dari list
@@ -1122,10 +1126,10 @@ class EditAssessment extends Component {
       if (e.target.files) {
         const files = Array.from(e.target.files);
         let over_limit = files.filter(
-          (file) => file.size / Math.pow(10, 6) > 5
+          (file) => file.size / Math.pow(10, 6) > uploadLimit
         );
         let file_to_upload = files.filter(
-          (file) => file.size / Math.pow(10, 6) <= 5
+          (file) => file.size / Math.pow(10, 6) <= uploadLimit
         );
         let temp = questions[qnsIndex].lampiran.concat(file_to_upload);
         questions[qnsIndex].lampiran = temp;
@@ -2271,7 +2275,7 @@ class EditAssessment extends Component {
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
           <MuiAlert elevation={6} variant="filled" severity="error">
-            {this.state.over_limit.length} file melebihi batas 5MB!
+            {this.state.over_limit.length} file melebihi batas {this.props.settingsCollection.upload_limit}MB!
           </MuiAlert>
         </Snackbar>
       </div>
@@ -2300,6 +2304,7 @@ const mapStateToProps = (state) => ({
   subjectsCollection: state.subjectsCollection,
   assessmentsCollection: state.assessmentsCollection,
   auth: state.auth,
+  settingsCollection: state.settingsCollection
 });
 
 export default connect(mapStateToProps, {
@@ -2310,5 +2315,6 @@ export default connect(mapStateToProps, {
   validateAssessment,
   clearErrors,
   getFileAssessment,
-  refreshTeacher
+  refreshTeacher,
+  getSetting
 })(withStyles(styles)(React.memo(EditAssessment)));
