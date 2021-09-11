@@ -255,11 +255,6 @@ class Setting extends Component {
                     setIsChanged = {this.setIsChanged}
                     setfileUploadLimit = {this.setfileUploadLimit}
                   />
-
-                  <Paper variant="outlined" className={classes.paper}>
-                    <Typography variant="h4" color="primary">And More</Typography>
-                    <br></br>
-                  </Paper>
                 </div>
               )
             }
