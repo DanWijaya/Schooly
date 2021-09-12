@@ -247,8 +247,8 @@ function ViewAssessmentTeacher(props) {
 
   let linkToShare =
     selectedAssessments.type === "Kuis"
-      ? `http://${window.location.host}/kuis-murid/${assessment_id}`
-      : `http://${window.location.host}/ujian-murid/${assessment_id}`;
+      ? `https://${window.location.host}/kuis-murid/${assessment_id}`
+      : `https://${window.location.host}/ujian-murid/${assessment_id}`;
       
   return (
     <div className={classes.root}>

@@ -1635,8 +1635,8 @@ class EditAssessment extends Component {
 
     const linkToShare =
       this.state.type === "Kuis"
-        ? `http://${window.location.host}/kuis-murid/${this.props.match.params.id}`
-        : `http://${window.location.host}/ujian-murid/${this.props.match.params.id}`;
+        ? `https://${window.location.host}/kuis-murid/${this.props.match.params.id}`
+        : `https://${window.location.host}/ujian-murid/${this.props.match.params.id}`;
 
     document.title = `Schooly | Sunting ${this.state.type} `;
 

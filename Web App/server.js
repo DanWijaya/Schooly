@@ -43,7 +43,7 @@ app.use(
   })
 );
 
-// // for parsing application/json
+// for parsing application/json
 // app.use(express.json());
 
 app.use(bodyParser.json());

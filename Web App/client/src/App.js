@@ -486,6 +486,7 @@ class App extends Component {
                         path="/kuis-murid/:id"
                         component={ViewAssessmentStudent}
                         loginRedirect={true}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
                       />
                       <PrivateRoute
                         exact
