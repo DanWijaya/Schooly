@@ -209,18 +209,26 @@ const styles = (theme) => ({
     },
   },
   menuCopy: {
-    "& .MuiListItemIcon-root": {
-      // color: theme.palette.primary.main
+    backgroundColor: theme.palette.copylink.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
       color: theme.palette.copylink.main,
     },
-    "&:hover, &:focus": {
-      // backgroundColor: theme.palette.primary.main,
-      backgroundColor: theme.palette.copylink.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: "white",
-      },
-    },
   },
+  // menuCopy: {
+  //   "& .MuiListItemIcon-root": {
+  //     // color: theme.palette.primary.main
+  //     color: theme.palette.copylink.main,
+  //   },
+  //   "&:hover, &:focus": {
+  //     // backgroundColor: theme.palette.primary.main,
+  //     backgroundColor: theme.palette.copylink.main,
+  //     "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+  //       color: "white",
+  //     },
+  //   },
+  // },
   menuCancel: {
     "& .MuiListItemIcon-root": {
       color: theme.palette.error.main,
@@ -330,7 +338,7 @@ class EditAssessment extends Component {
       over_limit: [],
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
-      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
       allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
       inputHeight: null, // menyimpan tinggi textfield
       customHeight: null, // menyimpan tinggi label + textfield
@@ -361,7 +369,7 @@ class EditAssessment extends Component {
     } else {
       console.log("Kuis atau Ujian tidak dispecify");
     }
-    
+
     handleSideDrawerExist(false);
     getAllClass();
     getOneAssessment(assessment_id);
@@ -375,7 +383,7 @@ class EditAssessment extends Component {
     if (this.inputHeightRef.current && this.customHeightRef.current) {
       this.setState({
         inputHeight: this.inputHeightRef.current.offsetHeight,
-        customHeight: this.customHeightRef.current.offsetHeight + this.inputHeightRef.current.offsetHeight + 32 // tinggi (label + textfield) + (textfield) + (space antara textfield dan label di bawahnya)  
+        customHeight: this.customHeightRef.current.offsetHeight + this.inputHeightRef.current.offsetHeight + 32 // tinggi (label + textfield) + (textfield) + (space antara textfield dan label di bawahnya)
         // customHeight: document.getElementById("top").getBoundingClientRect().top - document.getElementById("bottom").getBoundingClientRect().bottom // hasilnya salah
       });
     }
@@ -765,7 +773,7 @@ class EditAssessment extends Component {
               return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
             });
           }
-          
+
           // menambahkan matpel tersebut ke opsi matpel
           let newSubjectOptions = [];
           subjects.forEach((subjectId) => {
@@ -1236,12 +1244,12 @@ class EditAssessment extends Component {
     if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       const selectedAssessmentProps = this.props.assessmentsCollection.selectedAssessments;
 
-      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
+      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) &&
       selectedAssessmentProps && selectedAssessmentProps.constructor === Object && (Object.keys(selectedAssessmentProps).length !== 0)) {
-        
+
         let all_classes_obj = {};
         this.props.classesCollection.all_classes.forEach((classInfo) => {
-          all_classes_obj[classInfo._id] = classInfo.name; 
+          all_classes_obj[classInfo._id] = classInfo.name;
         });
 
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
@@ -1263,12 +1271,12 @@ class EditAssessment extends Component {
 
       if ( this.props.subjectsCollection.all_subjects && ( this.props.subjectsCollection.all_subjects.length !== 0) &&
       selectedAssessmentProps && selectedAssessmentProps.constructor === Object && (Object.keys(selectedAssessmentProps).length !== 0)) {
-        
+
         let all_subjects_obj = {};
          this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
-          all_subjects_obj[subjectInfo._id] = subjectInfo.name; 
+          all_subjects_obj[subjectInfo._id] = subjectInfo.name;
         });
-  
+
         // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
         let subjectMatrix = [];
         if (this.props.auth.user.class_to_subject) {
@@ -1623,6 +1631,45 @@ class EditAssessment extends Component {
         : `http://${window.location.host}/ujian-murid/${this.props.match.params.id}`;
 
     document.title = `Schooly | Sunting ${this.state.type} `;
+
+    const ToggleViewQuiz = withStyles((theme) => ({
+      root: {
+        width: 42,
+        height: 26,
+        padding: 0,
+        margin: theme.spacing(1),
+      },
+      switchBase: {
+        padding: 2,
+        color: theme.palette.warning.light,
+        "&$checked": {
+          transform: "translateX(16px)",
+          color: theme.palette.common.white,
+          "& + $track": {
+            backgroundColor: theme.palette.warning.light,
+            opacity: 1,
+            border: "none",
+          },
+        },
+        "&$focusVisible $thumb": {
+          color: "#52D869",
+          border: "6px solid #fff",
+        },
+      },
+      thumb: {
+        width: 10,
+        height: 10,
+      },
+      track: {
+        borderRadius: 24 / 2,
+        border: `1px solid ${theme.palette.grey[400]}`,
+        backgroundColor: theme.palette.grey[50],
+        opacity: 1,
+        transition: theme.transitions.create(["background-color", "border"]),
+      },
+      checked: {},
+    }))(Switch);
+
     if(Boolean(selectedAssessments.submissions)){
       return (
       <Grid
@@ -1920,7 +1967,7 @@ class EditAssessment extends Component {
                             {errors.post_date
                               ? <FormHelperText variant="outlined" error>{errors.post_date}</FormHelperText>
                               : null}
-                            {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang 
+                            {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang
                               untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
                             <FormGroup style={{ width: "fit-content" }}>
                               <FormControlLabel
@@ -2123,7 +2170,37 @@ class EditAssessment extends Component {
                 >
                   <Grid item className={classes.pageNavigator}>
                     <Grid item>
-                      <LightTooltip title={`Pengaturan`}>
+                      <LightTooltip title={!this.state.posted ? "Mati" : "Hidup"}>
+                        <FormControlLabel
+                          control={
+                            <ToggleViewQuiz
+                              icon={<FiberManualRecordIcon />}
+                              checkedIcon={<FiberManualRecordIcon />}
+                              disabled={this.state.isScheduled}
+                              checked={this.state.posted}
+                              onChange={this.handlePostToggle}
+                            />
+                          }
+                          label={
+                            <Typography variant="subtitle2">
+                              Akses ke murid
+                            </Typography>
+                          }
+                          labelPlacement="bottom"
+                        />
+                      </LightTooltip>
+                      <LightTooltip title={`Salin Tautan ${this.state.type}`}>
+                        <IconButton size="small"
+                          className={classes.menuCopy}
+                          onClick={() => {
+                            navigator.clipboard.writeText(linkToShare);
+                            this.handleOpenCopySnackBar();
+                          }}
+                        >
+                          <LinkIcon />
+                        </IconButton>
+                      </LightTooltip>
+                      {/*<LightTooltip title={`Pengaturan`}>
                         <IconButton
                           disableRipple
                           className={classes.settingsButton}
@@ -2185,7 +2262,7 @@ class EditAssessment extends Component {
                             primary={`Salin Tautan ${this.state.type}`}
                           />
                         </MenuItem>
-                      </Menu>
+                      </Menu>*/}
                     </Grid>
                   </Grid>
                   <Grid item className={classes.assessmentSettings}>
