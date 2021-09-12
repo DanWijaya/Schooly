@@ -33,7 +33,7 @@ import {
   Typography,
   Input,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ErrorIcon from "@material-ui/icons/Error";
@@ -46,6 +46,12 @@ import "moment/locale/id";
 import SubmitDialog from "../../misc/dialog/SubmitDialog";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import MobileStepper from '@material-ui/core/MobileStepper';
+
+const imgMaxHeight = 400;
+const imgMaxWidth = 650;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -193,7 +199,123 @@ const useStyles = makeStyles((theme) => ({
   toggleButtonSelected: {
     //harus ada meskipun kosong
   },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarImg11: {
+    // If width is smaller than height and height is smaller than maxHeight
+    maxHeight: imgMaxHeight,
+  },
+  avatarImg12: {
+    //If width is smaller than height and height is bigger than maxHeight
+    maxHeight: imgMaxHeight,
+    height: "100%"
+  },
+  avatarImg21: {
+    //If width is bigger than height and width is smaller than maxWidth
+    maxWidth: imgMaxWidth,
+  },
+  avatarImg22: {
+    //If width is bigger than height and width is bigger than maxWidth
+    maxWidth: imgMaxWidth,
+    width: "100%"
+  },
+  imgContainer: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      width: "100%"
+  },
+  imgMobileStepper: {
+    // maxWidth: 400,
+    flexGrow: 1,
+  },
 }));
+
+function TextMobileStepper(props) {
+  const classes = useStyles();
+  const theme = useTheme();
+  const [activeStep, setActiveStep] = React.useState(0);
+  const {maxSteps, label, image, lampiranUrls, qnsIndex } = props;
+  const [avatarDimensions, setAvatarDimensions] = React.useState({
+    height: null,
+    width: null,
+  });
+
+  React.useEffect(() => {
+    setActiveStep(0);
+  }, [qnsIndex])
+
+
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  function onImgLoad({ target: img }) {
+    setAvatarDimensions({ height: img.offsetHeight, width: img.offsetWidth });
+  }
+  
+
+  let imgClass;
+  if(avatarDimensions.width < avatarDimensions.height){
+    // If width is smaller than height and height is smaller than maxHeight
+    if(avatarDimensions.height < imgMaxHeight){
+      imgClass = classes.avatarImg11
+    } else {
+      imgClass = classes.avatarImg12
+    }
+  } else {
+    if(avatarDimensions.width < imgMaxWidth){
+      imgClass = classes.avatarImg21
+    } else {
+      imgClass = classes.avatarImg22
+    }
+  }
+  console.log(imgClass);
+
+  return (
+    <div className={classes.imgMobileStepper}>
+      <Paper square elevation={0} className={classes.header}>
+        <Typography align="center">{label}</Typography>
+      </Paper>
+      <div className={classes.imgContainer}>
+        <img
+          id="image"
+          onLoad={onImgLoad}
+          className={classes.avatarImg22}
+          src={lampiranUrls.get(image[activeStep])}
+          alt={label}
+        />
+         <MobileStepper
+        steps={maxSteps}
+        position="static"
+        variant="text"
+        activeStep={activeStep}
+        nextButton={
+          <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
+            Next
+            {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+          </Button>
+        }
+        backButton={
+          <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+            {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+            Back
+          </Button>
+        }
+      />
+      </div>
+     
+    </div>
+  );
+}
 
 function TimeoutDialog(props) {
   const classes = useStyles();
@@ -236,11 +358,6 @@ function Timer(props) {
   let finishTime = new Date(end_date);
 
   let workTime = Math.floor((finishTime - startTime) / 1000);
-  // let remainingTime = localStorage.getItem(`remainingTime_${id}`)
-  //   ? localStorage.getItem(`remainingTime_${id}`)
-  //   : Math.floor((finishTime - startTime) / 1000);
-  // let remainingTime = Math.floor((finishTime - startTime)/1000)
-  // const [time, setTime] = React.useState(remainingTime);
   const [time, setTime] = React.useState(workTime);
   var hours = Math.floor(time / 3600) % 24;
   var minutes = Math.floor(time / 60) % 60;
@@ -431,6 +548,7 @@ function ViewAssessmentStudent(props) {
     getAllClass,
     submitAssessment,
     getFileAssessment,
+    handleSideDrawerExist
   } = props;
   const { user } = props.auth;
 
@@ -589,11 +707,13 @@ function ViewAssessmentStudent(props) {
       startTest()
     }*/
     getStatus(id).then((res) => {
+      console.log(res);
       if (res.data.status === -1) {
         setCurrentTime(res.data.now);
       } else if ((res.data.status === 0)) {
         setCurrentTime(res.data.now);
         localStorage.setItem(`status`, "ujian");
+        props.handleSideDrawerExist(false);
         startTest();
       } else { // (res.data.status === 1)
         setShowClosedMessage(true);
@@ -624,7 +744,10 @@ function ViewAssessmentStudent(props) {
       userId: user._id,
     };
     submitAssessment(id, data)
-      .then(() => handleCloseSubmitDialog())
+      .then(() => {
+        handleCloseSubmitDialog();
+        props.handleSideDrawerExist(false); 
+      })
       .catch((err) => console.log(err));
   };
 
@@ -762,27 +885,19 @@ function ViewAssessmentStudent(props) {
                     <Typography variant="h6" color="primary" gutterBottom>
                       Soal {qnsIndex + 1}
                     </Typography>
-                    <GridList
-                      cols={3}
-                      cellHeight={300}
-                      style={{ margin: "10px 0px 10px 0px" }}
-                    >
-                      {!questions
-                        ? null
-                        : questions[qnsIndex].lampiran.map((image, i) => (
-                            <GridListTile key={image} cols={1}>
-                              <img
-                                alt="current img"
-                                src={lampiranUrls.get(image)}
-                              />
-                              <GridListTileBar
-                                title={`Gambar ${i + 1}`}
-                                titlePosition="top"
-                                actionPosition="right"
-                              />
-                            </GridListTile>
-                          ))}
-                    </GridList>
+                    {
+                      !questions || questions[qnsIndex].lampiran.length === 0 ? null :
+                       
+                    
+                        <TextMobileStepper 
+                        label={`Gambar ${qnsIndex + 1}`}
+                        qnsIndex={qnsIndex}
+                        maxSteps={questions[qnsIndex].lampiran.length}
+                        lampiranUrls={lampiranUrls}
+                        image={!questions[qnsIndex].lampiran ? [] : questions[qnsIndex].lampiran}/>
+                      
+                    }
+                   
                     {!questions ? null : questions[qnsIndex].type ===
                       "shorttext" ? (
                       generateSoalShortTextStudent()

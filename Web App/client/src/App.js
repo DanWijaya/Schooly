@@ -79,6 +79,8 @@ import TeacherList from "./components/objects/admin-only/TeacherList";
 //Prototypes
 import CSV from "./prototypes/contoh-tugas/CSV";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
+import Tester from "./prototypes/Tester";
+
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -126,7 +128,7 @@ class App extends Component {
   }
 
   componentDidCatch() {
-    this.setState({ problemEncountered: true });
+    // this.setState({ problemEncountered: true });
   }
 
   handleNavbar = (showBool) => {
@@ -203,6 +205,14 @@ class App extends Component {
                     />
                   ) : (
                     <Switch>
+                      <Route
+                        exact
+                        path="/tester"
+                        render={(props) => (
+                          <Tester
+                            {...props}
+                            />
+                        )}/>
                       <Route
                         exact
                         path="/"
@@ -483,6 +493,7 @@ class App extends Component {
                         path="/ujian-murid/:id"
                         component={ViewAssessmentStudent}
                         loginRedirect={true}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
                       />
                       <PrivateRoute
                         exact

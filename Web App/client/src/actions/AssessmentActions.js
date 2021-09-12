@@ -304,6 +304,7 @@ export const updateAssessmentGrades = (
 export const getStatus = (assessmentId) => {
   return axios
   .get(`/api/assessments/status/${assessmentId}`)
+  .then((res) => {return res})
   .catch((err) => {
     throw new Error(err.response.data);
   });

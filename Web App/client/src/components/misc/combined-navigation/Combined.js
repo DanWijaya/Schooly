@@ -16,7 +16,8 @@ function Combined(props) {
     const handleDrawerMobile = () => {
         setMobileOpen(!mobileOpen);
     }
-
+    console.log("Check status: ", localStorage.getItem("status"))
+    console.log("Check sidedrawer: ", sideDrawerExist);
     return (
         <>
         {showNavBar ? 
@@ -27,7 +28,7 @@ function Combined(props) {
           assessmentState={localStorage.getItem(`status`)}
         /> : null }
 
-        {sideDrawerExist && localStorage.getItem(`status`) !== "ujian" ? 
+        {sideDrawerExist && localStorage.getItem("status") !== "ujian" ? 
          <SideDrawer
           mobileOpen={mobileOpen}
           desktopOpen={desktopOpen}
