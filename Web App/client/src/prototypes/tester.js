@@ -88,7 +88,7 @@ function Tester(props) {
           </a>
         </Grid>
       </Grid>
-      <Grid container direction="column" spacing={4}>
+      <Grid container direction="column">
         <Grid item>
           <Paper elevation={2}>
             <div className={classes.dataCategoryHeader}>
@@ -99,193 +99,127 @@ function Tester(props) {
                 Berikut adalah informasi dari pengguna terkait.
               </Typography>
             </div>
-            <div className={classes.dataCategoryContent}>
               <Grid container direction="column">
-                <Grid item container spacing={2} style={{padding: "10px"}}>
+                <Grid item container spacing={2} style={{padding: "8px 16px 8px 16px"}}>
                   <Grid item>
                     <Avatar>
                       <PersonIcon />
                     </Avatar>
                   </Grid>
-                  <Grid item xs container alignItems="center" spacing={2}>
+                  <Grid item xs container alignItems="center">
                       <Grid item xs={12} sm={5}>
-                        <Typography>
+                        <Typography variant="overline">
                           <b>Nama</b>
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={7}>
-                        <Typography variant="body2">
-                          test
+                        <Typography>
+                          Billy Julius
                         </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Divider variant="inset" />
-                <Grid item container spacing={2} style={{padding: "10px"}}>
+                <Grid item container spacing={2} style={{padding: "8px 16px 8px 16px"}}>
                   <Grid item>
                     <Avatar>
                       <PersonIcon />
                     </Avatar>
                   </Grid>
-                  <Grid item xs container alignItems="center" spacing={2}>
+                  <Grid item xs container alignItems="center">
                       <Grid item xs={12} sm={5}>
-                        <Typography>
-                          <b>Nama</b>
+                        <Typography variant="overline">
+                          <b>Tanggal Lahir</b>
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={7}>
-                        <Typography variant="body2">
-                          test
+                        <Typography>
+                          21 Agt 2021
                         </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Divider variant="inset" />
-                <Grid item container spacing={2} style={{padding: "10px"}}>
+                <Grid item container spacing={2} style={{padding: "8px 16px 8px 16px"}}>
                   <Grid item>
                     <Avatar>
                       <PersonIcon />
                     </Avatar>
                   </Grid>
-                  <Grid item xs container alignItems="center" spacing={2}>
+                  <Grid item xs container alignItems="center">
                       <Grid item xs={12} sm={5}>
-                        <Typography>
-                          <b>Nama</b>
+                        <Typography variant="overline">
+                          <b>Jenis Kelamin</b>
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={7}>
                         <Typography variant="body2">
-                          test
+                          Kosong
                         </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Divider variant="inset" />
-                <Grid item container spacing={2} style={{padding: "10px"}}>
+                <Grid item container spacing={2} style={{padding: "8px 16px 8px 16px"}}>
                   <Grid item>
                     <Avatar>
                       <PersonIcon />
                     </Avatar>
                   </Grid>
-                  <Grid item xs container alignItems="center" spacing={2}>
+                  <Grid item xs container alignItems="center">
                       <Grid item xs={12} sm={5}>
-                        <Typography>
-                          <b>Nama</b>
+                        <Typography variant="overline">
+                          <b>Email</b>
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={7}>
-                        <Typography variant="body2">
-                          test
+                        <Typography>
+                          billyjulius01@gmail.com
                         </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Divider variant="inset" />
-                <Grid item container spacing={2} style={{padding: "10px"}}>
+                <Grid item container spacing={2} style={{padding: "8px 16px 8px 16px"}}>
                   <Grid item>
                     <Avatar>
                       <PersonIcon />
                     </Avatar>
                   </Grid>
-                  <Grid item xs container alignItems="center" spacing={2}>
+                  <Grid item xs container alignItems="center">
                       <Grid item xs={12} sm={5}>
-                        <Typography>
-                          <b>Nama</b>
+                        <Typography variant="overline">
+                          <b>Nomor Telepon</b>
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={7}>
-                        <Typography variant="body2">
-                          test
+                        <Typography>
+                          123
                         </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Divider variant="inset" />
-                <Grid item container spacing={2} style={{padding: "10px"}}>
+                <Grid item container spacing={2} style={{padding: "8px 16px 8px 16px"}}>
                   <Grid item>
                     <Avatar>
                       <PersonIcon />
                     </Avatar>
                   </Grid>
-                  <Grid item xs container alignItems="center" spacing={2}>
+                  <Grid item xs container alignItems="center">
                       <Grid item xs={12} sm={5}>
-                        <Typography>
-                          <b>Nama</b>
+                        <Typography variant="overline">
+                          <b>Nomor Telepon Darurat</b>
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={7}>
-                        <Typography variant="body2">
-                          test
+                        <Typography>
+                          123
                         </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Divider variant="inset" />
-                <Grid item container spacing={2} style={{padding: "10px"}}>
-                  <Grid item>
-                    <Avatar>
-                      <PersonIcon />
-                    </Avatar>
-                  </Grid>
-                  <Grid item xs container alignItems="center" spacing={2}>
-                      <Grid item xs={12} sm={5}>
-                        <Typography>
-                          <b>Nama</b>
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} sm={7}>
-                        <Typography variant="body2">
-                          test
-                        </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Divider variant="inset" />
-
-
-                <Grid item style={{padding: "10px"}}>
-
-                <ProfileDataItem
-                  icon={<CakeIcon />}
-                  type="Tanggal Lahir"
-                  value="Test"
-                />
-                </Grid>
-                <Divider variant="inset" />
-                <Grid item style={{padding: "10px"}}>
-
-                <ProfileDataItem
-                  icon={<WcIcon />}
-                  type="Jenis Kelamin"
-                  value="Test"
-                />
-                </Grid>
-                <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<EmailIcon />}
-                  type="Email"
-                  value="Test"
-                />
-                <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<PhoneIcon />}
-                  type="Nomor Telepon"
-                  value="Test"
-                />
-                <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<ContactPhoneIcon />}
-                  type="Nomor Telepon Darurat"
-                  value="Test"
-                />
-                <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<HomeIcon />}
-                  type="Alamat"
-                  value="Test"
-                />
               </Grid>
-            </div>
           </Paper>
         </Grid>
           <Grid item>
@@ -299,38 +233,133 @@ function Tester(props) {
                   murid terkait.
                 </Typography>
               </div>
-              <div className={classes.dataCategoryContent}>
-                <Grid container direction="column">
-                  <ProfileDataItem
-                    icon={<SportsEsportsIcon />}
-                    type="Hobi dan Minat"
-                    value="Test"
-                  />
-                  <Divider variant="inset" />
-                  <ProfileDataItem
-                    icon={<ColorLensIcon />}
-                    type="Keterampilan Non-Akademik"
-                    value="Test"
-
-                  />
-                  <Divider variant="inset" />
-                  <ProfileDataItem
-                    icon={<WorkIcon />}
-                    type="Cita-Cita"
-                    value="Test"
-
-                  />
-                  <Divider variant="inset" />
-                  <ProfileDataItem
-                    icon={<AccountBalanceIcon />}
-                    type="Perguruan Tinggi Impian"
-                    value="Test"
-
-                  />
+              <Grid container direction="column">
+                <Grid item container spacing={2} style={{padding: "8px 16px 8px 16px"}}>
+                  <Grid item>
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center">
+                      <Grid item xs={12} sm={5}>
+                        <Typography variant="overline">
+                          <b>Hobby dan Minat</b>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={7}>
+                        <Typography variant="body2">
+                          Kosong
+                        </Typography>
+                    </Grid>
+                  </Grid>
                 </Grid>
-              </div>
+                <Divider variant="inset" />
+                <Grid item container spacing={2} style={{padding: "8px 16px 8px 16px"}}>
+                  <Grid item>
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center">
+                      <Grid item xs={12} sm={5}>
+                        <Typography variant="overline">
+                          <b>Keterampilan Non Akademik</b>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={7}>
+                        <Typography variant="body2">
+                          Kosong
+                        </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Divider variant="inset" />
+                <Grid item container spacing={2} style={{padding: "8px 16px 8px 16px"}}>
+                  <Grid item>
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center">
+                      <Grid item xs={12} sm={5}>
+                        <Typography variant="overline">
+                          <b>Cita-Cita</b>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={7}>
+                        <Typography variant="body2">
+                          Kosong
+                        </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Divider variant="inset" />
+                <Grid item container spacing={2} style={{padding: "8px 16px 8px 16px"}}>
+                  <Grid item>
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center">
+                      <Grid item xs={12} sm={5}>
+                        <Typography variant="overline">
+                          <b>Perguruan Tinggi Impian</b>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={7}>
+                        <Typography variant="body2">
+                          Kosong
+                        </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Divider variant="inset" />
+
+
+              </Grid>
             </Paper>
           </Grid>
+      </Grid>
+      <Grid container direction="column">
+        <Grid item>
+          <Paper elevation={10}>
+            <div className={classes.dataCategoryHeader}>
+              <Typography variant="h5" gutterBottom>
+                Karir
+              </Typography>
+              <Typography gutterBottom>
+                Berikut adalah pilihan karir yang diinginkan dari
+                murid terkait.
+              </Typography>
+            </div>
+            <Grid container direction="column" style={{border: "1px solid red"}}>
+              <Grid item container spacing={2} style={{padding: "8px 16px 8px 16px", border: "1px solid blue"}}>
+                <Grid item>
+                  <Avatar>
+                    <PersonIcon />
+                  </Avatar>
+                </Grid>
+                <Grid item xs container alignItems="center">
+                  <Grid item xs={12} sm={5}>
+                    <Typography display="inline">
+                      <b>Perguruan Tinggi Impian</b>
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={7}>
+                    <Typography variant="body2">
+                      Kosong
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+        <Grid item>
+          <Paper elevation={10}>
+            Test
+          </Paper>
+        </Grid>
       </Grid>
     </div>
   );

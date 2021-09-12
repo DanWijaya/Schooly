@@ -90,7 +90,6 @@ function NavBar(props) {
       .then((result) => {
         setAvatar(result);
       })
-      .catch((err) => console.log(err));
   }, [user._id]);
 
   const onLogoutClick = (e) => {
@@ -204,7 +203,7 @@ function NavBar(props) {
   return (
     <AppBar position="fixed" className={classes.root}>
       {props.assessmentState !== "ujian" ? (
-          user.name ? (
+          user._id ? (
             <Toolbar>
               <div
                 className={classes.startButtonContainer}

@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { changePassword } from "../../../../actions/AuthActions";
 import { clearErrors } from "../../../../actions/ErrorActions";
 import { logoutUser } from "../../../../actions/UserActions";
-import PasswordField from "./PasswordField";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -14,6 +13,7 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import { useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import LockIcon from "@material-ui/icons/Lock";
@@ -21,7 +21,7 @@ import LockIcon from "@material-ui/icons/Lock";
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "450px",
-    [theme.breakpoints.down("xs")]: {
+    "@media (max-width: 450px)": {
       maxWidth: "100%",
     },
   },
@@ -60,8 +60,18 @@ function EditPassword(props) {
     errors,
     handleOpenAlert,
     clearErrors,
-    fullScreen
   } = props;
+
+  const fullScreen = useMediaQuery("(max-width:450px)");
+
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    clearErrors();
+    setOpen(true);
+  };
+  const handleClose = (e) => {
+    setOpen(false);
+  };
 
   const [old_password, setOldPassword] = React.useState("");
   const [new_password, setNewPassword] = React.useState("");
@@ -74,15 +84,6 @@ function EditPassword(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [success]);
-
-  const [open, setOpen] = React.useState(false);
-  const handleClickOpen = () => {
-    clearErrors();
-    setOpen(true);
-  };
-  const handleClose = (e) => {
-    setOpen(false);
-  };
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -150,32 +151,41 @@ function EditPassword(props) {
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <PasswordField
+                  <TextField
+                    fullWidth
+                    variant="outlined"
                     id="old_password"
                     label="Kata Sandi Saat Ini"
-                    errors={errors.old_password}
-                    value={old_password}
                     onChange={onChange}
+                    value={old_password}
+                    error={errors.old_password}
+                    type="password"
                     helperText={errors.old_password}
                   />
                 </Grid>
                 <Grid item>
-                  <PasswordField
+                  <TextField
+                    fullWidth
+                    variant="outlined"
                     id="new_password"
                     label="Kata Sandi Baru"
-                    errors={errors.new_password}
-                    value={new_password}
                     onChange={onChange}
-                    helperText={errors.new_password ? errors.new_password : "Gunakan 8 karakter atau lebih dengan kombinasi huruf kapital dan angka." }
+                    value={new_password}
+                    error={errors.new_password}
+                    type="password"
+                    helperText={errors.new_password ? errors.new_password : "Gunakan 8 karakter atau lebih dengan kombinasi huruf kapital dan angka."}
                   />
                 </Grid>
                 <Grid item>
-                  <PasswordField
+                  <TextField
+                    fullWidth
+                    variant="outlined"
                     id="new_password2"
                     label="Konfirmasi Kata Sandi Baru"
-                    errors={errors.new_password}
-                    value={new_password2}
                     onChange={onChange}
+                    value={new_password2}
+                    error={errors.new_password}
+                    type="password"
                     helperText={errors.new_password}
                   />
                 </Grid>

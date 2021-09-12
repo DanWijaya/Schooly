@@ -13,6 +13,7 @@ import Grid from "@material-ui/core/Grid";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
+import { useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
@@ -22,8 +23,8 @@ import PersonIcon from "@material-ui/icons/Person";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "350px",
-    [theme.breakpoints.down("xs")]: {
+    maxWidth: "400px",
+    "@media (max-width: 400px)": {
       maxWidth: "100%",
     },
   },
@@ -73,8 +74,9 @@ function EditProfilePicture(props) {
     uploadFileAvatar,
     avatar,
     setFileLimitSnackbar,
-    fullScreen
   } = props;
+
+  const fullScreen = useMediaQuery("(max-width:400px)");
 
   const [openDialog, setOpenDialog] = React.useState(false);
   const handleOpenDialog = () => {
@@ -144,7 +146,7 @@ function EditProfilePicture(props) {
         return (
           <Avatar className={classes.avatar}>
             <img
-              alt="Profile"
+              alt="Profile Picture"
               onLoad={onImgLoad}
               src={avatar}
               // src={`/api/upload/avatar/${user.avatar}`}
@@ -157,7 +159,7 @@ function EditProfilePicture(props) {
         return (
           <Avatar className={classes.avatar}>
             <img
-              alt="Profile"
+              alt="Profile Picture"
               onLoad={onImgLoad}
               src={defaultAvatar}
               ref={uploadedImage}
@@ -170,7 +172,7 @@ function EditProfilePicture(props) {
       return (
         <Avatar className={classes.avatar}>
           <img
-            alt="Current Profile"
+            alt="Current Profile Picture"
             onLoad={onImgLoad}
             ref={uploadedImage}
             className={avatarImgClass}

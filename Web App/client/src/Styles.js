@@ -55,6 +55,11 @@ const Styles = responsiveFontSizes(
       },
     },
     overrides: {
+      MuiListItemIcon: {
+        alignItemsFlexStart: {
+          marginTop: "4px",
+        },
+      },
       MuiButton: {
         root: {
           "&:focus, &:hover": {

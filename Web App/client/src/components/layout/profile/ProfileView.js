@@ -7,7 +7,7 @@ import "moment/locale/id";
 import { updateAvatar, getOneUser } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
-import ProfileDataItem from "./ProfileDataItem";
+import DataItem from "./DataItem";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
@@ -61,12 +61,14 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
   dataCategoryContent: {
-    padding: "0px 25px 22.5px 25px",
+    padding: "12.5px 25px 22.5px 25px",
+  },
+  dataItem: {
+    padding: "8px 16px 8px 16px",
   },
 }));
 
 function ProfileView(props) {
-
   const classes = useStyles();
   const { user, selectedUser } = props.auth;
   const {
@@ -148,32 +150,32 @@ function ProfileView(props) {
       <Grid container justify="flex-end" className={classes.profileButtonContainer}>
         {role === "Student" && user.role === "Teacher" ? (
           (classesCollection.kelas.walikelas) ?
-          (classesCollection.kelas.walikelas === user._id) ? (
-              <Grid item>
-                <Link to={{pathname: `/rapor/${_id}`}}>
-                  <Button
-                    variant="contained"
-                    className={classes.reportButton}
-                    startIcon={<AssessmentOutlinedIcon />}
-                  >
-                    Lihat Rapor
-                  </Button>
-                </Link>
-              </Grid>
-          ) : (user.class_teached).includes(classesCollection.kelas._id) ? (
+            (classesCollection.kelas.walikelas === user._id) ? (
                 <Grid item>
                   <Link to={{pathname: `/rapor/${_id}`}}>
                     <Button
                       variant="contained"
-                      startIcon={<AssessmentOutlinedIcon />}
                       className={classes.reportButton}
+                      startIcon={<AssessmentOutlinedIcon />}
                     >
                       Lihat Rapor
                     </Button>
                   </Link>
                 </Grid>
-              )
-            : null
+            ) : (user.class_teached).includes(classesCollection.kelas._id) ? (
+                  <Grid item>
+                    <Link to={{pathname: `/rapor/${_id}`}}>
+                      <Button
+                        variant="contained"
+                        startIcon={<AssessmentOutlinedIcon />}
+                        className={classes.reportButton}
+                      >
+                        Lihat Rapor
+                      </Button>
+                    </Link>
+                  </Grid>
+                )
+              : null
           : (user.class_teached).includes(classesCollection.kelas._id) ? (
               <Grid item>
                 <Link to={{pathname: `/rapor/${_id}`}}>
@@ -202,51 +204,182 @@ function ProfileView(props) {
               </Typography>
             </div>
             <div className={classes.dataCategoryContent}>
-              <List>
-                <ProfileDataItem
-                  icon={<PersonIcon />}
-                  type="Nama"
-                  value={name}
-                />
+              <Grid container direction="column">
+                <Grid item container spacing={2} className={classes.dataItem}>
+                  <Grid item>
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center">
+                    <Grid item xs={12} sm={5}>
+                      <Typography variant="overline" color="textSecondary" noWrap>
+                        <b>Nama</b>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={7}>
+                      {!name ? (
+                        <Typography variant="body2" color="textSecondary">Kosong</Typography>
+                      ) : (
+                        <Typography>
+                          {name}
+                        </Typography>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Grid>
                 <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<CakeIcon />}
-                  type="Tanggal Lahir"
-                  value={moment(tanggal_lahir)
-                    .locale("id")
-                    .format("DD MMM YYYY")}
-                />
+                <Grid item container spacing={2} className={classes.dataItem}>
+                  <Grid item>
+                    <Avatar>
+                      <CakeIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center">
+                    <Grid item xs={12} sm={5}>
+                      <Typography variant="overline" color="textSecondary" noWrap>
+                        <b>Tanggal Lahir</b>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={7}>
+                      {!tanggal_lahir ? (
+                        <Typography variant="body2" color="textSecondary">Kosong</Typography>
+                      ) : (
+                        <Typography>
+                          {moment(tanggal_lahir)
+                            .locale("id")
+                            .format("DD MMM YYYY")
+                          }
+                        </Typography>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Grid>
                 <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<WcIcon />}
-                  type="Jenis Kelamin"
-                  value={jenis_kelamin}
-                />
+                <Grid item container spacing={2} className={classes.dataItem}>
+                  <Grid item>
+                    <Avatar>
+                      <WcIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center">
+                    <Grid item xs={12} sm={5}>
+                      <Typography variant="overline" color="textSecondary" noWrap>
+                        <b>Jenis Kelamin</b>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={7}>
+                      {!jenis_kelamin ? (
+                        <Typography variant="body2" color="textSecondary">Kosong</Typography>
+                      ) : (
+                        <Typography>
+                          {jenis_kelamin}
+                        </Typography>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Grid>
                 <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<EmailIcon />}
-                  type="Email"
-                  value={email}
-                />
+                <Grid item container spacing={2} className={classes.dataItem}>
+                  <Grid item>
+                    <Avatar>
+                      <EmailIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center">
+                    <Grid item xs={12} sm={5}>
+                      <Typography variant="overline" color="textSecondary" noWrap>
+                        <b>Email</b>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={7}>
+                      {!email ? (
+                        <Typography variant="body2" color="textSecondary">Kosong</Typography>
+                      ) : (
+                        <Typography>
+                          {email}
+                        </Typography>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Grid>
                 <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<PhoneIcon />}
-                  type="Nomor Telepon"
-                  value={phone}
-                />
+                <Grid item container spacing={2} className={classes.dataItem}>
+                  <Grid item>
+                    <Avatar>
+                      <PhoneIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center">
+                    <Grid item xs={12} sm={5}>
+                      <Typography variant="overline" color="textSecondary" noWrap>
+                        <b>Nomor Telepon</b>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={7}>
+                      {!phone ? (
+                        <Typography variant="body2" color="textSecondary">Kosong</Typography>
+                      ) : (
+                        <Typography>
+                          {phone}
+                        </Typography>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Grid>
                 <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<ContactPhoneIcon />}
-                  type="Nomor Telepon Darurat"
-                  value={emergency_phone}
-                />
+                <Grid item container spacing={2} className={classes.dataItem}>
+                  <Grid item>
+                    <Avatar>
+                      <ContactPhoneIcon />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs container alignItems="center">
+                    <Grid item xs={12} sm={5}>
+                      <Typography variant="overline" color="textSecondary" noWrap>
+                        <b>Nomor Telepon Darurat</b>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={7}>
+                      {!emergency_phone ? (
+                        <Typography variant="body2" color="textSecondary">Kosong</Typography>
+                      ) : (
+                        <Typography>
+                          {emergency_phone}
+                        </Typography>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Grid>
+                {user.role === "Admin" ? (
+                  <div>
                     <Divider variant="inset" />
-                    <ProfileDataItem
-                      icon={<HomeIcon />}
-                      type="Alamat"
-                      value={address}
-                    />
-              </List>
+                    <Grid item container spacing={2} className={classes.dataItem}>
+                      <Grid item>
+                        <Avatar>
+                          <HomeIcon />
+                        </Avatar>
+                      </Grid>
+                      <Grid item xs container alignItems="center">
+                        <Grid item xs={12} sm={5}>
+                          <Typography variant="overline" color="textSecondary" noWrap>
+                            <b>Alamat</b>
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={7}>
+                          {!address ? (
+                            <Typography variant="body2" color="textSecondary">Kosong</Typography>
+                          ) : (
+                            <Typography>
+                              {address}
+                            </Typography>
+                          )}
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </div>
+                ) : null}
+              </Grid>
             </div>
           </Paper>
         </Grid>
@@ -258,31 +391,30 @@ function ProfileView(props) {
                     Karir
                   </Typography>
                   <Typography gutterBottom>
-                    Berikut adalah pilihan karir yang diinginkan dari
-                    murid terkait.
+                    Berikut adalah pilihan karir dan minat dari murid terkait.
                   </Typography>
                 </div>
                 <div className={classes.dataCategoryContent}>
                   <List>
-                    <ProfileDataItem
+                    <DataItem
                       icon={<SportsEsportsIcon />}
                       type="Hobi dan Minat"
                       value={hobi_minat}
                     />
                     <Divider variant="inset" />
-                    <ProfileDataItem
+                    <DataItem
                       icon={<ColorLensIcon />}
                       type="Keterampilan Non-Akademik"
                       value={ket_non_teknis}
                     />
                     <Divider variant="inset" />
-                    <ProfileDataItem
+                    <DataItem
                       icon={<WorkIcon />}
                       type="Cita-Cita"
                       value={cita_cita}
                     />
                     <Divider variant="inset" />
-                    <ProfileDataItem
+                    <DataItem
                       icon={<AccountBalanceIcon />}
                       type="Perguruan Tinggi Impian"
                       value={uni_impian}

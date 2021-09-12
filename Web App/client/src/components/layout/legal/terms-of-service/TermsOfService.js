@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   termsOfServiceArt: {
     maxHeight: "225px",
     [theme.breakpoints.down("md")]: {
-      maxHeight: "200px",
+      width: "100%",
     },
   },
   termsOfServiceTitleText: {
@@ -96,77 +96,77 @@ function TermsOfService(props) {
             <b>Daftar Isi</b>
           </Typography>
           <List>
-            <ListItem button component="a" href="#ketentuan-umum-dan-akun">
+            <ListItem alignItems="flex-start" button component="a" href="#ketentuan-umum-dan-akun">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Ketentuan Umum dan Akun" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#privasi-dan-penggunaan-informasi-pribadi">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#privasi-dan-penggunaan-informasi-pribadi">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Privasi dan Penggunaan Informasi Pribadi" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#konten-dan-hak-anda">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#konten-dan-hak-anda">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Konten dan Hak Anda" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#lisensi-anda-untuk-menggunakan-produk">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#lisensi-anda-untuk-menggunakan-produk">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Lisensi Anda untuk menggunakan Produk" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#hak-schooly">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#hak-schooly">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Hak Schooly" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#tanggung-jawab-pendaftaran-dan-kata-sandi">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#tanggung-jawab-pendaftaran-dan-kata-sandi">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Tanggung Jawab Pendaftaran dan Kata Sandi" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#penghentian-penggunaan">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#penghentian-penggunaan">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Penghentian Penggunaan" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#tautan-dan-sumber-daya pihak-ketiga">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#tautan-dan-sumber-daya pihak-ketiga">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Tautan dan Sumber Daya Pihak Ketiga" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#batasan-pertanggung-jawaban">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#batasan-pertanggung-jawaban">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Batasan Pertanggung Jawaban" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#tentang-ketentuan-ini">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#tentang-ketentuan-ini">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Tentang Ketentuan Ini" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#informasi-lebih-lanjut">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#informasi-lebih-lanjut">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
