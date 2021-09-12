@@ -99,7 +99,7 @@ function DrawerContent(props) {
       [
         "/pengaturan",
         <SettingsIcon className={classes.drawerListItemIcon} />,
-        "Setting",
+        "Pengaturan",
       ],
     ];
   else if (user.role === "Teacher") {

@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "15px",
   },
   informationPaper: {
-    padding: "5px 25px 22.5px 25px",
+    padding: "22.5px 25px 22.5px 25px",
   },
   informationCategoryPictureContainer: {
     display: "flex",

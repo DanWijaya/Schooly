@@ -42,7 +42,7 @@ function SideDrawer(props) {
 
   const isMobileView = useMediaQuery("(max-width:960px)");
 
-  if (user.name !== undefined) {
+  if (user._id !== undefined) {
     return (
       <div>
         {isMobileView ?
