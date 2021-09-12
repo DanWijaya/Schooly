@@ -313,11 +313,12 @@ export const validateAssessment = (assessmentData) => (
   dispatch
 ) => {
   return axios.post(`/api/assessments/validity`, assessmentData)
-  .then(() => {
+  .then((res) => {
     dispatch({
       type: GET_ERRORS,
       payload: false,
     });
+    return res;
   })
   .catch((err) => {
     if (err.response) {

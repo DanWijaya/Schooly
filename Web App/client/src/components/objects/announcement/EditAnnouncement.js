@@ -47,7 +47,6 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import { truncate } from "fs";
 
 const path = require("path");
 

@@ -52,35 +52,6 @@ router.post("/create", (req, res) => {
   );
 });
 
-/* router.post("/grade/:id", (req, res) => {
-  let { id } = req.params;
-
-  Assessment.findById(id, (err, assessmentData) => {
-    if (!assessmentData)
-      return res.status(404).send("Assessment data is not found");
-    else {
-      let { grades } = assessmentData;
-      let { grade, studentId } = req.body;
-      console.log(req.body);
-      if (grades) {
-        console.log(grades);
-        console.log(grades.get(studentId));
-        grades.set(studentId, parseFloat(grade.toFixed(1)));
-        console.log(grades.get(studentId));
-      } else {
-        let grade_map = new Map();
-        grade_map.set(studentId, parseFloat(grade.toFixed(1)));
-        grades = grade_map;
-      }
-
-      assessmentData.grades = grades;
-      assessmentData
-        .save()
-        .then((ass) => res.json(ass))
-        .catch((err) => res.status(400).send("Unable to update task database"));
-    }
-  });
-}); */
 
 router.put("/update/:id", (req, res) => {
   const { errors, isValid } = validateAssessmentInput(req.body);
@@ -625,6 +596,7 @@ router.post("/validity", (req, res) => {
   if (isValid) {
     res.status(200);
   } else {
+    // return res.status(400).json(errors);
     res.status(400).json(errors);
   }
 });

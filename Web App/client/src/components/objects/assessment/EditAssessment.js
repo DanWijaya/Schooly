@@ -595,7 +595,8 @@ class EditAssessment extends Component {
     });
 
     // jika soal dan bobot sudah lengkap dan benar, submit
-    if (invalidQuestionIndex.length === 0 && completeWeight && Object.values(this.state.errors).every((error) => (!error))) {
+    if (invalidQuestionIndex.length === 0 && completeWeight ) {
+      // sebelumnya ada && Object.values(this.state.errors).every((error) => (!error))
       let longtext;
       if (typeCount.get("longtext") === 0) {
         longtext = null;
@@ -670,8 +671,14 @@ class EditAssessment extends Component {
         description: this.state.description,
         questions: this.state.questions,
         type: this.state.type,
+        start_date: this.state.start_date,
+        end_date: this.state.end_date,
       };
-      validateAssessment(assessmentData).then(() => this.handleOpenErrorSnackbar());
+      validateAssessment(assessmentData)
+      .catch((err) => {
+        this.setState({ errors: err });
+      })
+      this.handleOpenErrorSnackbar()
     }
   };
 
@@ -1367,7 +1374,8 @@ class EditAssessment extends Component {
       for (let i = 0; i < filteredtypeCount.length; i++) {
         let type = filteredtypeCount[i];
         let weight = this.state.weights[type];
-        let showError =
+        console.log(weight);
+        let showError = 
           weight === null || (weight !== undefined && Number(weight) <= 0);
 
         mobileView.push(
@@ -1538,7 +1546,7 @@ class EditAssessment extends Component {
             {type !== "longtext" ? (
               <Grid item>
                 <TextField
-                  defaultValue={this.state.weights[type]}
+                  value={this.state.weights[type]}
                   variant="outlined"
                   key={type}
                   fullWidth

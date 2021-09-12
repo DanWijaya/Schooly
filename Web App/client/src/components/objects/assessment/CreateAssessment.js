@@ -352,6 +352,7 @@ class CreateAssessment extends Component {
     const { questions } = this.state;
     const { createAssessment, validateAssessment, history } = this.props;
 
+    console.log("Muncul lahh")
     // mencatat jumlah soal untuk tiap jenis soal
     let typeCount = new Map([
       ["radio", 0],
@@ -450,7 +451,8 @@ class CreateAssessment extends Component {
     });
 
     // jika soal dan bobot sudah lengkap dan benar, submit
-    if (invalidQuestionIndex.length === 0 && completeWeight && Object.values(this.state.errors).every((error) => (!error))) {
+    if (invalidQuestionIndex.length === 0 && completeWeight ) {
+      // sebelumnya ada && Object.values(this.state.errors).every((error) => (!error))
       let longtext;
       if (typeCount.get("longtext") === 0) {
         longtext = null;
@@ -519,12 +521,18 @@ class CreateAssessment extends Component {
         description: this.state.description,
         questions: this.state.questions,
         type: this.state.type,
+        start_date: this.state.start_date,
+        end_date: this.state.end_date,
       };
-      validateAssessment(assessmentData).catch((err) => {
+
+      validateAssessment(assessmentData)
+      .catch((err) => {
         this.setState({ errors: err });
-      }).finally(() => {
-        this.handleOpenErrorSnackbar();
-      });
+        // this.handleOpenErrorSnackbar();
+      })
+      this.handleOpenErrorSnackbar();
+
+      //COba pakai finally kayaknya gak bisa. 
     }
   };
 
@@ -1181,8 +1189,9 @@ class CreateAssessment extends Component {
       for (let i = 0; i < filteredtypeCount.length; i++) {
         let type = filteredtypeCount[i];
         let weight = this.state.weights[type];
-        let showError =
-          weight === null || (weight !== undefined && Number(weight) <= 0);
+        let showError = 
+            weight === null || (weight !== undefined && Number(weight) <= 0);
+
 
         mobileView.push(
           <Grid container>
@@ -1226,7 +1235,7 @@ class CreateAssessment extends Component {
               >
                 <Hidden xsDown>
                   <TextField
-                    defaultValue={this.state.weights[type]}
+                    value={this.state.weights[type]}
                     variant="outlined"
                     key={type}
                     fullWidth
