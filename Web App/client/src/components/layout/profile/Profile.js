@@ -12,11 +12,13 @@ import informationPrivate from "./InformationPrivate.png";
 import EditPassword from "./edit-password/EditPassword";
 import EditProfileData from "./edit-profile-data/EditProfileData";
 import EditProfilePicture from "./edit-profile-picture/EditProfilePicture";
+import DataItem from "./DataItem";
 import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
 import Paper from "@material-ui/core/Paper";
 import Snackbar from "@material-ui/core/Snackbar";
 import Typography from "@material-ui/core/Typography";
@@ -53,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "15px",
   },
   informationPaper: {
-    padding: "22.5px 25px",
+    padding: "5px 25px 22.5px 25px",
   },
   informationCategoryPictureContainer: {
     display: "flex",
@@ -67,9 +69,6 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("md")]: {
       height: "125px",
     },
-  },
-  dataItem: {
-    padding: "8px 16px 8px 16px",
   },
   dataIcon: {
     backgroundColor: theme.palette.primary.main,
@@ -245,106 +244,47 @@ function Profile(props) {
                 </div>
               </Grid>
             </Grid>
-            <Grid container direction="column">
-              <Grid item container spacing={2} className={classes.dataItem}>
-                <Grid item>
-                  <Avatar className={classes.dataIcon}>
-                    <PersonIcon />
-                  </Avatar>
-                </Grid>
-                <Grid item xs container alignItems="center">
-                  <Grid item xs={12} sm={5}>
-                    <Typography variant="overline" color="textSecondary">
-                      <b>Nama</b>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={7}>
-                    {!user.name ? (
-                      <Typography variant="body2" color="textSecondary">Kosong</Typography>
-                    ) : (
-                      <Typography>
-                        {user.name}
-                      </Typography>
-                    )}
-                  </Grid>
-                </Grid>
-              </Grid>
+            <List>
+              <ListItem>
+                <DataItem
+                  icon={<PersonIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Nama"
+                  value={user.name}
+                />
+              </ListItem>
               <Divider variant="inset" />
-              <Grid item container spacing={2} className={classes.dataItem}>
-                <Grid item>
-                  <Avatar className={classes.dataIcon}>
-                    <CakeIcon />
-                  </Avatar>
-                </Grid>
-                <Grid item xs container alignItems="center">
-                  <Grid item xs={12} sm={5}>
-                    <Typography variant="overline" color="textSecondary">
-                      <b>Tanggal Lahir</b>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={7}>
-                    {!user.tanggal_lahir ? (
-                      <Typography variant="body2" color="textSecondary">Kosong</Typography>
-                    ) : (
-                      <Typography>
-                        {moment(user.tanggal_lahir)
-                          .locale("id")
-                          .format("DD MMM YYYY")
-                        }
-                      </Typography>
-                    )}
-                  </Grid>
-                </Grid>
-              </Grid>
+              <ListItem>
+                <DataItem
+                  icon={<CakeIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Tanggal Lahir"
+                  value={
+                    moment(user.tanggal_lahir)
+                      .locale("id")
+                      .format("DD MMM YYYY")
+                  }
+                />
+              </ListItem>
               <Divider variant="inset" />
-              <Grid item container spacing={2} className={classes.dataItem}>
-                <Grid item>
-                  <Avatar className={classes.dataIcon}>
-                    <WcIcon />
-                  </Avatar>
-                </Grid>
-                <Grid item xs container alignItems="center">
-                  <Grid item xs={12} sm={5}>
-                    <Typography variant="overline" color="textSecondary">
-                      <b>Jenis Kelamin</b>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={7}>
-                    {!user.jenis_kelamin ? (
-                      <Typography variant="body2" color="textSecondary">Kosong</Typography>
-                    ) : (
-                      <Typography>
-                        {user.jenis_kelamin}
-                      </Typography>
-                    )}
-                  </Grid>
-                </Grid>
-              </Grid>
+              <ListItem>
+                <DataItem
+                  icon={<WcIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Jenis Kelamin"
+                  value={user.jenis_kelamin}
+                />
+              </ListItem>
               {/* <Divider variant="inset" />
-              <Grid item container spacing={2} className={classes.dataItem}>
-                <Grid item>
-                  <Avatar className={classes.dataIcon}>
-                    <SchoolIcon />
-                  </Avatar>
-                </Grid>
-                <Grid item xs container alignItems="center">
-                  <Grid item xs={12} sm={5}>
-                    <Typography variant="overline" color="textSecondary">
-                      <b>Sekolah</b>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={7}>
-                    {!user.sekolah ? (
-                      <Typography variant="body2" color="textSecondary">Kosong</Typography>
-                    ) : (
-                      <Typography>
-                        {user.sekolah}
-                      </Typography>
-                    )}
-                  </Grid>
-                </Grid>
-              </Grid>*/}
-            </Grid>
+              <ListItem>
+                <DataItem
+                  icon={<SchoolIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Sekolah"
+                  value={user.sekolah}
+                />
+              </ListItem>*/}
+            </List>
           </Paper>
         </Grid>
         <Grid item>
@@ -369,103 +309,43 @@ function Profile(props) {
                 </div>
               </Grid>
             </Grid>
-            <Grid container direction="column">
-              <Grid item container spacing={2} className={classes.dataItem}>
-                <Grid item>
-                  <Avatar className={classes.dataIcon}>
-                    <EmailIcon />
-                  </Avatar>
-                </Grid>
-                <Grid item xs container alignItems="center">
-                  <Grid item xs={12} sm={5}>
-                    <Typography variant="overline" color="textSecondary">
-                      <b>Email</b>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={7}>
-                    {!user.email ? (
-                      <Typography variant="body2" color="textSecondary">Kosong</Typography>
-                    ) : (
-                      <Typography>
-                        {user.email}
-                      </Typography>
-                    )}
-                  </Grid>
-                </Grid>
-              </Grid>
+            <List>
+              <ListItem>
+                <DataItem
+                  icon={<EmailIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Email"
+                  value={user.email}
+                />
+              </ListItem>
               <Divider variant="inset" />
-              <Grid item container spacing={2} className={classes.dataItem}>
-                <Grid item>
-                  <Avatar className={classes.dataIcon}>
-                    <PhoneIcon />
-                  </Avatar>
-                </Grid>
-                <Grid item xs container alignItems="center">
-                  <Grid item xs={12} sm={5}>
-                    <Typography variant="overline" color="textSecondary">
-                      <b>Nomor Telepon</b>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={7}>
-                    {!user.phone ? (
-                      <Typography variant="body2" color="textSecondary">Kosong</Typography>
-                    ) : (
-                      <Typography>
-                        {user.phone}
-                      </Typography>
-                    )}
-                  </Grid>
-                </Grid>
-              </Grid>
+              <ListItem>
+                <DataItem
+                  icon={<PhoneIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Nomor Telepon"
+                  value={user.phone}
+                />
+              </ListItem>
               <Divider variant="inset" />
-              <Grid item container spacing={2} className={classes.dataItem}>
-                <Grid item>
-                  <Avatar className={classes.dataIcon}>
-                    <ContactPhoneIcon />
-                  </Avatar>
-                </Grid>
-                <Grid item xs container alignItems="center">
-                  <Grid item xs={12} sm={5}>
-                    <Typography variant="overline" color="textSecondary">
-                      <b>Nomor Telepon Darurat</b>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={7}>
-                    {!user.emergency_phone ? (
-                      <Typography variant="body2" color="textSecondary">Kosong</Typography>
-                    ) : (
-                      <Typography>
-                        {user.emergency_phone}
-                      </Typography>
-                    )}
-                  </Grid>
-                </Grid>
-              </Grid>
+              <ListItem>
+                <DataItem
+                  icon={<ContactPhoneIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Nomor Telepon Darurat"
+                  value={user.emergency_phone}
+                />
+              </ListItem>
               <Divider variant="inset" />
-              <Grid item container spacing={2} className={classes.dataItem}>
-                <Grid item>
-                  <Avatar className={classes.dataIcon}>
-                    <HomeIcon />
-                  </Avatar>
-                </Grid>
-                <Grid item xs container alignItems="center">
-                  <Grid item xs={12} sm={5}>
-                    <Typography variant="overline" color="textSecondary">
-                      <b>Alamat</b>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={7}>
-                    {!user.address ? (
-                      <Typography variant="body2" color="textSecondary">Kosong</Typography>
-                    ) : (
-                      <Typography>
-                        {user.address}
-                      </Typography>
-                    )}
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
+              <ListItem>
+                <DataItem
+                  icon={<HomeIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Alamat"
+                  value={user.address}
+                />
+              </ListItem>
+            </List>
           </Paper>
         </Grid>
         {user.role === "Student" ? (
@@ -490,103 +370,43 @@ function Profile(props) {
                   </div>
                 </Grid>
               </Grid>
-              <Grid container direction="column">
-                <Grid item container spacing={2} className={classes.dataItem}>
-                  <Grid item>
-                    <Avatar className={classes.dataIcon}>
-                      <SportsEsportsIcon />
-                    </Avatar>
-                  </Grid>
-                  <Grid item xs container alignItems="center">
-                    <Grid item xs={12} sm={5}>
-                      <Typography variant="overline" color="textSecondary">
-                        <b>Hobi dan Minat</b>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={7}>
-                      {!user.hobi_minat ? (
-                        <Typography variant="body2" color="textSecondary">Kosong</Typography>
-                      ) : (
-                        <Typography>
-                          {user.hobi_minat}
-                        </Typography>
-                      )}
-                    </Grid>
-                  </Grid>
-                </Grid>
+              <List>
+                <ListItem>
+                  <DataItem
+                    icon={<SportsEsportsIcon />}
+                    iconStyle={classes.dataIcon}
+                    type="Hobi dan Minat"
+                    value={user.hobi_minat}
+                  />
+                </ListItem>
                 <Divider variant="inset" />
-                <Grid item container spacing={2} className={classes.dataItem}>
-                  <Grid item>
-                    <Avatar className={classes.dataIcon}>
-                      <ColorLensIcon />
-                    </Avatar>
-                  </Grid>
-                  <Grid item xs container alignItems="center">
-                    <Grid item xs={12} sm={5}>
-                      <Typography variant="overline" color="textSecondary">
-                        <b>Keterampilan Non-Akademik</b>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={7}>
-                      {!user.ket_non_teknis ? (
-                        <Typography variant="body2" color="textSecondary">Kosong</Typography>
-                      ) : (
-                        <Typography>
-                          {user.ket_non_teknis}
-                        </Typography>
-                      )}
-                    </Grid>
-                  </Grid>
-                </Grid>
+                <ListItem>
+                  <DataItem
+                    icon={<ColorLensIcon />}
+                    iconStyle={classes.dataIcon}
+                    type="Keterampilan Non-Akademik"
+                    value={user.ket_non_teknis}
+                  />
+                </ListItem>
                 <Divider variant="inset" />
-                <Grid item container spacing={2} className={classes.dataItem}>
-                  <Grid item>
-                    <Avatar className={classes.dataIcon}>
-                      <WorkIcon />
-                    </Avatar>
-                  </Grid>
-                  <Grid item xs container alignItems="center">
-                    <Grid item xs={12} sm={5}>
-                      <Typography variant="overline" color="textSecondary">
-                        <b>Cita-Cita</b>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={7}>
-                      {!user.cita_cita ? (
-                        <Typography variant="body2" color="textSecondary">Kosong</Typography>
-                      ) : (
-                        <Typography>
-                          {user.cita_cita}
-                        </Typography>
-                      )}
-                    </Grid>
-                  </Grid>
-                </Grid>
+                <ListItem>
+                  <DataItem
+                    icon={<WorkIcon />}
+                    iconStyle={classes.dataIcon}
+                    type="Cita-Cita"
+                    value={user.cita_cita}
+                  />
+                </ListItem>
                 <Divider variant="inset" />
-                <Grid item container spacing={2} className={classes.dataItem}>
-                  <Grid item>
-                    <Avatar className={classes.dataIcon}>
-                      <AccountBalanceIcon />
-                    </Avatar>
-                  </Grid>
-                  <Grid item xs container alignItems="center">
-                    <Grid item xs={12} sm={5}>
-                      <Typography variant="overline" color="textSecondary">
-                        <b>Perguruan Tinggi Impian</b>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={7}>
-                      {!user.uni_impian ? (
-                        <Typography variant="body2" color="textSecondary">Kosong</Typography>
-                      ) : (
-                        <Typography>
-                          {user.uni_impian}
-                        </Typography>
-                      )}
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
+                <ListItem>
+                  <DataItem
+                    icon={<AccountBalanceIcon />}
+                    iconStyle={classes.dataIcon}
+                    type="Perguruan Tinggi Impian"
+                    value={user.uni_impian}
+                  />
+                </ListItem>
+              </List>
             </Paper>
           </Grid>
         ) : null}
