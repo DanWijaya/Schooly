@@ -289,7 +289,7 @@ function TextMobileStepper(props) {
         <img
           id="image"
           onLoad={onImgLoad}
-          className={classes.avatarImg22}
+          className={imgClass}
           src={lampiranUrls.get(image[activeStep])}
           alt={label}
         />
