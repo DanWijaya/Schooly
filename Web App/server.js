@@ -102,7 +102,6 @@ app.use("/api/assessments", assessments);
 app.use("/api/events", events);
 
 if(process.env.NODE_ENV === 'production') {
-  console.log("/Hello")
   app.use(express.static('client/build'));
 
   app.get('*', (req,res) => {
