@@ -1452,7 +1452,7 @@ class CreateAssessment extends Component {
         margin: theme.spacing(1),
       },
       switchBase: {
-        padding: 2.5,
+        padding: 2,
         color: theme.palette.warning.light,
         "&$checked": {
           transform: "translateX(16px)",
@@ -1469,8 +1469,8 @@ class CreateAssessment extends Component {
         },
       },
       thumb: {
-        width: 24,
-        height: 24,
+        width: 10,
+        height: 10,
       },
       track: {
         borderRadius: 24 / 2,
@@ -1974,14 +1974,32 @@ class CreateAssessment extends Component {
               <Paper>
                 <Grid
                   container
-                  // spacing={2}
                   justify="space-between"
                   alignItems="center"
                   className={classes.pageNavigatorContent}
                 >
                   <Grid item className={classes.pageNavigator}>
                     <Grid item>
-                      <LightTooltip title={`Pengaturan`}>
+                      <LightTooltip title={!this.state.posted ? "Mati" : "Hidup"}>
+                        <FormControlLabel
+                          control={
+                            <ToggleViewQuiz
+                              icon={<FiberManualRecordIcon />}
+                              checkedIcon={<FiberManualRecordIcon />}
+                              disabled={this.state.isScheduled}
+                              checked={this.state.posted}
+                              onChange={this.handlePostToggle}
+                            />
+                          }
+                          label={
+                            <Typography variant="subtitle2">
+                              Akses ke murid
+                            </Typography>
+                          }
+                          labelPlacement="bottom"
+                        />
+                      </LightTooltip>
+                      {/*<LightTooltip title={`Pengaturan`}>
                         <IconButton
                           disableRipple
                           className={classes.settingsButton}
@@ -2027,7 +2045,7 @@ class CreateAssessment extends Component {
                             }
                           />
                         </MenuItem>
-                      </Menu>
+                      </Menu>*/}
                     </Grid>
                   </Grid>
                   <Grid item className={classes.assessmentSettings}>
