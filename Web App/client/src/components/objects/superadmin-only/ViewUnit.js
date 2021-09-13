@@ -8,7 +8,7 @@ import CustomLinkify from "../../misc/linkify/Linkify";
 import {
   getOneUnit,
 } from "../../../actions/UnitActions";
-
+import { getAllClass } from "../../../actions/ClassActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import {
   Avatar,
@@ -191,6 +191,7 @@ function ViewUnit(props) {
 
   const { user } = props.auth;
   const { selectedUnits } = props.unitsCollection;
+  const { all_classes } = props.classesCollection;
   const unit_id = props.match.params.id;
   
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -209,12 +210,16 @@ function ViewUnit(props) {
     }   
 
     React.useEffect(() => {
-        const { getOneUnit } = props;
+        const { getOneUnit, getAllClass } = props;
         const {id} = props.match.params;
+        console.log(id);
         getOneUnit(id);
+        getAllClass(id)
+
     }, []);
 
     console.log(selectedUnits);
+    console.log(user);
   return (
     <div className={classes.root}>
       <DeleteDialog
@@ -263,6 +268,22 @@ function ViewUnit(props) {
             </Grid>
           </Paper>
         </Grid>
+        <Grid item>
+        <Paper className={classes.paperBox}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="h6">Kelas yang tersedia</Typography>
+            </Grid>
+            <Grid> 
+              {all_classes.map((cl) => (
+                <Typography>
+                  {cl.name}
+                </Typography>
+              ))}
+            </Grid>
+          </Grid>
+          </Paper>
+        </Grid>
         </Grid>
     </div>
   );
@@ -274,13 +295,16 @@ ViewUnit.propTypes = {
   subjectsCollection: PropTypes.object.isRequired,
   getOneUnit: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
+  getAllClass: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  unitsCollection: state.unitsCollection
+  unitsCollection: state.unitsCollection,
+  classesCollection: state.classesCollection
 });
 
 export default connect(mapStateToProps, {
-    getOneUnit
+    getOneUnit,
+    getAllClass
 })(ViewUnit);

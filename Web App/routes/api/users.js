@@ -124,6 +124,9 @@ router.post("/login", (req, res) => {
           ket_non_teknis: user.ket_non_teknis,
           cita_cita: user.cita_cita,
           uni_impian: user.uni_impian,
+
+          //Unit
+          unit: user.unit
         };
         if (user.role === "Student") {
           payload.kelas = user.kelas;

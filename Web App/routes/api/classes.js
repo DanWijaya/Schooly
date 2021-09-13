@@ -53,8 +53,8 @@ router.get("/view/:id", (req, res) => {
   });
 });
 
-router.get("/viewall", (req, res) => {
-  Class.find({}).then((classes, err) => {
+router.get("/viewall/:unit_id", (req, res) => {
+  Class.find({unit: req.params.unit_id}).then((classes, err) => {
     if (!classes) res.status(400).json(err);
     else {
       classes.sort((a, b) => (a.name > b.name ? 1 : -1));

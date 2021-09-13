@@ -36,9 +36,10 @@ export const createClass = (classData, history) => (dispatch) => {
 };
 
 // View All Class
-export const getAllClass = (data = "array") => (dispatch) => {
+export const getAllClass = (unit_id,data = "array") => (dispatch) => {
+  // id nya berupa unit_id
   axios
-    .get("/api/classes/viewall")
+    .get(`/api/classes/viewall/${unit_id}`)
     .then((res) => {
       // console.log("Data should be here")
       if (data === "map") {
@@ -46,7 +47,6 @@ export const getAllClass = (data = "array") => (dispatch) => {
           type: GET_ALL_CLASSES_MAP,
           payload: res.data,
         });
-        console.log("getAllClass(map) completed");
       } else {
         dispatch({
           type: GET_ALL_CLASSES,

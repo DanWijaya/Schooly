@@ -47,6 +47,10 @@ const ClassSchema = new Schema({
   subject_assigned: {
     type: [ObjectId],
   },
+  unit: {
+    type: ObjectId,
+    ref: "units"
+  }
 });
 
 const Class = mongoose.model("class", ClassSchema);

@@ -1250,7 +1250,7 @@ class Dashboard extends Component {
     }
 
     document.title = "Schooly | Dashboard";
-
+    console.log(user);
     return (
       <div className={classes.root}>
         <WelcomePanel user={user} classes={classes} />
