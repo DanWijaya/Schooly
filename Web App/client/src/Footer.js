@@ -78,7 +78,9 @@ function Footer(props) {
                     <Link to="/tentang-schooly">Tentang Schooly</Link>
                   </Typography>
                   <Typography gutterBottom className={classes.mobileFont}>
-                    <Link to="/legal/ketentuan-penggunaan">Ketentuan Pengunaan</Link>
+                    <Link to="/legal/ketentuan-penggunaan">
+                      Ketentuan Pengunaan
+                    </Link>
                   </Typography>
                 </div>
               </Grid>
@@ -114,7 +116,9 @@ function Footer(props) {
                   <Link to="/bantuan">Bantuan</Link>
                 </Grid>
                 <Grid item>
-                  <Link to="/legal/ketentuan-penggunaan">Ketentuan Pengunaan</Link>
+                  <Link to="/legal/ketentuan-penggunaan">
+                    Ketentuan Pengunaan
+                  </Link>
                 </Grid>
               </Grid>
               <img
@@ -130,7 +134,9 @@ function Footer(props) {
                   <a href="mailto:schoolysystem@gmail.com">Hubungi Kami</a>
                 </Grid>
                 <Grid item>
-                  <a href="https://instagram.com/schoolysystem" target="blank_">Media Sosial</a>
+                  <a href="https://instagram.com/schoolysystem" target="blank_">
+                    Media Sosial
+                  </a>
                 </Grid>
               </Grid>
             </div>

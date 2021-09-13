@@ -240,16 +240,18 @@ function ViewAssessmentTeacher(props) {
   };
 
   const checkSubmissionExist = () => {
-    return (selectedAssessments &&
-            selectedAssessments.submissions &&
-            Object.keys(selectedAssessments.submissions).length !== 0)
-  }
+    return (
+      selectedAssessments &&
+      selectedAssessments.submissions &&
+      Object.keys(selectedAssessments.submissions).length !== 0
+    );
+  };
 
   let linkToShare =
     selectedAssessments.type === "Kuis"
       ? `http://${window.location.host}/kuis-murid/${assessment_id}`
       : `http://${window.location.host}/ujian-murid/${assessment_id}`;
-      
+
   return (
     <div className={classes.root}>
       {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
@@ -565,16 +567,23 @@ function ViewAssessmentTeacher(props) {
               </Fab>
             </LightTooltip>
           </Grid>
-          {checkSubmissionExist() ? null :
-          <Grid item style={{ paddingRight: "10px" }}>
-            <Link to={ type === "Kuis" ? `/sunting-kuis/${assessment_id}` : `/sunting-ujian/${assessment_id}`}>
-              <LightTooltip title="Sunting" placement="bottom">
-                <Fab className={classes.editAssessmentButton}>
-                  <EditIcon />
-                </Fab>
-              </LightTooltip>
-            </Link>
-          </Grid> }
+          {checkSubmissionExist() ? null : (
+            <Grid item style={{ paddingRight: "10px" }}>
+              <Link
+                to={
+                  type === "Kuis"
+                    ? `/sunting-kuis/${assessment_id}`
+                    : `/sunting-ujian/${assessment_id}`
+                }
+              >
+                <LightTooltip title="Sunting" placement="bottom">
+                  <Fab className={classes.editAssessmentButton}>
+                    <EditIcon />
+                  </Fab>
+                </LightTooltip>
+              </Link>
+            </Grid>
+          )}
           <Grid item>
             <LightTooltip title="Hapus" placement="bottom">
               <Fab

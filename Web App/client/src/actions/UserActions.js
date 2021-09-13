@@ -17,29 +17,27 @@ import {
   GET_PENDING_TEACHERS,
   GET_PENDING_ADMINS,
   // SET_DROPBOX_TOKEN,
-  GET_SUCCESS_RESPONSE
+  GET_SUCCESS_RESPONSE,
 } from "./Types";
 
 // Register User
 export const registerUser = (userData, history) => (dispatch) => {
-  return (
-    axios
-      .post("/api/users/register", userData)
-      .then(() => {
-        dispatch({
-          type: GET_ERRORS,
-          payload: false,
-        });
-        return true; // Success
-      })
-      .catch((err) => {
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data,
-        });
-        throw err.response.data; // Fail
-      })
-  );
+  return axios
+    .post("/api/users/register", userData)
+    .then(() => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: false,
+      });
+      return true; // Success
+    })
+    .catch((err) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+      throw err.response.data; // Fail
+    });
 };
 
 export const updateUserData = (userData, userId, history) => (dispatch) => {
@@ -58,8 +56,8 @@ export const updateUserData = (userData, userId, history) => (dispatch) => {
       const decoded = jwt_decode(token);
       // Set current user
       dispatch(setCurrentUser(decoded));
-      console.log("Successfully update user data")
-      return true
+      console.log("Successfully update user data");
+      return true;
     })
     .catch((err) => {
       console.log(err);
@@ -211,7 +209,7 @@ export const getTeachers = (data = "array") => (dispatch) => {
 };
 
 export const getOneUser = (userId) => (dispatch) => {
-  console.log(userId)
+  console.log(userId);
   return axios
     .get("/api/users/getOneUser/" + userId)
     .then((res) => {
@@ -288,32 +286,34 @@ export const getPendingTeachers = () => (dispatch) => {
 };
 
 export const getAdmins = () => (dispatch) => {
-  axios.get("/api/users/getAdmins")
-      .then((res) => {
-        dispatch({
-          type: GET_ALL_ADMINS,
-          payload: res.data,
-        });
-      })
-      .catch((err) => {
-        console.log("Error in getting Students by class");
+  axios
+    .get("/api/users/getAdmins")
+    .then((res) => {
+      dispatch({
+        type: GET_ALL_ADMINS,
+        payload: res.data,
       });
-}
+    })
+    .catch((err) => {
+      console.log("Error in getting Students by class");
+    });
+};
 
 export const getPendingAdmins = () => (dispatch) => {
   console.log("Get pending users are runned");
-  axios.get("/api/users/getpendingadmins")
-      .then((res) => {
-        console.log(res.data);
-        dispatch({
-          type: GET_PENDING_ADMINS,
-          payload: res.data,
-        });
-      })
-      .catch((err) => {
-        console.log("Error in getting Students by class");
+  axios
+    .get("/api/users/getpendingadmins")
+    .then((res) => {
+      console.log(res.data);
+      dispatch({
+        type: GET_PENDING_ADMINS,
+        payload: res.data,
       });
-}
+    })
+    .catch((err) => {
+      console.log("Error in getting Students by class");
+    });
+};
 
 export const setUserActive = (userId) => (dispatch) => {
   axios
@@ -368,7 +368,7 @@ export const updateTeacher = (data, teacherId) => (dispatch) => {
     .then(() => {
       dispatch({
         type: GET_SUCCESS_RESPONSE,
-        payload: teacherId
+        payload: teacherId,
       });
     })
     .catch((err) => {
@@ -381,21 +381,17 @@ export const updateTeacher = (data, teacherId) => (dispatch) => {
 
 export const refreshTeacher = (teacherId) => (dispatch) => {
   axios
-  .get("/api/users/getOneUser/" + teacherId)
-  .then((res) => {
-    dispatch(setCurrentUser(res.data));
-  })
-  .catch((err) => {
-    console.log(err);
-  });    
+    .get("/api/users/getOneUser/" + teacherId)
+    .then((res) => {
+      dispatch(setCurrentUser(res.data));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 export const bulkRegisterUsers = (data) => {
-  return (
-    axios
-      .post("/api/users/register_students_bulk", data)
-      .then((res) => {
-        return res;
-      })
-  )
-}
+  return axios.post("/api/users/register_students_bulk", data).then((res) => {
+    return res;
+  });
+};

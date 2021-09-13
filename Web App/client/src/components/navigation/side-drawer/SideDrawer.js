@@ -22,10 +22,10 @@ import AssessmentIcon from "@material-ui/icons/Assessment";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
-import EventNoteIcon from '@material-ui/icons/EventNote';
+import EventNoteIcon from "@material-ui/icons/EventNote";
 import { BsClipboardData } from "react-icons/bs";
 // import UnitIcon from '@material-ui/icons/Storage';
-import UnitIcon from '@material-ui/icons/Web';
+import UnitIcon from "@material-ui/icons/Web";
 import {
   FaChalkboardTeacher,
   FaClipboardList,
@@ -94,16 +94,16 @@ function DrawerContent(props) {
 
   const generateList = (linkto, icon, itemText, subheader = false) => {
     return (
-        <Link to={linkto} onClick={handleDrawerMobile}>
-          <Tooltip title={itemText} placement="right" enterDelay={300}>
-            <StyledListItem button>
-              <ListItemIcon>{icon}</ListItemIcon>
-              <ListItemText
-                primary={<Typography color="textPrimary">{itemText}</Typography>}
-              />
-            </StyledListItem>
-          </Tooltip>
-        </Link>
+      <Link to={linkto} onClick={handleDrawerMobile}>
+        <Tooltip title={itemText} placement="right" enterDelay={300}>
+          <StyledListItem button>
+            <ListItemIcon>{icon}</ListItemIcon>
+            <ListItemText
+              primary={<Typography color="textPrimary">{itemText}</Typography>}
+            />
+          </StyledListItem>
+        </Tooltip>
+      </Link>
     );
   };
 
@@ -118,7 +118,7 @@ function DrawerContent(props) {
   }
 
   let ListItemContents;
-  if(user.role === "SuperAdmin"){
+  if (user.role === "SuperAdmin") {
     ListItemContents = [
       [
         "/beranda",
@@ -128,7 +128,7 @@ function DrawerContent(props) {
       [
         "/daftar-unit",
         <UnitIcon className={classes.drawerListItemIcon} />,
-        "Unit Sekolah"
+        "Unit Sekolah",
       ],
       [
         "/pengelola-tertunda",
@@ -144,10 +144,9 @@ function DrawerContent(props) {
         "/kalender",
         <EventNoteIcon className={classes.drawerListItemIcon} />,
         "Kalender",
-      ]
+      ],
     ];
-  }
-  else if (user.role === "Admin"){
+  } else if (user.role === "Admin") {
     ListItemContents = [
       [
         "/beranda",
@@ -160,7 +159,7 @@ function DrawerContent(props) {
         "Pengguna Tertunda",
       ],
       [
-        "/atur-pengguna",
+        "/pengguna",
         <FaUserCheck className={classes.drawerListItemIcon} />,
         "Pengguna Aktif",
       ],
@@ -183,10 +182,9 @@ function DrawerContent(props) {
         "/kalender",
         <EventNoteIcon className={classes.drawerListItemIcon} />,
         "Kalender",
-      ]
+      ],
     ];
-  }
-  else if (user.role === "Student") {
+  } else if (user.role === "Student") {
     ListItemContents = [
       [
         "/beranda",
@@ -233,9 +231,9 @@ function DrawerContent(props) {
         "/kalender",
         <EventNoteIcon className={classes.drawerListItemIcon} />,
         "Kalender",
-      ]
+      ],
     ];
-  } else if(user.role === "Teacher"){
+  } else if (user.role === "Teacher") {
     ListItemContents = [
       [
         "/beranda",
@@ -282,11 +280,10 @@ function DrawerContent(props) {
         "/kalender",
         <EventNoteIcon className={classes.drawerListItemIcon} />,
         "Kalender",
-      ]
+      ],
     ];
-  }
-  else{
-    ListItemContents = []
+  } else {
+    ListItemContents = [];
   }
 
   return (

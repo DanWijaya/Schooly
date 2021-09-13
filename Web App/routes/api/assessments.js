@@ -395,19 +395,26 @@ router.put("/submit/:id", (req, res) => {
 });
 
 router.get("/viewall", (req, res) => {
-  Assessment.find({}).lean().then((assessments) => {
-    if (!assessments) {
-      res.status(404).json("Assessments are not found");
-    } else {
-      res.json(assessments.map((assessment) => {
-        if (assessment.posted === null) {
-          return { ...assessment, posted: new Date() >= new Date(assessment.post_date) };
-        } else {
-          return assessment;
-        }
-      }));
-    }
-  });
+  Assessment.find({})
+    .lean()
+    .then((assessments) => {
+      if (!assessments) {
+        res.status(404).json("Assessments are not found");
+      } else {
+        res.json(
+          assessments.map((assessment) => {
+            if (assessment.posted === null) {
+              return {
+                ...assessment,
+                posted: new Date() >= new Date(assessment.post_date),
+              };
+            } else {
+              return assessment;
+            }
+          })
+        );
+      }
+    });
 });
 
 router.get("/view/:id", (req, res) => {
@@ -417,7 +424,10 @@ router.get("/view/:id", (req, res) => {
       res.status(404).json("Assessment is not found");
     } else {
       if (assessment.posted === null) {
-        res.json({ ...assessment, posted: new Date() >= new Date(assessment.post_date) });
+        res.json({
+          ...assessment,
+          posted: new Date() >= new Date(assessment.post_date),
+        });
       } else {
         res.json(assessment);
       }
@@ -449,19 +459,26 @@ router.get("/view", (req, res) => {
     query.type = type;
   }
 
-  Assessment.find(query).lean().then((assessments) => {
-    if (assessments.length === 0) {
-      res.status(404).json(`Belum ada ${type}`);
-    } else {
-      res.json(assessments.map((assessment) => {
-        if (assessment.posted === null) {
-          return { ...assessment, posted: new Date() >= new Date(assessment.post_date) };
-        } else {
-          return assessment;
-        }
-      }));
-    }
-  });
+  Assessment.find(query)
+    .lean()
+    .then((assessments) => {
+      if (assessments.length === 0) {
+        res.status(404).json(`Belum ada ${type}`);
+      } else {
+        res.json(
+          assessments.map((assessment) => {
+            if (assessment.posted === null) {
+              return {
+                ...assessment,
+                posted: new Date() >= new Date(assessment.post_date),
+              };
+            } else {
+              return assessment;
+            }
+          })
+        );
+      }
+    });
 });
 
 router.put("/suspects/:assessmentId", (req, res) => {
@@ -474,9 +491,7 @@ router.put("/suspects/:assessmentId", (req, res) => {
         .save()
         .then(() => res.json(req.body))
         .catch(() =>
-          res
-            .status(400)
-            .send(`Unable to update assessment suspects`)
+          res.status(400).send(`Unable to update assessment suspects`)
         );
     }
   });
@@ -612,7 +627,8 @@ router.get("/status/:id", (req, res) => {
       status = -1;
     } else if (now >= startDate && now <= endDate) {
       status = 0;
-    } else { // (now > endDate)
+    } else {
+      // (now > endDate)
       status = 1;
     }
     res.json({ status, now });

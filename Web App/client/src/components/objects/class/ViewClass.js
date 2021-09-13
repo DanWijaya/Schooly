@@ -63,14 +63,14 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 
 const TASK_STATUS = {
-  SUBMITTED : "Sudah Dikumpulkan",
-  NOT_SUBMITTED : "Belum Dikumpulkan"
-}
+  SUBMITTED: "Sudah Dikumpulkan",
+  NOT_SUBMITTED: "Belum Dikumpulkan",
+};
 
 const ASSESSMENT_STATUS = {
-  SUBMITTED : "Sudah Ditempuh",
-  NOT_SUBMITTED: "Belum Ditempuh"
-}
+  SUBMITTED: "Sudah Ditempuh",
+  NOT_SUBMITTED: "Belum Ditempuh",
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -307,8 +307,20 @@ function AssessmentListItem(props) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-  const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
-    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
+  const handleOpenDialog = (
+    title,
+    subject,
+    teacher_name,
+    start_date,
+    end_date
+  ) => {
+    setCurrentDialogInfo({
+      title,
+      subject,
+      teacher_name,
+      start_date,
+      end_date,
+    });
     setOpenDialog(true);
     console.log(title);
   };
@@ -329,7 +341,7 @@ function AssessmentListItem(props) {
               props.work_subject,
               props.work_teacher_name,
               props.work_starttime,
-              props.work_endtime,
+              props.work_endtime
             )
           }
         >
@@ -390,7 +402,7 @@ function AssessmentListItem(props) {
               props.work_subject,
               props.work_teacher_name,
               props.work_starttime,
-              props.work_endtime,
+              props.work_endtime
             )
           }
         >
@@ -461,10 +473,7 @@ function AssessmentListItem(props) {
           >
             Guru: {currentDialogInfo.teacher_name}
           </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-          >
+          <Typography variant="subtitle1" align="center">
             Mulai: {currentDialogInfo.start_date}
           </Typography>
           <Typography variant="subtitle1" align="center">
@@ -589,7 +598,7 @@ function ViewClass(props) {
     assessmentsCollection,
     getFileAvatar,
     getMultipleFileAvatar,
-    getTaskByClass
+    getTaskByClass,
   } = props;
   // const { all_user_files } = props.filesCollection;
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
@@ -752,7 +761,7 @@ function ViewClass(props) {
         );
 
         let workStatus;
-        if(submittedTaskIds.has(task._id)){
+        if (submittedTaskIds.has(task._id)) {
           workStatus = TASK_STATUS.SUBMITTED;
         } else {
           workStatus = TASK_STATUS.NOT_SUBMITTED;
@@ -762,7 +771,8 @@ function ViewClass(props) {
           if (
             (!category ||
               (category === "subject" && task.subject === subject._id)) &&
-            (workStatus && workStatus === TASK_STATUS.NOT_SUBMITTED)
+            workStatus &&
+            workStatus === TASK_STATUS.NOT_SUBMITTED
           ) {
             result.push({
               _id: task._id,
@@ -847,7 +857,11 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
-                teacher_name: (all_teachers_map instanceof Map && all_teachers_map.get(assessment.author_id)) ? all_teachers_map.get(assessment.author_id).name : null,
+                teacher_name:
+                  all_teachers_map instanceof Map &&
+                  all_teachers_map.get(assessment.author_id)
+                    ? all_teachers_map.get(assessment.author_id).name
+                    : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -889,7 +903,11 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
-                teacher_name: (all_teachers_map instanceof Map && all_teachers_map.get(assessment.author_id)) ? all_teachers_map.get(assessment.author_id).name : null,
+                teacher_name:
+                  all_teachers_map instanceof Map &&
+                  all_teachers_map.get(assessment.author_id)
+                    ? all_teachers_map.get(assessment.author_id).name
+                    : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -936,7 +954,11 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
-                teacher_name: (all_teachers_map instanceof Map && all_teachers_map.get(assessment.author_id)) ? all_teachers_map.get(assessment.author_id).name : null,
+                teacher_name:
+                  all_teachers_map instanceof Map &&
+                  all_teachers_map.get(assessment.author_id)
+                    ? all_teachers_map.get(assessment.author_id).name
+                    : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -977,7 +999,11 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
-                teacher_name: (all_teachers_map instanceof Map && all_teachers_map.get(assessment.author_id)) ? all_teachers_map.get(assessment.author_id).name : null,
+                teacher_name:
+                  all_teachers_map instanceof Map &&
+                  all_teachers_map.get(assessment.author_id)
+                    ? all_teachers_map.get(assessment.author_id).name
+                    : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -1039,7 +1065,7 @@ function ViewClass(props) {
         // jika murid ini sudah ditempatkan ke suatu kelas dan
         // id kelas yang dimasukan sebagai parameter adalah id milik kelas yang ditempati murid ini,
         getMaterial(user.kelas, "by_class");
-        getTaskByClass(user.kelas)
+        getTaskByClass(user.kelas);
         //getAllTask(); // get the tasksCollection
       } else {
         // jika murid ini belum ditempatkan di kelas manapun atau mencoba membuka halaman untuk kelas lain,
@@ -1089,18 +1115,20 @@ function ViewClass(props) {
   }, [students_by_class.length, kelas.walikelas]);
 
   React.useEffect(() => {
-    if(user.role === "Student"){
+    if (user.role === "Student") {
       let submittedTaskIdSet = new Set();
-      getFileSubmitTasksByAuthor(user._id).then((response) => {
-        for (let file of response.data) {
-          submittedTaskIdSet.add(file.task_id);
-        }
-      }).finally(() => {
-        // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
-        setSubmittedTaskIds(submittedTaskIdSet);
-      });
+      getFileSubmitTasksByAuthor(user._id)
+        .then((response) => {
+          for (let file of response.data) {
+            submittedTaskIdSet.add(file.task_id);
+          }
+        })
+        .finally(() => {
+          // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
+          setSubmittedTaskIds(submittedTaskIdSet);
+        });
     }
-  }, [])
+  }, []);
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -1451,7 +1479,10 @@ function ViewClass(props) {
               ? null
               : all_subjects.map((subject) => {
                   // let isEmpty = true
-                  if (kelas.subject_assigned && kelas.subject_assigned.includes(subject._id)) {
+                  if (
+                    kelas.subject_assigned &&
+                    kelas.subject_assigned.includes(subject._id)
+                  ) {
                     return (
                       <ExpansionPanel>
                         <ExpansionPanelSummary>
@@ -1479,10 +1510,26 @@ function ViewClass(props) {
                         <Divider />
                         <List className={classes.expansionPanelList}>
                           {showAllbySubject(
-                            listMaterials("subject", subject, "mata_pelajaran").concat(
-                            listTasks("subject", subject, "mata_pelajaran")).concat(
-                            listAssessments("subject", subject, "Kuis", "mata_pelajaran")).concat(
-                            listAssessments("subject", subject, "Ujian", "mata_pelajaran"))
+                            listMaterials("subject", subject, "mata_pelajaran")
+                              .concat(
+                                listTasks("subject", subject, "mata_pelajaran")
+                              )
+                              .concat(
+                                listAssessments(
+                                  "subject",
+                                  subject,
+                                  "Kuis",
+                                  "mata_pelajaran"
+                                )
+                              )
+                              .concat(
+                                listAssessments(
+                                  "subject",
+                                  subject,
+                                  "Ujian",
+                                  "mata_pelajaran"
+                                )
+                              )
                           )}
                         </List>
                       </ExpansionPanel>
@@ -1646,5 +1693,5 @@ export default connect(mapStateToProps, {
   getTaskAtmpt,
   getFileAvatar,
   getMultipleFileAvatar,
-  getTaskByClass
+  getTaskByClass,
 })(ViewClass);

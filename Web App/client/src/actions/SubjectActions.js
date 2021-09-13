@@ -74,7 +74,7 @@ export const deleteSubject = (subjectId) => (dispatch) => {
   return axios
     .delete(`/api/subjects/delete/${subjectId}`)
     .then((res) => {
-      return "Subject is successfully deleted"
+      return "Subject is successfully deleted";
       // window.location.reload();
     })
     .catch((err) => {

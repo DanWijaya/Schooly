@@ -135,7 +135,6 @@ function ProfilePictureEditorDialog(props) {
     });
     // Fitur_4 punya:
     // updateAvatar(userData, userId, formData);
-    
   };
 
   function onImgLoad({ target: img }) {

@@ -6,7 +6,7 @@ const User = require("./User");
 const Admin = User.discriminator(
   "Admin",
   new mongoose.Schema({
-    unit: { type: ObjectId, ref: "units", default: null }
+    unit: { type: ObjectId, ref: "units", default: null },
     // class_teached: [{ type: Object, ref: "classes"}],
   })
 );

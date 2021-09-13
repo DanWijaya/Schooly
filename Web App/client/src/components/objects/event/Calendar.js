@@ -1,5 +1,5 @@
 import React from "react";
-import "./Calendar.css"
+import "./Calendar.css";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import lokal from "date-fns/locale/id";
@@ -45,27 +45,27 @@ import {
 import {
   MuiPickersUtilsProvider,
   KeyboardDateTimePicker,
-  KeyboardDatePicker
+  KeyboardDatePicker,
 } from "@material-ui/pickers";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import EventNoteIcon from '@material-ui/icons/EventNote';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import TimerIcon from '@material-ui/icons/Timer';
-import TimerOffIcon from '@material-ui/icons/TimerOff';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import SubjectIcon from '@material-ui/icons/Subject';
+import EventNoteIcon from "@material-ui/icons/EventNote";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
+import TimerIcon from "@material-ui/icons/Timer";
+import TimerOffIcon from "@material-ui/icons/TimerOff";
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import SubjectIcon from "@material-ui/icons/Subject";
 import DeleteIcon from "@material-ui/icons/Delete";
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import CancelIcon from '@material-ui/icons/Cancel';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import SearchIcon from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
-import DragHandleIcon from '@material-ui/icons/DragHandle';
-import CloseIcon from '@material-ui/icons/Close';
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
+import CancelIcon from "@material-ui/icons/Cancel";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import SearchIcon from "@material-ui/icons/Search";
+import AddIcon from "@material-ui/icons/Add";
+import DragHandleIcon from "@material-ui/icons/DragHandle";
+import CloseIcon from "@material-ui/icons/Close";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
@@ -84,16 +84,19 @@ import {
   updateEvent,
   getAllEvents,
   getOneEvent,
-  deleteEvent
+  deleteEvent,
 } from "../../../actions/EventActions";
 import {
   downloadFileEvent,
   viewFileEvent,
-  getFileEvents
+  getFileEvents,
 } from "../../../actions/files/FileEventActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getStudents, getTeachers } from "../../../actions/UserActions";
-import { getTasksBySubjectClass, getAllTask } from "../../../actions/TaskActions";
+import {
+  getTasksBySubjectClass,
+  getAllTask,
+} from "../../../actions/TaskActions";
 import {
   getAssessments,
   getAllAssessments,
@@ -101,7 +104,7 @@ import {
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import moment from "moment";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import Draggable from 'react-draggable';
+import Draggable from "react-draggable";
 import Path from "path";
 import CustomLinkify from "../../misc/linkify/Linkify";
 
@@ -110,11 +113,11 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-      maxWidth: "100%"
+      maxWidth: "100%",
     },
     padding: "10px",
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   newEventButton: {
     marginRight: "10px",
@@ -122,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
-      color: "white"
+      color: "white",
     },
   },
   newEventIconDesktop: {
@@ -156,12 +159,12 @@ const useStyles = makeStyles((theme) => ({
     overflow: "none",
     [theme.breakpoints.down("xs")]: {
       width: "100%",
-      marginRight: 0
+      marginRight: 0,
     },
   },
   calendarContainer: {
     marginLeft: "15px",
-    width: "200px"
+    width: "200px",
   },
   calendar: {
     border: "none",
@@ -178,7 +181,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     alignItems: "center",
     borderBottom: "none",
-    overflow: "none"
+    overflow: "none",
   },
   todayTile: {
     display: "flex",
@@ -190,10 +193,10 @@ const useStyles = makeStyles((theme) => ({
     height: "1.9rem",
     backgroundColor: "#195DE5",
     color: "white",
-    [theme.breakpoints.down("sm")] :{
+    [theme.breakpoints.down("sm")]: {
       width: "1.6rem",
       height: "1.6rem",
-    }
+    },
   },
   selectedTile: {
     display: "flex",
@@ -206,7 +209,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       width: "1.6rem",
       height: "1.6rem",
-    }
+    },
   },
   notSelectedTile: {
     "&:hover": {
@@ -220,8 +223,8 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.down("sm")]: {
         width: "1.6rem",
         height: "1.6rem",
-      }
-    }
+      },
+    },
   },
   holidayTile: {
     color: "#D10000",
@@ -236,18 +239,18 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.down("sm")]: {
         width: "1.6rem",
         height: "1.6rem",
-      }
-    }
+      },
+    },
   },
   calendarTile: {
     borderRadius: "100%",
-    backgroundColor: theme.palette.primary.light
+    backgroundColor: theme.palette.primary.light,
   },
   monthDateTile: {
     padding: "2px 5px",
     "&:focus, &:hover, &:active": {
       background: "#E6E6E6",
-      cursor: "pointer"
+      cursor: "pointer",
     },
   },
   selectedMonthDateTile: {
@@ -255,7 +258,7 @@ const useStyles = makeStyles((theme) => ({
     background: "#C9DCFD",
     "&:focus, &:hover, &:active": {
       background: "#E6E6E6",
-      cursor: "pointer"
+      cursor: "pointer",
     },
   },
   todayMonthDateTile: {
@@ -264,18 +267,18 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     "&:focus, &:hover, &:active": {
       background: "#E6E6E6",
-      cursor: "pointer"
+      cursor: "pointer",
     },
     marginBlockStart: 0,
     marginBlockEnd: 0,
-    padding: "2px 4px"
+    padding: "2px 4px",
   },
   holidayMonthDateTile: {
     color: "#D10000",
     padding: "2px 5px",
     "&:focus, &:hover, &:active": {
       background: "#E6E6E6",
-      cursor: "pointer"
+      cursor: "pointer",
     },
   },
   monthAgendaCell: {
@@ -284,7 +287,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: "14.2875%",
     border: "1px solid rgba(224, 224, 224, 1)",
     verticalAlign: "top",
-    padding: "10px 3px"
+    padding: "10px 3px",
   },
   monthAgendaChip: {
     background: theme.palette.primary.main,
@@ -297,7 +300,7 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: "ellipsis",
     maxWidth: "100%",
     "&:focus, &:hover, &:active": {
-      cursor: "pointer"
+      cursor: "pointer",
     },
   },
   monthAgendaChipAdmin: {
@@ -317,7 +320,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "4px",
     margin: "2px 0",
     "&:focus, &:hover, &:active": {
-      cursor: "pointer"
+      cursor: "pointer",
     },
   },
   toolbar: {
@@ -337,7 +340,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
   },
   listItem: {
-    padding: "6px 16px"
+    padding: "6px 16px",
   },
   errorIcon: {
     color: theme.palette.error.main,
@@ -354,10 +357,11 @@ const useStyles = makeStyles((theme) => ({
   holidayContainer: {
     display: "flex",
     flexDirection: "row",
-    flexWrap: "nowrap"
+    flexWrap: "nowrap",
   },
   shadow: {
-    boxShadow: "0 14px 18px -28px rgba(0,0,0,0.8), 0 10px 10px -10px rgba(0,0,0,0.15)"
+    boxShadow:
+      "0 14px 18px -28px rgba(0,0,0,0.8), 0 10px 10px -10px rgba(0,0,0,0.15)",
   },
   staticBlueChip: {
     backgroundColor: theme.palette.primary.main,
@@ -376,7 +380,7 @@ const useStyles = makeStyles((theme) => ({
   },
   hoverPointerCursor: {
     "&:focus, &:hover": {
-      cursor: "pointer"
+      cursor: "pointer",
     },
   },
   horizontalLine: {
@@ -385,17 +389,17 @@ const useStyles = makeStyles((theme) => ({
       content: "",
       position: "absolute",
       borderRight: "2px green solid",
-      transform: "translateX(-50%)"
+      transform: "translateX(-50%)",
     },
     "&:before": {
       content: "",
       position: "absolute",
       borderRight: "2px green solid",
-      transform: "translateY(-50%)"
+      transform: "translateY(-50%)",
     },
     flexGrow: 1,
     marginLeft: "10px",
-    overflow: "none"
+    overflow: "none",
   },
   greenFab: {
     backgroundColor: theme.palette.success.main,
@@ -406,11 +410,11 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     tableLayout: "fixed",
-    overflow: "hidden"
+    overflow: "hidden",
   },
   chevronButton: {
     "&:focus, &:hover": {
-      cursor: "pointer"
+      cursor: "pointer",
     },
   },
   selectRoot: {
@@ -418,7 +422,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     height: "40px",
     paddingTop: "0!important",
-    paddingBottom: "0!important"
+    paddingBottom: "0!important",
   },
   mobileDayModeDateCircle: {
     borderRadius: "50%",
@@ -427,8 +431,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#195DE5",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 }));
 
 function AgendaToolbar(props) {
@@ -446,40 +450,70 @@ function AgendaToolbar(props) {
   } = props;
 
   let monthNames = [
-    "Januari", "Februari", "Maret", "April",
-    "Mei", "Juni", "Juli", "Agustus",
-    "September", "Oktober", "November", "Desember"
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
   ];
 
-  let stringDateDayMode = monthNames[currentDate.getMonth()] + " " + currentDate.getDate() + ", " + currentDate.getFullYear();
-  let stringDateMonthMode = monthNames[currentDate.getMonth()] + " " + currentDate.getFullYear();
-  let stringDateDayModeMobile = monthNames[currentDate.getMonth()].slice(0, 3) + " " + currentDate.getFullYear();
+  let stringDateDayMode =
+    monthNames[currentDate.getMonth()] +
+    " " +
+    currentDate.getDate() +
+    ", " +
+    currentDate.getFullYear();
+  let stringDateMonthMode =
+    monthNames[currentDate.getMonth()] + " " + currentDate.getFullYear();
+  let stringDateDayModeMobile =
+    monthNames[currentDate.getMonth()].slice(0, 3) +
+    " " +
+    currentDate.getFullYear();
 
   const handleChangeMonth = (direction) => {
-    if(direction === "now") {
+    if (direction === "now") {
       setCurrentDate(new Date());
-    }
-    else if(direction === "next") {
+    } else if (direction === "next") {
       let nextMonthDate;
       if (currentDate.getMonth() === 11) {
-        nextMonthDate = new Date(currentDate.getFullYear() + 1, 0, currentDate.getDate());
-      }
-      else {
-        nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, currentDate.getDate());
+        nextMonthDate = new Date(
+          currentDate.getFullYear() + 1,
+          0,
+          currentDate.getDate()
+        );
+      } else {
+        nextMonthDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1,
+          currentDate.getDate()
+        );
       }
       setCurrentDate(nextMonthDate);
-    }
-    else {
+    } else {
       let prevMonthDate;
       if (currentDate.getMonth() === 0) {
-        prevMonthDate = new Date(currentDate.getFullYear() - 1, 11, currentDate.getDate());
-      }
-      else {
-        prevMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate());
+        prevMonthDate = new Date(
+          currentDate.getFullYear() - 1,
+          11,
+          currentDate.getDate()
+        );
+      } else {
+        prevMonthDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - 1,
+          currentDate.getDate()
+        );
       }
       setCurrentDate(prevMonthDate);
     }
-  }
+  };
 
   const handleChangeDay = (direction) => {
     let time;
@@ -492,63 +526,133 @@ function AgendaToolbar(props) {
     }
     setCurrentDate(time);
     setSelectedDateReactCalendar(time);
-    if (time.getMonth() !== activeStartDate.getMonth() || time.getFullYear() !== activeStartDate.getFullYear()) {
-      setActiveStartDate(new Date(time.getFullYear(), time.getMonth(), 1, 0, 0, 0, 0));
+    if (
+      time.getMonth() !== activeStartDate.getMonth() ||
+      time.getFullYear() !== activeStartDate.getFullYear()
+    ) {
+      setActiveStartDate(
+        new Date(time.getFullYear(), time.getMonth(), 1, 0, 0, 0, 0)
+      );
     }
-  }
+  };
 
   return (
-    <div className={classes.toolbar} >
-      <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+    <div className={classes.toolbar}>
+      <div
+        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+      >
         <Hidden xsDown>
-          {mode === "Day" ?
-            <Button style={{ height: "40px" }} variant="outlined" onClick={() => handleChangeDay("now")}>Hari ini</Button>
-          :
-            <Button style={{ height: "40px" }} variant="outlined" onClick={() => handleChangeMonth("now")}>Hari ini</Button>
-          }
-          {mode === "Day" ?
+          {mode === "Day" ? (
+            <Button
+              style={{ height: "40px" }}
+              variant="outlined"
+              onClick={() => handleChangeDay("now")}
+            >
+              Hari ini
+            </Button>
+          ) : (
+            <Button
+              style={{ height: "40px" }}
+              variant="outlined"
+              onClick={() => handleChangeMonth("now")}
+            >
+              Hari ini
+            </Button>
+          )}
+          {mode === "Day" ? (
             <>
-              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", margin: "0 5px"}}>
-                <ChevronLeftIcon onClick={() => handleChangeDay("prev")} className={classes.chevronButton}/>
-                <ChevronRightIcon onClick={() => handleChangeDay("next")} className={classes.chevronButton}/>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  margin: "0 5px",
+                }}
+              >
+                <ChevronLeftIcon
+                  onClick={() => handleChangeDay("prev")}
+                  className={classes.chevronButton}
+                />
+                <ChevronRightIcon
+                  onClick={() => handleChangeDay("next")}
+                  className={classes.chevronButton}
+                />
               </div>
               <Typography>{stringDateDayMode}</Typography>
             </>
-          :
+          ) : (
             <>
-              <div style={{display: "flex", flexDirection: "row", alignItems: "center", margin: "0 5px"}}>
-                <ChevronLeftIcon onClick={() => handleChangeMonth("prev")} className={classes.chevronButton}/>
-                <ChevronRightIcon onClick={() => handleChangeMonth("next")} className={classes.chevronButton}/>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  margin: "0 5px",
+                }}
+              >
+                <ChevronLeftIcon
+                  onClick={() => handleChangeMonth("prev")}
+                  className={classes.chevronButton}
+                />
+                <ChevronRightIcon
+                  onClick={() => handleChangeMonth("next")}
+                  className={classes.chevronButton}
+                />
               </div>
               <Typography>{stringDateMonthMode}</Typography>
             </>
-          }
+          )}
         </Hidden>
         <Hidden smUp>
-          {mode === "Day" ?
+          {mode === "Day" ? (
             <Typography variant="h5">{stringDateDayModeMobile}</Typography>
-          :
-            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <Typography>{stringDateMonthMode}</Typography>
-              <div style={{display: "flex", flexDirection: "row", alignItems: "center", margin: "0 5px"}}>
-                <ChevronLeftIcon onClick={() => handleChangeMonth("prev")} className={classes.chevronButton}/>
-                <ChevronRightIcon onClick={() => handleChangeMonth("next")} className={classes.chevronButton}/>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  margin: "0 5px",
+                }}
+              >
+                <ChevronLeftIcon
+                  onClick={() => handleChangeMonth("prev")}
+                  className={classes.chevronButton}
+                />
+                <ChevronRightIcon
+                  onClick={() => handleChangeMonth("next")}
+                  className={classes.chevronButton}
+                />
               </div>
             </div>
-          }
+          )}
         </Hidden>
       </div>
-      <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-        {
-          role === "Admin"
-          ?
-            <Fab className={classes.greenFab} aria-label="add" size="small" onClick={() => { handleOpenCreateDialog() }}>
-              <AddIcon fontSize="small"/>
-            </Fab>
-          : null
-        }
+      <div
+        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+      >
+        {role === "Admin" ? (
+          <Fab
+            className={classes.greenFab}
+            aria-label="add"
+            size="small"
+            onClick={() => {
+              handleOpenCreateDialog();
+            }}
+          >
+            <AddIcon fontSize="small" />
+          </Fab>
+        ) : null}
         <IconButton disabled>
-          <SearchIcon/>
+          <SearchIcon />
         </IconButton>
         <FormControl variant="outlined">
           <Select
@@ -557,12 +661,14 @@ function AgendaToolbar(props) {
             onChange={handleChangeMode}
             classes={{ root: classes.selectRoot }}
           >
-            <MenuItem value="Day">
-              Hari
+            <MenuItem value="Day">Hari</MenuItem>
+            <MenuItem value="Week" disabled>
+              Minggu (Coming soon)
             </MenuItem>
-            <MenuItem value="Week" disabled>Minggu (Coming soon)</MenuItem>
             <MenuItem value="Month">Bulan</MenuItem>
-            <MenuItem value="Year" disabled>Tahun (Coming soon)</MenuItem>
+            <MenuItem value="Year" disabled>
+              Tahun (Coming soon)
+            </MenuItem>
           </Select>
         </FormControl>
       </div>
@@ -584,7 +690,7 @@ function ListAssessments(props) {
     mainCounter,
     handleChangeCounter,
     mode,
-    handleChangeList
+    handleChangeList,
   } = props;
 
   let localCounter = mainCounter;
@@ -594,8 +700,20 @@ function ListAssessments(props) {
     const [openDialog, setOpenDialog] = React.useState(false);
     const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-    const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
-      setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
+    const handleOpenDialog = (
+      title,
+      subject,
+      teacher_name,
+      start_date,
+      end_date
+    ) => {
+      setCurrentDialogInfo({
+        title,
+        subject,
+        teacher_name,
+        start_date,
+        end_date,
+      });
       setOpenDialog(true);
     };
 
@@ -642,10 +760,7 @@ function ListAssessments(props) {
             >
               Guru: {currentDialogInfo.teacher_name}
             </Typography>
-            <Typography
-              variant="subtitle1"
-              align="center"
-            >
+            <Typography variant="subtitle1" align="center">
               Mulai: {currentDialogInfo.start_date}
             </Typography>
             <Typography variant="subtitle1" align="center">
@@ -667,7 +782,7 @@ function ListAssessments(props) {
   }
 
   let AssessmentsList = [];
-  let TeacherList = []
+  let TeacherList = [];
   let result = [];
 
   let tempSelectedDate = new Date(date);
@@ -676,14 +791,17 @@ function ListAssessments(props) {
     var i;
     for (i = all_assessments.length - 1; i >= 0; i--) {
       let assessment = all_assessments[i];
-      let tempDeadlineDate = new Date(moment(assessment.start_date)
-      .locale("id"));
+      let tempDeadlineDate = new Date(
+        moment(assessment.start_date).locale("id")
+      );
       let class_assigned = assessment.class_assigned;
 
-      if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
-      tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-      tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
-      class_assigned.indexOf(classId) !== -1) {
+      if (
+        tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
+        tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+        tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+        class_assigned.indexOf(classId) !== -1
+      ) {
         for (let j = 0; j < all_teachers.length; j++) {
           if (all_teachers[j]._id === assessment.author_id) {
             TeacherList.push(all_teachers[j].name);
@@ -710,12 +828,11 @@ function ListAssessments(props) {
         if (
           (!category ||
             (category === "subject" && assessment.subject === subject._id)) &&
-
           assessment.type === "Kuis" &&
           assessment.posted
         ) {
-          if(mode === "Month") {
-            if(localCounter < 3) {
+          if (mode === "Month") {
+            if (localCounter < 3) {
               result.push({
                 name: assessment.name,
                 workCategoryAvatar: workCategoryAvatar,
@@ -724,12 +841,11 @@ function ListAssessments(props) {
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
-                finished: assessment.submissions
+                finished: assessment.submissions,
               });
             }
-            localCounter ++;
-          }
-          else {
+            localCounter++;
+          } else {
             result.push({
               start_date: assessment.start_date,
               end_date: assessment.end_date,
@@ -743,12 +859,11 @@ function ListAssessments(props) {
         if (
           (!category ||
             (category === "subject" && assessment.subject === subject._id)) &&
-
           assessment.type === "Ujian" &&
           assessment.posted
         ) {
-          if(mode === "Month") {
-            if(localCounter < 3) {
+          if (mode === "Month") {
+            if (localCounter < 3) {
               result.push({
                 name: assessment.name,
                 workCategoryAvatar: workCategoryAvatar,
@@ -757,12 +872,11 @@ function ListAssessments(props) {
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
-                finished: assessment.submissions
+                finished: assessment.submissions,
               });
             }
-            localCounter ++;
-          }
-          else {
+            localCounter++;
+          } else {
             result.push({
               start_date: assessment.start_date,
               end_date: assessment.end_date,
@@ -774,7 +888,7 @@ function ListAssessments(props) {
       }
     }
   }
-  if(mode === "Month") {
+  if (mode === "Month") {
     handleChangeCounter(localCounter);
     return result.map((row) => (
       <AssessmentListItem
@@ -794,8 +908,7 @@ function ListAssessments(props) {
         work_finished={row.finished}
       />
     ));
-  }
-  else {
+  } else {
     console.log(result);
     handleChangeList(result);
     return;
@@ -808,29 +921,29 @@ function EventDialog(props) {
       width: "1rem",
       height: "1rem",
       marginRight: "7.5px",
-      color: theme.palette.text.secondary
+      color: theme.palette.text.secondary,
     },
     formLabels: {
       display: "flex",
-      alignItems: "center"
+      alignItems: "center",
     },
     zeroHeightHelperText: {
       height: "0",
-      display: "flex" // untuk men-disable "collapsing margin"
+      display: "flex", // untuk men-disable "collapsing margin"
     },
     chips: {
-      display: 'flex',
-      flexWrap: 'wrap'
+      display: "flex",
+      flexWrap: "wrap",
     },
     chip: {
       marginRight: 2,
     },
     viewDialogChip: {
       backgroundColor: theme.palette.primary.main,
-      color: "white"
+      color: "white",
     },
     dummyInput: {
-      height: "fit-content!important"
+      height: "fit-content!important",
     },
     create_edit_dialogTopDiv: {
       backgroundColor: theme.palette.action.selected,
@@ -839,23 +952,23 @@ function EventDialog(props) {
       padding: "0 24px",
       [theme.breakpoints.up("md")]: {
         "&:hover": {
-          cursor: "move"
-        }
+          cursor: "move",
+        },
       },
       [theme.breakpoints.down("sm")]: {
         justifyContent: "flex-end",
-        backgroundColor: "transparent"
-      }
+        backgroundColor: "transparent",
+      },
     },
     view_dialogTopDiv: {
       display: "flex",
       justifyContent: "flex-end",
-      padding: "0 24px"
+      padding: "0 24px",
     },
     dialogTopIcons: {
       width: "20px",
       height: "20px",
-      color: theme.palette.text.secondary
+      color: theme.palette.text.secondary,
     },
     addFileButton: {
       backgroundColor: theme.palette.primary.main,
@@ -897,35 +1010,35 @@ function EventDialog(props) {
     },
     mdUpZeroTopPadding: {
       [theme.breakpoints.up("md")]: {
-        paddingTop: "0!important"
-      }
+        paddingTop: "0!important",
+      },
     },
     mdUpZeroBottomPadding: {
       [theme.breakpoints.up("md")]: {
-        paddingBottom: "0!important"
-      }
+        paddingBottom: "0!important",
+      },
     },
     smDownZeroTopPadding: {
       [theme.breakpoints.down("sm")]: {
-        paddingTop: "0!important"
-      }
+        paddingTop: "0!important",
+      },
     },
     smDownZeroBottomPadding: {
       [theme.breakpoints.down("sm")]: {
-        paddingBottom: "0!important"
-      }
+        paddingBottom: "0!important",
+      },
     },
     dialogTopIconButtons: {
       padding: "8px",
       "&focus, &:hover": {
-        backgroundColor: theme.palette.action.hover
-      }
+        backgroundColor: theme.palette.action.hover,
+      },
     },
     dialogContent: {
       display: "flex",
       padding: "0",
       flexDirection: "column",
-      position: "relative"
+      position: "relative",
     },
     createEditDialogScrollableDiv: {
       display: "flex",
@@ -933,28 +1046,28 @@ function EventDialog(props) {
       overflowY: "auto",
       overflowX: "hidden",
       padding: "16px 24px",
-      flexDirection: "column"
+      flexDirection: "column",
     },
     viewDialogScrollableDiv: {
       flexGrow: "1",
       overflowY: "auto",
       overflowX: "hidden",
-      padding: "16px 24px"
+      padding: "16px 24px",
     },
     viewDialogBottomDiv: {
       flex: "1 1 auto",
       overflowY: "hidden",
       position: "relative",
       display: "flex",
-      flexDirection: "column"
+      flexDirection: "column",
     },
     createEventButton: {
       backgroundColor: theme.palette.success.main,
       color: "white",
       "&:focus, &:hover": {
         backgroundColor: theme.palette.success.main,
-        color: "white"
-      }
+        color: "white",
+      },
     },
     editEventButton: {
       backgroundColor: theme.palette.primary.main,
@@ -968,11 +1081,11 @@ function EventDialog(props) {
       "&:focus, &:hover": {
         backgroundColor: theme.palette.primary.fade,
       },
-    }
+    },
   }));
   const classes = useStyles();
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const {
     selectedEventInfo,
@@ -985,12 +1098,12 @@ function EventDialog(props) {
     getAllEvents,
     downloadFileEvent,
     viewFileEvent,
-    user
+    user,
   } = props;
   const roleConverter = {
     Admin: "Pengelola",
     Teacher: "Guru",
-    Student: "Murid"
+    Student: "Murid",
   };
   const [errors, setErrors] = React.useState({});
 
@@ -1013,9 +1126,13 @@ function EventDialog(props) {
 
   // DATETIME PICKER
   const [openStartDatePicker, setOpenStartDatePicker] = React.useState(false);
-  const [openStartDateTimePicker, setOpenStartDateTimePicker] = React.useState(false);
+  const [openStartDateTimePicker, setOpenStartDateTimePicker] = React.useState(
+    false
+  );
   const [openEndDatePicker, setOpenEndDatePicker] = React.useState(false);
-  const [openEndDateTimePicker, setOpenEndDateTimePicker] = React.useState(false);
+  const [openEndDateTimePicker, setOpenEndDateTimePicker] = React.useState(
+    false
+  );
   const startDatePicker = React.useRef(null);
   const endDatePicker = React.useRef(null);
 
@@ -1036,7 +1153,16 @@ function EventDialog(props) {
   React.useEffect(() => {
     if (eventDialogMode === "view") {
       if (Object.keys(selectedEventInfo).length !== 0) {
-        let { _id, name, location, start_date, end_date, to, description, author_id } = selectedEventInfo;
+        let {
+          _id,
+          name,
+          location,
+          start_date,
+          end_date,
+          to,
+          description,
+          author_id,
+        } = selectedEventInfo;
         start_date = new Date(start_date);
         end_date = new Date(end_date);
         setName(name);
@@ -1048,18 +1174,21 @@ function EventDialog(props) {
         setAuthorId(author_id);
         getFileEvents(_id).then((result) => {
           setFileLampiran(result);
-          setOriginalFileLampiran(result)
+          setOriginalFileLampiran(result);
         });
 
         // pada datetime picker, pengguna tidak bisa menset detik. jadi, pukul 23:59:59 hanya dapat
         // diset dengan menyentang checkbox sepanjang hari
-        if (end_date.getHours() === 23 && end_date.getMinutes() === 59 && end_date.getSeconds() === 59) {
+        if (
+          end_date.getHours() === 23 &&
+          end_date.getMinutes() === 59 &&
+          end_date.getSeconds() === 59
+        ) {
           setAllDay(true);
         }
       }
     }
   }, [selectedEventInfo]);
-
 
   // FORM
   const handleCreateEvent = () => {
@@ -1073,7 +1202,7 @@ function EventDialog(props) {
     let invert = {
       Pengelola: "Admin",
       Guru: "Teacher",
-      Murid: "Student"
+      Murid: "Student",
     };
     let temp = target_role.map((elm) => roleConverter[elm]);
     temp.sort();
@@ -1086,9 +1215,9 @@ function EventDialog(props) {
       end_date,
       to,
       description,
-      author_id: user._id
+      author_id: user._id,
     };
-    if (Object.values(errors).every((error) => (!error))) {
+    if (Object.values(errors).every((error) => !error)) {
       setOpenUploadDialog(true);
       createEvent(formData, eventData)
         .then(() => {
@@ -1113,7 +1242,7 @@ function EventDialog(props) {
     let invert = {
       Pengelola: "Admin",
       Guru: "Teacher",
-      Murid: "Student"
+      Murid: "Student",
     };
     let temp = target_role.map((elm) => roleConverter[elm]);
     temp.sort();
@@ -1125,11 +1254,16 @@ function EventDialog(props) {
       start_date,
       end_date,
       to,
-      description
+      description,
     };
-    if (Object.values(errors).every((error) => (!error))) {
+    if (Object.values(errors).every((error) => !error)) {
       setOpenUploadDialog(true);
-      updateEvent(formData, fileLampiranToDelete, eventData, selectedEventInfo._id)
+      updateEvent(
+        formData,
+        fileLampiranToDelete,
+        eventData,
+        selectedEventInfo._id
+      )
         .then(() => {
           setUploadSuccess(true);
           getAllEvents();
@@ -1153,7 +1287,11 @@ function EventDialog(props) {
     if (newStatus) {
       // jika diset ke sepanjang hari, ...
 
-      setErrors({ ...errors, start_date_custom: undefined, end_date_custom: undefined });
+      setErrors({
+        ...errors,
+        start_date_custom: undefined,
+        end_date_custom: undefined,
+      });
 
       // di mode sepanjang hari, hanya tanggal yang ditampilkan di datetime picker.
       // waktu tidak ditampilkan dan akan diset menjadi 00:00 (untuk start date) - 23:59 (untuk end date)
@@ -1168,7 +1306,7 @@ function EventDialog(props) {
         // simpan waktu
         lastSelectedTime.current.start_date = {
           hour: start_date.getHours(),
-          minute: start_date.getMinutes()
+          minute: start_date.getMinutes(),
         };
       } else {
         // jika tanggal atau waktu tidak valid,
@@ -1178,7 +1316,9 @@ function EventDialog(props) {
 
           // dapatkan string yang ditampilkan di textfield datetime picker.
           // string ini akan memiliki format yang sama seperti format yang sedang digunakan pada datetime picker: "dd/MM/yyyy - HH:mm"
-          let parsedStr = startDatePicker.current.getAttribute("value").split(" ");
+          let parsedStr = startDatePicker.current
+            .getAttribute("value")
+            .split(" ");
           let dateStr = parsedStr[0];
           let timeStr = parsedStr[2];
 
@@ -1202,13 +1342,12 @@ function EventDialog(props) {
             // simpan waktu
             lastSelectedTime.current.start_date = {
               hour: parsedTime.getHours(),
-              minute: parsedTime.getMinutes()
+              minute: parsedTime.getMinutes(),
             };
           } else {
             // simpan nilai null (saat waktu simpanan ini digunakan, nilai null ini akan dikonversi menjadi 00:00)
             lastSelectedTime.current.start_date = null;
           }
-
         } else {
           // jika isi textfield picker kosong,
           setStartDate(getDayStart(new Date()));
@@ -1226,7 +1365,7 @@ function EventDialog(props) {
         // simpan waktu
         lastSelectedTime.current.end_date = {
           hour: end_date.getHours(),
-          minute: end_date.getMinutes()
+          minute: end_date.getMinutes(),
         };
       } else {
         // jika tanggal atau waktu tidak valid,
@@ -1236,7 +1375,9 @@ function EventDialog(props) {
 
           // dapatkan string yang ditampilkan di textfield datetime picker.
           // string ini akan memiliki format yang sama seperti format yang sedang digunakan pada datetime picker: "dd/MM/yyyy - HH:mm"
-          let parsedStr = endDatePicker.current.getAttribute("value").split(" ");
+          let parsedStr = endDatePicker.current
+            .getAttribute("value")
+            .split(" ");
           let dateStr = parsedStr[0];
           let timeStr = parsedStr[2];
 
@@ -1259,7 +1400,7 @@ function EventDialog(props) {
             // simpan waktu
             lastSelectedTime.current.end_date = {
               hour: parsedTime.getHours(),
-              minute: parsedTime.getMinutes()
+              minute: parsedTime.getMinutes(),
             };
           } else {
             // simpan nilai null (saat waktu simpanan ini digunakan, nilai null ini akan dikonversi menjadi 00:00)
@@ -1292,10 +1433,7 @@ function EventDialog(props) {
             start.setHours(0, 0, 0, 0);
           } else {
             // jika waktu simpanan ada, set waktu mulai jadi sesuai dengan waktu yang disimpan tersebut
-            start.setHours(
-              startDate.hour,
-              startDate.minute
-            );
+            start.setHours(startDate.hour, startDate.minute);
           }
         }
         setStartDate(start);
@@ -1323,10 +1461,7 @@ function EventDialog(props) {
             end.setHours(23, 59, 0);
           } else {
             // jika waktu simpanan ada, set waktu selesai jadi sesuai dengan waktu yang disimpan tersebut
-            end.setHours(
-              endDate.hour,
-              endDate.minute
-            );
+            end.setHours(endDate.hour, endDate.minute);
           }
         }
         setEndDate(end);
@@ -1346,9 +1481,16 @@ function EventDialog(props) {
     let startDate = date;
     if (isValidDateTime(startDate) && isValidDateTime(end_date)) {
       if (end_date.getTime() < startDate.getTime()) {
-        setErrors({ ...errors, start_date_custom: "Harus sebelum Waktu Selesai" });
+        setErrors({
+          ...errors,
+          start_date_custom: "Harus sebelum Waktu Selesai",
+        });
       } else {
-        setErrors({ ...errors, start_date_custom: undefined, end_date_custom: undefined });
+        setErrors({
+          ...errors,
+          start_date_custom: undefined,
+          end_date_custom: undefined,
+        });
       }
     } else {
       setErrors({ ...errors, start_date_custom: undefined });
@@ -1367,7 +1509,11 @@ function EventDialog(props) {
       if (endDate.getTime() < start_date.getTime()) {
         setErrors({ ...errors, end_date_custom: "Harus setelah Waktu Mulai" });
       } else {
-        setErrors({ ...errors, start_date_custom: undefined, end_date_custom: undefined });
+        setErrors({
+          ...errors,
+          start_date_custom: undefined,
+          end_date_custom: undefined,
+        });
       }
     } else {
       setErrors({ ...errors, end_date_custom: undefined });
@@ -1425,7 +1571,7 @@ function EventDialog(props) {
 
   const handleChangeDescription = (e) => {
     setErrors({ ...errors, description: undefined });
-    setDescription(e.target.value)
+    setDescription(e.target.value);
   };
 
   const fileType = (filename) => {
@@ -1482,7 +1628,9 @@ function EventDialog(props) {
     } else if (eventDialogMode === "edit") {
       const files = Array.from(e.target.files);
       if (fileLampiran.length === 0) {
-        let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+        let over_limit = files.filter(
+          (file) => file.size / Math.pow(10, 6) > 10
+        );
         let allowed_file = files.filter(
           (file) => file.size / Math.pow(10, 6) <= 10
         );
@@ -1490,7 +1638,10 @@ function EventDialog(props) {
         setFileLampiranToAdd(allowed_file);
 
         if (over_limit.length > 0) {
-          showSnackbar("error", over_limit.length + " file melebihi batas 10MB!");
+          showSnackbar(
+            "error",
+            over_limit.length + " file melebihi batas 10MB!"
+          );
         }
 
         document.getElementById("file_control").value = null;
@@ -1511,7 +1662,10 @@ function EventDialog(props) {
           setFileLampiranToAdd(file_to_upload);
 
           if (over_limit.length > 0) {
-            showSnackbar("error", over_limit.length + " file melebihi batas 10MB!");
+            showSnackbar(
+              "error",
+              over_limit.length + " file melebihi batas 10MB!"
+            );
           }
         }
         document.getElementById("file_control").value = null;
@@ -1556,8 +1710,7 @@ function EventDialog(props) {
       getAllEvents();
       handleCloseEventDialog();
       showSnackbar("success", "Kegiatan berhasil dihapus");
-    })
-
+    });
   };
 
   const handleOpenDeleteDialog = () => {
@@ -1593,46 +1746,50 @@ function EventDialog(props) {
         }
       }}
       open={openEventDialog}
-      onClose={() => { handleClosingCheck() }}
+      onClose={() => {
+        handleClosingCheck();
+      }}
       PaperComponent={fullScreen ? undefined : PaperComponent}
       maxWidth="sm"
       fullScreen={fullScreen}
       fullWidth
       BackdropProps={{
-        style: { backgroundColor: "transparent" }
+        style: { backgroundColor: "transparent" },
       }}
     >
-      {eventDialogMode === "view"
-        ?
+      {eventDialogMode === "view" ? (
         <>
           <div className={classes.view_dialogTopDiv}>
-            {
-              user._id === author_id
-                ?
-                <>
-                  <LightTooltip title="Sunting">
-                    <IconButton
-                      className={classes.dialogTopIconButtons}
-                      onClick={() => { handleClickEdit() }}
-                    >
-                      <EditOutlinedIcon className={classes.dialogTopIcons} />
-                    </IconButton>
-                  </LightTooltip>
-                  <LightTooltip title="Hapus" style={{ marginRight: "24px" }}>
-                    <IconButton
-                      className={classes.dialogTopIconButtons}
-                      onClick={() => { handleOpenDeleteDialog() }}
-                    >
-                      <DeleteOutlinedIcon className={classes.dialogTopIcons} />
-                    </IconButton>
-                  </LightTooltip>
-                </>
-                : null
-            }
+            {user._id === author_id ? (
+              <>
+                <LightTooltip title="Sunting">
+                  <IconButton
+                    className={classes.dialogTopIconButtons}
+                    onClick={() => {
+                      handleClickEdit();
+                    }}
+                  >
+                    <EditOutlinedIcon className={classes.dialogTopIcons} />
+                  </IconButton>
+                </LightTooltip>
+                <LightTooltip title="Hapus" style={{ marginRight: "24px" }}>
+                  <IconButton
+                    className={classes.dialogTopIconButtons}
+                    onClick={() => {
+                      handleOpenDeleteDialog();
+                    }}
+                  >
+                    <DeleteOutlinedIcon className={classes.dialogTopIcons} />
+                  </IconButton>
+                </LightTooltip>
+              </>
+            ) : null}
             <IconButton
               edge="end"
               className={classes.dialogTopIconButtons}
-              onClick={() => { handleCloseEventDialog() }}
+              onClick={() => {
+                handleCloseEventDialog();
+              }}
             >
               <CloseIcon className={classes.dialogTopIcons} />
             </IconButton>
@@ -1642,26 +1799,41 @@ function EventDialog(props) {
               openDeleteDialog={openDeleteDialog}
               handleCloseDeleteDialog={handleCloseDeleteDialog}
               eventName={name}
-              handleDelete={() => { handleDelete(selectedEventInfo._id) }}
+              handleDelete={() => {
+                handleDelete(selectedEventInfo._id);
+              }}
             />
             <div className={classes.viewDialogScrollableDiv}>
-
-              <Grid container direction="column" spacing="4" style={{ marginTop: "0", marginBottom: "0" }}>
-                <Grid item xs={12} style={{ paddingTop: "0", paddingBottom: "0" }}>
-                  <Typography variant="h5" gutterBottom style={{ wordBreak: "break-word" }}>
+              <Grid
+                container
+                direction="column"
+                spacing="4"
+                style={{ marginTop: "0", marginBottom: "0" }}
+              >
+                <Grid
+                  item
+                  xs={12}
+                  style={{ paddingTop: "0", paddingBottom: "0" }}
+                >
+                  <Typography
+                    variant="h5"
+                    gutterBottom
+                    style={{ wordBreak: "break-word" }}
+                  >
                     <b>{name}</b>
                   </Typography>
                 </Grid>
-                {location && location.length > 0
-                  ?
+                {location && location.length > 0 ? (
                   <Grid item xs={12} style={{ paddingTop: "0" }}>
-                    <Typography className={classes.formLabels} style={{ wordBreak: "break-word" }}>
+                    <Typography
+                      className={classes.formLabels}
+                      style={{ wordBreak: "break-word" }}
+                    >
                       <LocationOnIcon className={classes.formIcons} />
                       {location}
                     </Typography>
                   </Grid>
-                  : null
-                }
+                ) : null}
                 <Grid item>
                   <Typography className={classes.formLabels}>
                     <TimerIcon className={classes.formIcons} />
@@ -1669,7 +1841,10 @@ function EventDialog(props) {
                       .locale("id")
                       .format("dddd, DD MMMM YYYY  ∙  HH:mm")}
                   </Typography>
-                  <Typography className={classes.formLabels} style={{ marginTop: "8px" }}>
+                  <Typography
+                    className={classes.formLabels}
+                    style={{ marginTop: "8px" }}
+                  >
                     <TimerOffIcon className={classes.formIcons} />
                     {moment(end_date)
                       .locale("id")
@@ -1688,64 +1863,70 @@ function EventDialog(props) {
                     ))}
                   </div>
                 </Grid>
-                {
-                  description && description.length > 0
-                    ?
-                    <Grid item>
-                      <Typography
-                        align="justify"
-                        style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-                      >
-                        <CustomLinkify text={description} />
-                      </Typography>
-                    </Grid>
-                    : null
-                }
-                {
-                  fileLampiran && fileLampiran.length > 0
-                    ?
-                    <Grid item container spacing={1}>
-                      {fileLampiran.map((lampiran) => (
-                        <LampiranFile
-                          classes={classes}
-                          file_id={lampiran._id}
-                          onPreviewFile={viewFileEvent}
-                          onDownloadFile={downloadFileEvent}
-                          filename={lampiran.filename}
-                          filetype={fileType(lampiran.filename)}
-                          eventDialogMode={eventDialogMode}
-                        />
-                      ))}
-                    </Grid>
-                    : null
-                }
+                {description && description.length > 0 ? (
+                  <Grid item>
+                    <Typography
+                      align="justify"
+                      style={{
+                        wordBreak: "break-word",
+                        whiteSpace: "pre-wrap",
+                      }}
+                    >
+                      <CustomLinkify text={description} />
+                    </Typography>
+                  </Grid>
+                ) : null}
+                {fileLampiran && fileLampiran.length > 0 ? (
+                  <Grid item container spacing={1}>
+                    {fileLampiran.map((lampiran) => (
+                      <LampiranFile
+                        classes={classes}
+                        file_id={lampiran._id}
+                        onPreviewFile={viewFileEvent}
+                        onDownloadFile={downloadFileEvent}
+                        filename={lampiran.filename}
+                        filetype={fileType(lampiran.filename)}
+                        eventDialogMode={eventDialogMode}
+                      />
+                    ))}
+                  </Grid>
+                ) : null}
               </Grid>
             </div>
           </div>
         </>
-        :
+      ) : (
         <>
           <div className={classes.create_edit_dialogTopDiv} id="drag-handle">
             <Hidden smDown>
-              <IconButton
-                edge="start"
-                className={classes.dialogTopIconButtons}
-              >
+              <IconButton edge="start" className={classes.dialogTopIconButtons}>
                 <DragHandleIcon className={classes.dialogTopIcons} />
               </IconButton>
             </Hidden>
             <IconButton
               edge="end"
               className={classes.dialogTopIconButtons}
-              style={(openUploadDialog && !uploadSuccess) ? { visibility: "hidden" } : undefined}
-              onClick={() => { if (!(openUploadDialog && !uploadSuccess)) { handleCloseEventDialog() } }}
+              style={
+                openUploadDialog && !uploadSuccess
+                  ? { visibility: "hidden" }
+                  : undefined
+              }
+              onClick={() => {
+                if (!(openUploadDialog && !uploadSuccess)) {
+                  handleCloseEventDialog();
+                }
+              }}
             >
               <CloseIcon className={classes.dialogTopIcons} />
             </IconButton>
           </div>
           <DialogTitle disableTypography>
             <Typography variant="h5" gutterBottom>
-              <b>{eventDialogMode === "create" ? "Buat Kegiatan" : "Sunting Kegiatan"}</b>
+              <b>
+                {eventDialogMode === "create"
+                  ? "Buat Kegiatan"
+                  : "Sunting Kegiatan"}
+              </b>
             </Typography>
             <Typography color="textSecondary">
               {eventDialogMode === "create"
@@ -1753,22 +1934,36 @@ function EventDialog(props) {
                 : "Ganti keterangan untuk menyunting kegiatan."}
             </Typography>
           </DialogTitle>
-          <DialogContent
-            dividers
-            className={classes.dialogContent}
-          >
+          <DialogContent dividers className={classes.dialogContent}>
             <CustomUploadDialog
               // handleWheel={handleUploadDialogWheel}
               openUploadDialog={openUploadDialog}
               handleUploadSuccess={handleCloseEventDialog}
               uploadSuccess={uploadSuccess}
-              messageUploading={eventDialogMode === "create" ? "Kegiatan sedang dibuat" : "Kegiatan sedang disunting"}
-              messageSuccess={eventDialogMode === "create" ? "Kegiatan telah dibuat" : "Kegiatan telah disunting"}
+              messageUploading={
+                eventDialogMode === "create"
+                  ? "Kegiatan sedang dibuat"
+                  : "Kegiatan sedang disunting"
+              }
+              messageSuccess={
+                eventDialogMode === "create"
+                  ? "Kegiatan telah dibuat"
+                  : "Kegiatan telah disunting"
+              }
             />
-            <div /* ref={uploadDialogScrollRef} */ className={classes.createEditDialogScrollableDiv}>
+            <div
+              /* ref={uploadDialogScrollRef} */ className={
+                classes.createEditDialogScrollableDiv
+              }
+            >
               <Grid container direction="column" spacing={4}>
                 <Grid item>
-                  <Typography component="label" for="name" color="primary" className={classes.formLabels}>
+                  <Typography
+                    component="label"
+                    for="name"
+                    color="primary"
+                    className={classes.formLabels}
+                  >
                     <EventNoteIcon className={classes.formIcons} />
                     Judul
                   </Typography>
@@ -1780,18 +1975,26 @@ function EventDialog(props) {
                     placeholder="Isi Judul"
                     value={name}
                     error={errors.name}
-                    onChange={(e) => { handleChangeName(e) }}
+                    onChange={(e) => {
+                      handleChangeName(e);
+                    }}
                   />
-                  {errors.name
-                    ?
+                  {errors.name ? (
                     <div className={classes.zeroHeightHelperText}>
-                      <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
+                      <FormHelperText variant="outlined" error>
+                        {errors.name}
+                      </FormHelperText>
                     </div>
-                    : null}
+                  ) : null}
                 </Grid>
 
                 <Grid item>
-                  <Typography component="label" for="location" color="primary" className={classes.formLabels}>
+                  <Typography
+                    component="label"
+                    for="location"
+                    color="primary"
+                    className={classes.formLabels}
+                  >
                     <LocationOnIcon className={classes.formIcons} />
                     Lokasi
                   </Typography>
@@ -1802,12 +2005,24 @@ function EventDialog(props) {
                     type="text"
                     placeholder="Isi Lokasi"
                     value={location}
-                    onChange={(e) => { setLocation(e.target.value) }}
+                    onChange={(e) => {
+                      setLocation(e.target.value);
+                    }}
                   />
                 </Grid>
 
-                <Grid item container spacing={2} className={classes.mdUpZeroBottomPadding}>
-                  <Grid item xs={12} md={6} className={classes.smDownZeroBottomPadding}>
+                <Grid
+                  item
+                  container
+                  spacing={2}
+                  className={classes.mdUpZeroBottomPadding}
+                >
+                  <Grid
+                    item
+                    xs={12}
+                    md={6}
+                    className={classes.smDownZeroBottomPadding}
+                  >
                     <Typography
                       component="label"
                       for="eventStart"
@@ -1825,9 +2040,13 @@ function EventDialog(props) {
                         okLabel="Simpan"
                         cancelLabel="Batal"
                         disablePast
-                        onChange={(date) => { handleStartDateChange(date) }}
+                        onChange={(date) => {
+                          handleStartDateChange(date);
+                        }}
                         open={openStartDatePicker}
-                        onClose={() => { setOpenStartDatePicker(false) }}
+                        onClose={() => {
+                          setOpenStartDatePicker(false);
+                        }}
                         style={{ display: "none" }}
                       />
                       <KeyboardDateTimePicker
@@ -1844,24 +2063,39 @@ function EventDialog(props) {
                         invalidDateMessage="Format tanggal tidak benar"
                         value={start_date}
                         placeholder="Isi Waktu Mulai"
-                        onChange={(date) => { handleStartDateChange(date) }}
+                        onChange={(date) => {
+                          handleStartDateChange(date);
+                        }}
                         helperText={null}
                         onError={(err) => {
                           if (errors.start_date_picker !== err) {
                             setErrors({ ...errors, start_date_picker: err });
                           }
                         }}
-                        error={errors.start_date_custom || errors.start_date_picker}
+                        error={
+                          errors.start_date_custom || errors.start_date_picker
+                        }
                         open={openStartDateTimePicker}
-                        onOpen={() => { handleOpenStartPicker(isAllDay) }}
-                        onClose={() => { handleCloseStartPicker(isAllDay) }}
+                        onOpen={() => {
+                          handleOpenStartPicker(isAllDay);
+                        }}
+                        onClose={() => {
+                          handleCloseStartPicker(isAllDay);
+                        }}
                       />
-                      <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
-                        {errors.start_date_custom
-                          ? <FormHelperText variant="outlined" error>{errors.start_date_custom}</FormHelperText>
-                          : errors.start_date_picker
-                            ? <FormHelperText variant="outlined" error>{errors.start_date_picker}</FormHelperText>
-                            : null}
+                      <div
+                        className={classes.zeroHeightHelperText}
+                        style={{ flexDirection: "column" }}
+                      >
+                        {errors.start_date_custom ? (
+                          <FormHelperText variant="outlined" error>
+                            {errors.start_date_custom}
+                          </FormHelperText>
+                        ) : errors.start_date_picker ? (
+                          <FormHelperText variant="outlined" error>
+                            {errors.start_date_picker}
+                          </FormHelperText>
+                        ) : null}
                         {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang
                           untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
                         <FormGroup style={{ width: "fit-content" }}>
@@ -1873,7 +2107,9 @@ function EventDialog(props) {
                             }
                             control={
                               <Checkbox
-                                onChange={() => { handleCheckAllDay() }}
+                                onChange={() => {
+                                  handleCheckAllDay();
+                                }}
                                 color="primary"
                                 size="small"
                                 checked={isAllDay}
@@ -1882,13 +2118,27 @@ function EventDialog(props) {
                           />
                         </FormGroup>
                       </div>
-                      <Grid item style={{ padding: "0", width: "0", visibility: "hidden" }}>
-                        <FormHelperText variant="outlined">{"\u200B"}</FormHelperText>
+                      <Grid
+                        item
+                        style={{
+                          padding: "0",
+                          width: "0",
+                          visibility: "hidden",
+                        }}
+                      >
+                        <FormHelperText variant="outlined">
+                          {"\u200B"}
+                        </FormHelperText>
                         <Checkbox size="small" disabled />
                       </Grid>
                     </MuiPickersUtilsProvider>
                   </Grid>
-                  <Grid item xs={12} md={6} className={classes.smDownZeroTopPadding}>
+                  <Grid
+                    item
+                    xs={12}
+                    md={6}
+                    className={classes.smDownZeroTopPadding}
+                  >
                     <Typography
                       component="label"
                       for="eventEnd"
@@ -1907,7 +2157,9 @@ function EventDialog(props) {
                         cancelLabel="Batal"
                         disablePast
                         minDate={start_date}
-                        onChange={(date) => { handleEndDateChange(date) }}
+                        onChange={(date) => {
+                          handleEndDateChange(date);
+                        }}
                         open={openEndDatePicker}
                         onClose={() => setOpenEndDatePicker(false)}
                         style={{ display: "none" }}
@@ -1927,7 +2179,9 @@ function EventDialog(props) {
                         invalidDateMessage="Format tanggal tidak benar"
                         value={end_date}
                         placeholder="Isi Waktu Selesai"
-                        onChange={(date) => { handleEndDateChange(date) }}
+                        onChange={(date) => {
+                          handleEndDateChange(date);
+                        }}
                         helperText={null}
                         onError={(err) => {
                           if (errors.end_date_picker !== err) {
@@ -1936,21 +2190,32 @@ function EventDialog(props) {
                         }}
                         error={errors.end_date_custom || errors.end_date_picker}
                         open={openEndDateTimePicker}
-                        onOpen={() => { handleOpenEndPicker(isAllDay) }}
-                        onClose={() => { handleCloseEndPicker(isAllDay) }}
+                        onOpen={() => {
+                          handleOpenEndPicker(isAllDay);
+                        }}
+                        onClose={() => {
+                          handleCloseEndPicker(isAllDay);
+                        }}
                       />
-                      <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
-                        {errors.end_date_custom
-                          ? <FormHelperText variant="outlined" error>{errors.end_date_custom}</FormHelperText>
-                          : errors.end_date_picker
-                            ? <FormHelperText variant="outlined" error>{errors.end_date_picker}</FormHelperText>
-                            : null}
+                      <div
+                        className={classes.zeroHeightHelperText}
+                        style={{ flexDirection: "column" }}
+                      >
+                        {errors.end_date_custom ? (
+                          <FormHelperText variant="outlined" error>
+                            {errors.end_date_custom}
+                          </FormHelperText>
+                        ) : errors.end_date_picker ? (
+                          <FormHelperText variant="outlined" error>
+                            {errors.end_date_picker}
+                          </FormHelperText>
+                        ) : null}
                       </div>
                     </MuiPickersUtilsProvider>
                   </Grid>
                 </Grid>
 
-                <Grid item className={classes.mdUpZeroTopPadding} >
+                <Grid item className={classes.mdUpZeroTopPadding}>
                   <Typography
                     component="label"
                     for="target_role"
@@ -1960,21 +2225,18 @@ function EventDialog(props) {
                     <SupervisorAccountIcon className={classes.formIcons} />
                     Pihak Penerima
                   </Typography>
-                  <FormControl
-                    variant="outlined"
-                    fullWidth
-                    error={errors.to}
-                  >
+                  <FormControl variant="outlined" fullWidth error={errors.to}>
                     <Select
                       id="target_role"
                       multiple
                       displayEmpty
                       value={target_role}
-                      onChange={(e) => { handleChangeTargetRole(e) }}
+                      onChange={(e) => {
+                        handleChangeTargetRole(e);
+                      }}
                       renderValue={(selected) => (
                         <div className={classes.chips}>
-                          {selected.length === 0
-                            ?
+                          {selected.length === 0 ? (
                             // input ini hanya digunakan sebagai placeholder
                             <Input
                               disableUnderline
@@ -1982,7 +2244,7 @@ function EventDialog(props) {
                               readOnly
                               classes={{ input: classes.dummyInput }}
                             />
-                            :
+                          ) : (
                             selected.map((role) => {
                               return (
                                 <Chip
@@ -1990,29 +2252,39 @@ function EventDialog(props) {
                                   className={classes.chip}
                                   label={roleConverter[role]}
                                 />
-                              )
-                            })}
+                              );
+                            })
+                          )}
                         </div>
                       )}
                     >
                       {["Student", "Teacher", "Admin"].map((role) => (
                         <MenuItem key={role} value={role}>
-                          <Checkbox checked={target_role.includes(role)} color="primary"/>
+                          <Checkbox
+                            checked={target_role.includes(role)}
+                            color="primary"
+                          />
                           <ListItemText primary={roleConverter[role]} />
                         </MenuItem>
                       ))}
                     </Select>
-                    {errors.to
-                      ?
+                    {errors.to ? (
                       <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText variant="outlined" error>{errors.to}</FormHelperText>
+                        <FormHelperText variant="outlined" error>
+                          {errors.to}
+                        </FormHelperText>
                       </div>
-                      : null}
+                    ) : null}
                   </FormControl>
                 </Grid>
 
                 <Grid item>
-                  <Typography component="label" for="description" color="primary" className={classes.formLabels}>
+                  <Typography
+                    component="label"
+                    for="description"
+                    color="primary"
+                    className={classes.formLabels}
+                  >
                     <SubjectIcon className={classes.formIcons} />
                     Deskripsi
                   </Typography>
@@ -2024,7 +2296,9 @@ function EventDialog(props) {
                     placeholder="Isi Deskripsi"
                     multiline
                     value={description}
-                    onChange={(e) => { handleChangeDescription(e) }}
+                    onChange={(e) => {
+                      handleChangeDescription(e);
+                    }}
                   />
                 </Grid>
 
@@ -2042,7 +2316,9 @@ function EventDialog(props) {
                   <Button
                     variant="contained"
                     startIcon={<AttachFileIcon />}
-                    onClick={() => { lampiranUploader.current.click() }}
+                    onClick={() => {
+                      lampiranUploader.current.click();
+                    }}
                     className={classes.addFileButton}
                   >
                     Tambah Lampiran Berkas
@@ -2050,18 +2326,18 @@ function EventDialog(props) {
                   <Grid container spacing={1} style={{ marginTop: "10px" }}>
                     {fileLampiran.length === 0
                       ? null
-                      :
-                      fileLampiran.map((lampiran, index) => (
-                        <LampiranFile
-                          classes={classes}
-                          filename={lampiran.name ?? lampiran.filename}
-                          filetype={fileType(lampiran.name ?? lampiran.filename)}
-                          handleLampiranDelete={handleLampiranDelete}
-                          i={index}
-                          eventDialogMode={eventDialogMode}
-                        />
-                      ))
-                    }
+                      : fileLampiran.map((lampiran, index) => (
+                          <LampiranFile
+                            classes={classes}
+                            filename={lampiran.name ?? lampiran.filename}
+                            filetype={fileType(
+                              lampiran.name ?? lampiran.filename
+                            )}
+                            handleLampiranDelete={handleLampiranDelete}
+                            i={index}
+                            eventDialogMode={eventDialogMode}
+                          />
+                        ))}
                   </Grid>
                 </Grid>
               </Grid>
@@ -2070,15 +2346,23 @@ function EventDialog(props) {
           <DialogActions style={{ padding: "16px 24px" }}>
             <Button
               variant="contained"
-              className={eventDialogMode === "create" ? classes.createEventButton : classes.editEventButton}
+              className={
+                eventDialogMode === "create"
+                  ? classes.createEventButton
+                  : classes.editEventButton
+              }
               disabled={openUploadDialog}
-              onClick={() => { eventDialogMode === "create" ? handleCreateEvent() : handleUpdateEvent() }}
+              onClick={() => {
+                eventDialogMode === "create"
+                  ? handleCreateEvent()
+                  : handleUpdateEvent();
+              }}
             >
               {eventDialogMode === "create" ? "Buat" : "Sunting"}
             </Button>
           </DialogActions>
         </>
-      }
+      )}
     </Dialog>
   );
 }
@@ -2093,7 +2377,7 @@ function CustomUploadDialog(props) {
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-between",
-      alignItems: "center"
+      alignItems: "center",
     },
     backdrop: {
       backgroundColor: "rgba(0,0,0,0.5)",
@@ -2104,7 +2388,7 @@ function CustomUploadDialog(props) {
       alignItems: "center",
       overflow: "hidden",
       width: "100%",
-      height: "100%"
+      height: "100%",
     },
     uploadSuccessIcon: {
       color: "green",
@@ -2129,14 +2413,16 @@ function CustomUploadDialog(props) {
     messageUploading,
     messageSuccess,
     uploadSuccess,
-    handleUploadSuccess
+    handleUploadSuccess,
   } = props;
 
   return (
-    <Fade in={openUploadDialog} /* ini sebenarnya ga terpakai karena upload dialog dibuat tutup bersamaan dengan parent dialognya */>
-      <div
-        className={classes.backdrop}
-      >
+    <Fade
+      in={
+        openUploadDialog
+      } /* ini sebenarnya ga terpakai karena upload dialog dibuat tutup bersamaan dengan parent dialognya */
+    >
+      <div className={classes.backdrop}>
         <Paper className={`${classes.paper} MuiPaper-elevation24`}>
           <Grid item>
             <Typography variant="h6" align="center" gutterBottom>
@@ -2159,7 +2445,9 @@ function CustomUploadDialog(props) {
               <Button
                 variant="contained"
                 className={classes.uploadFinishButton}
-                onClick={() => { handleUploadSuccess() }}
+                onClick={() => {
+                  handleUploadSuccess();
+                }}
               >
                 Selesai
               </Button>
@@ -2181,7 +2469,7 @@ function CustomDeleteDialog(props) {
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-between",
-      alignItems: "center"
+      alignItems: "center",
     },
     backdrop: {
       backgroundColor: "rgba(0,0,0,0.5)",
@@ -2192,7 +2480,7 @@ function CustomDeleteDialog(props) {
       alignItems: "center",
       overflow: "hidden",
       width: "100%",
-      height: "100%"
+      height: "100%",
     },
     dialogDeleteButton: {
       width: "125px",
@@ -2222,14 +2510,12 @@ function CustomDeleteDialog(props) {
     openDeleteDialog,
     handleCloseDeleteDialog,
     handleDelete,
-    eventName
+    eventName,
   } = props;
 
   return (
     <Fade in={openDeleteDialog}>
-      <div
-        className={classes.backdrop}
-      >
+      <div className={classes.backdrop}>
         <Paper className={`${classes.paper} MuiPaper-elevation24`}>
           <Grid item>
             <Typography variant="h6" align="center" gutterBottom>
@@ -2244,7 +2530,9 @@ function CustomDeleteDialog(props) {
           <Grid container spacing={2} justify="center" alignItems="center">
             <Grid item>
               <Button
-                onClick={() => { handleDelete() }}
+                onClick={() => {
+                  handleDelete();
+                }}
                 startIcon={<DeleteOutlinedIcon />}
                 className={classes.dialogDeleteButton}
               >
@@ -2253,7 +2541,9 @@ function CustomDeleteDialog(props) {
             </Grid>
             <Grid item>
               <Button
-                onClick={() => { handleCloseDeleteDialog() }}
+                onClick={() => {
+                  handleCloseDeleteDialog();
+                }}
                 startIcon={<CancelIcon />}
                 className={classes.dialogCancelButton}
               >
@@ -2269,14 +2559,26 @@ function CustomDeleteDialog(props) {
 
 function PaperComponent(props) {
   return (
-    <Draggable handle="#drag-handle" cancel={'[class*="MuiDialogContent-root"]'}>
+    <Draggable
+      handle="#drag-handle"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
       <Paper {...props} />
     </Draggable>
   );
 }
 
 function LampiranFile(props) {
-  const { file_id, filename, filetype, i, handleLampiranDelete, onPreviewFile, classes, eventDialogMode } = props;
+  const {
+    file_id,
+    filename,
+    filetype,
+    i,
+    handleLampiranDelete,
+    onPreviewFile,
+    classes,
+    eventDialogMode,
+  } = props;
 
   return (
     <Grid item xs={12}>
@@ -2329,17 +2631,13 @@ function LampiranFile(props) {
                   <Typography noWrap>
                     {filename.replace(Path.extname(filename), "")}
                   </Typography>
-                  <Typography>
-                    {Path.extname(filename)}
-                  </Typography>
+                  <Typography>{Path.extname(filename)}</Typography>
                 </div>
               </LightTooltip>
             }
             secondary={filetype}
           />
-          {eventDialogMode === "view"
-            ? null
-            :
+          {eventDialogMode === "view" ? null : (
             <LightTooltip title="Hapus Lampiran">
               <IconButton
                 size="small"
@@ -2351,7 +2649,7 @@ function LampiranFile(props) {
                 <DeleteIcon fontSize="small" />
               </IconButton>
             </LightTooltip>
-          }
+          )}
         </ListItem>
       </Paper>
     </Grid>
@@ -2369,7 +2667,7 @@ function Calendar(props) {
 
   const classes = useStyles();
   const theme = useTheme();
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 
   const {
     getSelectedClasses,
@@ -2394,7 +2692,9 @@ function Calendar(props) {
   const { selectedClasses, all_classes } = props.classesCollection;
   const { allEvents } = props.eventsCollection;
 
-  const [activeStartDate, setActiveStartDate] = React.useState(new Date(new Date().getFullYear(), new Date().getMonth())); // set ke awal bulan sekarang
+  const [activeStartDate, setActiveStartDate] = React.useState(
+    new Date(new Date().getFullYear(), new Date().getMonth())
+  ); // set ke awal bulan sekarang
 
   // EVENT DIALOG
   const [selectedEventInfo, setSelectedEventInfo] = React.useState({});
@@ -2408,12 +2708,22 @@ function Calendar(props) {
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
   // Calendar
-  const today = new Date()
+  const today = new Date();
   const [mode, setMode] = React.useState("Day");
   const [currentDate, setCurrentDate] = React.useState(today);
-  const [selectedDateMonthMode, setSelectedDateMonthMode] = React.useState(today);
-  const [selectedDateReactCalendar, setSelectedDateReactCalendar] = React.useState(today);
-  const [itemCount, setItemCount] = React.useState({ event: 0, ujian: 0, kuis: 0, task: 0 });
+  const [selectedDateMonthMode, setSelectedDateMonthMode] = React.useState(
+    today
+  );
+  const [
+    selectedDateReactCalendar,
+    setSelectedDateReactCalendar,
+  ] = React.useState(today);
+  const [itemCount, setItemCount] = React.useState({
+    event: 0,
+    ujian: 0,
+    kuis: 0,
+    task: 0,
+  });
 
   const [classCheckboxState, setClassCheckboxState] = React.useState({});
 
@@ -2427,7 +2737,10 @@ function Calendar(props) {
     [new Date(2021, 2, 14)]: ["Hari Suci Nyepi Tahun Baru Saka 1943"],
     [new Date(2021, 3, 2)]: ["Wafat Isa Al Masih"],
     [new Date(2021, 4, 1)]: ["Hari Buruh Internasional"],
-    [new Date(2021, 4, 13)]: ["Kenaikan Isa Al Masih", "Hari Raya Idul Fitri 1442 Hijriah"],
+    [new Date(2021, 4, 13)]: [
+      "Kenaikan Isa Al Masih",
+      "Hari Raya Idul Fitri 1442 Hijriah",
+    ],
     [new Date(2021, 4, 14)]: ["Hari Raya Idul Fitri 1442 Hijriah"],
     [new Date(2021, 4, 26)]: ["Hari Raya Waisak 2565"],
     [new Date(2021, 5, 1)]: ["Hari Lahir Pancasila"],
@@ -2436,7 +2749,7 @@ function Calendar(props) {
     [new Date(2021, 7, 17)]: ["Hari Kemerdekaan Republik Indonesia"],
     [new Date(2021, 9, 19)]: ["Maulid Nabi Muhammad SAW"],
     [new Date(2021, 11, 25)]: ["Hari Raya Natal"],
-  }
+  };
 
   const [tileRows, setTileRows] = React.useState([]);
   const [maxTreeHeight, setMaxTreeHeight] = React.useState(0);
@@ -2455,7 +2768,12 @@ function Calendar(props) {
     getAllSubjects("map");
 
     if (role === "Teacher") {
-      setClassCheckboxState(Object.assign({}, ...user.class_teached.map((class_id) => ({ [class_id]: true }))));
+      setClassCheckboxState(
+        Object.assign(
+          {},
+          ...user.class_teached.map((class_id) => ({ [class_id]: true }))
+        )
+      );
     }
   }, []);
 
@@ -2469,23 +2787,44 @@ function Calendar(props) {
         event: countEvent(start, end),
         kuis: countAssessment(start, end, "Kuis"),
         ujian: countAssessment(start, end, "Ujian"),
-        task: countTask(start, end)
+        task: countTask(start, end),
       });
     } else if (mode === "Month") {
-      let start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-      let dayCount = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-      let end = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayCount, 23, 59, 59, 999);
+      let start = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        1
+      );
+      let dayCount = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 1,
+        0
+      ).getDate();
+      let end = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        dayCount,
+        23,
+        59,
+        59,
+        999
+      );
       setItemCount({
         event: countEvent(start, end),
         kuis: countAssessment(start, end, "Kuis"),
         ujian: countAssessment(start, end, "Ujian"),
-        task: countTask(start, end)
+        task: countTask(start, end),
       });
     }
   }, [currentDate, mode]);
 
   React.useEffect(() => {
-    if (tasksCollection && Array.isArray(tasksCollection) && all_assessments && allEvents) {
+    if (
+      tasksCollection &&
+      Array.isArray(tasksCollection) &&
+      all_assessments &&
+      allEvents
+    ) {
       generateTiles(currentDate);
 
       if (mode === "Day") {
@@ -2497,17 +2836,33 @@ function Calendar(props) {
           event: countEvent(start, end),
           kuis: countAssessment(start, end, "Kuis"),
           ujian: countAssessment(start, end, "Ujian"),
-          task: countTask(start, end)
+          task: countTask(start, end),
         });
       } else if (mode === "Month") {
-        let start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-        let dayCount = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-        let end = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayCount, 23, 59, 59, 999);
+        let start = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          1
+        );
+        let dayCount = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1,
+          0
+        ).getDate();
+        let end = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          dayCount,
+          23,
+          59,
+          59,
+          999
+        );
         setItemCount({
           event: countEvent(start, end),
           kuis: countAssessment(start, end, "Kuis"),
           ujian: countAssessment(start, end, "Ujian"),
-          task: countTask(start, end)
+          task: countTask(start, end),
         });
       }
     }
@@ -2587,25 +2942,40 @@ function Calendar(props) {
         } else if (!end_at_current && start_at_current) {
           end_date = currentDayEnd;
 
-          if (getMillisecondDiff(start_date, currentDayEnd) < MINIMUM_DURATION_MILLISECOND) {
+          if (
+            getMillisecondDiff(start_date, currentDayEnd) <
+            MINIMUM_DURATION_MILLISECOND
+          ) {
             end_date = addTime(start_date, MINIMUM_DURATION_MILLISECOND);
             // titik paling bawah tile ini akan ada di bawah 23:59
           }
         } else if (end_at_current && !start_at_current) {
           start_date = currentDayStart;
 
-          if (getMillisecondDiff(currentDayStart, end_date) < MINIMUM_DURATION_MILLISECOND) {
+          if (
+            getMillisecondDiff(currentDayStart, end_date) <
+            MINIMUM_DURATION_MILLISECOND
+          ) {
             start_date = substractTime(end_date, MINIMUM_DURATION_MILLISECOND);
             // titik paling atas tile ini akan ada di atas 00:00
           }
         } else {
-          if (getMillisecondDiff(start_date, end_date) < MINIMUM_DURATION_MILLISECOND) {
+          if (
+            getMillisecondDiff(start_date, end_date) <
+            MINIMUM_DURATION_MILLISECOND
+          ) {
             end_date = addTime(start_date, MINIMUM_DURATION_MILLISECOND);
           }
         }
       } // tugas akan dibiarkan overflow ke atas 00:00 atau ke bawah 23:59
 
-      return { ...elm, start_date, end_date, start_date_epoch: start_date.getTime(), end_date_epoch: end_date.getTime() }
+      return {
+        ...elm,
+        start_date,
+        end_date,
+        start_date_epoch: start_date.getTime(),
+        end_date_epoch: end_date.getTime(),
+      };
     });
 
     // sort data. data yang start date-nya lebih dulu akan ditempatkan di awal array (epoch asc)
@@ -2636,7 +3006,14 @@ function Calendar(props) {
         } else {
           // jika sudah ada minimal 1 tile yang menempati kolom ini
 
-          if (!isIntersectExclusive(lastColElement[col].start_date_epoch, lastColElement[col].end_date_epoch, currentData.start_date_epoch, currentData.end_date_epoch)) {
+          if (
+            !isIntersectExclusive(
+              lastColElement[col].start_date_epoch,
+              lastColElement[col].end_date_epoch,
+              currentData.start_date_epoch,
+              currentData.end_date_epoch
+            )
+          ) {
             // jika tile ini tidak intersect dengan tile terakhir pada kolom ini
             // letakan tile di kolom ini
             lastColElement[col] = currentData;
@@ -2694,7 +3071,15 @@ function Calendar(props) {
                 break;
               }
 
-              if (isIntersectExclusive(tile.start_date_epoch, tile.end_date_epoch, data[i].start_date_epoch, data[i].end_date_epoch) && tile.width) {
+              if (
+                isIntersectExclusive(
+                  tile.start_date_epoch,
+                  tile.end_date_epoch,
+                  data[i].start_date_epoch,
+                  data[i].end_date_epoch
+                ) &&
+                tile.width
+              ) {
                 // jika root ini intersect dengan salah satu node dari tree sebelumnya, gunakan lebar tile pada tree tersebut
                 width = tile.width;
                 break;
@@ -2709,7 +3094,8 @@ function Calendar(props) {
 
           // treeHeight ini akan dipakai untuk menghitung width jika root ini
           // tidak intersect dengan salah satu node dari tree sebelumnya
-          highestTreeWidth = width ?? (100 / ((treeHeight > 3 ? 3 : treeHeight) + 1));
+          highestTreeWidth =
+            width ?? 100 / ((treeHeight > 3 ? 3 : treeHeight) + 1);
         }
 
         // set lebar semua tile di tree ini
@@ -2717,7 +3103,8 @@ function Calendar(props) {
         subtree.forEach((value) => {
           for (let j = 0; j <= data.length - 1; j++) {
             if (data[j]._id === value) {
-              data[j].width = width ?? (100 / ((treeHeight > 3 ? 3 : treeHeight) + 1));
+              data[j].width =
+                width ?? 100 / ((treeHeight > 3 ? 3 : treeHeight) + 1);
               break;
             }
           }
@@ -2761,14 +3148,23 @@ function Calendar(props) {
         break;
       }
 
-      if (isIntersectExclusive(rightTiles[i].start_date_epoch, rightTiles[i].end_date_epoch, currentNode.start_date_epoch, currentNode.end_date_epoch)) {
+      if (
+        isIntersectExclusive(
+          rightTiles[i].start_date_epoch,
+          rightTiles[i].end_date_epoch,
+          currentNode.start_date_epoch,
+          currentNode.end_date_epoch
+        )
+      ) {
         intersectNodes.push(rightTiles[i]);
       }
     }
     if (intersectNodes.length === 0) {
       return currentCol;
     }
-    let findMax = intersectNodes.map((node) => getTreeHeight(data, columns, currentCol + 1, node))
+    let findMax = intersectNodes.map((node) =>
+      getTreeHeight(data, columns, currentCol + 1, node)
+    );
     return Math.max(...findMax);
   }
 
@@ -2784,14 +3180,23 @@ function Calendar(props) {
         break;
       }
 
-      if (isIntersectExclusive(rightTiles[i].start_date_epoch, rightTiles[i].end_date_epoch, currentNode.start_date_epoch, currentNode.end_date_epoch)) {
+      if (
+        isIntersectExclusive(
+          rightTiles[i].start_date_epoch,
+          rightTiles[i].end_date_epoch,
+          currentNode.start_date_epoch,
+          currentNode.end_date_epoch
+        )
+      ) {
         intersectNodes.push(rightTiles[i]);
       }
     }
     if (intersectNodes.length === 0) {
       return [currentNode._id];
     }
-    let arrayOfIdsArray = intersectNodes.map((node) => getTree(data, columns, currentCol + 1, node))
+    let arrayOfIdsArray = intersectNodes.map((node) =>
+      getTree(data, columns, currentCol + 1, node)
+    );
     let res = [currentNode._id];
     for (let arrayOfId of arrayOfIdsArray) {
       res = res.concat(arrayOfId);
@@ -2807,11 +3212,15 @@ function Calendar(props) {
   }
 
   const handleNextMonth = () => {
-    setActiveStartDate(new Date(activeStartDate.setMonth(activeStartDate.getMonth() + 1)));
+    setActiveStartDate(
+      new Date(activeStartDate.setMonth(activeStartDate.getMonth() + 1))
+    );
   };
 
   const handlePreviousMonth = () => {
-    setActiveStartDate(new Date(activeStartDate.setMonth(activeStartDate.getMonth() - 1)));
+    setActiveStartDate(
+      new Date(activeStartDate.setMonth(activeStartDate.getMonth() - 1))
+    );
   };
 
   const handleTileContent = (selectedDate) => {
@@ -2819,15 +3228,12 @@ function Calendar(props) {
     // pengecekan ini hanya dilakukan ketika selectedDate ada
     if (selectedDate) {
       return function ({ activeStartDate, date, view }) {
-        if (view === 'month') {
-
+        if (view === "month") {
           // jika tanggal yang sedang dicek adalah tanggal hari ini
           if (isSameDate(new Date(), date)) {
             return (
               <div className={classes.todayTile}>
-                <abbr>
-                  {date.getDate()}
-                </abbr>
+                <abbr>{date.getDate()}</abbr>
               </div>
             );
           }
@@ -2836,9 +3242,7 @@ function Calendar(props) {
           if (isSameDate(selectedDate, date)) {
             return (
               <div className={classes.selectedTile}>
-                <abbr>
-                  {date.getDate()}
-                </abbr>
+                <abbr>{date.getDate()}</abbr>
               </div>
             );
           }
@@ -2848,59 +3252,52 @@ function Calendar(props) {
             if (isSameDate(new Date(holidayKey), date)) {
               return (
                 <div className={classes.holidayTile}>
-                  <abbr>
-                    {date.getDate()}
-                  </abbr>
+                  <abbr>{date.getDate()}</abbr>
                 </div>
               );
             }
           }
 
-          if (date.getDay() === 6 && date.getMonth() == activeStartDate.getMonth()) {
+          if (
+            date.getDay() === 6 &&
+            date.getMonth() == activeStartDate.getMonth()
+          ) {
             return (
-              <div style={{color: "black"}} className={classes.notSelectedTile}>
-                <abbr>
-                  {date.getDate()}
-                </abbr>
+              <div
+                style={{ color: "black" }}
+                className={classes.notSelectedTile}
+              >
+                <abbr>{date.getDate()}</abbr>
               </div>
             );
           }
-
         }
         return (
           <div className={classes.notSelectedTile}>
-            <abbr>
-              {date.getDate()}
-            </abbr>
+            <abbr>{date.getDate()}</abbr>
           </div>
         );
-      }
+      };
     } else {
       return function ({ activeStartDate, date, view }) {
-        if (view === 'month') {
-
+        if (view === "month") {
           // jika tanggal yang sedang dicek adalah tanggal hari ini
           if (isSameDate(new Date(), date)) {
             return (
               <div className={classes.todayTile}>
-                <abbr>
-                  {date.getDate()}
-                </abbr>
+                <abbr>{date.getDate()}</abbr>
               </div>
             );
           }
 
           // tidak mengecek now === selectedDate
-
         }
         return (
           <div className={classes.notSelectedTile}>
-            <abbr>
-              {date.getDate()}
-            </abbr>
+            <abbr>{date.getDate()}</abbr>
           </div>
         );
-      }
+      };
     }
   };
 
@@ -2927,39 +3324,39 @@ function Calendar(props) {
     setEventDialogMode("create");
     handleUnsetUnmountEventDialog();
     setOpenEventDialog(true);
-  }
+  };
   const handleOpenEditDialog = () => {
     setEventDialogMode("edit");
     setOpenEventDialog(true);
-  }
+  };
 
   const handleOpenViewDialog = (eventInfo) => {
     setEventDialogMode("view");
     handleUnsetUnmountEventDialog();
     setOpenEventDialog(true);
     setSelectedEventInfo(eventInfo);
-  }
+  };
 
   const handleCloseEventDialog = () => {
     setOpenEventDialog(false);
-  }
+  };
 
   const handleSetUnmountEventDialog = () => {
     setUnmountEventDialog(true);
-  }
+  };
 
   const handleUnsetUnmountEventDialog = () => {
     setUnmountEventDialog(false);
-  }
+  };
 
-  function listTasks(date, mainCounter=null, handleChangeCounter=null) {
+  function listTasks(date, mainCounter = null, handleChangeCounter = null) {
     let result = [];
     let localCounter = mainCounter;
     let tasksByClass = [];
     if (Boolean(tasksCollection.length)) {
       if (user.role === "Student") {
         tasksCollection.map((task) => {
-          if(localCounter < 3) {
+          if (localCounter < 3) {
             let class_assigned = task.class_assigned;
             for (var i = 0; i < class_assigned.length; i++) {
               if (class_assigned[i] === user.kelas) {
@@ -2970,27 +3367,25 @@ function Calendar(props) {
           return tasksByClass;
         });
       } else if (user.role === "Teacher") {
-
       }
     }
 
     tasksByClass.forEach((task) => {
-      let tempSelectedDate = new Date(moment(date)
-      .locale("id"));
-      let tempDeadlineDate = new Date(moment(task.deadline)
-      .locale("id")
-      );
+      let tempSelectedDate = new Date(moment(date).locale("id"));
+      let tempDeadlineDate = new Date(moment(task.deadline).locale("id"));
 
       let flag = true;
       let teacher_name;
 
       // Untuk sekarang yang ditampilkan adalah tugas dengan deadline pada tanggal yang sama
       // dengan selectedDate (tidak memperhitungkan jam, menit, detik)
-      if(tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
-      tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-      tempSelectedDate.getYear() === tempDeadlineDate.getYear()) {
-        if(mode === "Month") {
-          if(localCounter < 3) {
+      if (
+        tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
+        tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+        tempSelectedDate.getYear() === tempDeadlineDate.getYear()
+      ) {
+        if (mode === "Month") {
+          if (localCounter < 3) {
             for (let i = 0; i < all_user_files.length; i++) {
               if (all_user_files[i].for_task_object === task._id) {
                 flag = false;
@@ -3016,9 +3411,8 @@ function Calendar(props) {
               });
             }
           }
-          localCounter ++;
-        }
-        else {
+          localCounter++;
+        } else {
           for (let i = 0; i < all_user_files.length; i++) {
             if (all_user_files[i].for_task_object === task._id) {
               flag = false;
@@ -3051,32 +3445,40 @@ function Calendar(props) {
     return result;
   }
 
-  function listTasksTeacher(date, mainCounter=null, handleChangeCounter=null) {
-    if(classCheckboxState) {
+  function listTasksTeacher(
+    date,
+    mainCounter = null,
+    handleChangeCounter = null
+  ) {
+    if (classCheckboxState) {
       let tempSelectedDate = date;
       let localCounter = mainCounter;
       let result = [];
-      let classCheckList = Object.entries(classCheckboxState)
-      let selectedClassCheckList = []
+      let classCheckList = Object.entries(classCheckboxState);
+      let selectedClassCheckList = [];
       for (let classItem of classCheckList) {
-        if(classItem[1]) {
+        if (classItem[1]) {
           selectedClassCheckList.push(classItem[0]);
         }
       }
       for (let i = 0; i < tasksCollection.length; i++) {
-        let tempDeadlineDate = new Date(moment(tasksCollection[i].deadline).locale("id"));
+        let tempDeadlineDate = new Date(
+          moment(tasksCollection[i].deadline).locale("id")
+        );
         let classFound = false;
-        for(let classId of tasksCollection[i].class_assigned) {
-          if(selectedClassCheckList.includes(classId)) {
+        for (let classId of tasksCollection[i].class_assigned) {
+          if (selectedClassCheckList.includes(classId)) {
             classFound = true;
             break;
           }
         }
-        if (tasksCollection[i].person_in_charge_id === user._id &&
+        if (
+          tasksCollection[i].person_in_charge_id === user._id &&
           tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
           tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
           tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
-          classFound) {
+          classFound
+        ) {
           let number_students_assigned = 0;
           for (let j = 0; j < all_students.length; j++) {
             if (
@@ -3089,8 +3491,8 @@ function Calendar(props) {
             Object.values(tasksCollection[i].grades).length !==
             number_students_assigned
           ) {
-            if(mode === "Month") {
-              if(localCounter < 3) {
+            if (mode === "Month") {
+              if (localCounter < 3) {
                 let task = tasksCollection[i];
                 result.push({
                   _id: task._id,
@@ -3100,9 +3502,8 @@ function Calendar(props) {
                   createdAt: task.createdAt,
                 });
               }
-              localCounter ++;
-            }
-            else {
+              localCounter++;
+            } else {
               let task = tasksCollection[i];
               result.push({
                 _id: task._id,
@@ -3121,23 +3522,29 @@ function Calendar(props) {
     }
   }
 
-  function listTasksAdmin(date, mainCounter=null, handleChangeCounter=null) {
-    if(classCheckboxState) {
+  function listTasksAdmin(
+    date,
+    mainCounter = null,
+    handleChangeCounter = null
+  ) {
+    if (classCheckboxState) {
       let tempSelectedDate = date;
       let localCounter = mainCounter;
       let result = [];
-      let classCheckList = Object.entries(classCheckboxState)
-      let selectedClassCheckList = []
+      let classCheckList = Object.entries(classCheckboxState);
+      let selectedClassCheckList = [];
       for (let classItem of classCheckList) {
-        if(classItem[1]) {
+        if (classItem[1]) {
           selectedClassCheckList.push(classItem[0]);
         }
       }
       for (let i = 0; i < tasksCollection.length; i++) {
-        let tempDeadlineDate = new Date(moment(tasksCollection[i].deadline).locale("id"));
+        let tempDeadlineDate = new Date(
+          moment(tasksCollection[i].deadline).locale("id")
+        );
         let classFound = false;
-        for(let classId of tasksCollection[i].class_assigned) {
-          if(selectedClassCheckList.includes(classId)) {
+        for (let classId of tasksCollection[i].class_assigned) {
+          if (selectedClassCheckList.includes(classId)) {
             classFound = true;
             break;
           }
@@ -3146,7 +3553,8 @@ function Calendar(props) {
           tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
           tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
           tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
-          classFound) {
+          classFound
+        ) {
           let number_students_assigned = 0;
           for (let j = 0; j < all_students.length; j++) {
             if (
@@ -3159,8 +3567,8 @@ function Calendar(props) {
             Object.values(tasksCollection[i].grades).length !==
             number_students_assigned
           ) {
-            if(mode === "Month") {
-              if(localCounter < 3) {
+            if (mode === "Month") {
+              if (localCounter < 3) {
                 let task = tasksCollection[i];
                 result.push({
                   _id: task._id,
@@ -3170,9 +3578,8 @@ function Calendar(props) {
                   createdAt: task.createdAt,
                 });
               }
-              localCounter ++;
-            }
-            else {
+              localCounter++;
+            } else {
               let task = tasksCollection[i];
               result.push({
                 _id: task._id,
@@ -3196,7 +3603,7 @@ function Calendar(props) {
     let category = null;
     let subject = {};
     let AssessmentsList = [];
-    let TeacherList = []
+    let TeacherList = [];
     let result = [];
 
     if (Boolean(all_assessments.length)) {
@@ -3212,7 +3619,8 @@ function Calendar(props) {
             getDayStart(tempSelectedDate).getTime(),
             getDayEnd(tempSelectedDate).getTime()
           ) &&
-        class_assigned.indexOf(classId) !== -1) {
+          class_assigned.indexOf(classId) !== -1
+        ) {
           for (let j = 0; j < all_teachers.length; j++) {
             if (all_teachers[j]._id === assessment.author_id) {
               TeacherList.push(all_teachers[j].name);
@@ -3228,34 +3636,32 @@ function Calendar(props) {
           if (
             (!category ||
               (category === "subject" && assessment.subject === subject._id)) &&
-
             assessment.type === "Kuis" &&
             assessment.posted
           ) {
-              result.push({
-                _id: assessment._id,
-                start_date: assessment.start_date,
-                end_date: assessment.end_date,
-                type: type,
-                data: assessment,
-              });
+            result.push({
+              _id: assessment._id,
+              start_date: assessment.start_date,
+              end_date: assessment.end_date,
+              type: type,
+              data: assessment,
+            });
           }
         }
         if (type === "Ujian") {
           if (
             (!category ||
               (category === "subject" && assessment.subject === subject._id)) &&
-
             assessment.type === "Ujian" &&
             assessment.posted
           ) {
-              result.push({
-                _id: assessment._id,
-                start_date: assessment.start_date,
-                end_date: assessment.end_date,
-                type: type,
-                data: assessment,
-              });
+            result.push({
+              _id: assessment._id,
+              start_date: assessment.start_date,
+              end_date: assessment.end_date,
+              type: type,
+              data: assessment,
+            });
           }
         }
       }
@@ -3263,16 +3669,21 @@ function Calendar(props) {
     return result;
   }
 
-  function listAssessmentsTeacher(tempSelectedDate, assessmentType, mainCounter=null, handleChangeCounter=null) {
+  function listAssessmentsTeacher(
+    tempSelectedDate,
+    assessmentType,
+    mainCounter = null,
+    handleChangeCounter = null
+  ) {
     // menampilkan assessment jika ada submission yang belum selesai dinilai
-    if(classCheckboxState) {
+    if (classCheckboxState) {
       let result = [];
       let lowerCaseType = assessmentType === "Kuis" ? "kuis" : "ujian";
       let localCounter = mainCounter;
-      let classCheckList = Object.entries(classCheckboxState)
-      let selectedClassCheckList = []
+      let classCheckList = Object.entries(classCheckboxState);
+      let selectedClassCheckList = [];
       for (let classItem of classCheckList) {
-        if(classItem[1]) {
+        if (classItem[1]) {
           selectedClassCheckList.push(classItem[0]);
         }
       }
@@ -3282,9 +3693,12 @@ function Calendar(props) {
         console.log(assessment);
         // let tempDeadlineDate = new Date(moment(assessment.start_date).locale("id"));
         let classFound = false;
-        if (assessment.type === assessmentType && assessment.author_id === user._id) {
-          for(let classId of all_assessments[i].class_assigned) {
-            if(selectedClassCheckList.includes(classId)) {
+        if (
+          assessment.type === assessmentType &&
+          assessment.author_id === user._id
+        ) {
+          for (let classId of all_assessments[i].class_assigned) {
+            if (selectedClassCheckList.includes(classId)) {
               classFound = true;
               break;
             }
@@ -3296,9 +3710,10 @@ function Calendar(props) {
               getDayStart(tempSelectedDate).getTime(),
               getDayEnd(tempSelectedDate).getTime()
             ) &&
-          classFound) {
-            if(mode === "Month") {
-              if(localCounter < 3) {
+            classFound
+          ) {
+            if (mode === "Month") {
+              if (localCounter < 3) {
                 result.push({
                   _id: assessment._id,
                   title: assessment.name,
@@ -3309,9 +3724,8 @@ function Calendar(props) {
                   end_date: assessment.end_date,
                 });
               }
-              localCounter ++;
-            }
-            else {
+              localCounter++;
+            } else {
               result.push({
                 _id: assessment._id,
                 start_date: assessment.start_date,
@@ -3323,7 +3737,7 @@ function Calendar(props) {
           }
         }
       }
-      if(mode === "Month") {
+      if (mode === "Month") {
         handleChangeCounter(localCounter);
         return result.map((row) => {
           return (
@@ -3338,21 +3752,25 @@ function Calendar(props) {
             </Link>
           );
         });
-      }
-      else return result;
+      } else return result;
     }
   }
 
-  function listAssessmentsAdmin(tempSelectedDate, assessmentType, mainCounter, handleChangeCounter) {
+  function listAssessmentsAdmin(
+    tempSelectedDate,
+    assessmentType,
+    mainCounter,
+    handleChangeCounter
+  ) {
     // menampilkan assessment jika ada submission yang belum selesai dinilai
-    if(classCheckboxState) {
+    if (classCheckboxState) {
       let result = [];
       let lowerCaseType = assessmentType === "Kuis" ? "kuis" : "ujian";
       let localCounter = mainCounter;
-      let classCheckList = Object.entries(classCheckboxState)
-      let selectedClassCheckList = []
+      let classCheckList = Object.entries(classCheckboxState);
+      let selectedClassCheckList = [];
       for (let classItem of classCheckList) {
-        if(classItem[1]) {
+        if (classItem[1]) {
           selectedClassCheckList.push(classItem[0]);
         }
       }
@@ -3361,8 +3779,8 @@ function Calendar(props) {
         let assessment = all_assessments[i];
         let classFound = false;
         if (assessment.type === assessmentType) {
-          for(let classId of all_assessments[i].class_assigned) {
-            if(selectedClassCheckList.includes(classId)) {
+          for (let classId of all_assessments[i].class_assigned) {
+            if (selectedClassCheckList.includes(classId)) {
               classFound = true;
               break;
             }
@@ -3374,9 +3792,10 @@ function Calendar(props) {
               getDayStart(tempSelectedDate).getTime(),
               getDayEnd(tempSelectedDate).getTime()
             ) &&
-          classFound) {
-            if(mode === "Month") {
-              if(localCounter < 3) {
+            classFound
+          ) {
+            if (mode === "Month") {
+              if (localCounter < 3) {
                 result.push({
                   _id: assessment._id,
                   title: assessment.name,
@@ -3387,9 +3806,8 @@ function Calendar(props) {
                   end_date: assessment.end_date,
                 });
               }
-              localCounter ++;
-            }
-            else {
+              localCounter++;
+            } else {
               result.push({
                 _id: assessment._id,
                 start_date: assessment.start_date,
@@ -3401,7 +3819,7 @@ function Calendar(props) {
           }
         }
       }
-      if(mode === "Month") {
+      if (mode === "Month") {
         handleChangeCounter(localCounter);
         return result.map((row) => {
           return (
@@ -3416,13 +3834,12 @@ function Calendar(props) {
             </Link>
           );
         });
-      }
-      else return result;
+      } else return result;
     }
   }
 
   const listEvent = (date, mainCounter, handleChangeCounter) => {
-    let result = []
+    let result = [];
     let filteredEvents = allEvents.filter((eventInfo) => {
       let start_date = new Date(eventInfo.start_date);
       let end_date = new Date(eventInfo.end_date);
@@ -3432,58 +3849,7 @@ function Calendar(props) {
           end_date.getTime(),
           getDayStart(date).getTime(),
           getDayEnd(date).getTime()
-        ) &&
-        eventInfo.to.includes(role)
-      );
-    });
-    let localCounter = mainCounter;
-    filteredEvents.forEach((eventInfo) => {
-      if(mode === "Month") {
-        if(localCounter < 3) {
-          result.push(
-            <Typography
-              variant="body2"
-              className={classes.monthAgendaChip}
-              align="left"
-              onClick={() => {
-                handleOpenViewDialog(eventInfo)
-              }}
-            >
-              {eventInfo.name}
-            </Typography>
-          )
-        }
-        localCounter ++;
-      }
-      else {
-        result.push({
-          _id: eventInfo._id,
-          start_date: eventInfo.start_date,
-          end_date: eventInfo.end_date,
-          type: "Event",
-          data: eventInfo,
-        })
-      }
-    })
-    if(mode === "Month") {
-      handleChangeCounter(localCounter);
-      return {result, count: result.length};
-    }
-    else return result;
-  }
-
-  const listEventAdmin = (date, mainCounter, handleChangeCounter) => {
-    let result = []
-    let filteredEvents = allEvents.filter((eventInfo) => {
-      let start_date = new Date(eventInfo.start_date);
-      let end_date = new Date(eventInfo.end_date);
-      return (
-        isIntersectInclusive(
-          start_date.getTime(),
-          end_date.getTime(),
-          getDayStart(date).getTime(),
-          getDayEnd(date).getTime()
-        ) && (eventInfo.author_id === user._id || eventInfo.to.includes("Admin"))
+        ) && eventInfo.to.includes(role)
       );
     });
     let localCounter = mainCounter;
@@ -3496,31 +3862,78 @@ function Calendar(props) {
               className={classes.monthAgendaChip}
               align="left"
               onClick={() => {
-                handleOpenViewDialog(eventInfo)
+                handleOpenViewDialog(eventInfo);
               }}
             >
               {eventInfo.name}
             </Typography>
-          )
+          );
         }
         localCounter++;
-      }
-      else {
+      } else {
         result.push({
           _id: eventInfo._id,
           start_date: eventInfo.start_date,
           end_date: eventInfo.end_date,
           type: "Event",
           data: eventInfo,
-        })
+        });
       }
-    })
+    });
     if (mode === "Month") {
       handleChangeCounter(localCounter);
       return { result, count: result.length };
-    }
-    else return result;
-  }
+    } else return result;
+  };
+
+  const listEventAdmin = (date, mainCounter, handleChangeCounter) => {
+    let result = [];
+    let filteredEvents = allEvents.filter((eventInfo) => {
+      let start_date = new Date(eventInfo.start_date);
+      let end_date = new Date(eventInfo.end_date);
+      return (
+        isIntersectInclusive(
+          start_date.getTime(),
+          end_date.getTime(),
+          getDayStart(date).getTime(),
+          getDayEnd(date).getTime()
+        ) &&
+        (eventInfo.author_id === user._id || eventInfo.to.includes("Admin"))
+      );
+    });
+    let localCounter = mainCounter;
+    filteredEvents.forEach((eventInfo) => {
+      if (mode === "Month") {
+        if (localCounter < 3) {
+          result.push(
+            <Typography
+              variant="body2"
+              className={classes.monthAgendaChip}
+              align="left"
+              onClick={() => {
+                handleOpenViewDialog(eventInfo);
+              }}
+            >
+              {eventInfo.name}
+            </Typography>
+          );
+        }
+        localCounter++;
+      } else {
+        result.push({
+          _id: eventInfo._id,
+          start_date: eventInfo.start_date,
+          end_date: eventInfo.end_date,
+          type: "Event",
+          data: eventInfo,
+        });
+      }
+    });
+    if (mode === "Month") {
+      handleChangeCounter(localCounter);
+      return { result, count: result.length };
+    } else return result;
+  };
 
   const handleChangeDay = (direction) => {
     if (direction === "now") {
@@ -3530,63 +3943,101 @@ function Calendar(props) {
     } else {
       setCurrentDate(new Date(currentDate.getTime() - 1000 * 60 * 60 * 24));
     }
-  }
+  };
 
   const handleChangeMode = (event) => {
     if (event.target.value === "Day") {
       setSelectedDateReactCalendar(currentDate);
-      if (currentDate.getMonth() !== activeStartDate.getMonth() || currentDate.getFullYear() !== activeStartDate.getFullYear()) {
-        setActiveStartDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0));
+      if (
+        currentDate.getMonth() !== activeStartDate.getMonth() ||
+        currentDate.getFullYear() !== activeStartDate.getFullYear()
+      ) {
+        setActiveStartDate(
+          new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            1,
+            0,
+            0,
+            0,
+            0
+          )
+        );
       }
     }
     setMode(event.target.value);
-  }
+  };
 
   const handleOpenDayMode = (date) => {
     setSelectedDateMonthMode(date);
     setCurrentDate(date);
     setMode("Day");
-  }
+  };
 
   const handleClickReactCalendar = (date) => {
     setSelectedDateReactCalendar(date);
-    if (date.getFullYear() !== activeStartDate.getFullYear() || date.getMonth() !== activeStartDate.getMonth()) {
-      setActiveStartDate(new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0));
+    if (
+      date.getFullYear() !== activeStartDate.getFullYear() ||
+      date.getMonth() !== activeStartDate.getMonth()
+    ) {
+      setActiveStartDate(
+        new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0)
+      );
     }
     setCurrentDate(date);
     setMode("Day");
-  }
+  };
 
   const isSameDate = (date_1, date_2) => {
-    return date_1.getDate() === date_2.getDate() && date_1.getMonth() === date_2.getMonth() && date_1.getYear() === date_2.getYear()
-  }
+    return (
+      date_1.getDate() === date_2.getDate() &&
+      date_1.getMonth() === date_2.getMonth() &&
+      date_1.getYear() === date_2.getYear()
+    );
+  };
 
   const timeRows = [
-    '00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00',
-    '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00',
-    '20:00', '21:00', '22:00', '23:00'
-  ]
+    "00:00",
+    "01:00",
+    "02:00",
+    "03:00",
+    "04:00",
+    "05:00",
+    "06:00",
+    "07:00",
+    "08:00",
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+    "18:00",
+    "19:00",
+    "20:00",
+    "21:00",
+    "22:00",
+    "23:00",
+  ];
 
-  const dayNames = [
-    'SEN', 'SEL', 'RAB', 'KAM', 'JUM', 'SAB', 'MIN'
-  ]
+  const dayNames = ["SEN", "SEL", "RAB", "KAM", "JUM", "SAB", "MIN"];
 
   function getMaxDate(month, year) {
     // Index dimulai dari 1
     // 1: Januari
     let months_31 = [1, 3, 5, 7, 8, 10, 12];
     let months_30 = [4, 6, 9, 11];
-    if(months_31.includes(month)) {
+    if (months_31.includes(month)) {
       return 31;
-    }
-    else if(months_30.includes(month)) {
+    } else if (months_30.includes(month)) {
       return 30;
-    }
-    else {
-      if(((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)) {
+    } else {
+      if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
         return 29;
-      }
-      else {
+      } else {
         return 28;
       }
     }
@@ -3595,17 +4046,18 @@ function Calendar(props) {
   const countEvent = (start, end) => {
     let count = 0;
     if (allEvents) {
-      count = allEvents.filter((eventInfo) => (
-        isIntersectInclusive(
-          new Date(eventInfo.start_date).getTime(),
-          new Date(eventInfo.end_date).getTime(),
-          start.getTime(),
-          end.getTime()
-        ) && eventInfo.to.includes(role)
-      )).length;
+      count = allEvents.filter(
+        (eventInfo) =>
+          isIntersectInclusive(
+            new Date(eventInfo.start_date).getTime(),
+            new Date(eventInfo.end_date).getTime(),
+            start.getTime(),
+            end.getTime()
+          ) && eventInfo.to.includes(role)
+      ).length;
     }
     return count;
-  }
+  };
 
   const countTask = (start, end) => {
     let count = 0;
@@ -3614,151 +4066,179 @@ function Calendar(props) {
       let endEpoch = end.getTime();
 
       if (role === "Student") {
-        count = tasksCollection.filter((taskInfo) => (
-          taskInfo.class_assigned.includes(user.kelas) &&
-          new Date(taskInfo.deadline).getTime() >= startEpoch &&
-          new Date(taskInfo.deadline).getTime() <= endEpoch
-        )).length;
+        count = tasksCollection.filter(
+          (taskInfo) =>
+            taskInfo.class_assigned.includes(user.kelas) &&
+            new Date(taskInfo.deadline).getTime() >= startEpoch &&
+            new Date(taskInfo.deadline).getTime() <= endEpoch
+        ).length;
       } else if (role === "Teacher") {
-        count = tasksCollection.filter((taskInfo) => (
-          taskInfo.person_in_charge_id === user._id &&
-          (Object.keys(taskInfo.grades).length !== all_students.reduce((studentCount, studentInfo) => (
-            studentCount + (taskInfo.class_assigned.includes(studentInfo.kelas) ? 1 : 0)
-          ), 0)) &&
-          new Date(taskInfo.deadline).getTime() >= startEpoch &&
-          new Date(taskInfo.deadline).getTime() <= endEpoch
-        )).length;
-      } else { // admin
-        count = tasksCollection.filter((taskInfo) => (
-          (Object.keys(taskInfo.grades).length !== all_students.reduce((studentCount, studentInfo) => (
-            studentCount + (taskInfo.class_assigned.includes(studentInfo.kelas) ? 1 : 0)
-          ), 0)) &&
-          new Date(taskInfo.deadline).getTime() >= startEpoch &&
-          new Date(taskInfo.deadline).getTime() <= endEpoch
-        )).length;
+        count = tasksCollection.filter(
+          (taskInfo) =>
+            taskInfo.person_in_charge_id === user._id &&
+            Object.keys(taskInfo.grades).length !==
+              all_students.reduce(
+                (studentCount, studentInfo) =>
+                  studentCount +
+                  (taskInfo.class_assigned.includes(studentInfo.kelas) ? 1 : 0),
+                0
+              ) &&
+            new Date(taskInfo.deadline).getTime() >= startEpoch &&
+            new Date(taskInfo.deadline).getTime() <= endEpoch
+        ).length;
+      } else {
+        // admin
+        count = tasksCollection.filter(
+          (taskInfo) =>
+            Object.keys(taskInfo.grades).length !==
+              all_students.reduce(
+                (studentCount, studentInfo) =>
+                  studentCount +
+                  (taskInfo.class_assigned.includes(studentInfo.kelas) ? 1 : 0),
+                0
+              ) &&
+            new Date(taskInfo.deadline).getTime() >= startEpoch &&
+            new Date(taskInfo.deadline).getTime() <= endEpoch
+        ).length;
       }
     }
     return count;
-  }
+  };
 
   const countAssessment = (start, end, type) => {
     let count = 0;
     if (all_assessments) {
       if (role === "Student") {
-        count = all_assessments.filter((assessmentInfo) => (
-          assessmentInfo.type === type &&
-          assessmentInfo.posted &&
-          assessmentInfo.class_assigned.includes(user.kelas) &&
-          isIntersectInclusive(
-            new Date(assessmentInfo.start_date).getTime(),
-            new Date(assessmentInfo.end_date).getTime(),
-            start.getTime(),
-            end.getTime()
-          )
-        )).length;
+        count = all_assessments.filter(
+          (assessmentInfo) =>
+            assessmentInfo.type === type &&
+            assessmentInfo.posted &&
+            assessmentInfo.class_assigned.includes(user.kelas) &&
+            isIntersectInclusive(
+              new Date(assessmentInfo.start_date).getTime(),
+              new Date(assessmentInfo.end_date).getTime(),
+              start.getTime(),
+              end.getTime()
+            )
+        ).length;
       } else if (role === "Teacher") {
-        count = all_assessments.filter((assessmentInfo) => (
-          assessmentInfo.type === type &&
-          assessmentInfo.author_id === user._id &&
-          isIntersectInclusive(
-            new Date(assessmentInfo.start_date).getTime(),
-            new Date(assessmentInfo.end_date).getTime(),
-            start.getTime(),
-            end.getTime()
-          )
-        )).length;
-      } else { // admin
-        count = all_assessments.filter((assessmentInfo) => (
-          assessmentInfo.type === type &&
-          isIntersectInclusive(
-            new Date(assessmentInfo.start_date).getTime(),
-            new Date(assessmentInfo.end_date).getTime(),
-            start.getTime(),
-            end.getTime()
-          )
-        )).length;
+        count = all_assessments.filter(
+          (assessmentInfo) =>
+            assessmentInfo.type === type &&
+            assessmentInfo.author_id === user._id &&
+            isIntersectInclusive(
+              new Date(assessmentInfo.start_date).getTime(),
+              new Date(assessmentInfo.end_date).getTime(),
+              start.getTime(),
+              end.getTime()
+            )
+        ).length;
+      } else {
+        // admin
+        count = all_assessments.filter(
+          (assessmentInfo) =>
+            assessmentInfo.type === type &&
+            isIntersectInclusive(
+              new Date(assessmentInfo.start_date).getTime(),
+              new Date(assessmentInfo.end_date).getTime(),
+              start.getTime(),
+              end.getTime()
+            )
+        ).length;
       }
     }
     return count;
-  }
+  };
 
   const generateMonthDates = () => {
     let result = [];
-    let firstDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0);
+    let firstDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1,
+      0,
+      0,
+      0,
+      0
+    );
     let count = 1;
     let i = 1;
-    if(count > firstDate.getDay()) {
+    if (count > firstDate.getDay()) {
       count = count - 7;
       i = i - 7;
     }
-    while(count <= firstDate.getDay()) {
+    while (count <= firstDate.getDay()) {
       let tempDate = new Date(firstDate.getFullYear(), firstDate.getMonth(), 0);
-      tempDate.setDate(tempDate.getDate() - (firstDate.getDay()-i) + 1);
+      tempDate.setDate(tempDate.getDate() - (firstDate.getDay() - i) + 1);
       result.push(tempDate);
-      count ++;
-      i ++;
+      count++;
+      i++;
     }
 
     count = 1;
     i = 1;
     let isMaxDateFound = false;
-    while(count <= 35-firstDate.getDay()) {
+    while (count <= 35 - firstDate.getDay()) {
       let tempDate = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1);
-      tempDate.setDate(tempDate.getDate()+i);
+      tempDate.setDate(tempDate.getDate() + i);
       result.push(tempDate);
-      count ++;
-      i ++;
-      if(!isMaxDateFound && tempDate.getDate() === getMaxDate(tempDate.getMonth() + 1, tempDate.getYear())) {
+      count++;
+      i++;
+      if (
+        !isMaxDateFound &&
+        tempDate.getDate() ===
+          getMaxDate(tempDate.getMonth() + 1, tempDate.getYear())
+      ) {
         isMaxDateFound = true;
       }
-      if(count === 35-firstDate.getDay() && !isMaxDateFound) {
+      if (count === 35 - firstDate.getDay() && !isMaxDateFound) {
         count = count - 7;
       }
-      if(isMaxDateFound && 35-firstDate.getDay() - count === 6) {
+      if (isMaxDateFound && 35 - firstDate.getDay() - count === 6) {
         break;
       }
     }
     return result;
-  }
+  };
 
   const generateDates = () => {
     let currentMonthDates = generateMonthDates();
-    if(currentMonthDates.length !== 0) {
+    if (currentMonthDates.length !== 0) {
       let result = [];
       let temp_row = [];
-      for(let date of currentMonthDates) {
+      for (let date of currentMonthDates) {
         temp_row.push(date);
-        if(temp_row.length === 7) {
+        if (temp_row.length === 7) {
           result.push(temp_row);
           temp_row = [];
         }
       }
       return result;
-    }
-    else {
+    } else {
       return [[]];
     }
-  }
+  };
 
-  let agendaStates = {}
-  if(role !== "Admin") {
+  let agendaStates = {};
+  if (role !== "Admin") {
     agendaStates = {
       checkedTask: true,
       checkedQuiz: true,
       checkedExam: true,
       checkedEvent: true,
-    }
-  }
-  else {
+    };
+  } else {
     agendaStates = {
       checkedTask: false,
       checkedQuiz: false,
       checkedExam: false,
       checkedEvent: true,
-    }
+    };
   }
 
-  const [agendaCheckboxState, setAgendaCheckboxState] = React.useState(agendaStates);
+  const [agendaCheckboxState, setAgendaCheckboxState] = React.useState(
+    agendaStates
+  );
 
   const handleChange = (event) => {
     const tempAgendaCheckboxState = { ...agendaCheckboxState };
@@ -3768,73 +4248,80 @@ function Calendar(props) {
   };
 
   React.useEffect(() => {
-    if(role === "Admin" && all_classes.length !== 0) {
-      setClassCheckboxState(Object.assign({}, ...all_classes.map((kelas) => ({ [kelas._id]: true }))));
+    if (role === "Admin" && all_classes.length !== 0) {
+      setClassCheckboxState(
+        Object.assign(
+          {},
+          ...all_classes.map((kelas) => ({ [kelas._id]: true }))
+        )
+      );
     }
-  }, [all_classes])
+  }, [all_classes]);
 
   const handleChangeClassStates = (event) => {
-    setClassCheckboxState({ ...classCheckboxState, [event.target.name]: event.target.checked });
+    setClassCheckboxState({
+      ...classCheckboxState,
+      [event.target.name]: event.target.checked,
+    });
   };
 
   React.useEffect(() => {
-    if (tasksCollection && Array.isArray(tasksCollection) && all_assessments && allEvents) {
+    if (
+      tasksCollection &&
+      Array.isArray(tasksCollection) &&
+      all_assessments &&
+      allEvents
+    ) {
       generateTiles(currentDate);
     }
   }, [agendaCheckboxState, classCheckboxState]);
 
   const generateDayModeList = (date) => {
-    let result = []
-    if(mode === "Day") {
-      if(
-        tasksCollection &&
-        all_assessments &&
-        allEvents
-        ) {
+    let result = [];
+    if (mode === "Day") {
+      if (tasksCollection && all_assessments && allEvents) {
         let taskList = [];
         let quizList = [];
         let examList = [];
         let eventList = [];
-        if(role === "Student") {
-          if(agendaCheckboxState.checkedTask) {
+        if (role === "Student") {
+          if (agendaCheckboxState.checkedTask) {
             taskList = listTasks(new Date(date));
           }
-          if(agendaCheckboxState.checkedQuiz) {
+          if (agendaCheckboxState.checkedQuiz) {
             quizList = listAssessmentsStudentMonth(new Date(date), "Kuis");
           }
-          if(agendaCheckboxState.checkedExam) {
+          if (agendaCheckboxState.checkedExam) {
             examList = listAssessmentsStudentMonth(new Date(date), "Ujian");
           }
-          if(agendaCheckboxState.checkedEvent) {
+          if (agendaCheckboxState.checkedEvent) {
             eventList = listEvent(new Date(date));
           }
-        }
-        else if(role === "Teacher" && classCheckboxState) {
-          if(agendaCheckboxState.checkedTask) {
+        } else if (role === "Teacher" && classCheckboxState) {
+          if (agendaCheckboxState.checkedTask) {
             taskList = listTasksTeacher(new Date(date));
           }
-          if(agendaCheckboxState.checkedQuiz) {
+          if (agendaCheckboxState.checkedQuiz) {
             quizList = listAssessmentsTeacher(new Date(date), "Kuis");
           }
-          if(agendaCheckboxState.checkedExam) {
+          if (agendaCheckboxState.checkedExam) {
             examList = listAssessmentsTeacher(new Date(date), "Ujian");
           }
-          if(agendaCheckboxState.checkedEvent) {
+          if (agendaCheckboxState.checkedEvent) {
             eventList = listEvent(new Date(date));
           }
-        }
-        else {
-          if(classCheckboxState) {
-            if(agendaCheckboxState.checkedTask) {
+        } else {
+          if (classCheckboxState) {
+            if (agendaCheckboxState.checkedTask) {
               taskList = listTasksAdmin(new Date(date));
             }
-            if(agendaCheckboxState.checkedQuiz) {
+            if (agendaCheckboxState.checkedQuiz) {
               quizList = listAssessmentsAdmin(new Date(date), "Kuis");
             }
-            if(agendaCheckboxState.checkedExam) {
+            if (agendaCheckboxState.checkedExam) {
               examList = listAssessmentsAdmin(new Date(date), "Ujian");
             }
-            if(agendaCheckboxState.checkedEvent) {
+            if (agendaCheckboxState.checkedEvent) {
               eventList = listEventAdmin(new Date(date));
             }
           }
@@ -3843,14 +4330,20 @@ function Calendar(props) {
       }
     }
     return result;
-  }
+  };
 
   const hasHoliday = (currentDate) => {
-    return (new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) in holiday);
+    return (
+      new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate()
+      ) in holiday
+    );
   };
 
   const showShadow = (currentDate, allDayItems) => {
-    return hasHoliday(currentDate) || (allDayItems.length !== 0);
+    return hasHoliday(currentDate) || allDayItems.length !== 0;
   };
 
   const generateDayModeCalendar = () => {
@@ -3858,7 +4351,9 @@ function Calendar(props) {
       <div className={classes.dayAgendaContainer}>
         <div
           className={
-            showShadow(currentDate, allDayItems) ? `${classes.shadow} ${classes.holidayContainer}` : classes.holidayContainer
+            showShadow(currentDate, allDayItems)
+              ? `${classes.shadow} ${classes.holidayContainer}`
+              : classes.holidayContainer
           }
           style={
             showShadow(currentDate, allDayItems)
@@ -3871,31 +4366,45 @@ function Calendar(props) {
           <Typography variant="body2" style={{ visibility: "hidden" }}>
             00:00
           </Typography>
-          <div style={{ display: "flex", flexDirection: "column", flexGrow: "1" }}>
-            {
-              hasHoliday(currentDate) ?
-                holiday[new Date(currentDate.getFullYear(), currentDate.getMonth(),currentDate.getDate())].map((holiday) => (
+          <div
+            style={{ display: "flex", flexDirection: "column", flexGrow: "1" }}
+          >
+            {hasHoliday(currentDate)
+              ? holiday[
+                  new Date(
+                    currentDate.getFullYear(),
+                    currentDate.getMonth(),
+                    currentDate.getDate()
+                  )
+                ].map((holiday) => (
                   <div key={holiday} className={classes.staticBlueChip}>
                     <Typography style={{ color: "white" }} variant="body2">
                       {holiday}
                     </Typography>
                   </div>
                 ))
-              : null
-            }
-            {
-              allDayItems.map((item) => (
-                <div
-                  key={item._id}
-                  className={item.type === "Event" ? `${classes.hoverPointerCursor} ${classes.staticBlueChip}` : classes.staticBlueChip}
-                  onClick={item.type === "Event" ? () => { handleOpenViewDialog(item.data) } : undefined}
-                >
-                  <Typography style={{ color: "white" }} variant="body2">
-                    {item.data.name}
-                  </Typography>
-                </div>
-              ))
-            }
+              : null}
+            {allDayItems.map((item) => (
+              <div
+                key={item._id}
+                className={
+                  item.type === "Event"
+                    ? `${classes.hoverPointerCursor} ${classes.staticBlueChip}`
+                    : classes.staticBlueChip
+                }
+                onClick={
+                  item.type === "Event"
+                    ? () => {
+                        handleOpenViewDialog(item.data);
+                      }
+                    : undefined
+                }
+              >
+                <Typography style={{ color: "white" }} variant="body2">
+                  {item.data.name}
+                </Typography>
+              </div>
+            ))}
           </div>
         </div>
         <TableContainer ref={scrollRef}>
@@ -3903,84 +4412,159 @@ function Calendar(props) {
             <TableBody>
               {timeRows.map((row, index) => {
                 return (
-                  <TableRow key={row.name} style={{height: `${ROW_HEIGHT}px`, border: "none"}}>
-                    <TableCell component="th" scope="row" className={classes.dayTableCell}>
-                      <Typography color="textSecondary" variant="body2" style={{width: "32px"}}>{row}</Typography>
+                  <TableRow
+                    key={row.name}
+                    style={{ height: `${ROW_HEIGHT}px`, border: "none" }}
+                  >
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      className={classes.dayTableCell}
+                    >
+                      <Typography
+                        color="textSecondary"
+                        variant="body2"
+                        style={{ width: "32px" }}
+                      >
+                        {row}
+                      </Typography>
                       <div className={classes.horizontalLine}>
                         <div
                           style={{
-                            paddingRight: maxTreeHeight <= 3 ? undefined : "16px",
+                            paddingRight:
+                              maxTreeHeight <= 3 ? undefined : "16px",
                             width:
                               maxTreeHeight <= 3
-                                ? '100%'
-                                : `calc(16px + ${maxTreeHeight * TILE_HORIZONTAL_MARGIN}px + ${(maxTreeHeight + 1)} * (${highestTreeWidth}% - ${TILE_HORIZONTAL_MARGIN * (Math.floor(100 / highestTreeWidth) - 1) / Math.floor(100 / highestTreeWidth)}px))`
+                                ? "100%"
+                                : `calc(16px + ${
+                                    maxTreeHeight * TILE_HORIZONTAL_MARGIN
+                                  }px + ${
+                                    maxTreeHeight + 1
+                                  } * (${highestTreeWidth}% - ${
+                                    (TILE_HORIZONTAL_MARGIN *
+                                      (Math.floor(100 / highestTreeWidth) -
+                                        1)) /
+                                    Math.floor(100 / highestTreeWidth)
+                                  }px))`,
                           }}
                         >
                           {/* tujuan dibuat seperti ini: menambahkan margin di ujung kanan garis horizontal */}
                           <div
                             style={{
                               border: "rgba(224, 224, 224, 1) .25px solid",
-                              width: "100%"
+                              width: "100%",
                             }}
                           />
                         </div>
 
-                        {
-                          tileRows[index] ?
-                            tileRows[index].map((obj) => {
+                        {tileRows[index]
+                          ? tileRows[index].map((obj) => {
                               let verticalPadding = 8;
                               let widthPadding = 0;
-                              let i = Math.floor(100/obj.width);
-                              if(i > 1) {
-                                widthPadding = TILE_HORIZONTAL_MARGIN * (i-1) / i;
+                              let i = Math.floor(100 / obj.width);
+                              if (i > 1) {
+                                widthPadding =
+                                  (TILE_HORIZONTAL_MARGIN * (i - 1)) / i;
                               }
 
-                              let height = (((obj.end_date_epoch - obj.start_date_epoch) / (1000 * 60)) / 60 * ROW_HEIGHT) - BOTTOM_PADDING;
-                              let minHeight = ((MINIMUM_DURATION_MILLISECOND) / (1000 * 60)) / 60 * ROW_HEIGHT;
+                              let height =
+                                ((obj.end_date_epoch - obj.start_date_epoch) /
+                                  (1000 * 60) /
+                                  60) *
+                                  ROW_HEIGHT -
+                                BOTTOM_PADDING;
+                              let minHeight =
+                                (MINIMUM_DURATION_MILLISECOND /
+                                  (1000 * 60) /
+                                  60) *
+                                ROW_HEIGHT;
                               if (height < minHeight + verticalPadding) {
                                 verticalPadding = 2;
                               }
 
                               return (
                                 <div
-                                  onClick={obj.type === "Event" ? () => { handleOpenViewDialog(obj.data) } : undefined}
-                                  className={obj.type === "Event" ? `${classes.hoverPointerCursor} ${classes.blueChip}` : classes.blueChip}
+                                  onClick={
+                                    obj.type === "Event"
+                                      ? () => {
+                                          handleOpenViewDialog(obj.data);
+                                        }
+                                      : undefined
+                                  }
+                                  className={
+                                    obj.type === "Event"
+                                      ? `${classes.hoverPointerCursor} ${classes.blueChip}`
+                                      : classes.blueChip
+                                  }
                                   style={{
-                                    transform:
-                                      `translate(calc(100% * ${obj.startColumn} + ${obj.startColumn * TILE_HORIZONTAL_MARGIN}px), ${!isSameDate(obj.start_date, currentDate) && isSameDate(obj.end_date, currentDate)
-                                        ? (-1 * getMillisecondDiff(obj.start_date, getDayStart(obj.end_date)) / (1000 * 60)) / 60 * ROW_HEIGHT
-                                        : obj.start_date.getMinutes() / 60 * ROW_HEIGHT
-                                      }px)`,
+                                    transform: `translate(calc(100% * ${
+                                      obj.startColumn
+                                    } + ${
+                                      obj.startColumn * TILE_HORIZONTAL_MARGIN
+                                    }px), ${
+                                      !isSameDate(
+                                        obj.start_date,
+                                        currentDate
+                                      ) && isSameDate(obj.end_date, currentDate)
+                                        ? ((-1 *
+                                            getMillisecondDiff(
+                                              obj.start_date,
+                                              getDayStart(obj.end_date)
+                                            )) /
+                                            (1000 * 60) /
+                                            60) *
+                                          ROW_HEIGHT
+                                        : (obj.start_date.getMinutes() / 60) *
+                                          ROW_HEIGHT
+                                    }px)`,
                                     height: `${height}px`,
                                     width: `calc(${obj.width}% - ${widthPadding}px)`,
-                                    padding: `${verticalPadding}px 12px`
+                                    padding: `${verticalPadding}px 12px`,
                                   }}
                                 >
                                   <Typography noWrap variant="body2">
                                     {obj.data.name}
                                   </Typography>
                                   <Typography variant="body2">
-                                    {
-                                      obj.type === "Tugas"
-                                        ? moment(obj.data.deadline).locale("id").format("HH:mm")
-                                        : `${moment(isSameDate(new Date(obj.data.start_date), currentDate) ? obj.data.start_date : obj.start_date.toUTCString()).locale("id").format("HH:mm")} – ${moment(isSameDate(new Date(obj.data.end_date), currentDate) ? obj.data.end_date : obj.end_date.toUTCString()).locale("id").format("HH:mm")}`
-                                    }
+                                    {obj.type === "Tugas"
+                                      ? moment(obj.data.deadline)
+                                          .locale("id")
+                                          .format("HH:mm")
+                                      : `${moment(
+                                          isSameDate(
+                                            new Date(obj.data.start_date),
+                                            currentDate
+                                          )
+                                            ? obj.data.start_date
+                                            : obj.start_date.toUTCString()
+                                        )
+                                          .locale("id")
+                                          .format("HH:mm")} – ${moment(
+                                          isSameDate(
+                                            new Date(obj.data.end_date),
+                                            currentDate
+                                          )
+                                            ? obj.data.end_date
+                                            : obj.end_date.toUTCString()
+                                        )
+                                          .locale("id")
+                                          .format("HH:mm")}`}
                                   </Typography>
                                 </div>
-                              )
-                            }) : null
-                        }
+                              );
+                            })
+                          : null}
                       </div>
                     </TableCell>
                   </TableRow>
-                )
+                );
               })}
             </TableBody>
           </Table>
         </TableContainer>
       </div>
-    )
-  }
+    );
+  };
 
   const generateMonthModeCalendar = () => {
     let monthDates = generateDates();
@@ -3990,65 +4574,87 @@ function Calendar(props) {
           <Table className={classes.table}>
             <TableBody>
               <Hidden smUp>
-                <TableRow style={{verticalAlign: "bottom"}}>
-                  {
-                    dayNames.map((day) => {
-                      return (
-                        <TableCell style={{paddingBottom: "5px"}}>
-                          <Typography align="center" variant="body2">
-                            {day[0]}
-                          </Typography>
-                        </TableCell>
-                      )
-                    })
-                  }
+                <TableRow style={{ verticalAlign: "bottom" }}>
+                  {dayNames.map((day) => {
+                    return (
+                      <TableCell style={{ paddingBottom: "5px" }}>
+                        <Typography align="center" variant="body2">
+                          {day[0]}
+                        </Typography>
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               </Hidden>
-            {monthDates.map((row, index) => (
-              generateDateAgenda(row, index)
-            ))}
+              {monthDates.map((row, index) => generateDateAgenda(row, index))}
             </TableBody>
           </Table>
         </TableContainer>
       </div>
-    )
-  }
+    );
+  };
 
   const generateDateAgenda = (date, index) => {
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
-      "Jul", "Agu", "Sep", "Okt", "Nov", "Des"
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Mei",
+      "Jun",
+      "Jul",
+      "Agu",
+      "Sep",
+      "Okt",
+      "Nov",
+      "Des",
     ];
     if (all_assessments && tasksCollection && allEvents) {
       return (
-        <TableRow style={{height: "150px"}}>
+        <TableRow style={{ height: "150px" }}>
           {date.map((column, columnIndex) => {
             let temp_date = new Date(column).getDate();
-            let temp_date_withoutMonthNames = temp_date
-            if(temp_date === 1) {
-              temp_date = temp_date + " " + monthNames[new Date(column).getMonth()];
+            let temp_date_withoutMonthNames = temp_date;
+            if (temp_date === 1) {
+              temp_date =
+                temp_date + " " + monthNames[new Date(column).getMonth()];
             }
             let mainCounter = 0;
-            const handleChangeCounter = (count) => {mainCounter = count}
+            const handleChangeCounter = (count) => {
+              mainCounter = count;
+            };
 
             let today = new Date();
 
             let taskList = null;
-            if(agendaCheckboxState.checkedTask) {
-              if(role === "Student") {
-                taskList = listTasks(new Date(column), mainCounter, handleChangeCounter);
+            if (agendaCheckboxState.checkedTask) {
+              if (role === "Student") {
+                taskList = listTasks(
+                  new Date(column),
+                  mainCounter,
+                  handleChangeCounter
+                );
               }
-              if(role === "Teacher") {
-                taskList = listTasksTeacher(new Date(column), mainCounter, handleChangeCounter);
+              if (role === "Teacher") {
+                taskList = listTasksTeacher(
+                  new Date(column),
+                  mainCounter,
+                  handleChangeCounter
+                );
               }
-              if(role === "Admin") {
-                taskList = listTasksAdmin(new Date(column), mainCounter, handleChangeCounter);
+              if (role === "Admin") {
+                taskList = listTasksAdmin(
+                  new Date(column),
+                  mainCounter,
+                  handleChangeCounter
+                );
               }
             }
 
             let quizList = null;
-            if(agendaCheckboxState.checkedQuiz) {
-              if(role === "Student") {
-                quizList =
+            if (agendaCheckboxState.checkedQuiz) {
+              if (role === "Student") {
+                quizList = (
                   <ListAssessments
                     category={null}
                     subject={{}}
@@ -4064,19 +4670,30 @@ function Calendar(props) {
                     handleChangeCounter={handleChangeCounter}
                     mode={mode}
                   />
+                );
               }
-              if(role === "Teacher") {
-                quizList = listAssessmentsTeacher(new Date(column), "Kuis", mainCounter, handleChangeCounter)
+              if (role === "Teacher") {
+                quizList = listAssessmentsTeacher(
+                  new Date(column),
+                  "Kuis",
+                  mainCounter,
+                  handleChangeCounter
+                );
               }
-              if(role === "Admin") {
-                quizList = listAssessmentsAdmin(new Date(column), "Kuis", mainCounter, handleChangeCounter)
+              if (role === "Admin") {
+                quizList = listAssessmentsAdmin(
+                  new Date(column),
+                  "Kuis",
+                  mainCounter,
+                  handleChangeCounter
+                );
               }
             }
 
             let examList = null;
-            if(agendaCheckboxState.checkedExam) {
-              if(role === "Student") {
-                examList =
+            if (agendaCheckboxState.checkedExam) {
+              if (role === "Student") {
+                examList = (
                   <ListAssessments
                     category={null}
                     subject={{}}
@@ -4092,141 +4709,271 @@ function Calendar(props) {
                     handleChangeCounter={handleChangeCounter}
                     mode={mode}
                   />
+                );
               }
-              if(role === "Teacher") {
-                examList = listAssessmentsTeacher(new Date(column), "Ujian", mainCounter, handleChangeCounter)
+              if (role === "Teacher") {
+                examList = listAssessmentsTeacher(
+                  new Date(column),
+                  "Ujian",
+                  mainCounter,
+                  handleChangeCounter
+                );
               }
-              if(role === "Admin") {
-                examList = listAssessmentsAdmin(new Date(column), "Ujian", mainCounter, handleChangeCounter)
+              if (role === "Admin") {
+                examList = listAssessmentsAdmin(
+                  new Date(column),
+                  "Ujian",
+                  mainCounter,
+                  handleChangeCounter
+                );
               }
             }
 
-
-            let eventList = {result: null}
-            if(agendaCheckboxState.checkedEvent) {
+            let eventList = { result: null };
+            if (agendaCheckboxState.checkedEvent) {
               if (role === "Admin") {
-                eventList = listEventAdmin(new Date(column), mainCounter, handleChangeCounter);
+                eventList = listEventAdmin(
+                  new Date(column),
+                  mainCounter,
+                  handleChangeCounter
+                );
               } else {
-                eventList = listEvent(new Date(column), mainCounter, handleChangeCounter);
+                eventList = listEvent(
+                  new Date(column),
+                  mainCounter,
+                  handleChangeCounter
+                );
               }
             }
 
             return (
               <TableCell className={classes.monthAgendaCell}>
-                {(index === 0) ?
-                  (columnIndex === 6) ?
+                {index === 0 ? (
+                  columnIndex === 6 ? (
                     <Hidden xsDown>
-                      <Typography color="textSecondary" variant="body2" align="center" style={{color: "#D10000"}}>{dayNames[columnIndex]}</Typography>
+                      <Typography
+                        color="textSecondary"
+                        variant="body2"
+                        align="center"
+                        style={{ color: "#D10000" }}
+                      >
+                        {dayNames[columnIndex]}
+                      </Typography>
                     </Hidden>
-                  :
+                  ) : (
                     <Hidden xsDown>
-                      <Typography color="textSecondary" variant="body2" align="center">{dayNames[columnIndex]}</Typography>
+                      <Typography
+                        color="textSecondary"
+                        variant="body2"
+                        align="center"
+                      >
+                        {dayNames[columnIndex]}
+                      </Typography>
                     </Hidden>
-                : null}
-                <div style={{display: "flex", justifyContent: "center", marginBottom: "5px"}}>
-                  {isSameDate(today, column) ?
+                  )
+                ) : null}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: "5px",
+                  }}
+                >
+                  {isSameDate(today, column) ? (
                     <>
                       <Hidden xsDown>
-                        <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date}</Typography>
+                        <Typography
+                          color="textSecondary"
+                          variant="body2"
+                          className={classes.todayMonthDateTile}
+                          align="center"
+                          onClick={() => {
+                            handleOpenDayMode(new Date(column));
+                          }}
+                        >
+                          {temp_date}
+                        </Typography>
                       </Hidden>
                       <Hidden smUp>
-                        <Typography color="textSecondary" variant="body2" className={classes.todayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date_withoutMonthNames}</Typography>
+                        <Typography
+                          color="textSecondary"
+                          variant="body2"
+                          className={classes.todayMonthDateTile}
+                          align="center"
+                          onClick={() => {
+                            handleOpenDayMode(new Date(column));
+                          }}
+                        >
+                          {temp_date_withoutMonthNames}
+                        </Typography>
                       </Hidden>
                     </>
-                    : isSameDate(selectedDateMonthMode, column) ?
-                      <>
-                        <Hidden xsDown>
-                          <Typography color="textSecondary" variant="body2" className={classes.selectedMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date}</Typography>
-                        </Hidden>
-                        <Hidden smUp>
-                          <Typography color="textSecondary" variant="body2" className={classes.selectedMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date_withoutMonthNames}</Typography>
-                        </Hidden>
-                      </>
-                      : (new Date(column.getFullYear(), column.getMonth(), column.getDate()) in holiday || column.getDay() == 0) ?
-                          <>
-                            <Hidden xsDown>
-                              <Typography color="textSecondary" variant="body2" className={classes.holidayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date}</Typography>
-                            </Hidden>
-                            <Hidden smUp>
-                              <Typography color="textSecondary" variant="body2" className={classes.holidayMonthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date_withoutMonthNames}</Typography>
-                            </Hidden>
-                          </>
-                        :
-                          <>
-                            <Hidden xsDown>
-                              <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date}</Typography>
-                            </Hidden>
-                            <Hidden smUp>
-                              <Typography color="textSecondary" variant="body2" className={classes.monthDateTile} align="center" onClick={() => { handleOpenDayMode(new Date(column)) }}>{temp_date_withoutMonthNames}</Typography>
-                            </Hidden>
-                          </>
-                  }
+                  ) : isSameDate(selectedDateMonthMode, column) ? (
+                    <>
+                      <Hidden xsDown>
+                        <Typography
+                          color="textSecondary"
+                          variant="body2"
+                          className={classes.selectedMonthDateTile}
+                          align="center"
+                          onClick={() => {
+                            handleOpenDayMode(new Date(column));
+                          }}
+                        >
+                          {temp_date}
+                        </Typography>
+                      </Hidden>
+                      <Hidden smUp>
+                        <Typography
+                          color="textSecondary"
+                          variant="body2"
+                          className={classes.selectedMonthDateTile}
+                          align="center"
+                          onClick={() => {
+                            handleOpenDayMode(new Date(column));
+                          }}
+                        >
+                          {temp_date_withoutMonthNames}
+                        </Typography>
+                      </Hidden>
+                    </>
+                  ) : new Date(
+                      column.getFullYear(),
+                      column.getMonth(),
+                      column.getDate()
+                    ) in holiday || column.getDay() == 0 ? (
+                    <>
+                      <Hidden xsDown>
+                        <Typography
+                          color="textSecondary"
+                          variant="body2"
+                          className={classes.holidayMonthDateTile}
+                          align="center"
+                          onClick={() => {
+                            handleOpenDayMode(new Date(column));
+                          }}
+                        >
+                          {temp_date}
+                        </Typography>
+                      </Hidden>
+                      <Hidden smUp>
+                        <Typography
+                          color="textSecondary"
+                          variant="body2"
+                          className={classes.holidayMonthDateTile}
+                          align="center"
+                          onClick={() => {
+                            handleOpenDayMode(new Date(column));
+                          }}
+                        >
+                          {temp_date_withoutMonthNames}
+                        </Typography>
+                      </Hidden>
+                    </>
+                  ) : (
+                    <>
+                      <Hidden xsDown>
+                        <Typography
+                          color="textSecondary"
+                          variant="body2"
+                          className={classes.monthDateTile}
+                          align="center"
+                          onClick={() => {
+                            handleOpenDayMode(new Date(column));
+                          }}
+                        >
+                          {temp_date}
+                        </Typography>
+                      </Hidden>
+                      <Hidden smUp>
+                        <Typography
+                          color="textSecondary"
+                          variant="body2"
+                          className={classes.monthDateTile}
+                          align="center"
+                          onClick={() => {
+                            handleOpenDayMode(new Date(column));
+                          }}
+                        >
+                          {temp_date_withoutMonthNames}
+                        </Typography>
+                      </Hidden>
+                    </>
+                  )}
                 </div>
-                {
-                  agendaCheckboxState.checkedTask && taskList !== null ?
-                  taskList.map((row) => {
-                    if(role !== "Admin") {
-                      return  (
-                        <Link to={(role === "Student") ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`}>
-                          <Typography variant="body2" className={classes.monthAgendaChip} align="left">
+                {agendaCheckboxState.checkedTask && taskList !== null
+                  ? taskList.map((row) => {
+                      if (role !== "Admin") {
+                        return (
+                          <Link
+                            to={
+                              role === "Student"
+                                ? `/tugas-murid/${row._id}`
+                                : `/tugas-guru/${row._id}`
+                            }
+                          >
+                            <Typography
+                              variant="body2"
+                              className={classes.monthAgendaChip}
+                              align="left"
+                            >
+                              {row.name}
+                            </Typography>
+                          </Link>
+                        );
+                      } else {
+                        return (
+                          <Typography
+                            variant="body2"
+                            className={classes.monthAgendaChipAdmin}
+                            align="left"
+                          >
                             {row.name}
                           </Typography>
-                        </Link>
-                      )
-                    }
-                    else {
-                      return  (
-                        <Typography variant="body2" className={classes.monthAgendaChipAdmin} align="left">
-                          {row.name}
-                        </Typography>
-                      )
-                    }
-                  })
-                  : null
-                }
+                        );
+                      }
+                    })
+                  : null}
                 {agendaCheckboxState.checkedQuiz ? quizList : null}
                 {agendaCheckboxState.checkedExam ? examList : null}
                 {agendaCheckboxState.checkedEvent ? eventList.result : null}
-                {
-                  (mainCounter > 3) ?
-                    <Typography
-                      variant="body2"
-                      className={classes.moreMonthAgendaChip}
-                      align="left"
-                      onClick={() => { handleOpenDayMode(new Date(column)) }}
-                    >
-                      {mainCounter - 3} lagi
-                    </Typography>
-                  : null
-                }
+                {mainCounter > 3 ? (
+                  <Typography
+                    variant="body2"
+                    className={classes.moreMonthAgendaChip}
+                    align="left"
+                    onClick={() => {
+                      handleOpenDayMode(new Date(column));
+                    }}
+                  >
+                    {mainCounter - 3} lagi
+                  </Typography>
+                ) : null}
               </TableCell>
-            )
+            );
           })}
         </TableRow>
-      )
+      );
     }
-  }
+  };
 
   return (
     <div className={classes.root}>
-      {
-        unmountEventDialog
-          ? null
-          :
-          <EventDialog
-            downloadFileEvent={downloadFileEvent}
-            selectedEventInfo={selectedEventInfo}
-            getAllEvents={getAllEvents}
-            eventDialogMode={eventDialogMode}
-            openEventDialog={openEventDialog}
-            handleCloseEventDialog={handleCloseEventDialog}
-            handleOpenEditDialog={handleOpenEditDialog}
-            handleSetUnmountEventDialog={handleSetUnmountEventDialog}
-            viewFileEvent={viewFileEvent}
-            showSnackbar={showSnackbar}
-            user={user}
-          />
-      }
+      {unmountEventDialog ? null : (
+        <EventDialog
+          downloadFileEvent={downloadFileEvent}
+          selectedEventInfo={selectedEventInfo}
+          getAllEvents={getAllEvents}
+          eventDialogMode={eventDialogMode}
+          openEventDialog={openEventDialog}
+          handleCloseEventDialog={handleCloseEventDialog}
+          handleOpenEditDialog={handleOpenEditDialog}
+          handleSetUnmountEventDialog={handleSetUnmountEventDialog}
+          viewFileEvent={viewFileEvent}
+          showSnackbar={showSnackbar}
+          user={user}
+        />
+      )}
 
       <div className={classes.agendaContainer}>
         <AgendaToolbar
@@ -4241,92 +4988,139 @@ function Calendar(props) {
           activeStartDate={activeStartDate}
           setActiveStartDate={setActiveStartDate}
         />
-        {
-          mode === "Day"
-            ?
-            <>
-              <Hidden xsDown>
-                <Divider style={{ marginTop: "10px" }} />
-              </Hidden>
-              <Hidden xsDown>
+        {mode === "Day" ? (
+          <>
+            <Hidden xsDown>
+              <Divider style={{ marginTop: "10px" }} />
+            </Hidden>
+            <Hidden xsDown>
+              <div
+                className={
+                  showShadow(currentDate, allDayItems)
+                    ? undefined
+                    : classes.shadow
+                }
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+              >
                 <div
-                  className={
-                    showShadow(currentDate, allDayItems) ? undefined : classes.shadow
-                  }
-                  style={{ display: "flex", flexDirection: "column", alignItems:"flex-start" }}
-                >
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "16px 0 0 72px" }}>
-                    <Typography variant="body2">
-                      {moment(currentDate).locale("id").format("dddd").slice(0, 3).toUpperCase()}
-                    </Typography>
-                    <Typography variant="h5">
-                      {moment(currentDate).locale("id").format("DD")}
-                    </Typography>
-                  </div>
-                  <div
-                    style={{ height: "16px" }}
-                  />
-                </div>
-              </Hidden>
-              <Hidden smUp>
-                <div
-                  className={
-                    showShadow(currentDate, allDayItems) ? undefined : classes.shadow
-                  }
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "flex-start",
+                    alignItems: "center",
+                    margin: "16px 0 0 72px",
+                  }}
+                >
+                  <Typography variant="body2">
+                    {moment(currentDate)
+                      .locale("id")
+                      .format("dddd")
+                      .slice(0, 3)
+                      .toUpperCase()}
+                  </Typography>
+                  <Typography variant="h5">
+                    {moment(currentDate).locale("id").format("DD")}
+                  </Typography>
+                </div>
+                <div style={{ height: "16px" }} />
+              </div>
+            </Hidden>
+            <Hidden smUp>
+              <div
+                className={
+                  showShadow(currentDate, allDayItems)
+                    ? undefined
+                    : classes.shadow
+                }
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
                   }}
                 >
                   <div
                     style={{
                       display: "flex",
-                      justifyContent: "flex-start",
-                      alignItems:"center"
+                      flexDirection: "column",
+                      alignItems: "center",
+                      margin: "16px 0 0 12px",
                     }}
                   >
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "16px 0 0 12px" }}>
-                      <Typography variant="body2" style={{ color: "#195DE5" }}>
-                        {moment(currentDate).locale("id").format("dddd").slice(0, 3).toUpperCase()}
+                    <Typography variant="body2" style={{ color: "#195DE5" }}>
+                      {moment(currentDate)
+                        .locale("id")
+                        .format("dddd")
+                        .slice(0, 3)
+                        .toUpperCase()}
+                    </Typography>
+                    <div className={classes.mobileDayModeDateCircle}>
+                      <Typography variant="h5" style={{ color: "white" }}>
+                        {moment(currentDate).locale("id").format("DD")}
                       </Typography>
-                      <div className={classes.mobileDayModeDateCircle}>
-                        <Typography variant="h5" style={{ color: "white" }}>
-                          {moment(currentDate).locale("id").format("DD")}
-                        </Typography>
-                      </div>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                      <Typography variant="body2">
-                        {"\u200B"}
-                      </Typography>
-                      <div style={{ height: "3rem", display: "flex", alignItems: "center" }}>
-                        <Button style={{ height: "32px", marginLeft: "24px" }} variant="outlined" onClick={() => handleChangeDay("now")}>Hari ini</Button>
-                        <div style={{ marginLeft: "24px" }}>
-                          <ChevronLeftIcon onClick={() => handleChangeDay("prev")} className={classes.chevronButton} />
-                          <ChevronRightIcon onClick={() => handleChangeDay("next")} className={classes.chevronButton} />
-                        </div>
-                      </div>
                     </div>
                   </div>
                   <div
-                    style={{ height: "16px" }}
-                  />
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography variant="body2">{"\u200B"}</Typography>
+                    <div
+                      style={{
+                        height: "3rem",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Button
+                        style={{ height: "32px", marginLeft: "24px" }}
+                        variant="outlined"
+                        onClick={() => handleChangeDay("now")}
+                      >
+                        Hari ini
+                      </Button>
+                      <div style={{ marginLeft: "24px" }}>
+                        <ChevronLeftIcon
+                          onClick={() => handleChangeDay("prev")}
+                          className={classes.chevronButton}
+                        />
+                        <ChevronRightIcon
+                          onClick={() => handleChangeDay("next")}
+                          className={classes.chevronButton}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </Hidden>
-            </>
-            : <Divider style={{ marginTop: "10px" }} />
-        }
-        {mode === "Day" ? generateDayModeCalendar() : generateMonthModeCalendar()}
+                <div style={{ height: "16px" }} />
+              </div>
+            </Hidden>
+          </>
+        ) : (
+          <Divider style={{ marginTop: "10px" }} />
+        )}
+        {mode === "Day"
+          ? generateDayModeCalendar()
+          : generateMonthModeCalendar()}
       </div>
       <Hidden xsDown>
         <div className={classes.calendarContainer}>
           <Grid container alignItems="center" justify="space-between">
             <Grid item style={{ paddingLeft: "0.6em" }}>
               <Typography>
-                {moment(activeStartDate)
-                  .locale("id")
-                  .format("MMMM YYYY")}
+                {moment(activeStartDate).locale("id").format("MMMM YYYY")}
               </Typography>
             </Grid>
             <Grid item>
@@ -4351,7 +5145,9 @@ function Calendar(props) {
           <ReactCalendar
             locale="id-ID"
             showFixedNumberOfWeeks
-            onChange={(value) => { handleClickReactCalendar(value) }}
+            onChange={(value) => {
+              handleClickReactCalendar(value);
+            }}
             value={selectedDateReactCalendar}
             className={classes.calendar}
             showNavigation={false}
@@ -4359,16 +5155,25 @@ function Calendar(props) {
             tileContent={handleTileContent(selectedDateReactCalendar)}
             formatShortWeekday={(locale, date) => {
               // mengubah nama hari dalam satu minggu jadi satu huruf
-              return new Date(date).toLocaleDateString(locale, { weekday: 'long' })[0];
+              return new Date(date).toLocaleDateString(locale, {
+                weekday: "long",
+              })[0];
             }}
             view="month"
           />
-          <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
-            <Typography style={{marginTop: "15px"}}>Agenda</Typography>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+            }}
+          >
+            <Typography style={{ marginTop: "15px" }}>Agenda</Typography>
             <FormGroup>
               <FormControlLabel
                 control={
-                  <Checkbox checked={agendaCheckboxState.checkedTask}
+                  <Checkbox
+                    checked={agendaCheckboxState.checkedTask}
                     onChange={handleChange}
                     name="checkedTask"
                     color="primary"
@@ -4378,7 +5183,8 @@ function Calendar(props) {
               />
               <FormControlLabel
                 control={
-                  <Checkbox checked={agendaCheckboxState.checkedQuiz}
+                  <Checkbox
+                    checked={agendaCheckboxState.checkedQuiz}
                     onChange={handleChange}
                     name="checkedQuiz"
                     color="primary"
@@ -4388,7 +5194,8 @@ function Calendar(props) {
               />
               <FormControlLabel
                 control={
-                  <Checkbox checked={agendaCheckboxState.checkedExam}
+                  <Checkbox
+                    checked={agendaCheckboxState.checkedExam}
                     onChange={handleChange}
                     name="checkedExam"
                     color="primary"
@@ -4398,7 +5205,8 @@ function Calendar(props) {
               />
               <FormControlLabel
                 control={
-                  <Checkbox checked={agendaCheckboxState.checkedEvent}
+                  <Checkbox
+                    checked={agendaCheckboxState.checkedEvent}
                     onChange={handleChange}
                     name="checkedEvent"
                     color="primary"
@@ -4408,22 +5216,73 @@ function Calendar(props) {
               />
             </FormGroup>
           </div>
-          {(role === "Teacher" && selectedClasses !== null) ?
-            <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
-              <Typography style={{marginTop: "15px"}}>Kelas</Typography>
-              <div style={{display: "flex", flexDirection: "column", height: "190px", overflow: "auto"}}>
-                {
-                  user.class_teached.map((class_id) => {
-                    let temp = new Map(selectedClasses);
-                    let kelas = temp.get(class_id);
-                    let class_name = ""
-                    if(kelas) {
-                      class_name = kelas.name
-                    }
+          {role === "Teacher" && selectedClasses !== null ? (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <Typography style={{ marginTop: "15px" }}>Kelas</Typography>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "190px",
+                  overflow: "auto",
+                }}
+              >
+                {user.class_teached.map((class_id) => {
+                  let temp = new Map(selectedClasses);
+                  let kelas = temp.get(class_id);
+                  let class_name = "";
+                  if (kelas) {
+                    class_name = kelas.name;
+                  }
+                  return (
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={classCheckboxState[class_id]}
+                          onChange={handleChangeClassStates}
+                          name={class_id}
+                          color="primary"
+                        />
+                      }
+                      label={class_name}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
+          {role === "Admin" && all_classes !== null ? (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <Typography style={{ marginTop: "15px" }}>Kelas</Typography>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "190px",
+                  overflow: "auto",
+                }}
+              >
+                {all_classes.map((kelas) => {
+                  let class_id = kelas._id;
+                  let class_name = kelas.name;
+                  if (Object.keys(classCheckboxState).length !== 0) {
                     return (
                       <FormControlLabel
                         control={
-                          <Checkbox checked={classCheckboxState[class_id]}
+                          <Checkbox
+                            checked={classCheckboxState[class_id]}
                             onChange={handleChangeClassStates}
                             name={class_id}
                             color="primary"
@@ -4431,52 +5290,29 @@ function Calendar(props) {
                         }
                         label={class_name}
                       />
-                    )
-                  })
-                }
+                    );
+                  }
+                  return null;
+                })}
               </div>
             </div>
-          : null}
-          {(role === "Admin" && all_classes !== null) ?
-            <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
-              <Typography style={{marginTop: "15px"}}>Kelas</Typography>
-              <div style={{display: "flex", flexDirection: "column", height: "190px", overflow: "auto"}}>
-                {
-                  all_classes.map((kelas) => {
-                    let class_id = kelas._id;
-                    let class_name = kelas.name
-                    if(Object.keys(classCheckboxState).length !== 0) {
-                      return (
-                        <FormControlLabel
-                          control={
-                            <Checkbox checked={classCheckboxState[class_id]}
-                              onChange={handleChangeClassStates}
-                              name={class_id}
-                              color="primary"
-                            />
-                          }
-                          label={class_name}
-                        />
-                      )
-                    }
-                    return null;
-                  })
-                }
-              </div>
-            </div>
-          : null}
+          ) : null}
         </div>
       </Hidden>
       <Snackbar
         open={openSnackbar}
         autoHideDuration={4000}
-        onClose={() => { handleCloseSnackbar() }}
+        onClose={() => {
+          handleCloseSnackbar();
+        }}
       >
         <MuiAlert
           elevation={6}
           variant="filled"
           severity={severity}
-          onClose={() => { handleCloseSnackbar() }}
+          onClose={() => {
+            handleCloseSnackbar();
+          }}
         >
           {snackbarContent}
         </MuiAlert>
@@ -4532,5 +5368,5 @@ export default connect(mapStateToProps, {
   getStudents,
   getTeachers,
   getOneEvent,
-  viewFileEvent
-})(Calendar)
+  viewFileEvent,
+})(Calendar);

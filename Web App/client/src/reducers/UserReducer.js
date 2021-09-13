@@ -66,11 +66,11 @@ export default function (state = initialState, action) {
         ...state,
         all_students: action.payload,
       };
-    case GET_ALL_ADMINS: 
+    case GET_ALL_ADMINS:
       return {
-        ...state, 
-        all_admins: action.payload
-      }
+        ...state,
+        all_admins: action.payload,
+      };
     case GET_STUDENTS_BY_CLASS:
       return {
         ...state,

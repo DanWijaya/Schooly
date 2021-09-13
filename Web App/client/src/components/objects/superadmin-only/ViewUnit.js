@@ -186,7 +186,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function ViewMaterial(props) {
+function ViewUnit(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
@@ -210,8 +210,8 @@ function ViewMaterial(props) {
 
     React.useEffect(() => {
         const { getOneUnit } = props;
-        const unit_id = props.match.params.id;
-        getOneUnit(unit_id);
+        const {id} = props.match.params;
+        getOneUnit(id);
     }, []);
 
     console.log(selectedUnits);
@@ -232,13 +232,6 @@ function ViewMaterial(props) {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Typography variant="h4">{selectedUnits.name}</Typography>
-                {/* <Typography
-                  variant="caption"
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  <h6>{all_subjects_map.get(selectedUnits.subject)}</h6>
-                </Typography> */}
                 <Typography variant="body2" color="textSecondary">
                   Oleh: <b>{unitAuthorName.current}</b>
                 </Typography>
@@ -255,28 +248,6 @@ function ViewMaterial(props) {
               </Grid>
             {/* Munculin Kelas kelas yang ada di unit ini */}
             {/* Munculin Matpel yang ada di unit ini  */}
-              {/* {user.role === "Teacher" ? (
-                <Grid item xs={12}>
-                  <Typography color="textSecondary" gutterBottom>
-                    Kelas yang Diberikan:
-                  </Typography>
-                  <Typography>
-                    {!selectedUnits.class_assigned || !all_classes_map.size
-                      ? null
-                      : selectedUnits.class_assigned.map((kelas, i) => {
-                          if (all_classes_map.get(kelas)) {
-                            if (
-                              i ===
-                              selectedUnits.class_assigned.length - 1
-                            )
-                              return `${all_classes_map.get(kelas).name}`;
-                            return `${all_classes_map.get(kelas).name}, `;
-                          }
-                          return null;
-                        })}
-                  </Typography>
-                </Grid>
-              ) : null} */}
               <Grid item xs={12} style={{ marginTop: "15px" }}>
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Unit:
@@ -297,7 +268,7 @@ function ViewMaterial(props) {
   );
 }
 
-ViewMaterial.propTypes = {
+ViewUnit.propTypes = {
   auth: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
@@ -312,4 +283,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
     getOneUnit
-})(ViewMaterial);
+})(ViewUnit);

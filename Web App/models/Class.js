@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const ClassSchema = new Schema({
   unit: {
     type: ObjectId,
-    default: null
+    default: null,
   },
   name: {
     type: String,

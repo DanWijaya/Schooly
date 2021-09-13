@@ -240,7 +240,7 @@ function ViewAnnouncement(props) {
   React.useEffect(() => {}, []);
 
   React.useEffect(() => {
-    console.log(announcement_id)
+    console.log(announcement_id);
     getOneAnnouncement(announcement_id);
     getAllClass("map");
     getSelectedClasses(selectedAnnouncements.class_assigned);
@@ -252,7 +252,6 @@ function ViewAnnouncement(props) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAnnouncements._id]); // beacause only receive one announcement.
-
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
@@ -312,7 +311,7 @@ function ViewAnnouncement(props) {
     else console.log("File Category is not specified");
   };
   // console.log(user);
-  console.log(retrieved_users.get(selectedAnnouncements.author_id))
+  console.log(retrieved_users.get(selectedAnnouncements.author_id));
   return (
     <div className={classes.root}>
       <DeleteDialog
@@ -334,7 +333,7 @@ function ViewAnnouncement(props) {
                 </Typography>
               </Grid>
               <Grid item xs={12} style={{ paddingTop: "0" }}>
-              {/* h6 ditambahkan agar margin teks ini dengan teks nama pengumuman 
+                {/* h6 ditambahkan agar margin teks ini dengan teks nama pengumuman 
               memiliki margin yang sama seperti pada halaman-halaman view objek lainnya */}
                 <h6 style={{ marginBottom: "0" }}>
                   <Typography
@@ -363,33 +362,38 @@ function ViewAnnouncement(props) {
               <Grid item xs={12}>
                 <Divider className={classes.dividerColor} />
               </Grid>
-              {retrieved_users.get(selectedAnnouncements.author_id) ? user.role === "Teacher" &&
-              retrieved_users.size &&
-              selectedAnnouncements.author_id &&
-              retrieved_users.get(selectedAnnouncements.author_id).role ===
-                "Teacher" ? (
-                <Grid item xs={12} style={{ marginBottom: "15px" }}>
-                  <Typography color="textSecondary" gutterBottom>
-                    Kelas yang Diberikan:
-                  </Typography>
-                  <Typography>
-                    {!selectedAnnouncements.class_assigned ||
-                    !all_classes_map.size
-                      ? null
-                      : selectedAnnouncements.class_assigned.map((kelas, i) => {
-                          if (all_classes_map.get(kelas)) {
-                            if (
-                              i ===
-                              selectedAnnouncements.class_assigned.length - 1
-                            )
-                              return `${all_classes_map.get(kelas).name}`;
-                            return `${all_classes_map.get(kelas).name}, `;
-                          }
-                          return null;
-                        })}
-                  </Typography>
-                </Grid>
-              ) : null :null}
+              {retrieved_users.get(selectedAnnouncements.author_id) ? (
+                user.role === "Teacher" &&
+                retrieved_users.size &&
+                selectedAnnouncements.author_id &&
+                retrieved_users.get(selectedAnnouncements.author_id).role ===
+                  "Teacher" ? (
+                  <Grid item xs={12} style={{ marginBottom: "15px" }}>
+                    <Typography color="textSecondary" gutterBottom>
+                      Kelas yang Diberikan:
+                    </Typography>
+                    <Typography>
+                      {!selectedAnnouncements.class_assigned ||
+                      !all_classes_map.size
+                        ? null
+                        : selectedAnnouncements.class_assigned.map(
+                            (kelas, i) => {
+                              if (all_classes_map.get(kelas)) {
+                                if (
+                                  i ===
+                                  selectedAnnouncements.class_assigned.length -
+                                    1
+                                )
+                                  return `${all_classes_map.get(kelas).name}`;
+                                return `${all_classes_map.get(kelas).name}, `;
+                              }
+                              return null;
+                            }
+                          )}
+                    </Typography>
+                  </Grid>
+                ) : null
+              ) : null}
 
               <Grid item xs={12}>
                 <Typography color="textSecondary" gutterBottom>

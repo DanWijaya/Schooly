@@ -958,7 +958,11 @@ function AnnouncementSubList(props) {
 
   React.useEffect(() => {
     // If all_assessments is not undefined or an empty array
-    if (Array.isArray(selectedAnnouncements) && retrieved_users && adminAnnouncements) {
+    if (
+      Array.isArray(selectedAnnouncements) &&
+      retrieved_users &&
+      adminAnnouncements
+    ) {
       let newRows = [];
       if (mine) {
         if (author_role === "Student") {
@@ -1035,7 +1039,7 @@ function AnnouncementSubList(props) {
     adminAnnouncements,
     retrieved_users,
     selectedAnnouncements,
-    searchFilter
+    searchFilter,
   ]);
 
   return (
@@ -1144,7 +1148,7 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   listItem: {
-    padding: "6px 16px"
+    padding: "6px 16px",
   },
   titleIcon: {
     fontSize: "28px",
@@ -1216,7 +1220,6 @@ function AnnouncementList(props) {
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
-  
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -1237,7 +1240,7 @@ function AnnouncementList(props) {
 
   const handleOpenDeleteSnackbar = () => {
     setOpenDeleteSnackbar(true);
-  }
+  };
 
   const handleCloseDeleteSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -1256,7 +1259,7 @@ function AnnouncementList(props) {
         getAdminAnnouncements();
         setCurrentClass(user.kelas);
       } else if (user.role === "Admin") {
-        console.log("RUN II")
+        console.log("RUN II");
         getAnnouncement(user._id, "by_author");
       }
       handleCloseDeleteDialog();
@@ -1289,10 +1292,14 @@ function AnnouncementList(props) {
   };
 
   React.useEffect(() => {
-    // ini diperlukan untuk user role admin karena pada user role admin, 
+    // ini diperlukan untuk user role admin karena pada user role admin,
     // AnnouncementListItems akan langsung ditampilkan tanpa AnnouncementSubList,
     // sedangkan AnnouncementListItems tidak memfilter announcement dengan searchFilter.
-    if (user.role === "Admin" && Array.isArray(selectedAnnouncements) && retrieved_users) {
+    if (
+      user.role === "Admin" &&
+      Array.isArray(selectedAnnouncements) &&
+      retrieved_users
+    ) {
       let newRows = [];
       selectedAnnouncements
         .filter((item) =>

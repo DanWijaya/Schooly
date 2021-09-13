@@ -160,10 +160,10 @@ router.post("/comment/:materialId", (req, res) => {
       materialData
         .save()
         .then(() => {
-          res.json("Create material comment complete")
+          res.json("Create material comment complete");
         })
         .catch(() => {
-          res.status(400).send("Unable to create material comment")
+          res.status(400).send("Unable to create material comment");
         });
     }
   });
@@ -194,10 +194,10 @@ router.put("/comment/:materialId", (req, res) => {
       materialData
         .save()
         .then(() => {
-          res.json("Edit material comment complete")
+          res.json("Edit material comment complete");
         })
         .catch(() => {
-          res.status(400).send("Unable to edit material comment")
+          res.status(400).send("Unable to edit material comment");
         });
     }
   });
@@ -210,8 +210,7 @@ router.delete("/comment/:materialId&:commentId", (req, res) => {
     if (!materialData) {
       return res.status(404).send("Material data is not found");
     } else {
-
-      let newComments = materialData.comments ? [...materialData.comments] : [];      
+      let newComments = materialData.comments ? [...materialData.comments] : [];
       for (let i = 0; i < newComments.length; i++) {
         if (newComments[i]._id.toString() === commentId) {
           newComments.splice(i, 1);
@@ -223,10 +222,10 @@ router.delete("/comment/:materialId&:commentId", (req, res) => {
       materialData
         .save()
         .then(() => {
-          res.json("Delete material comment complete")
+          res.json("Delete material comment complete");
         })
         .catch(() => {
-          res.status(400).send("Unable to delete material comment")
+          res.status(400).send("Unable to delete material comment");
         });
     }
   });

@@ -21,7 +21,7 @@ import {
 } from "@material-ui/core";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import { withStyles } from "@material-ui/core/styles";
-import { Autocomplete }from '@material-ui/lab';
+import { Autocomplete } from "@material-ui/lab";
 
 const styles = (theme) => ({
   root: {
@@ -58,7 +58,7 @@ class CreateClass extends Component {
       openUploadDialog: null,
       teacherOptions: null,
       errors: {},
-      mata_pelajaran: []
+      mata_pelajaran: [],
     };
   }
 
@@ -70,9 +70,14 @@ class CreateClass extends Component {
     if (prevState.teacherOptions === null) {
       let all_classes = this.props.classesCollection.all_classes;
       let all_teachers = this.props.auth.all_teachers;
-      if (all_classes && Array.isArray(all_classes) && all_classes.length !== 0 &&
-        all_teachers && Array.isArray(all_teachers) && all_teachers.length !== 0) {
-
+      if (
+        all_classes &&
+        Array.isArray(all_classes) &&
+        all_classes.length !== 0 &&
+        all_teachers &&
+        Array.isArray(all_teachers) &&
+        all_teachers.length !== 0
+      ) {
         let all_walikelas = new Set(all_classes.map((cls) => cls.walikelas));
         let teacherOptions = all_teachers.filter(
           (teacher) => !all_walikelas.has(teacher._id)
@@ -81,7 +86,7 @@ class CreateClass extends Component {
         this.setState({ teacherOptions });
       }
     }
-  };
+  }
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
@@ -92,20 +97,18 @@ class CreateClass extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-    // otherfield ini adalah yang untuk field controllers Select atau variannya. 
+    // otherfield ini adalah yang untuk field controllers Select atau variannya.
     // Karena Select ini tidak memiliki nilai e.target.id, maka awalnya kita lakukan check dulu jika
-    
+
     let field = otherfield ? otherfield : e.target.id;
-      
+
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
-    
 
     if (field === "mata_pelajaran") {
       this.setState({ [field]: e });
-    } 
-    else {
+    } else {
       this.setState({ [field]: e.target.value });
     }
   };
@@ -121,7 +124,7 @@ class CreateClass extends Component {
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
       errors: {},
-      mata_pelajaran: this.state.mata_pelajaran.map((matpel) => (matpel._id))
+      mata_pelajaran: this.state.mata_pelajaran.map((matpel) => matpel._id),
     };
 
     this.props
@@ -224,15 +227,16 @@ class CreateClass extends Component {
                         this.onChange(event, "walikelas");
                       }}
                     >
-                      {(this.state.teacherOptions !== null) ? (
-                        this.state.teacherOptions.map((teacherInfo) => (
-                          <MenuItem key={teacherInfo._id} value={teacherInfo._id}>
-                            {teacherInfo.name}
-                          </MenuItem>
-                        ))
-                      ) : (
-                        null
-                      )}
+                      {this.state.teacherOptions !== null
+                        ? this.state.teacherOptions.map((teacherInfo) => (
+                            <MenuItem
+                              key={teacherInfo._id}
+                              value={teacherInfo._id}
+                            >
+                              {teacherInfo.name}
+                            </MenuItem>
+                          ))
+                        : null}
                     </Select>
                     <FormHelperText error>
                       {Boolean(errors.walikelas) ? errors.walikelas : null}
@@ -247,15 +251,15 @@ class CreateClass extends Component {
                   >
                     Mata Pelajaran
                   </Typography>
-                  <FormControl
-                    id="matapelajaran"
-                    color="primary"
-                    fullWidth
-                  >
+                  <FormControl id="matapelajaran" color="primary" fullWidth>
                     <Autocomplete
                       multiple
                       id="tags-outlined"
-                      options={this.props.subjectsCollection ? this.props.subjectsCollection.all_subjects : null}
+                      options={
+                        this.props.subjectsCollection
+                          ? this.props.subjectsCollection.all_subjects
+                          : null
+                      }
                       getOptionLabel={(option) => option.name}
                       filterSelectedOptions
                       // size="small"
@@ -340,7 +344,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   success: state.success,
   subjectsCollection: state.subjectsCollection,
-  classesCollection: state.classesCollection
+  classesCollection: state.classesCollection,
 });
 
 export default connect(mapStateToProps, {
@@ -349,5 +353,5 @@ export default connect(mapStateToProps, {
   getAllSubjects,
   clearErrors,
   clearSuccess,
-  getAllClass
+  getAllClass,
 })(withStyles(styles)(CreateClass));

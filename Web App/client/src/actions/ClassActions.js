@@ -118,10 +118,10 @@ export const updateClass = (classData, classId, history) => (dispatch) => {
 };
 
 export const deleteClass = (classId, history) => (dispatch) => {
- return axios
+  return axios
     .delete("/api/classes/delete/" + classId)
     .then((res) => {
-      return "Class is successfully deleted"
+      return "Class is successfully deleted";
     })
     .catch((err) => {
       console.log(err.response.data);

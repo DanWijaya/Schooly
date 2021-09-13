@@ -26,5 +26,5 @@ export default combineReducers({
   success: SuccessReducer,
   tasksCollection: TasksReducer,
   eventsCollection: EventReducer,
-  unitsCollection: UnitReducer
+  unitsCollection: UnitReducer,
 });

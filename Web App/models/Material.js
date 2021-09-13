@@ -7,7 +7,7 @@ const MaterialSchema = new Schema(
   {
     unit: {
       type: ObjectId,
-      default: null
+      default: null,
     },
     name: {
       type: String,
@@ -39,25 +39,25 @@ const MaterialSchema = new Schema(
     ],
     comments: [
       {
-        // nilai atribut "_id" (yang di-generate secara default) akan digunakan dalam penghapusan dan penyuntingan komentar 
-        author_id: { 
-          type: ObjectId, 
-          required: true 
+        // nilai atribut "_id" (yang di-generate secara default) akan digunakan dalam penghapusan dan penyuntingan komentar
+        author_id: {
+          type: ObjectId,
+          required: true,
         },
-        content: { 
+        content: {
           type: String,
-          required: true
+          required: true,
         },
         edited: {
           type: Boolean,
-          default: false
+          default: false,
         },
         createdAt: {
           type: Date,
-          required: true
-        }
+          required: true,
+        },
       },
-    ]
+    ],
   },
   { timestamps: true }
 );

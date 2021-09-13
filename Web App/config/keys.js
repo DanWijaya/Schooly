@@ -1,6 +1,6 @@
 module.exports = {
   mongoURI:
-  "mongodb+srv://Hello:Hello1234@schooly-46dtm.mongodb.net/hierarki?retryWrites=true&w=majority",
+    "mongodb+srv://Hello:Hello1234@schooly-46dtm.mongodb.net/hierarki?retryWrites=true&w=majority",
   secretOrKey: "secret",
   mailGunService: {
     apiKey: "9e91381d8c5088b2140f67f03315d628-7fba8a4e-31179542",

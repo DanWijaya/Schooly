@@ -4,13 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import schoolyIntroduction from "./SchoolyIntroduction.png";
 import schoolyAccess from "./SchoolyAccess.png";
-import {
-  Avatar,
-  Button,
-  Grid,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import { Avatar, Button, Grid, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
@@ -206,9 +200,9 @@ class Landing extends Component {
                   Schooly membuat pekerjaan sekolahmu lebih mudah.
                 </Typography>
                 <Typography variant="h6">
-                  Tidak pernah lupa lagi dengan tugas sekolah yang ada.
-                  Berikan materi dan pekerjaan sekolah dengan mudah.
-                  Periksa hasil kuis dan ujian secara otomatis.
+                  Tidak pernah lupa lagi dengan tugas sekolah yang ada. Berikan
+                  materi dan pekerjaan sekolah dengan mudah. Periksa hasil kuis
+                  dan ujian secara otomatis.
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6} container justify="flex-end">
@@ -231,7 +225,12 @@ class Landing extends Component {
               />
             </Grid>
             <Grid item>
-              <Typography variant="h4" color="primary" align="center" gutterBottom>
+              <Typography
+                variant="h4"
+                color="primary"
+                align="center"
+                gutterBottom
+              >
                 Akses dengan mudah di mana saja.
               </Typography>
               <Typography align="center">
@@ -249,11 +248,13 @@ class Landing extends Component {
                   Schooly selalu berkembang
                 </Typography>
                 <Typography color="textSecondary">
-                  Schooly memudahkan pekerjaan hampir semua pihak dalam kegiatan belajar mengajar,
-                  baik dari pihak <b>sekolah</b>, <b>guru</b>, maupun <b>murid</b>.
+                  Schooly memudahkan pekerjaan hampir semua pihak dalam kegiatan
+                  belajar mengajar, baik dari pihak <b>sekolah</b>, <b>guru</b>,
+                  maupun <b>murid</b>.
                 </Typography>
                 <Typography color="textSecondary" paragraph>
-                  Fitur yang kami sediakan pun selalu <u>bertambah</u> dan <u>berkembang</u> dari waktu ke waktu.
+                  Fitur yang kami sediakan pun selalu <u>bertambah</u> dan{" "}
+                  <u>berkembang</u> dari waktu ke waktu.
                 </Typography>
               </Grid>
               <Grid item xs={6} sm={4} lg={3}>
@@ -263,7 +264,8 @@ class Landing extends Component {
                   </Avatar>
                   <Typography paragraph>Akun Pengelola</Typography>
                   <Typography variant="body2">
-                    Atur dan kelola pengguna yang ada dengan mudah dan terstruktur.
+                    Atur dan kelola pengguna yang ada dengan mudah dan
+                    terstruktur.
                   </Typography>
                 </Paper>
               </Grid>
@@ -297,8 +299,8 @@ class Landing extends Component {
                   </Avatar>
                   <Typography paragraph>Kelas</Typography>
                   <Typography variant="body2">
-                    Kelompokkan murid-murid yang ada sesuai dengan kelas
-                    dan mata pelajaran masing-masing.
+                    Kelompokkan murid-murid yang ada sesuai dengan kelas dan
+                    mata pelajaran masing-masing.
                   </Typography>
                 </Paper>
               </Grid>
@@ -356,8 +358,8 @@ class Landing extends Component {
                   </Avatar>
                   <Typography paragraph>Materi</Typography>
                   <Typography variant="body2">
-                    Kertas tidak ada, tas pun jadi ringan. Berikan materi kepada murid dengan beberapa
-                    ketuk saja, tanpa harus dicetak.
+                    Kertas tidak ada, tas pun jadi ringan. Berikan materi kepada
+                    murid dengan beberapa ketuk saja, tanpa harus dicetak.
                   </Typography>
                 </Paper>
               </Grid>
@@ -416,8 +418,12 @@ class Landing extends Component {
                 Pengenalan dan Penjelasan
               </Typography>
               <Typography variant="body2" align="center">
-                Kunjungi halaman <Link to="/tentang-schooly" style={{ color: "white" }}><u>Tentang Schooly</u></Link> dan
-                hubungi kami untuk mendapatkan penjelasan lebih lanjut tentang Schooly.
+                Kunjungi halaman{" "}
+                <Link to="/tentang-schooly" style={{ color: "white" }}>
+                  <u>Tentang Schooly</u>
+                </Link>{" "}
+                dan hubungi kami untuk mendapatkan penjelasan lebih lanjut
+                tentang Schooly.
               </Typography>
             </Grid>
             <Grid item xs={12} md={4} className={classes.trySchoolyItemMiddle}>
@@ -436,8 +442,8 @@ class Landing extends Component {
                 Penggunaan
               </Typography>
               <Typography variant="body2" align="center">
-                Setelah semua dokumen administrasi sudah dilengkapi,
-                maka Schooly siap digunakan di sekolah Anda.
+                Setelah semua dokumen administrasi sudah dilengkapi, maka
+                Schooly siap digunakan di sekolah Anda.
               </Typography>
             </Grid>
           </Grid>
@@ -450,7 +456,11 @@ class Landing extends Component {
             Klik tombol "Kirim Pesan" untuk menghubungi kami atau tombol "Salin
             Tautan" untuk mengirim tautan ini ke sekolah Anda.
           </Typography>
-          <Grid container spacing={2} className={classes.contactSchoolyButtonsContainer}>
+          <Grid
+            container
+            spacing={2}
+            className={classes.contactSchoolyButtonsContainer}
+          >
             <Grid item>
               <Button
                 variant="contained"

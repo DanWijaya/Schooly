@@ -147,7 +147,7 @@ function ProfileDataItemEdit(props) {
 
 function ProfileDataEditorDialog(props) {
   const classes = useStyles();
-  
+
   const { user } = props.auth;
   const { updateUserData, clearErrors, errors, handleOpenAlert } = props;
   // handleOpenAlert()
@@ -197,12 +197,13 @@ function ProfileDataEditorDialog(props) {
   const onSubmit = (e) => {
     e.preventDefault();
     let userId = user._id;
-    handleOpenAlert()
+    handleOpenAlert();
     // if (isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
     //   handleOpenAlert();
 
-    updateUserData(dataProfil, userId, props.history)
-        .then((res) => props.handleOpenAlert());
+    updateUserData(dataProfil, userId, props.history).then((res) =>
+      props.handleOpenAlert()
+    );
   };
 
   const handleChangeDataProfil = (e, otherfield) => {

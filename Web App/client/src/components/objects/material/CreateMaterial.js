@@ -128,8 +128,8 @@ const styles = (theme) => ({
   },
   zeroHeightHelperText: {
     height: "0",
-    display: "flex" // untuk men-disable "collapsing margin"
-  }
+    display: "flex", // untuk men-disable "collapsing margin"
+  },
 });
 
 function LampiranFile(props) {
@@ -219,8 +219,8 @@ class CreateMaterial extends Component {
       // sortFlag: false
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
-      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
-      allSubjectObject: null // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
+      allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
     };
   }
 
@@ -252,9 +252,8 @@ class CreateMaterial extends Component {
     this.setState({ openDeleteDialog: false });
   };
 
-  onChange = (e, otherfield=null) => {
-
-    // dipindahkan (kode yg dari merge_fitur_4_cdn ada di bawah dan dikomen) 
+  onChange = (e, otherfield = null) => {
+    // dipindahkan (kode yg dari merge_fitur_4_cdn ada di bawah dan dikomen)
     let field = otherfield ? otherfield : e.target.id;
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
@@ -265,54 +264,82 @@ class CreateMaterial extends Component {
       if (otherfield === "deadline") {
         this.setState({ [otherfield]: e });
         // e is the date value itself for KeyboardDatePicker
-      } else if (otherfield === "subject") { // jika guru memilih mata pelajaran
+      } else if (otherfield === "subject") {
+        // jika guru memilih mata pelajaran
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
         let newClassOptions = [];
         if (this.props.auth.user.class_to_subject) {
-          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+          for (let [classId, subjectIdArray] of Object.entries(
+            this.props.auth.user.class_to_subject
+          )) {
             if (subjectIdArray.includes(e.target.value)) {
-              newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+              newClassOptions.push({
+                _id: classId,
+                name: this.state.allClassObject[classId],
+              });
             }
           }
         }
 
-        this.setState({ subject: e.target.value, classOptions: newClassOptions });
-
-      } else if (otherfield === "class_assigned") { // jika guru memilih kelas
+        this.setState({
+          subject: e.target.value,
+          classOptions: newClassOptions,
+        });
+      } else if (otherfield === "class_assigned") {
+        // jika guru memilih kelas
         let selectedClasses = e.target.value;
 
-        if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
+        if (selectedClasses.length === 0) {
+          // jika guru membatalkan semua pilihan kelas
           this.setState((prevState, props) => {
             return {
               class_assigned: selectedClasses,
               // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
-              subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
-            }
+              subjectOptions: props.auth.user.subject_teached.map(
+                (subjectId) => ({
+                  _id: subjectId,
+                  name: prevState.allSubjectObject[subjectId],
+                })
+              ),
+            };
           });
-        } else { // jika guru menambahkan atau mengurangi pilihan kelas
+        } else {
+          // jika guru menambahkan atau mengurangi pilihan kelas
           // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
           let subjectMatrix = [];
           if (this.props.auth.user.class_to_subject) {
             for (let classId of selectedClasses) {
               if (this.props.auth.user.class_to_subject[classId]) {
-                subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+                subjectMatrix.push(
+                  this.props.auth.user.class_to_subject[classId]
+                );
               }
             }
           }
           let subjects = [];
           if (subjectMatrix.length !== 0) {
-            subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
-              return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
-            });
+            subjects = subjectMatrix.reduce(
+              (prevIntersectionResult, currentArray) => {
+                return currentArray.filter((subjectId) =>
+                  prevIntersectionResult.includes(subjectId)
+                );
+              }
+            );
           }
 
           // menambahkan matpel tersebut ke opsi matpel
           let newSubjectOptions = [];
           subjects.forEach((subjectId) => {
-            newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
-          })
+            newSubjectOptions.push({
+              _id: subjectId,
+              name: this.state.allSubjectObject[subjectId],
+            });
+          });
 
-          this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
+          this.setState({
+            subjectOptions: newSubjectOptions,
+            class_assigned: selectedClasses,
+          });
         }
       } else {
         this.setState({ [otherfield]: e.target.value });
@@ -353,16 +380,16 @@ class CreateMaterial extends Component {
 
     console.log(this.state.fileLampiran);
     // this.props.createMaterial(formData, materialData, this.props.history)
-    
+
     this.handleOpenUploadDialog();
     this.props
       .createMaterial(formData, materialData, this.props.history)
       .then((res) => {
-      this.setState({ success: res});
-      // this.handleOpenUploadDialog();
-    })
+        this.setState({ success: res });
+        // this.handleOpenUploadDialog();
+      })
       .catch((err) => {
-        this.handleCloseUploadDialog()
+        this.handleCloseUploadDialog();
         this.setState({ errors: err });
       });
   };
@@ -373,9 +400,15 @@ class CreateMaterial extends Component {
     }
 
     // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas dan mata pelajaran
-    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
-      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
-
+    if (
+      prevState.classOptions === null ||
+      JSON.stringify(prevProps.auth.user) !==
+        JSON.stringify(this.props.auth.user)
+    ) {
+      if (
+        this.props.classesCollection.all_classes &&
+        this.props.classesCollection.all_classes.length !== 0
+      ) {
         let all_classes_obj = {};
         this.props.classesCollection.all_classes.forEach((classInfo) => {
           all_classes_obj[classInfo._id] = classInfo.name;
@@ -383,17 +416,28 @@ class CreateMaterial extends Component {
 
         let newClassOptions = [];
         if (this.props.auth.user.class_teached) {
-          newClassOptions = this.props.auth.user.class_teached.map((classId) => {
-            return { _id: classId, name: all_classes_obj[classId] };
-          });
+          newClassOptions = this.props.auth.user.class_teached.map(
+            (classId) => {
+              return { _id: classId, name: all_classes_obj[classId] };
+            }
+          );
         }
-        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
-      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
+        this.setState({
+          classOptions: newClassOptions,
+          allClassObject: all_classes_obj,
+        });
+      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null
     }
 
-    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
-      if (this.props.subjectsCollection.all_subjects && (this.props.subjectsCollection.all_subjects.length !== 0)) {
-
+    if (
+      prevState.subjectOptions === null ||
+      JSON.stringify(prevProps.auth.user) !==
+        JSON.stringify(this.props.auth.user)
+    ) {
+      if (
+        this.props.subjectsCollection.all_subjects &&
+        this.props.subjectsCollection.all_subjects.length !== 0
+      ) {
         let all_subjects_obj = {};
         this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
           all_subjects_obj[subjectInfo._id] = subjectInfo.name;
@@ -401,12 +445,17 @@ class CreateMaterial extends Component {
 
         let newSubjectOptions = [];
         if (this.props.auth.user.subject_teached) {
-          newSubjectOptions = this.props.auth.user.subject_teached.map((subjectId) => {
-            return { _id: subjectId, name: all_subjects_obj[subjectId] };
-          });
+          newSubjectOptions = this.props.auth.user.subject_teached.map(
+            (subjectId) => {
+              return { _id: subjectId, name: all_subjects_obj[subjectId] };
+            }
+          );
         }
 
-        this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
+        this.setState({
+          subjectOptions: newSubjectOptions,
+          allSubjectObject: all_subjects_obj,
+        });
       } // jika memang belum ada matpel yang tercatat di sistem, opsi matpel akan tetap null
     }
   }
@@ -585,12 +634,13 @@ class CreateMaterial extends Component {
                           invalid: errors.name,
                         })}
                       />
-                      {errors.name
-                        ?
+                      {errors.name ? (
                         <div className={classes.zeroHeightHelperText}>
-                          <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
+                          <FormHelperText variant="outlined" error>
+                            {errors.name}
+                          </FormHelperText>
                         </div>
-                        : null}
+                      ) : null}
                     </Grid>
                     <Grid item>
                       <Typography
@@ -616,12 +666,13 @@ class CreateMaterial extends Component {
                           invalid: errors.description,
                         })}
                       />
-                      {errors.description
-                        ?
+                      {errors.description ? (
                         <div className={classes.zeroHeightHelperText}>
-                          <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                          <FormHelperText variant="outlined" error>
+                            {errors.description}
+                          </FormHelperText>
                         </div>
-                        : null}
+                      ) : null}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -653,22 +704,21 @@ class CreateMaterial extends Component {
                             this.onChange(event, "subject");
                           }}
                         >
-                          {(this.state.subjectOptions !== null) ? (
-                            this.state.subjectOptions.map((subject) => (
-                              <MenuItem key={subject._id} value={subject._id}>
-                                {subject.name}
-                              </MenuItem>
-                            ))
-                          ) : (
-                            null
-                          )}
+                          {this.state.subjectOptions !== null
+                            ? this.state.subjectOptions.map((subject) => (
+                                <MenuItem key={subject._id} value={subject._id}>
+                                  {subject.name}
+                                </MenuItem>
+                              ))
+                            : null}
                         </Select>
-                        {Boolean(errors.subject) && !this.state.subject
-                          ?
+                        {Boolean(errors.subject) && !this.state.subject ? (
                           <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>{errors.subject}</FormHelperText>
+                            <FormHelperText variant="outlined" error>
+                              {errors.subject}
+                            </FormHelperText>
                           </div>
-                          : null}
+                        ) : null}
                       </FormControl>
                     </Grid>
                     <Grid item>
@@ -691,7 +741,7 @@ class CreateMaterial extends Component {
                           value={class_assigned}
                           onChange={(event) => {
                             this.onChange(event, "class_assigned");
-                            console.log(event.target.value)
+                            console.log(event.target.value);
                           }}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
@@ -699,7 +749,11 @@ class CreateMaterial extends Component {
                                 return (
                                   <Chip
                                     key={classId}
-                                    label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
+                                    label={
+                                      this.state.allClassObject
+                                        ? this.state.allClassObject[classId]
+                                        : null
+                                    }
                                     className={classes.chip}
                                   />
                                 );
@@ -707,22 +761,25 @@ class CreateMaterial extends Component {
                             </div>
                           )}
                         >
-                          {(this.state.classOptions !== null) ? (
-                            this.state.classOptions.map((classInfo) => (
-                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
-                                {classInfo.name}
-                              </MenuItem>
-                            ))
-                          ) : (
-                            null
-                          )}
+                          {this.state.classOptions !== null
+                            ? this.state.classOptions.map((classInfo) => (
+                                <MenuItem
+                                  selected={true}
+                                  key={classInfo._id}
+                                  value={classInfo._id}
+                                >
+                                  {classInfo.name}
+                                </MenuItem>
+                              ))
+                            : null}
                         </Select>
-                        {Boolean(errors.class_assigned)
-                          ?
+                        {Boolean(errors.class_assigned) ? (
                           <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                            <FormHelperText variant="outlined" error>
+                              {errors.class_assigned}
+                            </FormHelperText>
                           </div>
-                          : null}
+                        ) : null}
                       </FormControl>
                     </Grid>
                     <Grid item>
@@ -827,5 +884,5 @@ export default connect(mapStateToProps, {
   createMaterial,
   clearErrors,
   clearSuccess,
-  refreshTeacher
+  refreshTeacher,
 })(withStyles(styles)(CreateMaterial));

@@ -503,8 +503,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
   },
   listItem: {
-    padding: "6px 16px"
-  }
+    padding: "6px 16px",
+  },
 }));
 
 function MaterialList(props) {
@@ -522,7 +522,7 @@ function MaterialList(props) {
 
   const handleOpenDeleteSnackbar = () => {
     setOpenDeleteSnackbar(true);
-  }
+  };
 
   const handleCloseDeleteSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -570,17 +570,17 @@ function MaterialList(props) {
       // for student
       getMaterial(user.kelas, "by_class");
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
     // Untuk muculin delete snackbar pas didelete dari view page
-    if(props.location.openDeleteSnackbar){
-      handleOpenDeleteSnackbar()
+    if (props.location.openDeleteSnackbar) {
+      handleOpenDeleteSnackbar();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   console.log(all_teachers_map);
   const retrieveMaterials = () => {

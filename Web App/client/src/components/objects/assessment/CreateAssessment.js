@@ -4,7 +4,10 @@ import DateFnsUtils from "@date-io/date-fns";
 import PropTypes from "prop-types";
 import lokal from "date-fns/locale/id";
 import "date-fns";
-import { createAssessment, validateAssessment } from "../../../actions/AssessmentActions";
+import {
+  createAssessment,
+  validateAssessment,
+} from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { refreshTeacher } from "../../../actions/UserActions";
@@ -37,7 +40,7 @@ import {
   ListItemIcon,
   ListItemText,
   FormGroup,
-  Checkbox
+  Checkbox,
 } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
@@ -145,7 +148,7 @@ const styles = (theme) => ({
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
-      color: "white"
+      color: "white",
     },
   },
   cancelButton: {
@@ -153,7 +156,7 @@ const styles = (theme) => ({
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.error.main,
-      color: "white"
+      color: "white",
     },
   },
   chips: {
@@ -206,27 +209,27 @@ const styles = (theme) => ({
     },
   },
   dividerMargin: {
-    margin: "4px 0"
+    margin: "4px 0",
   },
   customSpacing: {
     [theme.breakpoints.down("sm")]: {
-      marginTop: theme.spacing(2)
-    }
+      marginTop: theme.spacing(2),
+    },
   },
   customPaddingBottom: {
     [theme.breakpoints.up("md")]: {
-      paddingBottom: "0!important"
-    }
+      paddingBottom: "0!important",
+    },
   },
   customPaddingTop: {
     [theme.breakpoints.up("md")]: {
-      paddingTop: "0!important"
-    }
+      paddingTop: "0!important",
+    },
   },
   zeroHeightHelperText: {
     height: "0",
-    display: "flex" // untuk men-disable "collapsing margin"
-  }
+    display: "flex", // untuk men-disable "collapsing margin"
+  },
 });
 
 class CreateAssessment extends Component {
@@ -293,7 +296,7 @@ class CreateAssessment extends Component {
       inputHeight: null, // menyimpan tinggi textfield
       customHeight: null, // menyimpan tinggi label + textfield
       errors: {},
-      success: null
+      success: null,
     };
     this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
     this.customHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi label "Judul" dan textfield
@@ -403,8 +406,11 @@ class CreateAssessment extends Component {
           if (type === "longtext") {
             for (let weight of this.state.longtextWeight) {
               // agar data assessment tidak disubmit ketika ada bobot soal uraian yang tidak valid
-              if (weight !== -1 && (isNaN(Number(weight)) || Number(weight) <= 0)) {
-                  completeWeight = false;
+              if (
+                weight !== -1 &&
+                (isNaN(Number(weight)) || Number(weight) <= 0)
+              ) {
+                completeWeight = false;
               }
             }
           } else {
@@ -450,7 +456,11 @@ class CreateAssessment extends Component {
     });
 
     // jika soal dan bobot sudah lengkap dan benar, submit
-    if (invalidQuestionIndex.length === 0 && completeWeight && Object.values(this.state.errors).every((error) => (!error))) {
+    if (
+      invalidQuestionIndex.length === 0 &&
+      completeWeight &&
+      Object.values(this.state.errors).every((error) => !error)
+    ) {
       let longtext;
       if (typeCount.get("longtext") === 0) {
         longtext = null;
@@ -468,9 +478,14 @@ class CreateAssessment extends Component {
         });
       }
       let question_weight = {
-        radio: typeCount.get("radio") === 0 ? null : Number(this.state.weights.radio),
+        radio:
+          typeCount.get("radio") === 0
+            ? null
+            : Number(this.state.weights.radio),
         checkbox:
-          typeCount.get("checkbox") === 0 ? null : Number(this.state.weights.checkbox),
+          typeCount.get("checkbox") === 0
+            ? null
+            : Number(this.state.weights.checkbox),
         shorttext:
           typeCount.get("shorttext") === 0
             ? null
@@ -494,8 +509,8 @@ class CreateAssessment extends Component {
         description: this.state.description,
         questions: this.state.questions,
         author_id: id,
-        posted: this.state.isScheduled ? null: this.state.posted,
-        post_date: this.state.isScheduled ? this.state.post_date: null,
+        posted: this.state.isScheduled ? null : this.state.posted,
+        post_date: this.state.isScheduled ? this.state.post_date : null,
         type: this.state.type,
         question_weight: question_weight,
       };
@@ -520,11 +535,13 @@ class CreateAssessment extends Component {
         questions: this.state.questions,
         type: this.state.type,
       };
-      validateAssessment(assessmentData).catch((err) => {
-        this.setState({ errors: err });
-      }).finally(() => {
-        this.handleOpenErrorSnackbar();
-      });
+      validateAssessment(assessmentData)
+        .catch((err) => {
+          this.setState({ errors: err });
+        })
+        .finally(() => {
+          this.handleOpenErrorSnackbar();
+        });
     }
   };
 
@@ -533,8 +550,8 @@ class CreateAssessment extends Component {
   };
 
   handleCloseUploadDialog = () => {
-    this.setState({ openUploadDialog: false})
-  }
+    this.setState({ openUploadDialog: false });
+  };
 
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
@@ -556,79 +573,142 @@ class CreateAssessment extends Component {
     }
 
     if (otherfield) {
-      if (otherfield === "end_date" || otherfield === "start_date" || otherfield === "post_date") {
-
+      if (
+        otherfield === "end_date" ||
+        otherfield === "start_date" ||
+        otherfield === "post_date"
+      ) {
         if (otherfield === "start_date") {
-          if (this.isValidDateTime(e) && this.isValidDateTime(this.state.end_date)) {
+          if (
+            this.isValidDateTime(e) &&
+            this.isValidDateTime(this.state.end_date)
+          ) {
             if (this.state.end_date.getTime() < e.getTime()) {
-              this.setState({ errors: { ...this.state.errors, start_date_custom: "Harus sebelum Waktu Selesai Pengerjaan" } });
+              this.setState({
+                errors: {
+                  ...this.state.errors,
+                  start_date_custom: "Harus sebelum Waktu Selesai Pengerjaan",
+                },
+              });
             } else {
-              this.setState({ errors: { ...this.state.errors, start_date_custom: null, end_date_custom: null } });
+              this.setState({
+                errors: {
+                  ...this.state.errors,
+                  start_date_custom: null,
+                  end_date_custom: null,
+                },
+              });
             }
           } else {
-            this.setState({ errors: { ...this.state.errors, start_date_custom: null } });
+            this.setState({
+              errors: { ...this.state.errors, start_date_custom: null },
+            });
           }
         } else if (otherfield === "end_date") {
-          if (this.isValidDateTime(e) && this.isValidDateTime(this.state.start_date)) {
+          if (
+            this.isValidDateTime(e) &&
+            this.isValidDateTime(this.state.start_date)
+          ) {
             if (e.getTime() < this.state.start_date.getTime()) {
-              this.setState({ errors: { ...this.state.errors, end_date_custom: "Harus setelah Waktu Mulai Pengerjaan" } });
+              this.setState({
+                errors: {
+                  ...this.state.errors,
+                  end_date_custom: "Harus setelah Waktu Mulai Pengerjaan",
+                },
+              });
             } else {
-              this.setState({ errors: { ...this.state.errors, start_date_custom: null, end_date_custom: null } });
+              this.setState({
+                errors: {
+                  ...this.state.errors,
+                  start_date_custom: null,
+                  end_date_custom: null,
+                },
+              });
             }
           } else {
-            this.setState({ errors: { ...this.state.errors, end_date_custom: null } });
+            this.setState({
+              errors: { ...this.state.errors, end_date_custom: null },
+            });
           }
         }
 
         this.setState({ [otherfield]: e });
-      } else if (otherfield === "subject") { // jika guru memilih mata pelajaran
+      } else if (otherfield === "subject") {
+        // jika guru memilih mata pelajaran
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
         let newClassOptions = [];
         if (this.props.auth.user.class_to_subject) {
-          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+          for (let [classId, subjectIdArray] of Object.entries(
+            this.props.auth.user.class_to_subject
+          )) {
             if (subjectIdArray.includes(e.target.value)) {
-              newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+              newClassOptions.push({
+                _id: classId,
+                name: this.state.allClassObject[classId],
+              });
             }
           }
         }
 
-        this.setState({ subject: e.target.value, classOptions: newClassOptions });
-
-      } else if (otherfield === "class_assigned") { // jika guru memilih kelas
+        this.setState({
+          subject: e.target.value,
+          classOptions: newClassOptions,
+        });
+      } else if (otherfield === "class_assigned") {
+        // jika guru memilih kelas
         let selectedClasses = e.target.value;
 
-        if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
+        if (selectedClasses.length === 0) {
+          // jika guru membatalkan semua pilihan kelas
           this.setState((prevState, props) => {
             return {
               class_assigned: selectedClasses,
               // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
-              subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
-            }
+              subjectOptions: props.auth.user.subject_teached.map(
+                (subjectId) => ({
+                  _id: subjectId,
+                  name: prevState.allSubjectObject[subjectId],
+                })
+              ),
+            };
           });
-        } else { // jika guru menambahkan atau mengurangi pilihan kelas
+        } else {
+          // jika guru menambahkan atau mengurangi pilihan kelas
           // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
           let subjectMatrix = [];
           if (this.props.auth.user.class_to_subject) {
             for (let classId of selectedClasses) {
               if (this.props.auth.user.class_to_subject[classId]) {
-                subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+                subjectMatrix.push(
+                  this.props.auth.user.class_to_subject[classId]
+                );
               }
             }
           }
           let subjects = [];
           if (subjectMatrix.length !== 0) {
-            subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
-              return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
-            });
+            subjects = subjectMatrix.reduce(
+              (prevIntersectionResult, currentArray) => {
+                return currentArray.filter((subjectId) =>
+                  prevIntersectionResult.includes(subjectId)
+                );
+              }
+            );
           }
 
           // menambahkan matpel tersebut ke opsi matpel
           let newSubjectOptions = [];
           subjects.forEach((subjectId) => {
-            newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
-          })
+            newSubjectOptions.push({
+              _id: subjectId,
+              name: this.state.allSubjectObject[subjectId],
+            });
+          });
 
-          this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
+          this.setState({
+            subjectOptions: newSubjectOptions,
+            class_assigned: selectedClasses,
+          });
         }
       } else {
         this.setState({ [otherfield]: e.target.value });
@@ -1018,9 +1098,15 @@ class CreateAssessment extends Component {
     }
 
     // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas dan mata pelajaran
-    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
-      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
-
+    if (
+      prevState.classOptions === null ||
+      JSON.stringify(prevProps.auth.user) !==
+        JSON.stringify(this.props.auth.user)
+    ) {
+      if (
+        this.props.classesCollection.all_classes &&
+        this.props.classesCollection.all_classes.length !== 0
+      ) {
         let all_classes_obj = {};
         this.props.classesCollection.all_classes.forEach((classInfo) => {
           all_classes_obj[classInfo._id] = classInfo.name;
@@ -1028,18 +1114,29 @@ class CreateAssessment extends Component {
 
         let newClassOptions = [];
         if (this.props.auth.user.class_teached) {
-          newClassOptions = this.props.auth.user.class_teached.map((classId) => {
-            return { _id: classId, name: all_classes_obj[classId] };
-          });
+          newClassOptions = this.props.auth.user.class_teached.map(
+            (classId) => {
+              return { _id: classId, name: all_classes_obj[classId] };
+            }
+          );
         }
 
-        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+        this.setState({
+          classOptions: newClassOptions,
+          allClassObject: all_classes_obj,
+        });
       } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null
     }
 
-    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
-      if (this.props.subjectsCollection.all_subjects && (this.props.subjectsCollection.all_subjects.length !== 0)) {
-
+    if (
+      prevState.subjectOptions === null ||
+      JSON.stringify(prevProps.auth.user) !==
+        JSON.stringify(this.props.auth.user)
+    ) {
+      if (
+        this.props.subjectsCollection.all_subjects &&
+        this.props.subjectsCollection.all_subjects.length !== 0
+      ) {
         let all_subjects_obj = {};
         this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
           all_subjects_obj[subjectInfo._id] = subjectInfo.name;
@@ -1047,24 +1144,34 @@ class CreateAssessment extends Component {
 
         let newSubjectOptions = [];
         if (this.props.auth.user.subject_teached) {
-          newSubjectOptions = this.props.auth.user.subject_teached.map((subjectId) => {
-            return { _id: subjectId, name: all_subjects_obj[subjectId] };
-          });
+          newSubjectOptions = this.props.auth.user.subject_teached.map(
+            (subjectId) => {
+              return { _id: subjectId, name: all_subjects_obj[subjectId] };
+            }
+          );
         }
 
-        this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
+        this.setState({
+          subjectOptions: newSubjectOptions,
+          allSubjectObject: all_subjects_obj,
+        });
       } // jika memang belum ada matpel yang tercatat di sistem, opsi matpel akan tetap null
     }
   }
 
   componentDidMount() {
-    const { getAllClass, getAllSubjects, handleSideDrawerExist, refreshTeacher } = this.props;
+    const {
+      getAllClass,
+      getAllSubjects,
+      handleSideDrawerExist,
+      refreshTeacher,
+    } = this.props;
     const { pathname } = this.props.location;
 
-    if(pathname === "/buat-kuis"){
-      this.setState({ type: "Kuis"})
-    } else if (pathname === "/buat-ujian"){
-      this.setState({ type: "Ujian"})
+    if (pathname === "/buat-kuis") {
+      this.setState({ type: "Kuis" });
+    } else if (pathname === "/buat-ujian") {
+      this.setState({ type: "Ujian" });
     } else {
       console.log("Kuis atau ujian tidak dispecify");
     }
@@ -1076,7 +1183,10 @@ class CreateAssessment extends Component {
     if (this.inputHeightRef.current && this.customHeightRef.current) {
       this.setState({
         inputHeight: this.inputHeightRef.current.offsetHeight,
-        customHeight: this.customHeightRef.current.offsetHeight + this.inputHeightRef.current.offsetHeight + 32 // tinggi (label + textfield) + (textfield) + (space antara textfield dan label di bawahnya)
+        customHeight:
+          this.customHeightRef.current.offsetHeight +
+          this.inputHeightRef.current.offsetHeight +
+          32, // tinggi (label + textfield) + (textfield) + (space antara textfield dan label di bawahnya)
         // customHeight: document.getElementById("top").getBoundingClientRect().top - document.getElementById("bottom").getBoundingClientRect().bottom // hasilnya salah
       });
     }
@@ -1160,9 +1270,12 @@ class CreateAssessment extends Component {
     for (let question of this.state.questions) {
       typeCount.add(question.type);
     }
-    let filteredtypeCount = ["radio", "checkbox", "shorttext", "longtext"].filter(
-      (type) => typeCount.has(type)
-    );
+    let filteredtypeCount = [
+      "radio",
+      "checkbox",
+      "shorttext",
+      "longtext",
+    ].filter((type) => typeCount.has(type));
 
     if (filteredtypeCount.length !== 0) {
       let desktopView = [];
@@ -1171,7 +1284,7 @@ class CreateAssessment extends Component {
           <Typography variant="h6">Bobot Per Soal:</Typography>
           <FormHelperText>{"\u200B"}</FormHelperText>
           <Divider className={classes.dividerMargin} />
-        </>
+        </>,
       ];
 
       for (let i = 0; i < filteredtypeCount.length; i++) {
@@ -1190,10 +1303,10 @@ class CreateAssessment extends Component {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                flexGrow: "1"
+                flexGrow: "1",
               }}
             >
-              <Grid container alignItems="center" style={{ flexGrow: "1"}}>
+              <Grid container alignItems="center" style={{ flexGrow: "1" }}>
                 <Grid item style={{ marginRight: "20px" }}>
                   {columnTemplate[type].icon}
                 </Grid>
@@ -1210,14 +1323,16 @@ class CreateAssessment extends Component {
                   </Hidden>
                 </Grid>
               </Grid>
-              {type !== "longtext" ? <FormHelperText>{"\u200B"}</FormHelperText> : null}
+              {type !== "longtext" ? (
+                <FormHelperText>{"\u200B"}</FormHelperText>
+              ) : null}
             </div>
             {type !== "longtext" ? (
               <Grid
                 item
                 style={{
                   display: "flex",
-                  flexDirection: "column"
+                  flexDirection: "column",
                 }}
               >
                 <Hidden xsDown>
@@ -1234,8 +1349,8 @@ class CreateAssessment extends Component {
                     FormHelperTextProps={{
                       style: {
                         marginLeft: "0",
-                        marginRight: "0"
-                      }
+                        marginRight: "0",
+                      },
                     }}
                     InputProps={{
                       style: {
@@ -1261,12 +1376,12 @@ class CreateAssessment extends Component {
                     FormHelperTextProps={{
                       style: {
                         marginLeft: "0",
-                        marginRight: "0"
-                      }
+                        marginRight: "0",
+                      },
                     }}
                     InputProps={{
                       style: {
-                        width: "85px"
+                        width: "85px",
                       },
                       endAdornment: (
                         <Typography
@@ -1360,7 +1475,7 @@ class CreateAssessment extends Component {
                   FormHelperTextProps={{
                     style: {
                       marginLeft: "0",
-                      marginRight: "0"
+                      marginRight: "0",
                     },
                   }}
                   InputProps={{
@@ -1469,7 +1584,10 @@ class CreateAssessment extends Component {
       checked: {},
     }))(Switch);
 
-    document.title = this.state.type === "Kuis" ? "Schooly | Buat Kuis" : "Schooly | Buat Ujian";
+    document.title =
+      this.state.type === "Kuis"
+        ? "Schooly | Buat Kuis"
+        : "Schooly | Buat Ujian";
 
     return (
       <div className={classes.root}>
@@ -1525,7 +1643,8 @@ class CreateAssessment extends Component {
                     <b>Buat {this.state.type}</b>
                   </Typography>
                   <Typography color="textSecondary">
-                    Tambahkan keterangan untuk membuat {this.state.type.toLowerCase()}.
+                    Tambahkan keterangan untuk membuat{" "}
+                    {this.state.type.toLowerCase()}.
                   </Typography>
                 </div>
                 <Divider />
@@ -1550,12 +1669,13 @@ class CreateAssessment extends Component {
                               // helperText={errors.name}
                               onChange={this.onChange}
                             />
-                            {errors.name
-                              ?
+                            {errors.name ? (
                               <div className={classes.zeroHeightHelperText}>
-                                <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
+                                <FormHelperText variant="outlined" error>
+                                  {errors.name}
+                                </FormHelperText>
                               </div>
-                              : null}
+                            ) : null}
                           </div>
                         </div>
                       </Grid>
@@ -1583,18 +1703,28 @@ class CreateAssessment extends Component {
                             <MenuItem value="Kuis">Kuis</MenuItem>
                             <MenuItem value="Ujian">Ujian</MenuItem>
                           </Select>
-                          {Boolean(errors.type)
-                            ?
+                          {Boolean(errors.type) ? (
                             <div className={classes.zeroHeightHelperText}>
-                              <FormHelperText variant="outlined" error>{errors.type}</FormHelperText>
+                              <FormHelperText variant="outlined" error>
+                                {errors.type}
+                              </FormHelperText>
                             </div>
-                            : null}
+                          ) : null}
                         </FormControl>
                       </Grid>
                       <Hidden smDown>
                         {/* dummy checkbox agar kedua kolom form keterangan assessment simetris */}
-                        <Grid item style={{ padding: "0", width: "0", visibility: "hidden" }}>
-                          <FormHelperText variant="outlined">{"\u200B"}</FormHelperText>
+                        <Grid
+                          item
+                          style={{
+                            padding: "0",
+                            width: "0",
+                            visibility: "hidden",
+                          }}
+                        >
+                          <FormHelperText variant="outlined">
+                            {"\u200B"}
+                          </FormHelperText>
                           <Checkbox size="small" disabled />
                         </Grid>
                       </Hidden>
@@ -1619,12 +1749,13 @@ class CreateAssessment extends Component {
                           id="description"
                           type="text"
                         />
-                        {errors.description
-                          ?
+                        {errors.description ? (
                           <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                            <FormHelperText variant="outlined" error>
+                              {errors.description}
+                            </FormHelperText>
                           </div>
-                          : null}
+                        ) : null}
                       </Grid>
                     </Grid>
                   </Grid>
@@ -1670,19 +1801,30 @@ class CreateAssessment extends Component {
                               //     this.setState({ errors: { ...errors, start_date: err } });
                               //   }
                               // }}
-                              error={errors.start_date_custom || errors.start_date}
+                              error={
+                                errors.start_date_custom || errors.start_date
+                              }
                             />
-                              <div className={classes.zeroHeightHelperText}>
-                                {/* <FormHelperText variant="outlined" error>{errors.start_date}</FormHelperText> */}
-                                {errors.start_date_custom
-                                  ? <FormHelperText variant="outlined" error>{errors.start_date_custom}</FormHelperText>
-                                : errors.start_date
-                                  ? <FormHelperText variant="outlined" error>{errors.start_date}</FormHelperText>
-                                    : null}
-                              </div>
+                            <div className={classes.zeroHeightHelperText}>
+                              {/* <FormHelperText variant="outlined" error>{errors.start_date}</FormHelperText> */}
+                              {errors.start_date_custom ? (
+                                <FormHelperText variant="outlined" error>
+                                  {errors.start_date_custom}
+                                </FormHelperText>
+                              ) : errors.start_date ? (
+                                <FormHelperText variant="outlined" error>
+                                  {errors.start_date}
+                                </FormHelperText>
+                              ) : null}
+                            </div>
                           </MuiPickersUtilsProvider>
                         </Grid>
-                        <Grid item xs={12} md={6} className={classes.customSpacing}>
+                        <Grid
+                          item
+                          xs={12}
+                          md={6}
+                          className={classes.customSpacing}
+                        >
                           <Typography
                             component="label"
                             for="workTimeEnd"
@@ -1714,19 +1856,25 @@ class CreateAssessment extends Component {
                               }
                               onError={(err) => {
                                 if (errors.end_date !== err) {
-                                  this.setState({ errors: { ...errors, end_date: err } });
+                                  this.setState({
+                                    errors: { ...errors, end_date: err },
+                                  });
                                 }
                               }}
                               error={errors.end_date_custom || errors.end_date}
                             />
-                              <div className={classes.zeroHeightHelperText}>
-                                {/* <FormHelperText variant="outlined" error>{errors.end_date}</FormHelperText> */}
-                              {errors.end_date_custom
-                                ? <FormHelperText variant="outlined" error>{errors.end_date_custom}</FormHelperText>
-                                : errors.end_date
-                                  ? <FormHelperText variant="outlined" error>{errors.end_date}</FormHelperText>
-                                  : null}
-                              </div>
+                            <div className={classes.zeroHeightHelperText}>
+                              {/* <FormHelperText variant="outlined" error>{errors.end_date}</FormHelperText> */}
+                              {errors.end_date_custom ? (
+                                <FormHelperText variant="outlined" error>
+                                  {errors.end_date_custom}
+                                </FormHelperText>
+                              ) : errors.end_date ? (
+                                <FormHelperText variant="outlined" error>
+                                  {errors.end_date}
+                                </FormHelperText>
+                              ) : null}
+                            </div>
                           </MuiPickersUtilsProvider>
                         </Grid>
                       </Grid>
@@ -1759,14 +1907,21 @@ class CreateAssessment extends Component {
                             }
                             onError={(err) => {
                               if (errors.post_date !== err) {
-                                this.setState({ errors: { ...errors, post_date: err } });
+                                this.setState({
+                                  errors: { ...errors, post_date: err },
+                                });
                               }
                             }}
                           />
-                          <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
-                            {errors.post_date
-                              ? <FormHelperText variant="outlined" error>{errors.post_date}</FormHelperText>
-                              : null}
+                          <div
+                            className={classes.zeroHeightHelperText}
+                            style={{ flexDirection: "column" }}
+                          >
+                            {errors.post_date ? (
+                              <FormHelperText variant="outlined" error>
+                                {errors.post_date}
+                              </FormHelperText>
+                            ) : null}
                             {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang
                               untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
                             <FormGroup style={{ width: "fit-content" }}>
@@ -1792,8 +1947,17 @@ class CreateAssessment extends Component {
                         </MuiPickersUtilsProvider>
                       </Grid>
                       {/* dummy checkbox untuk memberikan ruang bagi checkbox waktu rilis yang sebenarnya */}
-                      <Grid item style={{ padding: "0", width: "0", visibility: "hidden" }}>
-                        <FormHelperText variant="outlined">{"\u200B"}</FormHelperText>
+                      <Grid
+                        item
+                        style={{
+                          padding: "0",
+                          width: "0",
+                          visibility: "hidden",
+                        }}
+                      >
+                        <FormHelperText variant="outlined">
+                          {"\u200B"}
+                        </FormHelperText>
                         <Checkbox size="small" disabled />
                       </Grid>
                       <Grid item style={{ paddingTop: "0" }}>
@@ -1817,22 +1981,24 @@ class CreateAssessment extends Component {
                               this.onChange(event, "subject");
                             }}
                           >
-                            {(this.state.subjectOptions !== null) ? (
-                              this.state.subjectOptions.map((subject) => (
-                                <MenuItem key={subject._id} value={subject._id}>
-                                  {subject.name}
-                                </MenuItem>
-                              ))
-                            ) : (
-                              null
-                            )}
+                            {this.state.subjectOptions !== null
+                              ? this.state.subjectOptions.map((subject) => (
+                                  <MenuItem
+                                    key={subject._id}
+                                    value={subject._id}
+                                  >
+                                    {subject.name}
+                                  </MenuItem>
+                                ))
+                              : null}
                           </Select>
-                          {Boolean(errors.subject)
-                            ?
+                          {Boolean(errors.subject) ? (
                             <div className={classes.zeroHeightHelperText}>
-                              <FormHelperText variant="outlined" error>{errors.subject}</FormHelperText>
+                              <FormHelperText variant="outlined" error>
+                                {errors.subject}
+                              </FormHelperText>
                             </div>
-                            : null}
+                          ) : null}
                         </FormControl>
                       </Grid>
                       <Grid item>
@@ -1846,9 +2012,7 @@ class CreateAssessment extends Component {
                         <FormControl
                           variant="outlined"
                           fullWidth
-                          error={
-                            Boolean(errors.class_assigned)
-                          }
+                          error={Boolean(errors.class_assigned)}
                         >
                           <Select
                             multiple
@@ -1866,7 +2030,11 @@ class CreateAssessment extends Component {
                                   return (
                                     <Chip
                                       key={classId}
-                                      label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
+                                      label={
+                                        this.state.allClassObject
+                                          ? this.state.allClassObject[classId]
+                                          : null
+                                      }
                                       className={classes.chip}
                                     />
                                   );
@@ -1874,22 +2042,25 @@ class CreateAssessment extends Component {
                               </div>
                             )}
                           >
-                            {(this.state.classOptions !== null) ? (
-                              this.state.classOptions.map((classInfo) => (
-                                <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
-                                  {classInfo.name}
-                                </MenuItem>
-                              ))
-                            ) : (
-                              null
-                            )}
+                            {this.state.classOptions !== null
+                              ? this.state.classOptions.map((classInfo) => (
+                                  <MenuItem
+                                    selected={true}
+                                    key={classInfo._id}
+                                    value={classInfo._id}
+                                  >
+                                    {classInfo.name}
+                                  </MenuItem>
+                                ))
+                              : null}
                           </Select>
-                          {Boolean(errors.class_assigned)
-                            ?
+                          {Boolean(errors.class_assigned) ? (
                             <div className={classes.zeroHeightHelperText}>
-                              <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                              <FormHelperText variant="outlined" error>
+                                {errors.class_assigned}
+                              </FormHelperText>
                             </div>
-                            : null}
+                          ) : null}
                         </FormControl>
                       </Grid>
                     </Grid>
@@ -2101,5 +2272,5 @@ export default connect(mapStateToProps, {
   validateAssessment,
   clearErrors,
   clearSuccess,
-  refreshTeacher
+  refreshTeacher,
 })(withStyles(styles)(React.memo(CreateAssessment)));

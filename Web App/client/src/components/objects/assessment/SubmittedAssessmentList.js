@@ -824,33 +824,43 @@ function SubmittedAssessmentList(props) {
                     secondary={
                       selectedAssessments.grades &&
                       selectedAssessments.grades[student._id] &&
-                      selectedAssessments.grades[student._id].total_grade
-                        ? 
-                          <>
-                            Telah Dinilai<br />  
-                            Waktu Pengumpulan:&nbsp;
-                            <Hidden smUp>
-                              <br />
-                            </Hidden>
-                            {moment(selectedAssessments.submissions_timestamp[student._id])
+                      selectedAssessments.grades[student._id].total_grade ? (
+                        <>
+                          Telah Dinilai
+                          <br />
+                          Waktu Pengumpulan:&nbsp;
+                          <Hidden smUp>
+                            <br />
+                          </Hidden>
+                          {moment(
+                            selectedAssessments.submissions_timestamp[
+                              student._id
+                            ]
+                          )
                             .locale("id")
                             .format("DD MMM YYYY, HH:mm")}
-                          </>
-                        : 
-                          <>
-                            Belum Dinilai
-                            {scores ? 
-                              <>
-                                <br />Waktu Pengumpulan:&nbsp;
-                                <Hidden smUp>
-                                  <br />
-                                </Hidden>
-                                {moment(selectedAssessments.submissions_timestamp[student._id])
+                        </>
+                      ) : (
+                        <>
+                          Belum Dinilai
+                          {scores ? (
+                            <>
+                              <br />
+                              Waktu Pengumpulan:&nbsp;
+                              <Hidden smUp>
+                                <br />
+                              </Hidden>
+                              {moment(
+                                selectedAssessments.submissions_timestamp[
+                                  student._id
+                                ]
+                              )
                                 .locale("id")
                                 .format("DD MMM YYYY, HH:mm")}
-                              </>
-                            : null}
-                          </>
+                            </>
+                          ) : null}
+                        </>
+                      )
                     }
                   />
                   {selectedAssessments.grades &&

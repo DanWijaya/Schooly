@@ -19,7 +19,7 @@ import {
   FormGroup,
   Hidden,
   InputAdornment,
-  FormHelperText
+  FormHelperText,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -204,7 +204,11 @@ function QuestionItem(props) {
     setLongtextValue(longtextWeight);
   }, [longtextWeight]);
   React.useEffect(() => {
-    if (weightInput.current && weightInput.current.value !== longtextValue && (longtextValue === undefined || longtextValue === null)) {
+    if (
+      weightInput.current &&
+      weightInput.current.value !== longtextValue &&
+      (longtextValue === undefined || longtextValue === null)
+    ) {
       weightInput.current.value = "";
     }
   }, [longtextValue]);
@@ -752,8 +756,8 @@ function QuestionItem(props) {
                   FormHelperTextProps={{
                     style: {
                       marginLeft: "0",
-                      marginRight: "0"
-                    }
+                      marginRight: "0",
+                    },
                   }}
                   InputProps={{
                     style: {

@@ -497,7 +497,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   listItem: {
-    padding: "6px 16px"
+    padding: "6px 16px",
   },
   listAvatar: {
     backgroundColor: theme.palette.primary.main,
@@ -575,8 +575,8 @@ function SubjectList(props) {
   const onDeleteSubject = (id) => {
     deleteSubject(id).then((res) => {
       getAllSubjects();
-      handleOpenSnackbar("Delete")
-      handleCloseDeleteDialog()
+      handleOpenSnackbar("Delete");
+      handleCloseDeleteDialog();
     });
   };
 
@@ -593,22 +593,22 @@ function SubjectList(props) {
   };
 
   const handleOpenSnackbar = (action) => {
-    let content = "Mata Pelajaran berhasil "
-    if(action == "Create"){
-      content += "dibuat"
+    let content = "Mata Pelajaran berhasil ";
+    if (action == "Create") {
+      content += "dibuat";
       setSnackbarContent(content);
-    } else if(action == "Edit"){
-      content += "disunting"
+    } else if (action == "Edit") {
+      content += "disunting";
       setSnackbarContent(content);
-    } else if(action == "Delete"){
-      content += "dihapus"
-      setSnackbarContent(content)
-    } else{
+    } else if (action == "Delete") {
+      content += "dihapus";
+      setSnackbarContent(content);
+    } else {
       return;
     }
 
     setOpenSnackbar(true);
-  }
+  };
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -616,7 +616,6 @@ function SubjectList(props) {
     }
     setOpenSnackbar(false);
   };
-
 
   // Delete Dialog
   const handleOpenFormDialog = (e, id, name, isEdit = false) => {
@@ -779,9 +778,7 @@ function SubjectList(props) {
             return (
               <Grid item>
                 <Paper variant="outlined">
-                  <ListItem
-                    className={classes.listItem}
-                  >
+                  <ListItem className={classes.listItem}>
                     <Hidden smUp implementation="css">
                       <ListItemText
                         style={{ margin: "6px 0" }}

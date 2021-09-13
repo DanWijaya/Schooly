@@ -7,10 +7,10 @@ export const uploadFileAvatar = (id, formData) => (dispatch) => {
     .post(`/api/files/avatar/upload/${id}`, formData)
     .then((res) => {
       dispatch(setCurrentUser(res.data.user));
-      return true
+      return true;
     })
     .catch((err) => {
-      throw new Error(err)
+      throw new Error(err);
     });
 };
 

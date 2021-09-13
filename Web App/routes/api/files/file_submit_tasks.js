@@ -75,7 +75,7 @@ router.post(
               s3_directory: "submittask/",
               task_id: task_id,
               author_id: author_id,
-              on_time: on_time
+              on_time: on_time,
             };
             var document = new FileSubmitTask(newFileUploaded);
             document.save(function (error, newFile) {
@@ -120,13 +120,15 @@ router.get("/download/:id", (req, res) => {
   });
 });
 
-router.get("/by_multiple_tasks", (req,res) => {
+router.get("/by_multiple_tasks", (req, res) => {
   let { id_list } = req.query;
 
-  FileSubmitTask.find({ _id: { $in: id_list}}).then((results) => {
-    return res.status(200).json({file_submit_tasks: results, tasks_id: id_list});
-  })
-})
+  FileSubmitTask.find({ _id: { $in: id_list } }).then((results) => {
+    return res
+      .status(200)
+      .json({ file_submit_tasks: results, tasks_id: id_list });
+  });
+});
 
 // Router to delete a DOCUMENT file
 router.delete("/:id", (req, res) => {
@@ -147,7 +149,7 @@ router.delete("/:id", (req, res) => {
       });
     });
   } else {
-    FileSubmitTask.find({ task_id: req.params.id}).then((tasks) => {
+    FileSubmitTask.find({ task_id: req.params.id }).then((tasks) => {
       let id_list = tasks.map((m) => Object(m._id));
       let file_to_delete = tasks;
 
@@ -233,15 +235,15 @@ router.get("/by_task_author/:task_id&:author_id", (req, res) => {
 });
 
 router.get("/by_author/:author_id", (req, res) => {
-  FileSubmitTask.find({ author_id: req.params.author_id }).lean().then(
-    (results) => {
+  FileSubmitTask.find({ author_id: req.params.author_id })
+    .lean()
+    .then((results) => {
       if (results.length === 0) {
         res.status(404).json("Files not found");
       } else {
         res.json(results);
       }
-    }
-  );
+    });
 });
 
 router.get("/:id", (req, res) => {

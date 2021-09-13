@@ -87,8 +87,8 @@ const UserSchema = new Schema(
     },
     unit: {
       type: ObjectId,
-      default: null
-    }
+      default: null,
+    },
   },
   options
 );

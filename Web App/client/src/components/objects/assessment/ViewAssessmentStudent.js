@@ -8,7 +8,7 @@ import { getFileAssessment } from "../../../actions/files/FileAssessmentActions"
 import {
   getOneAssessment,
   submitAssessment,
-  getStatus
+  getStatus,
 } from "../../../actions/AssessmentActions";
 import {
   Avatar,
@@ -39,7 +39,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ErrorIcon from "@material-ui/icons/Error";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import moment from "moment";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import "moment/locale/id";
@@ -455,10 +455,11 @@ function ViewAssessmentStudent(props) {
     getStatus(id).then((res) => {
       if (res.data.status === -1) {
         setCurrentTime(res.data.now);
-      } else if ((res.data.status === 0)) {
+      } else if (res.data.status === 0) {
         setCurrentTime(res.data.now);
         setShowStartButton(true);
-      } else { // (res.data.status === 1)
+      } else {
+        // (res.data.status === 1)
         setShowClosedMessage(true);
       }
     });
@@ -591,11 +592,12 @@ function ViewAssessmentStudent(props) {
     getStatus(id).then((res) => {
       if (res.data.status === -1) {
         setCurrentTime(res.data.now);
-      } else if ((res.data.status === 0)) {
+      } else if (res.data.status === 0) {
         setCurrentTime(res.data.now);
         localStorage.setItem(`status`, "ujian");
         startTest();
-      } else { // (res.data.status === 1)
+      } else {
+        // (res.data.status === 1)
         setShowClosedMessage(true);
       }
     });
@@ -923,7 +925,7 @@ function ViewAssessmentStudent(props) {
       return <Redirect to="/tidak-ditemukan" />;
     }
   }
- console.log(window.innerHeight)
+  console.log(window.innerHeight);
   return (
     <div className={classes.root}>
       <SubmitDialog

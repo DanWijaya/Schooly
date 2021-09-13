@@ -10,7 +10,7 @@ const AnnoucementSchema = new Schema(
   {
     unit: {
       type: ObjectId,
-      default: null
+      default: null,
     },
     title: {
       type: String,
@@ -39,10 +39,15 @@ const AnnoucementSchema = new Schema(
       required: true,
     },
 
-		// elemen pada array ini bernilai: "Student" atau "Teacher"
+    // elemen pada array ini bernilai: "Student" atau "Teacher"
     to: {
       type: [String],
-      validate: [(value) => { return value.length > 0 }, "Pihak penerima tidak boleh kosong"]
+      validate: [
+        (value) => {
+          return value.length > 0;
+        },
+        "Pihak penerima tidak boleh kosong",
+      ],
     },
   },
   { timestamps: true }

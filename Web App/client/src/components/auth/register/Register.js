@@ -31,7 +31,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import UnitList from "../../objects/superadmin-only/UnitList";
 
@@ -161,7 +164,10 @@ class Register extends Component {
   }
 
   handleDateChange = (date) => {
-    this.setState({ tanggal_lahir: date , errors: {...this.state.errors, tanggal_lahir: ""}});
+    this.setState({
+      tanggal_lahir: date,
+      errors: { ...this.state.errors, tanggal_lahir: "" },
+    });
   };
 
   onChange = (e, otherfield) => {
@@ -184,7 +190,7 @@ class Register extends Component {
       password: this.state.password,
       password2: this.state.password2,
       tanggal_lahir: this.state.tanggal_lahir,
-      unit: this.state.unit
+      unit: this.state.unit,
     };
 
     if (this.state.activeStep === 2) {
@@ -216,7 +222,11 @@ class Register extends Component {
     const { errors } = this.state;
     const { all_units } = this.props.unitsCollection;
     const getSteps = () => {
-      return ["Kredensial Masuk", "Informasi Pribadi", "Konfirmasi Pendaftaran"];
+      return [
+        "Kredensial Masuk",
+        "Informasi Pribadi",
+        "Konfirmasi Pendaftaran",
+      ];
     };
 
     const getStepContent = (stepIndex) => {
@@ -250,7 +260,11 @@ class Register extends Component {
                   value={this.state.email}
                   error={errors.email}
                   type="email"
-                  helperText={errors.email ? errors.email : "Isi dengan email sekolah Anda jika ada"}
+                  helperText={
+                    errors.email
+                      ? errors.email
+                      : "Isi dengan email sekolah Anda jika ada"
+                  }
                   className={classnames("", {
                     invalid: errors.email,
                   })}
@@ -289,10 +303,15 @@ class Register extends Component {
                     />
                   </Grid>
                 </Grid>
-                <FormHelperText error={errors.password || errors.password2} className={classes.combinedHelperText}>
-                  {errors.password ? errors.password : errors.password2 ? errors.password2 :
-                    "Gunakan 8 karakter atau lebih dengan kombinasi huruf kapital dan angka"
-                  }
+                <FormHelperText
+                  error={errors.password || errors.password2}
+                  className={classes.combinedHelperText}
+                >
+                  {errors.password
+                    ? errors.password
+                    : errors.password2
+                    ? errors.password2
+                    : "Gunakan 8 karakter atau lebih dengan kombinasi huruf kapital dan angka"}
                 </FormHelperText>
               </Grid>
             </Grid>
@@ -322,41 +341,39 @@ class Register extends Component {
                     <MenuItem value="Admin">Pengelola Unit</MenuItem>
                     <MenuItem value="SuperAdmin">Pengelola Sekolah</MenuItem>
                   </Select>
-                  {Boolean(errors.role) ?
-                    <FormHelperText>
-                      {errors.role}
-                    </FormHelperText>
-                  : null}
+                  {Boolean(errors.role) ? (
+                    <FormHelperText>{errors.role}</FormHelperText>
+                  ) : null}
                 </FormControl>
               </Grid>
-              {this.state.role == "SuperAdmin" ? null : 
-              <Grid item>
-                <FormControl
-                  id="unit"
-                  variant="outlined"
-                  color="primary"
-                  fullWidth
-                  error={Boolean(errors.unit)}
+              {this.state.role == "SuperAdmin" ? null : (
+                <Grid item>
+                  <FormControl
+                    id="unit"
+                    variant="outlined"
+                    color="primary"
+                    fullWidth
+                    error={Boolean(errors.unit)}
                   >
-                  <InputLabel id="unit-label">Unit</InputLabel>
-                  <Select
-                    labelId="unit-label"
-                    label="Unit"
-                    value={this.state.unit}
-                    onChange={(event) => {
-                      this.onChange(event, "unit");
-                    }}
-                  >
-                    {all_units.map((unit) => (
-                      <MenuItem value={unit._id}>{unit.name}</MenuItem>
-                    ))}
-                  </Select>
-                  <FormHelperText>
-                    {Boolean(errors.unit) ? errors.unit : null}
-                  </FormHelperText>
+                    <InputLabel id="unit-label">Unit</InputLabel>
+                    <Select
+                      labelId="unit-label"
+                      label="Unit"
+                      value={this.state.unit}
+                      onChange={(event) => {
+                        this.onChange(event, "unit");
+                      }}
+                    >
+                      {all_units.map((unit) => (
+                        <MenuItem value={unit._id}>{unit.name}</MenuItem>
+                      ))}
+                    </Select>
+                    <FormHelperText>
+                      {Boolean(errors.unit) ? errors.unit : null}
+                    </FormHelperText>
                   </FormControl>
-              </Grid>
-              }
+                </Grid>
+              )}
               <Grid item>
                 <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
                   <KeyboardDatePicker
@@ -411,10 +428,15 @@ class Register extends Component {
                     />
                   </Grid>
                 </Grid>
-                <FormHelperText error={errors.phone || errors.emergency_phone} className={classes.combinedHelperText}>
-                  {errors.phone ? errors.phone : errors.emergency_phone ? errors.emergency_phone :
-                    "Nomor telepon darurat harus diisi dengan nomor yang dapat dihubungi sewaktu keadaan darurat"
-                  }
+                <FormHelperText
+                  error={errors.phone || errors.emergency_phone}
+                  className={classes.combinedHelperText}
+                >
+                  {errors.phone
+                    ? errors.phone
+                    : errors.emergency_phone
+                    ? errors.emergency_phone
+                    : "Nomor telepon darurat harus diisi dengan nomor yang dapat dihubungi sewaktu keadaan darurat"}
                 </FormHelperText>
               </Grid>
               <Grid item>
@@ -443,21 +465,34 @@ class Register extends Component {
             <Grid container direction="column" spacing={3}>
               <Grid item>
                 <Typography paragraph>
-                  Setelah pendaftaran selesai, silahkan hubungi pengelola sekolah
-                  Anda untuk mengaktifkan akun Anda.
+                  Setelah pendaftaran selesai, silahkan hubungi pengelola
+                  sekolah Anda untuk mengaktifkan akun Anda.
                 </Typography>
                 <Typography>
-                  Dengan mendaftar, Anda dan sekolah Anda telah
-                  menyetujui <Link to="/legal/ketentuan-penggunaan" target="_blank" rel="noopener noreferrer">
-                  Ketentuan Penggunaan </Link> Schooly System.
+                  Dengan mendaftar, Anda dan sekolah Anda telah menyetujui{" "}
+                  <Link
+                    to="/legal/ketentuan-penggunaan"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Ketentuan Penggunaan{" "}
+                  </Link>{" "}
+                  Schooly System.
                 </Typography>
               </Grid>
               <Grid item>
                 <Typography>
                   Informasi yang Anda berikan pada pendaftaran ini serta
                   penggunaan yang akan Anda gunakan pada aplikasi ini diatur
-                  dalam <Link to="/legal/kebijakan-privasi" target="_blank" rel="noopener noreferrer">
-                  Kebijakan Privasi </Link> Schooly System, yang dimana telah dirangkum dalam beberapa
+                  dalam{" "}
+                  <Link
+                    to="/legal/kebijakan-privasi"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Kebijakan Privasi{" "}
+                  </Link>{" "}
+                  Schooly System, yang dimana telah dirangkum dalam beberapa
                   poin-poin utama berikut:
                 </Typography>
                 <Typography>
@@ -469,28 +504,34 @@ class Register extends Component {
                       bisnis kami seperti merger atau akuisisi.
                     </li>
                     <li style={{ listStyleType: "disc" }}>
-                      Informasi pribadi yang anda berikan hanya kami gunakan untuk
-                      memberikan produk dan layanan yang lebih baik serta analitik untuk
-                      pemasaran yang ada dalam lingkup Schooly sendiri, institusi Anda, serta
-                      vendor dan mitra kami.
+                      Informasi pribadi yang anda berikan hanya kami gunakan
+                      untuk memberikan produk dan layanan yang lebih baik serta
+                      analitik untuk pemasaran yang ada dalam lingkup Schooly
+                      sendiri, institusi Anda, serta vendor dan mitra kami.
                     </li>
                     <li style={{ listStyleType: "disc" }}>
                       Kami membatasi dan berusaha untuk menyamarkan informasi
-                      kami bagikan kepada vendor atau mitra untuk keamanan bersama.
+                      kami bagikan kepada vendor atau mitra untuk keamanan
+                      bersama.
                     </li>
                     <li style={{ listStyleType: "disc" }}>
-                      Jika Anda adalah pengguna produk dan layanan kami yang kami sediakan
-                      atas nama institusi Anda, hubungi institusi Anda terlebih dahulu karena
-                      kebijkan privasi institusi Anda dan praktik privasi data akan
-                      menentukan bagaimana Schooly menggunakan informasi pribadi
-                      atas nama institusi Anda. Jika Anda memiliki masalah teknis atau
-                      dukungan, silakan hubungi meja bantuan institusi Anda.
-                      Mereka akan dapat membantu.
+                      Jika Anda adalah pengguna produk dan layanan kami yang
+                      kami sediakan atas nama institusi Anda, hubungi institusi
+                      Anda terlebih dahulu karena kebijkan privasi institusi
+                      Anda dan praktik privasi data akan menentukan bagaimana
+                      Schooly menggunakan informasi pribadi atas nama institusi
+                      Anda. Jika Anda memiliki masalah teknis atau dukungan,
+                      silakan hubungi meja bantuan institusi Anda. Mereka akan
+                      dapat membantu.
                     </li>
                     <li style={{ listStyleType: "disc" }}>
-                      Jika Anda memiliki pertanyaan atau kekhawatiran tentang kebijakan
-                      privasi kami atau praktik privasi data kami sendiri, hubungi kami
-                      di <a href="mailto:schoolysystem@gmail.com">schoolysystem@gmail.com</a>.
+                      Jika Anda memiliki pertanyaan atau kekhawatiran tentang
+                      kebijakan privasi kami atau praktik privasi data kami
+                      sendiri, hubungi kami di{" "}
+                      <a href="mailto:schoolysystem@gmail.com">
+                        schoolysystem@gmail.com
+                      </a>
+                      .
                     </li>
                   </ul>
                 </Typography>
@@ -540,91 +581,99 @@ class Register extends Component {
             className={classes.schoolyLogo}
           />
         </Link>
-          <Paper elevation={11} className={classes.registerPaper}>
-            <Grid container spacing={6}>
-              <Grid item xs={12} md={7}>
-                <Grid container direction="column" spacing={6}>
-                  <Grid item>
-                    <Typography variant="h6">
-                      <b>Daftar ke Schooly</b>
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <form noValidate onSubmit={this.onSubmit}>
-                      <Grid container direction="column" spacing={6}>
+        <Paper elevation={11} className={classes.registerPaper}>
+          <Grid container spacing={6}>
+            <Grid item xs={12} md={7}>
+              <Grid container direction="column" spacing={6}>
+                <Grid item>
+                  <Typography variant="h6">
+                    <b>Daftar ke Schooly</b>
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <form noValidate onSubmit={this.onSubmit}>
+                    <Grid container direction="column" spacing={6}>
+                      <Grid item>{getStepContent(this.state.activeStep)}</Grid>
+                      <Grid
+                        item
+                        container
+                        justify="space-between"
+                        className={classes.buttonsContainer}
+                      >
                         <Grid item>
-                          {getStepContent(this.state.activeStep)}
+                          {this.state.activeStep === 0 ? (
+                            <Link to="/masuk">
+                              <Button className={classes.loginButton}>
+                                Masuk saja
+                              </Button>
+                            </Link>
+                          ) : (
+                            <Button
+                              onClick={handleBack}
+                              className={classes.backButton}
+                            >
+                              Kembali
+                            </Button>
+                          )}
                         </Grid>
-                        <Grid item container justify="space-between" className={classes.buttonsContainer}>
-                          <Grid item>
-                            {this.state.activeStep === 0 ? (
-                              <Link to="/masuk">
-                                <Button className={classes.loginButton}>
-                                  Masuk saja
-                                </Button>
-                              </Link>
-                            ) : (
-                              <Button
-                                onClick={handleBack}
-                                className={classes.backButton}
-                              >
-                                Kembali
-                              </Button>
-                            )}
-                          </Grid>
-                          <Grid item>
-                            {this.state.activeStep === steps.length - 1 ? (
-                              <Button
-                                type="submit"
-                                variant="contained"
-                                className={classes.registerButton}
-                              >
-                                Daftar
-                              </Button>
-                            ) : (
-                              <Button
-                                variant="contained"
-                                onClick={handleNext}
-                                className={classes.continueButton}
-                              >
-                                Lanjut
-                              </Button>
-                            )}
-                          </Grid>
+                        <Grid item>
+                          {this.state.activeStep === steps.length - 1 ? (
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              className={classes.registerButton}
+                            >
+                              Daftar
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="contained"
+                              onClick={handleNext}
+                              className={classes.continueButton}
+                            >
+                              Lanjut
+                            </Button>
+                          )}
                         </Grid>
                       </Grid>
-                    </form>
-                  </Grid>
+                    </Grid>
+                  </form>
                 </Grid>
               </Grid>
-              <Hidden smDown>
-                <Grid item xs={12} md={5}>
-                  <Typography variant="body2" align="center" paragraph style={{ marginTop: "80px"}}>
-                    Buat akun Anda dengan tiga langkah mudah
-                  </Typography>
-                  <img
-                    alt="Register Art"
-                    src={registerStepperArt}
-                    className={classes.artThumbnail}
-                  />
-                  <Stepper
-                    alternativeLabel
-                    activeStep={this.state.activeStep}
-                    connector={<RegisterStepConnector />}
-                    className={classes.registerStepper}
-                  >
-                    {steps.map((label) => (
-                      <Step key={label}>
-                        <StepLabel StepIconComponent={RegisterStepIcon}>
-                          <Typography variant="caption">{label}</Typography>
-                        </StepLabel>
-                      </Step>
-                    ))}
-                  </Stepper>
-                </Grid>
-              </Hidden>
             </Grid>
-          </Paper>
+            <Hidden smDown>
+              <Grid item xs={12} md={5}>
+                <Typography
+                  variant="body2"
+                  align="center"
+                  paragraph
+                  style={{ marginTop: "80px" }}
+                >
+                  Buat akun Anda dengan tiga langkah mudah
+                </Typography>
+                <img
+                  alt="Register Art"
+                  src={registerStepperArt}
+                  className={classes.artThumbnail}
+                />
+                <Stepper
+                  alternativeLabel
+                  activeStep={this.state.activeStep}
+                  connector={<RegisterStepConnector />}
+                  className={classes.registerStepper}
+                >
+                  {steps.map((label) => (
+                    <Step key={label}>
+                      <StepLabel StepIconComponent={RegisterStepIcon}>
+                        <Typography variant="caption">{label}</Typography>
+                      </StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
+              </Grid>
+            </Hidden>
+          </Grid>
+        </Paper>
         <Snackbar
           open={this.state.snackbarOpen}
           autoHideDuration={6000}
@@ -657,19 +706,19 @@ Register.propTypes = {
   getAllUnits: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  unitsCollection: PropTypes.object.isRequired
+  unitsCollection: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
-  unitsCollection: state.unitsCollection
+  unitsCollection: state.unitsCollection,
 });
 
 export default withRouter(
   connect(mapStateToProps, {
     registerUser,
     clearErrors,
-    getAllUnits
+    getAllUnits,
   })(withStyles(styles)(Register))
 );

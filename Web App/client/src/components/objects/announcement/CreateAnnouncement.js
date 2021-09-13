@@ -128,8 +128,8 @@ const styles = (theme) => ({
   },
   zeroHeightHelperText: {
     height: "0",
-    display: "flex" // untuk men-disable "collapsing margin"
-  }
+    display: "flex", // untuk men-disable "collapsing margin"
+  },
 });
 
 function LampiranFile(props) {
@@ -215,7 +215,7 @@ class CreateAnnouncement extends Component {
       fileLimitSnackbar: false,
       over_limit: [],
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
-      allClassObject: null // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
     };
   }
 
@@ -227,35 +227,46 @@ class CreateAnnouncement extends Component {
     }
 
     // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas
-    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
-      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
-
+    if (
+      prevState.classOptions === null ||
+      JSON.stringify(prevProps.auth.user) !==
+        JSON.stringify(this.props.auth.user)
+    ) {
+      if (
+        this.props.classesCollection.all_classes &&
+        this.props.classesCollection.all_classes.length !== 0
+      ) {
         let newClassOptions = [];
         let all_classes_obj = {};
 
         if (this.props.auth.user.role === "Teacher") {
           // perlu dicek karena hanya guru yang memiliki atribut yang berisi kelas-kelas yang diajar
-          
+
           this.props.classesCollection.all_classes.forEach((classInfo) => {
-            all_classes_obj[classInfo._id] = classInfo.name; 
+            all_classes_obj[classInfo._id] = classInfo.name;
           });
 
           if (this.props.auth.user.class_teached) {
-            // dengan ini, jika guru tidak mengajar kelas yang diwalikannya, 
+            // dengan ini, jika guru tidak mengajar kelas yang diwalikannya,
             // guru tidak dapat membuat pengumuman untuk kelas walinya tersebut
-            newClassOptions = this.props.auth.user.class_teached.map((classId) => {
-              return { _id: classId, name: all_classes_obj[classId] };
-            });
+            newClassOptions = this.props.auth.user.class_teached.map(
+              (classId) => {
+                return { _id: classId, name: all_classes_obj[classId] };
+              }
+            );
           }
         } else {
           this.props.classesCollection.all_classes.forEach((classInfo) => {
-            all_classes_obj[classInfo._id] = classInfo.name; 
+            all_classes_obj[classInfo._id] = classInfo.name;
             newClassOptions.push({ _id: classInfo._id, name: classInfo.name });
           });
         }
 
-        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
-      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
+        this.setState({
+          classOptions: newClassOptions,
+          allClassObject: all_classes_obj,
+        });
+      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null
     }
   }
 
@@ -375,7 +386,7 @@ class CreateAnnouncement extends Component {
     this.props
       .createAnnouncement(formData, announcementData, this.props.history)
       .then((res) => {
-        this.setState({ success: res});
+        this.setState({ success: res });
         // this.handleOpenUploadDialog();
       })
       .catch((err) => {
@@ -400,7 +411,13 @@ class CreateAnnouncement extends Component {
 
     const { classes } = this.props;
     const { all_classes, kelas } = this.props.classesCollection;
-    const { class_assigned, fileLampiran, target_role, errors, success } = this.state;
+    const {
+      class_assigned,
+      fileLampiran,
+      target_role,
+      errors,
+      success,
+    } = this.state;
     // const { errors } = this.props;
     const { user } = this.props.auth;
 
@@ -515,12 +532,13 @@ class CreateAnnouncement extends Component {
                         invalid: errors.title,
                       })}
                     />
-                    {errors.title
-                      ?
+                    {errors.title ? (
                       <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText variant="outlined" error>{errors.title}</FormHelperText>
+                        <FormHelperText variant="outlined" error>
+                          {errors.title}
+                        </FormHelperText>
                       </div>
-                      : null}
+                    ) : null}
                   </Grid>
                   <Grid item>
                     <Typography
@@ -546,12 +564,13 @@ class CreateAnnouncement extends Component {
                         invalid: errors.description,
                       })}
                     />
-                    {errors.description
-                      ?
+                    {errors.description ? (
                       <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                        <FormHelperText variant="outlined" error>
+                          {errors.description}
+                        </FormHelperText>
                       </div>
-                      : null}
+                    ) : null}
                   </Grid>
                 </Grid>
               </Grid>
@@ -591,7 +610,13 @@ class CreateAnnouncement extends Component {
                                   return (
                                     <Chip
                                       key={role}
-                                      label={(role === "Student") ? "Murid" : (role === "Teacher") ? "Guru" : null}
+                                      label={
+                                        role === "Student"
+                                          ? "Murid"
+                                          : role === "Teacher"
+                                          ? "Guru"
+                                          : null
+                                      }
                                       className={classes.chip}
                                     />
                                   );
@@ -599,11 +624,10 @@ class CreateAnnouncement extends Component {
                               </div>
                             );
                           }}
-
                         >
                           {[
                             ["Student", "Murid"],
-                            ["Teacher", "Guru"]
+                            ["Teacher", "Guru"],
                           ].map((peran) => {
                             return (
                               <MenuItem key={peran[0]} value={peran[0]}>
@@ -612,12 +636,13 @@ class CreateAnnouncement extends Component {
                             );
                           })}
                         </Select>
-                        {Boolean(errors.to)
-                          ?
+                        {Boolean(errors.to) ? (
                           <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>{errors.to}</FormHelperText>
+                            <FormHelperText variant="outlined" error>
+                              {errors.to}
+                            </FormHelperText>
                           </div>
-                          : null}
+                        ) : null}
                       </FormControl>
                     </Grid>
                   ) : (
@@ -648,7 +673,11 @@ class CreateAnnouncement extends Component {
                                 return (
                                   <Chip
                                     key={classId}
-                                    label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
+                                    label={
+                                      this.state.allClassObject
+                                        ? this.state.allClassObject[classId]
+                                        : null
+                                    }
                                     className={classes.chip}
                                   />
                                 );
@@ -656,22 +685,25 @@ class CreateAnnouncement extends Component {
                             </div>
                           )}
                         >
-                          {(this.state.classOptions !== null) ? (
-                            this.state.classOptions.map((classInfo) => (
-                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
-                                {classInfo.name}
-                              </MenuItem>
-                            ))
-                          ) : (
-                            null
-                          )}
+                          {this.state.classOptions !== null
+                            ? this.state.classOptions.map((classInfo) => (
+                                <MenuItem
+                                  selected={true}
+                                  key={classInfo._id}
+                                  value={classInfo._id}
+                                >
+                                  {classInfo.name}
+                                </MenuItem>
+                              ))
+                            : null}
                         </Select>
-                        {Boolean(errors.class_assigned)
-                          ?
+                        {Boolean(errors.class_assigned) ? (
                           <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                            <FormHelperText variant="outlined" error>
+                              {errors.class_assigned}
+                            </FormHelperText>
                           </div>
-                          : null}
+                        ) : null}
                       </FormControl>
                     </Grid>
                   )}
@@ -761,5 +793,5 @@ export default connect(mapStateToProps, {
   setCurrentClass,
   clearErrors,
   clearSuccess,
-  refreshTeacher
+  refreshTeacher,
 })(withStyles(styles)(CreateAnnouncement));

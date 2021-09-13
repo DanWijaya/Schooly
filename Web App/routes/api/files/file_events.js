@@ -10,8 +10,8 @@ const { ObjectId } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
 
 // Multer ships with storage engines DiskStorage and MemoryStorage
-// And Multer adds a body object and a file or files object to the request object. 
-// The body object contains the values of the text fields of the form, 
+// And Multer adds a body object and a file or files object to the request object.
+// The body object contains the values of the text fields of the form,
 // the file or files object contains the files uploaded via the form.
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });

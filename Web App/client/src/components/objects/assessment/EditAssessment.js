@@ -7,7 +7,7 @@ import "date-fns";
 import {
   getOneAssessment,
   updateAssessment,
-  validateAssessment
+  validateAssessment,
 } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -41,7 +41,7 @@ import {
   ListItemText,
   Menu,
   FormGroup,
-  Checkbox
+  Checkbox,
 } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
@@ -166,7 +166,7 @@ const styles = (theme) => ({
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
-      color: "white"
+      color: "white",
       // backgroundColor: "white",
       // color: theme.palette.primary.main,
     },
@@ -176,7 +176,7 @@ const styles = (theme) => ({
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.error.main,
-      color: "white"
+      color: "white",
       // backgroundColor: "white",
       // color: theme.palette.error.main,
     },
@@ -244,27 +244,27 @@ const styles = (theme) => ({
     },
   },
   dividerMargin: {
-    margin: "4px 0"
+    margin: "4px 0",
   },
   customSpacing: {
     [theme.breakpoints.down("sm")]: {
-      marginTop: theme.spacing(2)
-    }
+      marginTop: theme.spacing(2),
+    },
   },
   customPaddingBottom: {
     [theme.breakpoints.up("md")]: {
-      paddingBottom: "0!important"
-    }
+      paddingBottom: "0!important",
+    },
   },
   customPaddingTop: {
     [theme.breakpoints.up("md")]: {
-      paddingTop: "0!important"
-    }
+      paddingTop: "0!important",
+    },
   },
   zeroHeightHelperText: {
     height: "0",
-    display: "flex" // untuk men-disable "collapsing margin"
-  }
+    display: "flex", // untuk men-disable "collapsing margin"
+  },
 });
 
 class EditAssessment extends Component {
@@ -330,12 +330,12 @@ class EditAssessment extends Component {
       over_limit: [],
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
-      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
       allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
       inputHeight: null, // menyimpan tinggi textfield
       customHeight: null, // menyimpan tinggi label + textfield
       errors: {},
-      success: null
+      success: null,
     };
     this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
     this.customHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi label "Judul" dan textfield
@@ -350,18 +350,18 @@ class EditAssessment extends Component {
       getAllSubjects,
       handleSideDrawerExist,
       getFileAssessment,
-      refreshTeacher
+      refreshTeacher,
     } = this.props;
     const { pathname } = this.props.location;
     const assessment_id = this.props.match.params.id;
-    if(pathname === `/sunting-kuis/${assessment_id}`){
-      this.setState({ type: "Kuis"})
-    } else if(pathname === `/sunting-ujian/${assessment_id}`){
-      this.setState({ type: "Ujian"})
+    if (pathname === `/sunting-kuis/${assessment_id}`) {
+      this.setState({ type: "Kuis" });
+    } else if (pathname === `/sunting-ujian/${assessment_id}`) {
+      this.setState({ type: "Ujian" });
     } else {
       console.log("Kuis atau Ujian tidak dispecify");
     }
-    
+
     handleSideDrawerExist(false);
     getAllClass();
     getOneAssessment(assessment_id);
@@ -375,7 +375,10 @@ class EditAssessment extends Component {
     if (this.inputHeightRef.current && this.customHeightRef.current) {
       this.setState({
         inputHeight: this.inputHeightRef.current.offsetHeight,
-        customHeight: this.customHeightRef.current.offsetHeight + this.inputHeightRef.current.offsetHeight + 32 // tinggi (label + textfield) + (textfield) + (space antara textfield dan label di bawahnya)  
+        customHeight:
+          this.customHeightRef.current.offsetHeight +
+          this.inputHeightRef.current.offsetHeight +
+          32, // tinggi (label + textfield) + (textfield) + (space antara textfield dan label di bawahnya)
         // customHeight: document.getElementById("top").getBoundingClientRect().top - document.getElementById("bottom").getBoundingClientRect().bottom // hasilnya salah
       });
     }
@@ -437,15 +440,19 @@ class EditAssessment extends Component {
         if (selectedAssessments.post_date === null) {
           this.setState({
             posted: selectedAssessments.posted,
-            isScheduled: false
+            isScheduled: false,
           });
         } else {
-          console.log("selectedAssessments.posted " + selectedAssessments.posted);
-          console.log("selectedAssessments.post_date " + selectedAssessments.post_date);
+          console.log(
+            "selectedAssessments.posted " + selectedAssessments.posted
+          );
+          console.log(
+            "selectedAssessments.post_date " + selectedAssessments.post_date
+          );
           this.setState({
             posted: false,
             post_date: selectedAssessments.post_date,
-            isScheduled: true
+            isScheduled: true,
           });
         }
       }
@@ -550,7 +557,10 @@ class EditAssessment extends Component {
           if (type === "longtext") {
             for (let weight of this.state.longtextWeight) {
               // agar data assessment tidak disubmit ketika ada bobot yang tidak valid
-              if (weight !== -1 && (isNaN(Number(weight)) || Number(weight) <= 0)) {
+              if (
+                weight !== -1 &&
+                (isNaN(Number(weight)) || Number(weight) <= 0)
+              ) {
                 completeWeight = false;
               }
             }
@@ -595,7 +605,11 @@ class EditAssessment extends Component {
     });
 
     // jika soal dan bobot sudah lengkap dan benar, submit
-    if (invalidQuestionIndex.length === 0 && completeWeight && Object.values(this.state.errors).every((error) => (!error))) {
+    if (
+      invalidQuestionIndex.length === 0 &&
+      completeWeight &&
+      Object.values(this.state.errors).every((error) => !error)
+    ) {
       let longtext;
       if (typeCount.get("longtext") === 0) {
         longtext = null;
@@ -613,9 +627,14 @@ class EditAssessment extends Component {
         });
       }
       let question_weight = {
-        radio: typeCount.get("radio") === 0 ? null : Number(this.state.weights.radio),
+        radio:
+          typeCount.get("radio") === 0
+            ? null
+            : Number(this.state.weights.radio),
         checkbox:
-          typeCount.get("checkbox") === 0 ? null : Number(this.state.weights.checkbox),
+          typeCount.get("checkbox") === 0
+            ? null
+            : Number(this.state.weights.checkbox),
         shorttext:
           typeCount.get("shorttext") === 0
             ? null
@@ -638,8 +657,8 @@ class EditAssessment extends Component {
         class_assigned: this.state.class_assigned,
         description: this.state.description,
         questions: this.state.questions,
-        posted: this.state.isScheduled ? null: this.state.posted,
-        post_date: this.state.isScheduled ? this.state.post_date: null,
+        posted: this.state.isScheduled ? null : this.state.posted,
+        post_date: this.state.isScheduled ? this.state.post_date : null,
         type: this.state.type,
         question_weight: question_weight,
       };
@@ -653,7 +672,7 @@ class EditAssessment extends Component {
         history
       )
         .then((res) => {
-          this.setState({ success: res});
+          this.setState({ success: res });
           // this.handleOpenUploadDialog();
           // console.log("Assessment is updated successfully");
         })
@@ -671,7 +690,9 @@ class EditAssessment extends Component {
         questions: this.state.questions,
         type: this.state.type,
       };
-      validateAssessment(assessmentData).then(() => this.handleOpenErrorSnackbar());
+      validateAssessment(assessmentData).then(() =>
+        this.handleOpenErrorSnackbar()
+      );
     }
   };
 
@@ -680,8 +701,8 @@ class EditAssessment extends Component {
   };
 
   handleCloseUploadDialog = () => {
-    this.setState({ openUploadDialog: false})
-  }
+    this.setState({ openUploadDialog: false });
+  };
 
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
@@ -702,77 +723,140 @@ class EditAssessment extends Component {
     }
 
     if (otherfield) {
-      if (otherfield === "end_date" || otherfield === "start_date" || otherfield === "post_date") {
-
+      if (
+        otherfield === "end_date" ||
+        otherfield === "start_date" ||
+        otherfield === "post_date"
+      ) {
         if (otherfield === "start_date") {
-          if (this.isValidDateTime(e) && this.isValidDateTime(this.state.end_date)) {
+          if (
+            this.isValidDateTime(e) &&
+            this.isValidDateTime(this.state.end_date)
+          ) {
             if (this.state.end_date.getTime() < e.getTime()) {
-              this.setState({ errors: { ...this.state.errors, start_date_custom: "Harus sebelum Waktu Selesai Pengerjaan" } });
+              this.setState({
+                errors: {
+                  ...this.state.errors,
+                  start_date_custom: "Harus sebelum Waktu Selesai Pengerjaan",
+                },
+              });
             } else {
-              this.setState({ errors: { ...this.state.errors, start_date_custom: null, end_date_custom: null } });
+              this.setState({
+                errors: {
+                  ...this.state.errors,
+                  start_date_custom: null,
+                  end_date_custom: null,
+                },
+              });
             }
           } else {
-            this.setState({ errors: { ...this.state.errors, start_date_custom: null } });
+            this.setState({
+              errors: { ...this.state.errors, start_date_custom: null },
+            });
           }
         } else if (otherfield === "end_date") {
-          if (this.isValidDateTime(e) && this.isValidDateTime(this.state.start_date)) {
+          if (
+            this.isValidDateTime(e) &&
+            this.isValidDateTime(this.state.start_date)
+          ) {
             if (e.getTime() < this.state.start_date.getTime()) {
-              this.setState({ errors: { ...this.state.errors, end_date_custom: "Harus setelah Waktu Mulai Pengerjaan" } });
+              this.setState({
+                errors: {
+                  ...this.state.errors,
+                  end_date_custom: "Harus setelah Waktu Mulai Pengerjaan",
+                },
+              });
             } else {
-              this.setState({ errors: { ...this.state.errors, start_date_custom: null, end_date_custom: null } });
+              this.setState({
+                errors: {
+                  ...this.state.errors,
+                  start_date_custom: null,
+                  end_date_custom: null,
+                },
+              });
             }
           } else {
-            this.setState({ errors: { ...this.state.errors, end_date_custom: null } });
+            this.setState({
+              errors: { ...this.state.errors, end_date_custom: null },
+            });
           }
         }
 
         this.setState({ [otherfield]: e });
-      } else if (otherfield === "subject") { // jika guru memilih mata pelajaran
+      } else if (otherfield === "subject") {
+        // jika guru memilih mata pelajaran
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
         let newClassOptions = [];
         if (this.props.auth.user.class_to_subject) {
-          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+          for (let [classId, subjectIdArray] of Object.entries(
+            this.props.auth.user.class_to_subject
+          )) {
             if (subjectIdArray.includes(e.target.value)) {
-              newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+              newClassOptions.push({
+                _id: classId,
+                name: this.state.allClassObject[classId],
+              });
             }
           }
         }
 
-        this.setState({ subject: e.target.value, classOptions: newClassOptions });
-
-      } else if (otherfield === "class_assigned") { // jika guru memilih kelas
+        this.setState({
+          subject: e.target.value,
+          classOptions: newClassOptions,
+        });
+      } else if (otherfield === "class_assigned") {
+        // jika guru memilih kelas
         let selectedClasses = e.target.value;
 
-        if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
+        if (selectedClasses.length === 0) {
+          // jika guru membatalkan semua pilihan kelas
           this.setState((prevState, props) => {
             return {
               class_assigned: selectedClasses,
               // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
-              subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
-            }
+              subjectOptions: props.auth.user.subject_teached.map(
+                (subjectId) => ({
+                  _id: subjectId,
+                  name: prevState.allSubjectObject[subjectId],
+                })
+              ),
+            };
           });
-        } else { // jika guru menambahkan atau mengurangi pilihan kelas
+        } else {
+          // jika guru menambahkan atau mengurangi pilihan kelas
           // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
           let subjectMatrix = [];
           if (this.props.auth.user.class_to_subject) {
             for (let classId of selectedClasses) {
-              subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+              subjectMatrix.push(
+                this.props.auth.user.class_to_subject[classId]
+              );
             }
           }
           let subjects = [];
           if (subjectMatrix.length !== 0) {
-            subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
-              return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
-            });
+            subjects = subjectMatrix.reduce(
+              (prevIntersectionResult, currentArray) => {
+                return currentArray.filter((subjectId) =>
+                  prevIntersectionResult.includes(subjectId)
+                );
+              }
+            );
           }
-          
+
           // menambahkan matpel tersebut ke opsi matpel
           let newSubjectOptions = [];
           subjects.forEach((subjectId) => {
-            newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
-          })
+            newSubjectOptions.push({
+              _id: subjectId,
+              name: this.state.allSubjectObject[subjectId],
+            });
+          });
 
-          this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
+          this.setState({
+            subjectOptions: newSubjectOptions,
+            class_assigned: selectedClasses,
+          });
         }
       } else {
         this.setState({ [otherfield]: e.target.value });
@@ -1233,65 +1317,103 @@ class EditAssessment extends Component {
     }
 
     // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas dan mata pelajaran
-    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
-      const selectedAssessmentProps = this.props.assessmentsCollection.selectedAssessments;
+    if (
+      prevState.classOptions === null ||
+      JSON.stringify(prevProps.auth.user) !==
+        JSON.stringify(this.props.auth.user)
+    ) {
+      const selectedAssessmentProps = this.props.assessmentsCollection
+        .selectedAssessments;
 
-      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
-      selectedAssessmentProps && selectedAssessmentProps.constructor === Object && (Object.keys(selectedAssessmentProps).length !== 0)) {
-        
+      if (
+        this.props.classesCollection.all_classes &&
+        this.props.classesCollection.all_classes.length !== 0 &&
+        selectedAssessmentProps &&
+        selectedAssessmentProps.constructor === Object &&
+        Object.keys(selectedAssessmentProps).length !== 0
+      ) {
         let all_classes_obj = {};
         this.props.classesCollection.all_classes.forEach((classInfo) => {
-          all_classes_obj[classInfo._id] = classInfo.name; 
+          all_classes_obj[classInfo._id] = classInfo.name;
         });
 
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
         let newClassOptions = [];
         if (this.props.auth.user.class_to_subject) {
-          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+          for (let [classId, subjectIdArray] of Object.entries(
+            this.props.auth.user.class_to_subject
+          )) {
             if (subjectIdArray.includes(selectedAssessmentProps.subject)) {
-              newClassOptions.push({ _id: classId, name: all_classes_obj[classId] });
+              newClassOptions.push({
+                _id: classId,
+                name: all_classes_obj[classId],
+              });
             }
           }
         }
 
-        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+        this.setState({
+          classOptions: newClassOptions,
+          allClassObject: all_classes_obj,
+        });
       }
     }
 
-    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
-      const selectedAssessmentProps = this.props.assessmentsCollection.selectedAssessments;
+    if (
+      prevState.subjectOptions === null ||
+      JSON.stringify(prevProps.auth.user) !==
+        JSON.stringify(this.props.auth.user)
+    ) {
+      const selectedAssessmentProps = this.props.assessmentsCollection
+        .selectedAssessments;
 
-      if ( this.props.subjectsCollection.all_subjects && ( this.props.subjectsCollection.all_subjects.length !== 0) &&
-      selectedAssessmentProps && selectedAssessmentProps.constructor === Object && (Object.keys(selectedAssessmentProps).length !== 0)) {
-        
+      if (
+        this.props.subjectsCollection.all_subjects &&
+        this.props.subjectsCollection.all_subjects.length !== 0 &&
+        selectedAssessmentProps &&
+        selectedAssessmentProps.constructor === Object &&
+        Object.keys(selectedAssessmentProps).length !== 0
+      ) {
         let all_subjects_obj = {};
-         this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
-          all_subjects_obj[subjectInfo._id] = subjectInfo.name; 
+        this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
+          all_subjects_obj[subjectInfo._id] = subjectInfo.name;
         });
-  
+
         // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
         let subjectMatrix = [];
         if (this.props.auth.user.class_to_subject) {
           for (let classId of selectedAssessmentProps.class_assigned) {
             if (this.props.auth.user.class_to_subject[classId]) {
-              subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+              subjectMatrix.push(
+                this.props.auth.user.class_to_subject[classId]
+              );
             }
           }
         }
         let subjects = [];
         if (subjectMatrix.length !== 0) {
-          subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
-            return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
-          });
+          subjects = subjectMatrix.reduce(
+            (prevIntersectionResult, currentArray) => {
+              return currentArray.filter((subjectId) =>
+                prevIntersectionResult.includes(subjectId)
+              );
+            }
+          );
         }
 
         // menambahkan matpel tersebut ke opsi matpel
         let newSubjectOptions = [];
         subjects.forEach((subjectId) => {
-          newSubjectOptions.push({ _id: subjectId, name: all_subjects_obj[subjectId] });
-        })
+          newSubjectOptions.push({
+            _id: subjectId,
+            name: all_subjects_obj[subjectId],
+          });
+        });
 
-        this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
+        this.setState({
+          subjectOptions: newSubjectOptions,
+          allSubjectObject: all_subjects_obj,
+        });
       }
     }
   }
@@ -1350,9 +1472,12 @@ class EditAssessment extends Component {
     for (let question of this.state.questions) {
       typeCount.add(question.type);
     }
-    let filteredtypeCount = ["radio", "checkbox", "shorttext", "longtext"].filter(
-      (type) => typeCount.has(type)
-    );
+    let filteredtypeCount = [
+      "radio",
+      "checkbox",
+      "shorttext",
+      "longtext",
+    ].filter((type) => typeCount.has(type));
 
     if (filteredtypeCount.length !== 0) {
       let desktopView = [];
@@ -1361,7 +1486,7 @@ class EditAssessment extends Component {
           <Typography variant="h6">Bobot Per Soal:</Typography>
           <FormHelperText>{"\u200B"}</FormHelperText>
           <Divider className={classes.dividerMargin} />
-        </>
+        </>,
       ];
 
       for (let i = 0; i < filteredtypeCount.length; i++) {
@@ -1380,10 +1505,10 @@ class EditAssessment extends Component {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                flexGrow: "1"
+                flexGrow: "1",
               }}
             >
-              <Grid container alignItems="center" style={{ flexGrow: "1"}}>
+              <Grid container alignItems="center" style={{ flexGrow: "1" }}>
                 <Grid item style={{ marginRight: "20px" }}>
                   {columnTemplate[type].icon}
                 </Grid>
@@ -1400,14 +1525,16 @@ class EditAssessment extends Component {
                   </Hidden>
                 </Grid>
               </Grid>
-              {type !== "longtext" ? <FormHelperText>{"\u200B"}</FormHelperText> : null}
+              {type !== "longtext" ? (
+                <FormHelperText>{"\u200B"}</FormHelperText>
+              ) : null}
             </div>
             {type !== "longtext" ? (
               <Grid
                 item
                 style={{
                   display: "flex",
-                  flexDirection: "column"
+                  flexDirection: "column",
                 }}
               >
                 <Hidden xsDown>
@@ -1424,8 +1551,8 @@ class EditAssessment extends Component {
                     FormHelperTextProps={{
                       style: {
                         marginLeft: "0",
-                        marginRight: "0"
-                      }
+                        marginRight: "0",
+                      },
                     }}
                     InputProps={{
                       style: {
@@ -1451,12 +1578,12 @@ class EditAssessment extends Component {
                     FormHelperTextProps={{
                       style: {
                         marginLeft: "0",
-                        marginRight: "0"
-                      }
+                        marginRight: "0",
+                      },
                     }}
                     InputProps={{
                       style: {
-                        width: "85px"
+                        width: "85px",
                       },
                       endAdornment: (
                         <Typography
@@ -1550,7 +1677,7 @@ class EditAssessment extends Component {
                   FormHelperTextProps={{
                     style: {
                       marginLeft: "0",
-                      marginRight: "0"
+                      marginRight: "0",
                     },
                   }}
                   InputProps={{
@@ -1623,659 +1750,717 @@ class EditAssessment extends Component {
         : `http://${window.location.host}/ujian-murid/${this.props.match.params.id}`;
 
     document.title = `Schooly | Sunting ${this.state.type} `;
-    if(Boolean(selectedAssessments.submissions)){
+    if (Boolean(selectedAssessments.submissions)) {
       return (
-      <Grid
-        container
-        alignItems="center"
-        justify="center"
-        style={{ height: "20vh" }}
-      >
-      <Typography variant="h5" color="textSecondary" align="center">
-        Tidak dapat disunting karena sudah ada yang mengumpulkan
-      </Typography>
-      </Grid>
-      )
-    } else{
-    return (
-      <div className={classes.root}>
-        <DeleteDialog
-          openDeleteDialog={this.state.openDeleteDialog}
-          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-          itemType={
-            this.state.type
-              ? `Perubahan ${this.state.type}`
-              : "Perubahan Penilaian"
-          }
-          itemName={this.state.name}
-          // itemType="Kuis"
-          // itemName={this.state.name}
-          customMessage="Hapus perubahan"
-          // redirectLink="/daftar-kuis"
-          redirectLink={
-            this.state.type === "Kuis" ? `/kuis-guru/${this.props.match.params.id}` : `/ujian-guru/${this.props.match.params.id}`
-          }
-          customDecline="Tidak"
-          deleteItem=""
-          isLink={true}
-          isWarning={false}
-        />
-        <UploadDialog
-          openUploadDialog={this.state.openUploadDialog}
-          success={success}
-          messageUploading={`${this.state.type} sedang disunting`}
-          messageSuccess={`${this.state.type} telah disunting`}
-          redirectLink={
-            this.state.type === "Kuis"
-              ? `/kuis-guru/${this.props.match.params.id}`
-              : `/ujian-guru/${this.props.match.params.id}`
-          }
-        />
-        <form onSubmit={(e) => this.onSubmit(e)}>
-          <Grid container direction="column" spacing={3}>
-            <Grid item>
-              <Paper>
-                <div className={classes.content}>
-                  <Typography variant="h5" gutterBottom>
-                    <b>Sunting {this.state.type} </b>
-                  </Typography>
-                  <Typography color="textSecondary">
-                    Tambahkan keterangan untuk menyunting {this.state.type}.
-                  </Typography>
-                </div>
-                <Divider />
-                <Grid container>
-                  <Grid item xs={12} md className={classes.content}>
-                    <Grid container direction="column" spacing={4}>
-                      <Grid item>
-                        <div ref={this.customHeightRef}>
-                          <Typography
-                            component="label"
-                            for="name"
-                            color="primary"
-                          >
-                            Judul
-                          </Typography>
-                          <div ref={this.inputHeightRef}>
-                            <TextField
-                              value={this.state.name}
-                              fullWidth
-                              variant="outlined"
-                              id="name"
-                              error={errors.name}
-                              // helperText={errors.name}
-                              onChange={this.onChange}
-                            />
-                            {errors.name
-                              ?
-                              <div className={classes.zeroHeightHelperText}>
-                                <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
-                              </div>
-                              : null}
-                          </div>
-                        </div>
-                      </Grid>
-                      <Grid item className={classes.customPaddingBottom}>
-                        <Typography
-                          component="label"
-                          for="class_assigned"
-                          color="primary"
-                        >
-                          Tipe Penilaian
-                        </Typography>
-                        <FormControl
-                          id="role"
-                          variant="outlined"
-                          color="primary"
-                          fullWidth
-                          error={Boolean(errors.type)}
-                        >
-                          <Select
-                            value={this.state.type}
-                            onChange={(event) => {
-                              this.onChange(event, "type");
-                            }}
-                          >
-                            <MenuItem value="Kuis">Kuis</MenuItem>
-                            <MenuItem value="Ujian">Ujian</MenuItem>
-                          </Select>
-                          {Boolean(errors.type)
-                            ?
-                            <div className={classes.zeroHeightHelperText}>
-                              <FormHelperText variant="outlined" error>{errors.type}</FormHelperText>
-                            </div>
-                            : null}
-                        </FormControl>
-                      </Grid>
-                      <Hidden smDown>
-                        {/* dummy checkbox agar kedua kolom form keterangan assessment simetris */}
-                        <Grid item style={{ padding: "0", width: "0", visibility: "hidden" }}>
-                          <FormHelperText variant="outlined">{"\u200B"}</FormHelperText>
-                          <Checkbox size="small" disabled />
-                        </Grid>
-                      </Hidden>
-                      <Grid item className={classes.customPaddingTop}>
-                        <Typography
-                          component="label"
-                          for="description"
-                          color="primary"
-                        >
-                          Deskripsi
-                        </Typography>
-                        <TextField
-                          value={this.state.description}
-                          multiline
-                          // 1 row = 17px. ukuran padding (cek dengan devtool) = 37px
-                          rows={(this.state.customHeight - 37) / 17}
-                          rowsMax={10}
-                          fullWidth
-                          error={errors.description}
-                          // helperText={errors.description}
-                          onChange={this.onChange}
-                          variant="outlined"
-                          id="description"
-                          type="text"
-                        />
-                        {errors.description
-                          ?
-                          <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
-                          </div>
-                          : null}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Divider
-                    flexItem
-                    orientation="vertical"
-                    className={classes.divider}
-                  />
-                  <Grid item xs={12} md className={classes.content}>
-                    <Grid container direction="column" spacing={4}>
-                      <Grid item container spacing={2}>
-                        <Grid item xs={12} md={6}>
-                          <Typography
-                            component="label"
-                            for="workTimeStart"
-                            color="primary"
-                          >
-                            Waktu Mulai Pengerjaan
-                          </Typography>
-                          <MuiPickersUtilsProvider
-                            locale={lokal}
-                            utils={DateFnsUtils}
-                          >
-                            <KeyboardDateTimePicker
-                              fullWidth
-                              disablePast
-                              inputVariant="outlined"
-                              format="dd/MM/yyyy - HH:mm"
-                              ampm={false}
-                              okLabel="Simpan"
-                              cancelLabel="Batal"
-                              minDateMessage="Harus waktu yang akan datang"
-                              invalidDateMessage="Format tanggal tidak benar"
-                              id="workTimeStart"
-                              value={this.state.start_date}
-                              helperText={null}
-                              onChange={(date) =>
-                                this.onChange(date, "start_date")
-                              }
-                              onError={(err) => {
-                                if (errors.start_date !== err) {
-                                  this.setState({ errors: { ...errors, start_date: err } });
-                                }
-                              }}
-                              error={errors.start_date_custom || errors.start_date}
-                            />
-                            <div className={classes.zeroHeightHelperText}>
-                              {errors.start_date_custom
-                                ? <FormHelperText variant="outlined" error>{errors.start_date_custom}</FormHelperText>
-                                : errors.start_date
-                                  ? <FormHelperText variant="outlined" error>{errors.start_date}</FormHelperText>
-                                  : null}
-                            </div>
-                          </MuiPickersUtilsProvider>
-                        </Grid>
-                        <Grid item xs={12} md={6} className={classes.customSpacing}>
-                          <Typography
-                            component="label"
-                            for="workTimeEnd"
-                            color="primary"
-                          >
-                            Waktu Selesai Pengerjaan
-                          </Typography>
-                          <MuiPickersUtilsProvider
-                            locale={lokal}
-                            utils={DateFnsUtils}
-                          >
-                            <KeyboardDateTimePicker
-                              fullWidth
-                              // disablePast
-                              inputVariant="outlined"
-                              format="dd/MM/yyyy - HH:mm"
-                              ampm={false}
-                              okLabel="Simpan"
-                              cancelLabel="Batal"
-                              invalidDateMessage="Format tanggal tidak benar"
-                              id="workTimeEnd"
-                              helperText={null}
-                              value={this.state.end_date}
-                              minDate={this.state.start_date}
-                              minDateMessage="Harus setelah Waktu Mulai Pengerjaan"
-                              onChange={(date) =>
-                                this.onChange(date, "end_date")
-                              }
-                              onError={(err) => {
-                                if (errors.end_date !== err) {
-                                  this.setState({ errors: { ...errors, end_date: err } });
-                                }
-                              }}
-                              error={errors.end_date_custom || errors.end_date}
-                            />
-                            <div className={classes.zeroHeightHelperText}>
-                              {errors.end_date_custom
-                                ? <FormHelperText variant="outlined" error>{errors.end_date_custom}</FormHelperText>
-                                : errors.end_date
-                                  ? <FormHelperText variant="outlined" error>{errors.end_date}</FormHelperText>
-                                  : null}
-                            </div>
-                          </MuiPickersUtilsProvider>
-                        </Grid>
-                      </Grid>
-                      <Grid item style={{ paddingBottom: "0" }}>
-                        <Typography
-                          component="label"
-                          for="postDate"
-                          color="primary"
-                        >
-                          Waktu Rilis
-                        </Typography>
-                        <MuiPickersUtilsProvider
-                          locale={lokal}
-                          utils={DateFnsUtils}
-                        >
-                          <KeyboardDateTimePicker
-                            disabled={!this.state.isScheduled}
-                            fullWidth
-                            inputVariant="outlined"
-                            format="dd/MM/yyyy - HH:mm"
-                            ampm={false}
-                            okLabel="Simpan"
-                            cancelLabel="Batal"
-                            invalidDateMessage="Format tanggal tidak benar"
-                            id="postDate"
-                            helperText={null}
-                            value={this.state.post_date}
-                            onChange={(date) =>
-                              this.onChange(date, "post_date")
-                            }
-                            onError={(err) => {
-                              if (errors.post_date !== err) {
-                                this.setState({ errors: { ...errors, post_date: err } });
-                              }
-                            }}
-                          />
-                          <div className={classes.zeroHeightHelperText} style={{ flexDirection: "column" }}>
-                            {errors.post_date
-                              ? <FormHelperText variant="outlined" error>{errors.post_date}</FormHelperText>
-                              : null}
-                            {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang 
-                              untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
-                            <FormGroup style={{ width: "fit-content" }}>
-                              <FormControlLabel
-                                label={
-                                  <Typography color="textPrimary">
-                                    Rilis Otomatis
-                                  </Typography>
-                                }
-                                control={
-                                  <Checkbox
-                                    onChange={() => {
-                                      this.handleCheckScheduleMode();
-                                    }}
-                                    color="primary"
-                                    size="small"
-                                    checked={this.state.isScheduled}
-                                  />
-                                }
+        <Grid
+          container
+          alignItems="center"
+          justify="center"
+          style={{ height: "20vh" }}
+        >
+          <Typography variant="h5" color="textSecondary" align="center">
+            Tidak dapat disunting karena sudah ada yang mengumpulkan
+          </Typography>
+        </Grid>
+      );
+    } else {
+      return (
+        <div className={classes.root}>
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType={
+              this.state.type
+                ? `Perubahan ${this.state.type}`
+                : "Perubahan Penilaian"
+            }
+            itemName={this.state.name}
+            // itemType="Kuis"
+            // itemName={this.state.name}
+            customMessage="Hapus perubahan"
+            // redirectLink="/daftar-kuis"
+            redirectLink={
+              this.state.type === "Kuis"
+                ? `/kuis-guru/${this.props.match.params.id}`
+                : `/ujian-guru/${this.props.match.params.id}`
+            }
+            customDecline="Tidak"
+            deleteItem=""
+            isLink={true}
+            isWarning={false}
+          />
+          <UploadDialog
+            openUploadDialog={this.state.openUploadDialog}
+            success={success}
+            messageUploading={`${this.state.type} sedang disunting`}
+            messageSuccess={`${this.state.type} telah disunting`}
+            redirectLink={
+              this.state.type === "Kuis"
+                ? `/kuis-guru/${this.props.match.params.id}`
+                : `/ujian-guru/${this.props.match.params.id}`
+            }
+          />
+          <form onSubmit={(e) => this.onSubmit(e)}>
+            <Grid container direction="column" spacing={3}>
+              <Grid item>
+                <Paper>
+                  <div className={classes.content}>
+                    <Typography variant="h5" gutterBottom>
+                      <b>Sunting {this.state.type} </b>
+                    </Typography>
+                    <Typography color="textSecondary">
+                      Tambahkan keterangan untuk menyunting {this.state.type}.
+                    </Typography>
+                  </div>
+                  <Divider />
+                  <Grid container>
+                    <Grid item xs={12} md className={classes.content}>
+                      <Grid container direction="column" spacing={4}>
+                        <Grid item>
+                          <div ref={this.customHeightRef}>
+                            <Typography
+                              component="label"
+                              for="name"
+                              color="primary"
+                            >
+                              Judul
+                            </Typography>
+                            <div ref={this.inputHeightRef}>
+                              <TextField
+                                value={this.state.name}
+                                fullWidth
+                                variant="outlined"
+                                id="name"
+                                error={errors.name}
+                                // helperText={errors.name}
+                                onChange={this.onChange}
                               />
-                            </FormGroup>
-                          </div>
-                        </MuiPickersUtilsProvider>
-                      </Grid>
-                      {/* dummy checkbox untuk memberikan ruang bagi checkbox waktu rilis yang sebenarnya */}
-                      <Grid item style={{ padding: "0", width: "0", visibility: "hidden" }}>
-                        <FormHelperText variant="outlined">{"\u200B"}</FormHelperText>
-                        <Checkbox size="small" disabled />
-                      </Grid>
-                      <Grid item>
-                        <Typography
-                          component="label"
-                          for="subject"
-                          color="primary"
-                        >
-                          Mata Pelajaran
-                        </Typography>
-                        <FormControl
-                          id="subject"
-                          variant="outlined"
-                          color="primary"
-                          fullWidth
-                          error={Boolean(errors.subject)}
-                        >
-                          <Select
-                            value={this.state.subject}
-                            onChange={(event) => {
-                              this.onChange(event, "subject");
-                            }}
-                          >
-                            {(this.state.subjectOptions !== null) ? (
-                              this.state.subjectOptions.map((subject) => (
-                                <MenuItem key={subject._id} value={subject._id}>
-                                  {subject.name}
-                                </MenuItem>
-                              ))
-                            ) : (
-                              null
-                            )}
-                          </Select>
-                          {Boolean(errors.subject)
-                            ?
-                            <div className={classes.zeroHeightHelperText}>
-                              <FormHelperText variant="outlined" error>{errors.subject}</FormHelperText>
+                              {errors.name ? (
+                                <div className={classes.zeroHeightHelperText}>
+                                  <FormHelperText variant="outlined" error>
+                                    {errors.name}
+                                  </FormHelperText>
+                                </div>
+                              ) : null}
                             </div>
-                            : null}
-                        </FormControl>
-                      </Grid>
-                      <Grid item>
-                        <Typography
-                          component="label"
-                          for="class_assigned"
-                          color="primary"
-                        >
-                          Kelas yang Ditugaskan
-                        </Typography>
-                        <FormControl
-                          variant="outlined"
-                          fullWidth
-                          error={
-                            Boolean(errors.class_assigned)
-                          }
-                        >
-                          <Select
-                            multiple
-                            fullWidth
+                          </div>
+                        </Grid>
+                        <Grid item className={classes.customPaddingBottom}>
+                          <Typography
+                            component="label"
+                            for="class_assigned"
+                            color="primary"
+                          >
+                            Tipe Penilaian
+                          </Typography>
+                          <FormControl
+                            id="role"
                             variant="outlined"
                             color="primary"
-                            id="class_assigned"
-                            value={class_assigned}
-                            onChange={(event) =>
-                              this.onChange(event, "class_assigned")
-                            }
-                            renderValue={(selected) => (
-                              <div className={classes.chips}>
-                                {selected.map((classId) => {
-                                  return (
-                                    <Chip
-                                      key={classId}
-                                      label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
-                                      className={classes.chip}
-                                    />
-                                  );
-                                })}
-                              </div>
-                            )}
+                            fullWidth
+                            error={Boolean(errors.type)}
                           >
-                            {(this.state.classOptions !== null) ? (
-                              this.state.classOptions.map((classInfo) => (
-                                <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
-                                  {classInfo.name}
-                                </MenuItem>
-                              ))
-                            ) : (
-                              null
-                            )}
-                          </Select>
-                          {Boolean(errors.class_assigned)
-                            ?
+                            <Select
+                              value={this.state.type}
+                              onChange={(event) => {
+                                this.onChange(event, "type");
+                              }}
+                            >
+                              <MenuItem value="Kuis">Kuis</MenuItem>
+                              <MenuItem value="Ujian">Ujian</MenuItem>
+                            </Select>
+                            {Boolean(errors.type) ? (
+                              <div className={classes.zeroHeightHelperText}>
+                                <FormHelperText variant="outlined" error>
+                                  {errors.type}
+                                </FormHelperText>
+                              </div>
+                            ) : null}
+                          </FormControl>
+                        </Grid>
+                        <Hidden smDown>
+                          {/* dummy checkbox agar kedua kolom form keterangan assessment simetris */}
+                          <Grid
+                            item
+                            style={{
+                              padding: "0",
+                              width: "0",
+                              visibility: "hidden",
+                            }}
+                          >
+                            <FormHelperText variant="outlined">
+                              {"\u200B"}
+                            </FormHelperText>
+                            <Checkbox size="small" disabled />
+                          </Grid>
+                        </Hidden>
+                        <Grid item className={classes.customPaddingTop}>
+                          <Typography
+                            component="label"
+                            for="description"
+                            color="primary"
+                          >
+                            Deskripsi
+                          </Typography>
+                          <TextField
+                            value={this.state.description}
+                            multiline
+                            // 1 row = 17px. ukuran padding (cek dengan devtool) = 37px
+                            rows={(this.state.customHeight - 37) / 17}
+                            rowsMax={10}
+                            fullWidth
+                            error={errors.description}
+                            // helperText={errors.description}
+                            onChange={this.onChange}
+                            variant="outlined"
+                            id="description"
+                            type="text"
+                          />
+                          {errors.description ? (
                             <div className={classes.zeroHeightHelperText}>
-                              <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                              <FormHelperText variant="outlined" error>
+                                {errors.description}
+                              </FormHelperText>
                             </div>
-                            : null}
-                        </FormControl>
+                          ) : null}
+                        </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Grid>
-
-            <Grid item>
-              {this.state.ready ? this.weightInput(classes) : null}
-            </Grid>
-
-            {this.listQuestion()}
-            <Grid item container justify="center">
-              <Grid item>
-                <LightTooltip title="Tambah soal pilihan ganda">
-                  <IconButton
-                    className={`${classes.addQuestionButton} ${classes.RadioQst}`}
-                    onClick={() => this.handleCloseMenuTambah("radio")}
-                  >
-                    <RadioButtonChecked />
-                  </IconButton>
-                </LightTooltip>
-              </Grid>
-              <Grid item>
-                <LightTooltip title="Tambah soal kotak centang">
-                  <IconButton
-                    className={`${classes.addQuestionButton} ${classes.CheckboxQst}`}
-                    onClick={() => this.handleCloseMenuTambah("checkbox")}
-                  >
-                    <CheckBox />
-                  </IconButton>
-                </LightTooltip>
-              </Grid>
-              <Grid item>
-                <LightTooltip title="Tambah soal isian pendek">
-                  <IconButton
-                    className={`${classes.addQuestionButton} ${classes.ShorttextQst}`}
-                    onClick={() => this.handleCloseMenuTambah("shorttext")}
-                  >
-                    <TextFormat />
-                  </IconButton>
-                </LightTooltip>
-              </Grid>
-              <Grid item>
-                <LightTooltip title="Tambah soal uraian">
-                  <IconButton
-                    className={`${classes.addQuestionButton} ${classes.LongtextQst}`}
-                    onClick={() => this.handleCloseMenuTambah("longtext")}
-                  >
-                    <Subject />
-                  </IconButton>
-                </LightTooltip>
-              </Grid>
-            </Grid>
-            <Grid item container justify="center">
-              <Grid item>
-                <TablePagination
-                  labelRowsPerPage="Soal Per Halaman"
-                  rowsPerPageOptions={[5, 10]}
-                  component="div"
-                  count={this.state.questions.length}
-                  rowsPerPage={this.state.rowsPerPage}
-                  page={this.state.page}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Paper>
-                <Grid
-                  container
-                  // spacing={2}
-                  justify="space-between"
-                  alignItems="center"
-                  className={classes.pageNavigatorContent}
-                >
-                  <Grid item className={classes.pageNavigator}>
-                    <Grid item>
-                      <LightTooltip title={`Pengaturan`}>
-                        <IconButton
-                          disableRipple
-                          className={classes.settingsButton}
-                          onClick={(event) => this.handleMenuOpen(event)}
-                        >
-                          <SettingsIcon />
-                        </IconButton>
-                      </LightTooltip>
-                      <Menu
-                        keepMounted
-                        anchorEl={this.state.anchorEl}
-                        open={Boolean(this.state.anchorEl)}
-                        onClose={this.handleMenuClose}
-                        getContentAnchorEl={null}
-                        style={{ marginTop: "10px" }}
-                        anchorOrigin={{
-                          vertical: "top",
-                          horizontal: "center",
-                        }}
-                        transformOrigin={{
-                          vertical: "bottom",
-                          horizontal: "center",
-                        }}
-                      >
-                        <MenuItem
-                          button
-                          disabled={this.state.isScheduled}
-                          className={classes.menuVisible}
-                          onClick={this.handlePostToggle}
-                        >
-                          <ListItemIcon>
-                            {!this.state.posted ? (
-                              <VisibilityIcon />
-                            ) : (
-                              <VisibilityOffIcon />
-                            )}
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={
-                              !this.state.posted
-                                ? "Tampilkan ke Murid"
-                                : "Sembunyikan dari Murid"
-                            }
-                          />
-                        </MenuItem>
-                        <MenuItem
-                          button
-                          component="a"
-                          className={classes.menuCopy}
-                          onClick={() => {
-                            navigator.clipboard.writeText(linkToShare);
-                            this.handleOpenCopySnackBar();
+                    <Divider
+                      flexItem
+                      orientation="vertical"
+                      className={classes.divider}
+                    />
+                    <Grid item xs={12} md className={classes.content}>
+                      <Grid container direction="column" spacing={4}>
+                        <Grid item container spacing={2}>
+                          <Grid item xs={12} md={6}>
+                            <Typography
+                              component="label"
+                              for="workTimeStart"
+                              color="primary"
+                            >
+                              Waktu Mulai Pengerjaan
+                            </Typography>
+                            <MuiPickersUtilsProvider
+                              locale={lokal}
+                              utils={DateFnsUtils}
+                            >
+                              <KeyboardDateTimePicker
+                                fullWidth
+                                disablePast
+                                inputVariant="outlined"
+                                format="dd/MM/yyyy - HH:mm"
+                                ampm={false}
+                                okLabel="Simpan"
+                                cancelLabel="Batal"
+                                minDateMessage="Harus waktu yang akan datang"
+                                invalidDateMessage="Format tanggal tidak benar"
+                                id="workTimeStart"
+                                value={this.state.start_date}
+                                helperText={null}
+                                onChange={(date) =>
+                                  this.onChange(date, "start_date")
+                                }
+                                onError={(err) => {
+                                  if (errors.start_date !== err) {
+                                    this.setState({
+                                      errors: { ...errors, start_date: err },
+                                    });
+                                  }
+                                }}
+                                error={
+                                  errors.start_date_custom || errors.start_date
+                                }
+                              />
+                              <div className={classes.zeroHeightHelperText}>
+                                {errors.start_date_custom ? (
+                                  <FormHelperText variant="outlined" error>
+                                    {errors.start_date_custom}
+                                  </FormHelperText>
+                                ) : errors.start_date ? (
+                                  <FormHelperText variant="outlined" error>
+                                    {errors.start_date}
+                                  </FormHelperText>
+                                ) : null}
+                              </div>
+                            </MuiPickersUtilsProvider>
+                          </Grid>
+                          <Grid
+                            item
+                            xs={12}
+                            md={6}
+                            className={classes.customSpacing}
+                          >
+                            <Typography
+                              component="label"
+                              for="workTimeEnd"
+                              color="primary"
+                            >
+                              Waktu Selesai Pengerjaan
+                            </Typography>
+                            <MuiPickersUtilsProvider
+                              locale={lokal}
+                              utils={DateFnsUtils}
+                            >
+                              <KeyboardDateTimePicker
+                                fullWidth
+                                // disablePast
+                                inputVariant="outlined"
+                                format="dd/MM/yyyy - HH:mm"
+                                ampm={false}
+                                okLabel="Simpan"
+                                cancelLabel="Batal"
+                                invalidDateMessage="Format tanggal tidak benar"
+                                id="workTimeEnd"
+                                helperText={null}
+                                value={this.state.end_date}
+                                minDate={this.state.start_date}
+                                minDateMessage="Harus setelah Waktu Mulai Pengerjaan"
+                                onChange={(date) =>
+                                  this.onChange(date, "end_date")
+                                }
+                                onError={(err) => {
+                                  if (errors.end_date !== err) {
+                                    this.setState({
+                                      errors: { ...errors, end_date: err },
+                                    });
+                                  }
+                                }}
+                                error={
+                                  errors.end_date_custom || errors.end_date
+                                }
+                              />
+                              <div className={classes.zeroHeightHelperText}>
+                                {errors.end_date_custom ? (
+                                  <FormHelperText variant="outlined" error>
+                                    {errors.end_date_custom}
+                                  </FormHelperText>
+                                ) : errors.end_date ? (
+                                  <FormHelperText variant="outlined" error>
+                                    {errors.end_date}
+                                  </FormHelperText>
+                                ) : null}
+                              </div>
+                            </MuiPickersUtilsProvider>
+                          </Grid>
+                        </Grid>
+                        <Grid item style={{ paddingBottom: "0" }}>
+                          <Typography
+                            component="label"
+                            for="postDate"
+                            color="primary"
+                          >
+                            Waktu Rilis
+                          </Typography>
+                          <MuiPickersUtilsProvider
+                            locale={lokal}
+                            utils={DateFnsUtils}
+                          >
+                            <KeyboardDateTimePicker
+                              disabled={!this.state.isScheduled}
+                              fullWidth
+                              inputVariant="outlined"
+                              format="dd/MM/yyyy - HH:mm"
+                              ampm={false}
+                              okLabel="Simpan"
+                              cancelLabel="Batal"
+                              invalidDateMessage="Format tanggal tidak benar"
+                              id="postDate"
+                              helperText={null}
+                              value={this.state.post_date}
+                              onChange={(date) =>
+                                this.onChange(date, "post_date")
+                              }
+                              onError={(err) => {
+                                if (errors.post_date !== err) {
+                                  this.setState({
+                                    errors: { ...errors, post_date: err },
+                                  });
+                                }
+                              }}
+                            />
+                            <div
+                              className={classes.zeroHeightHelperText}
+                              style={{ flexDirection: "column" }}
+                            >
+                              {errors.post_date ? (
+                                <FormHelperText variant="outlined" error>
+                                  {errors.post_date}
+                                </FormHelperText>
+                              ) : null}
+                              {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang 
+                              untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
+                              <FormGroup style={{ width: "fit-content" }}>
+                                <FormControlLabel
+                                  label={
+                                    <Typography color="textPrimary">
+                                      Rilis Otomatis
+                                    </Typography>
+                                  }
+                                  control={
+                                    <Checkbox
+                                      onChange={() => {
+                                        this.handleCheckScheduleMode();
+                                      }}
+                                      color="primary"
+                                      size="small"
+                                      checked={this.state.isScheduled}
+                                    />
+                                  }
+                                />
+                              </FormGroup>
+                            </div>
+                          </MuiPickersUtilsProvider>
+                        </Grid>
+                        {/* dummy checkbox untuk memberikan ruang bagi checkbox waktu rilis yang sebenarnya */}
+                        <Grid
+                          item
+                          style={{
+                            padding: "0",
+                            width: "0",
+                            visibility: "hidden",
                           }}
                         >
-                          <ListItemIcon>
-                            <LinkIcon />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={`Salin Tautan ${this.state.type}`}
-                          />
-                        </MenuItem>
-                      </Menu>
+                          <FormHelperText variant="outlined">
+                            {"\u200B"}
+                          </FormHelperText>
+                          <Checkbox size="small" disabled />
+                        </Grid>
+                        <Grid item>
+                          <Typography
+                            component="label"
+                            for="subject"
+                            color="primary"
+                          >
+                            Mata Pelajaran
+                          </Typography>
+                          <FormControl
+                            id="subject"
+                            variant="outlined"
+                            color="primary"
+                            fullWidth
+                            error={Boolean(errors.subject)}
+                          >
+                            <Select
+                              value={this.state.subject}
+                              onChange={(event) => {
+                                this.onChange(event, "subject");
+                              }}
+                            >
+                              {this.state.subjectOptions !== null
+                                ? this.state.subjectOptions.map((subject) => (
+                                    <MenuItem
+                                      key={subject._id}
+                                      value={subject._id}
+                                    >
+                                      {subject.name}
+                                    </MenuItem>
+                                  ))
+                                : null}
+                            </Select>
+                            {Boolean(errors.subject) ? (
+                              <div className={classes.zeroHeightHelperText}>
+                                <FormHelperText variant="outlined" error>
+                                  {errors.subject}
+                                </FormHelperText>
+                              </div>
+                            ) : null}
+                          </FormControl>
+                        </Grid>
+                        <Grid item>
+                          <Typography
+                            component="label"
+                            for="class_assigned"
+                            color="primary"
+                          >
+                            Kelas yang Ditugaskan
+                          </Typography>
+                          <FormControl
+                            variant="outlined"
+                            fullWidth
+                            error={Boolean(errors.class_assigned)}
+                          >
+                            <Select
+                              multiple
+                              fullWidth
+                              variant="outlined"
+                              color="primary"
+                              id="class_assigned"
+                              value={class_assigned}
+                              onChange={(event) =>
+                                this.onChange(event, "class_assigned")
+                              }
+                              renderValue={(selected) => (
+                                <div className={classes.chips}>
+                                  {selected.map((classId) => {
+                                    return (
+                                      <Chip
+                                        key={classId}
+                                        label={
+                                          this.state.allClassObject
+                                            ? this.state.allClassObject[classId]
+                                            : null
+                                        }
+                                        className={classes.chip}
+                                      />
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            >
+                              {this.state.classOptions !== null
+                                ? this.state.classOptions.map((classInfo) => (
+                                    <MenuItem
+                                      selected={true}
+                                      key={classInfo._id}
+                                      value={classInfo._id}
+                                    >
+                                      {classInfo.name}
+                                    </MenuItem>
+                                  ))
+                                : null}
+                            </Select>
+                            {Boolean(errors.class_assigned) ? (
+                              <div className={classes.zeroHeightHelperText}>
+                                <FormHelperText variant="outlined" error>
+                                  {errors.class_assigned}
+                                </FormHelperText>
+                              </div>
+                            ) : null}
+                          </FormControl>
+                        </Grid>
+                      </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item className={classes.assessmentSettings}>
-                    <Grid container spacing={1}>
-                      <Grid item>
-                        <Button
-                          variant="contained"
-                          className={classes.cancelButton}
-                          onClick={this.handleOpenDeleteDialog}
-                        >
-                          Batal
-                        </Button>
-                      </Grid>
-                      <Grid item>
-                        <Button
-                          variant="contained"
-                          type="submit"
-                          className={classes.editAssessmentButton}
-                        >
-                          Sunting {this.state.type}
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                </Paper>
+              </Grid>
+
+              <Grid item>
+                {this.state.ready ? this.weightInput(classes) : null}
+              </Grid>
+
+              {this.listQuestion()}
+              <Grid item container justify="center">
+                <Grid item>
+                  <LightTooltip title="Tambah soal pilihan ganda">
+                    <IconButton
+                      className={`${classes.addQuestionButton} ${classes.RadioQst}`}
+                      onClick={() => this.handleCloseMenuTambah("radio")}
+                    >
+                      <RadioButtonChecked />
+                    </IconButton>
+                  </LightTooltip>
                 </Grid>
-              </Paper>
+                <Grid item>
+                  <LightTooltip title="Tambah soal kotak centang">
+                    <IconButton
+                      className={`${classes.addQuestionButton} ${classes.CheckboxQst}`}
+                      onClick={() => this.handleCloseMenuTambah("checkbox")}
+                    >
+                      <CheckBox />
+                    </IconButton>
+                  </LightTooltip>
+                </Grid>
+                <Grid item>
+                  <LightTooltip title="Tambah soal isian pendek">
+                    <IconButton
+                      className={`${classes.addQuestionButton} ${classes.ShorttextQst}`}
+                      onClick={() => this.handleCloseMenuTambah("shorttext")}
+                    >
+                      <TextFormat />
+                    </IconButton>
+                  </LightTooltip>
+                </Grid>
+                <Grid item>
+                  <LightTooltip title="Tambah soal uraian">
+                    <IconButton
+                      className={`${classes.addQuestionButton} ${classes.LongtextQst}`}
+                      onClick={() => this.handleCloseMenuTambah("longtext")}
+                    >
+                      <Subject />
+                    </IconButton>
+                  </LightTooltip>
+                </Grid>
+              </Grid>
+              <Grid item container justify="center">
+                <Grid item>
+                  <TablePagination
+                    labelRowsPerPage="Soal Per Halaman"
+                    rowsPerPageOptions={[5, 10]}
+                    component="div"
+                    count={this.state.questions.length}
+                    rowsPerPage={this.state.rowsPerPage}
+                    page={this.state.page}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  />
+                </Grid>
+              </Grid>
+              <Grid item>
+                <Paper>
+                  <Grid
+                    container
+                    // spacing={2}
+                    justify="space-between"
+                    alignItems="center"
+                    className={classes.pageNavigatorContent}
+                  >
+                    <Grid item className={classes.pageNavigator}>
+                      <Grid item>
+                        <LightTooltip title={`Pengaturan`}>
+                          <IconButton
+                            disableRipple
+                            className={classes.settingsButton}
+                            onClick={(event) => this.handleMenuOpen(event)}
+                          >
+                            <SettingsIcon />
+                          </IconButton>
+                        </LightTooltip>
+                        <Menu
+                          keepMounted
+                          anchorEl={this.state.anchorEl}
+                          open={Boolean(this.state.anchorEl)}
+                          onClose={this.handleMenuClose}
+                          getContentAnchorEl={null}
+                          style={{ marginTop: "10px" }}
+                          anchorOrigin={{
+                            vertical: "top",
+                            horizontal: "center",
+                          }}
+                          transformOrigin={{
+                            vertical: "bottom",
+                            horizontal: "center",
+                          }}
+                        >
+                          <MenuItem
+                            button
+                            disabled={this.state.isScheduled}
+                            className={classes.menuVisible}
+                            onClick={this.handlePostToggle}
+                          >
+                            <ListItemIcon>
+                              {!this.state.posted ? (
+                                <VisibilityIcon />
+                              ) : (
+                                <VisibilityOffIcon />
+                              )}
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={
+                                !this.state.posted
+                                  ? "Tampilkan ke Murid"
+                                  : "Sembunyikan dari Murid"
+                              }
+                            />
+                          </MenuItem>
+                          <MenuItem
+                            button
+                            component="a"
+                            className={classes.menuCopy}
+                            onClick={() => {
+                              navigator.clipboard.writeText(linkToShare);
+                              this.handleOpenCopySnackBar();
+                            }}
+                          >
+                            <ListItemIcon>
+                              <LinkIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={`Salin Tautan ${this.state.type}`}
+                            />
+                          </MenuItem>
+                        </Menu>
+                      </Grid>
+                    </Grid>
+                    <Grid item className={classes.assessmentSettings}>
+                      <Grid container spacing={1}>
+                        <Grid item>
+                          <Button
+                            variant="contained"
+                            className={classes.cancelButton}
+                            onClick={this.handleOpenDeleteDialog}
+                          >
+                            Batal
+                          </Button>
+                        </Grid>
+                        <Grid item>
+                          <Button
+                            variant="contained"
+                            type="submit"
+                            className={classes.editAssessmentButton}
+                          >
+                            Sunting {this.state.type}
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-        <Snackbar
-          open={this.state.checkboxSnackbarOpen}
-          autoHideDuration={6000}
-          onClose={this.handleCloseCheckboxErrorSnackBar}
-        >
-          <MuiAlert
+          </form>
+          <Snackbar
+            open={this.state.checkboxSnackbarOpen}
+            autoHideDuration={6000}
             onClose={this.handleCloseCheckboxErrorSnackBar}
-            severity="error"
           >
-            Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
-          </MuiAlert>
-        </Snackbar>
-        <Snackbar
-          open={this.state.radioSnackbarOpen}
-          autoHideDuration={6000}
-          onClose={this.handleCloseRadioErrorSnackBar}
-        >
-          <MuiAlert
+            <MuiAlert
+              onClose={this.handleCloseCheckboxErrorSnackBar}
+              severity="error"
+            >
+              Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
+            </MuiAlert>
+          </Snackbar>
+          <Snackbar
+            open={this.state.radioSnackbarOpen}
+            autoHideDuration={6000}
             onClose={this.handleCloseRadioErrorSnackBar}
-            severity="error"
           >
-            Soal Dalam Bentuk Pilihan Ganda Minimal Memiliki Satu Jawaban.
-          </MuiAlert>
-        </Snackbar>
-        <Snackbar
-          open={this.state.copySnackbarOpen}
-          autoHideDuration={6000}
-          onClose={this.handleCloseCopySnackBar}
-        >
-          <MuiAlert onClose={this.handleCloseCopySnackBar} severity="success">
-            Tautan {this.state.type} berhasil disalin ke Clipboard Anda!
-          </MuiAlert>
-        </Snackbar>
-        <Snackbar
-          open={this.state.snackbarOpen}
-          autoHideDuration={4000}
-          onClose={this.handleCloseErrorSnackbar}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-          <MuiAlert
-            elevation={6}
-            variant="filled"
-            onClose={this.handleCloseSnackbar}
-            severity="error"
+            <MuiAlert
+              onClose={this.handleCloseRadioErrorSnackBar}
+              severity="error"
+            >
+              Soal Dalam Bentuk Pilihan Ganda Minimal Memiliki Satu Jawaban.
+            </MuiAlert>
+          </Snackbar>
+          <Snackbar
+            open={this.state.copySnackbarOpen}
+            autoHideDuration={6000}
+            onClose={this.handleCloseCopySnackBar}
           >
-            Masih ada bagian yang belum diisi atau salah, silakan diperiksa
-            kembali!
-          </MuiAlert>
-        </Snackbar>
-        <Snackbar
-          open={this.state.fileLimitSnackbar}
-          autoHideDuration={4000}
-          onClose={this.handleFileLimitSnackbar}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-          <MuiAlert elevation={6} variant="filled" severity="error">
-            {this.state.over_limit.length} file melebihi batas 5MB!
-          </MuiAlert>
-        </Snackbar>
-      </div>
-    );
+            <MuiAlert onClose={this.handleCloseCopySnackBar} severity="success">
+              Tautan {this.state.type} berhasil disalin ke Clipboard Anda!
+            </MuiAlert>
+          </Snackbar>
+          <Snackbar
+            open={this.state.snackbarOpen}
+            autoHideDuration={4000}
+            onClose={this.handleCloseErrorSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              onClose={this.handleCloseSnackbar}
+              severity="error"
+            >
+              Masih ada bagian yang belum diisi atau salah, silakan diperiksa
+              kembali!
+            </MuiAlert>
+          </Snackbar>
+          <Snackbar
+            open={this.state.fileLimitSnackbar}
+            autoHideDuration={4000}
+            onClose={this.handleFileLimitSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <MuiAlert elevation={6} variant="filled" severity="error">
+              {this.state.over_limit.length} file melebihi batas 5MB!
+            </MuiAlert>
+          </Snackbar>
+        </div>
+      );
     }
   }
 }
@@ -2290,7 +2475,7 @@ EditAssessment.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -2310,5 +2495,5 @@ export default connect(mapStateToProps, {
   validateAssessment,
   clearErrors,
   getFileAssessment,
-  refreshTeacher
+  refreshTeacher,
 })(withStyles(styles)(React.memo(EditAssessment)));

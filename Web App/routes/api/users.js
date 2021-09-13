@@ -46,10 +46,11 @@ router.post("/register", (req, res) => {
       var newUser;
       if (req.body.role === "Student") newUser = new Student(req.body);
       else if (req.body.role === "Teacher") newUser = new Teacher(req.body);
-      else if(req.body.role === "Admin") newUser = new Admin(req.body);
-      else if(req.body.role === "SuperAdmin") newUser = new SuperAdmin(req.body);
-      else{
-        return res.status(400).json({ role : "Peran belum diisi"})
+      else if (req.body.role === "Admin") newUser = new Admin(req.body);
+      else if (req.body.role === "SuperAdmin")
+        newUser = new SuperAdmin(req.body);
+      else {
+        return res.status(400).json({ role: "Peran belum diisi" });
       }
 
       // Hash password before saving in database
@@ -354,32 +355,37 @@ router.put(
 );
 
 router.get("/getTeachers", (req, res) => {
-  Teacher.find({ active: true }).sort({name: 1}).then((users, err) => {
-    if (!users) console.log("No teachers yet in Schooly System");
-    else return res.json(users);
-  });
+  Teacher.find({ active: true })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users) console.log("No teachers yet in Schooly System");
+      else return res.json(users);
+    });
 });
 
 router.get("/getStudents", (req, res) => {
-  Student.find({ active: true }).sort({name: 1}).then((users, err) => {
-    if (!users) console.log("No students yet in Schooly System");
-    else return res.json(users);
-  });
+  Student.find({ active: true })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users) console.log("No students yet in Schooly System");
+      else return res.json(users);
+    });
 });
 
-router.get("/getAdmins", (req,res) => {
-  Admin.find({ active: true }).sort({name: 1}).then((users, err) => {
-    if (!users) console.log("No unit admins yet in Schooly System");
-    else return res.json(users);
-  });
-})
+router.get("/getAdmins", (req, res) => {
+  Admin.find({ active: true })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users) console.log("No unit admins yet in Schooly System");
+      else return res.json(users);
+    });
+});
 
 router.get("/getOneUser/:id", (req, res) => {
   let id = req.params.id;
   User.findById(id, (err, user) => {
     console.log(user);
-    if (!user)
-      return res.status(404).json("No user is found in Database");
+    if (!user) return res.status(404).json("No user is found in Database");
     else return res.json(user);
   });
 });
@@ -402,44 +408,54 @@ router.get("/getUsers", (req, res) => {
 
 router.get("/getstudentsbyclass/:id", (req, res) => {
   let id = req.params.id;
-  Student.find({ kelas: id, active: true}).sort({name: 1}).then((users, err) => {
-    if (!users) console.log("No students with this class ID");
-    else {
-      // console.log("Users by class : ", users)
-      return res.json(users);
-    }
-  });
+  Student.find({ kelas: id, active: true })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users) console.log("No students with this class ID");
+      else {
+        // console.log("Users by class : ", users)
+        return res.json(users);
+      }
+    });
 });
 
 router.get("/all_users", (req, res) => {
-  User.find({ active: true }).sort({name: 1}).then((users, err) => {
-    if (!users)
-      return res.status(404).json("No students yet in Schooly system");
-    else return res.json(users);
-  });
+  User.find({ active: true })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users)
+        return res.status(404).json("No students yet in Schooly system");
+      else return res.json(users);
+    });
 });
 
 // for admin only
 router.get("/getpendingstudents", (req, res) => {
-  Student.find({ active: false }).sort({name: 1}).then((users, err) => {
-    if (!users) return res.json([]);
-    else return res.json(users);
-  });
+  Student.find({ active: false })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users) return res.json([]);
+      else return res.json(users);
+    });
 });
 
 router.get("/getpendingteachers", (req, res) => {
-  Teacher.find({ active: false }).sort({name: 1}).then((users, err) => {
-    if (!users) return res.json([]);
-    else return res.json(users);
-  });
+  Teacher.find({ active: false })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users) return res.json([]);
+      else return res.json(users);
+    });
 });
 
-router.get("/getpendingadmins", (req,res) => {
-  Admin.find({ active: false}).sort({ name: 1}).then((users, err) => {
-    if (!users) return res.json([]);
-    else return res.json(users);
-  })
-})
+router.get("/getpendingadmins", (req, res) => {
+  Admin.find({ active: false })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users) return res.json([]);
+      else return res.json(users);
+    });
+});
 router.put("/setuseractive/:id", (req, res) => {
   let id = req.params.id;
 
@@ -522,29 +538,30 @@ router.put("/teacher/:teacherId", (req, res) => {
   });
 });
 
-router.post("/register_students_bulk", (req,res) => {
+router.post("/register_students_bulk", (req, res) => {
   let { classes, users } = req.body;
-  // terima req.body.classes 
+  // terima req.body.classes
   let class_map = new Map();
-  
+
   // isi dari classes_map (key,value) = (nama kelas, ObjectId)
-  Class.find( {name: {$in: classes}}).then((result) => {
-    result.forEach((item) => class_map.set(item.name, item._id));
-    let user_list = users.map((u) => {
-      u.kelas = class_map.get(u.kelas);
-      u.active = true;
-      
-      const saltRounds = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(u.password, saltRounds)
-      
-      u.password = hash;
-      return u;
+  Class.find({ name: { $in: classes } })
+    .then((result) => {
+      result.forEach((item) => class_map.set(item.name, item._id));
+      let user_list = users.map((u) => {
+        u.kelas = class_map.get(u.kelas);
+        u.active = true;
+
+        const saltRounds = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(u.password, saltRounds);
+
+        u.password = hash;
+        return u;
+      });
+      return User.insertMany(user_list);
+    })
+    .then((results) => {
+      return res.json(results);
     });
-    return User.insertMany(user_list);
-  }).then((results) => {
-    return res.json(results);
-  })
-})
+});
 
 module.exports = router;
-

@@ -56,7 +56,15 @@ function createData(
   createdAt,
   submissionStatus
 ) {
-  return { _id, tasktitle, subject, deadline, class_assigned, createdAt, submissionStatus };
+  return {
+    _id,
+    tasktitle,
+    subject,
+    deadline,
+    class_assigned,
+    createdAt,
+    submissionStatus,
+  };
 }
 
 var rows = [];
@@ -502,7 +510,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.success.main,
   },
   listItem: {
-    padding: "6px 16px"
+    padding: "6px 16px",
   },
   assignmentLate: {
     backgroundColor: theme.palette.primary.main,
@@ -551,36 +559,35 @@ function TaskList(props) {
     );
   };
 
-  React.useEffect(
-    () => {
-      getAllTask();
-      getAllClass("map");
-      getAllSubjects("map");
+  React.useEffect(() => {
+    getAllTask();
+    getAllClass("map");
+    getAllSubjects("map");
 
-      if (user.role === "Student") {
-        let submittedTaskIdSet = new Set();
-        getFileSubmitTasksByAuthor(user._id).then((response) => {
+    if (user.role === "Student") {
+      let submittedTaskIdSet = new Set();
+      getFileSubmitTasksByAuthor(user._id)
+        .then((response) => {
           for (let file of response.data) {
             submittedTaskIdSet.add(file.task_id);
           }
-        }).finally(() => {
+        })
+        .finally(() => {
           // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
           setSubmittedTaskIds(submittedTaskIdSet);
         });
-      }
-      
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },
-    []
-  );
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   React.useEffect(() => {
     // Untuk muculin delete snackbar pas didelete dari view page
-    if(props.location.openDeleteSnackbar){
-      handleOpenDeleteSnackbar()
+    if (props.location.openDeleteSnackbar) {
+      handleOpenDeleteSnackbar();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const retrieveTasks = () => {
     rows = [];
@@ -597,7 +604,7 @@ function TaskList(props) {
             }
           });
       } else if (user.role === "Student") {
-        if (submittedTaskIds) { 
+        if (submittedTaskIds) {
           tasksCollection
             .filter((item) =>
               item.name.toLowerCase().includes(searchFilter.toLowerCase())
@@ -605,7 +612,10 @@ function TaskList(props) {
             .forEach((data) => {
               let class_assigned = data.class_assigned;
               if (class_assigned.indexOf(user.kelas) !== -1) {
-                taskRowItem({ ...data, submissionStatus: submittedTaskIds.has(data._id) });
+                taskRowItem({
+                  ...data,
+                  submissionStatus: submittedTaskIds.has(data._id),
+                });
               }
             });
         }
@@ -628,7 +638,7 @@ function TaskList(props) {
 
   const handleOpenDeleteSnackbar = () => {
     setOpenDeleteSnackbar(true);
-  }
+  };
 
   const handleCloseDeleteSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -643,8 +653,8 @@ function TaskList(props) {
 
   const onDeleteTask = (id) => {
     deleteTask(id).then((res) => {
-      handleOpenDeleteSnackbar()
-      handleCloseDeleteDialog()
+      handleOpenDeleteSnackbar();
+      handleCloseDeleteDialog();
       getAllTask();
     });
   };
@@ -855,7 +865,7 @@ function TaskList(props) {
                         style={{ display: "flex", flexDirection: "row" }}
                         badgeContent={
                           row.submissionStatus === false ? (
-                          // workStatus(row) === "Belum Dikumpulkan" ? (
+                            // workStatus(row) === "Belum Dikumpulkan" ? (
                             <ErrorIcon className={classes.errorIcon} />
                           ) : (
                             <CheckCircleIcon className={classes.checkIcon} />

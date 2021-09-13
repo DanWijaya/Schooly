@@ -1,7 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getAllClass, setHomeroomTeachers } from "../../../actions/ClassActions";
+import {
+  getAllClass,
+  setHomeroomTeachers,
+} from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";

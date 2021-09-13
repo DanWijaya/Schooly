@@ -50,7 +50,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import RecentActorsIcon from '@material-ui/icons/RecentActors';
+import RecentActorsIcon from "@material-ui/icons/RecentActors";
 import { BiSitemap } from "react-icons/bi";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { GoSearch } from "react-icons/go";
@@ -438,10 +438,8 @@ function ManageUsersToolbar(props) {
               <>
                 <LightTooltip title="Sunting Data Ajar Guru">
                   <Link to="/sunting-guru">
-                    <IconButton
-                      className={classes.checkboxModeButton}
-                    >
-                      < BiSitemap />
+                    <IconButton className={classes.checkboxModeButton}>
+                      <BiSitemap />
                     </IconButton>
                   </Link>
                 </LightTooltip>

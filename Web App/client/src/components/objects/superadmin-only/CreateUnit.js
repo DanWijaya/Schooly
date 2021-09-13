@@ -59,8 +59,8 @@ const styles = (theme) => ({
   },
   zeroHeightHelperText: {
     height: "0",
-    display: "flex" // untuk men-disable "collapsing margin"
-  }
+    display: "flex", // untuk men-disable "collapsing margin"
+  },
 });
 
 class CreateUnit extends Component {
@@ -82,8 +82,8 @@ class CreateUnit extends Component {
       fileLimitSnackbar: false,
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
-      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
-      allSubjectObject: null // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
+      allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
     };
   }
 
@@ -115,8 +115,8 @@ class CreateUnit extends Component {
     this.setState({ openDeleteDialog: false });
   };
 
-  onChange = (e, otherfield=null) => {
-      this.setState({ [e.target.id]: e.target.value })
+  onChange = (e, otherfield = null) => {
+    this.setState({ [e.target.id]: e.target.value });
   };
 
   onSubmit = (e, id) => {
@@ -132,7 +132,8 @@ class CreateUnit extends Component {
     this.handleOpenUploadDialog();
 
     createUnit(unitData).then((res) => {
-      this.setState({ success: res})})
+      this.setState({ success: res });
+    });
   };
 
   handleLampiranDelete = (e, i) => {
@@ -215,7 +216,6 @@ class CreateUnit extends Component {
       }
     };
 
-
     document.title = "Schooly | Buat Unit";
 
     if (user.role === "SuperAdmin") {
@@ -269,12 +269,13 @@ class CreateUnit extends Component {
                         })}
                         placeholder="SMA"
                       />
-                      {errors.name
-                        ?
+                      {errors.name ? (
                         <div className={classes.zeroHeightHelperText}>
-                          <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
+                          <FormHelperText variant="outlined" error>
+                            {errors.name}
+                          </FormHelperText>
                         </div>
-                        : null}
+                      ) : null}
                     </Grid>
                     <Grid item>
                       <Typography
@@ -300,16 +301,17 @@ class CreateUnit extends Component {
                         })}
                         placeholder="Sekolah Menengah Atas"
                       />
-                      {errors.description
-                        ?
+                      {errors.description ? (
                         <div className={classes.zeroHeightHelperText}>
-                          <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                          <FormHelperText variant="outlined" error>
+                            {errors.description}
+                          </FormHelperText>
                         </div>
-                        : null}
+                      ) : null}
                     </Grid>
                   </Grid>
                 </Grid>
-                </Grid>
+              </Grid>
               <div
                 style={{ display: "flex", justifyContent: "flex-end" }}
                 className={classes.content}
@@ -376,5 +378,4 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(mapStateToProps, {
-})(withStyles(styles)(CreateUnit));
+export default connect(mapStateToProps, {})(withStyles(styles)(CreateUnit));

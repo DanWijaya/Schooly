@@ -189,15 +189,15 @@ function ProfileView(props) {
         .then((result) => setAvatar(result))
         .catch((err) => console.log(err));
     });
-  
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
-    setCurrentClass(selectedUser.kelas)
+    setCurrentClass(selectedUser.kelas);
   }, [selectedUser]);
 
-  console.log(selectedUser)
+  console.log(selectedUser);
 
   React.useEffect(() => {
     setNamaKelas(classesCollection.kelas.name);
@@ -231,10 +231,10 @@ function ProfileView(props) {
     : "Schooly";
 
   const roleMap = new Map();
-  roleMap.set("Student", "Murid")
-  roleMap.set("Teacher", "Guru")
-  roleMap.set("Admin", "Pengelola Unit")
-  roleMap.set("SuperAdmin", "Pengelola Sekolah")
+  roleMap.set("Student", "Murid");
+  roleMap.set("Teacher", "Guru");
+  roleMap.set("Admin", "Pengelola Unit");
+  roleMap.set("SuperAdmin", "Pengelola Sekolah");
 
   return (
     <div className={classes.root}>
@@ -263,59 +263,59 @@ function ProfileView(props) {
         </Grid>
       </Grid>
       <Divider className={classes.profileDivider} />
+      {/* Ini khusus Untuk guru bisa lihat murid muridnya */}
       {role === "Student" && user.role === "Teacher" ? (
-        (classesCollection.kelas.walikelas) ?
-        (classesCollection.kelas.walikelas === user._id) ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginBottom: "20px",
-            }}
-          >
-            <Link
-              to={{
-                pathname: `/rapor/${_id}`,
+        classesCollection.kelas.walikelas ? (
+          classesCollection.kelas.walikelas === user._id ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginBottom: "20px",
               }}
             >
-              <LightTooltip title="Klik Untuk Melihat Rapor">
-                <Button
-                  variant="contained"
-                  className={classes.buttonRapor}
-                  startIcon={<AssessmentOutlinedIcon />}
-                >
-                  Lihat Rapor
-                </Button>
-              </LightTooltip>
-            </Link>
-          </div>
-        ) : (user.class_teached).includes(classesCollection.kelas._id) ? (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginBottom: "20px",
+              <Link
+                to={{
+                  pathname: `/rapor/${_id}`,
                 }}
               >
-                <Link
-                  to={{
-                    pathname: `/rapor/${_id}`,
-                  }}
-                >
-                  <LightTooltip title="Klik Untuk Melihat Rapor">
-                    <Button
-                      variant="contained"
-                      className={classes.buttonRapor}
-                      startIcon={<AssessmentOutlinedIcon />}
-                    >
-                      Lihat Rapor
-                    </Button>
-                  </LightTooltip>
-                </Link>
-              </div>
-            )
-          : null
-        : (user.class_teached).includes(classesCollection.kelas._id) ? (
+                <LightTooltip title="Klik Untuk Melihat Rapor">
+                  <Button
+                    variant="contained"
+                    className={classes.buttonRapor}
+                    startIcon={<AssessmentOutlinedIcon />}
+                  >
+                    Lihat Rapor
+                  </Button>
+                </LightTooltip>
+              </Link>
+            </div>
+          ) : user.class_teached.includes(classesCollection.kelas._id) ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginBottom: "20px",
+              }}
+            >
+              <Link
+                to={{
+                  pathname: `/rapor/${_id}`,
+                }}
+              >
+                <LightTooltip title="Klik Untuk Melihat Rapor">
+                  <Button
+                    variant="contained"
+                    className={classes.buttonRapor}
+                    startIcon={<AssessmentOutlinedIcon />}
+                  >
+                    Lihat Rapor
+                  </Button>
+                </LightTooltip>
+              </Link>
+            </div>
+          ) : null
+        ) : user.class_teached.includes(classesCollection.kelas._id) ? (
           <div
             style={{
               display: "flex",
@@ -339,13 +339,10 @@ function ProfileView(props) {
               </LightTooltip>
             </Link>
           </div>
-        )
-      : null
+        ) : null
       ) : null}
       <Grid container direction="column" spacing={4}>
-        {user.role === "Teacher" ||
-        user.role === "Student" ||
-        user.role === "Admin"
+        {roleMap.has(user.role)
           ? [
               <Grid item>
                 <Paper className={classes.informationPaper}>

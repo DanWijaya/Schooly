@@ -16,11 +16,11 @@ import {
   Paper,
   Divider,
   Badge,
-  Dialog
+  Dialog,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import EventNoteIcon from '@material-ui/icons/EventNote';
+import EventNoteIcon from "@material-ui/icons/EventNote";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
@@ -29,13 +29,17 @@ import WarningIcon from "@material-ui/icons/Warning";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
-import {
-  getAllEvents,
-  deleteEvent
-} from "../../../actions/EventActions";
+import { getAllEvents, deleteEvent } from "../../../actions/EventActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getStudents, getStudentsByClass, getTeachers } from "../../../actions/UserActions";
-import { getTasksBySubjectClass, getAllTask } from "../../../actions/TaskActions";
+import {
+  getStudents,
+  getStudentsByClass,
+  getTeachers,
+} from "../../../actions/UserActions";
+import {
+  getTasksBySubjectClass,
+  getAllTask,
+} from "../../../actions/TaskActions";
 import {
   getAssessments,
   getAllAssessments,
@@ -50,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-      maxWidth: "100%"
+      maxWidth: "100%",
     },
     padding: "10px",
   },
@@ -60,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
-      color: "white"
+      color: "white",
     },
   },
   newEventIconDesktop: {
@@ -99,10 +103,10 @@ const useStyles = makeStyles((theme) => ({
   calendarContainer: {
     display: "flex",
     justifyContent: "center",
-    marginBottom: "30px"
+    marginBottom: "30px",
   },
   calendar: {
-    width: "100%"
+    width: "100%",
   },
   calendarTile: {
     // minWidth: "100px"
@@ -124,7 +128,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
   },
   listItem: {
-    padding: "6px 16px"
+    padding: "6px 16px",
   },
   errorIcon: {
     color: theme.palette.error.main,
@@ -152,27 +156,32 @@ function CalendarListToolbar(props) {
     setSearchBarFocus,
     searchBarFocus,
     role,
-    type
+    type,
   } = props;
 
   let toolbarTitle = "";
   let toolbarIcon = null;
 
-  if(type === "Event") {
+  if (type === "Event") {
     toolbarTitle = "Daftar Kegiatan";
-    toolbarIcon = <EventNoteIcon className={classes.titleIcon} fontSize="large" />;
-  }
-  else if(type === "Task") {
+    toolbarIcon = (
+      <EventNoteIcon className={classes.titleIcon} fontSize="large" />
+    );
+  } else if (type === "Task") {
     toolbarTitle = "Daftar Tugas";
-    toolbarIcon = <AssignmentIcon className={classes.titleIcon} fontSize="large" />;
-  }
-  else if(type === "Quiz") {
+    toolbarIcon = (
+      <AssignmentIcon className={classes.titleIcon} fontSize="large" />
+    );
+  } else if (type === "Quiz") {
     toolbarTitle = "Daftar Kuis";
-    toolbarIcon = <FaClipboardList className={classes.titleIcon} fontSize="large" />;
-  }
-  else {
+    toolbarIcon = (
+      <FaClipboardList className={classes.titleIcon} fontSize="large" />
+    );
+  } else {
     toolbarTitle = "Daftar Ujian";
-    toolbarIcon = <BsClipboardData className={classes.titleIcon} fontSize="large" />;
+    toolbarIcon = (
+      <BsClipboardData className={classes.titleIcon} fontSize="large" />
+    );
   }
 
   const createSortHandler = (property) => (event) => {
@@ -381,7 +390,7 @@ function CalendarListToolbar(props) {
               >
                 <EventNoteIcon className={classes.newEventIconDesktop} />
                 Buat Kegiatan
-            </Fab>
+              </Fab>
             </Link>
           )}
         </Hidden>
@@ -459,9 +468,7 @@ function TaskListItem(props) {
               </Hidden>
               <ListItemText
                 primary={
-                  <Typography variant="h6">
-                    {props.work_title}
-                  </Typography>
+                  <Typography variant="h6">{props.work_title}</Typography>
                 }
                 secondary={props.work_sender}
               />
@@ -499,18 +506,30 @@ function ListAssessments(props) {
     classes,
     all_subjects_map,
     all_teachers,
-    getSelectedDate
+    getSelectedDate,
   } = props;
 
-  console.log(all_assessments)
+  console.log(all_assessments);
 
   function AssessmentListItem(props) {
     // Dialog Kuis dan Ujian
     const [openDialog, setOpenDialog] = React.useState(false);
     const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-    const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
-      setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
+    const handleOpenDialog = (
+      title,
+      subject,
+      teacher_name,
+      start_date,
+      end_date
+    ) => {
+      setCurrentDialogInfo({
+        title,
+        subject,
+        teacher_name,
+        start_date,
+        end_date,
+      });
       setOpenDialog(true);
     };
 
@@ -535,7 +554,13 @@ function ListAssessments(props) {
         >
           <Badge
             style={{ display: "flex", flexDirection: "row" }}
-            badgeContent={(!props.work_finished) ? <WarningIcon className={classes.warningIcon} /> : <CheckCircleIcon className={classes.checkIcon} />}
+            badgeContent={
+              !props.work_finished ? (
+                <WarningIcon className={classes.warningIcon} />
+              ) : (
+                <CheckCircleIcon className={classes.checkIcon} />
+              )
+            }
             anchorOrigin={{
               vertical: "bottom",
               horizontal: "right",
@@ -590,10 +615,7 @@ function ListAssessments(props) {
             >
               Guru: {currentDialogInfo.teacher_name}
             </Typography>
-            <Typography
-              variant="subtitle1"
-              align="center"
-            >
+            <Typography variant="subtitle1" align="center">
               Mulai: {currentDialogInfo.start_date}
             </Typography>
             <Typography variant="subtitle1" align="center">
@@ -615,22 +637,24 @@ function ListAssessments(props) {
   }
 
   let AssessmentsList = [];
-  let TeacherList = []
+  let TeacherList = [];
   let result = [];
 
   let tempSelectedDate = new Date(getSelectedDate());
-      
+
   if (Boolean(all_assessments.length)) {
     var i;
     for (i = all_assessments.length - 1; i >= 0; i--) {
       let assessment = all_assessments[i];
-      let tempDeadlineDate = new Date(assessment.start_date.substring(0,10));
+      let tempDeadlineDate = new Date(assessment.start_date.substring(0, 10));
       let class_assigned = assessment.class_assigned;
 
-      if (tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
-      tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-      tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
-      class_assigned.indexOf(classId) !== -1) {
+      if (
+        tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
+        tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+        tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
+        class_assigned.indexOf(classId) !== -1
+      ) {
         for (let j = 0; j < all_teachers.length; j++) {
           if (all_teachers[j]._id === assessment.author_id) {
             TeacherList.push(all_teachers[j].name);
@@ -643,7 +667,7 @@ function ListAssessments(props) {
       //   break;
       // }
     }
-    console.log(AssessmentsList)
+    console.log(AssessmentsList);
     for (i = 0; i < AssessmentsList.length; i++) {
       let assessment = AssessmentsList[i];
       let teacher_name = TeacherList[i];
@@ -662,11 +686,10 @@ function ListAssessments(props) {
         if (
           (!category ||
             (category === "subject" && assessment.subject === subject._id)) &&
-          
           assessment.type === "Kuis" &&
           assessment.posted
         ) {
-          console.log(assessment.start_date)
+          console.log(assessment.start_date);
           result.push({
             name: assessment.name,
             workCategoryAvatar: workCategoryAvatar,
@@ -675,7 +698,7 @@ function ListAssessments(props) {
             start_date: assessment.start_date,
             end_date: assessment.end_date,
             createdAt: assessment.createdAt,
-            finished: assessment.submissions
+            finished: assessment.submissions,
           });
           // result.push(
           //   <AssessmentListItem
@@ -702,7 +725,6 @@ function ListAssessments(props) {
         if (
           (!category ||
             (category === "subject" && assessment.subject === subject._id)) &&
-          
           assessment.type === "Ujian" &&
           assessment.posted
         ) {
@@ -714,7 +736,7 @@ function ListAssessments(props) {
             start_date: assessment.start_date,
             end_date: assessment.end_date,
             createdAt: assessment.createdAt,
-            finished: assessment.submissions
+            finished: assessment.submissions,
           });
           // result.push(
           //   <AssessmentListItem
@@ -860,12 +882,15 @@ function Calendar(props) {
   React.useEffect(() => {
     // mencari event yang berlangsung hari ini.
     // event yang sudah lewat jamnya, sedang berlangsung, atau belum berlangsung akan ditampilkan.
-    let now = (selectedDate === null) ? (new Date()).getDate() : selectedDate.getDate();
-    let filteredEvents = props.eventsCollection.allEvents.filter((eventInfo) => {
-      let start_date = (new Date(eventInfo.start_date)).getDate();
-      let end_date = (new Date(eventInfo.end_date)).getDate();
-      return (start_date <= now && now <= end_date);
-    });
+    let now =
+      selectedDate === null ? new Date().getDate() : selectedDate.getDate();
+    let filteredEvents = props.eventsCollection.allEvents.filter(
+      (eventInfo) => {
+        let start_date = new Date(eventInfo.start_date).getDate();
+        let end_date = new Date(eventInfo.end_date).getDate();
+        return start_date <= now && now <= end_date;
+      }
+    );
     setRows(filteredEvents);
   }, [props.eventsCollection.allEvents, selectedDate]);
 
@@ -893,16 +918,18 @@ function Calendar(props) {
     }
     tasksByClass.forEach((task) => {
       let tempSelectedDate = new Date(selectedDate);
-      let tempDeadlineDate = new Date(task.deadline.substring(0,10));
+      let tempDeadlineDate = new Date(task.deadline.substring(0, 10));
 
       let flag = true;
       let teacher_name;
 
       // Untuk sekarang yang ditampilkan adalah tugas dengan deadline pada tanggal yang sama
       // dengan selectedDate (tidak memperhitungkan jam, menit, detik)
-      if(tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
-      tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-      tempSelectedDate.getYear() === tempDeadlineDate.getYear()) {
+      if (
+        tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
+        tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
+        tempSelectedDate.getYear() === tempDeadlineDate.getYear()
+      ) {
         for (var i = 0; i < all_user_files.length; i++) {
           if (all_user_files[i].for_task_object === task._id) {
             flag = false;
@@ -929,7 +956,7 @@ function Calendar(props) {
         }
       }
     });
-  
+
     if (result.length === 0) {
       return (
         <Typography variant="subtitle1" align="center" color="textSecondary">
@@ -960,11 +987,15 @@ function Calendar(props) {
     let result = [];
     console.log(user);
     for (let i = 0; i < tasksCollection.length; i++) {
-      let tempDeadlineDate = new Date(tasksCollection[i].deadline.substring(0,10));
-      if (tasksCollection[i].person_in_charge_id === user._id &&
-        tempSelectedDate.getDate() === tempDeadlineDate.getDate() && 
+      let tempDeadlineDate = new Date(
+        tasksCollection[i].deadline.substring(0, 10)
+      );
+      if (
+        tasksCollection[i].person_in_charge_id === user._id &&
+        tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
         tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
-        tempSelectedDate.getYear() === tempDeadlineDate.getYear()) {
+        tempSelectedDate.getYear() === tempDeadlineDate.getYear()
+      ) {
         let number_students_assigned = 0;
         for (let j = 0; j < all_students.length; j++) {
           if (
@@ -978,7 +1009,7 @@ function Calendar(props) {
           number_students_assigned
         ) {
           let task = tasksCollection[i];
-          console.log(task)
+          console.log(task);
           result.push({
             _id: task._id,
             name: task.name,
@@ -1032,10 +1063,7 @@ function Calendar(props) {
           Object.keys(assessment.submissions).length > 0
         ) {
           // jika ada murid yang jawaban uraiannya sudah dinilai
-          if (
-            assessment.grades &&
-            Object.keys(assessment.grades).length > 0
-          ) {
+          if (assessment.grades && Object.keys(assessment.grades).length > 0) {
             // untuk setiap murid yang sudah mengumpulkan jawaban
             for (const studentId of Object.keys(assessment.submissions)) {
               // jika ada jawaban uraian yang belum dinilai
@@ -1102,11 +1130,7 @@ function Calendar(props) {
           className={classes.calendar}
         />
       </div>
-      <CalendarListToolbar
-        classes={classes}
-        role={role}
-        type="Event"
-      />
+      <CalendarListToolbar classes={classes} role={role} type="Event" />
       <Divider variant="inset" className={classes.titleDivider} />
       {/* <Hidden mdUp implementation="css">
         {role !== "Admin" ? null : (
@@ -1134,12 +1158,17 @@ function Calendar(props) {
         )}
       </Hidden> */}
 
-      <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
+      <Grid
+        container
+        direction="column"
+        spacing={2}
+        style={{ marginBottom: "32px" }}
+      >
         {rows.length === 0 ? (
           <Typography variant="subtitle1" align="center" color="textSecondary">
             Kosong
           </Typography>
-        ) : 
+        ) : (
           rows.map((eventInfo) => {
             return (
               <Grid item>
@@ -1251,14 +1280,13 @@ function Calendar(props) {
                                 onClick={() => {
                                   deleteEvent(eventInfo._id).then(() => {
                                     getAllEvents();
-                                  })
+                                  });
                                 }}
                               >
                                 <DeleteIcon fontSize="small" />
                               </IconButton>
                             </LightTooltip>
                           </Grid>
-
                         </Grid>
                       }
                     />
@@ -1267,28 +1295,30 @@ function Calendar(props) {
               </Grid>
             );
           })
-        }
+        )}
       </Grid>
 
-      {(role != "Admin") ?
+      {role != "Admin" ? (
         <>
-          <CalendarListToolbar
-            classes={classes}
-            role={role}
-            type="Task"
-          />
+          <CalendarListToolbar classes={classes} role={role} type="Task" />
           <Divider variant="inset" className={classes.titleDivider} />
-          <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
-            {(role === "Student") ? listTasks() : listTasksTeacher()}
+          <Grid
+            container
+            direction="column"
+            spacing={2}
+            style={{ marginBottom: "32px" }}
+          >
+            {role === "Student" ? listTasks() : listTasksTeacher()}
           </Grid>
-          <CalendarListToolbar
-            classes={classes}
-            role={role}
-            type="Quiz"
-          />
+          <CalendarListToolbar classes={classes} role={role} type="Quiz" />
           <Divider variant="inset" className={classes.titleDivider} />
-          <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
-            {(role === "Student") ?
+          <Grid
+            container
+            direction="column"
+            spacing={2}
+            style={{ marginBottom: "32px" }}
+          >
+            {role === "Student" ? (
               <ListAssessments
                 category={null}
                 subject={{}}
@@ -1301,16 +1331,19 @@ function Calendar(props) {
                 all_teachers={all_teachers}
                 getSelectedDate={getSelectedDate}
               />
-            : listAssessmentsTeacher("Kuis")}
+            ) : (
+              listAssessmentsTeacher("Kuis")
+            )}
           </Grid>
-          <CalendarListToolbar
-            classes={classes}
-            role={role}
-            type="Exam"
-          />
+          <CalendarListToolbar classes={classes} role={role} type="Exam" />
           <Divider variant="inset" className={classes.titleDivider} />
-          <Grid container direction="column" spacing={2} style={{marginBottom: "32px"}}>
-            {(role === "Student") ?
+          <Grid
+            container
+            direction="column"
+            spacing={2}
+            style={{ marginBottom: "32px" }}
+          >
+            {role === "Student" ? (
               <ListAssessments
                 category={null}
                 subject={{}}
@@ -1323,10 +1356,12 @@ function Calendar(props) {
                 all_teachers={all_teachers}
                 getSelectedDate={getSelectedDate}
               />
-            : listAssessmentsTeacher("Ujian")}
+            ) : (
+              listAssessmentsTeacher("Ujian")
+            )}
           </Grid>
         </>
-      : null}
+      ) : null}
     </div>
   );
 }
@@ -1350,5 +1385,5 @@ export default connect(mapStateToProps, {
   getTasksBySubjectClass,
   getAssessments,
   getStudents,
-  getTeachers
-})(Calendar)
+  getTeachers,
+})(Calendar);

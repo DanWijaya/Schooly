@@ -1,10 +1,17 @@
 import React, { Component, Fragment } from "react";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 import { Provider } from "react-redux";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import store from "./Store";
-import { setCurrentUser, logoutUser,
+import {
+  setCurrentUser,
+  logoutUser,
   // setDropboxToken,
 } from "./actions/UserActions";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -74,12 +81,12 @@ import Calendar from "./components/objects/event/Calendar";
 //Admin Only
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
-import EditClassTeacher from "./components/objects/classes/EditClassTeacher";
+import EditClassTeacher from "./components/objects/class/EditClassTeacher";
 import TeacherList from "./components/objects/admin-only/TeacherList";
 //Super Admin Only
 import UnitList from "./components/objects/superadmin-only/UnitList";
-import ManageAdmins from "./components/objects/superadmin-only/ManageAdmins"
-import ManagePendingAdmins from "./components/objects/superadmin-only/ManagePendingAdmins"
+import ManageAdmins from "./components/objects/superadmin-only/ManageAdmins";
+import ManagePendingAdmins from "./components/objects/superadmin-only/ManagePendingAdmins";
 import CreateUnit from "./components/objects/superadmin-only/CreateUnit";
 import EditUnit from "./components/objects/superadmin-only/CreateUnit";
 //Dropbox
@@ -161,15 +168,13 @@ class App extends Component {
     this.setState({ problemEncountered: dataFromChild });
   };
 
-
   render() {
-
     const Role = {
       SUPERADMIN: "SuperAdmin",
-      ADMIN : "Admin",
-      STUDENT : "Student",
-      TEACHER : "Teacher"
-    }
+      ADMIN: "Admin",
+      STUDENT: "Student",
+      TEACHER: "Teacher",
+    };
 
     console.log(localStorage.getItem(`status`));
 
@@ -185,7 +190,8 @@ class App extends Component {
                 ) : null}
                 <Navigation
                   showNavBar={this.state.showNavBar}
-                  sideDrawerExist={this.state.sideDrawerExist}/>
+                  sideDrawerExist={this.state.sideDrawerExist}
+                />
                 <div
                   style={{
                     flexGrow: "1",
@@ -202,47 +208,27 @@ class App extends Component {
                       <Route
                         exact
                         path="/"
-                        render={(props) => (
-                          <Landing
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <Landing {...props} />}
                       />
                       <Route
                         exact
                         path="/bantuan"
-                        render={(props) => (
-                          <Help
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <Help {...props} />}
                       />
                       <Route
                         exact
                         path="/tentang-schooly"
-                        render={(props) => (
-                          <About
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <About {...props} />}
                       />
                       <Route
                         exact
                         path="/legal/ketentuan-penggunaan"
-                        render={(props) => (
-                          <TermsOfService
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <TermsOfService {...props} />}
                       />
                       <Route
                         exact
                         path="/legal/kebijakan-privasi"
-                        render={(props) => (
-                          <PrivacyPolicy
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <PrivacyPolicy {...props} />}
                       />
                       <Route
                         exact
@@ -514,13 +500,13 @@ class App extends Component {
                       <PrivateRoute
                         exact
                         access={[Role.ADMIN]}
-                        path="/atur-pengguna"
+                        path="/pengguna"
                         component={ManageUsers}
                       />
                       <PrivateRoute
                         exact
                         access={[Role.ADMIN]}
-                        path="/pending-users"
+                        path="/pengguna-tidakaktif"
                         component={ManagePendingUsers}
                       />
                       <PrivateRoute
@@ -537,49 +523,51 @@ class App extends Component {
                       />
                       {/* Route SuperAdmin-Only */}
                       <PrivateRoute
-                      exact
-                      access={[Role.SUPERADMIN]}
-                      path="/pengelola-aktif"
-                      component={ManageAdmins}
-                      />
-                       <PrivateRoute
-                      exact
-                      access={[Role.SUPERADMIN]}
-                      path="/pengelola-tertunda"
-                      component={ManagePendingAdmins}
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/pengelola-aktif"
+                        component={ManageAdmins}
                       />
                       <PrivateRoute
-                      exact
-                      access={[Role.SUPERADMIN]}
-                      path="/daftar-unit"
-                      component={UnitList}/>
-                      <PrivateRoute
-                      exact
-                      access={[Role.SUPERADMIN]}
-                      path="/buat-unit"
-                      handleSideDrawerExist={this.handleSideDrawerExist}
-                      component={CreateUnit}
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/pengelola-tertunda"
+                        component={ManagePendingAdmins}
                       />
                       <PrivateRoute
-                      exact
-                      access={[Role.SUPERADMIN]}
-                      path="/sunting-unit/:id"
-                      handleSideDrawerExist={this.handleSideDrawerExist}
-                      component={EditUnit}
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/daftar-unit"
+                        component={UnitList}
                       />
                       <PrivateRoute
-                      exact
-                      access={[Role.SUPERADMIN]}
-                      path="/unit/:id"
-                      handleSideDrawerExist={this.handleSideDrawerExist}
-                      component={ViewUnit}
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/buat-unit"
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        component={CreateUnit}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/sunting-unit/:id"
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        component={EditUnit}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/unit/:id"
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        component={ViewUnit}
                       />
                       {/* Route Event */}
                       <PrivateRoute
-                      exact
-                      access={["Admin"]}
-                      path="/bulk-register"
-                      component={BulkRegister}/>
+                        exact
+                        access={["Admin"]}
+                        path="/bulk-register"
+                        component={BulkRegister}
+                      />
                       <PrivateRoute
                         exact
                         path="/kalender"
@@ -601,11 +589,7 @@ class App extends Component {
                       <Route
                         exact
                         path="/tidak-ditemukan"
-                        render={(props) => (
-                          <NotFound
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <NotFound {...props} />}
                       />
                       <Redirect to="/tidak-ditemukan" />
                     </Switch>

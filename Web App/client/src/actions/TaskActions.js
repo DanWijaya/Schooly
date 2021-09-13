@@ -5,8 +5,8 @@ import {
   GET_SUCCESS_RESPONSE,
   GET_TASKS_BY_CLASS,
 } from "./Types";
-import { BrowserRouter } from "react-router-dom"
-import {deleteFileSubmitTasks} from "./files/FileSubmitTaskActions";
+import { BrowserRouter } from "react-router-dom";
+import { deleteFileSubmitTasks } from "./files/FileSubmitTaskActions";
 
 // Add Task
 export const createTask = (formData, taskData, history) => (dispatch) => {
@@ -162,26 +162,27 @@ export const gradeTask = (taskId, gradingData, student_name) => (dispatch) => {
       });
     });
 };
-export const deleteTask = (taskId, history=null) => (dispatch) => {
+export const deleteTask = (taskId, history = null) => (dispatch) => {
   return axios
     .delete("/api/tasks/delete/" + taskId)
     .then((res) => {
-      return axios
-        .delete(`/api/files/tasks/${taskId}`, { data: { delete_all: true}})
+      return axios.delete(`/api/files/tasks/${taskId}`, {
+        data: { delete_all: true },
+      });
     })
     .then((res) => {
-      return axios
-    .delete(`/api/files/submit_tasks/${taskId}`, {
-      data: { delete_all: true }})
+      return axios.delete(`/api/files/submit_tasks/${taskId}`, {
+        data: { delete_all: true },
+      });
     })
     .then((res) => {
-      if(history){
+      if (history) {
         history.push({
           pathname: "/daftar-tugas",
-          openDeleteSnackbar: true 
-        })
+          openDeleteSnackbar: true,
+        });
       }
-      return true
+      return true;
     })
 
     .catch((err) => {
@@ -208,19 +209,19 @@ export const getTasksBySubjectClass = (subjectId, classId) => {
 
 export const getTaskByClass = (classId) => (dispatch) => {
   return axios
-  .get(`/api/tasks/view`, { params: { classId } })
-  .then((res) => {
-    dispatch({
-      type: GET_ALL_TASKS,
-      payload: res.data,
+    .get(`/api/tasks/view`, { params: { classId } })
+    .then((res) => {
+      dispatch({
+        type: GET_ALL_TASKS,
+        payload: res.data,
+      });
+      console.log("getTaskByClass completed");
+      return res.data;
+    })
+    .catch(() => {
+      throw new Error("getTaskByClass error has occured");
     });
-    console.log("getTaskByClass completed");
-    return res.data;
-  })
-  .catch(() => {
-    throw new Error("getTaskByClass error has occured");
-  });
-}
+};
 
 export const getTaskAtmpt = (user_id) => (dispatch) => {
   return axios
@@ -246,22 +247,13 @@ export const getTaskAtmpt = (user_id) => (dispatch) => {
   });
 }; */
 
-export const createTaskComment = (
-  taskId,
-  comment
-) => {
-  return axios
-    .post(`/api/tasks/comment/${taskId}`, comment)
-    .catch(() => {
-      throw new Error("createTaskComment error has occured");
-    });
+export const createTaskComment = (taskId, comment) => {
+  return axios.post(`/api/tasks/comment/${taskId}`, comment).catch(() => {
+    throw new Error("createTaskComment error has occured");
+  });
 };
 
-export const editTaskComment = (
-  taskId,
-  updatedContent,
-  commentId
-) => {
+export const editTaskComment = (taskId, updatedContent, commentId) => {
   return axios
     .put(`/api/tasks/comment/${taskId}`, { updatedContent, commentId })
     .catch(() => {
@@ -269,13 +261,8 @@ export const editTaskComment = (
     });
 };
 
-export const deleteTaskComment = (
-  taskId,
-  commentId
-) => {
-  return axios
-    .delete(`/api/tasks/comment/${taskId}&${commentId}`)
-    .catch(() => {
-      throw new Error("deleteTaskComment error has occured");
-    });
+export const deleteTaskComment = (taskId, commentId) => {
+  return axios.delete(`/api/tasks/comment/${taskId}&${commentId}`).catch(() => {
+    throw new Error("deleteTaskComment error has occured");
+  });
 };

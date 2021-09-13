@@ -192,14 +192,16 @@ function WorkFile(props) {
     file_type,
     onDownloadFile,
     onPreviewFile,
-    isLate
+    isLate,
   } = props;
 
   let name_to_show;
-  if(isLate){
-    name_to_show = <Typography color="error"> {`${file_name} (TELAT)` }</Typography>
+  if (isLate) {
+    name_to_show = (
+      <Typography color="error"> {`${file_name} (TELAT)`}</Typography>
+    );
   } else {
-    name_to_show = <Typography color="textPrimary"> {file_name}</Typography>
+    name_to_show = <Typography color="textPrimary"> {file_name}</Typography>;
   }
 
   return (
@@ -604,21 +606,21 @@ function SubmittedTaskList(props) {
             isClassSubmissionEmpty = false;
             let isLate = false;
             task_list_on_panel = students_files.map((file) => {
-              if(file.createdAt > tasksCollection.deadline){
-                isLate=true;
+              if (file.createdAt > tasksCollection.deadline) {
+                isLate = true;
               }
               console.log("Ini filenya:", file);
               return (
-              <WorkFile
-                isLate={isLate}
-                file_id={file._id}
-                file_name={file.filename}
-                file_type={fileType(file.filename)}
-                onPreviewFile={viewFileSubmitTasks}
-                // onDownloadFile={onDownloadFile}
-              />
-            );
-          })
+                <WorkFile
+                  isLate={isLate}
+                  file_id={file._id}
+                  file_name={file.filename}
+                  file_type={fileType(file.filename)}
+                  onPreviewFile={viewFileSubmitTasks}
+                  // onDownloadFile={onDownloadFile}
+                />
+              );
+            });
           } else {
             task_list_on_panel = [
               <Typography

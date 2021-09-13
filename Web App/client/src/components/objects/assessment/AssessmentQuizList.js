@@ -80,7 +80,7 @@ function createData(
     createdAt,
     submissions,
     teacher_name,
-    grades
+    grades,
   };
 }
 
@@ -334,7 +334,9 @@ function AssessmentListToolbar(props) {
             <LightTooltip title="Buat Kuis">
               <Link to="/buat-kuis">
                 <Fab size="small" className={classes.newAssessmentButton}>
-                  <FaClipboardList className={classes.newAssessmentIconMobile}/>
+                  <FaClipboardList
+                    className={classes.newAssessmentIconMobile}
+                  />
                   {/* <FaTasks className={classes.newAssessmentIconMobile} /> */}
                 </Fab>
               </Link>
@@ -350,7 +352,7 @@ function AssessmentListToolbar(props) {
                 className={classes.newAssessmentButton}
               >
                 {/* <FaTasks className={classes.newAssessmentIconDesktop} /> */}
-                <FaClipboardList className={classes.newAssessmentIconDesktop}/>
+                <FaClipboardList className={classes.newAssessmentIconDesktop} />
                 Buat Kuis
               </Fab>
             </Link>
@@ -551,8 +553,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
   },
   listItem: {
-    padding: "6px 16px"
-  }
+    padding: "6px 16px",
+  },
 }));
 
 function AssessmentList(props) {
@@ -574,7 +576,7 @@ function AssessmentList(props) {
     deleteAssessment,
     getAllClass,
     getAllSubjects,
-    getTeachers
+    getTeachers,
   } = props;
   const { all_assessments } = props.assessmentsCollection;
   const { all_classes_map } = props.classesCollection;
@@ -585,21 +587,34 @@ function AssessmentList(props) {
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
-
   const handleOpenDialog = (data) => {
-    let { assessmenttitle, subject, teacher_name, start_date, end_date, grades } = data;
+    let {
+      assessmenttitle,
+      subject,
+      teacher_name,
+      start_date,
+      end_date,
+      grades,
+    } = data;
 
     subject = all_subjects_map.get(subject);
     start_date = moment(start_date).locale("id").format("DD MMM YYYY, HH.mm");
     end_date = moment(end_date).locale("id").format("DD MMM YYYY, HH.mm");
-    if(grades){
+    if (grades) {
       grades = grades[user._id].total_grade;
     }
 
     let title = assessmenttitle;
     console.log(data);
 
-    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date, grades});
+    setCurrentDialogInfo({
+      title,
+      subject,
+      teacher_name,
+      start_date,
+      end_date,
+      grades,
+    });
     setOpenDialog(true);
     console.log(title);
   };
@@ -610,7 +625,11 @@ function AssessmentList(props) {
 
   var rows = [];
   const assessmentRowItem = (data) => {
-    if (data.type === "Kuis" && all_teachers_map instanceof Map &&  all_teachers_map.get(data.author_id)) {
+    if (
+      data.type === "Kuis" &&
+      all_teachers_map instanceof Map &&
+      all_teachers_map.get(data.author_id)
+    ) {
       rows.push(
         createData(
           data._id,
@@ -642,12 +661,11 @@ function AssessmentList(props) {
 
   React.useEffect(() => {
     // Untuk muculin delete snackbar pas didelete dari view page
-    if(props.location.openDeleteSnackbar){
-      handleOpenDeleteSnackbar()
+    if (props.location.openDeleteSnackbar) {
+      handleOpenDeleteSnackbar();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
+  }, []);
 
   const retrieveAssessments = () => {
     // If all_assessments is not undefined or an empty array
@@ -743,7 +761,7 @@ function AssessmentList(props) {
 
   const handleOpenDeleteSnackbar = () => {
     setOpenDeleteSnackbar(true);
-  }
+  };
 
   const handleCloseDeleteSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -751,7 +769,6 @@ function AssessmentList(props) {
     }
     setOpenDeleteSnackbar(false);
   };
-
 
   const workStatus = (assessment) => {
     console.log(assessment);
@@ -797,10 +814,7 @@ function AssessmentList(props) {
             >
               Guru: {currentDialogInfo.teacher_name}
             </Typography>
-            <Typography
-              variant="subtitle1"
-              align="center"
-            >
+            <Typography variant="subtitle1" align="center">
               Mulai: {currentDialogInfo.start_date}
             </Typography>
             <Typography variant="subtitle1" align="center">
@@ -837,7 +851,7 @@ function AssessmentList(props) {
           ) : (
             stableSort(rows, getComparator(order, orderBy)).map(
               (row, index) => {
-                console.log(row.teacher_name)
+                console.log(row.teacher_name);
                 const labelId = `enhanced-table-checkbox-${index}`;
                 let viewpage =
                   user.role === "Student"
@@ -935,21 +949,22 @@ function AssessmentList(props) {
                                   </IconButton>
                                 </LightTooltip>
                               </Grid>
-                              {row.submissions && Object.keys(row.submissions).length !== 0 ? 
-                                null : 
-                              <Grid item>
-                                <LightTooltip title="Sunting">
-                                  <Link to={`/sunting-kuis/${row._id}`}>
-                                    <IconButton
-                                      size="small"
-                                      className={classes.editAssessmentButton}
-                                    >
-                                      <EditIcon fontSize="small" />
-                                    </IconButton>
-                                  </Link>
-                                </LightTooltip>
-                              </Grid> 
-                              }
+                              {row.submissions &&
+                              Object.keys(row.submissions).length !==
+                                0 ? null : (
+                                <Grid item>
+                                  <LightTooltip title="Sunting">
+                                    <Link to={`/sunting-kuis/${row._id}`}>
+                                      <IconButton
+                                        size="small"
+                                        className={classes.editAssessmentButton}
+                                      >
+                                        <EditIcon fontSize="small" />
+                                      </IconButton>
+                                    </Link>
+                                  </LightTooltip>
+                                </Grid>
+                              )}
                               <Grid item>
                                 <LightTooltip title="Hapus">
                                   <IconButton
@@ -1025,9 +1040,7 @@ function AssessmentList(props) {
                         component="a"
                         variant="outlined"
                         className={classes.assessmentPaper}
-                        onClick={() =>
-                          handleOpenDialog(row)
-                        }
+                        onClick={() => handleOpenDialog(row)}
                       >
                         <Badge
                           style={{ display: "flex", flexDirection: "row" }}
@@ -1127,24 +1140,24 @@ function AssessmentList(props) {
             Tautan {type} berhasil disalin ke Clipboard Anda!
           </MuiAlert>
         </Snackbar>
-         {/* Snackbar untuk delete assessment */}
-      <Snackbar
-        open={openDeleteSnackbar}
-        autoHideDuration={4000}
-        onClose={(event, reason) => {
-          handleCloseDeleteSnackbar(event, reason);
-        }}
-      >
-        <MuiAlert
-          variant="filled"
-          severity="success"
+        {/* Snackbar untuk delete assessment */}
+        <Snackbar
+          open={openDeleteSnackbar}
+          autoHideDuration={4000}
           onClose={(event, reason) => {
             handleCloseDeleteSnackbar(event, reason);
           }}
         >
-          Kuis berhasil dihapus
-        </MuiAlert>
-      </Snackbar>
+          <MuiAlert
+            variant="filled"
+            severity="success"
+            onClose={(event, reason) => {
+              handleCloseDeleteSnackbar(event, reason);
+            }}
+          >
+            Kuis berhasil dihapus
+          </MuiAlert>
+        </Snackbar>
       </div>
     </>
   );
@@ -1175,5 +1188,5 @@ export default connect(mapStateToProps, {
   deleteAssessment,
   getAllClass,
   getAllSubjects,
-  getTeachers
+  getTeachers,
 })(AssessmentList);

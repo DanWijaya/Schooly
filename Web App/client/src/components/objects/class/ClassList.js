@@ -84,7 +84,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-
 function ClassListToolbar(props) {
   const {
     classes,
@@ -101,7 +100,6 @@ function ClassListToolbar(props) {
   const { getStudents, handleOpenSnackbar } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
 
-  
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -283,7 +281,9 @@ function ClassListToolbar(props) {
         let classNames = dataMatrix[0];
         if (classNames.includes("")) {
           throw new Error(
-            "Masih ada nama kelas yang kosong pada kolom" + (classNames.findIndex((name) => name === "") + 1) + "mohon periksa kembali"
+            "Masih ada nama kelas yang kosong pada kolom" +
+              (classNames.findIndex((name) => name === "") + 1) +
+              "mohon periksa kembali"
           );
         }
         let classId = [];
@@ -991,7 +991,7 @@ function ClassList(props) {
 
   const handleOpenDeleteSnackbar = () => {
     setOpenDeleteSnackbar(true);
-  }
+  };
 
   const handleCloseDeleteSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -1321,13 +1321,10 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(
-  mapStateToProps,
-  {
-    clearErrors,
-    getTeachers,
-    getStudents,
-    getAllClass,
-    deleteClass,
-  }
-)(ClassList);
+export default connect(mapStateToProps, {
+  clearErrors,
+  getTeachers,
+  getStudents,
+  getAllClass,
+  deleteClass,
+})(ClassList);

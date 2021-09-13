@@ -302,8 +302,20 @@ function AssessmentListItem(props) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-  const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
-    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
+  const handleOpenDialog = (
+    title,
+    subject,
+    teacher_name,
+    start_date,
+    end_date
+  ) => {
+    setCurrentDialogInfo({
+      title,
+      subject,
+      teacher_name,
+      start_date,
+      end_date,
+    });
     setOpenDialog(true);
     console.log(title);
   };
@@ -436,10 +448,7 @@ function AssessmentListItem(props) {
           >
             Guru: {currentDialogInfo.teacher_name}
           </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-          >
+          <Typography variant="subtitle1" align="center">
             Mulai: {currentDialogInfo.start_date}
           </Typography>
           <Typography variant="subtitle1" align="center">
@@ -461,7 +470,6 @@ function AssessmentListItem(props) {
 }
 
 function ViewSubject(props) {
-
   const { user, all_teachers } = props.auth;
   const id = props.match.params.id;
   const {
@@ -473,7 +481,7 @@ function ViewSubject(props) {
     getMaterial,
     getAllAssessments,
     assessmentsCollection,
-    getTeachers
+    getTeachers,
   } = props;
   const all_assessments = assessmentsCollection.all_assessments;
   const { kelas } = props.classesCollection;
@@ -781,7 +789,9 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
-                  work_teacher_name={all_teachers.get(assessment.author_id).name}
+                  work_teacher_name={
+                    all_teachers.get(assessment.author_id).name
+                  }
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -811,7 +821,9 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
-                  work_teacher_name={all_teachers.get(assessment.author_id).name}
+                  work_teacher_name={
+                    all_teachers.get(assessment.author_id).name
+                  }
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -848,7 +860,9 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
-                  work_teacher_name={all_teachers.get(assessment.author_id).name}
+                  work_teacher_name={
+                    all_teachers.get(assessment.author_id).name
+                  }
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -877,7 +891,9 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
-                  work_teacher_name={all_teachers.get(assessment.author_id).name}
+                  work_teacher_name={
+                    all_teachers.get(assessment.author_id).name
+                  }
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -1043,5 +1059,5 @@ export default connect(mapStateToProps, {
   getAllTaskFilesByUser,
   getMaterial,
   getAllAssessments,
-  getTeachers
+  getTeachers,
 })(ViewSubject);

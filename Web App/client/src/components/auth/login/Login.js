@@ -71,9 +71,9 @@ const styles = (theme) => ({
   toggleErrorShowPasswordButton: {
     color: theme.palette.error.main,
   },
-  disabledLink : {
-    pointerEvents: "none"
-  }
+  disabledLink: {
+    pointerEvents: "none",
+  },
 });
 
 class Login extends Component {
@@ -183,7 +183,12 @@ class Login extends Component {
             className={classes.schoolyLogo}
           />
         </Link>
-        <Grid container alignItems="flex-end" spacing={3} className={classes.loginContainer}>
+        <Grid
+          container
+          alignItems="flex-end"
+          spacing={3}
+          className={classes.loginContainer}
+        >
           <Hidden smDown>
             <Grid item container justify="flex-end" xs={3}>
               <img
@@ -214,10 +219,14 @@ class Login extends Component {
                           onChange={this.onChange}
                           value={this.state.email}
                           helperText={
-                            errors.email || errors.emailnotfound || errors.notactive
+                            errors.email ||
+                            errors.emailnotfound ||
+                            errors.notactive
                           }
                           error={Boolean(
-                            errors.email || errors.emailnotfound || errors.notactive
+                            errors.email ||
+                              errors.emailnotfound ||
+                              errors.notactive
                           )}
                           className={classnames("", {
                             invalid: errors.email || errors.emailnotfound,
@@ -233,12 +242,15 @@ class Login extends Component {
                           label="Kata Sandi"
                           onChange={this.onChange}
                           value={this.state.password}
-                          helperText={errors.password || errors.passwordincorrect}
+                          helperText={
+                            errors.password || errors.passwordincorrect
+                          }
                           error={Boolean(
                             errors.password || errors.passwordincorrect
                           )}
                           className={classnames("", {
-                            invalid: errors.password || errors.passwordincorrect,
+                            invalid:
+                              errors.password || errors.passwordincorrect,
                           })}
                           onFocus={() => {
                             this.setIsFocused(true);
@@ -256,20 +268,26 @@ class Login extends Component {
                                   {icon ? (
                                     <VisibilityIcon
                                       className={
-                                        passwordtextfieldFocus ?
-                                        Boolean(errors.password || errors.passwordincorrect) ?
-                                        classes.toggleErrorShowPasswordButton
-                                          : classes.toggleShowPasswordButton
+                                        passwordtextfieldFocus
+                                          ? Boolean(
+                                              errors.password ||
+                                                errors.passwordincorrect
+                                            )
+                                            ? classes.toggleErrorShowPasswordButton
+                                            : classes.toggleShowPasswordButton
                                           : null
                                       }
                                     />
                                   ) : (
                                     <VisibilityOffIcon
                                       className={
-                                        passwordtextfieldFocus ?
-                                        Boolean(errors.password || errors.passwordincorrect) ?
-                                        classes.toggleErrorShowPasswordButton
-                                          : classes.toggleShowPasswordButton
+                                        passwordtextfieldFocus
+                                          ? Boolean(
+                                              errors.password ||
+                                                errors.passwordincorrect
+                                            )
+                                            ? classes.toggleErrorShowPasswordButton
+                                            : classes.toggleShowPasswordButton
                                           : null
                                       }
                                     />
@@ -294,8 +312,13 @@ class Login extends Component {
                 </Grid>
                 <Divider />
                 <Grid item container justify="space-around">
-                  <Link to="/akun/lupa-katasandi" className={classes.disabledLink}>Lupa kata sandi?</Link>
-                    <Typography color="textSecondary">·</Typography>
+                  <Link
+                    to="/akun/lupa-katasandi"
+                    className={classes.disabledLink}
+                  >
+                    Lupa kata sandi?
+                  </Link>
+                  <Typography color="textSecondary">·</Typography>
                   <Link to="/daftar">Belum ada akun?</Link>
                 </Grid>
               </Grid>
@@ -303,11 +326,11 @@ class Login extends Component {
           </Grid>
           <Hidden smDown>
             <Grid item container justify="flex-start" xs={3}>
-                <img
-                  alt="Login Art Right"
-                  src={loginArtRight}
-                  className={classes.artThumbnail}
-                />
+              <img
+                alt="Login Art Right"
+                src={loginArtRight}
+                className={classes.artThumbnail}
+              />
             </Grid>
           </Hidden>
         </Grid>

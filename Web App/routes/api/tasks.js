@@ -30,7 +30,9 @@ router.post("/create", (req, res) => {
       if (task) {
         return res
           .status(400)
-          .json({ name: "Tugas dengan nama dan mata pelajaran yang sama sudah ada" });
+          .json({
+            name: "Tugas dengan nama dan mata pelajaran yang sama sudah ada",
+          });
       } else {
         const newTask = new Task(req.body);
         // const newTask = new Task({
@@ -198,10 +200,10 @@ router.post("/comment/:taskId", (req, res) => {
       taskData
         .save()
         .then(() => {
-          res.json("Create task comment complete")
+          res.json("Create task comment complete");
         })
         .catch(() => {
-          res.status(400).send("Unable to create task comment")
+          res.status(400).send("Unable to create task comment");
         });
     }
   });
@@ -232,10 +234,10 @@ router.put("/comment/:taskId", (req, res) => {
       taskData
         .save()
         .then(() => {
-          res.json("Edit task comment complete")
+          res.json("Edit task comment complete");
         })
         .catch(() => {
-          res.status(400).send("Unable to edit task comment")
+          res.status(400).send("Unable to edit task comment");
         });
     }
   });
@@ -243,12 +245,11 @@ router.put("/comment/:taskId", (req, res) => {
 
 router.delete("/comment/:taskId&:commentId", (req, res) => {
   const { taskId, commentId } = req.params;
-  
+
   Task.findById(taskId, (err, taskData) => {
     if (!taskData) {
       return res.status(404).send("Task data is not found");
     } else {
-
       let newComments = taskData.comments ? [...taskData.comments] : [];
       for (let i = 0; i < newComments.length; i++) {
         if (newComments[i]._id.toString() === commentId) {
@@ -261,10 +262,10 @@ router.delete("/comment/:taskId&:commentId", (req, res) => {
       taskData
         .save()
         .then(() => {
-          res.json("Delete task comment complete")
+          res.json("Delete task comment complete");
         })
         .catch(() => {
-          res.status(400).send("Unable to delete task comment")
+          res.status(400).send("Unable to delete task comment");
         });
     }
   });

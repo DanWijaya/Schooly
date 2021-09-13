@@ -3,9 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
-import {
-  getAllUnits
-} from "../../../actions/UnitActions";
+import { getAllUnits } from "../../../actions/UnitActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -40,7 +38,7 @@ import SortIcon from "@material-ui/icons/Sort";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from "@material-ui/icons/Clear";
-import UnitIcon from '@material-ui/icons/Web';
+import UnitIcon from "@material-ui/icons/Web";
 
 function createData(
   _id,
@@ -324,7 +322,7 @@ function UnitListToolbar(props) {
               className={classes.newMaterialButton}
             >
               <UnitIcon className={classes.newMaterialIconDesktop} />
-              Buat Unit 
+              Buat Unit
             </Fab>
           </Link>
         </Hidden>
@@ -494,8 +492,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
   },
   listItem: {
-    padding: "6px 16px"
-  }
+    padding: "6px 16px",
+  },
 }));
 
 function UnitList(props) {
@@ -513,7 +511,7 @@ function UnitList(props) {
 
   const handleOpenDeleteSnackbar = () => {
     setOpenDeleteSnackbar(true);
-  }
+  };
 
   const handleCloseDeleteSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -522,12 +520,7 @@ function UnitList(props) {
     setOpenDeleteSnackbar(false);
   };
 
-  const {
-    getMaterial,
-    deleteMaterial,
-    getAllClass,
-    getTeachers,
-  } = props;
+  const { getMaterial, deleteMaterial, getAllClass, getTeachers } = props;
   const { all_units, selectedUnits } = props.unitsCollection;
   const { all_classes_map } = props.classesCollection;
   const { user, all_teachers_map } = props.auth;
@@ -552,17 +545,17 @@ function UnitList(props) {
   React.useEffect(() => {
     const { getAllUnits } = props;
     getAllUnits();
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
     // Untuk muculin delete snackbar pas didelete dari view page
-    if(props.location.openDeleteSnackbar){
-      handleOpenDeleteSnackbar()
+    if (props.location.openDeleteSnackbar) {
+      handleOpenDeleteSnackbar();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   console.log(all_teachers_map);
   const retrieveUnits = () => {
@@ -883,7 +876,7 @@ function UnitList(props) {
             handleCloseDeleteSnackbar(event, reason);
           }}
         >
-          Unit  berhasil dihapus
+          Unit berhasil dihapus
         </MuiAlert>
       </Snackbar>
     </div>
@@ -893,17 +886,17 @@ function UnitList(props) {
 UnitList.propTypes = {
   getAllUnits: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  unitsCollection: PropTypes.object.isRequired
+  unitsCollection: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   unitsCollection: state.unitsCollection,
   classesCollection: state.classesCollection,
-  subjectsCollection: state.subjectsCollection
+  subjectsCollection: state.subjectsCollection,
 });
 
 // parameter 1 : reducer , parameter 2 : actions
 export default connect(mapStateToProps, {
-  getAllUnits
+  getAllUnits,
 })(UnitList);

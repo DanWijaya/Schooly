@@ -6,7 +6,7 @@ const { ObjectId } = require("mongodb");
 const SubjectSchema = new Schema({
   unit: {
     type: ObjectId,
-    default: null
+    default: null,
   },
   name: {
     type: String,
