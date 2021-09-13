@@ -72,7 +72,7 @@ function DrawerContent(props) {
         "Pengguna Tertunda",
       ],
       [
-        "/atur-pengguna",
+        "/pengguna",
         <FaUserCheck className={classes.drawerListItemIcon} />,
         "Pengguna Aktif",
       ],
