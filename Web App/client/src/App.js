@@ -36,6 +36,7 @@ import Dashboard from "./components/objects/dashboard/Dashboard";
 //Class
 import CreateClass from "./components/objects/class/CreateClass";
 import EditClass from "./components/objects/class/EditClass";
+import EditClassTeacher from "./components/objects/class/EditClassTeacher";
 import ViewClass from "./components/objects/class/ViewClass";
 import ClassList from "./components/objects/class/ClassList";
 //Material
@@ -72,10 +73,9 @@ import Report from "./components/objects/report/Report";
 //Event
 import Calendar from "./components/objects/event/Calendar";
 //Admin Only
-import ManageUsers from "./components/objects/admin-only/ManageUsers";
-import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
-import EditClassTeacher from "./components/objects/classes/EditClassTeacher";
-import TeacherList from "./components/objects/admin-only/TeacherList";
+import ManageUsers from "./components/objects/user/ManageUsers";
+import ManagePendingUsers from "./components/objects/user/ManagePendingUsers";
+import TeacherList from "./components/objects/user/TeacherList";
 //Super Admin Only
 import UnitList from "./components/objects/superadmin-only/UnitList";
 import ManageAdmins from "./components/objects/superadmin-only/ManageAdmins"
