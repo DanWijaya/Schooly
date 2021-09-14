@@ -9,9 +9,12 @@ import {
   getOneUnit,
 } from "../../../actions/UnitActions";
 import { getAllClass, getSelectedClasses } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
+  Badge,
   CircularProgress,
   Fab,
   Grid,
@@ -20,6 +23,8 @@ import {
   ListItemAvatar,
   ListItemText,
   Paper,
+  Tabs,
+  Tab,
   Typography,
   Divider,
   Hidden,
@@ -29,7 +34,11 @@ import {
   Box
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-
+import BallotIcon from "@material-ui/icons/Ballot";
+import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import { FaChalkboardTeacher } from "react-icons/fa";
+import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
 const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
@@ -199,6 +208,10 @@ function ViewUnit(props) {
   const [tabValue, setTabValue] = React.useState(0);
   const unitAuthorName = React.useRef(null);
 
+  const handleChangeTab = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
   document.title = !selectedUnits.name
     ? "Schooly | Lihat Materi"
     : `Schooly | ${selectedUnits.name}`;
@@ -274,19 +287,163 @@ function ViewUnit(props) {
         </Grid>
         <Grid item>
         <Paper className={classes.paperBox}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant="h6">Kelas yang tersedia</Typography>
-            </Grid>
-            <Grid> 
-              {unitClass.map((cl) => (
-                <Typography>
-                  {cl.name}
-                </Typography>
-              ))}
-            </Grid>
+        <Tabs
+          variant="fullWidth"
+          indicatorColor="primary"
+          textColor="primary"
+          value={tabValue}
+          onChange={handleChangeTab}>
+          <Tab
+            icon={<DesktopWindowsIcon />}
+            label="Kelas"
+            {...TabIndex(0)}
+          />
+          <Tab
+            icon={<BallotIcon />}
+            label="Mata Pelajaran"
+            {...TabIndex(1)}
+          />
+          <Tab
+            icon={<SupervisorAccountIcon />}
+            label="Peserta"
+            {...TabIndex(2)}
+          />
+        </Tabs>
+        <TabPanel value={tabValue} index={0}>
+        <Grid container spacing={2}>
+          {unitClass.map((cl, index) => {
+            const labelId = `enhanced-table-checkbox-${index}`;
+            let viewpage = `/kelas/${clearInterval._id}`;
+          return (
+            <Grid item xs={12} sm={6} md={4}>
+            <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
+              <Paper button className={classes.classPaper}>
+                <Avatar
+                  variant="square"
+                  style={{
+                    // backgroundColor: colorMap.get(cl._id),
+                    width: "100%",
+                    height: "120px",
+                    borderRadius: "3px 3px 0px 0px",
+                  }}
+                >
+                  <FaChalkboardTeacher
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                    }}
+                  />
+                </Avatar>
+                <Divider />
+                <div style={{ padding: "10px 20px 20px 10px" }}>
+                  <Typography id={labelId} variant="h5" align="center">
+                    {cl.name}
+                  </Typography>
+                  {cl.homeroomTeacher && cl.homeroomTeacher !== "" ? (
+                    <Typography
+                      variant="body1"
+                      color="textSecondary"
+                      align="center"
+                      style={{ marginTop: "5px" }}
+                    >
+                      Wali Kelas: {cl.homeroomTeacher}
+                    </Typography>
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginTop: "5px",
+                      }}
+                    >
+                      <Typography
+                        variant="body1"
+                        color="textSecondary"
+                        align="center"
+                      >
+                        Wali Kelas:
+                      </Typography>
+                      <Paper className={classes.emptyClass}>
+                        <Typography variant="body2">KOSONG</Typography>
+                      </Paper>
+                    </div>
+                  )}
+                </div>
+                <Divider />
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-between"
+                  alignItems="center"
+                  className={classes.classActionContainer}
+                >
+                  {user.role === "Admin" ? (
+                    <Grid
+                      item
+                      xs
+                      container
+                      spacing={1}
+                      justify="flex-end"
+                      alignItems="center"
+                    >
+                      <Grid item>
+                        <LightTooltip title="Jumlah Murid">
+                          <Badge
+                            badgeContent={cl.size}
+                            color="secondary"
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "left",
+                            }}
+                            showZero
+                          >
+                            <IconButton size="small" disabled>
+                              <SupervisorAccountIcon
+                                className={classes.classPersonIcon}
+                              />
+                            </IconButton>
+                          </Badge>
+                        </LightTooltip>
+                      </Grid>
+                    </Grid>
+                  ) : (
+                    <Grid
+                      container
+                      direction="row"
+                      justify="flex-end"g31
+                      alignItems="center"
+                    >
+                      <Grid item>
+                        <LightTooltip title="Jumlah Murid">
+                          <Badge
+                            badgeContent={cl.size}
+                            color="secondary"
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "left",
+                            }}
+                            showZero
+                          >
+                            <IconButton size="small" disabled>
+                              <SupervisorAccountIcon
+                                className={classes.classPersonIcon}
+                              />
+                            </IconButton>
+                          </Badge>
+                        </LightTooltip>
+                      </Grid>
+                    </Grid>
+                  )}
+                </Grid>
+              </Paper>
+            </Link>
           </Grid>
-          </Paper>
+          )})}
+          </Grid>
+        </TabPanel>
+        </Paper>
         </Grid>
         </Grid>
     </div>
@@ -305,10 +462,12 @@ ViewUnit.propTypes = {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   unitsCollection: state.unitsCollection,
+  subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection
 });
 
 export default connect(mapStateToProps, {
     getOneUnit,
-    getAllClass
+    getAllClass,
+    getAllSubjects
 })(ViewUnit);

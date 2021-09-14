@@ -26,9 +26,9 @@ export const getSubject = (subjectId) => (dispatch) => {
     });
 };
 
-export const getAllSubjects = (data = "array") => (dispatch) => {
+export const getAllSubjects = (unit_id,data = "array") => (dispatch) => {
   axios
-    .get("/api/subjects/viewall")
+    .get(`/api/subjects/viewall/${unit_id}`)
     .then((res) => {
       // console.log("Run get all subjects")
       if (data !== "map") {

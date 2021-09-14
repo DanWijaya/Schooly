@@ -357,8 +357,9 @@ router.put(
   }
 );
 
-router.get("/getTeachers", (req, res) => {
-  Teacher.find({ active: true })
+router.get("/getTeachers/:unit_id", (req, res) => {
+  let { unit_id } = req.params;
+  Teacher.find({ active: true, unit: unit_id })
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) console.log("No teachers yet in Schooly System");
@@ -366,8 +367,9 @@ router.get("/getTeachers", (req, res) => {
     });
 });
 
-router.get("/getStudents", (req, res) => {
-  Student.find({ active: true })
+router.get("/getStudents/:unit_id", (req, res) => {
+  let { unit_id } = req.params;
+  Student.find({ active: true , unit: unit_id})
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) console.log("No students yet in Schooly System");
@@ -375,8 +377,9 @@ router.get("/getStudents", (req, res) => {
     });
 });
 
-router.get("/getAdmins", (req, res) => {
-  Admin.find({ active: true })
+router.get("/getAdmins/:unit_id", (req, res) => {
+  let { unit_id } = req.params;
+  Admin.find({ active: true, unit:unit_id })
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) console.log("No unit admins yet in Schooly System");
