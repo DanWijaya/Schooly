@@ -469,11 +469,26 @@ router.put("/setuseractive/:id", (req, res) => {
     user
       .save()
       .then(res.json(user))
-      .catch((err) => console.log(err));
+      .catch((err) => res.json(err));
   });
 });
 
-router.put("/setuserdisabled/:id", (req, res) => {
+router.put("/bulksetuseractive/", (req, res) => {
+  let { id_list } = req.body;
+  User.updateMany({_id : {$in : id_list}}, {active: true}, (err,user) => {
+    if (err){
+      console.log(err)
+      return res.status(404).json("There is an error");
+    }
+    else{
+        console.log("Updated Docs : ", user);
+        return res.json(user);
+    }
+  })
+});
+
+
+router.put("/setuserdeactivated/:id", (req, res) => {
   let id = req.params.id;
 
   User.findById(id, (err, user) => {
@@ -485,6 +500,20 @@ router.put("/setuserdisabled/:id", (req, res) => {
       .then(res.json(user))
       .catch((err) => console.log(err));
   });
+});
+
+router.put("/bulksetuserdeactivated/", (req, res) => {
+  let { id_list } = req.body;
+  User.updateMany({_id : {$in : id_list}}, {active: false}, (err,user) => {
+    if (err){
+      console.log(err)
+      return res.status(404).json("There is an error");
+    }
+    else{
+        console.log("Updated Docs : ", user);
+        return res.json(user);
+    }
+  })
 });
 
 router.delete("/delete/:id", (req, res) => {

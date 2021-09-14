@@ -47,7 +47,10 @@ function UserMenu(props) {
             <MenuItem
               key={option}
               selected={option === "Detail"}
-              onClick={(e) => handleActionOnClick[idx](e, row._id, row.name)}
+              onClick={(e) => {
+                handleActionOnClick[idx](e, row._id, row.name)
+                handleClose();
+              }}
             >
               {option}
             </MenuItem>

@@ -8,7 +8,7 @@ import CustomLinkify from "../../misc/linkify/Linkify";
 import {
   getOneUnit,
 } from "../../../actions/UnitActions";
-import { getAllClass } from "../../../actions/ClassActions";
+import { getAllClass, getSelectedClasses } from "../../../actions/ClassActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import {
   Avatar,
@@ -191,10 +191,12 @@ function ViewUnit(props) {
 
   const { user } = props.auth;
   const { selectedUnits } = props.unitsCollection;
-  const { all_classes } = props.classesCollection;
+  // const { all_classes } = props.classesCollection;
   const unit_id = props.match.params.id;
   
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [unitClass, setUnitClass] = React.useState([]); 
+  const [tabValue, setTabValue] = React.useState(0);
   const unitAuthorName = React.useRef(null);
 
   document.title = !selectedUnits.name
@@ -214,7 +216,9 @@ function ViewUnit(props) {
         const {id} = props.match.params;
         console.log(id);
         getOneUnit(id);
-        getAllClass(id)
+        getAllClass(id).then((res) => {
+          setUnitClass(res);
+        })
 
     }, []);
 
@@ -237,9 +241,9 @@ function ViewUnit(props) {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Typography variant="h4">{selectedUnits.name}</Typography>
-                <Typography variant="body2" color="textSecondary">
+                {/* <Typography variant="body2" color="textSecondary">
                   Oleh: <b>{unitAuthorName.current}</b>
-                </Typography>
+                </Typography> */}
                 <Typography variant="body2" color="textSecondary">
                   Waktu Dibuat:{" "}
                   {moment(selectedUnits.createdAt)
@@ -275,7 +279,7 @@ function ViewUnit(props) {
               <Typography variant="h6">Kelas yang tersedia</Typography>
             </Grid>
             <Grid> 
-              {all_classes.map((cl) => (
+              {unitClass.map((cl) => (
                 <Typography>
                   {cl.name}
                 </Typography>

@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 function DisableDialog(props) {
   const classes = useStyles();
-  const { open, onClose, itemName, onAction, itemId, itemType } = props;
+  const { open, onClose, itemName, onAction, itemType } = props;
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -80,9 +80,7 @@ function DisableDialog(props) {
         <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item>
             <Button
-              onClick={() => {
-                onAction(itemId);
-              }}
+              onClick={onAction}
               startIcon={<BlockIcon />}
               className={classes.dialogConfirmButton}
             >

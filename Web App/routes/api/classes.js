@@ -28,6 +28,7 @@ router.post("/create", (req, res) => {
         nihil: req.body.nihil,
         ukuran: req.body.ukuran,
         subject_assigned: req.body.mata_pelajaran.map((id) => new ObjectId(id)),
+        unit: ObjectId(req.body.unit)
       };
 
       if (req.body.walikelas) {

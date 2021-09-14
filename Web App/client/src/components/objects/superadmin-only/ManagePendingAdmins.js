@@ -24,6 +24,7 @@ import {
   ListItemAvatar,
   Menu,
   MenuItem,
+  Snackbar,
   TableSortLabel,
   TextField,
   Toolbar,
@@ -42,6 +43,7 @@ import {
   ListItemSecondaryAction,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
+import MuiAlert from "@material-ui/lab/Alert";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -753,7 +755,7 @@ function ManagePendingAdmins(props) {
   const [orderBy_teacher, setOrderByTeacher] = React.useState("name");
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [openApproveDialog, setOpenApproveDialog] = React.useState(null);
+  const [openActivateDialog, setOpenApproveDialog] = React.useState(null);
   const [selectedUserId, setSelectedUserId] = React.useState(null);
   const [selectedUserName, setSelectedUserName] = React.useState(null);
   const [searchFilterS, updateSearchFilterS] = React.useState("");
@@ -762,7 +764,7 @@ function ManagePendingAdmins(props) {
   const [searchFilterT, updateSearchFilterT] = React.useState("");
   const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
 
-  const { setUserActive, deleteUser } = props;
+  const { setUserActive, deleteUser, getPendingAdmins } = props;
   const { all_teachers, pending_admins, user } = props.auth;
 
   let rows = [];
@@ -795,12 +797,13 @@ function ManagePendingAdmins(props) {
   );
 
   const [test, setTest] = React.useState(false);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
   let currentListBooleanStudent;
   let currentListBooleanTeacher;
 
   React.useEffect(() => {
-    const { getPendingAdmins } = props;
     getPendingAdmins();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -876,16 +879,16 @@ function ManagePendingAdmins(props) {
   };
 
   const handleDeleteListStudent = () => {
-    for (let i = 0; i < listCheckboxStudent.length; i++) {
-      onDeleteUser(listCheckboxStudent[i].row._id);
-    }
+    // for (let i = 0; i < listCheckboxStudent.length; i++) {
+    //   onDeleteUser(listCheckboxStudent[i].row._id);
+    // }
     setListCheckboxStudent([]);
   };
 
   const handleDeleteListTeacher = () => {
-    for (let i = 0; i < listCheckboxTeacher.length; i++) {
-      onDeleteUser(listCheckboxTeacher[i].row._id);
-    }
+    // for (let i = 0; i < listCheckboxTeacher.length; i++) {
+    //   onDeleteUser(listCheckboxTeacher[i].row._id);
+    // }
     setListCheckboxTeacher([]);
   };
 
@@ -994,10 +997,19 @@ function ManagePendingAdmins(props) {
   retrieveUsers();
 
   const onDeleteUser = (id) => {
-    deleteUser(id);
+    deleteUser(id).then((res) => {
+      getPendingAdmins();
+      handleOpenSnackbar("Pengelola berhasil dihapus");
+      handleCloseDeleteDialog();
+    });
   };
-  const onApproveUser = (id) => {
-    setUserActive(id);
+
+  const onActivateUser = (id) => {
+    setUserActive(id).then((res) => {
+      getPendingAdmins();
+      handleOpenSnackbar("Pengelola berhasil diaktifkan");
+      handleCloseActivateDialog();
+    });
   };
   // Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
@@ -1020,7 +1032,7 @@ function ManagePendingAdmins(props) {
     setOpenDeleteDialog(false);
   };
 
-  const handleCloseApproveDialog = () => {
+  const handleCloseActivateDialog = () => {
     setOpenApproveDialog(false);
   };
 
@@ -1064,7 +1076,7 @@ function ManagePendingAdmins(props) {
                     startIcon={<CheckCircleIcon />}
                     className={classes.dialogDeleteButton}
                   >
-                    iya
+                    Iya
                   </Button>
                 </Grid>
                 <Grid item>
@@ -1134,14 +1146,26 @@ function ManagePendingAdmins(props) {
     );
   }
 
+  const handleOpenSnackbar = (message) => {
+    setOpenSnackbar(true);
+    setSnackbarMessage(message);
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
   return (
     <div className={classes.root}>
       <ActivateDialog
-        open={openApproveDialog}
-        onClose={handleCloseApproveDialog}
+        open={openActivateDialog}
+        onClose={handleCloseActivateDialog}
         itemName={selectedUserName}
         itemId={selectedUserId}
-        onAction={onApproveUser}
+        onAction={onActivateUser}
         itemType="Pengelola"
       />
       <DeleteDialog
@@ -1306,6 +1330,23 @@ function ManagePendingAdmins(props) {
           })
         )}
       </Grid>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={(event, reason) => {
+          handleCloseSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseSnackbar(event, reason);
+          }}
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

@@ -115,6 +115,7 @@ class CreateClass extends Component {
 
   onSubmit = (e) => {
     e.preventDefault();
+    const { user } = this.props.auth;
     const classObject = {
       name: this.state.name,
       nihil: this.state.nihil,
@@ -124,9 +125,11 @@ class CreateClass extends Component {
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
       errors: {},
+      unit: user.unit,
       mata_pelajaran: this.state.mata_pelajaran.map((matpel) => matpel._id),
     };
-
+    console.log(user);
+    
     this.props
       .createClass(classObject, this.props.history)
       .then((res) => this.handleOpenUploadDialog())
@@ -163,7 +166,7 @@ class CreateClass extends Component {
     // console.log(errors);
     // console.log(all_teachers);
     document.title = "Schooly | Buat Kelas";
-
+    console.log(user);
     if (user.role === "Teacher" || user.role === "Admin") {
       return (
         <div className={classes.root}>

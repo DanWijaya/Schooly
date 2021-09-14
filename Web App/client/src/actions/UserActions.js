@@ -316,38 +316,63 @@ export const getPendingAdmins = () => (dispatch) => {
 };
 
 export const setUserActive = (userId) => (dispatch) => {
-  axios
+ return axios
     .put(`/api/users/setuseractive/${userId}`)
     .then((res) => {
-      console.log(res.data);
-      window.location.reload();
+      return res.data;
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
+      throw err;
     });
 };
 
-export const setUserDisabled = (userId) => (dispatch) => {
-  axios
-    .put(`/api/users/setuserdisabled/${userId}`)
+export const bulkSetUserActive = (id_list) => (dispatch) => {
+  let data = {id_list : id_list}
+  return axios
+    .put(`/api/users/bulksetuseractive/`, data)
     .then((res) => {
-      console.log(res.data);
-      window.location.reload();
+      return res.data;
     })
     .catch((err) => {
-      console.log(err);
+      throw err;
+      console.error(err);
+    });
+}
+
+export const setUserDeactivated = (userId) => (dispatch) => {
+  return axios
+    .put(`/api/users/setuserdeactivated/${userId}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      throw err;
+      console.error(err);
     });
 };
 
+export const bulkSetUserDeactivated = (id_list) => (dispatch) => {
+  let data = {id_list : id_list}
+  return axios
+    .put(`/api/users/bulksetuseractive/`, data)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      throw err;
+      console.error(err);
+    });
+}
 export const deleteUser = (userId) => (dispatch) => {
-  axios
+  return axios
     .delete(`/api/users/delete/${userId}`)
     .then((res) => {
-      console.log(res.data);
-      window.location.reload();
+      return res.data;
     })
     .catch((err) => {
-      console.log("Error in deleting students");
+      console.error("Error in deleting user");
+      throw err;
     });
 };
 

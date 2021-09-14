@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import {
-  setUserDisabled,
+  setUserDeactivated,
   getStudents,
   getTeachers,
   deleteUser,
@@ -752,7 +752,7 @@ function ManageUsers(props) {
   const [searchFilterT, updateSearchFilterT] = React.useState("");
   const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
 
-  const { setUserDisabled, deleteUser, getTeachers, getStudents } = props;
+  const { setUserDeactivated, deleteUser, getTeachers, getStudents } = props;
   const { all_students, all_teachers, pending_users, user } = props.auth;
 
   console.log(all_students);
@@ -1040,7 +1040,7 @@ function ManageUsers(props) {
     deleteUser(id);
   };
   const onDisableUser = (id) => {
-    setUserDisabled(id);
+    setUserDeactivated(id);
   };
   // Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
@@ -1602,7 +1602,7 @@ ManageUsers.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   getStudents: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
-  setUserDisabled: PropTypes.func.isRequired,
+  setUserDeactivated: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   deleteUser: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
@@ -1619,7 +1619,7 @@ export default connect(mapStateToProps, {
   getStudentsByClass,
   getAllSubjects,
   getAllTask,
-  setUserDisabled,
+  setUserDeactivated,
   getStudents,
   getTeachers,
   deleteUser,
