@@ -8,7 +8,9 @@ function Tester(props) {
   const classes = useStyles();
 
   return (
-    <div />
+    <div>
+      test
+    </div>
   );
 }
 
