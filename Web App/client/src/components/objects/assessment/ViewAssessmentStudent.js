@@ -42,6 +42,7 @@ import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import moment from "moment";
 import CustomLinkify from "../../misc/linkify/Linkify";
+import Latex from "../../misc/latex/Latex";
 import "moment/locale/id";
 import SubmitDialog from "../../misc/dialog/SubmitDialog";
 import ToggleButton from "@material-ui/lab/ToggleButton";
@@ -691,6 +692,7 @@ function ViewAssessmentStudent(props) {
         style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
       >
         <form>
+          {/* <Latex content={splitResult}/> */}
           <CustomLinkify text={splitResult} />
         </form>
       </Typography>
@@ -910,7 +912,8 @@ function ViewAssessmentStudent(props) {
                         }}
                         gutterButtom
                       >
-                        <CustomLinkify text={questions[qnsIndex].name} />
+                        <Latex content={questions[qnsIndex].name}/>
+                        {/* <CustomLinkify text={questions[qnsIndex].name} /> */}
                       </Typography>
                     )}
                   </Grid>

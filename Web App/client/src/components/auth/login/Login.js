@@ -22,6 +22,7 @@ import {
 import { withStyles } from "@material-ui/core/styles";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import Latex from "../../misc/latex/Latex";
 
 const styles = (theme) => ({
   root: {

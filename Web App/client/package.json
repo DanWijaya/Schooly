@@ -15,6 +15,7 @@
     "csvtojson": "^2.0.10",
     "date-fns": "^2.14.0",
     "jwt-decode": "^2.2.0",
+    "katex": "^0.11.1",
     "moment": "^2.24.0",
     "react": "^16.6.3",
     "react-bootstrap": "^1.0.0-beta.14",
@@ -30,6 +31,7 @@
     "react-images-upload": "^1.2.8",
     "react-katex": "^2.0.2",
     "react-linkify": "^1.0.0-alpha",
+    "react-markdown": "^4.3.1",
     "react-mathjax2": "0.0.2",
     "react-redux": "^5.1.1",
     "react-router-dom": "^5.0.1",
@@ -38,6 +40,7 @@
     "react-swipeable-views": "^0.13.9",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
+    "remark-math": "^2.0.1",
     "styled-components": "^4.3.2",
     "xlsx": "^0.17.1"
   },
