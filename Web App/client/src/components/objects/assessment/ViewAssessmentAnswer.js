@@ -54,6 +54,7 @@ import ExploreIcon from "@material-ui/icons/Explore";
 import MuiAlert from "@material-ui/lab/Alert";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import Latex from "../../misc/latex/Latex";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -507,7 +508,9 @@ function ViewAssessmentTeacher(props) {
       content = (
         <Grid container direction="column" spacing={2}>
           <Grid item>
-            <Typography align="justify">{`${questionName}`}</Typography>
+            <Typography align="justify">
+              <Latex content={questionName}/>
+            </Typography>
           </Grid>
           <Grid item>
             <Typography color="textSecondary" align="justify">
@@ -540,7 +543,9 @@ function ViewAssessmentTeacher(props) {
       content = (
         <Grid container direction="column" spacing={2}>
           <Grid item>
-            <Typography align="justify">{`${questionName}`}</Typography>
+            <Typography align="justify">
+              <Latex content={questionName}/>
+            </Typography>
           </Grid>
           <Grid item>
             <RadioGroup value={questionAnswer[0]}>
@@ -1761,7 +1766,9 @@ function QuestionAnswerPerStudent(props) {
       answer = (
         <Grid container direction="column" spacing={2}>
           <Grid item>
-            <Typography align="justify">{`${questionName}`}</Typography>
+            <Typography align="justify">
+              <Latex content={questionName}/>
+            </Typography>
           </Grid>
           <Grid item>
             <RadioGroup value={studentAnswer[0]}>
