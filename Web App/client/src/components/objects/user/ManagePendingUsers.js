@@ -13,7 +13,7 @@ import {
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import UserMenu from "../../misc/menu-user/UserMenu";
+import UserMenu from "./UserMenu";
 import {
   Avatar,
   Button,
@@ -57,7 +57,7 @@ import RecentActorsIcon from "@material-ui/icons/RecentActors";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from "@material-ui/icons/Clear";
-import { FaUserClock } from "react-icons/fa";
+import { FaUserLock } from "react-icons/fa";
 
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
@@ -1410,7 +1410,7 @@ function ManageUsers(props) {
           columnGap: "20px",
         }}
       >
-        <FaUserClock
+        <FaUserLock
           fontSize="30px"
           className={classes.headerIcon}
         />

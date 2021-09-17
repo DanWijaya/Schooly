@@ -16,7 +16,7 @@ import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import SettingsIcon from '@material-ui/icons/Settings';
 import { BsClipboardData } from "react-icons/bs";
-import { FaChalkboardTeacher, FaClipboardList, FaUserCheck, FaUserClock } from "react-icons/fa";
+import { FaChalkboardTeacher, FaClipboardList, FaUserFriends, FaUserLock } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
   drawerListItem: {
@@ -25,8 +25,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   drawerListItemIcon: {
-    width: "22.5px",
-    height: "22.5px",
+    fontSize: "22.5px",
   },
 }));
 
@@ -67,14 +66,14 @@ function DrawerContent(props) {
         "Beranda",
       ],
       [
-        "/pengguna-tidakaktif",
-        <FaUserClock className={classes.drawerListItemIcon} />,
-        "Pengguna Tertunda",
+        "/pengguna",
+        <FaUserFriends className={classes.drawerListItemIcon} />,
+        "Pengguna Aktif",
       ],
       [
-        "/pengguna",
-        <FaUserCheck className={classes.drawerListItemIcon} />,
-        "Pengguna Aktif",
+        "/pengguna-tidakaktif",
+        <FaUserLock className={classes.drawerListItemIcon} />,
+        "Pengguna Tidak Aktif",
       ],
       [
         "/kalender",

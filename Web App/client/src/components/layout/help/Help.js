@@ -337,6 +337,78 @@ function Help(props) {
             <ExpansionPanel variant="outlined" defaultExpanded>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography variant="h5" color="primary">
+                  Kegiatan dan Kalender
+                </Typography>
+              </ExpansionPanelSummary>
+              <Divider />
+              <ExpansionPanelDetails>
+                <Grid container direction="column" spacing={4}>
+                  <Grid item>
+                    <Typography variant="h6" align="justify" gutterBottom>
+                      <b>Apa itu Kegiatan?</b>
+                    </Typography>
+                    <Typography align="justify">
+                      Kegiatan adalah pengingat untuk acara-acara sekolah yang ada
+                      baik akademik seperti minggu ujian ataupun non-akademik seperti
+                      perayaan hari tertentu yang dirangkum dalam bentuk kalender.
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h6" align="justify" gutterBottom>
+                      <b>Apa saja isi suatu Kegiatan?</b>
+                    </Typography>
+                    <Typography align="justify">
+                      Suatu kegiatan terdiri dari judul, lokasi, waktu pelaksanaan,
+                      pihak penerima, deskripsi, dan lampiran berkas.
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h6" align="justify" gutterBottom>
+                      <b>Hal apa saja yang diingatkan oleh Kalender?</b>
+                    </Typography>
+                    <Typography align="justify">
+                      Suatu kalender dapat mengingatkan Anda akan kegiatan, dan pekerjaan
+                      sekolah Anda seperti tugas, kuis, dan ujian.
+                    </Typography>
+                  </Grid>
+                  {user.role === "Student" ? null : user.role ==="Teacher" ? null
+                  : user.role === "Admin" ? (
+                    <Grid item>
+                      <Typography variant="h6" align="justify" gutterBottom>
+                        <b>
+                          Bagaimana cara membuat suatu kegiatan?
+                        </b>
+                      </Typography>
+                      <Typography align="justify">
+                        <ol className={classes.list}>
+                          <li>
+                            Buka <Link to="/kalender">halaman Kalender</Link>.
+                          </li>
+                          <li>
+                            Tekan tombol "Buat Kegiatan" dengan simbol "+" untuk membuat kegiatan.
+                          </li>
+                          <li>
+                            Masukkan judul, lokasi, waktu pelaksanaan, pihak penerima, deskripsi,
+                            dan lampiran berkas, jika sudah tekan tombol "Buat".
+                          </li>
+                        </ol>
+                      </Typography>
+                    </Grid>
+                  ) : (
+                    <Grid item>
+                      <Typography color="textSecondary">
+                        Silahkan masuk untuk mendapatkan bantuan lebih lanjut mengenai topik ini.
+                      </Typography>
+                    </Grid>
+                  )}
+                </Grid>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          </Grid>
+          <Grid item>
+            <ExpansionPanel variant="outlined" defaultExpanded>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h5" color="primary">
                   Mata Pelajaran
                 </Typography>
               </ExpansionPanelSummary>
@@ -351,7 +423,8 @@ function Help(props) {
                       Mata pelajaran adalah jenis ilmu pengetahuan yang diajarkan.
                     </Typography>
                   </Grid>
-                  {user.role === "Admin" ? (
+                  {user.role === "Student" ? null : user.role ==="Teacher" ? null
+                  : user.role === "Admin" ? (
                     <Grid item>
                       <Typography variant="h6" align="justify" gutterBottom>
                         <b>
