@@ -47,8 +47,6 @@
     "prettier": "^2.2.1",
     "query-string": "^6.13.1",
     "react-avatar-edit": "^0.8.3",
-    "react-icons": "^3.9.0",
-    "react-sidebar": "^3.0.2",
     "react-swipeable-views": "^0.13.9",
     "shortid": "^2.2.15",
     "uuid": "^8.3.2",
