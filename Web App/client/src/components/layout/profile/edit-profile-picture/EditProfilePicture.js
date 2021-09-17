@@ -2,24 +2,28 @@ import React from "react";
 import { connect } from "react-redux";
 import { uploadFileAvatar, getFileAvatar } from "../../../../actions/files/FileAvatarActions";
 import defaultAvatar from "./DefaultAvatar.svg";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Fab from "@material-ui/core/Fab";
-import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import { useMediaQuery } from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Fab,
+  Grid,
+  Hidden,
+  IconButton,
+  Typography,
+  useMediaQuery
+} from "@material-ui/core";
+import {
+  AddAPhoto as AddAPhotoIcon,
+  CameraAlt as CameraAltIcon,
+  Close as CloseIcon,
+  CloudUpload as CloudUploadIcon,
+  Person as PersonIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
-import CameraAltIcon from "@material-ui/icons/CameraAlt";
-import CloseIcon from "@material-ui/icons/Close";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import PersonIcon from "@material-ui/icons/Person";
 
 const useStyles = makeStyles((theme) => ({
   root: {

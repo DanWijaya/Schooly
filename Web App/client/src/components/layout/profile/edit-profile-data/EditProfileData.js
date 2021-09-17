@@ -7,40 +7,44 @@ import lokal from "date-fns/locale/id";
 import { updateUserData } from "../../../../actions/UserActions";
 import { clearErrors } from "../../../../actions/ErrorActions";
 import DataField from "../DataField";
-import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import FormControl from "@material-ui/core/FormControl";
-import IconButton from "@material-ui/core/IconButton";
-import InputLabel from "@material-ui/core/InputLabel";
-import List from "@material-ui/core/List";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
-import Typography from "@material-ui/core/Typography";
+import {
+  Button,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  IconButton,
+  InputLabel,
+  List,
+  MenuItem,
+  Select,
+  Tab,
+  Tabs,
+  Typography,
+  useMediaQuery
+} from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
-import { useMediaQuery } from "@material-ui/core";
+import {
+  AccountBalance as AccountBalanceIcon,
+  Cake as CakeIcon,
+  Close as CloseIcon,
+  ColorLens as ColorLensIcon,
+  Contacts as ContactsIcon,
+  ContactMail as ContactMailIcon,
+  ContactPhone as ContactPhoneIcon,
+  Edit as EditIcon,
+  EmojiPeople as EmojiPeopleIcon,
+  Email as EmailIcon,
+  Home as HomeIcon,
+  Person as PersonIcon,
+  Phone as PhoneIcon,
+  SportsEsports as SportsEsportsIcon,
+  Wc as WcIcon,
+  Work as WorkIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import CakeIcon from "@material-ui/icons/Cake";
-import CloseIcon from "@material-ui/icons/Close";
-import ColorLensIcon from "@material-ui/icons/ColorLens";
-import ContactsIcon from "@material-ui/icons/Contacts";
-import ContactMailIcon from "@material-ui/icons/ContactMail";
-import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
-import EditIcon from "@material-ui/icons/Edit";
-import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
-import EmailIcon from "@material-ui/icons/Email";
-import HomeIcon from "@material-ui/icons/Home";
-import PersonIcon from "@material-ui/icons/Person";
-import PhoneIcon from "@material-ui/icons/Phone";
-import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
-import WcIcon from "@material-ui/icons/Wc";
-import WorkIcon from "@material-ui/icons/Work";
 
 const useStyles = makeStyles((theme) => ({
   root: {

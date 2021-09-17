@@ -1,10 +1,12 @@
 import React from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import TextField from "@material-ui/core/TextField";
+import {
+  Avatar,
+  Grid,
+  Hidden,
+  ListItem,
+  ListItemAvatar,
+  TextField
+} from "@material-ui/core";
 
 function DataField(props) {
   const { icon, iconStyle, isTextField, nonTextFieldContent,

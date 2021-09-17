@@ -1,10 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
+import {
+  ContactMail as ContactMailIcon,
+  DoneOutline as DoneOutlineIcon,
+  Storage as StorageIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import ContactMailIcon from "@material-ui/icons/ContactMail";
-import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
-import StorageIcon from "@material-ui/icons/Storage";
 
 const useRegisterStepIconStyles = makeStyles({
   root: {

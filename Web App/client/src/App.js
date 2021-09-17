@@ -7,8 +7,10 @@ import store from "./Store";
 import { setCurrentUser, logoutUser,
   // setDropboxToken,
 } from "./actions/UserActions";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
 import { ThemeProvider } from "@material-ui/core/styles";
+// Page Components
 import Footer from "./Footer";
 import Navigation from "./components/navigation/Navigation";
 import Styles from "./Styles";
@@ -173,6 +175,7 @@ class App extends Component {
       <div>
         <Provider store={store}>
           <ThemeProvider theme={Styles}>
+            <CssBaseline />
             <Router>
               <ScrollToTop />
               <div style={{ display: "flex" }}>

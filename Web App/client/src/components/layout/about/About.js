@@ -6,13 +6,15 @@ import onlineLearning from "./OnlineLearning-CompareFibre.jpg";
 import aboutArt1 from "./AboutArt1.png";
 import aboutArt2 from "./AboutArt2.png";
 import aboutArt3 from "./AboutArt3.png";
-import Button from "@material-ui/core/Button";
-import Divider from "@material-ui/core/Divider";
-import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
-import Typography from "@material-ui/core/Typography";
+import {
+  Button,
+  Divider,
+  Grid,
+  Hidden,
+  Typography
+} from "@material-ui/core";
+import { Email as EmailIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import EmailIcon from "@material-ui/icons/Email";
 
 const useStyles = makeStyles((theme) => ({
   root: {

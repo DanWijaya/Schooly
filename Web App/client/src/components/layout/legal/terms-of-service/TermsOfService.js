@@ -2,14 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import termsOfServiceArt from "./TermsOfServiceArt.png";
 import ScrollToTopButton from "../../../misc/scroll-to-top/ScrollToTopButton";
-import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Typography from "@material-ui/core/Typography";
+import {
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography
+} from "@material-ui/core";
+import { KeyboardArrowRight as KeyboardArrowRightIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -3,9 +3,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import DrawerContent from "./DrawerContent";
-import Drawer from "@material-ui/core/Drawer";
-import Toolbar from "@material-ui/core/Toolbar";
-import { useMediaQuery } from "@material-ui/core";
+import {
+  Drawer,
+  Toolbar,
+  useMediaQuery
+} from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({

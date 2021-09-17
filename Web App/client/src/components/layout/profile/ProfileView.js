@@ -8,27 +8,31 @@ import { updateAvatar, getOneUser } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
 import DataItem from "./DataItem";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Divider from "@material-ui/core/Divider";
-import Grid from "@material-ui/core/Grid";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  Paper,
+  Typography
+} from "@material-ui/core";
+import {
+  AccountBalance as AccountBalanceIcon,
+  AssessmentOutlined as AssessmentOutlinedIcon,
+  Cake as CakeIcon,
+  ColorLens as ColorLensIcon,
+  ContactPhone as ContactPhoneIcon,
+  Email as EmailIcon,
+  Home as HomeIcon,
+  Person as PersonIcon,
+  Phone as PhoneIcon,
+  SportsEsports as SportsEsportsIcon,
+  Wc as WcIcon,
+  Work as WorkIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
-import CakeIcon from "@material-ui/icons/Cake";
-import ColorLensIcon from "@material-ui/icons/ColorLens";
-import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
-import EmailIcon from "@material-ui/icons/Email";
-import HomeIcon from "@material-ui/icons/Home";
-import PersonIcon from "@material-ui/icons/Person";
-import PhoneIcon from "@material-ui/icons/Phone";
-import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
-import WcIcon from "@material-ui/icons/Wc";
-import WorkIcon from "@material-ui/icons/Work";
 
 const useStyles = makeStyles((theme) => ({
   root: {

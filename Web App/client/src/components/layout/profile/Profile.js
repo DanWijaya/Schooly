@@ -13,28 +13,32 @@ import EditPassword from "./edit-password/EditPassword";
 import EditProfileData from "./edit-profile-data/EditProfileData";
 import EditProfilePicture from "./edit-profile-picture/EditProfilePicture";
 import DataItem from "./DataItem";
-import Avatar from "@material-ui/core/Avatar";
-import Badge from "@material-ui/core/Badge";
-import Divider from "@material-ui/core/Divider";
-import Grid from "@material-ui/core/Grid";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Paper from "@material-ui/core/Paper";
-import Snackbar from "@material-ui/core/Snackbar";
-import Typography from "@material-ui/core/Typography";
+import {
+  Avatar,
+  Badge,
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  Paper,
+  Snackbar,
+  Typography
+} from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
+import {
+  AccountBalance as AccountBalanceIcon,
+  Cake as CakeIcon,
+  ColorLens as ColorLensIcon,
+  ContactPhone as ContactPhoneIcon,
+  Email as EmailIcon,
+  Home as HomeIcon,
+  Person as PersonIcon,
+  Phone as PhoneIcon,
+  SportsEsports as SportsEsportsIcon,
+  Wc as WcIcon,
+  Work as WorkIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import CakeIcon from "@material-ui/icons/Cake";
-import ColorLensIcon from "@material-ui/icons/ColorLens";
-import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
-import EmailIcon from "@material-ui/icons/Email";
-import HomeIcon from "@material-ui/icons/Home";
-import PersonIcon from "@material-ui/icons/Person";
-import PhoneIcon from "@material-ui/icons/Phone";
-import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
-import WorkIcon from "@material-ui/icons/Work";
-import WcIcon from "@material-ui/icons/Wc";
 
 const useStyles = makeStyles((theme) => ({
   root: {
