@@ -331,3 +331,28 @@ export const validateAssessment = (assessmentData) => (
     }
   });
 };
+
+export const getKeyAnswers = (assessmentId) => {
+  return axios.get(`/api/assessments/keyanswers/${assessmentId}`)
+  .then((res) => {
+    return res.data;
+  })
+  .catch((err) => {
+    throw err.response.data;
+  })
+}
+
+// export const getSubmissionsByStd = (assessmentId) => {
+//   return axios.get(`/api/assessments/submissionsByStd/${assessmentId}`)
+
+// }
+
+// Implementasinya dengan cara urutkan soal berdasarkan jumlah benar oleh murid murid. 
+export const getQuestionAnalytics = (assessmentId, top_K=10) => {
+  return axios.get(`/qnsDifficultyRanking/${assessmentId}`);
+  /* @params : {
+    1. assessmentID -> Id of the assessment
+    2. top_K -> untuk pilih mau munculin berapa soal tersulit
+    */
+  
+}

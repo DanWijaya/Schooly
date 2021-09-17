@@ -7,6 +7,7 @@ import CustomLinkify from "../../misc/linkify/Linkify";
 import {
   getOneAssessment,
   updateAssessmentGrades,
+  getQuestionAnalytics
 } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getStudents } from "../../../actions/UserActions";
@@ -299,6 +300,11 @@ function ViewAssessmentTeacher(props) {
   // Tabs
   const [value, setValue] = React.useState(0);
 
+  React.useEffect( async () => {
+    const result = await getQuestionAnalytics(assessment_id);
+    console.log("INI RESULTNYA")
+    console.log(result);
+  }, [])
   React.useEffect(() => {
     getOneAssessment(assessment_id);
     getAllClass("map");

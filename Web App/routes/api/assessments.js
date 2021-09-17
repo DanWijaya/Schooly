@@ -601,4 +601,67 @@ router.post("/validity", (req, res) => {
   }
 });
 
+router.get("/qnsDifficultyRanking/:id", async (req,res) => {
+  let { id } = req.params;
+
+  //Dapatin Kunci Jawabannya dulu
+  const getKeyAnswers = new Promise((resolve, reject) => {
+      Assessment.findById(id, (err, assessmentData) => {
+      if(!assessmentData) reject("Assessment not found");
+      else {
+        let { questions } = assessmentData;
+        let key_answers;
+        if(Array.isArray(questions)){
+          key_answers = questions.map((qns) => qns.answer);
+          resolve({
+            assessmentData: assessmentData , 
+            key_answers: key_answers
+          });
+        }else {
+          reject("Question for this assessment is still empty");
+        }
+  
+      }
+      
+    })
+  });
+
+  try{
+    const result = await getKeyAnswers;
+    const { key_answers, assessmentData} = result;
+    // Setelah itu diproses jawabannya. 
+    let { submissions } = assessmentData;
+    if(Object.keys(submissions).length == 0) {
+      return res.status(404).json("Submission for this assessment is empty");
+    }
+    else {
+    let submissions= assessmentData.submissions;
+     const qns_length = assessmentData.questions.length;
+
+     let correctCountByQns = [];
+       for (var i=0; i < qns_length; i++){
+       let correctCount = 0;
+        for (const [key, val] of submissions.entries()){
+          console.log(val[i], key_answers[i])
+          if(val[i][0] == key_answers[i][0]){
+            correctCount += 1;
+          }
+        }
+        correctCountByQns.push(correctCount);
+     }
+     let qns_ranking = correctCountByQns
+           .map((val, ind) => {return {ind, val}})
+           .sort((a, b) => {return a.val > b.val ? 1 : a.val == b.val ? 0 : -1 })
+           .map((obj) => obj.ind + 1);
+
+    //Hasilnya berupa nomor nomor soal. Pertama yang paling dikit benar, terakhir yang paling banyak benar. 
+     return res.json(qns_ranking);
+    }
+    
+  }catch(err) {
+    return res.status(404).json(err);
+  }
+})
+// router.get("/ansByStd")
+
 module.exports = router;
