@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Dialog, Grid, Typography } from "@material-ui/core";
+import {
+  Cancel as CancelIcon,
+  DeleteOutline as DeleteOutlineIcon,
+  ErrorOutline as ErrorOutlineIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import CancelIcon from "@material-ui/icons/Cancel";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,16 +54,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function DeleteDialog(props) {
-  // const {
-  //   openDeleteDialog,
-  //   handleCloseDeleteDialog,
-  //   itemType,
-  //   itemName,
-  //   deleteItem,
-  //   isLink,
-  //   redirectLink,
-  //   isWarning,
-  // } = props;
   const classes = useStyles();
   const {
     openDeleteDialog,
@@ -86,8 +78,6 @@ function DeleteDialog(props) {
         className={classes.root}
       >
         <Grid item>
-          {/* <Typography variant="h5" align="center">
-            Hapus {itemType} berikut? */}
           <Typography variant="h6" align="center" gutterBottom>
             {customMessage
               ? `${customMessage} ${itemType}`

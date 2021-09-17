@@ -5,10 +5,10 @@ import {
   CircularProgress,
   Dialog,
   Grid,
-  Typography,
+  Typography
 } from "@material-ui/core/";
+import { CheckCircle as CheckCircleIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const useStyles = makeStyles((theme) => ({
   root: {
