@@ -81,7 +81,7 @@ import TeacherList from "./components/objects/user/TeacherList";
 // Settings
 import Setting from "./components/objects/setting/Setting";
 //Prototypes
-import Tester from "./prototypes/Tester";
+import Tester from "./prototypes/Tester1";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
 
 // Check for token to keep user logged in
