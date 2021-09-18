@@ -253,7 +253,7 @@ class CreateAssessment extends Component {
       class_assigned: [],
       start_date: null,
       end_date: null,
-      post_date: null,
+      post_date: new Date(),
       posted: false,
       isScheduled: false,
       type: "",
@@ -354,6 +354,7 @@ class CreateAssessment extends Component {
     const { questions } = this.state;
     const { createAssessment, validateAssessment, history } = this.props;
 
+    console.log("Muncul lahh")
     // mencatat jumlah soal untuk tiap jenis soal
     let typeCount = new Map([
       ["radio", 0],
@@ -452,7 +453,8 @@ class CreateAssessment extends Component {
     });
 
     // jika soal dan bobot sudah lengkap dan benar, submit
-    if (invalidQuestionIndex.length === 0 && completeWeight && Object.values(this.state.errors).every((error) => (!error))) {
+    if (invalidQuestionIndex.length === 0 && completeWeight ) {
+      // sebelumnya ada && Object.values(this.state.errors).every((error) => (!error))
       let longtext;
       if (typeCount.get("longtext") === 0) {
         longtext = null;
@@ -521,12 +523,18 @@ class CreateAssessment extends Component {
         description: this.state.description,
         questions: this.state.questions,
         type: this.state.type,
+        start_date: this.state.start_date,
+        end_date: this.state.end_date,
       };
-      validateAssessment(assessmentData).catch((err) => {
+
+      validateAssessment(assessmentData)
+      .catch((err) => {
         this.setState({ errors: err });
-      }).finally(() => {
-        this.handleOpenErrorSnackbar();
-      });
+        // this.handleOpenErrorSnackbar();
+      })
+      this.handleOpenErrorSnackbar();
+
+      //COba pakai finally kayaknya gak bisa. 
     }
   };
 
@@ -638,6 +646,10 @@ class CreateAssessment extends Component {
     } else {
       this.setState({ [e.target.id]: e.target.value });
     }
+
+    console.log("Start date:", this.state.start_date)
+    console.log("End date:", this.state.start_date)
+
   };
 
   // onDateChange = (date) => {
@@ -1181,8 +1193,9 @@ class CreateAssessment extends Component {
       for (let i = 0; i < filteredtypeCount.length; i++) {
         let type = filteredtypeCount[i];
         let weight = this.state.weights[type];
-        let showError =
-          weight === null || (weight !== undefined && Number(weight) <= 0);
+        let showError = 
+            weight === null || (weight !== undefined && Number(weight) <= 0);
+
 
         mobileView.push(
           <Grid container>
@@ -1226,7 +1239,7 @@ class CreateAssessment extends Component {
               >
                 <Hidden xsDown>
                   <TextField
-                    defaultValue={this.state.weights[type]}
+                    value={this.state.weights[type]}
                     variant="outlined"
                     key={type}
                     fullWidth
@@ -1443,7 +1456,7 @@ class CreateAssessment extends Component {
         margin: theme.spacing(1),
       },
       switchBase: {
-        padding: 2.5,
+        padding: 2,
         color: theme.palette.warning.light,
         "&$checked": {
           transform: "translateX(16px)",
@@ -1460,8 +1473,8 @@ class CreateAssessment extends Component {
         },
       },
       thumb: {
-        width: 24,
-        height: 24,
+        width: 10,
+        height: 10,
       },
       track: {
         borderRadius: 24 / 2,
@@ -1965,14 +1978,32 @@ class CreateAssessment extends Component {
               <Paper>
                 <Grid
                   container
-                  // spacing={2}
                   justify="space-between"
                   alignItems="center"
                   className={classes.pageNavigatorContent}
                 >
                   <Grid item className={classes.pageNavigator}>
                     <Grid item>
-                      <LightTooltip title={`Pengaturan`}>
+                      <LightTooltip title={!this.state.posted ? "Mati" : "Hidup"}>
+                        <FormControlLabel
+                          control={
+                            <ToggleViewQuiz
+                              icon={<FiberManualRecordIcon />}
+                              checkedIcon={<FiberManualRecordIcon />}
+                              disabled={this.state.isScheduled}
+                              checked={this.state.posted}
+                              onChange={this.handlePostToggle}
+                            />
+                          }
+                          label={
+                            <Typography variant="subtitle2">
+                              Akses ke murid
+                            </Typography>
+                          }
+                          labelPlacement="bottom"
+                        />
+                      </LightTooltip>
+                      {/*<LightTooltip title={`Pengaturan`}>
                         <IconButton
                           disableRipple
                           className={classes.settingsButton}
@@ -2018,7 +2049,7 @@ class CreateAssessment extends Component {
                             }
                           />
                         </MenuItem>
-                      </Menu>
+                      </Menu>*/}
                     </Grid>
                   </Grid>
                   <Grid item className={classes.assessmentSettings}>

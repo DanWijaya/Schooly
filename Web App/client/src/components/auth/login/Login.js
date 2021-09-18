@@ -24,6 +24,7 @@ import {
   VisibilityOff as VisibilityOffIcon
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
+import Latex from "../../misc/latex/Latex";
 
 const styles = (theme) => ({
   root: {
@@ -147,6 +148,7 @@ class Login extends Component {
       password: this.state.password,
     };
     this.props.loginUser(userData).catch((err) => {
+      console.log(err);
       this.setState({ errors: err });
     });
   };
@@ -213,13 +215,13 @@ class Login extends Component {
                           onChange={this.onChange}
                           value={this.state.email}
                           helperText={
-                            errors.email || errors.emailnotfound || errors.notactive
+                            errors.email
                           }
                           error={Boolean(
-                            errors.email || errors.emailnotfound || errors.notactive
+                            errors.email
                           )}
                           className={classnames("", {
-                            invalid: errors.email || errors.emailnotfound,
+                            invalid: errors.email
                           })}
                         />
                       </Grid>
@@ -232,12 +234,12 @@ class Login extends Component {
                           label="Kata Sandi"
                           onChange={this.onChange}
                           value={this.state.password}
-                          helperText={errors.password || errors.passwordincorrect}
+                          helperText={errors.password}
                           error={Boolean(
-                            errors.password || errors.passwordincorrect
+                            errors.password 
                           )}
                           className={classnames("", {
-                            invalid: errors.password || errors.passwordincorrect,
+                            invalid: errors.password
                           })}
                           onFocus={() => {
                             this.setIsFocused(true);

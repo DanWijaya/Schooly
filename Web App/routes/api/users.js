@@ -86,10 +86,10 @@ router.post("/login", (req, res) => {
     console.log(user);
     // Check if user exists
     if (!user) {
-      return res.status(404).json({ emailnotfound: "Email tidak ditemukan" });
+      return res.status(404).json({ email: "Email tidak ditemukan" });
     }
     if (!user.active) {
-      return res.status(404).json({ notactive: "Akun ini belum aktif" });
+      return res.status(404).json({ email: "Akun ini belum aktif" });
     }
 
     // Check password
@@ -146,7 +146,7 @@ router.post("/login", (req, res) => {
       } else {
         return res
           .status(400)
-          .json({ passwordincorrect: "Kata sandi tidak benar" });
+          .json({ password: "Kata sandi tidak benar" });
       }
     });
   });

@@ -47,8 +47,7 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import { truncate } from "fs";
-import {getSetting} from "../../../actions/SettingActions";
+import { getSetting } from "../../../actions/SettingActions";
 
 const path = require("path");
 

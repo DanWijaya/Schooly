@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
-
+const path = require("path");
 //untuk users punya
 const users = require("./routes/api/users");
 
@@ -46,7 +46,7 @@ app.use(
   })
 );
 
-// // for parsing application/json
+// for parsing application/json
 // app.use(express.json());
 
 app.use(bodyParser.json());

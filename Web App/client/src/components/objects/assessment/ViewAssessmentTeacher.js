@@ -36,6 +36,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import MuiAlert from "@material-ui/lab/Alert";
 import SwitchBase from "@material-ui/core/internal/SwitchBase";
+import Latex from "../../misc/latex/Latex";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -213,6 +214,7 @@ function ViewAssessmentTeacher(props) {
         style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
       >
         <form>
+        {/* <Latex content={splitResult}/> */}
           <CustomLinkify text={splitResult} />
         </form>
       </Typography>
@@ -247,8 +249,8 @@ function ViewAssessmentTeacher(props) {
 
   let linkToShare =
     selectedAssessments.type === "Kuis"
-      ? `http://${window.location.host}/kuis-murid/${assessment_id}`
-      : `http://${window.location.host}/ujian-murid/${assessment_id}`;
+      ? `https://${window.location.host}/kuis-murid/${assessment_id}`
+      : `https://${window.location.host}/ujian-murid/${assessment_id}`;
       
   return (
     <div className={classes.root}>
@@ -440,7 +442,8 @@ function ViewAssessmentTeacher(props) {
                                 whiteSpace: "pre-wrap",
                               }}
                             >
-                              <CustomLinkify text={question.name} />
+                              <Latex content={question.name}/>
+                              {/* <CustomLinkify text={question.name} /> */}
                             </Typography>
                           </Grid>
                           <Grid item>
@@ -452,6 +455,7 @@ function ViewAssessmentTeacher(props) {
                                 whiteSpace: "pre-wrap",
                               }}
                             >
+                              {/* <Latex content={question.answer}/> */}
                               <CustomLinkify text={question.answer} />
                             </Typography>
                           </Grid>
@@ -464,8 +468,9 @@ function ViewAssessmentTeacher(props) {
                             whiteSpace: "pre-wrap",
                           }}
                         >
-                          <CustomLinkify text={question.name} />
-                        </Typography>
+                          <Latex content={question.name}/>
+                          {/* <CustomLinkify text={question.name} /> */}
+                        </Typography> 
                       )}
                       {/* </Typography> */}
                     </Grid>

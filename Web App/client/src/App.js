@@ -201,6 +201,14 @@ class App extends Component {
                     <Switch>
                       <Route
                         exact
+                        path="/tester"
+                        render={(props) => (
+                          <Tester
+                            {...props}
+                            />
+                        )}/>
+                      <Route
+                        exact
                         path="/"
                         render={(props) => (
                           <Landing
@@ -478,6 +486,7 @@ class App extends Component {
                         path="/kuis-murid/:id"
                         component={ViewAssessmentStudent}
                         loginRedirect={true}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
                       />
                       <PrivateRoute
                         exact
@@ -485,6 +494,7 @@ class App extends Component {
                         path="/ujian-murid/:id"
                         component={ViewAssessmentStudent}
                         loginRedirect={true}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
                       />
                       <PrivateRoute
                         exact
