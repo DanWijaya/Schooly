@@ -173,7 +173,7 @@ class App extends Component {
       SUPERADMIN: "SuperAdmin",
       ADMIN: "Admin",
       STUDENT: "Student",
-      TEACHER: "Teacher",
+      TEACHER: "Teacher"
     };
 
     console.log(localStorage.getItem(`status`));
@@ -302,7 +302,6 @@ class App extends Component {
                       />
                       <PrivateRoute
                         exact
-                        access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
                         path="/kelas/:id"
                         component={ViewClass}
                       />

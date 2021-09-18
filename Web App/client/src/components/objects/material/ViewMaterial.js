@@ -357,7 +357,7 @@ function ViewMaterial(props) {
   console.log(commentList);
 
   React.useEffect(() => {
-    getAllSubjects("map"); // this will get the selectedMaterials.
+    getAllSubjects(user.unit, "map"); // this will get the selectedMaterials.
     getOneMaterial(materi_id);
     getAllClass("map");
     // COba S3

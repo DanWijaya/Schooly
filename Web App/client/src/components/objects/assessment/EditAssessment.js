@@ -365,7 +365,7 @@ class EditAssessment extends Component {
     handleSideDrawerExist(false);
     getAllClass();
     getOneAssessment(assessment_id);
-    getAllSubjects();
+    getAllSubjects(this.props.auth.user.unit);
     refreshTeacher(this.props.auth.user._id);
     getFileAssessment(assessment_id)
       .then((result) => {

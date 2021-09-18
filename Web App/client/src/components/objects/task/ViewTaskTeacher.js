@@ -345,7 +345,7 @@ function ViewTaskTeacher(props) {
   React.useEffect(() => {
     getOneTask(task_id);
     getAllClass("map");
-    getAllSubjects("map");
+    getAllSubjects(user.unit, "map");
     getFileTasks(task_id).then((res) => {
       setFileLampiran(res);
     });

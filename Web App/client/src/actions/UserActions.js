@@ -162,9 +162,9 @@ export const setUserLoading = () => {
   };
 };
 
-export const getStudents = () => (dispatch) => {
+export const getStudents = (unit_id) => (dispatch) => {
   axios
-    .get("/api/users/getStudents")
+    .get(`/api/users/getStudents/${unit_id}`)
     .then((res) => {
       console.log(res.data);
       dispatch({
@@ -178,10 +178,10 @@ export const getStudents = () => (dispatch) => {
     });
 };
 
-export const getTeachers = (data = "array") => (dispatch) => {
+export const getTeachers = (unit_id, data = "array") => (dispatch) => {
   // console.log('getTeacher start')
   return axios
-    .get("/api/users/getTeachers")
+    .get(`/api/users/getTeachers/${unit_id}`)
     .then((res) => {
       // console.log(res.data)
       if (data === "map") {
@@ -285,9 +285,9 @@ export const getPendingTeachers = () => (dispatch) => {
     });
 };
 
-export const getAdmins = () => (dispatch) => {
+export const getAdmins = (unit_id) => (dispatch) => {
   axios
-    .get("/api/users/getAdmins")
+    .get(`/api/users/getAdmins/${unit_id}`)
     .then((res) => {
       dispatch({
         type: GET_ALL_ADMINS,

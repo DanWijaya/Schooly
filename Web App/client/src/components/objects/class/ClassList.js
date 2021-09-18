@@ -51,6 +51,7 @@ import { GiTeacher } from "react-icons/gi";
 import ClearIcon from "@material-ui/icons/Clear";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import ClassPaper from "../../misc/paper/ClassPaper";
 
 function createData(_id, name, homeroomTeacher, size, absent) {
   return { _id, name, homeroomTeacher, size, absent };
@@ -898,14 +899,7 @@ function ClassList(props) {
   } = props;
 
   const { user, all_teachers_map, all_students } = props.auth;
-
-  console.log(classesCollection);
-
-  const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"];
-  const colorMap = new Map();
-
   const classItem = (data, i) => {
-    colorMap.set(data._id, colorList[i % colorList.length]);
     let temp_ukuran = 0;
     for (let i = 0; i < all_students.length; i++) {
       if (all_students[i].kelas === data._id) {
@@ -926,8 +920,8 @@ function ClassList(props) {
     );
   };
   React.useEffect(() => {
-    getAllClass();
-    getAllClass("map");
+    getAllClass(user.unit);
+    getAllClass(user.unit, "map");
     getTeachers("map");
     getStudents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1064,207 +1058,13 @@ function ClassList(props) {
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container spacing={2}>
-        {rows.length === 0
-          ? null
-          : stableSort(rows, getComparator(order, orderBy)).map(
-              (row, index) => {
-                const labelId = `enhanced-table-checkbox-${index}`;
-                let viewpage = `/kelas/${row._id}`;
-                return (
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
-                      <Paper button className={classes.classPaper}>
-                        <Avatar
-                          variant="square"
-                          style={{
-                            backgroundColor: colorMap.get(row._id),
-                            width: "100%",
-                            height: "120px",
-                            borderRadius: "3px 3px 0px 0px",
-                          }}
-                        >
-                          <FaChalkboardTeacher
-                            style={{
-                              width: "50px",
-                              height: "50px",
-                            }}
-                          />
-                        </Avatar>
-                        <Divider />
-                        <div style={{ padding: "10px 20px 20px 10px" }}>
-                          <Typography id={labelId} variant="h5" align="center">
-                            {row.name}
-                          </Typography>
-                          {row.homeroomTeacher && row.homeroomTeacher !== "" ? (
-                            <Typography
-                              variant="body1"
-                              color="textSecondary"
-                              align="center"
-                              style={{ marginTop: "5px" }}
-                            >
-                              Wali Kelas: {row.homeroomTeacher}
-                            </Typography>
-                          ) : (
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                marginTop: "5px",
-                              }}
-                            >
-                              <Typography
-                                variant="body1"
-                                color="textSecondary"
-                                align="center"
-                              >
-                                Wali Kelas:
-                              </Typography>
-                              <Paper className={classes.emptyClass}>
-                                <Typography variant="body2">KOSONG</Typography>
-                              </Paper>
-                            </div>
-                          )}
-                        </div>
-                        <Divider />
-                        <Grid
-                          container
-                          direction="row"
-                          justify="space-between"
-                          alignItems="center"
-                          className={classes.classActionContainer}
-                        >
-                          {user.role === "Admin" ? (
-                            <Grid
-                              item
-                              xs
-                              container
-                              spacing={1}
-                              justify="flex-end"
-                              alignItems="center"
-                            >
-                              <Grid item>
-                                <LightTooltip title="Jumlah Murid">
-                                  <Badge
-                                    badgeContent={row.size}
-                                    color="secondary"
-                                    anchorOrigin={{
-                                      vertical: "bottom",
-                                      horizontal: "left",
-                                    }}
-                                    showZero
-                                  >
-                                    <IconButton size="small" disabled>
-                                      <SupervisorAccountIcon
-                                        className={classes.classPersonIcon}
-                                      />
-                                    </IconButton>
-                                  </Badge>
-                                </LightTooltip>
-                                {/* <LightTooltip title="Jumlah Murid">
-                                  <Badge
-                                    badgeContent={row.size}
-                                    color="secondary"
-                                    anchorOrigin={{
-                                      vertical: "bottom",
-                                      horizontal: "left",
-                                    }}
-                                    showZero
-                                  >
-                                    <IconButton size="small" disabled>
-                                      <SupervisorAccountIcon
-                                        className={classes.classPersonIcon}
-                                      />
-                                    </IconButton>
-                                  </Badge>
-                                </LightTooltip> */}
-                              </Grid>
-                              <Grid item>
-                                <LightTooltip title="Sunting">
-                                  <Link
-                                    to={`/sunting-kelas/${row._id}`}
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <IconButton
-                                      size="small"
-                                      className={classes.editClassButton}
-                                    >
-                                      <EditIcon fontSize="small" />
-                                    </IconButton>
-                                  </Link>
-                                </LightTooltip>
-                              </Grid>
-                              <Grid item>
-                                <LightTooltip title="Hapus">
-                                  <IconButton
-                                    size="small"
-                                    className={classes.deleteClassButton}
-                                    onClick={(e) =>
-                                      handleOpenDeleteDialog(
-                                        e,
-                                        row._id,
-                                        row.name
-                                      )
-                                    }
-                                  >
-                                    <DeleteIcon fontSize="small" />
-                                  </IconButton>
-                                </LightTooltip>
-                              </Grid>
-                            </Grid>
-                          ) : (
-                            <Grid
-                              container
-                              direction="row"
-                              justify="flex-end"
-                              alignItems="center"
-                            >
-                              <Grid item>
-                                <LightTooltip title="Jumlah Murid">
-                                  <Badge
-                                    badgeContent={row.size}
-                                    color="secondary"
-                                    anchorOrigin={{
-                                      vertical: "bottom",
-                                      horizontal: "left",
-                                    }}
-                                    showZero
-                                  >
-                                    <IconButton size="small" disabled>
-                                      <SupervisorAccountIcon
-                                        className={classes.classPersonIcon}
-                                      />
-                                    </IconButton>
-                                  </Badge>
-                                </LightTooltip>
-                                {/* <LightTooltip title="Jumlah Murid">
-                                  <Badge
-                                    badgeContent={row.size}
-                                    color="secondary"
-                                    anchorOrigin={{
-                                      vertical: "bottom",
-                                      horizontal: "left",
-                                    }}
-                                    showZero
-                                  >
-                                    <IconButton size="small" disabled>
-                                      <SupervisorAccountIcon
-                                        className={classes.classPersonIcon}
-                                      />
-                                    </IconButton>
-                                  </Badge>
-                                </LightTooltip> */}
-                              </Grid>
-                            </Grid>
-                          )}
-                        </Grid>
-                      </Paper>
-                    </Link>
-                  </Grid>
-                );
-              }
-            )}
+      {rows.length === 0
+          ? null :
+        <ClassPaper 
+            data={stableSort(rows, getComparator(order, orderBy))}
+            user={user}
+          />
+      }
       </Grid>
       <Snackbar
         open={openSnackbar}

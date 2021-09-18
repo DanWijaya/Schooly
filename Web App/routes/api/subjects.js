@@ -15,15 +15,13 @@ router.post("/create", (req, res) => {
     return res.status(404).json(errors);
   }
 
-  Subject.findOne({ name: req.body.name }).then((subject) => {
+  Subject.findOne({ name: req.body.name, unit: req.body.unit }).then((subject) => {
     if (subject) {
       return res
         .status(404)
         .json({ name: "Nama mata pelajaran sudah dipakai" });
     } else {
-      const newSubject = new Subject({
-        name: req.body.name,
-      });
+      const newSubject = new Subject(req.body);
 
       newSubject
         .save()
@@ -41,7 +39,7 @@ router.put("/edit/:id", (req, res) => {
     return res.status(404).json(errors);
   }
 
-  Subject.findOne({ name: req.body.name }, (err, subject) => {
+  Subject.findOne({ name: req.body.name, unit: req.body.unit }, (err, subject) => {
     if (subject) {
       return res
         .status(404)
@@ -54,7 +52,7 @@ router.put("/edit/:id", (req, res) => {
             .json({ name: "Mata pelajaran tidak ditemukan" });
         } else {
           subject.name = req.body.name;
-
+          
           subject
             .save()
             .then(res.status(200).json("Done with updating subject"))

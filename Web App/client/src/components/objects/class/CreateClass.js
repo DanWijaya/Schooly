@@ -149,7 +149,7 @@ class CreateClass extends Component {
 
   componentDidMount() {
     this.props.getTeachers();
-    this.props.getAllSubjects();
+    this.props.getAllSubjects(this.props.auth.user.unit);
     this.props.getAllClass();
   }
 

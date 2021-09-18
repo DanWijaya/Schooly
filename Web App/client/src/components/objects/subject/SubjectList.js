@@ -14,7 +14,7 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import {
   Button,
   IconButton,
@@ -40,14 +40,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import CancelIcon from "@material-ui/icons/Cancel";
-import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import SortIcon from "@material-ui/icons/Sort";
 import ClearIcon from "@material-ui/icons/Clear";
 import { GoSearch } from "react-icons/go";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import SubjectPaper from "../../misc/paper/SubjectPaper";
 
 function createData(_id, name, all_class) {
   return { _id, name, all_class };
@@ -430,22 +430,6 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.warning.main,
     },
   },
-  editSubjectButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  deleteSubjectlButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
   dialogBox: {
     width: "300px",
     maxWidth: "100%",
@@ -496,12 +480,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  listItem: {
-    padding: "6px 16px",
-  },
-  listAvatar: {
-    backgroundColor: theme.palette.primary.main,
-  },
   titleIcon: {
     fontSize: "28px",
     backgroundColor: "white",
@@ -540,6 +518,7 @@ function SubjectList(props) {
   } = props;
   const { all_subjects } = props.subjectsCollection;
   const { user, retrieved_users } = props.auth;
+  const { unit } = user;
 
   console.log(action);
   const subjectRowItem = (data) => {
@@ -547,7 +526,7 @@ function SubjectList(props) {
   };
 
   React.useEffect(() => {
-    getAllSubjects();
+    getAllSubjects(unit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -574,7 +553,7 @@ function SubjectList(props) {
 
   const onDeleteSubject = (id) => {
     deleteSubject(id).then((res) => {
-      getAllSubjects();
+      getAllSubjects(unit);
       handleOpenSnackbar("Delete");
       handleCloseDeleteDialog();
     });
@@ -649,19 +628,25 @@ function SubjectList(props) {
 
   const onSubmit = (e) => {
     e.preventDefault();
+
+    let subjectData = {
+      ...subject,
+      unit: unit
+    }
+
     if (action === "Edit") {
-      editSubject(subject)
+      editSubject(subjectData)
         .then(() => {
           handleOpenSnackbar(action);
-          getAllSubjects();
+          getAllSubjects(unit);
           handleCloseFormDialog();
         })
         .catch((err) => setErrors(err));
     } else if (action === "Create") {
-      createSubject(subject)
+      createSubject(subjectData)
         .then(() => {
           handleOpenSnackbar(action);
-          getAllSubjects();
+          getAllSubjects(unit);
           handleCloseFormDialog();
         })
         .catch((err) => setErrors(err));
@@ -773,115 +758,12 @@ function SubjectList(props) {
             Kosong
           </Typography>
         ) : (
-          stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-            return (
-              <Grid item>
-                <Paper variant="outlined">
-                  <ListItem className={classes.listItem}>
-                    <Hidden smUp implementation="css">
-                      <ListItemText
-                        style={{ margin: "6px 0" }}
-                        primary={
-                          <Grid container alignItems="center">
-                            <Typography variant="subtitle1" color="textPrimary">
-                              {row.name}
-                            </Typography>
-
-                            {/* bagian ini ditambahkan agar tinggi listitemnya sama seperti listitem yang ada props secondarynya */}
-                            <Grid item style={{ visibility: "hidden" }}>
-                              <Typography variant="subtitle1">
-                                {"\u200B"}
-                              </Typography>
-                              <Typography variant="caption">
-                                {"\u200B"}
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        }
-                      />
-                    </Hidden>
-                    <Hidden xsDown implementation="css">
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <ListItemAvatar>
-                          <Avatar className={classes.listAvatar}>
-                            <LibraryBooksIcon />
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                          style={{ margin: "6px 0" }}
-                          primary={
-                            <Grid container alignItems="center">
-                              <Typography variant="h6" color="textPrimary">
-                                {row.name}
-                              </Typography>
-
-                              {/* bagian ini ditambahkan agar tinggi listitemnya sama seperti listitem yang ada props secondarynya */}
-                              <Grid item style={{ visibility: "hidden" }}>
-                                <Grid container direction="column">
-                                  <Typography variant="h6">
-                                    {"\u200B"}
-                                  </Typography>
-                                  <Typography variant="body2">
-                                    {"\u200B"}
-                                  </Typography>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          }
-                        />
-                      </div>
-                    </Hidden>
-                    <ListItemText
-                      align="right"
-                      primary={
-                        <Grid container spacing={1} justify="flex-end">
-                          <Grid item>
-                            <LightTooltip title="Sunting">
-                              <IconButton
-                                size="small"
-                                className={classes.editSubjectButton}
-                                onClick={(e) =>
-                                  handleOpenFormDialog(
-                                    e,
-                                    row._id,
-                                    row.name,
-                                    true
-                                  )
-                                }
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                            </LightTooltip>
-                          </Grid>
-                          <Grid item>
-                            <LightTooltip title="Hapus">
-                              <IconButton
-                                size="small"
-                                className={classes.deleteSubjectlButton}
-                                onClick={(e) => {
-                                  handleOpenDeleteDialog(e, row._id, row.name);
-                                }}
-                              >
-                                <DeleteIcon fontSize="small" />
-                              </IconButton>
-                            </LightTooltip>
-                          </Grid>
-                        </Grid>
-                      }
-                    />
-                  </ListItem>
-                </Paper>
-              </Grid>
-            );
-          })
+          <SubjectPaper 
+           data={stableSort(rows, getComparator(order, orderBy))}
+           isEditable={true}
+           handleOpenFormDialog={handleOpenFormDialog}
+           handleOpenDeleteDialog={handleOpenDeleteDialog}
+           />
         )}
       </Grid>
       <Snackbar

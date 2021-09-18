@@ -652,7 +652,7 @@ function ViewTaskStudent(props) {
 
   let tugasId = props.match.params.id;
   // kalau misalnya parameter keduanya masukkin aja array kosong, dia acts like compomnentDidMount()
-  // useEffect(() => {getAllSubjects("map")}, [])
+  // useEffect(() => {getAllSubjects(user.unit, "map")}, [])
 
   useEffect(() => {
     getStudents();
@@ -670,7 +670,7 @@ function ViewTaskStudent(props) {
       setFileTugas(results)
     );
     getOneTask(tugasId);
-    getAllSubjects("map");
+    getAllSubjects(user.unit, "map");
     // Will run getOneUser again once the tasksCollection is retrieved
     getFileTasks(tugasId).then((results) => setFileLampiran(results));
     if (tasksCollection.person_in_charge_id) {

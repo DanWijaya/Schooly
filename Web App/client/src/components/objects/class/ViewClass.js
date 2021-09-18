@@ -604,7 +604,7 @@ function ViewClass(props) {
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
   const { kelas } = props.classesCollection;
-  const { students_by_class, all_teachers_map, user } = props.auth;
+  const { students_by_class, all_teachers_map, user, all_roles } = props.auth;
   const classId = props.match.params.id;
 
   const [walikelas, setWalikelas] = React.useState({});
@@ -1060,7 +1060,7 @@ function ViewClass(props) {
   }
 
   React.useEffect(() => {
-    if (user.role === "Student") {
+    if (user.role === all_roles.STUDENT) {
       if (user.kelas && user.kelas === classId) {
         // jika murid ini sudah ditempatkan ke suatu kelas dan
         // id kelas yang dimasukan sebagai parameter adalah id milik kelas yang ditempati murid ini,
@@ -1073,8 +1073,8 @@ function ViewClass(props) {
         return;
       }
     }
-    getAllSubjects("map"); // get the all_subjects_map in map
-    getAllSubjects(); // get the all_subjects
+    getAllSubjects(user.unit, "map"); // get the all_subjects_map in map
+    getAllSubjects(user.unit); // get the all_subjects
     getStudentsByClass(props.match.params.id); // get the students_by_class
     // getTeachers("map"); // dipindahkan
     getStudents();
@@ -1106,7 +1106,7 @@ function ViewClass(props) {
           console.log(results);
           setAvatar(results);
         });
-        getTeachers("map").then((results) =>
+        getTeachers(user.unit,"map").then((results) =>
           setWalikelas(results.get(kelas.walikelas))
         );
       }
@@ -1115,7 +1115,7 @@ function ViewClass(props) {
   }, [students_by_class.length, kelas.walikelas]);
 
   React.useEffect(() => {
-    if (user.role === "Student") {
+    if (user.role === all_roles.STUDENT) {
       let submittedTaskIdSet = new Set();
       getFileSubmitTasksByAuthor(user._id)
         .then((response) => {
@@ -1167,7 +1167,7 @@ function ViewClass(props) {
     }
   }
 
-  if (user.role === "Student") {
+  if (user.role === all_roles.STUDENT) {
     if (user.kelas) {
       if (classId !== user.kelas) {
         // jika murid ini membuka halaman kelas lain,
@@ -1193,10 +1193,10 @@ function ViewClass(props) {
       );
     }
   }
-
+  console.log(all_roles)
   return (
     <div className={classes.root}>
-      {user.role === "Admin" || user.role === "Teacher" ? (
+      {user.role === all_roles.ADMIN || user.role === all_roles.TEACHER || user.role === all_roles.SUPERADMIN ? (
         <div>
           <Paper className={classes.classPaper}>
             <Typography variant="h3">{kelas.name}</Typography>

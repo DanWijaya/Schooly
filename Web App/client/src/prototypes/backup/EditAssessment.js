@@ -288,7 +288,7 @@ class EditAssessment extends Component {
     handleSideDrawerExist(false);
     getAllClass();
     getOneAssessment(this.props.match.params.id);
-    getAllSubjects();
+    getAllSubjects(user.unit);
   }
 
   componentWillUnmount() {

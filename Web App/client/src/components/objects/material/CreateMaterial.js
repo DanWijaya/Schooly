@@ -462,7 +462,7 @@ class CreateMaterial extends Component {
 
   componentDidMount() {
     this.props.getAllClass();
-    this.props.getAllSubjects();
+    this.props.getAllSubjects(this.props.auth.user.unit);
     this.props.refreshTeacher(this.props.auth.user._id);
   }
 

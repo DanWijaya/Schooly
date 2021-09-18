@@ -561,7 +561,7 @@ function MaterialList(props) {
 
   React.useEffect(() => {
     //
-    getAllSubjects("map");
+    getAllSubjects(user.unit, "map");
     getAllClass("map");
     getTeachers("map");
     if (user.role === "Teacher") {

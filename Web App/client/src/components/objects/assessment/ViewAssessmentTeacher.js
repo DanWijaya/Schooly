@@ -162,11 +162,12 @@ function ViewAssessmentTeacher(props) {
     null
   );
   const [lampiranUrls, setLampiranUrls] = React.useState(new Map());
+  const { user } = props.auth;
 
   React.useEffect(() => {
     getOneAssessment(assessment_id);
     getAllClass("map");
-    getAllSubjects("map");
+    getAllSubjects(user.unit, "map");
     getFileAssessment(assessment_id).then((result) => setLampiranUrls(result));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

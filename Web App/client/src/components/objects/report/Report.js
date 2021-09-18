@@ -1185,8 +1185,8 @@ function Report(props) {
       getAllClass();
       getAllClass("map");
     }
-    getAllSubjects();
-    getAllSubjects("map");
+    getAllSubjects(user.unit);
+    getAllSubjects(user.unit, "map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -1348,7 +1348,7 @@ function Report(props) {
   }, [students_by_class]);
 
   // menginisialisasi isi menu item komponen Select setelah
-  // setKelasWali, getAllClass("map"), dan getAllSubjects("map") sudah selesai dijalankan semuanya.
+  // setKelasWali, getAllClass("map"), dan getAllSubjects(user.unit, "map") sudah selesai dijalankan semuanya.
   React.useEffect(() => {
     countMIDependencyUpdate.current++;
     if (countMIDependencyUpdate.current === 4) {

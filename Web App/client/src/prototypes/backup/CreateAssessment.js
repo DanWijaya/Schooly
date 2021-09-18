@@ -695,7 +695,7 @@ class CreateAssessment extends Component {
     const { getAllClass, getAllSubjects, handleSideDrawerExist } = this.props;
     handleSideDrawerExist(false);
     getAllClass();
-    getAllSubjects();
+    getAllSubjects(user.unit);
   }
 
   handleChangePage = (event, newPage) => {

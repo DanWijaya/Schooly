@@ -721,9 +721,9 @@ class Dashboard extends Component {
     const { user } = this.props.auth;
 
     getAllTask(); // actions yang membuat GET request ke Database.
-    getAllSubjects();
+    getAllSubjects(user.unit);
     getTeachers();
-    getAllSubjects("map"); // untuk dapatin subject"nya gitu
+    getAllSubjects(user.unit, "map"); // untuk dapatin subject"nya gitu
     setCurrentClass(user.kelas);
 
     // const { all_subjects_map } = this.props.subjectsCollection

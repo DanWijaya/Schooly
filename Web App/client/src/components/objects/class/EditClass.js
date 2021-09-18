@@ -222,7 +222,7 @@ class EditClass extends Component {
     getTeachers();
     getStudentsByClass(this.props.match.params.id);
     getAllClass();
-    getAllSubjects();
+    getAllSubjects(this.props.auth.user.unit);
   }
 
   componentWillUnmount() {

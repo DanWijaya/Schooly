@@ -652,7 +652,7 @@ function AssessmentList(props) {
     () => {
       getAllAssessments();
       getAllClass("map");
-      getAllSubjects("map");
+      getAllSubjects(user.unit, "map");
       getTeachers("map");
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -562,7 +562,7 @@ function TaskList(props) {
   React.useEffect(() => {
     getAllTask();
     getAllClass("map");
-    getAllSubjects("map");
+    getAllSubjects(user.unit, "map");
 
     if (user.role === "Student") {
       let submittedTaskIdSet = new Set();

@@ -39,6 +39,9 @@ import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
+import ClassPaper from "../../misc/paper/ClassPaper";
+import SubjectPaper from "../../misc/paper/SubjectPaper";
+import { getStudents, getTeachers, getAdmins } from "../../../actions/UserActions"
 const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
@@ -192,20 +195,68 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.error.dark
     },
-  }
+  },
+  classPaper: {
+    borderRadius: "3px",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
+    transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
+    "&:focus, &:hover": {
+      boxShadow: "0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.15)",
+      cursor: "pointer",
+    },
+  },
+  classActionContainer: {
+    padding: "20px 10px 20px 10px",
+  },
+  classPersonIcon: {
+    color: theme.palette.text.disabled,
+  },
+  editClassButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
+  deleteClassButton: {
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
+  },
+  emptyClass: {
+    display: "flex",
+    justifyContent: "center",
+    maxWidth: "150px",
+    padding: "2px",
+    paddingLeft: "6px",
+    paddingRight: "6px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    marginLeft: "5px",
+  },
+  dialogPaper: {
+    maxHeight: "70vh",
+  },
 }));
 
 function ViewUnit(props) {
   const classes = useStyles();
 
-  const { user } = props.auth;
+  const { user, all_students, all_teachers, all_admins } = props.auth;
   const { selectedUnits } = props.unitsCollection;
+  const { all_subjects } = props.subjectsCollection;
   // const { all_classes } = props.classesCollection;
   const unit_id = props.match.params.id;
   
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [unitClass, setUnitClass] = React.useState([]); 
   const [tabValue, setTabValue] = React.useState(0);
+  const { getOneUnit, getAllClass, getAllSubjects, getStudents, getTeachers, getAdmins } = props;
+
   const unitAuthorName = React.useRef(null);
 
   const handleChangeTab = (event, newValue) => {
@@ -225,18 +276,18 @@ function ViewUnit(props) {
     }   
 
     React.useEffect(() => {
-        const { getOneUnit, getAllClass } = props;
-        const {id} = props.match.params;
-        console.log(id);
+        const { id } = props.match.params;
         getOneUnit(id);
         getAllClass(id).then((res) => {
           setUnitClass(res);
         })
-
+        getAllSubjects(id);
+        getStudents(id);
+        getTeachers(id);
+        getAdmins(id);
     }, []);
 
-    console.log(selectedUnits);
-    console.log(user);
+  
   return (
     <div className={classes.root}>
       <DeleteDialog
@@ -311,136 +362,34 @@ function ViewUnit(props) {
         </Tabs>
         <TabPanel value={tabValue} index={0}>
         <Grid container spacing={2}>
-          {unitClass.map((cl, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-            let viewpage = `/kelas/${clearInterval._id}`;
-          return (
-            <Grid item xs={12} sm={6} md={4}>
-            <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
-              <Paper button className={classes.classPaper}>
-                <Avatar
-                  variant="square"
-                  style={{
-                    // backgroundColor: colorMap.get(cl._id),
-                    width: "100%",
-                    height: "120px",
-                    borderRadius: "3px 3px 0px 0px",
-                  }}
-                >
-                  <FaChalkboardTeacher
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                    }}
-                  />
-                </Avatar>
-                <Divider />
-                <div style={{ padding: "10px 20px 20px 10px" }}>
-                  <Typography id={labelId} variant="h5" align="center">
-                    {cl.name}
-                  </Typography>
-                  {cl.homeroomTeacher && cl.homeroomTeacher !== "" ? (
-                    <Typography
-                      variant="body1"
-                      color="textSecondary"
-                      align="center"
-                      style={{ marginTop: "5px" }}
-                    >
-                      Wali Kelas: {cl.homeroomTeacher}
-                    </Typography>
-                  ) : (
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        marginTop: "5px",
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        color="textSecondary"
-                        align="center"
-                      >
-                        Wali Kelas:
-                      </Typography>
-                      <Paper className={classes.emptyClass}>
-                        <Typography variant="body2">KOSONG</Typography>
-                      </Paper>
-                    </div>
-                  )}
-                </div>
-                <Divider />
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-between"
-                  alignItems="center"
-                  className={classes.classActionContainer}
-                >
-                  {user.role === "Admin" ? (
-                    <Grid
-                      item
-                      xs
-                      container
-                      spacing={1}
-                      justify="flex-end"
-                      alignItems="center"
-                    >
-                      <Grid item>
-                        <LightTooltip title="Jumlah Murid">
-                          <Badge
-                            badgeContent={cl.size}
-                            color="secondary"
-                            anchorOrigin={{
-                              vertical: "bottom",
-                              horizontal: "left",
-                            }}
-                            showZero
-                          >
-                            <IconButton size="small" disabled>
-                              <SupervisorAccountIcon
-                                className={classes.classPersonIcon}
-                              />
-                            </IconButton>
-                          </Badge>
-                        </LightTooltip>
-                      </Grid>
-                    </Grid>
-                  ) : (
-                    <Grid
-                      container
-                      direction="row"
-                      justify="flex-end"g31
-                      alignItems="center"
-                    >
-                      <Grid item>
-                        <LightTooltip title="Jumlah Murid">
-                          <Badge
-                            badgeContent={cl.size}
-                            color="secondary"
-                            anchorOrigin={{
-                              vertical: "bottom",
-                              horizontal: "left",
-                            }}
-                            showZero
-                          >
-                            <IconButton size="small" disabled>
-                              <SupervisorAccountIcon
-                                className={classes.classPersonIcon}
-                              />
-                            </IconButton>
-                          </Badge>
-                        </LightTooltip>
-                      </Grid>
-                    </Grid>
-                  )}
-                </Grid>
-              </Paper>
-            </Link>
+          <ClassPaper 
+            data={unitClass}
+            user={user}
+            />
           </Grid>
-          )})}
+        </TabPanel>
+        <TabPanel value={tabValue} index={1}>
+          <Grid container spacing={2} direction="column">
+            <SubjectPaper 
+              data={all_subjects}
+              isEditable={false}
+              />
+          </Grid>
+        </TabPanel>
+        <TabPanel value={tabValue} index={2}>
+          <Grid container spacing={2} direction="column">
+            <Grid item>
+              <Typography> Pengelola </Typography>
+              {all_admins.map((user) => user.name)}
+            </Grid>
+            <Grid item>
+              <Typography> Guru </Typography>
+              {all_teachers.map((user) => user.name)}
+            </Grid>
+            <Grid item>
+              <Typography> Murid </Typography>
+              {all_students.map((user) => user.name)}
+            </Grid>
           </Grid>
         </TabPanel>
         </Paper>
@@ -469,5 +418,8 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
     getOneUnit,
     getAllClass,
-    getAllSubjects
+    getAllSubjects,
+    getTeachers,
+    getStudents,
+    getAdmins
 })(ViewUnit);

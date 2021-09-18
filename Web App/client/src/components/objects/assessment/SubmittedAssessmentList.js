@@ -267,7 +267,7 @@ function SubmittedAssessmentList(props) {
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
   const { all_classes } = props.classesCollection;
-  const { all_students } = props.auth;
+  const { all_students, user } = props.auth;
   const assessment_id = props.match.params.id;
 
   const [value, setValue] = React.useState(0);
@@ -279,7 +279,7 @@ function SubmittedAssessmentList(props) {
     getOneAssessment(assessment_id);
     getStudents();
     getAllClass();
-    getAllSubjects("map");
+    getAllSubjects(user.unit, "map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

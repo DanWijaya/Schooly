@@ -251,7 +251,7 @@ class EditTask extends Component {
     const { id } = this.props.match.params;
     this.props.getOneTask(id);
     this.props.getAllClass();
-    this.props.getAllSubjects();
+    this.props.getAllSubjects(this.props.auth.user.unit);
     this.props.getFileTasks(id).then((res) => {
       this.setState({
         fileLampiran: res,

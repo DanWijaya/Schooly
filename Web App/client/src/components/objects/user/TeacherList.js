@@ -530,8 +530,8 @@ function TeacherList(props) {
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
   React.useEffect(() => {
-    // getAllSubjects("map");
-    getAllSubjects();
+    // getAllSubjects(user.unit, "map");
+    getAllSubjects(user.unit);
     // getAllClass("map");
     getAllClass();
     // getTeachers("map");

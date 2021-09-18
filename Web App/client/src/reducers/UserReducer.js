@@ -30,6 +30,12 @@ const initialState = {
   pending_admins: [],
   selectedUser: {},
   retrieved_users: new Map(),
+  all_roles : {
+    SUPERADMIN: "SuperAdmin",
+    ADMIN: "Admin",
+    STUDENT: "Student",
+    TEACHER: "Teacher",
+  }
   // dropbox_token: null,
 };
 

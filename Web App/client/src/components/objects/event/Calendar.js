@@ -2765,7 +2765,7 @@ function Calendar(props) {
     getStudents();
     getTeachers();
     getAllTaskFilesByUser(user._id);
-    getAllSubjects("map");
+    getAllSubjects(user.unit, "map");
 
     if (role === "Teacher") {
       setClassCheckboxState(

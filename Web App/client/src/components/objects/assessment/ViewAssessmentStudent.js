@@ -463,7 +463,7 @@ function ViewAssessmentStudent(props) {
         setShowClosedMessage(true);
       }
     });
-    getAllSubjects("map");
+    getAllSubjects(user.unit, "map");
     getAllClass("map");
     getFileAssessment(id).then((result) => setLampiranUrls(result));
 

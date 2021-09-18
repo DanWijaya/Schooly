@@ -248,7 +248,7 @@ class EditMaterial extends Component {
 
     getAllClass();
     getOneMaterial(id);
-    getAllSubjects();
+    getAllSubjects(this.props.auth.user.unit);
     getFileMaterials(id).then((result) => {
       this.setState({ fileLampiran: result, originalFileLampiran: result });
     });

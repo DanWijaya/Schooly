@@ -409,7 +409,7 @@ class CreateTask extends Component {
   componentDidMount() {
     const { getAllClass, getAllSubjects, refreshTeacher } = this.props;
     getAllClass();
-    getAllSubjects();
+    getAllSubjects(this.props.auth.user.unit);
     refreshTeacher(this.props.auth.user._id);
   }
 

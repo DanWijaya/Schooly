@@ -217,7 +217,7 @@ function ViewAssessmentTeacher(props) {
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
   const { type } = selectedAssessments;
-  const { all_students } = props.auth;
+  const { all_students , user} = props.auth;
 
   // cek note di model assessment (Assessment.js) untuk melihat aturan-aturan tambahan yang digunakan
 
@@ -301,7 +301,7 @@ function ViewAssessmentTeacher(props) {
   React.useEffect(() => {
     getOneAssessment(assessment_id);
     getAllClass("map");
-    getAllSubjects("map");
+    getAllSubjects(user.unit, "map");
     getStudents();
 
     if (location.state) {

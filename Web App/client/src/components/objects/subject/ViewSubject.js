@@ -510,7 +510,7 @@ function ViewSubject(props) {
     setCurrentClass(user.kelas);
     getAllTask();
     getAllTaskFilesByUser(user._id);
-    getAllSubjects("map");
+    getAllSubjects(user.unit, "map");
     getAllAssessments();
     getTeachers("map");
     // eslint-disable-next-line react-hooks/exhaustive-deps

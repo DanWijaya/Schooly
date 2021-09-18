@@ -345,6 +345,7 @@ class CreateAssessment extends Component {
     this.setState({ radioSnackbarOpen: false });
   };
 
+
   onSubmit = (e, id) => {
     e.preventDefault();
     let formData = new FormData();
@@ -1178,7 +1179,7 @@ class CreateAssessment extends Component {
 
     handleSideDrawerExist(false);
     getAllClass();
-    getAllSubjects();
+    getAllSubjects(this.props.auth.user.unit);
     refreshTeacher(this.props.auth.user._id);
     if (this.inputHeightRef.current && this.customHeightRef.current) {
       this.setState({
