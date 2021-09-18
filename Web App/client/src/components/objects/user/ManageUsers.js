@@ -215,21 +215,19 @@ function ManageUsersToolbar(props) {
     <Toolbar className={classes.toolbar}>
       <Grid container>
         <Grid item xs container alignItems="center">
-          <Checkbox
+          {/*<Checkbox
             color="primary"
-          />
+          />*/}
+
           {
-            rowCount === 0 ?
-              <IconButton size="small" onClick={() => selectAllData(role)} disabled={rowCount === 0} className={classes.checkboxIconPrimary}>
-                <CheckBoxOutlineBlankIcon />
-              </IconButton>
-              :
+            //rowCount === 0 ?
+            //   <IconButton size="small" onClick={() => selectAllData(role)} disabled={rowCount === 0}>
+            //     <CheckBoxOutlineBlankIcon className={classes.checkboxIconPrimary} />
+            //   </IconButton>
+            //   :
               listCheckbox.length === 0 ? (
                 <IconButton size="small" onClick={() => selectAllData(role)}>
-                  <Checkbox
-                    icon={<CheckBoxOutlineBlankIcon htmlColor="grey" />}
-                    className={classes.checkboxIconPrimary}
-                  />
+                  <CheckBoxOutlineBlankIcon style={{ color: "grey" }} />
                 </IconButton>
               ) : listCheckbox.length === rowCount ? (
                 <IconButton size="small" onClick={() => deSelectAllData(role)}>

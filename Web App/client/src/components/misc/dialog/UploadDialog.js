@@ -4,6 +4,8 @@ import {
   Button,
   CircularProgress,
   Dialog,
+  DialogContent,
+  DialogTitle,
   Grid,
   Typography
 } from "@material-ui/core/";
@@ -12,17 +14,15 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "300px",
-    maxWidth: "100%",
-    minHeight: "175px",
-    padding: "15px",
+    maxWidth: "300px",
+    width: "100%",
   },
-  uploadSuccessIcon: {
+  successIcon: {
     color: "green",
     height: "45px",
     width: "45px",
   },
-  uploadFinishButton: {
+  finishButton: {
     width: "100%",
     marginTop: "10px",
     backgroundColor: theme.palette.success.main,
@@ -47,51 +47,47 @@ function UploadDialog(props) {
   } = props;
 
   return (
-    <Dialog open={openUploadDialog} onClose={handleCloseUploadDialog}>
-      <Grid
-        container
-        direction="column"
-        justify="space-between"
-        alignItems="center"
-        className={classes.root}
-      >
-        <Grid item>
-          <Typography variant="h6" align="center" gutterBottom>
-            {!success ? messageUploading : messageSuccess}
-          </Typography>
-        </Grid>
-        <Grid item>
-          {!success ? (
-            <CircularProgress />
-          ) : (
-            <CheckCircleIcon className={classes.uploadSuccessIcon} />
-          )}
-        </Grid>
-        <Grid item>
-          {!success ? (
-            <Typography variant="body2" align="center" gutterBottom>
-              <b>Mohon tunggu sebentar</b>
-            </Typography>
-          ) : !redirectLink ? (
-            <Button
-              variant="contained"
-              className={classes.uploadFinishButton}
-              onClick={handleCloseUploadDialog}
-            >
-              Selesai
-            </Button>
-          ) : (
-            <Link to={redirectLink}>
+    <Dialog
+      open={openUploadDialog}
+      onClose={handleCloseUploadDialog}
+      PaperProps={{ className: classes.root }}
+    >
+      <DialogTitle>
+        <Typography variant="h6" align="center">
+          {!success ? messageUploading : messageSuccess}
+        </Typography>
+      </DialogTitle>
+      <DialogContent>
+        <Grid container direction="column" alignItems="center" spacing={2}>
+          <Grid item>
+            {!success ? (
+              <CircularProgress />
+            ) : (
+              <CheckCircleIcon className={classes.successIcon} />
+            )}
+          </Grid>
+          <Grid item>
+            {!success ? (
+              <Typography variant="body2" align="center" gutterBottom>
+                Mohon untuk tetap berada di halaman ini.
+              </Typography>
+            ) : !redirectLink ? (
               <Button
-                variant="contained"
-                className={classes.uploadFinishButton}
+                className={classes.finishButton}
+                onClick={handleCloseUploadDialog}
               >
                 Selesai
               </Button>
-            </Link>
-          )}
+            ) : (
+              <Link to={redirectLink}>
+                <Button className={classes.finishButton}>
+                  Selesai
+                </Button>
+              </Link>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      </DialogContent>
     </Dialog>
   );
 }

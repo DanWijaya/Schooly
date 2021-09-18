@@ -43,7 +43,7 @@ function Tester(props) {
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Pengumuman"
+        itemType="tugas"
         itemName="bla bla bla"
       />
       <Button onClick={handleOpenUploadDialog}>
@@ -51,7 +51,7 @@ function Tester(props) {
       </Button>
       <UploadDialog
         openUploadDialog={openUploadDialog}
-        success={true}
+        success={false}
         messageUploading="Tugas sedang dikumpul"
         messageSuccess="Tugas telah dikumpul"
         handleCloseUploadDialog={handleCloseUploadDialog}
@@ -64,6 +64,7 @@ function Tester(props) {
         handleCloseSubmitDialog={handleCloseSubmitDialog}
         itemType="Ujian"
         itemName="Nigga"
+        loading={true}
         // onSubmit={onSubmit}
         messageLoading="Jawaban Anda sedang disimpan"
       />

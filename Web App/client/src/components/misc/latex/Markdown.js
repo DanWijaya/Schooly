@@ -4,10 +4,8 @@ import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 import RemarkMathPlugin from 'remark-math';
 
-const _mapProps = (props) => 
-
-{ console.log(props);
-    return ({
+const _mapProps = (props) => {
+  return ({
     ...props,
     escapeHtml: false,
     plugins: [
@@ -22,10 +20,9 @@ const _mapProps = (props) =>
 };
 
 const Markdown = (props) => {
-  console.log(props);
   return (
-  <ReactMarkdown {..._mapProps(props)} />
-)
+    <ReactMarkdown {..._mapProps(props)} />
+  )
 };
 
 export default Markdown;

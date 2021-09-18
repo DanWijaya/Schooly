@@ -1,42 +1,47 @@
 import React from "react";
-// import { Link } from "react-router-dom";
 import {
   Button,
+  CircularProgress,
   Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
   Typography,
-  CircularProgress,
 } from "@material-ui/core/";
-import { Cancel as CancelIcon } from "@material-ui/icons";
+import {
+  Cancel as CancelIcon,
+  Publish as PublishIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "300px",
-    maxWidth: "100%",
-    minHeight: "175px",
-    padding: "15px",
+    maxWidth: "300px",
+    width: "100%",
   },
-  dialogSubmitButton: {
-    width: "125px",
+  submitButton: {
+    maxWidth: "110px",
+    width: "100%",
+    border: `1px solid ${theme.palette.success.main}`,
     backgroundColor: theme.palette.success.main,
     color: "white",
-    border: `1px solid ${theme.palette.success.main}`,
     "&:focus, &:hover": {
+      border: `1px solid ${theme.palette.success.dark}`,
       backgroundColor: theme.palette.success.dark,
       color: "white",
-      border: `1px solid ${theme.palette.success.dark}`,
     },
   },
-  dialogCancelButton: {
-    width: "125px",
+  cancelButton: {
+    maxWidth: "110px",
+    width: "100%",
+    border: `1px solid ${theme.palette.error.main}`,
     backgroundColor: theme.palette.error.main,
     color: "white",
-    border: `1px solid ${theme.palette.error.main}`,
     "&:focus, &:hover": {
+      border: `1px solid ${theme.palette.error.dark}`,
       backgroundColor: theme.palette.error.dark,
       color: "white",
-      border: `1px solid ${theme.palette.error.dark}`,
     },
   },
 }));
@@ -60,69 +65,63 @@ function SubmitDialog(props) {
   }
 
   return (
-    <Dialog open={openSubmitDialog} onClose={handleCloseSubmitDialog}>
+    <Dialog
+      open={openSubmitDialog}
+      onClose={handleCloseSubmitDialog}
+      PaperProps={{ className: classes.root }}
+    >
       {loading ? (
-        <Grid
-          container
-          direction="column"
-          justify="space-between"
-          alignItems="center"
-          className={classes.root}
-        >
-          <Grid item>
-            <Typography variant="h6" align="center" gutterBottom>
+        <div>
+          <DialogTitle>
+            <Typography variant="h6" align="center">
               {messageLoading}
             </Typography>
-          </Grid>
-          <Grid item>
-            <CircularProgress />
-          </Grid>
-          <Grid item>
-            <Typography variant="body2" align="center" gutterBottom>
-              <b>Mohon tunggu sebentar</b>
-            </Typography>
-          </Grid>
-        </Grid>
+          </DialogTitle>
+          <DialogContent>
+            <Grid container direction="column" alignItems="center" spacing={2}>
+              <Grid item>
+                <CircularProgress />
+              </Grid>
+              <Grid item>
+                <Typography variant="body2" align="center" gutterBottom>
+                  Mohon untuk tetap berada di halaman ini.
+                </Typography>
+              </Grid>
+            </Grid>
+          </DialogContent>
+        </div>
       ) : (
-        <Grid
-          container
-          direction="column"
-          justify="space-between"
-          alignItems="center"
-          className={classes.root}
-        >
-          <Grid item>
-            <Typography variant="h5" align="center" gutterBottom>
+        <div>
+          <DialogTitle>
+            <Typography variant="h6">
               Kumpul {itemType} berikut?
             </Typography>
-          </Grid>
-          <Grid item>
-            <Typography align="center" gutterBottom>
-              <b>{itemName}</b>
+          </DialogTitle>
+          <DialogContent>
+            <Typography noWrap gutterBottom>
+              {itemName}
             </Typography>
-          </Grid>
-          <Grid container spacing={2} justify="center" alignItems="center">
-            <Grid item>
-              <Button
-                variant="contained"
-                onClick={handleClick}
-                className={classes.dialogSubmitButton}
-              >
-                Kumpul
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                onClick={handleCloseSubmitDialog}
-                startIcon={<CancelIcon />}
-                className={classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
+            <Typography variant="body2" color="textSecondary" paragraph>
+              Pastikan semua nomor sudah terjawab.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={handleCloseSubmitDialog}
+              startIcon={<CancelIcon />}
+              className={classes.cancelButton}
+            >
+              Batal
+            </Button>
+            <Button
+              onClick={handleClick}
+              startIcon={<PublishIcon />}
+              className={classes.submitButton}
+            >
+              Kumpul
+            </Button>
+          </DialogActions>
+        </div>
       )}
     </Dialog>
   );
