@@ -370,16 +370,13 @@ export const bulkRegisterUsers = (data) => {
   )
 }
 
-export const getRegisterErrors = (userData, pageNum) => (dispatch) => {
+export const validateRegister = (userData, pageNum) => {
   return axios
-    .post(`api/users/getregistererrors/${pageNum}`, userData)
+    .post(`api/users/validateregister/${pageNum}`, userData)
     .then ((res) => {
-      dispatch({
-        type: GET_REGISTER_ERRORS,
-        payload: res.data,
-      });
+      return res.data;
     })
     .catch((err) => {
-      console.log(err);
+      throw err.response.data;
     });
 }

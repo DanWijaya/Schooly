@@ -21,17 +21,17 @@ const { ObjectId } = require("mongodb");
 const Validator = require("validator");
 const isEmpty = require("is-empty");
 
-router.post("/getregistererrors/:pageNum", (req, res) => {
+router.post("/validateregister/:pageNum", (req, res) => {
   const pageNum = req.params.pageNum;
   if (pageNum == 1) {
     const { errors1, isValid1 } = validateRegisterInput1(req.body);
     if (isValid1) return res.status(200).json({});
-    return res.status(200).json(errors1);
+    return res.status(400).json(errors1); // return the result needed as error
   }
   if (pageNum == 2) {
     const { errors2, isValid2 } = validateRegisterInput2(req.body);
     if (isValid2) return res.status(200).json({});
-    return res.status(200).json(errors2);
+    return res.status(400).json(errors2);
   }
   return res.status(400);
 });

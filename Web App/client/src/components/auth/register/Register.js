@@ -6,7 +6,7 @@ import classnames from "classnames";
 import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import { clearErrors } from "../../../actions/ErrorActions";
-import { registerUser, getRegisterErrors } from "../../../actions/UserActions";
+import { registerUser, validateRegister } from "../../../actions/UserActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import registerStepperArt from "./RegisterStepperArt.png";
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -185,7 +185,6 @@ class Register extends Component {
     };
 
     if (this.state.submitButtonActive) {
-      console.log("clicked on submit");
       this.props
         .registerUser(newUser)
         .then((res) => {
@@ -489,8 +488,11 @@ class Register extends Component {
           };
         }
 
-        this.props.getRegisterErrors(userData, this.state.activeStep+1).then(() => {
-          this.setState({errors: this.props.auth.errors})
+        // get errors on current page
+        validateRegister(userData, this.state.activeStep+1).catch((err) => { this.setState({errors: err}) });
+        // if no error exists, proceed to next page
+        validateRegister(userData, this.state.activeStep+1).then(() => {
+          this.setState({ errors: {} });
           if (Object.keys(this.state.errors).length === 0){
             this.setState((prevState) => ({
               activeStep: prevState.activeStep + 1,
@@ -501,7 +503,6 @@ class Register extends Component {
           if (this.state.activeStep === 2) {
             this.setState({ submitButtonActive: true });
           }
-      
         });
         
       document.body.scrollTop = 0;
@@ -665,6 +666,5 @@ export default withRouter(
   connect(mapStateToProps, {
     registerUser,
     clearErrors,
-    getRegisterErrors,
   })(withStyles(styles)(Register))
 );
