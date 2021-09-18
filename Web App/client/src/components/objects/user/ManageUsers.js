@@ -1377,7 +1377,6 @@ function ManageUsers(props) {
         indicatorColor="primary"
         textColor="primary"
         onChange={handleTabs}
-        variant="fullWidth"
         style={{
           borderBottom: "1px solid #E0E0E0",
         }}

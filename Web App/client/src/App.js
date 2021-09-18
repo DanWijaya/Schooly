@@ -175,7 +175,7 @@ class App extends Component {
       <div>
         <Provider store={store}>
           <ThemeProvider theme={Styles}>
-            <CssBaseline />
+            {/*<CssBaseline />*/}
             <Router>
               <ScrollToTop />
               <div style={{ display: "flex" }}>

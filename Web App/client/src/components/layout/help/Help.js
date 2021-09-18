@@ -1053,7 +1053,7 @@ function Help(props) {
                     </Typography>
                     <Typography>
                       Kuis dan Ujian adalah evaluasi berkala terhadap pemahaman
-                      murid terhadap pembelajaran yang telah diajarkan. Pada
+                      murid terhadap pembelajaran yang telah diajarkan. Di
                       Schooly, tersedia 4 jenis soal pada fitur kuis dan ujian ini
                       yaitu pilihan ganda, kotak centang, isilah, dan uraian.
                     </Typography>

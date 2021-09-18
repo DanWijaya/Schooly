@@ -12,7 +12,7 @@ import {
   Announcement as AnnouncementIcon,
   Assessment as AssessmentIcon,
   Assignment as AssignmentIcon,
-  Dashboard as DashboardIcon,
+  DashboardOutlined as DashboardIcon,
   EventNote as EventNoteIcon,
   LibraryBooks as LibraryBooksIcon,
   MenuBook as MenuBookIcon,
