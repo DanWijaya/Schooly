@@ -79,7 +79,7 @@ import TeacherList from "./components/objects/admin-only/TeacherList";
 //Prototypes
 import CSV from "./prototypes/contoh-tugas/CSV";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
-import Tester from "./prototypes/Tester";
+import Tester from "./prototypes/Tester1";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
