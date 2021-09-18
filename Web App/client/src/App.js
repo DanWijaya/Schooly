@@ -81,7 +81,6 @@ import TeacherList from "./components/objects/user/TeacherList";
 // Settings
 import Setting from "./components/objects/setting/Setting";
 //Prototypes
-import Tester from "./prototypes/Tester";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
 
 // Check for token to keep user logged in
@@ -570,11 +569,6 @@ class App extends Component {
                         component={Setting}
                       />
                       {/*  Route Prototypes */}
-                      <Route
-                        exact
-                        path="/tester"
-                        component={Tester}
-                      />
                       <PrivateRoute
                         exact
                         access={["Admin"]}
