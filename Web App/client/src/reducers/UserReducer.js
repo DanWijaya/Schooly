@@ -9,6 +9,7 @@ import {
   GET_STUDENTS_BY_CLASS,
   GET_PENDING_STUDENTS,
   GET_PENDING_TEACHERS,
+  GET_REGISTER_ERRORS,
   SET_DROPBOX_TOKEN,
 } from "../actions/Types";
 
@@ -27,6 +28,7 @@ const initialState = {
   selectedUser: {},
   retrieved_users: new Map(),
   dropbox_token: null,
+  errors: [],
 };
 
 export default function (state = initialState, action) {
@@ -88,6 +90,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         pending_teachers: action.payload,
+      };
+    case GET_REGISTER_ERRORS:
+      return {
+        ...state,
+        errors: action.payload,
       };
     default:
       return state;

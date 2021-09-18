@@ -15,7 +15,8 @@ import {
   GET_PENDING_STUDENTS,
   GET_PENDING_TEACHERS,
   // SET_DROPBOX_TOKEN,
-  GET_SUCCESS_RESPONSE
+  GET_SUCCESS_RESPONSE,
+  GET_REGISTER_ERRORS
 } from "./Types";
 
 // Register User
@@ -367,4 +368,18 @@ export const bulkRegisterUsers = (data) => {
         return res;
       })
   )
+}
+
+export const getRegisterErrors = (userData, pageNum) => (dispatch) => {
+  return axios
+    .post(`api/users/getregistererrors/${pageNum}`, userData)
+    .then ((res) => {
+      dispatch({
+        type: GET_REGISTER_ERRORS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }

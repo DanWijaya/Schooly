@@ -7,7 +7,7 @@ const keys = require("../../config/keys");
 // const passport = require("passport");
 
 // Load input validation
-const validateRegisterInput = require("../../validation/Register");
+const { validateRegisterInput1, validateRegisterInput2 } = require("../../validation/Register");
 const validateLoginInput = require("../../validation/Login");
 // const validateUserDataInput = require("../../validation/UserData")
 
@@ -21,6 +21,21 @@ const { ObjectId } = require("mongodb");
 const Validator = require("validator");
 const isEmpty = require("is-empty");
 
+router.post("/getregistererrors/:pageNum", (req, res) => {
+  const pageNum = req.params.pageNum;
+  if (pageNum == 1) {
+    const { errors1, isValid1 } = validateRegisterInput1(req.body);
+    if (isValid1) return res.status(200).json({});
+    return res.status(200).json(errors1);
+  }
+  if (pageNum == 2) {
+    const { errors2, isValid2 } = validateRegisterInput2(req.body);
+    if (isValid2) return res.status(200).json({});
+    return res.status(200).json(errors2);
+  }
+  return res.status(400);
+});
+
 // @route POST api/users/register
 // @desc Register user
 // @access Public
@@ -29,10 +44,17 @@ const isEmpty = require("is-empty");
 
 router.post("/register", (req, res) => {
   // Form validation
-  const { errors, isValid } = validateRegisterInput(req.body);
+  const { errors1, isValid1 } = validateRegisterInput1(req.body);
+  const { errors2, isValid2 } = validateRegisterInput2(req.body);
+
+  console.log(errors1);
+  console.log(errors2);
+  console.log(isValid1);
+  console.log(isValid2);
+
   // Check validation
-  if (!isValid) {
-    return res.status(400).json(errors);
+  if (!isValid1 || !isValid2) {
+    return res.status(400).json({...errors1, ...errors2});
   }
   // res stands for response
   // req.body.name
