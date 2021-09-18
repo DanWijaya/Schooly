@@ -79,11 +79,9 @@ const Styles = responsiveFontSizes(
           },
         },
       },
-      MuiTab: {
-        root: {
-          "&:focus": {
-            backgroundColor: "transparent",
-          },
+      MuiListItemIcon: {
+        alignItemsFlexStart: {
+          marginTop: "4px",
         },
       },
       MuiPickersDay: {
@@ -93,9 +91,11 @@ const Styles = responsiveFontSizes(
           },
         },
       },
-      PrivateNotchedOutline: {
-        legendLabelled: {
-          maxWidth: "none",
+      MuiTab: {
+        root: {
+          "&:focus": {
+            backgroundColor: "transparent",
+          },
         },
       },
       MuiFilledInput: {
@@ -116,7 +116,12 @@ const Styles = responsiveFontSizes(
           WebkitBoxShadow: "0 0 0 1000px white inset!important",
           width: "0!important"
         },
-      }
+      },
+      PrivateNotchedOutline: {
+        legendLabelled: {
+          maxWidth: "none",
+        },
+      },
     },
     props: {
       MuiTab: {

@@ -6,50 +6,49 @@ import "date-fns";
 import lokal from "date-fns/locale/id";
 import { updateUserData } from "../../../../actions/UserActions";
 import { clearErrors } from "../../../../actions/ErrorActions";
-import ProfileDataField from "./ProfileDataField";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import FormControl from "@material-ui/core/FormControl";
-import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
-import IconButton from "@material-ui/core/IconButton";
-import InputLabel from "@material-ui/core/InputLabel";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
+import DataField from "../DataField";
+import {
+  Button,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  IconButton,
+  InputLabel,
+  List,
+  MenuItem,
+  Select,
+  Tab,
+  Tabs,
+  Typography,
+  useMediaQuery
+} from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import {
+  AccountBalance as AccountBalanceIcon,
+  Cake as CakeIcon,
+  Close as CloseIcon,
+  ColorLens as ColorLensIcon,
+  Contacts as ContactsIcon,
+  ContactMail as ContactMailIcon,
+  ContactPhone as ContactPhoneIcon,
+  Edit as EditIcon,
+  EmojiPeople as EmojiPeopleIcon,
+  Email as EmailIcon,
+  Home as HomeIcon,
+  Person as PersonIcon,
+  Phone as PhoneIcon,
+  SportsEsports as SportsEsportsIcon,
+  Wc as WcIcon,
+  Work as WorkIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import CakeIcon from "@material-ui/icons/Cake";
-import CloseIcon from "@material-ui/icons/Close";
-import ColorLensIcon from "@material-ui/icons/ColorLens";
-import ContactsIcon from "@material-ui/icons/Contacts";
-import ContactMailIcon from "@material-ui/icons/ContactMail";
-import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
-import EditIcon from "@material-ui/icons/Edit";
-import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
-import EmailIcon from "@material-ui/icons/Email";
-import HomeIcon from "@material-ui/icons/Home";
-import PersonIcon from "@material-ui/icons/Person";
-import PhoneIcon from "@material-ui/icons/Phone";
-import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
-import WcIcon from "@material-ui/icons/Wc";
-import WorkIcon from "@material-ui/icons/Work";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    [theme.breakpoints.down("xs")]: {
+    "@media (max-width: 500px)": {
       maxWidth: "100%",
     },
   },
@@ -113,7 +112,9 @@ function TabIndex(index) {
 function EditProfileData(props) {
   const classes = useStyles();
   const { user } = props.auth;
-  const { updateUserData, clearErrors, errors, handleOpenAlert, fullScreen } = props;
+  const { updateUserData, clearErrors, errors, handleOpenAlert} = props;
+
+  const fullScreen = useMediaQuery("(max-width:500px)");
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -197,7 +198,7 @@ function EditProfileData(props) {
       >
         Sunting Profil
       </Button>
-      <Dialog open={open} onClose={handleClose} fullWidth fullScreen={fullScreen}>
+      <Dialog fullWidth open={open} onClose={handleClose} fullScreen={fullScreen}>
         <div className={classes.root}>
           <DialogActions>
             <IconButton size="small" onClick={handleClose}>
@@ -251,7 +252,7 @@ function EditProfileData(props) {
               </Tabs>
               <TabPanel value={value} index={0}>
                 <List>
-                  <ProfileDataField
+                  <DataField
                     icon={<PersonIcon />}
                     iconStyle={classes.dataIcon}
                     type="Nama"
@@ -260,7 +261,7 @@ function EditProfileData(props) {
                     id="nama"
                     onChange={handleChangeDataProfil}
                   />
-                  <ProfileDataField
+                  <DataField
                     icon={<CakeIcon />}
                     iconStyle={classes.dataIcon}
                     type="Tanggal Lahir"
@@ -292,7 +293,7 @@ function EditProfileData(props) {
                       </div>
                     }
                   />
-                  <ProfileDataField
+                  <DataField
                     icon={<WcIcon />}
                     iconStyle={classes.dataIcon}
                     type="Jenis Kelamin"
@@ -318,7 +319,7 @@ function EditProfileData(props) {
                       </FormControl>
                     }
                   />
-                  {/*<ProfileDataField
+                  {/*<DataField
                     icon={<SchoolIcon />}
                     iconStyle={classes.dataIcon}
                     type="Sekolah"
@@ -331,7 +332,7 @@ function EditProfileData(props) {
               </TabPanel>
               <TabPanel value={value} index={1}>
                 <List>
-                  <ProfileDataField
+                  <DataField
                     icon={<EmailIcon />}
                     iconStyle={classes.dataIcon}
                     type="Email"
@@ -341,7 +342,7 @@ function EditProfileData(props) {
                     id="email"
                     onChange={handleChangeDataProfil}
                   />
-                  <ProfileDataField
+                  <DataField
                     icon={<PhoneIcon />}
                     iconStyle={classes.dataIcon}
                     type="Nomor Telepon"
@@ -350,7 +351,7 @@ function EditProfileData(props) {
                     id="no_telp"
                     onChange={handleChangeDataProfil}
                   />
-                  <ProfileDataField
+                  <DataField
                     icon={<ContactPhoneIcon />}
                     iconStyle={classes.dataIcon}
                     type="Nomor Telepon Darurat"
@@ -359,7 +360,7 @@ function EditProfileData(props) {
                     id="no_telp_darurat"
                     onChange={handleChangeDataProfil}
                   />
-                  <ProfileDataField
+                  <DataField
                     icon={<HomeIcon />}
                     iconStyle={classes.dataIcon}
                     type="Alamat"
@@ -373,7 +374,7 @@ function EditProfileData(props) {
               {user.role === "Student" ? (
                 <TabPanel value={value} index={2}>
                   <List>
-                    <ProfileDataField
+                    <DataField
                       icon={<SportsEsportsIcon />}
                       iconStyle={classes.dataIcon}
                       type="Hobi dan Minat"
@@ -382,7 +383,7 @@ function EditProfileData(props) {
                       id="hobi_minat"
                       onChange={handleChangeDataProfil}
                     />
-                    <ProfileDataField
+                    <DataField
                       icon={<ColorLensIcon />}
                       iconStyle={classes.dataIcon}
                       type="Keterampilan Non-Akademik"
@@ -391,7 +392,7 @@ function EditProfileData(props) {
                       id="ket_non_teknis"
                       onChange={handleChangeDataProfil}
                     />
-                    <ProfileDataField
+                    <DataField
                       icon={<WorkIcon />}
                       iconStyle={classes.dataIcon}
                       type="Cita-Cita"
@@ -400,7 +401,7 @@ function EditProfileData(props) {
                       id="cita_cita"
                       onChange={handleChangeDataProfil}
                     />
-                    <ProfileDataField
+                    <DataField
                       icon={<AccountBalanceIcon />}
                       iconStyle={classes.dataIcon}
                       type="Perguruan Tinggi Impian"

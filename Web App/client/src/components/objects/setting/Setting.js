@@ -1,32 +1,26 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import {
-  getSetting,
-  createSetting,
-  editSetting,
-} from "../../../actions/SettingActions";
+import { getSetting, createSetting, editSetting } from "../../../actions/SettingActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import {
-  AppBar,
-  Grid,
-  Paper,
-  Typography,
-  Button,
-  IconButton,
-  Drawer,
-  ListItem,
-  ListItemText,
-  Divider,
-  TextField,
-  InputAdornment,
-  Snackbar,
-  Hidden,
-  useMediaQuery,
-} from "@material-ui/core/";
+import AppBar from "@material-ui/core/AppBar";
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
+import Drawer from "@material-ui/core/Drawer";
+import Grid from "@material-ui/core/Grid";
+import Hidden from "@material-ui/core/Hidden";
+import IconButton from "@material-ui/core/IconButton";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import Paper from "@material-ui/core/Paper";
+import Snackbar from "@material-ui/core/Snackbar";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import { useMediaQuery } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 const styles = (theme) => ({
   root: {
@@ -126,7 +120,6 @@ class FileSetting extends Component {
   }
 }
 
-// *** MAIN PAGE ***
 class Setting extends Component {
   constructor(){
     super();
@@ -134,14 +127,11 @@ class Setting extends Component {
       isChanged: false,
       isSnackBarOpen: false,
       isBackDialogOpen: false,
-      settingView: "file", // when in mobile set to "mobile" thus will view all page at once
+      settingView: "file", // When in mobile set to "mobile" thus will view all page at once
       fileUploadLimit: 0,
     };
   }
 
-  // isMobileView = this.props.mediaQuery("(max-width:960px)");
-
-  // *** STATE SETTER ***
   setIsChanged = (newState) => {
     this.setState({ isChanged: newState });
   }
@@ -177,7 +167,7 @@ class Setting extends Component {
     handleFooter(true);
   }
 
-  // to save every changes
+  // To save every changes
   commitSave = () => {
     const { editSetting } = this.props;
     editSetting(`upload_limit=${this.state.fileUploadLimit}`).then(
@@ -186,15 +176,15 @@ class Setting extends Component {
     this.setIsChanged(false);
   }
 
-  // back button
+  // Back button
   goBack = () => {
     if (this.state.isChanged) this.setIsBackDialogOpen(true);
     else this.props.history.goBack();
   }
 
   render(){
-    console.log(this.props);
     const { classes } = this.props;
+
     return (
       <div className={classes.root}>
         <AppBar position="fixed" className={classes.appBar}>
@@ -233,20 +223,18 @@ class Setting extends Component {
         </Hidden>
         <div className={classes.settingContainer}>
           <div className={classes.toolbar}/>
-            {!this.props.isMobileView ? 
-              // *** DESKTOP VIEW ***
+            {!this.props.isMobileView ?
               (
-                // FILE SETTING
                 (this.state.settingView == "file") ?
                 <FileSetting
                   classes = {classes}
                   fileUploadLimit = {this.state.fileUploadLimit}
                   setIsChanged = {this.setIsChanged}
                   setfileUploadLimit = {this.setfileUploadLimit}
-                /> 
+                />
                 : null
               )
-            :  // *** MOBILE VIEW ***
+            :
               (
                 <div>
                   <FileSetting
@@ -271,7 +259,7 @@ class Setting extends Component {
             severity="success"
             onClose={() => this.setIsSnackBarOpen(false)}
           >
-            Perubahan Setting berhasil!
+            Pengaturan disimpan!
           </MuiAlert>
         </Snackbar>
         <DeleteDialog
@@ -298,4 +286,4 @@ export default withRouter(connect(mapStateToProps, {
   getSetting,
   createSetting,
   editSetting,
-})(withStyles(styles)(withMediaQuery('(max-width:960px)')(Setting))));
+})(withStyles(styles)(withMediaQuery("(max-width:960px)")(Setting))));

@@ -1,19 +1,21 @@
 import React from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import TextField from "@material-ui/core/TextField";
+import {
+  Avatar,
+  Grid,
+  Hidden,
+  ListItem,
+  ListItemAvatar,
+  TextField
+} from "@material-ui/core";
 
-function ProfileDataField(props) {
+function DataField(props) {
   const { icon, iconStyle, isTextField, nonTextFieldContent,
     id, type, onChange, value, errors } = props;
 
   return (
     <ListItem>
-      <Grid container alignItems="center">
-        <Grid item sm={2}>
+      <Grid container>
+        <Grid item>
           <Hidden xsDown>
             <ListItemAvatar>
               <Avatar className={iconStyle}>
@@ -22,7 +24,7 @@ function ProfileDataField(props) {
             </ListItemAvatar>
           </Hidden>
         </Grid>
-        <Grid item xs={12} sm={10}>
+        <Grid item xs>
           {isTextField ? (
             <TextField
               fullWidth
@@ -43,4 +45,4 @@ function ProfileDataField(props) {
   );
 }
 
-export default ProfileDataField;
+export default DataField;

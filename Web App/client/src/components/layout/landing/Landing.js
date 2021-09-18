@@ -4,28 +4,32 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import schoolyIntroduction from "./SchoolyIntroduction.png";
 import schoolyAccess from "./SchoolyAccess.png";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemText from "@material-ui/core/ListItemText";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import {
+  Avatar,
+  Button,
+  Grid,
+  Hidden,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Typography
+} from "@material-ui/core";
+import {
+  Assignment as AssignmentIcon,
+  Announcement as AnnouncementIcon,
+  Assessment as AssessmentIcon,
+  EventNote as EventNoteIcon,
+  Face as FaceIcon,
+  LooksOne as LooksOneIcon,
+  LooksTwo as LooksTwoIcon,
+  Looks3 as Looks3Icon,
+  Mail as MailIcon,
+  MenuBook as MenuBookIcon,
+  QuestionAnswer as QuestionAnswerIcon
+} from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import AnnouncementIcon from "@material-ui/icons/Announcement";
-import AssessmentIcon from "@material-ui/icons/Assessment";
-import EventNoteIcon from "@material-ui/icons/EventNote";
-import FaceIcon from "@material-ui/icons/Face";
-import LooksOneIcon from "@material-ui/icons/LooksOne";
-import LooksTwoIcon from "@material-ui/icons/LooksTwo";
-import Looks3Icon from "@material-ui/icons/Looks3";
-import MailIcon from "@material-ui/icons/Mail";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
-import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 import { AiFillNotification } from "react-icons/ai";
 import { BsClipboardData } from "react-icons/bs";
 import { FaChalkboardTeacher, FaSchool, FaUserCog } from "react-icons/fa";

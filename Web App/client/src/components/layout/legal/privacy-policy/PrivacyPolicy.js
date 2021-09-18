@@ -1,14 +1,16 @@
 import React from "react";
 import privacyPolicyArt from "./PrivacyPolicyArt.png";
 import ScrollToTopButton from "../../../misc/scroll-to-top/ScrollToTopButton";
-import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Typography from "@material-ui/core/Typography";
+import {
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography
+} from "@material-ui/core";
+import { KeyboardArrowRight as KeyboardArrowRightIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   privacyPolicyArt: {
     maxHeight: "225px",
     [theme.breakpoints.down("md")]: {
-      maxHeight: "200px",
+      width: "100%",
     },
   },
   privacyPolicyTitleText: {
@@ -133,42 +135,42 @@ function PrivacyPolicy(props) {
             <b>Daftar Isi</b>
           </Typography>
           <List>
-            <ListItem button component="a" href="#bagaimana-informasi-anda-digunakan">
+            <ListItem alignItems="flex-start" button component="a" href="#bagaimana-informasi-anda-digunakan">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Bagaimana Informasi Anda Digunakan" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#vendor-mitra-dan-jenis-pengungkapan-lainnya">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#vendor-mitra-dan-jenis-pengungkapan-lainnya">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Vendor, Mitra dan Jenis Pengungkapan Lainnya" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#keterlibatan-klien-dan-pemasaran">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#keterlibatan-klien-dan-pemasaran">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Keterlibatan Klien dan Pemasaran" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#keamanan">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#keamanan">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Keamanan" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#hak-anda">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#hak-anda">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Hak Anda" />
             </ListItem>
-            <Divider variant="middle" />
-            <ListItem button component="a" href="#hubungi-kami">
+            <Divider variant="inset" />
+            <ListItem alignItems="flex-start" button component="a" href="#hubungi-kami">
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>

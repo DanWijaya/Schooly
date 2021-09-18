@@ -2,28 +2,33 @@ import React from "react";
 import { connect } from "react-redux";
 import { uploadFileAvatar, getFileAvatar } from "../../../../actions/files/FileAvatarActions";
 import defaultAvatar from "./DefaultAvatar.svg";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Fab from "@material-ui/core/Fab";
-import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
+import {
+  Avatar,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Fab,
+  Grid,
+  Hidden,
+  IconButton,
+  Typography,
+  useMediaQuery
+} from "@material-ui/core";
+import {
+  AddAPhoto as AddAPhotoIcon,
+  CameraAlt as CameraAltIcon,
+  Close as CloseIcon,
+  CloudUpload as CloudUploadIcon,
+  Person as PersonIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
-import CameraAltIcon from "@material-ui/icons/CameraAlt";
-import CloseIcon from "@material-ui/icons/Close";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import PersonIcon from "@material-ui/icons/Person";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "350px",
-    [theme.breakpoints.down("xs")]: {
+    maxWidth: "400px",
+    "@media (max-width: 400px)": {
       maxWidth: "100%",
     },
   },
@@ -73,8 +78,9 @@ function EditProfilePicture(props) {
     uploadFileAvatar,
     avatar,
     setFileLimitSnackbar,
-    fullScreen
   } = props;
+
+  const fullScreen = useMediaQuery("(max-width:400px)");
 
   const [openDialog, setOpenDialog] = React.useState(false);
   const handleOpenDialog = () => {
@@ -144,7 +150,7 @@ function EditProfilePicture(props) {
         return (
           <Avatar className={classes.avatar}>
             <img
-              alt="Profile"
+              alt="Profile Picture"
               onLoad={onImgLoad}
               src={avatar}
               // src={`/api/upload/avatar/${user.avatar}`}
@@ -157,7 +163,7 @@ function EditProfilePicture(props) {
         return (
           <Avatar className={classes.avatar}>
             <img
-              alt="Profile"
+              alt="Profile Picture"
               onLoad={onImgLoad}
               src={defaultAvatar}
               ref={uploadedImage}
@@ -170,7 +176,7 @@ function EditProfilePicture(props) {
       return (
         <Avatar className={classes.avatar}>
           <img
-            alt="Current Profile"
+            alt="Current Profile Picture"
             onLoad={onImgLoad}
             ref={uploadedImage}
             className={avatarImgClass}

@@ -4,17 +4,21 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import helpCenter from "./HelpCenter.png";
 import helpCenterSmall from "./HelpCenterSmall.png";
-import Avatar from "@material-ui/core/Avatar";
-import Divider from "@material-ui/core/Divider";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import {
+  Avatar,
+  Divider,
+  ExpansionPanel,
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+  Grid,
+  Paper,
+  Typography
+} from "@material-ui/core";
+import {
+  ContactSupport as ContactSupportIcon,
+  ExpandMore as ExpandMoreIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import ContactSupportIcon from "@material-ui/icons/ContactSupport";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -337,6 +341,78 @@ function Help(props) {
             <ExpansionPanel variant="outlined" defaultExpanded>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography variant="h5" color="primary">
+                  Kegiatan dan Kalender
+                </Typography>
+              </ExpansionPanelSummary>
+              <Divider />
+              <ExpansionPanelDetails>
+                <Grid container direction="column" spacing={4}>
+                  <Grid item>
+                    <Typography variant="h6" align="justify" gutterBottom>
+                      <b>Apa itu Kegiatan?</b>
+                    </Typography>
+                    <Typography align="justify">
+                      Kegiatan adalah pengingat untuk acara-acara sekolah yang ada
+                      baik akademik seperti minggu ujian ataupun non-akademik seperti
+                      perayaan hari tertentu yang dirangkum dalam bentuk kalender.
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h6" align="justify" gutterBottom>
+                      <b>Apa saja isi suatu Kegiatan?</b>
+                    </Typography>
+                    <Typography align="justify">
+                      Suatu kegiatan terdiri dari judul, lokasi, waktu pelaksanaan,
+                      pihak penerima, deskripsi, dan lampiran berkas.
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h6" align="justify" gutterBottom>
+                      <b>Hal apa saja yang diingatkan oleh Kalender?</b>
+                    </Typography>
+                    <Typography align="justify">
+                      Suatu kalender dapat mengingatkan Anda akan kegiatan, dan pekerjaan
+                      sekolah Anda seperti tugas, kuis, dan ujian.
+                    </Typography>
+                  </Grid>
+                  {user.role === "Student" ? null : user.role ==="Teacher" ? null
+                  : user.role === "Admin" ? (
+                    <Grid item>
+                      <Typography variant="h6" align="justify" gutterBottom>
+                        <b>
+                          Bagaimana cara membuat suatu kegiatan?
+                        </b>
+                      </Typography>
+                      <Typography align="justify">
+                        <ol className={classes.list}>
+                          <li>
+                            Buka <Link to="/kalender">halaman Kalender</Link>.
+                          </li>
+                          <li>
+                            Tekan tombol "Buat Kegiatan" dengan simbol "+" untuk membuat kegiatan.
+                          </li>
+                          <li>
+                            Masukkan judul, lokasi, waktu pelaksanaan, pihak penerima, deskripsi,
+                            dan lampiran berkas, jika sudah tekan tombol "Buat".
+                          </li>
+                        </ol>
+                      </Typography>
+                    </Grid>
+                  ) : (
+                    <Grid item>
+                      <Typography color="textSecondary">
+                        Silahkan masuk untuk mendapatkan bantuan lebih lanjut mengenai topik ini.
+                      </Typography>
+                    </Grid>
+                  )}
+                </Grid>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          </Grid>
+          <Grid item>
+            <ExpansionPanel variant="outlined" defaultExpanded>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h5" color="primary">
                   Mata Pelajaran
                 </Typography>
               </ExpansionPanelSummary>
@@ -351,7 +427,8 @@ function Help(props) {
                       Mata pelajaran adalah jenis ilmu pengetahuan yang diajarkan.
                     </Typography>
                   </Grid>
-                  {user.role === "Admin" ? (
+                  {user.role === "Student" ? null : user.role ==="Teacher" ? null
+                  : user.role === "Admin" ? (
                     <Grid item>
                       <Typography variant="h6" align="justify" gutterBottom>
                         <b>
@@ -976,7 +1053,7 @@ function Help(props) {
                     </Typography>
                     <Typography>
                       Kuis dan Ujian adalah evaluasi berkala terhadap pemahaman
-                      murid terhadap pembelajaran yang telah diajarkan. Pada
+                      murid terhadap pembelajaran yang telah diajarkan. Di
                       Schooly, tersedia 4 jenis soal pada fitur kuis dan ujian ini
                       yaitu pilihan ganda, kotak centang, isilah, dan uraian.
                     </Typography>

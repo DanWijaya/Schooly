@@ -1,5 +1,5 @@
-import Linkify from "react-linkify";
 import React from "react";
+import Linkify from "react-linkify";
 
 function CustomLinkify(props) {
   return (

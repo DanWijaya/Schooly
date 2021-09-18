@@ -1,4 +1,4 @@
-import StepConnector from "@material-ui/core/StepConnector";
+import { StepConnector } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const RegisterStepConnector = withStyles((theme) => ({

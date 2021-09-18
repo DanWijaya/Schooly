@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import problemEncounteredBackground from "./ProblemEncounteredBackground.svg";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
+import {
+  Button,
+  Typography
+} from "@material-ui/core";
+import { Email as EmailIcon } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
-import EmailIcon from "@material-ui/icons/Email";
 
 const styles = (theme) => ({
   root: {

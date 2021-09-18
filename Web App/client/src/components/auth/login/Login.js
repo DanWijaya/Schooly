@@ -8,18 +8,22 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import loginArtLeft from "./LoginArtLeft.png";
 import loginArtRight from "./LoginArtRight.png";
-import Button from "@material-ui/core/Button";
-import Divider from "@material-ui/core/Divider";
-import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
-import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Paper from "@material-ui/core/Paper";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
+import {
+  Button,
+  Divider,
+  Grid,
+  Hidden,
+  IconButton,
+  InputAdornment,
+  Paper,
+  TextField,
+  Typography
+} from "@material-ui/core";
+import {
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon
+} from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 const styles = (theme) => ({
   root: {
@@ -69,9 +73,6 @@ const styles = (theme) => ({
   toggleErrorShowPasswordButton: {
     color: theme.palette.error.main,
   },
-  disabledLink : {
-    pointerEvents: "none"
-  }
 });
 
 class Login extends Component {
@@ -106,7 +107,7 @@ class Login extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     // This static function belongs to the class as a whole thing, not as a instance of the class.
-    //  That's why there is no this keyword.
+    //  That"s why there is no this keyword.
     if (nextProps.auth.isAuthenticated)
       // nextProps.auth.isAuthenticated = kalau true,
       return { isAuthenticated: nextProps.auth.isAuthenticated };
@@ -119,7 +120,7 @@ class Login extends Component {
       this.state.isAuthenticated &&
       this.props.auth.isAuthenticated !== prevProps.auth.isAuthenticated
     ) {
-      // When students who haven't logged in open the assessment page,
+      // When students who haven"t logged in open the assessment page,
       // The page will be redirected to the assessment page after that student logged in.
       if (this.props.location.state && this.props.location.state.url) {
         window.location.href = `.${this.props.location.state.url}`;
@@ -292,7 +293,7 @@ class Login extends Component {
                 </Grid>
                 <Divider />
                 <Grid item container justify="space-around">
-                  <Link to="/akun/lupa-katasandi" className={classes.disabledLink}>Lupa kata sandi?</Link>
+                  <Link to="/akun/lupa-katasandi">Lupa kata sandi?</Link>
                     <Typography color="textSecondary">·</Typography>
                   <Link to="/daftar">Belum ada akun?</Link>
                 </Grid>

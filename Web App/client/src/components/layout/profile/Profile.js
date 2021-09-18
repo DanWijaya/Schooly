@@ -6,35 +6,39 @@ import "moment/locale/id";
 import { uploadFileAvatar, getFileAvatar } from "../../../actions/files/FileAvatarActions";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import dataContacts from "./DataContacts.png";
-import dataJob from "./DataJob.png";
-import dataPrivate from "./DataPrivate.png";
-import ProfileDataItem from "./ProfileDataItem";
+import informationContacts from "./InformationContacts.png";
+import informationJob from "./InformationJob.png";
+import informationPrivate from "./InformationPrivate.png";
 import EditPassword from "./edit-password/EditPassword";
 import EditProfileData from "./edit-profile-data/EditProfileData";
 import EditProfilePicture from "./edit-profile-picture/EditProfilePicture";
-import Avatar from "@material-ui/core/Avatar";
-import Badge from "@material-ui/core/Badge";
-import Divider from "@material-ui/core/Divider";
-import Grid from "@material-ui/core/Grid";
-import List from "@material-ui/core/List";
-import Paper from "@material-ui/core/Paper";
-import Snackbar from "@material-ui/core/Snackbar";
-import Typography from "@material-ui/core/Typography";
+import DataItem from "./DataItem";
+import {
+  Avatar,
+  Badge,
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  Paper,
+  Snackbar,
+  Typography
+} from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
-import { useMediaQuery } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import CakeIcon from "@material-ui/icons/Cake";
-import ColorLensIcon from "@material-ui/icons/ColorLens";
-import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
-import EmailIcon from "@material-ui/icons/Email";
-import HomeIcon from "@material-ui/icons/Home";
-import PersonIcon from "@material-ui/icons/Person";
-import PhoneIcon from "@material-ui/icons/Phone";
-import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
-import WorkIcon from "@material-ui/icons/Work";
-import WcIcon from "@material-ui/icons/Wc";
+import {
+  AccountBalance as AccountBalanceIcon,
+  Cake as CakeIcon,
+  ColorLens as ColorLensIcon,
+  ContactPhone as ContactPhoneIcon,
+  Email as EmailIcon,
+  Home as HomeIcon,
+  Person as PersonIcon,
+  Phone as PhoneIcon,
+  SportsEsports as SportsEsportsIcon,
+  Wc as WcIcon,
+  Work as WorkIcon
+} from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,17 +58,17 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "25px",
     paddingBottom: "15px",
   },
-  dataPaper: {
+  informationPaper: {
     padding: "22.5px 25px 22.5px 25px",
   },
-  dataPictureContainer: {
+  informationCategoryPictureContainer: {
     display: "flex",
     justifyContent: "center",
     [theme.breakpoints.up("md")]: {
       justifyContent: "flex-end",
     },
   },
-  dataPicture: {
+  informationCategoryPicture: {
     height: "100px",
     [theme.breakpoints.up("md")]: {
       height: "125px",
@@ -85,9 +89,6 @@ function Profile(props) {
     uploadFileAvatar,
     getFileAvatar,
   } = props;
-
-  const theme = useTheme();
-  const isMobileView = useMediaQuery(theme.breakpoints.down("xs"));
 
   const [avatar, setAvatar] = React.useState(null);
   const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
@@ -170,7 +171,6 @@ function Profile(props) {
                   setFileLimitSnackbar={setFileLimitSnackbar}
                   fileLimitSnackbar={fileLimitSnackbar}
                   handleOpenAlert={handleOpenAlert}
-                  fullScreen={isMobileView}
                 />
               }
             >
@@ -190,7 +190,6 @@ function Profile(props) {
                   setFileLimitSnackbar={setFileLimitSnackbar}
                   fileLimitSnackbar={fileLimitSnackbar}
                   handleOpenAlert={handleOpenAlert}
-                  fullScreen={isMobileView}
                 />
               }
             >
@@ -218,75 +217,82 @@ function Profile(props) {
           <EditProfileData
             handleOpenAlert={handleOpenDataEditorAlert}
             userData={user}
-            fullScreen={isMobileView}
           />
         </Grid>
         <Grid item>
           <EditPassword
             handleOpenAlert={handleOpenPasswordEditorAlert}
-            fullScreen={isMobileView}
           />
         </Grid>
       </Grid>
       <Grid container direction="column" spacing={4}>
         <Grid item>
-          <Paper elevation={2} className={classes.dataPaper}>
+          <Paper elevation={2} className={classes.informationPaper}>
             <Grid container justify="space-between">
               <Grid item xs={12} md={6}>
                 <Typography variant="h4" gutterBottom>
                   Informasi Pribadi
                 </Typography>
                 <Typography variant="subtitle1" color="textSecondary">
-                  Jangan lupa untuk mengisi semua informasi pribadi Anda untuk
-                  melengkapi pendataan sekolah Anda.
+                  Lengkapi informasi pribadi Anda dengan data terkini untuk
+                  mendata diri Anda ke sekolah Anda.
                 </Typography>
               </Grid>
               <Grid item xs={12} md={6}>
-                <div className={classes.dataPictureContainer}>
+                <div className={classes.informationCategoryPictureContainer}>
                   <img
                     alt="Private Data"
-                    src={dataPrivate}
-                    className={classes.dataPicture}
+                    src={informationPrivate}
+                    className={classes.informationCategoryPicture}
                   />
                 </div>
               </Grid>
             </Grid>
             <List>
-              <ProfileDataItem
-                icon={<PersonIcon />}
-                iconStyle={classes.dataIcon}
-                type="Nama"
-                value={user.name}
-              />
+              <ListItem>
+                <DataItem
+                  icon={<PersonIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Nama"
+                  value={user.name}
+                />
+              </ListItem>
               <Divider variant="inset" />
-              <ProfileDataItem
-                icon={<CakeIcon />}
-                iconStyle={classes.dataIcon}
-                type="Tanggal Lahir"
-                value={moment(user.tanggal_lahir)
-                  .locale("id")
-                  .format("DD MMM YYYY")
-                }
-              />
+              <ListItem>
+                <DataItem
+                  icon={<CakeIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Tanggal Lahir"
+                  value={
+                    moment(user.tanggal_lahir)
+                      .locale("id")
+                      .format("DD MMM YYYY")
+                  }
+                />
+              </ListItem>
               <Divider variant="inset" />
-              <ProfileDataItem
-                icon={<WcIcon />}
-                iconStyle={classes.dataIcon}
-                type="Jenis Kelamin"
-                value={user.jenis_kelamin}
-              />
+              <ListItem>
+                <DataItem
+                  icon={<WcIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Jenis Kelamin"
+                  value={user.jenis_kelamin}
+                />
+              </ListItem>
               {/* <Divider variant="inset" />
-              <ProfileDataItem
-                iconStyle={classes.dataIcon}
-                icon={<SchoolIcon />}
-                type="Sekolah"
-                value={user.sekolah}
-              /> */}
+              <ListItem>
+                <DataItem
+                  icon={<SchoolIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Sekolah"
+                  value={user.sekolah}
+                />
+              </ListItem>*/}
             </List>
           </Paper>
         </Grid>
         <Grid item>
-          <Paper elevation={2} className={classes.dataPaper}>
+          <Paper elevation={2} className={classes.informationPaper}>
             <Grid container justify="space-between">
               <Grid item xs={12} md={6}>
                 <Typography variant="h4" gutterBottom>
@@ -298,49 +304,57 @@ function Profile(props) {
                 </Typography>
               </Grid>
               <Grid item xs={12} md={6}>
-                <div className={classes.dataPictureContainer}>
+                <div className={classes.informationCategoryPictureContainer}>
                   <img
                     alt="Contacts"
-                    src={dataContacts}
-                    className={classes.dataPicture}
+                    src={informationContacts}
+                    className={classes.informationCategoryPicture}
                   />
                 </div>
               </Grid>
             </Grid>
             <List>
-              <ProfileDataItem
-                icon={<EmailIcon />}
-                iconStyle={classes.dataIcon}
-                type="Email"
-                value={user.email}
-              />
+              <ListItem>
+                <DataItem
+                  icon={<EmailIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Email"
+                  value={user.email}
+                />
+              </ListItem>
               <Divider variant="inset" />
-              <ProfileDataItem
-                icon={<PhoneIcon />}
-                iconStyle={classes.dataIcon}
-                type="Nomor Telepon"
-                value={user.phone}
-              />
+              <ListItem>
+                <DataItem
+                  icon={<PhoneIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Nomor Telepon"
+                  value={user.phone}
+                />
+              </ListItem>
               <Divider variant="inset" />
-              <ProfileDataItem
-                icon={<ContactPhoneIcon />}
-                iconStyle={classes.dataIcon}
-                type="Nomor Telepon Darurat"
-                value={user.emergency_phone}
-              />
+              <ListItem>
+                <DataItem
+                  icon={<ContactPhoneIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Nomor Telepon Darurat"
+                  value={user.emergency_phone}
+                />
+              </ListItem>
               <Divider variant="inset" />
-              <ProfileDataItem
-                icon={<HomeIcon />}
-                iconStyle={classes.dataIcon}
-                type="Alamat"
-                value={user.address}
-              />
+              <ListItem>
+                <DataItem
+                  icon={<HomeIcon />}
+                  iconStyle={classes.dataIcon}
+                  type="Alamat"
+                  value={user.address}
+                />
+              </ListItem>
             </List>
           </Paper>
         </Grid>
         {user.role === "Student" ? (
           <Grid item>
-            <Paper elevation={2} className={classes.dataPaper}>
+            <Paper elevation={2} className={classes.informationPaper}>
               <Grid container justify="space-between">
                 <Grid item xs={12} md={6}>
                   <Typography variant="h4" gutterBottom>
@@ -351,43 +365,51 @@ function Profile(props) {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <div className={classes.dataPictureContainer}>
+                  <div className={classes.informationCategoryPictureContainer}>
                     <img
                       alt="Career"
-                      src={dataJob}
-                      className={classes.dataPicture}
+                      src={informationJob}
+                      className={classes.informationCategoryPicture}
                     />
                   </div>
                 </Grid>
               </Grid>
               <List>
-                <ProfileDataItem
-                  icon={<SportsEsportsIcon />}
-                  iconStyle={classes.dataIcon}
-                  type="Hobi dan Minat"
-                  value={user.hobi_minat}
-                />
+                <ListItem>
+                  <DataItem
+                    icon={<SportsEsportsIcon />}
+                    iconStyle={classes.dataIcon}
+                    type="Hobi dan Minat"
+                    value={user.hobi_minat}
+                  />
+                </ListItem>
                 <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<ColorLensIcon />}
-                  iconStyle={classes.dataIcon}
-                  type="Keterampilan Non-Akademik"
-                  value={user.ket_non_teknis}
-                />
+                <ListItem>
+                  <DataItem
+                    icon={<ColorLensIcon />}
+                    iconStyle={classes.dataIcon}
+                    type="Keterampilan Non-Akademik"
+                    value={user.ket_non_teknis}
+                  />
+                </ListItem>
                 <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<WorkIcon />}
-                  iconStyle={classes.dataIcon}
-                  type="Cita-Cita"
-                  value={user.cita_cita}
-                />
+                <ListItem>
+                  <DataItem
+                    icon={<WorkIcon />}
+                    iconStyle={classes.dataIcon}
+                    type="Cita-Cita"
+                    value={user.cita_cita}
+                  />
+                </ListItem>
                 <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<AccountBalanceIcon />}
-                  iconStyle={classes.dataIcon}
-                  type="Perguruan Tinggi Impian"
-                  value={user.uni_impian}
-                />
+                <ListItem>
+                  <DataItem
+                    icon={<AccountBalanceIcon />}
+                    iconStyle={classes.dataIcon}
+                    type="Perguruan Tinggi Impian"
+                    value={user.uni_impian}
+                  />
+                </ListItem>
               </List>
             </Paper>
           </Grid>

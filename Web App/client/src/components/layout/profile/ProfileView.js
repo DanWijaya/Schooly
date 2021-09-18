@@ -7,27 +7,32 @@ import "moment/locale/id";
 import { updateAvatar, getOneUser } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
-import ProfileDataItem from "./ProfileDataItem";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Divider from "@material-ui/core/Divider";
-import Grid from "@material-ui/core/Grid";
-import List from "@material-ui/core/List";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import DataItem from "./DataItem";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  Paper,
+  Typography
+} from "@material-ui/core";
+import {
+  AccountBalance as AccountBalanceIcon,
+  AssessmentOutlined as AssessmentOutlinedIcon,
+  Cake as CakeIcon,
+  ColorLens as ColorLensIcon,
+  ContactPhone as ContactPhoneIcon,
+  Email as EmailIcon,
+  Home as HomeIcon,
+  Person as PersonIcon,
+  Phone as PhoneIcon,
+  SportsEsports as SportsEsportsIcon,
+  Wc as WcIcon,
+  Work as WorkIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
-import CakeIcon from "@material-ui/icons/Cake";
-import ColorLensIcon from "@material-ui/icons/ColorLens";
-import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
-import EmailIcon from "@material-ui/icons/Email";
-import HomeIcon from "@material-ui/icons/Home";
-import PersonIcon from "@material-ui/icons/Person";
-import PhoneIcon from "@material-ui/icons/Phone";
-import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
-import WcIcon from "@material-ui/icons/Wc";
-import WorkIcon from "@material-ui/icons/Work";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,12 +66,11 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
   dataCategoryContent: {
-    padding: "0px 25px 22.5px 25px",
+    padding: "5px 25px 22.5px 25px",
   },
 }));
 
 function ProfileView(props) {
-
   const classes = useStyles();
   const { user, selectedUser } = props.auth;
   const {
@@ -148,32 +152,32 @@ function ProfileView(props) {
       <Grid container justify="flex-end" className={classes.profileButtonContainer}>
         {role === "Student" && user.role === "Teacher" ? (
           (classesCollection.kelas.walikelas) ?
-          (classesCollection.kelas.walikelas === user._id) ? (
-              <Grid item>
-                <Link to={{pathname: `/rapor/${_id}`}}>
-                  <Button
-                    variant="contained"
-                    className={classes.reportButton}
-                    startIcon={<AssessmentOutlinedIcon />}
-                  >
-                    Lihat Rapor
-                  </Button>
-                </Link>
-              </Grid>
-          ) : (user.class_teached).includes(classesCollection.kelas._id) ? (
+            (classesCollection.kelas.walikelas === user._id) ? (
                 <Grid item>
                   <Link to={{pathname: `/rapor/${_id}`}}>
                     <Button
                       variant="contained"
-                      startIcon={<AssessmentOutlinedIcon />}
                       className={classes.reportButton}
+                      startIcon={<AssessmentOutlinedIcon />}
                     >
                       Lihat Rapor
                     </Button>
                   </Link>
                 </Grid>
-              )
-            : null
+            ) : (user.class_teached).includes(classesCollection.kelas._id) ? (
+                  <Grid item>
+                    <Link to={{pathname: `/rapor/${_id}`}}>
+                      <Button
+                        variant="contained"
+                        startIcon={<AssessmentOutlinedIcon />}
+                        className={classes.reportButton}
+                      >
+                        Lihat Rapor
+                      </Button>
+                    </Link>
+                  </Grid>
+                )
+              : null
           : (user.class_teached).includes(classesCollection.kelas._id) ? (
               <Grid item>
                 <Link to={{pathname: `/rapor/${_id}`}}>
@@ -203,49 +207,69 @@ function ProfileView(props) {
             </div>
             <div className={classes.dataCategoryContent}>
               <List>
-                <ProfileDataItem
-                  icon={<PersonIcon />}
-                  type="Nama"
-                  value={name}
-                />
+                <ListItem>
+                  <DataItem
+                    icon={<PersonIcon />}
+                    type="Nama"
+                    value={name}
+                  />
+                </ListItem>
                 <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<CakeIcon />}
-                  type="Tanggal Lahir"
-                  value={moment(tanggal_lahir)
-                    .locale("id")
-                    .format("DD MMM YYYY")}
-                />
+                <ListItem>
+                  <DataItem
+                    icon={<CakeIcon />}
+                    type="Tanggal Lahir"
+                    value={
+                      moment(user.tanggal_lahir)
+                      .locale("id")
+                      .format("DD MMM YYYY")
+                    }
+                  />
+                </ListItem>
                 <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<WcIcon />}
-                  type="Jenis Kelamin"
-                  value={jenis_kelamin}
-                />
+                <ListItem>
+                  <DataItem
+                    icon={<WcIcon />}
+                    type="Jenis Kelamin"
+                    value={jenis_kelamin}
+                  />
+                </ListItem>
                 <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<EmailIcon />}
-                  type="Email"
-                  value={email}
-                />
+                <ListItem>
+                  <DataItem
+                    icon={<EmailIcon />}
+                    type="Email"
+                    value={email}
+                  />
+                </ListItem>
                 <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<PhoneIcon />}
-                  type="Nomor Telepon"
-                  value={phone}
-                />
+                <ListItem>
+                  <DataItem
+                    icon={<PhoneIcon />}
+                    type="Nomor Telepon"
+                    value={phone}
+                  />
+                </ListItem>
                 <Divider variant="inset" />
-                <ProfileDataItem
-                  icon={<ContactPhoneIcon />}
-                  type="Nomor Telepon Darurat"
-                  value={emergency_phone}
-                />
+                <ListItem>
+                  <DataItem
+                    icon={<ContactPhoneIcon />}
+                    type="Nomor Telepon Darurat"
+                    value={emergency_phone}
+                  />
+                </ListItem>
+                {user.role === "Admin" ? (
+                  <div>
                     <Divider variant="inset" />
-                    <ProfileDataItem
-                      icon={<HomeIcon />}
-                      type="Alamat"
-                      value={address}
-                    />
+                    <ListItem>
+                      <DataItem
+                        icon={<HomeIcon />}
+                        type="Alamat"
+                        value={address}
+                      />
+                    </ListItem>
+                  </div>
+                ) : null}
               </List>
             </div>
           </Paper>
@@ -258,35 +282,42 @@ function ProfileView(props) {
                     Karir
                   </Typography>
                   <Typography gutterBottom>
-                    Berikut adalah pilihan karir yang diinginkan dari
-                    murid terkait.
+                    Berikut adalah pilihan karir dan minat dari murid terkait.
                   </Typography>
                 </div>
                 <div className={classes.dataCategoryContent}>
                   <List>
-                    <ProfileDataItem
-                      icon={<SportsEsportsIcon />}
-                      type="Hobi dan Minat"
-                      value={hobi_minat}
-                    />
+                    <ListItem>
+                      <DataItem
+                        icon={<SportsEsportsIcon />}
+                        type="Hobi dan Minat"
+                        value={hobi_minat}
+                      />
+                    </ListItem>
                     <Divider variant="inset" />
-                    <ProfileDataItem
-                      icon={<ColorLensIcon />}
-                      type="Keterampilan Non-Akademik"
-                      value={ket_non_teknis}
-                    />
+                    <ListItem>
+                      <DataItem
+                        icon={<ColorLensIcon />}
+                        type="Keterampilan Non-Akademik"
+                        value={ket_non_teknis}
+                      />
+                    </ListItem>
                     <Divider variant="inset" />
-                    <ProfileDataItem
-                      icon={<WorkIcon />}
-                      type="Cita-Cita"
-                      value={cita_cita}
-                    />
+                    <ListItem>
+                      <DataItem
+                        icon={<WorkIcon />}
+                        type="Cita-Cita"
+                        value={cita_cita}
+                      />
+                    </ListItem>
                     <Divider variant="inset" />
-                    <ProfileDataItem
-                      icon={<AccountBalanceIcon />}
-                      type="Perguruan Tinggi Impian"
-                      value={uni_impian}
-                    />
+                    <ListItem>
+                      <DataItem
+                        icon={<AccountBalanceIcon />}
+                        type="Perguruan Tinggi Impian"
+                        value={uni_impian}
+                      />
+                    </ListItem>
                   </List>
                 </div>
               </Paper>

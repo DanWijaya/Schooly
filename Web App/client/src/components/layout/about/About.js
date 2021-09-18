@@ -6,13 +6,15 @@ import onlineLearning from "./OnlineLearning-CompareFibre.jpg";
 import aboutArt1 from "./AboutArt1.png";
 import aboutArt2 from "./AboutArt2.png";
 import aboutArt3 from "./AboutArt3.png";
-import Button from "@material-ui/core/Button";
-import Divider from "@material-ui/core/Divider";
-import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
-import Typography from "@material-ui/core/Typography";
+import {
+  Button,
+  Divider,
+  Grid,
+  Hidden,
+  Typography
+} from "@material-ui/core";
+import { Email as EmailIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import EmailIcon from "@material-ui/icons/Email";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,11 +55,25 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
     height: "3px",
     width: "20%",
-    margin: "40px 0px 40px 0px",
+    margin: "40px 0px",
     [theme.breakpoints.down("sm")]: {
       width: "30%",
-      margin: "25px 0px 25px 0px",
+      margin: "25px 0px",
     },
+  },
+  subtopicDividerLong: {
+    backgroundColor: theme.palette.primary.light,
+    height: "2px",
+    maxWidth: "75px",
+    width: "100%",
+  },
+  subtopicDividerShort: {
+    backgroundColor: theme.palette.primary.dark,
+    height: "2px",
+    maxWidth: "40px",
+    width: "100%",
+    marginTop: "7.5px",
+    marginBottom: "15px",
   },
   introduction: {
     backgroundImage: `url(${backpackStudent})`,
@@ -207,6 +223,8 @@ function About(props) {
               <Typography variant="h6" style={{ marginTop: "10px", marginBottom: "10px" }}>
                 Dunia berubah, begitu juga seharusnya pendidikan
               </Typography>
+              <Divider className={classes.subtopicDividerLong} />
+              <Divider className={classes.subtopicDividerShort} />
               <Typography>
                 Di kegiatan sehari-hari sekarang, tidak terlepas dengan namanya teknologi.
                 Hampir segala sesuatu yang kita butuhkan dan inginkan dapat terpenuhi melalui
@@ -220,6 +238,8 @@ function About(props) {
               <Typography variant="h6" style={{ marginTop: "10px", marginBottom: "10px" }}>
                 Apa kata perkuliahan dan pekerjaan zaman sekarang?
               </Typography>
+              <Divider className={classes.subtopicDividerLong} />
+              <Divider className={classes.subtopicDividerShort} />
               <Typography>
                 Pengaruh teknologi ini juga dapat dilihat baik di perkuliahan dan pekerjaan
                 zaman sekarang. Sekarang, hampir semua tugas dan ujian di perkuliahan

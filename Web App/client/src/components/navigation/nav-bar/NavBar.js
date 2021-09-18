@@ -6,21 +6,25 @@ import { logoutUser } from "../../../actions/UserActions";
 import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import AppBar from "@material-ui/core/AppBar";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Toolbar from "@material-ui/core/Toolbar";
-import { useMediaQuery } from "@material-ui/core";
+import {
+  AppBar,
+  Avatar,
+  Button,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Toolbar,
+  useMediaQuery
+} from "@material-ui/core";
+import {
+  ExitToApp as ExitToAppIcon,
+  ExpandMore as ExpandMoreIcon,
+  Help as HelpIcon,
+  Menu as MenuIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import HelpIcon from "@material-ui/icons/Help";
-import MenuIcon from "@material-ui/icons/Menu";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -90,7 +94,6 @@ function NavBar(props) {
       .then((result) => {
         setAvatar(result);
       })
-      .catch((err) => console.log(err));
   }, [user._id]);
 
   const onLogoutClick = (e) => {
@@ -204,7 +207,7 @@ function NavBar(props) {
   return (
     <AppBar position="fixed" className={classes.root}>
       {props.assessmentState !== "ujian" ? (
-          user.name ? (
+          user._id ? (
             <Toolbar>
               <div
                 className={classes.startButtonContainer}

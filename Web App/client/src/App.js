@@ -7,17 +7,19 @@ import store from "./Store";
 import { setCurrentUser, logoutUser,
   // setDropboxToken,
 } from "./actions/UserActions";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
 import { ThemeProvider } from "@material-ui/core/styles";
+// Page Components
 import Footer from "./Footer";
 import Navigation from "./components/navigation/Navigation";
 import Styles from "./Styles";
-//Auth
+// Auth
 import Register from "./components/auth/register/Register";
 import Login from "./components/auth/login/Login";
 import ForgotPassword from "./components/auth/reset-password/ForgotPassword";
 import ResetPassword from "./components/auth/reset-password/ResetPassword";
-//Layout
+// Layout
 import About from "./components/layout/about/About";
 import Landing from "./components/layout/landing/Landing";
 import Profile from "./components/layout/profile/Profile";
@@ -27,38 +29,41 @@ import TermsOfService from "./components/layout/legal/terms-of-service/TermsOfSe
 import PrivacyPolicy from "./components/layout/legal/privacy-policy/PrivacyPolicy";
 import NotFound from "./components/layout/error/error404/NotFound";
 import ProblemEncountered from "./components/layout/error/error500/ProblemEncountered";
-//Misc
+// Misc
 import PrivateRoute from "./components/misc/private-route/PrivateRoute";
 import ProgressIndicator from "./components/misc/progress-indicator/ProgressIndicator";
 import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
-//Dashboard
+// Dashboard
 import Dashboard from "./components/objects/dashboard/Dashboard";
-//Class
+// Class
 import CreateClass from "./components/objects/class/CreateClass";
 import EditClass from "./components/objects/class/EditClass";
+import EditClassTeacher from "./components/objects/class/EditClassTeacher";
 import ViewClass from "./components/objects/class/ViewClass";
 import ClassList from "./components/objects/class/ClassList";
-//Subject
+// Subject
 import ViewSubject from "./components/objects/subject/ViewSubject";
 import SubjectList from "./components/objects/subject/SubjectList";
-//Material
-import CreateMaterial from "./components/objects/material/CreateMaterial";
-import EditMaterial from "./components/objects/material/EditMaterial";
-import ViewMaterial from "./components/objects/material/ViewMaterial";
-import MaterialList from "./components/objects/material/MaterialList";
-//Announcement
+// Event
+import Calendar from "./components/objects/event/Calendar";
+// Announcement
 import CreateAnnouncement from "./components/objects/announcement/CreateAnnouncement";
 import EditAnnouncement from "./components/objects/announcement/EditAnnouncement";
 import ViewAnnouncement from "./components/objects/announcement/ViewAnnouncement";
 import AnnouncementList from "./components/objects/announcement/AnnouncementList";
-//Task
+// Material
+import CreateMaterial from "./components/objects/material/CreateMaterial";
+import EditMaterial from "./components/objects/material/EditMaterial";
+import ViewMaterial from "./components/objects/material/ViewMaterial";
+import MaterialList from "./components/objects/material/MaterialList";
+// Task
 import CreateTask from "./components/objects/task/CreateTask";
 import EditTask from "./components/objects/task/EditTask";
 import ViewTaskStudent from "./components/objects/task/ViewTaskStudent";
 import ViewTaskTeacher from "./components/objects/task/ViewTaskTeacher";
 import SubmittedTaskList from "./components/objects/task/SubmittedTaskList";
 import TaskList from "./components/objects/task/TaskList";
-//Assessment
+// Assessment
 import AssessmentList from "./components/objects/assessment/AssessmentQuizList";
 import AssessmentTestList from "./components/objects/assessment/AssessmentExamList";
 import CreateAssessment from "./components/objects/assessment/CreateAssessment";
@@ -67,18 +72,16 @@ import ViewAssessmentTeacher from "./components/objects/assessment/ViewAssessmen
 import ViewAssessmentStudent from "./components/objects/assessment/ViewAssessmentStudent";
 import SubmittedAssessmentList from "./components/objects/assessment/SubmittedAssessmentList";
 import ViewAssessmentAnswer from "./components/objects/assessment/ViewAssessmentAnswer";
-//Report
+// Report
 import Report from "./components/objects/report/Report";
-//Event
-import Calendar from "./components/objects/event/Calendar";
-//Admin Only
-import ManageUsers from "./components/objects/admin-only/ManageUsers";
-import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
-import EditClassTeacher from "./components/objects/class/EditClassTeacher";
-import TeacherList from "./components/objects/admin-only/TeacherList";
+// User
+import ManageUsers from "./components/objects/user/ManageUsers";
+import ManagePendingUsers from "./components/objects/user/ManagePendingUsers";
+import TeacherList from "./components/objects/user/TeacherList";
+// Settings
 import Setting from "./components/objects/setting/Setting";
 //Prototypes
-import Tester from "./prototypes/tester";
+import Tester from "./prototypes/Tester";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
 
 // Check for token to keep user logged in
@@ -172,6 +175,7 @@ class App extends Component {
       <div>
         <Provider store={store}>
           <ThemeProvider theme={Styles}>
+            {/*<CssBaseline />*/}
             <Router>
               <ScrollToTop />
               <div style={{ display: "flex" }}>
@@ -292,16 +296,15 @@ class App extends Component {
                         path="/beranda"
                         component={Dashboard}
                       />
-                      <PrivateRoute exact path="/profil" component={Profile} />
+                      <PrivateRoute
+                        exact
+                        path="/profil"
+                        component={Profile}
+                      />
                       <PrivateRoute
                         exact
                         path="/lihat-profil/:id"
                         component={ProfileView}
-                      />
-                      <PrivateRoute
-                        exact
-                        path="/rapor/:id"
-                        component={Report}
                       />
                       {/* Route Class */}
                       <PrivateRoute
@@ -318,10 +321,23 @@ class App extends Component {
                       />
                       <PrivateRoute
                         exact
+                        access={["Admin"]}
+                        path="/atur-walikelas"
+                        component={EditClassTeacher}
+                      />
+                      <PrivateRoute
+                        exact
                         access={["Student", "Teacher", "Admin"]}
                         path="/kelas/:id"
                         component={ViewClass}
                       />
+                      <PrivateRoute
+                        exact
+                        access={["Teacher", "Admin"]}
+                        path="/daftar-kelas"
+                        component={ClassList}
+                      />
+                      {/* Route Subject */}
                       <PrivateRoute
                         exact
                         access={["Student"]}
@@ -330,34 +346,15 @@ class App extends Component {
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher", "Admin"]}
-                        path="/daftar-kelas"
-                        component={ClassList}
+                        access={["Admin"]}
+                        path="/daftar-mata-pelajaran"
+                        component={SubjectList}
                       />
-                      {/* Route Materials */}
+                      {/* Route Event */}
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
-                        path="/buat-materi"
-                        component={CreateMaterial}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={["Teacher"]}
-                        path="/sunting-materi/:id"
-                        component={EditMaterial}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={["Student", "Teacher"]}
-                        path="/materi/:id"
-                        component={ViewMaterial}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={["Student", "Teacher"]}
-                        path="/daftar-materi"
-                        component={MaterialList}
+                        path="/kalender"
+                        component={Calendar}
                       />
                       {/* Route Announcement */}
                       <PrivateRoute
@@ -383,6 +380,31 @@ class App extends Component {
                         access={["Student", "Teacher", "Admin"]}
                         path="/daftar-pengumuman"
                         component={AnnouncementList}
+                      />
+                      {/* Route Material */}
+                      <PrivateRoute
+                        exact
+                        access={["Teacher"]}
+                        path="/buat-materi"
+                        component={CreateMaterial}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={["Teacher"]}
+                        path="/sunting-materi/:id"
+                        component={EditMaterial}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={["Student", "Teacher"]}
+                        path="/materi/:id"
+                        component={ViewMaterial}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={["Student", "Teacher"]}
+                        path="/daftar-materi"
+                        component={MaterialList}
                       />
                       {/* Route Task */}
                       <PrivateRoute
@@ -411,15 +433,15 @@ class App extends Component {
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
-                        path="/daftar-tugas-terkumpul/:id"
-                        component={SubmittedTaskList}
-                      />
-                      <PrivateRoute
-                        exact
                         access={["Student", "Teacher"]}
                         path="/daftar-tugas"
                         component={TaskList}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={["Teacher"]}
+                        path="/daftar-tugas-terkumpul/:id"
+                        component={SubmittedTaskList}
                       />
                       {/* Route Assessment */}
                       <PrivateRoute
@@ -435,18 +457,6 @@ class App extends Component {
                         path="/buat-ujian"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={CreateAssessment}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={["Student", "Teacher"]}
-                        path="/daftar-kuis"
-                        component={AssessmentList}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={["Student", "Teacher"]}
-                        path="/daftar-ujian"
-                        component={AssessmentTestList}
                       />
                       <PrivateRoute
                         exact
@@ -490,6 +500,18 @@ class App extends Component {
                       />
                       <PrivateRoute
                         exact
+                        access={["Student", "Teacher"]}
+                        path="/daftar-kuis"
+                        component={AssessmentList}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={["Student", "Teacher"]}
+                        path="/daftar-ujian"
+                        component={AssessmentTestList}
+                      />
+                      <PrivateRoute
+                        exact
                         access={["Teacher"]}
                         path="/daftar-kuis-terkumpul/:id"
                         component={SubmittedAssessmentList}
@@ -512,11 +534,17 @@ class App extends Component {
                         path="/lihat-jawaban-ujian/:id"
                         component={ViewAssessmentAnswer}
                       />
-                      {/* Route Admin-Only */}
+                      {/* Route Report */}
+                      <PrivateRoute
+                        exact
+                        path="/rapor/:id"
+                        component={Report}
+                      />
+                      {/* Route User */}
                       <PrivateRoute
                         exact
                         access={["Admin"]}
-                        path="/atur-pengguna"
+                        path="/pengguna"
                         component={ManageUsers}
                       />
                       <PrivateRoute
@@ -528,35 +556,10 @@ class App extends Component {
                       <PrivateRoute
                         exact
                         access={["Admin"]}
-                        path="/daftar-mata-pelajaran"
-                        component={SubjectList}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={["Admin"]}
-                        path="/atur-walikelas"
-                        component={EditClassTeacher}
-                      />
-                      {/*prototype*/}
-                      <Route exact path="/tester" component={Tester} />
-                      {/* Route Event */}
-                      <PrivateRoute
-                      exact
-                      access={["Admin"]}
-                      path="/bulk-register"
-                      component={BulkRegister}/>
-                      <PrivateRoute
-                        exact
-                        path="/kalender"
-                        component={Calendar}
-                      />
-                      {/* Route Event Admin-Only*/}
-                      <PrivateRoute
-                        exact
-                        access={["Admin"]}
                         path="/sunting-guru"
                         component={TeacherList}
                       />
+                      {/*  Route Settings */}
                       <PrivateRoute
                         exact
                         access={["Admin"]}
@@ -566,6 +569,19 @@ class App extends Component {
                         handleNavbar={(data) => this.handleNavbar(data)}
                         component={Setting}
                       />
+                      {/*  Route Prototypes */}
+                      <Route
+                        exact
+                        path="/tester"
+                        component={Tester}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={["Admin"]}
+                        path="/bulk-register"
+                        component={BulkRegister}
+                      />
+                      {/*  Route Not Found */}
                       <Route
                         exact
                         path="/tidak-ditemukan"

@@ -1,43 +1,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button, Dialog, Grid, Typography } from "@material-ui/core/";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Typography
+} from "@material-ui/core";
+import {
+  Cancel as CancelIcon,
+  DeleteOutline as DeleteOutlineIcon,
+  ErrorOutline as ErrorOutlineIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import CancelIcon from "@material-ui/icons/Cancel";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "300px",
-    maxWidth: "100%",
-    minHeight: "175px",
-    padding: "15px",
+    maxWidth: "500px",
   },
-  dialogDeleteButton: {
-    width: "125px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    border: `1px solid ${theme.palette.error.main}`,
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-      border: `1px solid ${theme.palette.error.dark}`,
-    },
-  },
-  dialogCancelButton: {
-    width: "125px",
-    backgroundColor: "white",
-    color: theme.palette.error.main,
-    border: `1px solid ${theme.palette.error.main}`,
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-      border: `1px solid ${theme.palette.error.dark}`,
-    },
+  warning: {
+    display: "flex",
+    alignItems: "center",
   },
   warningText: {
     color: theme.palette.error.main,
-    marginLeft: "3px",
     fontSize: "10px",
   },
   warningIcon: {
@@ -45,23 +33,29 @@ const useStyles = makeStyles((theme) => ({
     width: "15px",
     height: "15px",
   },
-  warning: {
-    display: "flex",
-    alignItems: "center",
+  dialogDeleteButton: {
+    maxWidth: "125px",
+    width: "100%",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.dark,
+      color: "white",
+    },
+  },
+  dialogCancelButton: {
+    maxWidth: "125px",
+    width: "100%",
+    backgroundColor: "white",
+    color: theme.palette.error.main,
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
   },
 }));
 
 function DeleteDialog(props) {
-  // const {
-  //   openDeleteDialog,
-  //   handleCloseDeleteDialog,
-  //   itemType,
-  //   itemName,
-  //   deleteItem,
-  //   isLink,
-  //   redirectLink,
-  //   isWarning,
-  // } = props;
   const classes = useStyles();
   const {
     openDeleteDialog,
@@ -78,7 +72,61 @@ function DeleteDialog(props) {
 
   return (
     <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-      <Grid
+      <div className={classes.root}>
+        <DialogTitle>
+          <Typography variant="h6">
+            {customMessage
+              ? `${customMessage} ${itemType}`
+              : `Hapus ${itemType} berikut?`}
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          {itemName ? (
+            <Typography gutterBottom>
+              {itemName}
+            </Typography>
+          ) : null}
+          {isWarning ? (
+            <div className={classes.warning}>
+              <ErrorOutlineIcon className={classes.warningIcon} />
+              <Typography className={classes.warningText}>
+                Nilai Murid pada {itemType} ini juga akan dihapus
+              </Typography>
+            </div>
+          ) : null}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleCloseDeleteDialog}
+            startIcon={<CancelIcon />}
+            className={classes.dialogCancelButton}
+          >
+            {customDecline ? customDecline : "Tidak"}
+          </Button>
+          {!redirectLink ? (
+            <Button
+              onClick={deleteItem}
+              startIcon={<DeleteOutlineIcon />}
+              className={classes.dialogDeleteButton}
+            >
+              Iya
+            </Button>
+          ) : (
+            <Link to={redirectLink}>
+              <Button
+                onClick={deleteItem}
+                startIcon={<DeleteOutlineIcon />}
+                className={classes.dialogDeleteButton}
+              >
+                Iya
+              </Button>
+            </Link>
+          )}
+        </DialogActions>
+      </div>
+      {/*<Grid
         container
         direction="column"
         justify="space-between"
@@ -86,8 +134,6 @@ function DeleteDialog(props) {
         className={classes.root}
       >
         <Grid item>
-          {/* <Typography variant="h5" align="center">
-            Hapus {itemType} berikut? */}
           <Typography variant="h6" align="center" gutterBottom>
             {customMessage
               ? `${customMessage} ${itemType}`
@@ -145,7 +191,7 @@ function DeleteDialog(props) {
             </Button>
           </Grid>
         </Grid>
-      </Grid>
+      </Grid>*/}
     </Dialog>
   );
 }

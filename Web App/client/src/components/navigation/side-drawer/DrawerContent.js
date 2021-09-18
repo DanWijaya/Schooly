@@ -1,22 +1,26 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Tooltip,
+  Typography
+} from "@material-ui/core";
+import {
+  Announcement as AnnouncementIcon,
+  Assessment as AssessmentIcon,
+  Assignment as AssignmentIcon,
+  DashboardOutlined as DashboardIcon,
+  EventNote as EventNoteIcon,
+  LibraryBooks as LibraryBooksIcon,
+  MenuBook as MenuBookIcon,
+  Settings as SettingsIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import AnnouncementIcon from "@material-ui/icons/Announcement";
-import AssessmentIcon from "@material-ui/icons/Assessment";
-import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
-import DashboardIcon from "@material-ui/icons/DashboardOutlined";
-import EventNoteIcon from "@material-ui/icons/EventNote";
-import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
-import SettingsIcon from '@material-ui/icons/Settings';
 import { BsClipboardData } from "react-icons/bs";
-import { FaChalkboardTeacher, FaClipboardList, FaUserCheck, FaUserClock } from "react-icons/fa";
+import { FaChalkboardTeacher, FaClipboardList, FaUserFriends, FaUserLock } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
   drawerListItem: {
@@ -25,8 +29,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   drawerListItemIcon: {
-    width: "22.5px",
-    height: "22.5px",
+    fontSize: "22.5px",
   },
 }));
 
@@ -67,14 +70,14 @@ function DrawerContent(props) {
         "Beranda",
       ],
       [
-        "/pengguna-tidakaktif",
-        <FaUserClock className={classes.drawerListItemIcon} />,
-        "Pengguna Tertunda",
+        "/pengguna",
+        <FaUserFriends className={classes.drawerListItemIcon} />,
+        "Pengguna Aktif",
       ],
       [
-        "/atur-pengguna",
-        <FaUserCheck className={classes.drawerListItemIcon} />,
-        "Pengguna Aktif",
+        "/pengguna-tidakaktif",
+        <FaUserLock className={classes.drawerListItemIcon} />,
+        "Pengguna Tidak Aktif",
       ],
       [
         "/kalender",
@@ -99,7 +102,7 @@ function DrawerContent(props) {
       [
         "/pengaturan",
         <SettingsIcon className={classes.drawerListItemIcon} />,
-        "Setting",
+        "Pengaturan",
       ],
     ];
   else if (user.role === "Teacher") {
