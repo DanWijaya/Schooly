@@ -26,8 +26,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemAvatar,
-  ListItemText,
   ListItemSecondaryAction,
+  ListItemText,
   Menu,
   MenuItem,
   Tab,
@@ -37,6 +37,7 @@ import {
   Typography
 } from "@material-ui/core";
 import {
+  ArrowBack as ArrowBackIcon,
   Block as BlockIcon,
   Cancel as CancelIcon,
   CheckBox as CheckBoxIcon,
@@ -45,7 +46,7 @@ import {
   Clear as ClearIcon,
   IndeterminateCheckBox as IndeterminateCheckBoxIcon,
   Search as SearchIcon,
-  Sort as SortIcon,
+  Sort as SortIcon
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { BiSitemap } from "react-icons/bi";
@@ -230,13 +231,11 @@ function ManageUsersToolbar(props) {
               </IconButton>
             ) : listCheckbox.length === rowCount ? (
               <IconButton onClick={() => deSelectAllData(role)}>
-                <CheckBoxIcon className={classes.checkboxIconPrimary} />
+                <CheckBoxIcon className={classes.checkboxIcon} />
               </IconButton>
             ) : (
               <IconButton onClick={() => deSelectAllData(role)}>
-                <IndeterminateCheckBoxIcon
-                  className={classes.checkboxIconPrimary}
-                />
+                <IndeterminateCheckBoxIcon className={classes.checkboxIcon} />
               </IconButton>
             )
           }
@@ -251,9 +250,9 @@ function ManageUsersToolbar(props) {
               handleOpenDisableApproveDialog={OpenDialogCheckboxDisable}
               rowCount={listCheckbox.length === 0}
             />
+            {CheckboxDialog("Disable", role)}
+            {CheckboxDialog("Delete", role)}
           </Grid>
-          {CheckboxDialog("Disable", role)}
-          {CheckboxDialog("Delete", role)}
         </Grid>
         <Grid item xs container justify="flex-end" alignItems="center" spacing={1}>
           <Grid item>
@@ -300,57 +299,54 @@ function ManageUsersToolbar(props) {
             <Hidden mdUp>
               {searchBarFocus ? (
                 <TextField
-                  fullWidth
-                  variant="outlined"
-                  id="searchFilterMobile"
-                  value={searchFilter}
-                  placeholder={searchFilterHint}
-                  onChange={onChange}
-                  autoFocus
-                  onClick={(e) => {
-                    setSearchBarFocus(true)
-                  }}
-                  InputProps={{
-                    style: { borderRadius: "22.5px" },
-                    endAdornment: (
-                      <InputAdornment
-                        position="end"
-                        style={{ marginLeft: "-10px" }}
-                      >
-                        <IconButton
-                          size="small"
-                          id="searchFilterMobile"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onClear(e);
-                          }}
-                          style={{
-                            visibility: !searchFilter ? "hidden" : "visible",
-                          }}
-                        >
-                          <ClearIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
+                      fullWidth
+                      autoFocus
+                      variant="outlined"
+                      id="searchFilterMobile"
+                      value={searchFilter}
+                      placeholder={searchFilterHint}
+                      onChange={onChange}
+                      onClick={(e) => {
+                        setSearchBarFocus(true)
+                      }}
+                      InputProps={{
+                        style: { borderRadius: "22.5px" },
+                        endAdornment: (
+                          <InputAdornment
+                            position="end"
+                            style={{ marginLeft: "-10px" }}
+                          >
+                            <IconButton
+                              size="small"
+                              id="searchFilterMobile"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onClear(e);
+                              }}
+                              style={{
+                                visibility: !searchFilter ? "hidden" : "visible",
+                              }}
+                            >
+                              <ClearIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
               ) : (
                 <LightTooltip title="Cari Akun">
-                  <IconButton
-                    className={classes.SearchIconButton}
-                    onClick={() => setSearchBarFocus(true)}
-                  >
-                    <SearchIcon className={classes.SearchIconIconMobile} />
+                  <IconButton onClick={() => setSearchBarFocus(true)}>
+                    <SearchIcon />
                   </IconButton>
                 </LightTooltip>
               )}
             </Hidden>
           </Grid>
           {role === "Teacher" ? (
-            <Grid item>
+            <Grid item style={{ display: searchBarFocus ? "none" : "block" }}>
               <Link to="/sunting-guru">
                 <LightTooltip title="Sunting Data Ajar Guru">
-                  <IconButton style={{ display: searchBarFocus ? "none" : "block" }}>
+                  <IconButton>
                     <BiSitemap />
                   </IconButton>
                 </LightTooltip>
@@ -359,12 +355,9 @@ function ManageUsersToolbar(props) {
           ) : (
             null
           )}
-          <Grid item>
+          <Grid item style={{ display: searchBarFocus ? "none" : "block"}}>
             <LightTooltip title="Urutkan Akun">
-              <IconButton
-                onClick={handleOpenSortMenu}
-                style={{ display: searchBarFocus ? "none" : "block"}}
-              >
+              <IconButton onClick={handleOpenSortMenu}>
                 <SortIcon />
               </IconButton>
             </LightTooltip>
@@ -503,14 +496,17 @@ const useStyles = makeStyles((theme) => ({
       boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
     }
   },
-  checkboxIconPrimary: {
+  checkboxIcon: {
     color: theme.palette.primary.main,
   },
   userTabs: {
     borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
   },
-  tabTitle: {
+  userTabTitle: {
     alignSelf: "flex-start",
+  },
+  userList: {
+    padding: "0px",
   },
 }));
 
@@ -1192,7 +1188,7 @@ function ManageUsers(props) {
     </div>)
   }
 
-  document.title = "Schooly | Pengguna";
+  document.title = "Schooly | Pengguna Aktif";
 
   return (
     <div className={classes.root}>
@@ -1215,8 +1211,8 @@ function ManageUsers(props) {
         onChange={handleTabs}
         className={classes.userTabs}
       >
-        <Tab label={<Typography className={classes.tabTitle}>Murid</Typography>} />
-        <Tab label={<Typography className={classes.tabTitle}>Guru</Typography>} />
+        <Tab label={<Typography className={classes.userTabTitle}>Murid</Typography>} />
+        <Tab label={<Typography className={classes.userTabTitle}>Guru</Typography>} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <ManageUsersToolbar
@@ -1247,7 +1243,7 @@ function ManageUsers(props) {
           updateSearchFilter={updateSearchFilterS}
           tabValueCheck={value === 0}
         />
-        <List>
+        <List className={classes.userList}>
           <Divider />
           {student_rows.length === 0 ? (
             <Empty />
@@ -1291,15 +1287,13 @@ function ManageUsers(props) {
                         />*/}
                       </ListItemIcon>
                       <Hidden xsDown>
-                        {!row.avatar ? (
-                          <ListItemAvatar >
+                        <ListItemAvatar>
+                          {!row.avatar ? (
                             <Avatar />
-                          </ListItemAvatar>
-                        ) : (
-                          <ListItemAvatar>
+                          ) : (
                             <Avatar src={`/api/upload/avatar/${row.avatar}`} />
-                          </ListItemAvatar>
-                        )}
+                          )}
+                        </ListItemAvatar>
                       </Hidden>
                       <ListItemText
                         primary={
@@ -1371,7 +1365,7 @@ function ManageUsers(props) {
           updateSearchFilter={updateSearchFilterT}
           tabValueCheck={value === 1}
         />
-        <List>
+        <List className={classes.userList}>
           <Divider />
           {teacher_rows.length === 0 ? (
             <Empty />
