@@ -12,7 +12,7 @@ import {
     Avatar,
   } from "@material-ui/core/";
   import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
-  import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+  import LightTooltip from "../light-tooltip/LightTooltip";
   import { makeStyles } from "@material-ui/core/styles";
   import EditIcon from "@material-ui/icons/Edit";
   import DeleteIcon from "@material-ui/icons/Delete";

@@ -2,6 +2,7 @@
 export const USER_LOADING = "USER_LOADING";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 export const GET_USERS = "GET_USERS";
+export const GET_ALL_USERS = "GET_ALL_USERS";
 export const GET_ALL_ADMINS = "GET_ALL_ADMINS";
 export const GET_ALL_TEACHERS = "GET_TEACHERS";
 export const GET_ALL_TEACHERS_MAP = "GET_TEACHERS_MAP";

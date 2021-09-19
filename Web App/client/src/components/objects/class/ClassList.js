@@ -51,7 +51,7 @@ import { GiTeacher } from "react-icons/gi";
 import ClearIcon from "@material-ui/icons/Clear";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import ClassPaper from "../../misc/paper/ClassPaper";
+import ClassPaper from "../../misc/object-view/ClassPaper";
 
 function createData(_id, name, homeroomTeacher, size, absent) {
   return { _id, name, homeroomTeacher, size, absent };
@@ -417,7 +417,7 @@ function ClassListToolbar(props) {
           moveStudents(newClassParticipant, dummyClassId)
             .then(() => {
               // agar text jumlah murid di halaman ini diperbarui, panggil ulang getStudents
-              getStudents();
+              getStudents(user.unit);
               if (invalidEmails.current.length !== 0) {
                 handleOpenEmailDialog();
               }
@@ -923,7 +923,7 @@ function ClassList(props) {
     getAllClass(user.unit);
     getAllClass(user.unit, "map");
     getTeachers("map");
-    getStudents();
+    getStudents(user.unit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

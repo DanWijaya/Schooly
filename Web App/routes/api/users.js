@@ -253,43 +253,6 @@ router.put("/update/data/:id", (req, res) => {
   });
 });
 
-router.get("/gettask/:id/:task_id", (req, res) => {
-  let id = req.params.id;
-  let tugasId = req.params.task_id;
-
-  // res.send([])
-  User.findById(id, (err, user) => {
-    if (!user || !user.active) res.status(404).send("User data is not found");
-    else {
-      let tugasList = [];
-      if (user.role === "Student") {
-        //Student are the ones has tugas field...
-        user.tugas.map((item) => {
-          console.log(item.for_task_object, tugasId);
-          if (String(item.for_task_object) === String(tugasId)) {
-            tugasList.push(item);
-          }
-        });
-      }
-      res.json(tugasList);
-    }
-  });
-});
-
-router.get("/getalltask/:user_id", (req, res) => {
-  let id = req.params.user_id;
-
-  User.findById(id, (err, user) => {
-    if (!user || !user.active) res.status(404).send("User data is not found");
-    else {
-      let allFilesList = [];
-      if (Boolean(user.tugas) && Boolean(user.tugas.length))
-        user.tugas.map((item) => allFilesList.push(item));
-      res.json(allFilesList);
-    }
-  });
-});
-
 router.put(
   "/update/avatar/:id",
   avatar.uploadAvatar.single("avatar"),
@@ -387,6 +350,16 @@ router.get("/getAdmins/:unit_id", (req, res) => {
     });
 });
 
+router.get("/getAllAdmins/", (req, res) => {
+
+  Admin.find({ active: true })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users) console.log("No unit admins yet in Schooly System");
+      else return res.json(users);
+    });
+});
+
 router.get("/getOneUser/:id", (req, res) => {
   let id = req.params.id;
   User.findById(id, (err, user) => {
@@ -425,12 +398,15 @@ router.get("/getstudentsbyclass/:id", (req, res) => {
     });
 });
 
-router.get("/all_users", (req, res) => {
-  User.find({ active: true })
+router.get("/getAllUsers/:unit_id", (req, res) => {
+  let { unit_id } = req.params;
+
+  User.find({ active: true , unit: unit_id})
     .sort({ name: 1 })
+    .lean()
     .then((users, err) => {
       if (!users)
-        return res.status(404).json("No students yet in Schooly system");
+        return res.status(404).json("No users yet in Schooly system");
       else return res.json(users);
     });
 });

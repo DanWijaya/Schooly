@@ -19,6 +19,7 @@ import {
   Fab,
   Grid,
   IconButton,
+  List,
   ListItem,
   ListItemAvatar,
   ListItemText,
@@ -39,9 +40,11 @@ import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
-import ClassPaper from "../../misc/paper/ClassPaper";
-import SubjectPaper from "../../misc/paper/SubjectPaper";
-import { getStudents, getTeachers, getAdmins } from "../../../actions/UserActions"
+import ClassPaper from "../../misc/object-view/ClassPaper";
+import SubjectPaper from "../../misc/object-view/SubjectPaper";
+import { getStudents, getTeachers, getAdmins, getAllUsers } from "../../../actions/UserActions"
+import UserListItem from "../../misc/object-view/UserListItem";
+import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
 const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
@@ -241,6 +244,9 @@ const useStyles = makeStyles((theme) => ({
   dialogPaper: {
     maxHeight: "70vh",
   },
+  personListDivider: {
+    backgroundColor: theme.palette.primary.main,
+  },
 }));
 
 function ViewUnit(props) {
@@ -249,13 +255,17 @@ function ViewUnit(props) {
   const { user, all_students, all_teachers, all_admins } = props.auth;
   const { selectedUnits } = props.unitsCollection;
   const { all_subjects } = props.subjectsCollection;
-  // const { all_classes } = props.classesCollection;
+  const { all_classes } = props.classesCollection;
   const unit_id = props.match.params.id;
   
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [unitClass, setUnitClass] = React.useState([]); 
   const [tabValue, setTabValue] = React.useState(0);
-  const { getOneUnit, getAllClass, getAllSubjects, getStudents, getTeachers, getAdmins } = props;
+  const [avatar, setAvatar] = React.useState({});
+
+  const { getOneUnit, getAllClass, getAllSubjects, 
+    getStudents, getTeachers, getAdmins, getAllUsers,
+    getMultipleFileAvatar } = props;
+
 
   const unitAuthorName = React.useRef(null);
 
@@ -276,18 +286,31 @@ function ViewUnit(props) {
     }   
 
     React.useEffect(() => {
-        const { id } = props.match.params;
-        getOneUnit(id);
-        getAllClass(id).then((res) => {
-          setUnitClass(res);
-        })
-        getAllSubjects(id);
-        getStudents(id);
-        getTeachers(id);
-        getAdmins(id);
+        getOneUnit(unit_id);
+        getAllClass(unit_id);
+        getAllSubjects(unit_id);
+        getStudents(unit_id);
+        getTeachers(unit_id);
+        getAdmins(unit_id);
     }, []);
 
+  React.useEffect(() => {
+    //Can only pass a normal function as argument to useEffect, and not an async function.
+    // So to use async, have to do this: 
+    const fetchAvatar = async () => {
+      try{
+        const users = await getAllUsers(unit_id);
+        let id_list = users.map((u) => u._id);
   
+        const avatars = await getMultipleFileAvatar(id_list);
+        setAvatar(avatars);
+      } catch(err) {
+        console.log(err);
+      }
+    }
+    fetchAvatar()
+  }, [])
+
   return (
     <div className={classes.root}>
       <DeleteDialog
@@ -305,9 +328,6 @@ function ViewUnit(props) {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Typography variant="h4">{selectedUnits.name}</Typography>
-                {/* <Typography variant="body2" color="textSecondary">
-                  Oleh: <b>{unitAuthorName.current}</b>
-                </Typography> */}
                 <Typography variant="body2" color="textSecondary">
                   Waktu Dibuat:{" "}
                   {moment(selectedUnits.createdAt)
@@ -363,7 +383,7 @@ function ViewUnit(props) {
         <TabPanel value={tabValue} index={0}>
         <Grid container spacing={2}>
           <ClassPaper 
-            data={unitClass}
+            data={all_classes}
             user={user}
             />
           </Grid>
@@ -378,18 +398,45 @@ function ViewUnit(props) {
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
           <Grid container spacing={2} direction="column">
-            <Grid item>
-              <Typography> Pengelola </Typography>
-              {all_admins.map((user) => user.name)}
-            </Grid>
-            <Grid item>
-              <Typography> Guru </Typography>
-              {all_teachers.map((user) => user.name)}
-            </Grid>
-            <Grid item>
-              <Typography> Murid </Typography>
-              {all_students.map((user) => user.name)}
-            </Grid>
+            <>
+              <Typography variant="h4" gutterButtom>
+                Pengelola
+              </Typography>
+              <Divider className={classes.personListDivider} />
+              <Grid item>
+                <List>
+                  <UserListItem 
+                    data={all_admins}
+                    avatar_map={avatar}/>
+                </List>
+              </Grid>
+            </>
+            <>
+              <Typography variant="h4" gutterButtom>
+                Guru
+              </Typography>
+              <Divider className={classes.personListDivider} />
+              <Grid item>
+                <List>
+                  <UserListItem 
+                    data={all_teachers}
+                    avatar_map={avatar}/>
+                </List>
+              </Grid>
+            </>
+            <>
+              <Typography variant="h4" gutterButtom>
+                Murid
+              </Typography>
+              <Divider className={classes.personListDivider} />
+              <Grid item>
+                <List>
+                  <UserListItem 
+                    data={all_students}
+                    avatar_map={avatar}/>
+                </List>
+              </Grid>
+            </>
           </Grid>
         </TabPanel>
         </Paper>
@@ -421,5 +468,7 @@ export default connect(mapStateToProps, {
     getAllSubjects,
     getTeachers,
     getStudents,
-    getAdmins
+    getAdmins,
+    getAllUsers,
+    getMultipleFileAvatar
 })(ViewUnit);

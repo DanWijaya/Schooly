@@ -764,7 +764,7 @@ function ManageAdmins(props) {
   const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
 
   const { setUserDeactivated, deleteUser, getAdmins } = props;
-  const { all_teachers, all_admins, user } = props.auth;
+  const { all_admins, user } = props.auth;
 
   let rows = [];
   console.log(all_admins);
@@ -962,18 +962,6 @@ function ManageAdmins(props) {
         .forEach((data) => {
           userRowItem(data);
           currentListBooleanStudent.push(false);
-        });
-    }
-    if (Array.isArray(all_teachers)) {
-      all_teachers
-        .filter(
-          (item) =>
-            item.name.toLowerCase().includes(searchFilterT.toLowerCase()) ||
-            item.email.toLowerCase().includes(searchFilterT.toLowerCase())
-        )
-        .forEach((data) => {
-          userRowItem(data);
-          currentListBooleanTeacher.push(false);
         });
     }
   };

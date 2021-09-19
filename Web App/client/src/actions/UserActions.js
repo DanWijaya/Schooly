@@ -18,6 +18,7 @@ import {
   GET_PENDING_ADMINS,
   // SET_DROPBOX_TOKEN,
   GET_SUCCESS_RESPONSE,
+  GET_ALL_USERS
 } from "./Types";
 
 // Register User
@@ -208,6 +209,21 @@ export const getTeachers = (unit_id, data = "array") => (dispatch) => {
     });
 };
 
+export const getAllUsers = (unit_id) => (dispatch) => {
+    return axios.get(`/api/users/getAllUsers/${unit_id}`)
+        .then((res) => {
+          dispatch({
+            type: GET_ALL_USERS,
+            payload: res.data
+          });
+          return res.data;
+        })
+        .catch((err) => {
+          console.log("Error in getting one user");
+          throw err;
+        }); 
+
+}
 export const getOneUser = (userId) => (dispatch) => {
   console.log(userId);
   return axios
@@ -222,6 +238,7 @@ export const getOneUser = (userId) => (dispatch) => {
     })
     .catch((err) => {
       console.log("Error in getting one user");
+      throw err;
     });
 };
 
@@ -285,18 +302,32 @@ export const getPendingTeachers = () => (dispatch) => {
     });
 };
 
-export const getAdmins = (unit_id) => (dispatch) => {
-  axios
-    .get(`/api/users/getAdmins/${unit_id}`)
-    .then((res) => {
-      dispatch({
-        type: GET_ALL_ADMINS,
-        payload: res.data,
+export const getAdmins = (unit_id=null) => (dispatch) => {
+  if(unit_id == null){
+    axios
+      .get(`/api/users/getAllAdmins/`)
+      .then((res) => {
+        dispatch({
+          type: GET_ALL_ADMINS,
+          payload: res.data,
+        });
+      })
+      .catch((err) => {
+        console.log("Error in getting Students by class");
       });
-    })
-    .catch((err) => {
-      console.log("Error in getting Students by class");
-    });
+  }else{
+    axios
+      .get(`/api/users/getAdmins/${unit_id}`)
+      .then((res) => {
+        dispatch({
+          type: GET_ALL_ADMINS,
+          payload: res.data,
+        });
+      })
+      .catch((err) => {
+        console.log("Error in getting Students by class");
+      });
+  }
 };
 
 export const getPendingAdmins = () => (dispatch) => {

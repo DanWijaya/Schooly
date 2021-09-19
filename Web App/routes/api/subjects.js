@@ -77,10 +77,10 @@ router.get("/view/:id", (req, res) => {
 router.get("/viewall/:unit_id", (req, res) => {
   let { unit_id } = req.params;
   Subject.find({unit: unit_id}).then((subjects, err) => {
-    if (!subjects) res.status(400).json(err);
+    if (!subjects) return res.status(400).json(err);
     else {
       subjects.sort((a, b) => (a.name > b.name ? 1 : -1));
-      res.json(subjects);
+      return res.json(subjects);
     }
   });
 });

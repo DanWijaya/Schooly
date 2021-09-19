@@ -718,23 +718,27 @@ class Dashboard extends Component {
       getTeachers,
     } = this.props;
     // const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
-    const { user } = this.props.auth;
-
-    getAllTask(); // actions yang membuat GET request ke Database.
-    getAllSubjects(user.unit);
-    getTeachers();
-    getAllSubjects(user.unit, "map"); // untuk dapatin subject"nya gitu
-    setCurrentClass(user.kelas);
+    const { user, all_roles } = this.props.auth;
+    if(user.role != all_roles.SUPERADMIN){
+      getAllTask(); // actions yang membuat GET request ke Database.
+      getAllSubjects(user.unit);
+      getTeachers();
+      getAllSubjects(user.unit, "map"); 
+      if(user.role === all_roles.STUDENT){
+        setCurrentClass(user.kelas);
+      }
+      if (user.role === "Student") {
+        getStudentsByClass(user.kelas);
+      }
+      getAllAssessments();
+      getAllTaskFilesByUser(user._id); // yang dapatin takfiles cuma berlaku untuk student soalnya
+      getStudents();
+    }
 
     // const { all_subjects_map } = this.props.subjectsCollection
     // let subjectArray = Object.keys(all_subjects_map)
 
-    if (user.role === "Student") {
-      getStudentsByClass(user.kelas);
-    }
-    getAllAssessments();
-    getAllTaskFilesByUser(user._id); // yang dapatin takfiles cuma berlaku untuk student soalnya
-    getStudents();
+   
   }
 
   componentWillUnmount() {

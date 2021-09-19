@@ -23,6 +23,7 @@ const initialState = {
   all_teachers_map: new Map(),
   all_students: [],
   all_admins: [],
+  all_users: [],
   students_by_class: [],
   loading: false,
   pending_students: [],

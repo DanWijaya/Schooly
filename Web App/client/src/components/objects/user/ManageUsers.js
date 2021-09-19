@@ -514,16 +514,6 @@ function ManageUsersToolbar(props) {
               </>
             ) : (
               <>
-                {/* {CheckboxDialog("Approve", "Teacher")}
-                <LightTooltip title="Aktifkan Pengguna Tercentang">
-                  <IconButton
-                    className={classes.profileApproveButton}
-                    onClick={(e) => OpenDialogCheckboxApprove(e, "Teacher")}
-                    style={{ marginRight: "3px" }}
-                  >
-                    <CheckCircleIcon />
-                  </IconButton>
-                </LightTooltip> */}
                 {CheckboxDialog("Delete", "Teacher")}
                 <LightTooltip title="Hapus Pengguna Tercentang">
                   <IconButton
@@ -539,54 +529,6 @@ function ManageUsersToolbar(props) {
         )}
       </div>
     </Toolbar>
-
-    // <Toolbar className={classes.toolbar}>
-    //   <Typography variant="h5">
-    //     {heading}
-    //   </Typography>
-    //   <LightTooltip title="Urutkan Akun">
-    //     <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-    //       <SortIcon />
-    //     </IconButton>
-    //   </LightTooltip>
-    //   <Menu
-    //     keepMounted
-    //     anchorEl={anchorEl}
-    //     open={Boolean(anchorEl)}
-    //     onClose={handleCloseSortMenu}
-    //     anchorOrigin={{
-    //       vertical: "bottom",
-    //       horizontal: "right",
-    //     }}
-    //     transformOrigin={{
-    //       vertical: "top",
-    //       horizontal: "left",
-    //     }}
-    //   >
-    //     {headCells.map((headCell, i) => (
-    //       <MenuItem
-    //         key={headCell.id}
-    //         sortDirection={orderBy === headCell.id ? order : false}
-    //         onClick={props.handleClosePanel}
-    //       >
-    //         <TableSortLabel
-    //           active={orderBy === headCell.id}
-    //           direction={orderBy === headCell.id ? order : "asc"}
-    //           onClick={createSortHandler(headCell.id)}
-    //         >
-    //           {headCell.label}
-    //           {orderBy === headCell.id ?
-    //             <span className={classes.visuallyHidden}>
-    //               {order === "desc" ? "sorted descending" : "sorted ascending"}
-    //             </span>
-    //             :
-    //             null
-    //           }
-    //         </TableSortLabel>
-    //       </MenuItem>
-    //     ))}
-    //   </Menu>
-    // </Toolbar>
   );
 }
 
@@ -933,15 +875,6 @@ function ManageUsers(props) {
     }
   };
 
-  // const handleOpenCheckboxApproveDialog = (e, user) => {
-  //   e.stopPropagation();
-  //   if (user === "Student") {
-  //     setOpenApproveCheckboxDialogStudent(true)
-  //   }
-  //   else {
-  //     setOpenApproveCheckboxDialogTeacher(true)
-  //   }
-  // };
 
   const handleCloseCheckboxDeleteDialog = (user) => {
     if (user === "Student") {
@@ -950,16 +883,7 @@ function ManageUsers(props) {
       setOpenDeleteCheckboxDialogTeacher(false);
     }
   };
-
-  // const handleCloseCheckboxApproveDialog = (user) => {
-  //   if (user === "Student") {
-  //     setOpenApproveCheckboxDialogStudent(false)
-  //   }
-  //   else {
-  //     setOpenApproveCheckboxDialogTeacher(false)
-  //   }
-  // };
-
+  
   const autoReloader = () => {
     setTest(!test);
   };
@@ -1153,11 +1077,6 @@ function ManageUsers(props) {
                   Hapus semua pengguna berikut?
                 </Typography>
               </Grid>
-              {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
-                  <Typography variant="h6" align="center" gutterBottom>
-                    <b>{selectedUserName}</b>
-                  </Typography>
-                </Grid> */}
               <Grid
                 container
                 direction="row"
