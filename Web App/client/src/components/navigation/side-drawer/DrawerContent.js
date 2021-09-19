@@ -70,7 +70,7 @@ function DrawerContent(props) {
         "Beranda",
       ],
       [
-        "/pengguna",
+        "/pengguna-aktif",
         <FaUserFriends className={classes.drawerListItemIcon} />,
         "Pengguna Aktif",
       ],

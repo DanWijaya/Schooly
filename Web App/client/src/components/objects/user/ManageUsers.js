@@ -8,43 +8,46 @@ import { getStudentsByClass } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import Empty from "../../misc/empty/Empty";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import UserMenu from "./UserMenu";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import Dialog from "@material-ui/core/Dialog";
-import Divider from "@material-ui/core/Divider";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
-import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import TextField from "@material-ui/core/TextField";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+import {
+  Avatar,
+  Button,
+  Checkbox,
+  Dialog,
+  Divider,
+  FormControlLabel,
+  Grid,
+  Hidden,
+  IconButton,
+  InputAdornment,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemAvatar,
+  ListItemText,
+  ListItemSecondaryAction,
+  Menu,
+  MenuItem,
+  Tab,
+  Tabs,
+  TableSortLabel,
+  TextField,
+  Typography
+} from "@material-ui/core";
+import {
+  Block as BlockIcon,
+  Cancel as CancelIcon,
+  CheckBox as CheckBoxIcon,
+  CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
+  CheckCircle as CheckCircleIcon,
+  Clear as ClearIcon,
+  IndeterminateCheckBox as IndeterminateCheckBoxIcon,
+  Search as SearchIcon,
+  Sort as SortIcon,
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import BlockIcon from "@material-ui/icons/Block";
-import CancelIcon from "@material-ui/icons/Cancel";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import ClearIcon from "@material-ui/icons/Clear";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
-import SearchIcon from "@material-ui/icons/Search";
-import SortIcon from "@material-ui/icons/Sort";
 import { BiSitemap } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
 
@@ -212,38 +215,33 @@ function ManageUsersToolbar(props) {
   // },[]);
 
   return (
-    <Toolbar className={classes.toolbar}>
+    <div className={classes.toolbar}>
       <Grid container>
-        <Grid item xs container alignItems="center">
-          {/*<Checkbox
-            color="primary"
-          />*/}
-
+        <Grid item xs container alignItems="center" spacing={1}>
+          <Grid item>
+          {/*
+          Perlu diubah jadi komponen checkbox biar posisinya nda aneh
+          <Checkbox color="primary" />
+          */}
           {
-            //rowCount === 0 ?
-            //   <IconButton size="small" onClick={() => selectAllData(role)} disabled={rowCount === 0}>
-            //     <CheckBoxOutlineBlankIcon className={classes.checkboxIconPrimary} />
-            //   </IconButton>
-            //   :
-              listCheckbox.length === 0 ? (
-                <IconButton size="small" onClick={() => selectAllData(role)}>
-                  <CheckBoxOutlineBlankIcon style={{ color: "grey" }} />
-                </IconButton>
-              ) : listCheckbox.length === rowCount ? (
-                <IconButton size="small" onClick={() => deSelectAllData(role)}>
-                  <CheckBoxIcon className={classes.checkboxIconPrimary} />
-                </IconButton>
-              ) : (
-                <IconButton size="small" onClick={() => deSelectAllData(role)}>
-                  <IndeterminateCheckBoxIcon
-                    className={classes.checkboxIconPrimary}
-                  />
-                </IconButton>
-              )
+            listCheckbox.length === 0 ? (
+              <IconButton onClick={() => selectAllData(role)}>
+                <CheckBoxOutlineBlankIcon style={{ color: "grey" }} />
+              </IconButton>
+            ) : listCheckbox.length === rowCount ? (
+              <IconButton onClick={() => deSelectAllData(role)}>
+                <CheckBoxIcon className={classes.checkboxIconPrimary} />
+              </IconButton>
+            ) : (
+              <IconButton onClick={() => deSelectAllData(role)}>
+                <IndeterminateCheckBoxIcon
+                  className={classes.checkboxIconPrimary}
+                />
+              </IconButton>
+            )
           }
-          <div>
-            {CheckboxDialog("Disable", role)}
-            {CheckboxDialog("Delete", role)}
+          </Grid>
+          <Grid item>
             <UserMenu
               options={["Nonaktifkan", "Hapus"]}
               role={role}
@@ -253,67 +251,54 @@ function ManageUsersToolbar(props) {
               handleOpenDisableApproveDialog={OpenDialogCheckboxDisable}
               rowCount={listCheckbox.length === 0}
             />
-          </div>
+          </Grid>
+          {CheckboxDialog("Disable", role)}
+          {CheckboxDialog("Delete", role)}
         </Grid>
-        <Grid item xs container justify="flex-end" alignItems="center">
-          <Hidden smDown>
-            <TextField
-              variant="outlined"
-              id="searchFilterDesktop"
-              value={searchFilter}
-              onChange={onChange}
-              autoFocus={searchFilter.length > 0}
-              placeholder={searchFilterHint}
-              style={{
-                maxWidth: "500px",
-                marginRight: "10px",
-              }}
-
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment
-                    position="start"
-                    style={{ marginRight: "-5px" }}
-                  >
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment
-                    position="end"
-                    style={{ marginLeft: "-10px" }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onClear(e);
-                      }}
-                      style={{
-                        opacity: 0.5,
-                        visibility: !searchFilter ? "hidden" : "visible",
-                      }}
+        <Grid item xs container justify="flex-end" alignItems="center" spacing={1}>
+          <Grid item>
+            <Hidden smDown>
+              <TextField
+                variant="outlined"
+                id="searchFilterDesktop"
+                value={searchFilter}
+                onChange={onChange}
+                autoFocus={searchFilter.length > 0}
+                placeholder={searchFilterHint}
+                InputProps={{
+                  style: { borderRadius: "22.5px" },
+                  startAdornment: (
+                    <InputAdornment
+                      position="start"
+                      style={{ marginRight: "-5px", color: "grey" }}
                     >
-                      <ClearIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-
-                style: {
-                  borderRadius: "22.5px",
-                  background: "#F1F3F4",
-                  boxShadow: "none",
-                },
-              }}
-              // styling di dalam input searchnya
-              inputProps={{
-                style: { boxShadow: "none", margin: "0 15px", borderBottom: "none" },
-              }}
-            />
-          </Hidden>
-          <Hidden mdUp>
-            {searchBarFocus ? (
-              <div style={{ display: "flex" }}>
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      style={{ marginLeft: "-10px" }}
+                    >
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onClear(e);
+                        }}
+                        style={{
+                          visibility: !searchFilter ? "hidden" : "visible",
+                        }}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Hidden>
+            <Hidden mdUp>
+              {searchBarFocus ? (
                 <TextField
                   fullWidth
                   variant="outlined"
@@ -325,26 +310,8 @@ function ManageUsersToolbar(props) {
                   onClick={(e) => {
                     setSearchBarFocus(true)
                   }}
-                  style={{
-                    maxWidth: "200px",
-                    marginLeft: "10px",
-                  }}
-                  inputProps={{
-                    style: { boxShadow: "none", margin: "0px 15px", borderBottom: "none" },
-                  }}
                   InputProps={{
-                    style: {
-                      borderRadius: "22.5px",
-                      background: "#F1F3F4",
-                    },
-                    startAdornment: searchBarFocus ? null : (
-                      <InputAdornment
-                        position="start"
-                        style={{ marginRight: "-5px" }}
-                      >
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
+                    style: { borderRadius: "22.5px" },
                     endAdornment: (
                       <InputAdornment
                         position="end"
@@ -358,7 +325,6 @@ function ManageUsersToolbar(props) {
                             onClear(e);
                           }}
                           style={{
-                            opacity: 0.5,
                             visibility: !searchFilter ? "hidden" : "visible",
                           }}
                         >
@@ -368,141 +334,80 @@ function ManageUsersToolbar(props) {
                     ),
                   }}
                 />
-              </div>
-            ) : (
-              <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
-                <IconButton
-                  className={classes.SearchIconButton}
-                  onClick={() => setSearchBarFocus(true)}
-                >
-                  <SearchIcon className={classes.SearchIconIconMobile} />
-                </IconButton>
-              </LightTooltip>
-            )}
-          </Hidden>
-          {role === "Student" ? (
-              <div>
-                <LightTooltip title="Urutkan Akun">
+              ) : (
+                <LightTooltip title="Cari Akun">
                   <IconButton
-                    onClick={handleOpenSortMenu}
-                    className={classes.sortButton}
-                    style={{
-                      display: searchBarFocus ? "none" : "block"
-                    }}
+                    className={classes.SearchIconButton}
+                    onClick={() => setSearchBarFocus(true)}
                   >
-                    <SortIcon />
+                    <SearchIcon className={classes.SearchIconIconMobile} />
                   </IconButton>
                 </LightTooltip>
-                <Menu
-                  keepMounted
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleCloseSortMenu}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  {headCells.map((headCell, i) => (
-                    <MenuItem
-                      key={headCell.id}
-                      sortDirection={orderBy === headCell.id ? order : false}
-                      onClick={createSortHandler(headCell.id)}
-                    >
-                      <TableSortLabel
-                        active={orderBy === headCell.id}
-                        direction={orderBy === headCell.id ? order : "asc"}
-                      >
-                        {headCell.label}
-                        {orderBy === headCell.id ? (
-                          <span className={classes.visuallyHidden}>
-                            {order === "desc"
-                              ? "sorted descending"
-                              : "sorted ascending"}
-                          </span>
-                        ) : null}
-                      </TableSortLabel>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </div>
-          ) : (
-            <>
-              {lengthListCheckbox === 0 ? (
-                <>
-                  <LightTooltip title="Sunting Data Ajar Guru">
-                    <Link to="/sunting-guru">
-                      <IconButton
-                        className={classes.checkboxModeButton}
-                        style={{
-                          display: searchBarFocus ? "none" : "block"
-                        }}
-                      >
-                        < BiSitemap />
-                      </IconButton>
-                    </Link>
-                  </LightTooltip>
-                  <LightTooltip title="Urutkan Akun">
-                    <IconButton
-                      onClick={handleOpenSortMenu}
-                      className={classes.sortButton}
-                      style={{
-                        display: searchBarFocus ? "none" : "block"
-                      }}
-                    >
-                      <SortIcon />
-                    </IconButton>
-                  </LightTooltip>
-                  <Menu
-                    keepMounted
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleCloseSortMenu}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "left",
-                    }}
-                  >
-                    {headCells.map((headCell, i) => (
-                      <MenuItem
-                        key={headCell.id}
-                        sortDirection={orderBy === headCell.id ? order : false}
-                        onClick={createSortHandler(headCell.id)}
-                      >
-                        <TableSortLabel
-                          active={orderBy === headCell.id}
-                          direction={orderBy === headCell.id ? order : "asc"}
-                        >
-                          {headCell.label}
-                          {orderBy === headCell.id ? (
-                            <span className={classes.visuallyHidden}>
-                              {order === "desc"
-                                ? "sorted descending"
-                                : "sorted ascending"}
-                            </span>
-                          ) : null}
-                        </TableSortLabel>
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </>
-              ) : (
-                <>
-                </>
               )}
-            </>
+            </Hidden>
+          </Grid>
+          {role === "Teacher" ? (
+            <Grid item>
+              <Link to="/sunting-guru">
+                <LightTooltip title="Sunting Data Ajar Guru">
+                  <IconButton style={{ display: searchBarFocus ? "none" : "block" }}>
+                    <BiSitemap />
+                  </IconButton>
+                </LightTooltip>
+              </Link>
+            </Grid>
+          ) : (
+            null
           )}
+          <Grid item>
+            <LightTooltip title="Urutkan Akun">
+              <IconButton
+                onClick={handleOpenSortMenu}
+                style={{ display: searchBarFocus ? "none" : "block"}}
+              >
+                <SortIcon />
+              </IconButton>
+            </LightTooltip>
+            <Menu
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleCloseSortMenu}
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+            >
+              {headCells.map((headCell, i) => (
+                <MenuItem
+                  key={headCell.id}
+                  sortDirection={orderBy === headCell.id ? order : false}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  <TableSortLabel
+                    active={orderBy === headCell.id}
+                    direction={orderBy === headCell.id ? order : "asc"}
+                  >
+                    {headCell.label}
+                    {orderBy === headCell.id ? (
+                      <span className={classes.visuallyHidden}>
+                        {order === "desc"
+                          ? "sorted descending"
+                          : "sorted ascending"}
+                      </span>
+                    ) : null}
+                  </TableSortLabel>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Grid>
         </Grid>
       </Grid>
-    </Toolbar>
+    </div>
   );
 }
 
@@ -516,6 +421,9 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "100%",
     },
   },
+  header: {
+    marginBottom: "25px",
+  },
   headerIcon: {
     display: "flex",
     backgroundColor: theme.palette.primary.main,
@@ -524,44 +432,8 @@ const useStyles = makeStyles((theme) => ({
     padding: "7.5px",
     borderRadius: "5px",
   },
-  subTitleDivider: {
-    marginTop: "15px",
-  },
-  titleDivider: {
-    backgroundColor: theme.palette.primary.main,
-    marginTop: "15px",
-    marginBottom: "32px",
-  },
   toolbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "0px",
-    minHeight: "unset",
-  },
-  viewMaterialButton: {
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
-    },
-  },
-  profileDeleteButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
-  profileDisableButton: {
-    backgroundColor: theme.palette.warning.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.dark,
-    },
+    padding: "10px 16px",
   },
   dialogBox: {
     width: "300px",
@@ -614,14 +486,6 @@ const useStyles = makeStyles((theme) => ({
       border: `1px solid ${theme.palette.error.dark}`,
     },
   },
-  sortButton: {
-    color: "#757575",
-    backgroundColor: "rgb(241 243 244)",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.action.disabledBackground,
-      color: "black",
-    },
-  },
   visuallyHidden: {
     border: 0,
     clip: "rect(0 0 0 0)",
@@ -633,36 +497,20 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  profilePanelDivider: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  profilePanelSummary: {
-    "&:hover:not(.Mui-disabled)": {
-      cursor: "default",
-    },
-    width: "100%"
-  },
-  content: {
+  accountItem: {
+    color: "black",
     "&:focus, &:hover": {
-      boxShadow: "0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.15)",
-      cursor: "pointer",
+      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
     }
-  },
-  checkboxModeButton: {
-    color: "#757575",
-    backgroundColor: "rgb(241 243 244)",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.action.disabledBackground,
-      color: "black",
-    },
-    marginRight: "3px",
   },
   checkboxIconPrimary: {
     color: theme.palette.primary.main,
   },
-  titleTab: {
-    fontSize: "16px",
-    minWidth: "10%"
+  userTabs: {
+    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+  },
+  tabTitle: {
+    alignSelf: "flex-start",
   },
 }));
 
@@ -1348,17 +1196,7 @@ function ManageUsers(props) {
 
   return (
     <div className={classes.root}>
-      {DisableDialog()}
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Pengguna"
-        itemName={selectedUserName}
-        deleteItem={() => {
-          onDeleteUser(selectedUserId);
-        }}
-      />
-      <Grid container alignItems="center" spacing={2}>
+      <Grid container alignItems="center" spacing={2} className={classes.header}>
         <Grid item>
           <div className={classes.headerIcon}>
             <FaUserFriends />
@@ -1375,16 +1213,12 @@ function ManageUsers(props) {
         indicatorColor="primary"
         textColor="primary"
         onChange={handleTabs}
-        style={{
-          borderBottom: "1px solid #E0E0E0",
-        }}
+        className={classes.userTabs}
       >
-        <Tab className={classes.titleTab} label={<span style={{ alignSelf: "flex-start" }}>Murid</span>} />
-        <Tab className={classes.titleTab} label={<span style={{ alignSelf: "flex-start" }}>Guru</span>} />
+        <Tab label={<Typography className={classes.tabTitle}>Murid</Typography>} />
+        <Tab label={<Typography className={classes.tabTitle}>Guru</Typography>} />
       </Tabs>
-      {/* </AppBar> */}
       <TabPanel value={value} index={0}>
-
         <ManageUsersToolbar
           searchFilterHint="Cari Murid"
           role="Student"
@@ -1409,160 +1243,99 @@ function ManageUsers(props) {
           user={user}
           setSearchBarFocus={setSearchBarFocusS}
           searchBarFocus={searchBarFocusS}
-          //Two props added for search filter.
           searchFilter={searchFilterS}
           updateSearchFilter={updateSearchFilterS}
           tabValueCheck={value === 0}
         />
-        <Divider className={classes.subTitleDivider} />
-        <Grid
-          container
-          direction="column"
-          spacing={2}
-          style={{ marginBottom: "100px" }}
-        >
-          <List dense>
-            {student_rows.length === 0 ? (
-              <Empty />
-            ) : (
-              stableSort(
-                student_rows,
-                getComparator(order_student, orderBy_student)
-              ).map((row, index) => {
-                const labelId = `enhanced-table-checkbox-${index}`;
-                let content = (
-                  <Link
-                    style={{ color: "black", cursor: "pointer" }}
-                    to={{
-                      pathname: `/lihat-profil/${row._id}`,
-                    }}
-                  >
-                    <div>
-                      <ListItem key={row} role={undefined} button>
-                        <ExpansionPanelSummary className={classes.profilePanelSummary} style={{ cursor: "pointer" }}>
-                          <Grid
-                            container
-                            spacing={1}
-                            justify="space-between"
-                            alignItems="center"
-                          >
-                            <Grid item justify="flex-start">
-                              <Grid item>
-                                <LightTooltip title="Aktifkan">
-                                  <FormGroup>
-                                    <FormControlLabel
-                                      control={
-                                        <Checkbox
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                          }}
-                                          onChange={(e) => {
-                                            handleChangeListStudent(e, index, row);
-                                            autoReloader();
-                                          }}
-                                          color="primary"
-                                          checked={Boolean(booleanCheckboxStudent[index])}
-                                        />
-                                      }
-                                    />
-                                  </FormGroup>
-                                </LightTooltip>
-                              </Grid>
-                            </Grid>
-
-                            <Hidden xsDown>
-                              <Grid item>
-                                {!row.avatar ? (
-                                  <ListItemAvatar >
-                                    <Avatar />
-                                  </ListItemAvatar>
-                                ) : (
-                                  <ListItemAvatar>
-                                    <Avatar src={`/api/upload/avatar/${row.avatar}`} />
-                                  </ListItemAvatar>
-                                )}
-                              </Grid>
-                            </Hidden>
-
-
-                            <Grid item>
-                              <Hidden smUp implementation="css">
-                                <div style={{ overflow: "hidden", textOverflow: "ellipsis", width: "11rem" }}>
-                                  <Typography variant="subtitle1" id={labelId} noWrap>
-                                    {row.name}
-                                  </Typography>
-
-
-                                  <Typography variant="caption" color="textSecondary" noWrap>
-                                    {row.email}
-                                  </Typography>
-                                </div>
-                              </Hidden>
-                              {/* <Hidden smUp implementation="css">
-                              <Typography variant="subtitle1" id={labelId}>
-                                {row.name}
-                              </Typography>
-                              <Typography variant="caption" color="textSecondary">
-                                {row.email}
-                              </Typography>
-                            </Hidden> */}
-                              <Hidden xsDown implementation="css">
-                                <Typography variant="h6" id={labelId}>
-                                  {row.name}
-                                </Typography>
-                                <Typography variant="body2" color="textSecondary">
-                                  {row.email}
-                                </Typography>
-                              </Hidden>
-                            </Grid>
-
-
-                            <Grid item xs container spacing={1} justify="flex-end">
-
-                              <ListItemSecondaryAction
-                                button
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                }}
-                                onChange={(e) => {
-                                  e.stopPropagation()
-                                }}
-                              >
-                                {/* <IconButton type="button" onClick={(e) => e.preventDefault()}>
-                                  More
-                                  </IconButton> */}
-                                <UserMenu
-                                  options={["Nonaktifkan", "Hapus"]}
-                                  role={null}
-                                  row={row}
-                                  handleOpenDeleteDialog={handleOpenDeleteDialog}
-                                  handleOpenDisableApproveDialog={handleOpenDisableDialog}
-                                />
-
-                              </ListItemSecondaryAction>
-                            </Grid>
-
-                          </Grid>
-                        </ExpansionPanelSummary>
-                        <Divider />
-                      </ListItem>
-                      <Divider />
-                    </div>
+        <List>
+          <Divider />
+          {student_rows.length === 0 ? (
+            <Empty />
+          ) : (
+            stableSort(
+              student_rows,
+              getComparator(order_student, orderBy_student)
+            ).map((row, index) => {
+              const labelId = `enhanced-table-checkbox-${index}`;
+              return (
+                <div>
+                  <Link to={`/lihat-profil/${row._id}`}>
+                    <ListItem className={classes.accountItem}>
+                      <ListItemIcon>
+                        <Checkbox
+                          color="primary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                          onChange={(e) => {
+                            handleChangeListStudent(e, index, row);
+                            autoReloader();
+                          }}
+                          checked={Boolean(booleanCheckboxStudent[index])}
+                        />
+                        {/*Ini yang propagationnya berhasil ke handle
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              color="primary"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                              onChange={(e) => {
+                                handleChangeListStudent(e, index, row);
+                                autoReloader();
+                              }}
+                              checked={Boolean(booleanCheckboxStudent[index])}
+                            />
+                          }
+                        />*/}
+                      </ListItemIcon>
+                      <Hidden xsDown>
+                        {!row.avatar ? (
+                          <ListItemAvatar >
+                            <Avatar />
+                          </ListItemAvatar>
+                        ) : (
+                          <ListItemAvatar>
+                            <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                          </ListItemAvatar>
+                        )}
+                      </Hidden>
+                      <ListItemText
+                        primary={
+                          <Typography id={labelId} noWrap>
+                            {row.name}
+                          </Typography>
+                        }
+                        secondary={
+                          <Typography variant="body2" color="textSecondary" noWrap>
+                            {row.email}
+                          </Typography>
+                        }
+                      />
+                      <ListItemSecondaryAction
+                        onClick={(e) => {
+                          e.stopPropagation()
+                        }}
+                      >
+                        <UserMenu
+                          options={["Nonaktifkan", "Hapus"]}
+                          role={null}
+                          row={row}
+                          handleOpenDeleteDialog={handleOpenDeleteDialog}
+                          handleOpenDisableApproveDialog={handleOpenDisableDialog}
+                        />
+                      </ListItemSecondaryAction>
+                    </ListItem>
                   </Link>
-                );
-
-                return (
-                  <Grid item className={classes.content} >
-                    {content}
-                  </Grid>
-                );
-              })
-            )}
-          </List>
-        </Grid>
+                  <Divider />
+                </div>
+              );
+            })
+          )}
+        </List>
       </TabPanel>
       <TabPanel value={value} index={1}>
-
         <ManageUsersToolbar
           searchFilterHint="Cari Guru"
           role="Teacher"
@@ -1598,147 +1371,99 @@ function ManageUsers(props) {
           updateSearchFilter={updateSearchFilterT}
           tabValueCheck={value === 1}
         />
-        <Divider className={classes.subTitleDivider} />
-        <Grid container direction="column" spacing={2}>
-          <List>
-            {teacher_rows.length === 0 ? (
-              <Empty />
-            ) : (
-              stableSort(
-                teacher_rows,
-                getComparator(order_teacher, orderBy_teacher)
-              ).map((row, index) => {
-                const labelId = `enhanced-table-checkbox-${index}`;
-                console.log(all_teachers[index]);
-
-                let content = (
-                  <div>
-                    <ListItem role={undefined} dense button>
-                      <ExpansionPanelSummary className={classes.profilePanelSummary} style={{ cursor: "pointer" }}>
-                        <Grid
-                          container
-                          spacing={1}
-                          justify="space-between"
-                          alignItems="center"
-                        >
-                          <Grid item justify="flex-start">
-                            <Grid item>
-                              <LightTooltip title="Aktifkan">
-                                <FormGroup>
-                                  <FormControlLabel
-                                    control={
-                                      <Checkbox
-                                        onChange={(e) => {
-                                          handleChangeListTeacher(e, index, row);
-                                          autoReloader();
-                                        }}
-                                        color="primary"
-                                        checked={Boolean(booleanCheckboxTeacher[index])}
-                                      />
-                                    }
-                                  />
-                                </FormGroup>
-                              </LightTooltip>
-                            </Grid>
-                          </Grid>
-                          <Grid item>
-                            <Hidden xsDown>
-                              {!row.avatar ? (
-                                <ListItemAvatar>
-                                  <Avatar />
-                                </ListItemAvatar>
-                              ) : (
-                                <ListItemAvatar>
-                                  <Avatar src={`/api/upload/avatar/${row.avatar}`} />
-                                </ListItemAvatar>
-                              )}
-
-                            </Hidden>
-                          </Grid>
-                          <Link
-                            style={{ color: "black" }}
-                            to={{
-                              pathname: `/lihat-profil/${row._id}`,
-                            }}
-                          >
-                            <Grid item>
-                              <Hidden smUp implementation="css">
-                                <div style={{ overflow: "hidden", textOverflow: "ellipsis", width: "11rem" }}>
-
-                                  <Typography variant="subtitle1" id={labelId} noWrap>
-                                    {row.name}
-                                  </Typography>
-                                  <Typography variant="caption" color="textSecondary" noWrap>
-                                    {row.email}
-                                  </Typography>
-                                </div>
-                              </Hidden>
-                              <Hidden xsDown implementation="css">
-                                <Typography variant="h6" id={labelId}>
-                                  {row.name}
-                                </Typography>
-                                <Typography variant="body2" color="textSecondary">
-                                  {row.email}
-                                </Typography>
-                              </Hidden>
-                            </Grid>
-                          </Link>
-                          {/* {!checkboxModeTeacher ? (
-                      <Grid item xs container spacing={1} justify="flex-end">
-                        <Grid item>
-                          <UserMenu
-                            options={["Nonaktifkan", "Hapus"]}
-                            row={row}
-                            handleOpenDeleteDialog={handleOpenDeleteDialog}
-                            handleOpenDisableDialog={handleOpenDisableDialog}
-
-                          />
-                        </Grid>
-                      </Grid>
-                    ) : ( */}
-                          <Grid item xs container spacing={1} justify="flex-end">
-                            {/* <LightTooltip title="Aktifkan">
-                            <FormGroup>
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    onChange={(e) => {
-                                      handleChangeListTeacher(e, index, row);
-                                      autoReloader();
-                                    }}
-                                    color="primary"
-                                    checked={Boolean(booleanCheckboxTeacher[index])}
-                                  />
-                                }
-                              />
-                            </FormGroup>
-                          </LightTooltip> */}
-                            <ListItemSecondaryAction>
-                              <UserMenu
-                                options={["Nonaktifkan", "Hapus"]}
-                                role={null}
-                                row={row}
-                                handleOpenDeleteDialog={handleOpenDeleteDialog}
-                                handleOpenDisableApproveDialog={handleOpenDisableDialog}
-                              />
-                            </ListItemSecondaryAction>
-                          </Grid>
-
-                        </Grid>
-                      </ExpansionPanelSummary>
-                      <Divider />
+        <List>
+          <Divider />
+          {teacher_rows.length === 0 ? (
+            <Empty />
+          ) : (
+            stableSort(
+              teacher_rows,
+              getComparator(order_teacher, orderBy_teacher)
+            ).map((row, index) => {
+              const labelId = `enhanced-table-checkbox-${index}`;
+              return (
+                <div>
+                  <Link to={`/lihat-profil/${row._id}`}>
+                    <ListItem className={classes.accountItem}>
+                      <ListItemIcon>
+                        <Checkbox
+                          color="primary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                          onChange={(e) => {
+                            handleChangeListTeacher(e, index, row);
+                            autoReloader();
+                          }}
+                          checked={Boolean(booleanCheckboxTeacher[index])}
+                        />
+                        {/*Ini yang propagationnya berhasil ke handle
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              color="primary"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                              onChange={(e) => {
+                                handleChangeListTeacher(e, index, row);
+                                autoReloader();
+                              }}
+                              checked={Boolean(booleanCheckboxTeacher[index])}
+                            />
+                          }
+                        />*/}
+                      </ListItemIcon>
+                      <Hidden xsDown>
+                        {!row.avatar ? (
+                          <ListItemAvatar>
+                            <Avatar />
+                          </ListItemAvatar>
+                        ) : (
+                          <ListItemAvatar>
+                            <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                          </ListItemAvatar>
+                        )}
+                      </Hidden>
+                      <ListItemText
+                        primary={
+                          <Typography id={labelId} noWrap>
+                            {row.name}
+                          </Typography>
+                        }
+                        secondary={
+                          <Typography variant="body2" color="textSecondary" noWrap>
+                            {row.email}
+                          </Typography>
+                        }
+                      />
+                      <ListItemSecondaryAction>
+                        <UserMenu
+                          options={["Nonaktifkan", "Hapus"]}
+                          role={null}
+                          row={row}
+                          handleOpenDeleteDialog={handleOpenDeleteDialog}
+                          handleOpenDisableApproveDialog={handleOpenDisableDialog}
+                        />
+                      </ListItemSecondaryAction>
                     </ListItem>
-                    <Divider />
-                  </div>
-                );
-
-                return <Grid item className={classes.content}>{content}</Grid>;
-              })
-            )}
-          </List>
-        </Grid>
+                  </Link>
+                  <Divider />
+                </div>
+              );
+            })
+          )}
+        </List>
       </TabPanel>
-    </div >
+      {DisableDialog()}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Pengguna"
+        itemName={selectedUserName}
+        deleteItem={() => {onDeleteUser(selectedUserId)}}
+      />
+    </div>
   );
 }
 

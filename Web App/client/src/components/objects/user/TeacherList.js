@@ -1,12 +1,10 @@
 import React from "react";
-// import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { getTeachers, updateTeacher } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
-
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Divider,
@@ -683,7 +681,7 @@ function TeacherList(props) {
       class_teached: newClassTeached,
       class_to_subject: tempClassToSubject
     };
-    
+
     updateTeacher(newTeacherData, teacherId);
   }
 

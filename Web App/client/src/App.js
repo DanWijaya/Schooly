@@ -554,7 +554,7 @@ class App extends Component {
                       <PrivateRoute
                         exact
                         access={["Admin"]}
-                        path="/pengguna"
+                        path="/pengguna-aktif"
                         component={ManageUsers}
                       />
                       <PrivateRoute

@@ -28,14 +28,14 @@ function UserMenu(props) {
         <MoreVertIcon />
       </IconButton>
       <Menu
-        id="long-menu"
-        anchorEl={anchorEl}
         keepMounted
         open={open}
         onClose={handleClose}
+        anchorEl={anchorEl}
         PaperProps={{
           style: {
-            width: "20ch",
+            maxWidth: "150px",
+            width: "100%",
           },
         }}
       >
