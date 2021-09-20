@@ -75,12 +75,14 @@ const styles = (theme) => ({
   },
   backButton: {
     color: theme.palette.primary.main,
-    width: "90px",
+    maxWidth: "90px",
+    width: "100%",
   },
   continueButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    width: "90px",
+    maxWidth: "90px",
+    width: "100%",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
@@ -89,7 +91,8 @@ const styles = (theme) => ({
   registerButton: {
     backgroundColor: theme.palette.success.main,
     color: "white",
-    width: "90px",
+    maxWidth: "90px",
+    width: "100%",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
       color: "white",

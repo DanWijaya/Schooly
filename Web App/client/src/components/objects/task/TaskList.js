@@ -33,7 +33,7 @@ import {
   ListItemAvatar,
   ListItemText,
   Avatar,
-} from "@material-ui/core/";
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
 import AssignmentIcon from "@material-ui/icons/Assignment";

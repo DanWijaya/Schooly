@@ -8,7 +8,7 @@ import {
   DialogTitle,
   Grid,
   Typography,
-} from "@material-ui/core/";
+} from "@material-ui/core";
 import {
   Cancel as CancelIcon,
   Publish as PublishIcon

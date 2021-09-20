@@ -299,40 +299,40 @@ function ManageUsersToolbar(props) {
             <Hidden mdUp>
               {searchBarFocus ? (
                 <TextField
-                      fullWidth
-                      autoFocus
-                      variant="outlined"
-                      id="searchFilterMobile"
-                      value={searchFilter}
-                      placeholder={searchFilterHint}
-                      onChange={onChange}
-                      onClick={(e) => {
-                        setSearchBarFocus(true)
-                      }}
-                      InputProps={{
-                        style: { borderRadius: "22.5px" },
-                        endAdornment: (
-                          <InputAdornment
-                            position="end"
-                            style={{ marginLeft: "-10px" }}
-                          >
-                            <IconButton
-                              size="small"
-                              id="searchFilterMobile"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onClear(e);
-                              }}
-                              style={{
-                                visibility: !searchFilter ? "hidden" : "visible",
-                              }}
-                            >
-                              <ClearIcon />
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
+                  fullWidth
+                  autoFocus
+                  variant="outlined"
+                  id="searchFilterMobile"
+                  value={searchFilter}
+                  placeholder={searchFilterHint}
+                  onChange={onChange}
+                  onClick={(e) => {
+                    setSearchBarFocus(true)
+                  }}
+                  InputProps={{
+                    style: { borderRadius: "22.5px" },
+                    endAdornment: (
+                      <InputAdornment
+                        position="end"
+                        style={{ marginLeft: "-10px" }}
+                      >
+                        <IconButton
+                          size="small"
+                          id="searchFilterMobile"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onClear(e);
+                          }}
+                          style={{
+                            visibility: !searchFilter ? "hidden" : "visible",
+                          }}
+                        >
+                          <ClearIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
               ) : (
                 <LightTooltip title="Cari Akun">
                   <IconButton onClick={() => setSearchBarFocus(true)}>
@@ -426,7 +426,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
   },
   toolbar: {
-    padding: "10px 16px",
+    padding: "16px",
   },
   dialogBox: {
     width: "300px",

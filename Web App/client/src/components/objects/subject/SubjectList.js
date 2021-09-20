@@ -35,7 +35,7 @@ import {
   ListItemAvatar,
   InputAdornment,
   Avatar,
-} from "@material-ui/core/";
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";

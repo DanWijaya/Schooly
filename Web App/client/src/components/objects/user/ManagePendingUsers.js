@@ -33,7 +33,7 @@ import {
   TableSortLabel,
   TextField,
   Typography
-} from "@material-ui/core/";
+} from "@material-ui/core";
 import {
   ArrowBack as ArrowBackIcon,
   Block as BlockIcon,
@@ -424,7 +424,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
   },
   toolbar: {
-    padding: "10px 16px",
+    padding: "16px",
   },
   profileApproveButton: {
     backgroundColor: theme.palette.success.main,

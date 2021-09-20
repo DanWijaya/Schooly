@@ -41,7 +41,7 @@ import {
   useMediaQuery,
   CircularProgress,
   Fade,
-} from "@material-ui/core/";
+} from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
   KeyboardDateTimePicker,

@@ -17,7 +17,7 @@ import {
   Divider,
   Badge,
   Dialog
-} from "@material-ui/core/";
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import EventNoteIcon from '@material-ui/icons/EventNote';

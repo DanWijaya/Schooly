@@ -8,7 +8,7 @@ import {
   DialogTitle,
   Grid,
   Typography
-} from "@material-ui/core/";
+} from "@material-ui/core";
 import { CheckCircle as CheckCircleIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 

@@ -12,15 +12,15 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: {
-    width: "240px",
+    width: "250px",
   },
   drawerDesktop: {
-    width: "240px",
+    width: "250px",
     flexShrink: 0,
     whiteSpace: "nowrap"
   },
   drawerDesktopOpen: {
-    width: "240px",
+    width: "250px",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
