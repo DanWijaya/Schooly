@@ -361,7 +361,7 @@ class CreateAnnouncement extends Component {
           ? [null]
           : this.state.class_assigned,
       author_id: user._id,
-      errors: {},
+      
       to: user.role === "Admin" ? this.state.target_role : ["Student"],
     };
 

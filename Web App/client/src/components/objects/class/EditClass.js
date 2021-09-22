@@ -198,7 +198,7 @@ class EditClass extends Component {
       ketua_kelas: this.state.ketua_kelas,
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
-      errors: {},
+      
       mata_pelajaran: this.state.mata_pelajaran.map((matpel) => (matpel._id))
     };
     this.props

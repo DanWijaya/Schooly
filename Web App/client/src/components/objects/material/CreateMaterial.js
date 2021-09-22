@@ -349,7 +349,7 @@ class CreateMaterial extends Component {
       description: this.state.description,
       lampiran: Array.from(this.state.fileLampiran),
       author_id: id,
-      errors: {},
+      
     };
 
     console.log(this.state.fileLampiran);

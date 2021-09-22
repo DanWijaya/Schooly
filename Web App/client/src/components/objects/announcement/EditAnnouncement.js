@@ -442,7 +442,7 @@ class EditAnnouncement extends Component {
           : user.role === "Admin"
           ? [null]
           : this.state.class_assigned,
-      errors: {},
+      
       to: user.role === "Admin" ? this.state.target_role : ["Student"],
     };
 
