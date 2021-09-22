@@ -374,8 +374,8 @@ function SubmittedTaskList(props) {
 
   React.useEffect(() => {
     getOneTask(task_id);
-    getStudents();
-    getAllClass();
+    getStudents(user.unit);
+    getAllClass(user.unit);
     // ini successnya bakal return 3 barang di list.
     if (success instanceof Array) {
       if (success.length === 3) handleOpenAlert();

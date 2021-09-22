@@ -1168,7 +1168,7 @@ class CreateAssessment extends Component {
       refreshTeacher,
     } = this.props;
     const { pathname } = this.props.location;
-
+    const { unit, _id } = this.props.auth.user;
     if (pathname === "/buat-kuis") {
       this.setState({ type: "Kuis" });
     } else if (pathname === "/buat-ujian") {
@@ -1178,9 +1178,9 @@ class CreateAssessment extends Component {
     }
 
     handleSideDrawerExist(false);
-    getAllClass();
-    getAllSubjects(this.props.auth.user.unit);
-    refreshTeacher(this.props.auth.user._id);
+    getAllClass(unit);
+    getAllSubjects(unit);
+    refreshTeacher(_id);
     if (this.inputHeightRef.current && this.customHeightRef.current) {
       this.setState({
         inputHeight: this.inputHeightRef.current.offsetHeight,

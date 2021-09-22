@@ -922,7 +922,7 @@ function ClassList(props) {
   React.useEffect(() => {
     getAllClass(user.unit);
     getAllClass(user.unit, "map");
-    getTeachers("map");
+    getTeachers(user.unit, "map");
     getStudents(user.unit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -962,9 +962,9 @@ function ClassList(props) {
     deleteClass(id).then((res) => {
       console.log(res);
 
-      getAllClass();
-      getAllClass("map");
-      getTeachers("map");
+      getAllClass(user.unit);
+      getAllClass(user.unit ,"map");
+      getTeachers(user.unit, "map");
       handleOpenDeleteSnackbar();
       handleCloseDeleteDialog();
     });

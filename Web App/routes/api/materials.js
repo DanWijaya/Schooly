@@ -32,7 +32,7 @@ router.post("/create", (req, res) => {
     author_id: req.body.author_id,
     class_assigned: class_assigned_ids,
     description: req.body.description,
-    // lampiran: req.body.lampiran
+    unit: req.body.unit
   });
 
   console.log(newMaterial);

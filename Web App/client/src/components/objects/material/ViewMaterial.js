@@ -359,15 +359,15 @@ function ViewMaterial(props) {
   React.useEffect(() => {
     getAllSubjects(user.unit, "map"); // this will get the selectedMaterials.
     getOneMaterial(materi_id);
-    getAllClass("map");
+    getAllClass(user.unit ,"map");
     // COba S3
     getFileMaterials(materi_id).then((result) => {
       setFileLampiran(result);
     });
     // bakal ngedapat collection of S3 files di
 
-    getStudents();
-    getTeachers();
+    getStudents(user.unit);
+    getTeachers(user.unit);
     clearErrors();
     clearSuccess();
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -166,7 +166,7 @@ function ViewAssessmentTeacher(props) {
 
   React.useEffect(() => {
     getOneAssessment(assessment_id);
-    getAllClass("map");
+    getAllClass(user.unit ,"map");
     getAllSubjects(user.unit, "map");
     getFileAssessment(assessment_id).then((result) => setLampiranUrls(result));
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -655,8 +655,8 @@ function ViewTaskStudent(props) {
   // useEffect(() => {getAllSubjects(user.unit, "map")}, [])
 
   useEffect(() => {
-    getStudents();
-    getTeachers();
+    getStudents(user.unit);
+    getTeachers(user.unit);
     clearErrors();
     clearSuccess();
     // eslint-disable-next-line react-hooks/exhaustive-deps

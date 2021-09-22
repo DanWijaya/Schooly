@@ -102,9 +102,9 @@ router.get("/setCurrentClass/:id", (req, res) => {
 router.get("/viewSelectedClasses/", (req, res) => {
   const { classes_ids } = req.query;
   // console.log(classes_ids)
-  let ids_to_find;
+  let ids_to_find = [];
 
-  if (classes_ids !== undefined) {
+  if (Array.isArray(classes_ids)) {
     ids_to_find = classes_ids.map((id) => new ObjectId(id));
   }
   Class.find({ _id: { $in: ids_to_find } }, (err, classes) => {

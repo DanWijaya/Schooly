@@ -85,14 +85,13 @@ function EditClassTeacher(props) {
 
   // const [selectedClass, setSelectedClass] = React.useState(null);
 
-  const { all_teachers } = props.auth;
+  const { all_teachers, user } = props.auth;
   const { all_classes } = props.classesCollection;
   // const { all_classes_map } = props.classesCollection;
   const { getTeachers, getAllClass } = props;
-
   React.useEffect(() => {
-    getTeachers();
-    getAllClass();
+    getTeachers(user.unit);
+    getAllClass(user.unit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

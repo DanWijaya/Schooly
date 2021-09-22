@@ -691,10 +691,11 @@ class CreateAssessment extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount(){ 
+    const { user } = this.props.auth;
     const { getAllClass, getAllSubjects, handleSideDrawerExist } = this.props;
     handleSideDrawerExist(false);
-    getAllClass();
+    getAllClass(user.unit);
     getAllSubjects(user.unit);
   }
 

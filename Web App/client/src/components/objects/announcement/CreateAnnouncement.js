@@ -273,7 +273,7 @@ class CreateAnnouncement extends Component {
   componentDidMount() {
     const { user } = this.props.auth;
     const { getAllClass, setCurrentClass, refreshTeacher } = this.props;
-    getAllClass();
+    getAllClass(user.unit);
 
     if (user.role === "Student") {
       setCurrentClass(user.kelas);
@@ -369,8 +369,8 @@ class CreateAnnouncement extends Component {
           ? [null]
           : this.state.class_assigned,
       author_id: user._id,
-      errors: {},
       to: user.role === "Admin" ? this.state.target_role : ["Student"],
+      unit: user.unit
     };
 
     if (this.state.fileLampiran)

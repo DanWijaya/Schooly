@@ -357,6 +357,7 @@ class CreateMaterial extends Component {
   };
 
   onSubmit = (e, id) => {
+    const { user } = this.props.auth;
     e.preventDefault();
     let formData = new FormData();
 
@@ -375,7 +376,7 @@ class CreateMaterial extends Component {
       description: this.state.description,
       lampiran: Array.from(this.state.fileLampiran),
       author_id: id,
-      errors: {},
+      unit: user.unit
     };
 
     console.log(this.state.fileLampiran);
@@ -460,8 +461,9 @@ class CreateMaterial extends Component {
     }
   }
 
-  componentDidMount() {
-    this.props.getAllClass();
+  componentDidMount(){ 
+    const { user } = this.props.auth;
+    this.props.getAllClass(user.unit);
     this.props.getAllSubjects(this.props.auth.user.unit);
     this.props.refreshTeacher(this.props.auth.user._id);
   }

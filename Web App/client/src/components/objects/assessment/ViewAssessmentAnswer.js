@@ -300,9 +300,9 @@ function ViewAssessmentTeacher(props) {
 
   React.useEffect(() => {
     getOneAssessment(assessment_id);
-    getAllClass("map");
+    getAllClass(user.unit ,"map");
     getAllSubjects(user.unit, "map");
-    getStudents();
+    getStudents(user.unit);
 
     if (location.state) {
       setSelectedStudent(location.state.studentId);

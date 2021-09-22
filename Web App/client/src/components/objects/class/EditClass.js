@@ -212,16 +212,17 @@ class EditClass extends Component {
       });
   };
 
-  componentDidMount() {
+  componentDidMount(){ 
+    const { user } = this.props.auth;
     const {
       getTeachers,
       getStudentsByClass,
       getAllClass,
       getAllSubjects,
     } = this.props;
-    getTeachers();
+    getTeachers(user.unit);
     getStudentsByClass(this.props.match.params.id);
-    getAllClass();
+    getAllClass(user.unit);
     getAllSubjects(this.props.auth.user.unit);
   }
 

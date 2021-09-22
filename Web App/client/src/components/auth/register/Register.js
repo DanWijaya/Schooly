@@ -192,7 +192,7 @@ class Register extends Component {
       tanggal_lahir: this.state.tanggal_lahir,
       unit: this.state.unit,
     };
-
+    
     if (this.state.activeStep === 2) {
       this.setState({ submitButtonClicked: true });
     }

@@ -247,10 +247,11 @@ class EditTask extends Component {
 
   tugasUploader = React.createRef(null);
 
-  componentDidMount() {
+  componentDidMount(){ 
+    const { user } = this.props.auth;
     const { id } = this.props.match.params;
     this.props.getOneTask(id);
-    this.props.getAllClass();
+    this.props.getAllClass(user.unit);
     this.props.getAllSubjects(this.props.auth.user.unit);
     this.props.getFileTasks(id).then((res) => {
       this.setState({

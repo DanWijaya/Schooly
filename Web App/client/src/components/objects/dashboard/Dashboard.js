@@ -722,7 +722,7 @@ class Dashboard extends Component {
     if(user.role != all_roles.SUPERADMIN){
       getAllTask(); // actions yang membuat GET request ke Database.
       getAllSubjects(user.unit);
-      getTeachers();
+      getTeachers(user.unit);
       getAllSubjects(user.unit, "map"); 
       if(user.role === all_roles.STUDENT){
         setCurrentClass(user.kelas);
@@ -732,7 +732,7 @@ class Dashboard extends Component {
       }
       getAllAssessments();
       getAllTaskFilesByUser(user._id); // yang dapatin takfiles cuma berlaku untuk student soalnya
-      getStudents();
+      getStudents(user.unit);
     }
 
     // const { all_subjects_map } = this.props.subjectsCollection

@@ -343,7 +343,8 @@ class EditAssessment extends Component {
 
   imageUploader = React.createRef(null); // untuk ngerefer html object yang lain
 
-  componentDidMount() {
+  componentDidMount(){ 
+    const { user } = this.props.auth;
     const {
       getOneAssessment,
       getAllClass,
@@ -363,7 +364,7 @@ class EditAssessment extends Component {
     }
 
     handleSideDrawerExist(false);
-    getAllClass();
+    getAllClass(user.unit);
     getOneAssessment(assessment_id);
     getAllSubjects(this.props.auth.user.unit);
     refreshTeacher(this.props.auth.user._id);

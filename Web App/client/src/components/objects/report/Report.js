@@ -1174,16 +1174,16 @@ function Report(props) {
   // mengklik tombol rapor di side drawer.
   React.useEffect(() => {
     if (role === "Teacher") {
-      getAllClass();
+      getAllClass(user.unit);
       getAllTask();
       getAllAssessments();
     } else if (role === "Student") {
-      setKelasWali(new Map()); // agar setRows(handleIndividualReport()) dijalankan, tapi tidak perlu panggil getAllClass()
+      setKelasWali(new Map()); // agar setRows(handleIndividualReport()) dijalankan, tapi tidak perlu panggil getAllClass(user.unit)
       getAllTask();
       getAllAssessments();
     } else {
-      getAllClass();
-      getAllClass("map");
+      getAllClass(user.unit);
+      getAllClass(user.unit ,"map");
     }
     getAllSubjects(user.unit);
     getAllSubjects(user.unit, "map");
@@ -1348,7 +1348,7 @@ function Report(props) {
   }, [students_by_class]);
 
   // menginisialisasi isi menu item komponen Select setelah
-  // setKelasWali, getAllClass("map"), dan getAllSubjects(user.unit, "map") sudah selesai dijalankan semuanya.
+  // setKelasWali, getAllClass(user.unit ,"map"), dan getAllSubjects(user.unit, "map") sudah selesai dijalankan semuanya.
   React.useEffect(() => {
     countMIDependencyUpdate.current++;
     if (countMIDependencyUpdate.current === 4) {

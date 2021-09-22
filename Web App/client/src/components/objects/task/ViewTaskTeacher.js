@@ -344,13 +344,13 @@ function ViewTaskTeacher(props) {
 
   React.useEffect(() => {
     getOneTask(task_id);
-    getAllClass("map");
+    getAllClass(user.unit ,"map");
     getAllSubjects(user.unit, "map");
     getFileTasks(task_id).then((res) => {
       setFileLampiran(res);
     });
-    getStudents();
-    getTeachers();
+    getStudents(user.unit);
+    getTeachers(user.unit);
     clearErrors();
     clearSuccess();
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -561,7 +561,7 @@ function TaskList(props) {
 
   React.useEffect(() => {
     getAllTask();
-    getAllClass("map");
+    getAllClass(user.unit ,"map");
     getAllSubjects(user.unit, "map");
 
     if (user.role === "Student") {

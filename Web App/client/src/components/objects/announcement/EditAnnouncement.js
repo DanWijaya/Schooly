@@ -243,7 +243,7 @@ class EditAnnouncement extends Component {
     const { id } = this.props.match.params;
 
     getOneAnnouncement(id);
-    getAllClass();
+    getAllClass(user.unit);
     getFileAnnouncements(id).then((result) => {
       this.setState({ fileLampiran: result, originalFileLampiran: result });
     });

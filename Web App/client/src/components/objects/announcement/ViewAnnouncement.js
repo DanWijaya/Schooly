@@ -237,15 +237,13 @@ function ViewAnnouncement(props) {
 
   const announcement_id = props.match.params.id;
 
-  React.useEffect(() => {}, []);
-
   React.useEffect(() => {
-    console.log(announcement_id);
+
     getOneAnnouncement(announcement_id);
-    getAllClass("map");
-    getSelectedClasses(selectedAnnouncements.class_assigned);
+    getAllClass(user.unit,"map");
     if (selectedAnnouncements._id) {
       getUsers([selectedAnnouncements.author_id]);
+      getSelectedClasses(selectedAnnouncements.class_assigned);
     }
     getFileAnnouncements(announcement_id).then((result) => {
       setFileLampiran(result);

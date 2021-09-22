@@ -512,7 +512,7 @@ function ViewSubject(props) {
     getAllTaskFilesByUser(user._id);
     getAllSubjects(user.unit, "map");
     getAllAssessments();
-    getTeachers("map");
+    getTeachers(user.unit, "map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

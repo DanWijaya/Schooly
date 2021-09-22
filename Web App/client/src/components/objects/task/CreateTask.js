@@ -386,7 +386,6 @@ class CreateTask extends Component {
       class_assigned: this.state.class_assigned,
       person_in_charge_id: id,
       description: this.state.description,
-      errors: {},
     };
 
     //Check if there is any lampiran_tugas uploaded or not.
@@ -406,9 +405,10 @@ class CreateTask extends Component {
       });
   };
 
-  componentDidMount() {
+  componentDidMount(){ 
+    const { user } = this.props.auth;
     const { getAllClass, getAllSubjects, refreshTeacher } = this.props;
-    getAllClass();
+    getAllClass(user.unit);
     getAllSubjects(this.props.auth.user.unit);
     refreshTeacher(this.props.auth.user._id);
   }

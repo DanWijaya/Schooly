@@ -124,7 +124,6 @@ class CreateClass extends Component {
       ketua_kelas: this.state.ketua_kelas,
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
-      errors: {},
       unit: user.unit,
       mata_pelajaran: this.state.mata_pelajaran.map((matpel) => matpel._id),
     };
@@ -147,10 +146,11 @@ class CreateClass extends Component {
     this.setState({ class_assigned: selectedList[0] });
   };
 
-  componentDidMount() {
-    this.props.getTeachers();
-    this.props.getAllSubjects(this.props.auth.user.unit);
-    this.props.getAllClass();
+  componentDidMount(){ 
+    const { user } = this.props.auth;
+    this.props.getTeachers(user.unit);
+    this.props.getAllSubjects(user.unit);
+    this.props.getAllClass(user.unit);
   }
 
   componentWillUnmount() {

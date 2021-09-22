@@ -651,9 +651,9 @@ function AssessmentList(props) {
   React.useEffect(
     () => {
       getAllAssessments();
-      getAllClass("map");
+      getAllClass(user.unit ,"map");
       getAllSubjects(user.unit, "map");
-      getTeachers("map");
+      getTeachers(user.unit, "map");
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

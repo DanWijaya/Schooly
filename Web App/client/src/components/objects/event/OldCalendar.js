@@ -873,8 +873,8 @@ function Calendar(props) {
     getAllEvents();
     getAllTask();
     getAllAssessments();
-    getStudents();
-    getTeachers();
+    getStudents(user.unit);
+    getTeachers(user.unit);
     getAllTaskFilesByUser(user._id);
     getAllSubjects(user.unit, "map");
   }, []);

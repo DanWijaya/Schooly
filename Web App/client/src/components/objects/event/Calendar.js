@@ -2758,12 +2758,12 @@ function Calendar(props) {
 
   React.useEffect(() => {
     getSelectedClasses(user.class_teached);
-    getAllClass();
+    getAllClass(user.unit);
     getAllEvents();
     getAllTask();
     getAllAssessments();
-    getStudents();
-    getTeachers();
+    getStudents(user.unit);
+    getTeachers(user.unit);
     getAllTaskFilesByUser(user._id);
     getAllSubjects(user.unit, "map");
 

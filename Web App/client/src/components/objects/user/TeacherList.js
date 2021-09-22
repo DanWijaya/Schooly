@@ -532,10 +532,10 @@ function TeacherList(props) {
   React.useEffect(() => {
     // getAllSubjects(user.unit, "map");
     getAllSubjects(user.unit);
-    // getAllClass("map");
-    getAllClass();
-    // getTeachers("map");
-    getTeachers();
+    // getAllClass(user.unit ,"map");
+    getAllClass(user.unit);
+    // getTeachers(user.unit, "map");
+    getTeachers(user.unit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

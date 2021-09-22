@@ -464,7 +464,7 @@ function ViewAssessmentStudent(props) {
       }
     });
     getAllSubjects(user.unit, "map");
-    getAllClass("map");
+    getAllClass(user.unit ,"map");
     getFileAssessment(id).then((result) => setLampiranUrls(result));
 
     new Promise((resolve, reject) => {

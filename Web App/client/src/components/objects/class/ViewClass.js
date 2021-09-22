@@ -1076,8 +1076,8 @@ function ViewClass(props) {
     getAllSubjects(user.unit, "map"); // get the all_subjects_map in map
     getAllSubjects(user.unit); // get the all_subjects
     getStudentsByClass(props.match.params.id); // get the students_by_class
-    // getTeachers("map"); // dipindahkan
-    getStudents();
+    // getTeachers(user.unit, "map"); // dipindahkan
+    getStudents(user.unit);
 
     getAllTaskFilesByUser(user._id); // get the all_user_files
     getAllAssessments();
@@ -1095,7 +1095,7 @@ function ViewClass(props) {
   React.useEffect(() => {
     //Untuk mendapatkan kelas current, digunakan untuk:
     //  -> Dapatin id walikelas
-    // -> pindahkan getTeachers("map") di sini karena mau execute setWalikelas hanya setelah itu selesai.
+    // -> pindahkan getTeachers(user.unit, "map") di sini karena mau execute setWalikelas hanya setelah itu selesai.
     var id_list;
     setCurrentClass(classId).then((kelas) => {
       if (kelas) {
@@ -1612,7 +1612,7 @@ function ViewClass(props) {
                         {[
                           <Grid item>
                             <PersonListItem
-                              person_avatar={avatar[walikelas._id]}
+                              person_avatar={walikelas._id ? avatar[walikelas._id] : null}
                               person_name={student.name}
                               person_role={student_role(student._id)}
                             />

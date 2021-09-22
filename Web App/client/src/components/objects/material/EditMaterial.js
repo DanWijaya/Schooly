@@ -236,7 +236,8 @@ class EditMaterial extends Component {
 
   lampiranUploader = React.createRef(null);
 
-  componentDidMount() {
+  componentDidMount(){ 
+    const { user } = this.props.auth;
     const {
       getAllClass,
       getAllSubjects,
@@ -246,7 +247,7 @@ class EditMaterial extends Component {
     } = this.props;
     const { id } = this.props.match.params;
 
-    getAllClass();
+    getAllClass(user.unit);
     getOneMaterial(id);
     getAllSubjects(this.props.auth.user.unit);
     getFileMaterials(id).then((result) => {

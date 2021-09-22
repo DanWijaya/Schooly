@@ -907,8 +907,10 @@ function ManageUsers(props) {
   };
 
   React.useEffect(() => {
-    getStudents();
-    getTeachers();
+    if(user){
+      getStudents(user.unit);
+      getTeachers(user.unit);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -1398,7 +1400,6 @@ function ManageUsers(props) {
             getComparator(order_teacher, orderBy_teacher)
           ).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
-            console.log(all_teachers[index]);
 
             let content = (
               <ExpansionPanel button variant="outlined" expanded={false}>

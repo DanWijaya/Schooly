@@ -277,8 +277,8 @@ function SubmittedAssessmentList(props) {
 
   React.useEffect(() => {
     getOneAssessment(assessment_id);
-    getStudents();
-    getAllClass();
+    getStudents(user.unit);
+    getAllClass(user.unit);
     getAllSubjects(user.unit, "map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
