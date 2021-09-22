@@ -546,20 +546,21 @@ function TeacherList(props) {
                         </Typography>
                         <Autocomplete
                           multiple
-                          value={
-                            selectedValues[row._id]
-                              ? selectedValues[row._id].subject
-                              : null
-                          }
+                          size="small"
+                          filterSelectedOptions
                           options={all_subjects}
                           getOptionLabel={(option) => option.name}
                           getOptionSelected={(option, value) =>
                             option._id === value._id
                           }
-                          filterSelectedOptions
                           onChange={(event, value) => {
                             handleChangeSubject(value, row._id);
                           }}
+                          value={
+                            selectedValues[row._id]
+                            ? selectedValues[row._id].subject
+                            : null
+                          }
                           renderInput={(params) => (
                             <TextField variant="outlined" {...params} />
                           )}
@@ -571,20 +572,19 @@ function TeacherList(props) {
                         </Typography>
                         <Autocomplete
                           multiple
-                          value={
-                            selectedValues[row._id]
-                              ? selectedValues[row._id].class
-                              : null
-                          }
+                          size="small"
                           options={all_classes ? all_classes : null}
                           getOptionLabel={(option) => option.name}
-                          getOptionSelected={(option, value) =>
-                            option._id === value._id
-                          }
+                          getOptionSelected={(option, value) => option._id === value._id}
                           filterSelectedOptions
                           onChange={(event, value) => {
                             handleChangeClass(value, row._id);
                           }}
+                          value={
+                            selectedValues[row._id]
+                            ? selectedValues[row._id].class
+                            : null
+                          }
                           renderInput={(params) => (
                             <TextField variant="outlined" {...params} />
                           )}

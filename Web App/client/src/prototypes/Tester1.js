@@ -1,5 +1,8 @@
 import React from "react";
-import { Button, List, ListItem } from "@material-ui/core";
+import { Button, Grid, List, ListItem } from "@material-ui/core";
+import {
+  LibraryBooks as LibraryBooksIcon,
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import DeleteDialog from "../components/misc/dialog/DeleteDialog";
 import UploadDialog from "../components/misc/dialog/UploadDialog";
@@ -36,7 +39,7 @@ function Tester(props) {
   };
 
   return (
-    <div>
+    <div style={{maxWidth: "80%", margin: "auto"}}>
       <Button onClick={handleOpenDeleteDialog}>
         Delete
       </Button>
@@ -68,14 +71,33 @@ function Tester(props) {
         // onSubmit={onSubmit}
         messageLoading="Jawaban Anda sedang disimpan"
       />
-      <List>
-        <ListItem>
-          Test
-        </ListItem>
-        <ListItem>
-          Test
-        </ListItem>
-      </List>
+      <Grid>
+        <Grid container alignItems="stretch" justify="space-between" style={{border: "1px solid black"}}>
+          <Grid item
+            container alignItems="center" style={{backgroundColor: "blue", color: "white"
+            , width: "70%"
+          }}
+          >
+            <LibraryBooksIcon />
+          </Grid>
+          <Grid item style={{height: "100px"}}>
+            Grid
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <div>
+        <div style={{display: "flex", justifyContent: "space-between", alignItems: "stretch", border: "1px solid black"}}>
+          <div
+            style={{backgroundColor: "blue", color: "white", display: "flex", alignItems: "center"}}
+          >
+            <LibraryBooksIcon />
+          </div>
+          <div style={{height: "100px"}}>
+            div
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
