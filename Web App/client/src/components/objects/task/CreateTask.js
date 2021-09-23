@@ -356,7 +356,7 @@ class CreateTask extends Component {
       class_assigned: this.state.class_assigned,
       person_in_charge_id: id,
       description: this.state.description,
-      errors: {},
+      
     };
 
     //Check if there is any lampiran_tugas uploaded or not.

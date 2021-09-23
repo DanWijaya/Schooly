@@ -386,7 +386,7 @@ class EditTask extends Component {
       description: this.state.description,
       class_assigned: this.state.class_assigned,
       lampiran: Array.from(this.state.fileLampiran),
-      errors: {},
+      
     };
 
     let formData = new FormData();
