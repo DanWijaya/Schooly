@@ -566,7 +566,7 @@ class App extends Component {
                       <PrivateRoute
                         exact
                         access={["Admin"]}
-                        path="/sunting-guru"
+                        path="/data-ajar-guru"
                         component={TeacherList}
                       />
                       {/*  Route Settings */}

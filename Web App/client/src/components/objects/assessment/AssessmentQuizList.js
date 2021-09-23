@@ -44,7 +44,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
 import LinkIcon from "@material-ui/icons/Link";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from "@material-ui/icons/Clear";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -1123,9 +1123,9 @@ function AssessmentList(props) {
           autoHideDuration={3000}
           onClose={handleCloseCopySnackBar}
         >
-          <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
+          <Alert onClose={handleCloseCopySnackBar} severity="success">
             Tautan {type} berhasil disalin ke Clipboard Anda!
-          </MuiAlert>
+          </Alert>
         </Snackbar>
          {/* Snackbar untuk delete assessment */}
       <Snackbar
@@ -1135,7 +1135,7 @@ function AssessmentList(props) {
           handleCloseDeleteSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity="success"
           onClose={(event, reason) => {
@@ -1143,7 +1143,7 @@ function AssessmentList(props) {
           }}
         >
           Kuis berhasil dihapus
-        </MuiAlert>
+        </Alert>
       </Snackbar>
       </div>
     </>

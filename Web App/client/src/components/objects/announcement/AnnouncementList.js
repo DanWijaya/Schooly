@@ -34,7 +34,7 @@ import {
   Avatar,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import SortIcon from "@material-ui/icons/Sort";
@@ -1458,7 +1458,7 @@ function AnnouncementList(props) {
           handleCloseDeleteSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity="success"
           onClose={(event, reason) => {
@@ -1466,7 +1466,7 @@ function AnnouncementList(props) {
           }}
         >
           Pengumuman berhasil dihapus
-        </MuiAlert>
+        </Alert>
       </Snackbar>
     </div>
   );

@@ -34,7 +34,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import {
   ArrowBack as ArrowBackIcon,
   Cancel as CancelIcon,
@@ -811,7 +811,7 @@ function SubjectList(props) {
           handleCloseSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity="success"
           onClose={(event, reason) => {
@@ -819,7 +819,7 @@ function SubjectList(props) {
           }}
         >
           {snackbarContent}
-        </MuiAlert>
+        </Alert>
       </Snackbar>
     </div>
   );

@@ -49,7 +49,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
 import AddIcon from "@material-ui/icons/Add";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import LinkIcon from "@material-ui/icons/Link";
@@ -798,24 +798,24 @@ class CreateAssessment extends Component {
           autoHideDuration={6000}
           onClose={this.handleCloseCheckboxErrorSnackBar}
         >
-          <MuiAlert
+          <Alert
             onClose={this.handleCloseCheckboxErrorSnackBar}
             severity="error"
           >
             Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
-          </MuiAlert>
+          </Alert>
         </Snackbar>
         <Snackbar
           open={this.state.radioSnackbarOpen}
           autoHideDuration={6000}
           onClose={this.handleCloseRadioErrorSnackBar}
         >
-          <MuiAlert
+          <Alert
             onClose={this.handleCloseRadioErrorSnackBar}
             severity="error"
           >
             Soal Dalam Bentuk Pilihan Ganda Minimal Memiliki Satu Jawaban.
-          </MuiAlert>
+          </Alert>
         </Snackbar>
         {/* Ini Delete Dialog yang untuk cancel action saja, blm ada di DB*/}
         <DeleteDialog
@@ -1339,7 +1339,7 @@ class CreateAssessment extends Component {
           onClose={this.handleCloseErrorSnackbar}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          <MuiAlert
+          <Alert
             elevation={6}
             variant="filled"
             onClose={this.handleCloseSnackbar}
@@ -1353,7 +1353,7 @@ class CreateAssessment extends Component {
                   this.state.snackbarMessage + " " + errors.questions
               : // kasus: hanya ada error deskripsi
                 this.state.snackbarMessage}
-          </MuiAlert>
+          </Alert>
         </Snackbar>
         <Snackbar
           open={this.state.invalidQstOpen}
@@ -1361,14 +1361,14 @@ class CreateAssessment extends Component {
           onClose={this.handleCloseInvalidQstSnackbar}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          <MuiAlert
+          <Alert
             elevation={6}
             variant="filled"
             onClose={this.handleCloseInvalidQstSnackbar}
             severity="error"
           >
             {this.state.invalidQstMessage}
-          </MuiAlert>
+          </Alert>
         </Snackbar>
       </div>
     );

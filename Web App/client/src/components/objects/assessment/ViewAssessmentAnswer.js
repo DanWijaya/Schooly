@@ -52,7 +52,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import ExploreIcon from "@material-ui/icons/Explore";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import Latex from "../../misc/latex/Latex";
@@ -1395,7 +1395,7 @@ function ViewAssessmentTeacher(props) {
           handleCloseSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity={severity}
           onClose={(event, reason) => {
@@ -1403,7 +1403,7 @@ function ViewAssessmentTeacher(props) {
           }}
         >
           {snackbarContent}
-        </MuiAlert>
+        </Alert>
       </Snackbar>
       <Dialog open={openDialog} onClose={handleCloseNavDialog} fullWidth>
         <DialogTitle style={{ textAlign: "center", padding: "16px 24px 8px" }}>

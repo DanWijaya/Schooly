@@ -344,7 +344,7 @@ function ManageUsersToolbar(props) {
           </Grid>
           {role === "Teacher" ? (
             <Grid item style={{ display: searchBarFocus ? "none" : "block" }}>
-              <Link to="/sunting-guru">
+              <Link to="/data-ajar-guru">
                 <LightTooltip title="Sunting Data Ajar Guru">
                   <IconButton>
                     <BiSitemap />

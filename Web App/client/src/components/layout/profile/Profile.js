@@ -24,7 +24,7 @@ import {
   Snackbar,
   Typography
 } from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import {
   AccountBalance as AccountBalanceIcon,
   Cake as CakeIcon,
@@ -422,14 +422,14 @@ function Profile(props) {
         onClose={handleCloseAlert}
         anchorOrigin={{ vertical: "center", horizontal: "center" }}
       >
-        <MuiAlert
+        <Alert
           elevation={6}
           variant="filled"
           onClose={handleCloseAlert}
           severity="success"
         >
           Foto profil berhasil diganti!
-        </MuiAlert>
+        </Alert>
       </Snackbar>
       {/* EditProfileData Snackbar */}
       <Snackbar
@@ -438,14 +438,14 @@ function Profile(props) {
         onClose={handleCloseDataEditorAlert}
         anchorOrigin={{ vertical: "center", horizontal: "center" }}
       >
-        <MuiAlert
+        <Alert
           elevation={6}
           variant="filled"
           onClose={handleCloseDataEditorAlert}
           severity="success"
         >
           Data profil berhasil diganti!
-        </MuiAlert>
+        </Alert>
       </Snackbar>
       {/* EditPassword Snackbar */}
       <Snackbar
@@ -454,14 +454,14 @@ function Profile(props) {
         onClose={handleClosePasswordEditorAlert}
         anchorOrigin={{ vertical: "center", horizontal: "center" }}
       >
-        <MuiAlert
+        <Alert
           elevation={6}
           variant="filled"
           onClose={handleClosePasswordEditorAlert}
           severity="success"
         >
           Kata sandi berhasil diganti!
-        </MuiAlert>
+        </Alert>
       </Snackbar>
       {/* Profile Pict Size Limit Snackbar */}
       <Snackbar
@@ -470,9 +470,9 @@ function Profile(props) {
         onClose={handleCloseErrorSnackbar}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <MuiAlert elevation={6} variant="filled" severity="error">
+        <Alert elevation={6} variant="filled" severity="error">
           Foto profil melebihi batas 5MB!
-        </MuiAlert>
+        </Alert>
       </Snackbar>
     </div>
   );

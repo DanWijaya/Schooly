@@ -37,7 +37,7 @@ import {
   Avatar,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
@@ -894,7 +894,7 @@ function MaterialList(props) {
           handleCloseDeleteSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity="success"
           onClose={(event, reason) => {
@@ -902,7 +902,7 @@ function MaterialList(props) {
           }}
         >
           Materi berhasil dihapus
-        </MuiAlert>
+        </Alert>
       </Snackbar>
     </div>
   );

@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerDesktopOpen: {
     width: "250px",
+    overflowX: "hidden",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
