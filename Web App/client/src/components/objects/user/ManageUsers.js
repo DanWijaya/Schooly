@@ -1252,7 +1252,7 @@ function ManageUsers(props) {
               student_rows,
               getComparator(order_student, orderBy_student)
             ).map((row, index) => {
-              const labelId = `enhanced-table-checkbox-${index}`;
+              const labelId = index;
               return (
                 <div>
                   <Link to={`/lihat-profil/${row._id}`}>
@@ -1374,7 +1374,7 @@ function ManageUsers(props) {
               teacher_rows,
               getComparator(order_teacher, orderBy_teacher)
             ).map((row, index) => {
-              const labelId = `enhanced-table-checkbox-${index}`;
+              const labelId = index;
               return (
                 <div>
                   <Link to={`/lihat-profil/${row._id}`}>

@@ -2,16 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import {
-  getTeachers,
-  getStudents,
-  moveStudents,
-} from "../../../actions/UserActions";
-import {
-  getAllClass,
-  deleteClass,
-  unassignClassOfficers,
-} from "../../../actions/ClassActions";
+import { getTeachers, getStudents, moveStudents } from "../../../actions/UserActions";
+import { getAllClass, deleteClass, unassignClassOfficers } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -38,19 +30,19 @@ import {
   Button,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
+import {
+  AccountTree as AccountTreeIcon,
+  ArrowBack as ArrowBackIcon,
+  AssignmentInd as AssignmentIndIcon,
+  Clear as ClearIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  Search as SearchIcon,
+  Sort as SortIcon,
+  SupervisorAccount as SupervisorAccountIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import SortIcon from "@material-ui/icons/Sort";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import AccountTreeIcon from "@material-ui/icons/AccountTree";
-import { GoSearch } from "react-icons/go";
-import { FaChalkboardTeacher } from "react-icons/fa";
-import { AiOutlineUserSwitch } from "react-icons/ai";
-import { GiTeacher } from "react-icons/gi";
-import ClearIcon from "@material-ui/icons/Clear";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { FaChalkboard, FaChalkboardTeacher } from "react-icons/fa";
 
 function createData(_id, name, homeroomTeacher, size, absent) {
   return { _id, name, homeroomTeacher, size, absent };
@@ -101,21 +93,36 @@ function ClassListToolbar(props) {
   const { getStudents, handleOpenSnackbar } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
 
-  
+
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
   const headCells = [
-    { id: "name", numeric: false, disablePadding: true, label: "Kelas" },
+    {
+      id: "name",
+      numeric: false,
+      disablePadding: true,
+      label: "Kelas"
+    },
     {
       id: "homeroomTeacher",
       numeric: false,
       disablePadding: false,
       label: "Wali Kelas",
     },
-    { id: "size", numeric: true, disablePadding: false, label: "Jumlah Murid" },
-    { id: "absent", numeric: false, disablePadding: false, label: "Absen" },
+    {
+      id: "size",
+      numeric: true,
+      disablePadding: false,
+      label: "Jumlah Murid"
+    },
+    {
+      id: "absent",
+      numeric: false,
+      disablePadding: false,
+      label: "Absen"
+    },
   ];
 
   // Sort Menu
@@ -127,7 +134,7 @@ function ClassListToolbar(props) {
     setAnchorEl(null);
   };
 
-  // Export Import CSV Menu
+  // Import and export student class data
   const dummyClassId = "no_class";
   const dummyClassName = "belum ditempatkan";
   const [csvAnchor, setCSVAnchor] = React.useState(null);
@@ -154,14 +161,14 @@ function ClassListToolbar(props) {
 
     let classData = {
       [dummyClassId]: {
-        studentsEmail: [], // semua murid di kelas dummy ini merupakan murid yang belum ditempatkan ke kelas manapun
+        studentsEmail: [], // Every student in the dummy class are the students who are not grouped in any class yet
         classNames: dummyClassName,
       },
     };
-    /* contoh isi:
+    /* Example:
       {
         classId_1: {
-          studentsEmail: [ studentEmail_1, studentEmail_2, studentEmail_3, ... ], -> semua murid anggota kelas ini
+          studentsEmail: [ studentEmail_1, studentEmail_2, studentEmail_3, ... ],
           classNames: className_1
         },
         classId_2: {
@@ -169,13 +176,13 @@ function ClassListToolbar(props) {
           classNames: className_2
         },
         ...
-      } key -> id semua kelas yang ada di db
+      } key = id off every class in database
     */
 
     let blobData = "";
-    // matrix ini digunakan untuk menghasilkan string isi file csv yang akan didownload.
     let tempMatrix = [];
-    /* contoh isi:
+    /* This matrix is used to generate string in CSV file that will be downloaded.
+    Example:
       [
         [nama_kelas_1, nama_kelas_2, nama_kelas_3, ...]
         [email_murid_1_anggota_kelas_1, email_murid_1_anggota_kelas_2, email_murid_1_anggota_kelas_3, ...]
@@ -183,6 +190,7 @@ function ClassListToolbar(props) {
         [email_murid_3_anggota_kelas_1, undefined                    , undefined                    , ...]
       ]
     */
+
     for (let classInfo of all_classes) {
       classData[classInfo._id] = {
         studentsEmail: [],
@@ -190,7 +198,7 @@ function ClassListToolbar(props) {
       };
     }
 
-    // menyimpan email-email murid suatu kelas
+    // To keep email of students in a class.
     for (let student of all_students) {
       if (student.kelas) {
         classData[student.kelas].studentsEmail.push(student.email);
@@ -202,7 +210,7 @@ function ClassListToolbar(props) {
     let classDataEntries = Object.entries(classData);
     let classCount = classDataEntries.length;
 
-    // mencari jumlah murid untuk kelas dengan jumlah murid terbanyak
+    // To search the class which has the most students.
     let maxStudentCount = classDataEntries[0][1].studentsEmail.length;
     for (let i = 1; i <= classCount - 1; i++) {
       let currentClassStdCount = classDataEntries[i][1].studentsEmail.length;
@@ -211,23 +219,23 @@ function ClassListToolbar(props) {
       }
     }
 
-    // inisialisasi matrix dengan jumlah baris = jumlah murid untuk kelas dengan jumlah murid terbanyak + 1 (untuk header).
+    // Initialization matrix with numbers of row = The number of students in a class which have the most students + 1 (for header).
     for (let i = 1; i <= maxStudentCount + 1; i++) {
       tempMatrix.push([]);
     }
 
-    // mengisi matrix
+    // Filling the matrix.
     for (let entry of classDataEntries) {
-      // menyimpan nama kelas di baris pertama
+      // Fill the first row with class name.
       tempMatrix[0].push(entry[1].classNames);
 
-      // dari "atas ke bawah" kolom, masukan email semua murid anggota kelas ini
+      // From top to bottom of a column, email of students in class are inserted here.
       for (let i = 0; i <= entry[1].studentsEmail.length - 1; i++) {
         // i itu index baris. pengisian mulai dari i + 1 karena baris pertama sudah diisi nama kelas.
         tempMatrix[i + 1].push(entry[1].studentsEmail[i]);
       }
 
-      // jika semua email murid untuk kelas ini sudah dimasukan ke kolom, isi sisa baris kolom ini dengan undefined
+      // If all students' email in this class have been inserted to the column, the remaining empty cells are filled with "undefined".
       for (
         let i = entry[1].studentsEmail.length + 1;
         i <= maxStudentCount;
@@ -260,7 +268,7 @@ function ClassListToolbar(props) {
   const invalidEmails = React.useRef([]);
   const handleImportCSV = (event) => {
     event.preventDefault();
-    invalidEmails.current = []; // digunakan untuk menampilkan semua email murid yang tidak ditemukan di database
+    invalidEmails.current = []; // This is used to show every student's email that is not found in the database.
     // if (!all_students || !all_teachers_map || !all_classes_map || !tasksCollection || !all_assessments) {
     if (!all_students || !all_teachers_map || !all_classes_map) {
       return;
@@ -275,7 +283,7 @@ function ClassListToolbar(props) {
           return;
         }
 
-        // membuat array yang berisi array email murid (array of csv rows)
+        // To create array that contains array of students' email (array of CSV rows)
         let dataMatrix = temp.map((rowString) => {
           return rowString.split(",");
         });
@@ -288,7 +296,7 @@ function ClassListToolbar(props) {
         }
         let classId = [];
 
-        // mengubah array header nama kelas menjadi array id kelas
+        // To change header array of classes' names to ids.
         for (let className of classNames) {
           let id;
           for (let storedClass of all_classes) {
@@ -297,7 +305,7 @@ function ClassListToolbar(props) {
               break;
             }
           }
-          // jika kelas ini ada di db,
+          // If this class have not been listed in database,
           if (id) {
             if (classId.includes(id)) {
               throw new Error(
@@ -307,8 +315,7 @@ function ClassListToolbar(props) {
               classId.push(id);
             }
           } else {
-            // jika kelas ini tidak ada di db,
-
+            // If this class have not been listed in database.
             if (className === dummyClassName) {
               classId.push(dummyClassId);
             } else {
@@ -319,17 +326,17 @@ function ClassListToolbar(props) {
           }
         }
 
-        let classesToUpdate = {}; // digunakan untuk menghapus id murid pengurus kelas pada kelas-kelas tertentu
-        let newClassParticipant = {}; // digunakan untuk mengubah kelas murid-murid yang pindah kelas
-        let allStudentEmail = new Set(); // digunakan untuk mengecek duplikasi email
-        // traverse dari kiri ke kanan, atas ke bawah
+        let classesToUpdate = {}; // This is used to delete class representative's id of a certain class.
+        let newClassParticipant = {}; // This is used to change the class of students that is assigned to a new class.
+        let allStudentEmail = new Set(); // This is used to check whether there are email duplicates or not.
+        // Traverse from left to right and from top to bottom.
         for (let row = 1; row <= dataMatrix.length - 1; row++) {
           for (let column = 0; column <= classNames.length - 1; column++) {
-            // jika sel tidak ada atau berisi string kosong, tidak lakukan apa-apa
-            // jika sel berisi email murid,
+            // If this cell is empty or is filled with an empty string, then do nothing.
+            // If cell is filled with student's email
             let currentEmail = dataMatrix[row][column];
             if (currentEmail !== "" && currentEmail !== undefined) {
-              // cek duplikasi email
+              // Check email duplicates
               if (allStudentEmail.has(currentEmail)) {
                 throw new Error(
                   `Terdapat duplikasi email "${currentEmail}", mohon periksa kembali`
@@ -337,7 +344,7 @@ function ClassListToolbar(props) {
               }
               allStudentEmail.add(currentEmail);
 
-              // mencari id kelas lama, id kelas baru, dan id murid dengan menggunakan kriteria pencarian berupa email murid
+              // To find the old class id, new class id, dan student's id that use a searching criteria which is student's email.
               let newClassId = classId[column];
               let oldClassId;
               let studentId;
@@ -349,14 +356,14 @@ function ClassListToolbar(props) {
                 }
               }
               if (studentId) {
-                // jika murid ini tidak dipindahkan ke kelas lain, tidak lakukan apa-apa
-                // jika murid ini dipindahkan ke kelas lain,
+                // If this student is not moved to another class, then do nothing.
+                // If this student is moved to another class.
                 if (newClassId !== oldClassId) {
-                  //  jika murid ini merupakan ketua kelas/bendahara/sekretaris pada kelas sebelumnya, ubah info kelas sebelumnya
+                  //  If this student is a class representative from the previous class, change the information of the previous class.
                   let oldClassInfo;
                   let fieldToDelete = [];
 
-                  // jika murid ini dipindahkan dari suatu kelas,
+                  // If this student is moved from a class.
                   if (oldClassId) {
                     oldClassInfo = all_classes_map.get(oldClassId);
 
@@ -374,16 +381,16 @@ function ClassListToolbar(props) {
                       classesToUpdate[oldClassId] = fieldToDelete;
                     }
                   } else {
-                    // jika sebelumnya, murid ini belum ditempatkan di kelas manapun,
+                    // If this student is not placed in any class before.
 
-                    // jika murid ini tidak ditempatkan di kelas manapun lagi
+                    // If this student is not placed into any class anymore.
                     if (newClassId === dummyClassId) {
-                      // do nothing (skip langkah di bawah)
+                      // Then do nothing (skip the steps below)
                       continue;
                     }
                   }
 
-                  // catat id murid yang akan dipindahkan ke kelas ini
+                  // This is used to save the student's id that will be moved to this class.
                   if (newClassParticipant[newClassId]) {
                     newClassParticipant[newClassId].push(studentId);
                   } else {
@@ -391,7 +398,7 @@ function ClassListToolbar(props) {
                   }
                 }
               } else {
-                // jika murid ini tidak ada di database,
+                // If this student have not been listed in the database yet.
                 invalidEmails.current.push(currentEmail);
                 // throw new Error(`Murid yang memiliki email "${row[i].email}" tidak terdaftar di basisdata`);
                 // console.log(
@@ -415,7 +422,7 @@ function ClassListToolbar(props) {
         if (Object.keys(newClassParticipant).length !== 0) {
           moveStudents(newClassParticipant, dummyClassId)
             .then(() => {
-              // agar text jumlah murid di halaman ini diperbarui, panggil ulang getStudents
+              // So that number of students text in this page renewed (recalled using getStudents).
               getStudents();
               if (invalidEmails.current.length !== 0) {
                 handleOpenEmailDialog();
@@ -427,7 +434,6 @@ function ClassListToolbar(props) {
             })
             .catch((err) => {
               handleOpenSnackbar("error", "Pemindahan murid gagal dilakukan");
-              console.log(err);
             });
         } else {
           handleOpenSnackbar("info", "Tidak ada murid yang dipindahkan");
@@ -435,232 +441,203 @@ function ClassListToolbar(props) {
       })
       .catch((err) => {
         handleOpenSnackbar("error", err.message);
-        // console.error(err);
       });
 
-    // agar file yang sama bisa diupload ulang
+    // So that the same file can be reupload.
     fileInput.current.value = "";
   };
 
-  // Dialog Email
+  // Email Dialog
   const [openDialog, setOpenDialog] = React.useState(false);
-
   const handleOpenEmailDialog = () => {
     setOpenDialog(true);
   };
-
   const handleCloseEmailDialog = () => {
     setOpenDialog(false);
   };
+
   return (
     <div className={classes.toolbar}>
-      {/* <Typography variant="h4">Daftar Kelas</Typography> */}
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden mdUp implementation="css">
-          {searchBarFocus ? null : (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              {/* <MenuBookIcon className={classes.titleIcon} fontSize="large" /> */}
-              <Typography variant="h4">Daftar Kelas</Typography>
-            </div>
-          )}
-        </Hidden>
-        <Hidden smDown implementation="css">
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            {/* <MenuBookIcon className={classes.titleIcon} fontSize="large" /> */}
-            <Typography variant="h4">Daftar Kelas</Typography>
-          </div>
-        </Hidden>
-        <Hidden mdUp implementation="css">
-          {searchBarFocus ? (
-            <div style={{ display: "flex" }}>
-              <IconButton
-                onClick={() => {
-                  setSearchBarFocus(false);
-                  updateSearchFilter("");
-                }}
-              >
-                <ArrowBackIcon />
-              </IconButton>
+      <Grid container justify="space-between" alignItems="center">
+        {user.role === "Admin" ? (
+          <Grid item>
+            <Hidden mdUp>
+              <LightTooltip title="Buat Kelas">
+                <Link to="/buat-kelas">
+                  <Fab size="medium" className={classes.createClassButton}>
+                    <FaChalkboard className={classes.createClassIconMobile} />
+                  </Fab>
+                </Link>
+              </LightTooltip>
+            </Hidden>
+            <Hidden smDown>
+              <Link to="/buat-kelas">
+                <Fab
+                  size="large"
+                  variant="extended"
+                  className={classes.createClassButton}
+                >
+                  <FaChalkboard className={classes.createClassIconDesktop} />
+                  Buat Kelas
+                </Fab>
+              </Link>
+            </Hidden>
+          </Grid>
+        ): null }
+        <Grid item xs container justify="flex-end" alignItems="center" spacing={1}>
+          <Grid item>
+            <Hidden mdUp>
+              {searchBarFocus ? (
+                <div style={{ display: "flex" }}>
+                  <IconButton
+                    onClick={() => {
+                      setSearchBarFocus(false);
+                      updateSearchFilter("");
+                    }}
+                  >
+                    <ArrowBackIcon />
+                  </IconButton>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    id="searchFilterMobile"
+                    value={searchFilter}
+                    onChange={onChange}
+                    autoFocus
+                    onClick={(e) => setSearchBarFocus(true)}
+                    placeholder="Kelas"
+                    InputProps={{
+                      style: {
+                        borderRadius: "22.5px",
+                        maxWidth: "450px",
+                        width: "100%"
+                      },
+                      endAdornment: (
+                        <InputAdornment
+                          position="end"
+                          style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                        >
+                          <IconButton
+                            size="small"
+                            id="searchFilterMobile"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onClear(e);
+                            }}
+                            style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                          >
+                            <ClearIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </div>
+              ) : (
+                <LightTooltip title="Search">
+                  <IconButton onClick={() => setSearchBarFocus(true)}>
+                    <SearchIcon />
+                  </IconButton>
+                </LightTooltip>
+              )}
+            </Hidden>
+            <Hidden smDown>
               <TextField
-                fullWidth
                 variant="outlined"
-                id="searchFilterMobile"
+                id="searchFilterDesktop"
                 value={searchFilter}
                 onChange={onChange}
-                autoFocus
-                onClick={(e) => setSearchBarFocus(true)}
-                placeholder="Kelas"
-                style={{
-                  maxWidth: user.role === "Admin" ? "110px" : "200px",
-                  marginLeft: "10px",
-                }}
+                onClick={() => setSearchBarFocus(true)}
+                onBlur={() => setSearchBarFocus(false)}
+                placeholder="Cari Kelas"
                 InputProps={{
-                  startAdornment: searchBarFocus ? null : (
+                  style: {
+                    borderRadius: "22.5px",
+                    maxWidth: "450px",
+                    width: "100%"
+                  },
+                  startAdornment: (
                     <InputAdornment
                       position="start"
-                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                      style={{ marginRight: "-5px", color: "grey" }}
                     >
-                      <IconButton size="small">
-                        <GoSearch />
-                      </IconButton>
+                      <SearchIcon />
                     </InputAdornment>
                   ),
                   endAdornment: (
                     <InputAdornment
                       position="end"
-                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                      style={{ marginLeft: "-10px" }}
                     >
                       <IconButton
                         size="small"
-                        id="searchFilterMobile"
                         onClick={(e) => {
                           e.stopPropagation();
                           onClear(e);
                         }}
-                        style={{
-                          opacity: 0.5,
-                          visibility: !searchFilter ? "hidden" : "visible",
-                        }}
+                        style={{ visibility: !searchFilter ? "hidden" : "visible" }}
                       >
                         <ClearIcon />
                       </IconButton>
                     </InputAdornment>
                   ),
-                  style: {
-                    borderRadius: "22.5px",
-                  },
                 }}
               />
-            </div>
-          ) : (
-            <LightTooltip title="Search" style={{ marginLeft: "5px" }}>
-              <IconButton
-                className={classes.goSearchButton}
-                onClick={() => setSearchBarFocus(true)}
-              >
-                <GoSearch className={classes.goSearchIconMobile} />
-              </IconButton>
-            </LightTooltip>
-          )}
-        </Hidden>
-      </div>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden smDown implementation="css">
-          <TextField
-            variant="outlined"
-            id="searchFilterDesktop"
-            value={searchFilter}
-            onChange={onChange}
-            onClick={() => setSearchBarFocus(true)}
-            onBlur={() => setSearchBarFocus(false)}
-            placeholder="Cari Kelas"
-            style={{
-              maxWidth: "250px",
-              marginRight: "10px",
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment
-                  position="start"
-                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
-                >
-                  <IconButton size="small">
-                    <GoSearch />
-                  </IconButton>
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment
-                  position="end"
-                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                >
+            </Hidden>
+          </Grid>
+          {user.role === "Admin" ? (
+            <Grid item>
+              <form onChange={(event) => {handleImportCSV(event)}}>
+                <input type="file" accept=".csv" ref={fileInput} style={{ display: "none" }} />
+                <LightTooltip title="Atur Kelas Murid">
                   <IconButton
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onClear(e);
-                    }}
-                    style={{
-                      opacity: 0.5,
-                      visibility: !searchFilter ? "hidden" : "visible",
-                    }}
+                    onClick={handleOpenCSVMenu}
                   >
-                    <ClearIcon />
+                    <FaChalkboardTeacher />
                   </IconButton>
-                </InputAdornment>
-              ),
-              style: {
-                borderRadius: "22.5px",
-              },
-            }}
-          />
-        </Hidden>
-        {user.role === "Admin" ? (
-          <div>
-            <Hidden smUp implementation="css">
-              <LightTooltip title="Buat Kelas">
-                <Link to="/buat-kelas">
-                  <Fab size="small" className={classes.newClassButton}>
-                    <FaChalkboardTeacher
-                      className={classes.newClassIconMobile}
-                    />
-                  </Fab>
+                </LightTooltip>
+                <Menu
+                  keepMounted
+                  open={Boolean(csvAnchor)}
+                  onClose={handleCloseCSVMenu}
+                  anchorEl={csvAnchor}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                >
+                  <MenuItem onClick={handleClickExport}>Unduh Data Kelas</MenuItem>
+                  <MenuItem onClick={handleClickImport}>Unggah Data Kelas</MenuItem>
+                </Menu>
+              </form>
+            </Grid>
+          ) : null}
+          {user.role === "Admin" ? (
+            <Grid item>
+              <LightTooltip title="Atur Wali Kelas">
+                <Link to="/atur-walikelas">
+                  <IconButton>
+                    <AssignmentIndIcon />
+                  </IconButton>
                 </Link>
               </LightTooltip>
-            </Hidden>
-            <Hidden xsDown implementation="css">
-              <Link to="/buat-kelas">
-                <Fab
-                  size="medium"
-                  variant="extended"
-                  className={classes.newClassButton}
-                >
-                  <FaChalkboardTeacher
-                    className={classes.newClassIconDesktop}
-                  />
-                  Buat Kelas
-                </Fab>
-              </Link>
-            </Hidden>
-          </div>
-        ) : null}
-        {user.role === "Admin" ? (
-          <>
-            <form
-              onChange={(event) => {
-                handleImportCSV(event);
-              }}
-              style={{ display: "none" }}
-            >
-              <input type="file" ref={fileInput} accept=".csv" />
-            </form>
-
-            <LightTooltip title="Atur Kelas Murid">
-              <IconButton
-                onClick={handleOpenCSVMenu}
-                className={classes.toolbarButtons}
-                style={{ marginRight: "3px" }}
-              >
-                <GiTeacher />
+            </Grid>
+          ) : null}
+          <Grid item>
+            <LightTooltip title="Urutkan Kelas">
+              <IconButton onClick={handleOpenSortMenu}>
+                <SortIcon />
               </IconButton>
             </LightTooltip>
             <Menu
               keepMounted
-              anchorEl={csvAnchor}
-              open={Boolean(csvAnchor)}
-              onClose={handleCloseCSVMenu}
+              open={Boolean(anchorEl)}
+              onClose={handleCloseSortMenu}
+              anchorEl={anchorEl}
               anchorOrigin={{
                 vertical: "bottom",
                 horizontal: "right",
@@ -670,73 +647,34 @@ function ClassListToolbar(props) {
                 horizontal: "left",
               }}
             >
-              <MenuItem onClick={handleClickExport}>Unduh Data Kelas</MenuItem>
-              <MenuItem onClick={handleClickImport}>Unggah Data Kelas</MenuItem>
-            </Menu>
-
-            <LightTooltip title="Atur Wali Kelas">
-              <Link to="/atur-walikelas">
-                <IconButton
-                  className={classes.toolbarButtons}
-                  style={{ marginRight: "3px" }}
+              {headCells.map((headCell, i) => (
+                <MenuItem
+                  key={headCell.id}
+                  sortDirection={orderBy === headCell.id ? order : false}
+                  onClick={createSortHandler(headCell.id)}
                 >
-                  <AiOutlineUserSwitch />
-                </IconButton>
-              </Link>
-            </LightTooltip>
-          </>
-        ) : null}
-        <LightTooltip title="Urutkan Kelas">
-          <IconButton
-            onClick={handleOpenSortMenu}
-            className={classes.toolbarButtons}
-            style={user.role === "Admin" ? { marginLeft: "3px" } : null}
-          >
-            <SortIcon />
-          </IconButton>
-        </LightTooltip>
-        <Menu
-          keepMounted
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleCloseSortMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          {headCells.map((headCell, i) => (
-            <MenuItem
-              key={headCell.id}
-              sortDirection={orderBy === headCell.id ? order : false}
-              onClick={createSortHandler(headCell.id)}
-            >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-              >
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                  <span className={classes.visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </span>
-                ) : null}
-              </TableSortLabel>
-            </MenuItem>
-          ))}
-        </Menu>
-      </div>
-
+                  <TableSortLabel
+                    active={orderBy === headCell.id}
+                    direction={orderBy === headCell.id ? order : "asc"}
+                  >
+                    {headCell.label}
+                    {orderBy === headCell.id ? (
+                      <span className={classes.visuallyHidden}>
+                        {order === "desc"
+                          ? "sorted descending"
+                          : "sorted ascending"}
+                      </span>
+                    ) : null}
+                  </TableSortLabel>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Grid>
+        </Grid>
+      </Grid>
       <Dialog
-        classes={{ paper: classes.dialogPaper }}
-        maxWidth="xs"
         fullWidth
+        maxWidth="xs"
         open={openDialog}
       >
         <DialogTitle>Email berikut tidak ditemukan di basis data</DialogTitle>
@@ -775,24 +713,30 @@ ClassListToolbar.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
+  },
+  header: {
+    marginBottom: "25px",
+  },
+  headerIcon: {
+    display: "flex",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    fontSize: "25px",
+    padding: "7.5px",
+    borderRadius: "5px",
   },
   toolbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  titleDivider: {
-    backgroundColor: theme.palette.primary.main,
-    marginTop: "15px",
+    padding: "16px 0px",
     marginBottom: "15px",
   },
-  newClassButton: {
-    marginRight: "10px",
+  createClassButton: {
+    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -800,22 +744,14 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  newClassIconDesktop: {
-    width: theme.spacing(2.5),
-    height: theme.spacing(2.5),
-    marginRight: "7.5px",
+  createClassIconDesktop: {
+    width: "25px",
+    height: "25px",
+    marginRight: "8px",
   },
-  newClassIconMobile: {
-    width: theme.spacing(2.5),
-    height: theme.spacing(2.5),
-  },
-  toolbarButtons: {
-    backgroundColor: theme.palette.action.selected,
-    color: "black",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.divider,
-      color: "black",
-    },
+  createClassIconMobile: {
+    width: "25px",
+    height: "25px",
   },
   visuallyHidden: {
     border: 0,
@@ -829,56 +765,42 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   classPaper: {
-    borderRadius: "3px",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
-    transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
     "&:focus, &:hover": {
-      boxShadow: "0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.15)",
-      cursor: "pointer",
+      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 10px 2px rgba(60,64,67,0.15)",
     },
   },
-  classActionContainer: {
-    padding: "20px 10px 20px 10px",
+  classBackground: {
+    width: "100%",
+    height: "120px",
+    borderRadius: "3px 3px 0px 0px",
+  },
+  classIcon: {
+    width: "50px",
+    height: "50px",
+  },
+  classContent: {
+    padding: "20px 20px",
   },
   classPersonIcon: {
     color: theme.palette.text.disabled,
   },
-  editClassButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
+  classButtons: {
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
+      backgroundColor: "#F1F1F1",
     },
-  },
-  deleteClassButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
-  emptyClass: {
-    display: "flex",
-    justifyContent: "center",
-    maxWidth: "150px",
-    padding: "2px",
-    paddingLeft: "6px",
-    paddingRight: "6px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    marginLeft: "5px",
-  },
-  dialogPaper: {
-    maxHeight: "70vh",
-    // width: "300px",
-    // maxWidth: "100%",
   },
 }));
 
 function ClassList(props) {
   const classes = useStyles();
+  const {
+    clearErrors,
+    getStudents,
+    getTeachers,
+    deleteClass,
+    getAllClass,
+  } = props;
+  const { user, all_teachers_map, all_students } = props.auth;
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("homeroomTeacher");
@@ -889,17 +811,6 @@ function ClassList(props) {
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
   const { classesCollection, tasksCollection } = props;
-  const {
-    clearErrors,
-    getStudents,
-    getTeachers,
-    deleteClass,
-    getAllClass,
-  } = props;
-
-  const { user, all_teachers_map, all_students } = props.auth;
-
-  console.log(classesCollection);
 
   const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"];
   const colorMap = new Map();
@@ -940,9 +851,6 @@ function ClassList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(classesCollection);
-
-  console.log(all_teachers_map);
   const retrieveClasses = () => {
     if (classesCollection.all_classes.length > 0) {
       rows = [];
@@ -960,8 +868,8 @@ function ClassList(props) {
     setOrderBy(property);
   };
 
-  // Call the function to get the classes from DB
-  // this function is defined above
+  // Call the function to get the classes from database.
+  // This function is defined above
   retrieveClasses();
 
   const onDeleteClass = (id) => {
@@ -976,7 +884,7 @@ function ClassList(props) {
     });
   };
 
-  // Delete Dialog box
+  // Delete Dialog
   const handleOpenDeleteDialog = (e, id, name) => {
     e.preventDefault();
     setOpenDeleteDialog(true);
@@ -1018,29 +926,23 @@ function ClassList(props) {
     setOpenSnackbar(false);
   }
 
-  if (user.role === "Student") {
-    return (
-      <div className={classes.root}>
-        <Typography variant="h5" align="center" className={classes.title}>
-          <b>Anda tidak mempunyai izin akses halaman ini.</b>
-        </Typography>
-      </div>
-    );
-  }
-
   document.title = "Schooly | Daftar Kelas";
 
   return (
     <div className={classes.root}>
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Kelas"
-        itemName={selectedClassName}
-        deleteItem={() => {
-          onDeleteClass(selectedClassId);
-        }}
-      />
+      <Grid container alignItems="center" spacing={2} className={classes.header}>
+        <Grid item>
+          <div className={classes.headerIcon}>
+            <FaChalkboard />
+          </div>
+        </Grid>
+        <Grid item>
+          <Typography variant="h5" align="left">
+            Kelas
+          </Typography>
+        </Grid>
+      </Grid>
+      <Divider />
       <ClassListToolbar
         classes={classes}
         deleteClass={deleteClass}
@@ -1062,83 +964,42 @@ function ClassList(props) {
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
       />
-      <Divider variant="inset" className={classes.titleDivider} />
       <Grid container spacing={2}>
         {rows.length === 0
           ? null
           : stableSort(rows, getComparator(order, orderBy)).map(
               (row, index) => {
-                const labelId = `enhanced-table-checkbox-${index}`;
+                const labelId = index;
                 let viewpage = `/kelas/${row._id}`;
+
                 return (
                   <Grid item xs={12} sm={6} md={4}>
                     <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
                       <Paper button className={classes.classPaper}>
                         <Avatar
                           variant="square"
-                          style={{
-                            backgroundColor: colorMap.get(row._id),
-                            width: "100%",
-                            height: "120px",
-                            borderRadius: "3px 3px 0px 0px",
-                          }}
+                          className={classes.classBackground}
+                          style={{ backgroundColor: colorMap.get(row._id) }}
                         >
-                          <FaChalkboardTeacher
-                            style={{
-                              width: "50px",
-                              height: "50px",
-                            }}
-                          />
+                          <FaChalkboard className={classes.classIcon} />
                         </Avatar>
                         <Divider />
-                        <div style={{ padding: "10px 20px 20px 10px" }}>
-                          <Typography id={labelId} variant="h5" align="center">
+                        <div className={classes.classContent}>
+                          <Typography id={labelId} variant="h5" align="center" noWrap gutterBottom>
                             {row.name}
                           </Typography>
-                          {row.homeroomTeacher && row.homeroomTeacher !== "" ? (
-                            <Typography
-                              variant="body1"
-                              color="textSecondary"
-                              align="center"
-                              style={{ marginTop: "5px" }}
-                            >
-                              Wali Kelas: {row.homeroomTeacher}
-                            </Typography>
-                          ) : (
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                marginTop: "5px",
-                              }}
-                            >
-                              <Typography
-                                variant="body1"
-                                color="textSecondary"
-                                align="center"
-                              >
-                                Wali Kelas:
-                              </Typography>
-                              <Paper className={classes.emptyClass}>
-                                <Typography variant="body2">KOSONG</Typography>
-                              </Paper>
-                            </div>
-                          )}
+                          <Typography color="textSecondary" align="center" noWrap>
+                            Wali Kelas: {row.homeroomTeacher ? (
+                              row.homeroomTeacher
+                            ) : (
+                              "-"
+                            )}
+                          </Typography>
                         </div>
                         <Divider />
-                        <Grid
-                          container
-                          direction="row"
-                          justify="space-between"
-                          alignItems="center"
-                          className={classes.classActionContainer}
-                        >
+                        <div className={classes.classContent}>
                           {user.role === "Admin" ? (
                             <Grid
-                              item
-                              xs
                               container
                               spacing={1}
                               justify="flex-end"
@@ -1147,38 +1008,17 @@ function ClassList(props) {
                               <Grid item>
                                 <LightTooltip title="Jumlah Murid">
                                   <Badge
+                                    showZero
+                                    color={row.size === 0 ? "error" : "primary"}
                                     badgeContent={row.size}
-                                    color="secondary"
                                     anchorOrigin={{
                                       vertical: "bottom",
                                       horizontal: "left",
                                     }}
-                                    showZero
                                   >
-                                    <IconButton size="small" disabled>
-                                      <SupervisorAccountIcon
-                                        className={classes.classPersonIcon}
-                                      />
-                                    </IconButton>
+                                    <SupervisorAccountIcon className={classes.classPersonIcon} />
                                   </Badge>
                                 </LightTooltip>
-                                {/* <LightTooltip title="Jumlah Murid">
-                                  <Badge
-                                    badgeContent={row.size}
-                                    color="secondary"
-                                    anchorOrigin={{
-                                      vertical: "bottom",
-                                      horizontal: "left",
-                                    }}
-                                    showZero
-                                  >
-                                    <IconButton size="small" disabled>
-                                      <SupervisorAccountIcon
-                                        className={classes.classPersonIcon}
-                                      />
-                                    </IconButton>
-                                  </Badge>
-                                </LightTooltip> */}
                               </Grid>
                               <Grid item>
                                 <LightTooltip title="Sunting">
@@ -1186,10 +1026,7 @@ function ClassList(props) {
                                     to={`/sunting-kelas/${row._id}`}
                                     onClick={(e) => e.stopPropagation()}
                                   >
-                                    <IconButton
-                                      size="small"
-                                      className={classes.editClassButton}
-                                    >
+                                    <IconButton size="small" className={classes.classButtons}>
                                       <EditIcon fontSize="small" />
                                     </IconButton>
                                   </Link>
@@ -1199,7 +1036,7 @@ function ClassList(props) {
                                 <LightTooltip title="Hapus">
                                   <IconButton
                                     size="small"
-                                    className={classes.deleteClassButton}
+                                    className={classes.classButtons}
                                     onClick={(e) =>
                                       handleOpenDeleteDialog(
                                         e,
@@ -1216,49 +1053,26 @@ function ClassList(props) {
                           ) : (
                             <Grid
                               container
-                              direction="row"
                               justify="flex-end"
-                              alignItems="center"
                             >
                               <Grid item>
                                 <LightTooltip title="Jumlah Murid">
                                   <Badge
+                                    showZero
+                                    color={row.size === 0 ? "error" : "primary"}
                                     badgeContent={row.size}
-                                    color="secondary"
                                     anchorOrigin={{
                                       vertical: "bottom",
                                       horizontal: "left",
                                     }}
-                                    showZero
                                   >
-                                    <IconButton size="small" disabled>
-                                      <SupervisorAccountIcon
-                                        className={classes.classPersonIcon}
-                                      />
-                                    </IconButton>
+                                    <SupervisorAccountIcon className={classes.classPersonIcon} />
                                   </Badge>
                                 </LightTooltip>
-                                {/* <LightTooltip title="Jumlah Murid">
-                                  <Badge
-                                    badgeContent={row.size}
-                                    color="secondary"
-                                    anchorOrigin={{
-                                      vertical: "bottom",
-                                      horizontal: "left",
-                                    }}
-                                    showZero
-                                  >
-                                    <IconButton size="small" disabled>
-                                      <SupervisorAccountIcon
-                                        className={classes.classPersonIcon}
-                                      />
-                                    </IconButton>
-                                  </Badge>
-                                </LightTooltip> */}
                               </Grid>
                             </Grid>
                           )}
-                        </Grid>
+                        </div>
                       </Paper>
                     </Link>
                   </Grid>
@@ -1266,6 +1080,15 @@ function ClassList(props) {
               }
             )}
       </Grid>
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Kelas"
+        itemName={selectedClassName}
+        deleteItem={() => {
+          onDeleteClass(selectedClassId);
+        }}
+      />
       <Snackbar
         open={openSnackbar}
         autoHideDuration={4000}

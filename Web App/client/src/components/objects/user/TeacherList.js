@@ -157,9 +157,7 @@ function TeacherListToolbar(props) {
                       e.stopPropagation();
                       onClear(e, "searchFilterDesktop");
                     }}
-                    style={{
-                      visibility: !searchFilter ? "hidden" : "visible",
-                    }}
+                    style={{ visibility: !searchFilter ? "hidden" : "visible" }}
                   >
                     <ClearIcon />
                   </IconButton>
@@ -501,7 +499,7 @@ function TeacherList(props) {
           <Empty />
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
+            const labelId = index;
             return (
               <Grid item>
                 <ExpansionPanel variant="outlined">

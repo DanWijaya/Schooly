@@ -39,7 +39,7 @@ import AssignmentIcon from "@material-ui/icons/Assignment";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import { AiOutlineUserSwitch } from "react-icons/ai";
-import { FaChalkboardTeacher } from "react-icons/fa";
+import { FaChalkboard } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 import ErrorIcon from "@material-ui/icons/Error";
@@ -713,7 +713,7 @@ class Dashboard extends Component {
     } = this.props;
     // const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
-    
+
     getAllTask(); // actions yang membuat GET request ke Database.
     getAllSubjects();
     getTeachers();
@@ -1240,7 +1240,7 @@ class Dashboard extends Component {
       }
     }
 
-    document.title = "Schooly | Dashboard";
+    document.title = "Schooly | Beranda";
 
     return (
       <div className={classes.root}>
@@ -1782,7 +1782,7 @@ class Dashboard extends Component {
               <Grid item>
                 <Link to="/daftar-kelas">
                   <Fab variant="extended" className={classes.manageClassButton}>
-                    <FaChalkboardTeacher className={classes.manageClassIcon} />
+                    <FaChalkboard className={classes.manageClassIcon} />
                     Atur Kelas
                   </Fab>
                 </Link>
@@ -1817,7 +1817,7 @@ class Dashboard extends Component {
                     className={classes.menuItem}
                   >
                     <ListItemIcon>
-                      <FaChalkboardTeacher
+                      <FaChalkboard
                         className={classes.manageClassIcon}
                       />
                     </ListItemIcon>

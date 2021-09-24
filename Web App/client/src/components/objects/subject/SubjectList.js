@@ -189,10 +189,7 @@ function SubjectListToolbar(props) {
                           e.stopPropagation();
                           onClear(e, "searchFilterDesktop");
                         }}
-                        style={{
-                          opacity: 0.5,
-                          visibility: !searchFilter ? "hidden" : "visible",
-                        }}
+                        style={{ visibility: !searchFilter ? "hidden" : "visible" }}
                       >
                         <ClearIcon />
                       </IconButton>
@@ -669,7 +666,7 @@ function SubjectList(props) {
           <Empty />
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
+            const labelId = index;
             return (
               <Grid item>
                 <Grid container alignItems="stretch" className={classes.subjectItem}>

@@ -20,7 +20,7 @@ import {
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
-import { FaChalkboardTeacher, FaClipboardList, FaUserFriends, FaUserLock } from "react-icons/fa";
+import { FaChalkboard, FaClipboardList, FaUserFriends, FaUserLock } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
   drawerListItem: {
@@ -86,7 +86,7 @@ function DrawerContent(props) {
       ],
       [
         classLink,
-        <FaChalkboardTeacher className={classes.drawerListItemIcon} />,
+        <FaChalkboard className={classes.drawerListItemIcon} />,
         "Kelas",
       ],
       [
@@ -119,7 +119,7 @@ function DrawerContent(props) {
       ],
       [
         classLink,
-        <FaChalkboardTeacher className={classes.drawerListItemIcon} />,
+        <FaChalkboard className={classes.drawerListItemIcon} />,
         "Kelas",
       ],
       [
@@ -167,7 +167,7 @@ function DrawerContent(props) {
       ],
       [
         classLink,
-        <FaChalkboardTeacher className={classes.drawerListItemIcon} />,
+        <FaChalkboard className={classes.drawerListItemIcon} />,
         "Kelas",
       ],
       [

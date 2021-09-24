@@ -62,7 +62,7 @@ const styles = (theme) => ({
     border: "none",
   },
   drawerItem: {
-    "&:active, &:hover": {
+    "&:focus, &:hover": {
       backgroundColor: "#D8D8D8",
     },
   },
