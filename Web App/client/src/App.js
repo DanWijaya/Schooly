@@ -1,10 +1,17 @@
 import React, { Component, Fragment } from "react";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 import { Provider } from "react-redux";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import store from "./Store";
-import { setCurrentUser, logoutUser,
+import {
+  setCurrentUser,
+  logoutUser,
   // setDropboxToken,
 } from "./actions/UserActions";
 import PrivateRoute from "./components/private-route/PrivateRoute";
@@ -128,7 +135,7 @@ class App extends Component {
   }
 
   componentDidCatch() {
-    this.setState({ problemEncountered: true });
+    // this.setState({ problemEncountered: true });
   }
 
   handleNavbar = (showBool) => {
@@ -175,7 +182,8 @@ class App extends Component {
                 ) : null}
                 <Combined
                   showNavBar={this.state.showNavBar}
-                  sideDrawerExist={this.state.sideDrawerExist}/>
+                  sideDrawerExist={this.state.sideDrawerExist}
+                />
                 {/* {this.state.showNavBar ? (
                   <NavBar
                     handleDrawerDesktop={this.handleDrawerDesktop}
@@ -208,55 +216,32 @@ class App extends Component {
                       <Route
                         exact
                         path="/tester"
-                        render={(props) => (
-                          <Tester
-                            {...props}
-                            />
-                        )}/>
+                        render={(props) => <Tester {...props} />}
+                      />
                       <Route
                         exact
                         path="/"
-                        render={(props) => (
-                          <Landing
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <Landing {...props} />}
                       />
                       <Route
                         exact
                         path="/bantuan"
-                        render={(props) => (
-                          <Help
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <Help {...props} />}
                       />
                       <Route
                         exact
                         path="/tentang-schooly"
-                        render={(props) => (
-                          <About
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <About {...props} />}
                       />
                       <Route
                         exact
                         path="/legal/ketentuan-penggunaan"
-                        render={(props) => (
-                          <TermsOfService
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <TermsOfService {...props} />}
                       />
                       <Route
                         exact
                         path="/legal/kebijakan-privasi"
-                        render={(props) => (
-                          <PrivacyPolicy
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <PrivacyPolicy {...props} />}
                       />
                       {/* <Route exact path="/dropbox-auth" component={DropboxAuth} />
                     <Route
@@ -560,11 +545,12 @@ class App extends Component {
                       {/*prototype*/}
                       {/*<Route exact path="/csv" component={CSV} />*/}
                       {/* Route Event */}
-                      <PrivateRoute 
-                      exact
-                      access={["Admin"]}
-                      path="/bulk-register"
-                      component={BulkRegister}/>
+                      <PrivateRoute
+                        exact
+                        access={["Admin"]}
+                        path="/bulk-register"
+                        component={BulkRegister}
+                      />
                       <PrivateRoute
                         exact
                         path="/kalender"
@@ -586,11 +572,7 @@ class App extends Component {
                       <Route
                         exact
                         path="/tidak-ditemukan"
-                        render={(props) => (
-                          <NotFound
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <NotFound {...props} />}
                       />
                       <Redirect to="/tidak-ditemukan" />
                     </Switch>

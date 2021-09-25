@@ -38,6 +38,17 @@ import WarningIcon from "@material-ui/icons/Warning";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
+import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
+
+const TASK_STATUS = {
+  SUBMITTED: "Sudah Dikumpulkan",
+  NOT_SUBMITTED: "Belum Dikumpulkan",
+};
+
+const ASSESSMENT_STATUS = {
+  SUBMITTED: "Sudah Ditempuh",
+  NOT_SUBMITTED: "Belum Ditempuh",
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -302,8 +313,20 @@ function AssessmentListItem(props) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-  const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
-    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
+  const handleOpenDialog = (
+    title,
+    subject,
+    teacher_name,
+    start_date,
+    end_date
+  ) => {
+    setCurrentDialogInfo({
+      title,
+      subject,
+      teacher_name,
+      start_date,
+      end_date,
+    });
     setOpenDialog(true);
     console.log(title);
   };
@@ -436,10 +459,7 @@ function AssessmentListItem(props) {
           >
             Guru: {currentDialogInfo.teacher_name}
           </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-          >
+          <Typography variant="subtitle1" align="center">
             Mulai: {currentDialogInfo.start_date}
           </Typography>
           <Typography variant="subtitle1" align="center">
@@ -461,7 +481,6 @@ function AssessmentListItem(props) {
 }
 
 function ViewSubject(props) {
-
   const { user, all_teachers } = props.auth;
   const id = props.match.params.id;
   const {
@@ -473,7 +492,7 @@ function ViewSubject(props) {
     getMaterial,
     getAllAssessments,
     assessmentsCollection,
-    getTeachers
+    getTeachers,
   } = props;
   const all_assessments = assessmentsCollection.all_assessments;
   const { kelas } = props.classesCollection;
@@ -481,7 +500,7 @@ function ViewSubject(props) {
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
   const classId = user.kelas;
-
+  const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
   let subjects_list = Array.from(all_subjects_map.keys());
   let background_idx = subjects_list.indexOf(id) % subjectBackground.length;
   let background_image, background_color;
@@ -508,6 +527,22 @@ function ViewSubject(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  React.useEffect(() => {
+    if (user.role === "Student") {
+      let submittedTaskIdSet = new Set();
+      getFileSubmitTasksByAuthor(user._id)
+        .then((response) => {
+          for (let file of response.data) {
+            submittedTaskIdSet.add(file.task_id);
+          }
+        })
+        .finally(() => {
+          // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
+          setSubmittedTaskIds(submittedTaskIdSet);
+        });
+    }
+  }, []);
+
   console.log(all_subjects_map);
   let tasksByClass = []; // Tasks on specific class.
 
@@ -522,54 +557,6 @@ function ViewSubject(props) {
       return tasksByClass;
     });
   }
-
-  // let tasksBySubjectClass = [];
-  // const generateTaskBySubject = (target=null) => {
-  //   tasksByClass.map((task) => {
-  //     let workCategoryAvatar = (
-  //       <Avatar className={classes.assignmentLate}>
-  //         <AssignmentLateIcon/>
-  //       </Avatar>
-  //     )
-
-  //     let workStatus = "Belum Dikumpulkan"
-  //     // for (var i = 0; i < all_user_files.length; i++) {
-  //     //   if (all_user_files[i].for_task_object === task._id) {
-  //     //     workStatus = "Telah Dikumpulkan"
-  //     //     workCategoryAvatar = (
-  //     //       <Avatar className={classes.assignmentTurnedIn}>
-  //     //         <AssignmentTurnedInIcon/>
-  //     //       </Avatar>
-  //     //     )
-  //     //     break;
-  //     //   }
-  //     // }
-
-  //     if (task.subject === id) {
-  //     tasksBySubjectClass.push(
-  //       <AssignmentListItem
-  //         work_title={task.name}
-  //         work_category_avatar={workCategoryAvatar}
-  //         work_sender={`Mata Pelajaran: ${all_subjects_map.get(task.subject)}`}
-  //         work_status={workStatus}
-  //         work_deadline={moment(task.deadline).format("DD MMM YYYY")}
-  //         work_link={`/tugas-murid/${task._id}`}
-  //       />
-  //     )
-  //   }
-  //   return tasksBySubjectClass
-  // })
-
-  // if (target === "length")
-  //   return tasksBySubjectClass.length;
-
-  // return tasksBySubjectClass.length === 0 ?
-  // (<Typography variant="h5" align="center" gutterBottom>
-  //   Kosong
-  // </Typography>)
-  // : tasksBySubjectClass
-
-  // }
 
   function listMaterials(
     category = null,
@@ -641,12 +628,11 @@ function ViewSubject(props) {
           </Avatar>
         );
 
-        let workStatus = "Belum Dikumpulkan";
-        for (let i = 0; i < user.tugas.length; i++) {
-          if (user.tugas[i].for_task_object === task._id) {
-            workStatus = "Sudah Dikumpulkan";
-            break;
-          }
+        let workStatus;
+        if (submittedTaskIds.has(task._id)) {
+          workStatus = TASK_STATUS.SUBMITTED;
+        } else {
+          workStatus = TASK_STATUS.NOT_SUBMITTED;
         }
 
         // console.log(all_user_files)
@@ -730,9 +716,6 @@ function ViewSubject(props) {
           console.log("test");
           AssessmentsList.push(assessment);
         }
-        // if(i === all_assessments.length - 5){ // item terakhir harus pas index ke 4.
-        //   break;
-        // }
       }
 
       for (i = 0; i < AssessmentsList.length; i++) {
@@ -748,19 +731,6 @@ function ViewSubject(props) {
             </Avatar>
           );
 
-        // console.log(all_user_files)
-        // for (var j = 0; j < all_user_files.length; j++){
-        //     if(all_user_files[j].for_task_object === task._id){
-        //     workStatus = "Telah Dikumpulkan"
-        //     workCategoryAvatar = (
-        //       <Avatar className={classes.assignmentTurnedIn}>
-        //         <AssignmentTurnedInIcon/>
-        //       </Avatar>
-        //     )
-        //     break;
-        //   }
-        // }
-        // console.log(Object.values(assessment.submissions)[0])
         if (tab === "pekerjaan_kelas") {
           let workStatus = "Belum Ditempuh";
           if (type === "Kuis") {
@@ -781,7 +751,9 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
-                  work_teacher_name={all_teachers.get(assessment.author_id).name}
+                  work_teacher_name={
+                    all_teachers.get(assessment.author_id).name
+                  }
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -811,7 +783,9 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
-                  work_teacher_name={all_teachers.get(assessment.author_id).name}
+                  work_teacher_name={
+                    all_teachers.get(assessment.author_id).name
+                  }
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -848,7 +822,9 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
-                  work_teacher_name={all_teachers.get(assessment.author_id).name}
+                  work_teacher_name={
+                    all_teachers.get(assessment.author_id).name
+                  }
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -877,7 +853,9 @@ function ViewSubject(props) {
                       : all_subjects_map.get(assessment.subject)
                   }
                   work_status={workStatus}
-                  work_teacher_name={all_teachers.get(assessment.author_id).name}
+                  work_teacher_name={
+                    all_teachers.get(assessment.author_id).name
+                  }
                   work_starttime={moment(assessment.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
@@ -1043,5 +1021,5 @@ export default connect(mapStateToProps, {
   getAllTaskFilesByUser,
   getMaterial,
   getAllAssessments,
-  getTeachers
+  getTeachers,
 })(ViewSubject);
