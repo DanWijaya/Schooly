@@ -326,24 +326,16 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    width: "100px",
     borderRadius: "3px 0px 0px 3px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
+    width: "100px",
     [theme.breakpoints.down("md")]: {
       width: "60px",
     },
   },
   subjectItemContent: {
     padding: "10px 10px 10px 20px",
-  },
-  viewMaterialButton: {
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
-    },
   },
   editSubjectButton: {
     backgroundColor: theme.palette.primary.main,

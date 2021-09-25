@@ -494,7 +494,7 @@ const useStyles = makeStyles((theme) => ({
     color: "black",
     "&:focus, &:hover": {
       boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
-    }
+    },
   },
   checkboxIcon: {
     color: theme.palette.primary.main,

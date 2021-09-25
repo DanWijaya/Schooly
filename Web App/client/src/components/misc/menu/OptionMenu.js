@@ -8,8 +8,8 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 function OptionMenu(props) {
   const { actions, row, rowCount, handleActionOnClick } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
 
+  const open = Boolean(anchorEl);
   const handleClick = (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -22,23 +22,21 @@ function OptionMenu(props) {
   return (
     <div>
       <IconButton
-        aria-label="more"
-        aria-controls="long-menu"
-        aria-haspopup="true"
         onClick={handleClick}
         disabled={rowCount}
       >
         <MoreVertIcon />
       </IconButton>
       <Menu
+        keepMounted
         id="long-menu"
         anchorEl={anchorEl}
-        keepMounted
         open={open}
         onClose={handleClose}
         PaperProps={{
           style: {
-            width: "20ch",
+            maxWidth: "150px",
+            width: "100%",
           },
         }}
       >

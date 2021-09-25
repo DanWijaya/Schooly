@@ -1,29 +1,29 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import {
+  IconButton,
+  Menu,
+  MenuItem
+} from "@material-ui/core";
+import { MoreVert as MoreVertIcon } from "@material-ui/icons";
 
 function UserMenu(props) {
-  const { options, row, rowCount, role } = props
-  const { handleOpenDeleteDialog, handleOpenDisableApproveDialog, CheckboxDialog } = props
+  const { options, row, rowCount, role } = props;
+  const { handleOpenDeleteDialog, handleOpenDisableApproveDialog, CheckboxDialog } = props'
   const [anchorEl, setAnchorEl] = React.useState(null);
-  // const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  // const [selectedUserId, setSelectedUserId] = React.useState(null);
-  const open = Boolean(anchorEl);
 
+  const open = Boolean(anchorEl);
   const handleClick = (e) => {
     e.stopPropagation();
     e.preventDefault();
     setAnchorEl(e.currentTarget);
   };
   const handleClose = (e) => {
-      setAnchorEl(null);
+    setAnchorEl(null);
   };
 
   return (
-    <div >
+    <div>
       <IconButton onClick={handleClick} disabled={rowCount}>
         <MoreVertIcon />
       </IconButton>
