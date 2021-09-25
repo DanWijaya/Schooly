@@ -38,6 +38,18 @@ import WarningIcon from "@material-ui/icons/Warning";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
+import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
+
+const TASK_STATUS = {
+  SUBMITTED: "Sudah Dikumpulkan",
+  NOT_SUBMITTED: "Belum Dikumpulkan",
+};
+
+const ASSESSMENT_STATUS = {
+  SUBMITTED: "Sudah Ditempuh",
+  NOT_SUBMITTED: "Belum Ditempuh",
+};
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -205,7 +217,7 @@ function AssignmentListItem(props) {
             <Badge
               style={{ display: "flex", flexDirection: "row" }}
               badgeContent={
-                props.work_status === "Belum Dikumpulkan" ? (
+                props.work_status === TASK_STATUS.NOT_SUBMITTED ? (
                   <ErrorIcon className={classes.errorIcon} />
                 ) : (
                   <CheckCircleIcon className={classes.checkIcon} />
@@ -255,7 +267,7 @@ function AssignmentListItem(props) {
             <Badge
               style={{ display: "flex", flexDirection: "row" }}
               badgeContent={
-                props.work_status === "Belum Dikumpulkan" ? (
+                props.work_status === TASK_STATUS.NOT_SUBMITTED ? (
                   <ErrorIcon className={classes.errorIcon} />
                 ) : (
                   <CheckCircleIcon className={classes.checkIcon} />
@@ -331,7 +343,7 @@ function AssessmentListItem(props) {
           <Badge
             style={{ display: "flex", flexDirection: "row" }}
             badgeContent={
-              props.work_status === "Belum Ditempuh" ? (
+              props.work_status === ASSESSMENT_STATUS.NOT_SUBMITTED ? (
                 <WarningIcon className={classes.warningIcon} />
               ) : null
             }
@@ -381,7 +393,7 @@ function AssessmentListItem(props) {
           <Badge
             style={{ display: "flex", flexDirection: "row" }}
             badgeContent={
-              props.work_status === "Belum Ditempuh" ? (
+              props.work_status === ASSESSMENT_STATUS.NOT_SUBMITTED ? (
                 <WarningIcon className={classes.warningIcon} />
               ) : null
             }
@@ -481,6 +493,7 @@ function ViewSubject(props) {
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
   const classId = user.kelas;
+  const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
 
   let subjects_list = Array.from(all_subjects_map.keys());
   let background_idx = subjects_list.indexOf(id) % subjectBackground.length;
@@ -506,6 +519,22 @@ function ViewSubject(props) {
     getAllAssessments();
     getTeachers("map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
+    if (user.role === "Student") {
+      let submittedTaskIdSet = new Set();
+      getFileSubmitTasksByAuthor(user._id)
+        .then((response) => {
+          for (let file of response.data) {
+            submittedTaskIdSet.add(file.task_id);
+          }
+        })
+        .finally(() => {
+          // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
+          setSubmittedTaskIds(submittedTaskIdSet);
+        });
+    }
   }, []);
 
   console.log(all_subjects_map);
@@ -641,12 +670,11 @@ function ViewSubject(props) {
           </Avatar>
         );
 
-        let workStatus = "Belum Dikumpulkan";
-        for (let i = 0; i < user.tugas.length; i++) {
-          if (user.tugas[i].for_task_object === task._id) {
-            workStatus = "Sudah Dikumpulkan";
-            break;
-          }
+        let workStatus;
+        if (submittedTaskIds.has(task._id)) {
+          workStatus = TASK_STATUS.SUBMITTED;
+        } else {
+          workStatus = TASK_STATUS.NOT_SUBMITTED;
         }
 
         // console.log(all_user_files)
@@ -665,7 +693,7 @@ function ViewSubject(props) {
           if (
             (!category ||
               (category === "subject" && task.subject === subject)) &&
-            workStatus === "Belum Dikumpulkan"
+            workStatus === TASK_STATUS.SUBMITTED
           ) {
             result.push(
               <AssignmentListItem
@@ -762,7 +790,7 @@ function ViewSubject(props) {
         // }
         // console.log(Object.values(assessment.submissions)[0])
         if (tab === "pekerjaan_kelas") {
-          let workStatus = "Belum Ditempuh";
+          let workStatus = ASSESSMENT_STATUS.NOT_SUBMITTED;
           if (type === "Kuis") {
             if (
               (!category ||
@@ -827,8 +855,8 @@ function ViewSubject(props) {
           if (category === "subject" && result.length === 3) break;
         } else if (tab === "mata_pelajaran") {
           let workStatus = !assessment.submissions
-            ? "Belum Ditempuh"
-            : "Sudah Ditempuh";
+            ? ASSESSMENT_STATUS.NOT_SUBMITTED
+            : ASSESSMENT_STATUS.SUBMITTED;
           console.log(assessment.subject);
           console.log(subject);
           if (type === "Kuis") {
