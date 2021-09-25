@@ -17,10 +17,10 @@ viewMaterialButton: {
 },
 }));
 
-function UserListItem(props) {
+function UserItem(props) {
     const { data, avatar_map} = props;
     const classes = useStyles();
-    
+
     return (
       data.map((user) => {
         let { name, role, email, _id} = user;
@@ -76,8 +76,8 @@ function UserListItem(props) {
     </Grid>
         )
       })
-       
+
     )
 }
 
-export default UserListItem;
+export default UserItem;

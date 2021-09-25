@@ -47,7 +47,7 @@ import SortIcon from "@material-ui/icons/Sort";
 import ClearIcon from "@material-ui/icons/Clear";
 import { GoSearch } from "react-icons/go";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import SubjectPaper from "../../misc/object-view/SubjectPaper";
+import SubjectItem from "../../objects/object-item/SubjectItem";
 
 function createData(_id, name, all_class) {
   return { _id, name, all_class };
@@ -758,7 +758,7 @@ function SubjectList(props) {
             Kosong
           </Typography>
         ) : (
-          <SubjectPaper 
+          <SubjectItem 
            data={stableSort(rows, getComparator(order, orderBy))}
            isEditable={true}
            handleOpenFormDialog={handleOpenFormDialog}

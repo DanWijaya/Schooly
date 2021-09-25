@@ -40,10 +40,10 @@ import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
-import ClassPaper from "../../misc/object-view/ClassPaper";
-import SubjectPaper from "../../misc/object-view/SubjectPaper";
+import ClassItem from "../../objects/object-item/ClassItem";
+import SubjectItem from "../../objects/object-item/SubjectItem";
 import { getStudents, getTeachers, getAdmins, getAllUsers } from "../../../actions/UserActions"
-import UserListItem from "../../misc/object-view/UserListItem";
+import UserItem from "../../objects/object-item/UserItem";
 import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
 const path = require("path");
 
@@ -382,7 +382,7 @@ function ViewUnit(props) {
         </Tabs>
         <TabPanel value={tabValue} index={0}>
         <Grid container spacing={2}>
-          <ClassPaper 
+          <ClassItem 
             data={all_classes}
             user={user}
             />
@@ -390,7 +390,7 @@ function ViewUnit(props) {
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
           <Grid container spacing={2} direction="column">
-            <SubjectPaper 
+            <SubjectItem 
               data={all_subjects}
               isEditable={false}
               />
@@ -405,7 +405,7 @@ function ViewUnit(props) {
               <Divider className={classes.personListDivider} />
               <Grid item>
                 <List>
-                  <UserListItem 
+                  <UserItem 
                     data={all_admins}
                     avatar_map={avatar}/>
                 </List>
@@ -418,7 +418,7 @@ function ViewUnit(props) {
               <Divider className={classes.personListDivider} />
               <Grid item>
                 <List>
-                  <UserListItem 
+                  <UserItem 
                     data={all_teachers}
                     avatar_map={avatar}/>
                 </List>
@@ -431,7 +431,7 @@ function ViewUnit(props) {
               <Divider className={classes.personListDivider} />
               <Grid item>
                 <List>
-                  <UserListItem 
+                  <UserItem 
                     data={all_students}
                     avatar_map={avatar}/>
                 </List>

@@ -51,7 +51,7 @@ import { GiTeacher } from "react-icons/gi";
 import ClearIcon from "@material-ui/icons/Clear";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import ClassPaper from "../../misc/object-view/ClassPaper";
+import ClassItem from "../../objects/object-item/ClassItem";
 
 function createData(_id, name, homeroomTeacher, size, absent) {
   return { _id, name, homeroomTeacher, size, absent };
@@ -1060,7 +1060,7 @@ function ClassList(props) {
       <Grid container spacing={2}>
       {rows.length === 0
           ? null :
-        <ClassPaper 
+        <ClassItem 
             data={stableSort(rows, getComparator(order, orderBy))}
             user={user}
           />

@@ -5,7 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 import { Avatar, Badge, Divider, Grid, IconButton, Paper, Typography} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaChalkboardTeacher } from "react-icons/fa";
-import LightTooltip from "../light-tooltip/LightTooltip";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
       },
 }));
 
-    function ClassPaper(props) {
+    function ClassItem(props) {
     const { data } = props;
     const { user } = props.auth;
     const classes = useStyles();
@@ -73,10 +73,10 @@ const useStyles = makeStyles((theme) => ({
         {data.map((cl, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
             let viewpage = `/kelas/${cl._id}`;
-        
+
         return    (
         <Grid item xs={12} sm={6} md={4}>
-        <Link to={viewpage} onClick={(e) => e.stopPropagation()}> 
+        <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
         <Paper button className={classes.classPaper}>
                 <Avatar
                   variant="square"
@@ -207,15 +207,15 @@ const useStyles = makeStyles((theme) => ({
     else{
         return null;
     }
-    
+
 }
 
-ClassPaper.propTypes = {
+ClassItem.propTypes = {
     auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
     auth: state.auth,
 });
-  
-export default connect(mapStateToProps, {})(ClassPaper);
+
+export default connect(mapStateToProps, {})(ClassItem);
