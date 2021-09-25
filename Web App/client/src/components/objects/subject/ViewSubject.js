@@ -475,7 +475,7 @@ function ViewSubject(props) {
   const { kelas } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
-  const classId = user.kelas;
+
   const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
   const all_assessments = assessmentsCollection.all_assessments;
   // const {all_user_files} = props.filesCollection;
