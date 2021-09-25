@@ -32,7 +32,7 @@ import {
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {
   FaFile,
@@ -787,14 +787,14 @@ class CreateMaterial extends Component {
             onClose={this.handleCloseErrorSnackbar}
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
           >
-            <MuiAlert
+            <Alert
               elevation={6}
               variant="filled"
               onClose={this.handleCloseSnackbar}
               severity="error"
             >
               {this.state.over_limit.length} file melebihi batas {this.props.settingsCollection.upload_limit}MB!
-            </MuiAlert>
+            </Alert>
           </Snackbar>
         </div>
       );

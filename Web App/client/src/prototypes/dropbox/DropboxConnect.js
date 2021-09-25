@@ -21,7 +21,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import HomeIcon from "@material-ui/icons/Home";
@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
+  return <Alert elevation={6} variant="filled" {...props} />;
 }
 
 function ViewDirectory(props) {

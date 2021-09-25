@@ -39,7 +39,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {
@@ -924,14 +924,14 @@ class EditMaterial extends Component {
             onClose={this.handleCloseErrorSnackbar}
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
           >
-            <MuiAlert
+            <Alert
               elevation={6}
               variant="filled"
               onClose={this.handleCloseSnackbar}
               severity="error"
             >
               {this.state.over_limit.length} file melebihi batas {this.props.settingsCollection.upload_limit}MB!
-            </MuiAlert>
+            </Alert>
           </Snackbar>
         </div>
       );

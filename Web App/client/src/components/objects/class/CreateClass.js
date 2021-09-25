@@ -7,6 +7,7 @@ import { clearSuccess } from "../../../actions/SuccessActions";
 import { createClass, getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers } from "../../../actions/UserActions";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import {
   Button,
   Divider,
@@ -19,18 +20,18 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import UploadDialog from "../../misc/dialog/UploadDialog";
-import { withStyles } from "@material-ui/core/styles";
 import { Autocomplete } from '@material-ui/lab';
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
   content: {
     padding: "20px",
@@ -81,8 +82,6 @@ class CreateClass extends Component {
         this.setState({ teacherOptions });
       }
     }
-    console.log("state");
-    console.log(this.state);
   };
 
   handleOpenUploadDialog = () => {
@@ -94,7 +93,7 @@ class CreateClass extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-    // otherfield ini adalah yang untuk field controllers Select atau variannya. 
+    // otherfield ini adalah yang untuk field controllers Select atau variannya.
     // Karena Select ini tidak memiliki nilai e.target.id, maka awalnya kita lakukan check dulu jika
 
     let field = otherfield ? otherfield : e.target.id;
@@ -122,11 +121,9 @@ class CreateClass extends Component {
       ketua_kelas: this.state.ketua_kelas,
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
-      
+
       mata_pelajaran: this.state.mata_pelajaran.map((matpel) => (matpel._id))
     };
-    console.log("classObject")
-    console.log(classObject);
 
     this.props
       .createClass(classObject, this.props.history)
@@ -161,20 +158,10 @@ class CreateClass extends Component {
     const { errors } = this.state;
     const { all_teachers, user } = this.props.auth;
 
-    // console.log(errors);
-    // console.log(all_teachers);
     document.title = "Schooly | Buat Kelas";
 
-    if (user.role === "Teacher" || user.role === "Admin") {
-      return (
+    return (
         <div className={classes.root}>
-          <UploadDialog
-            openUploadDialog={this.state.openUploadDialog}
-            success={success}
-            messageUploading="Kelas sedang dibuat"
-            messageSuccess="Kelas telah dibuat"
-            redirectLink={`/kelas/${success}`}
-          />
           <Paper>
             <div className={classes.content}>
               <Typography variant="h5" gutterBottom>
@@ -194,7 +181,7 @@ class CreateClass extends Component {
                 className={classes.content}
               >
                 <Grid item>
-                  <Typography component="label" for="name" color="primary">
+                  <Typography for="name" color="primary">
                     Nama Kelas
                   </Typography>
                   <TextField
@@ -212,7 +199,7 @@ class CreateClass extends Component {
                   />
                 </Grid>
                 <Grid item>
-                  <Typography component="label" for="walikelas" color="primary">
+                  <Typography for="walikelas" color="primary">
                     Wali Kelas
                   </Typography>
                   <FormControl
@@ -244,17 +231,13 @@ class CreateClass extends Component {
                   </FormControl>
                 </Grid>
                 <Grid item>
-                  <Typography
-                    component="label"
-                    for="matapelajaran"
-                    color="primary"
-                  >
+                  <Typography for="matapelajaran" color="primary">
                     Mata Pelajaran
                   </Typography>
                   <FormControl
+                    fullWidth
                     id="matapelajaran"
                     color="primary"
-                    fullWidth
                   >
                     <Autocomplete
                       multiple
@@ -262,42 +245,21 @@ class CreateClass extends Component {
                       options={this.props.subjectsCollection ? this.props.subjectsCollection.all_subjects : null}
                       getOptionLabel={(option) => option.name}
                       filterSelectedOptions
-                      // size="small"
+                      size="small"
                       onChange={(event, value) => {
                         this.onChange(value, "mata_pelajaran");
                       }}
                       renderInput={(params) => (
                         <TextField
-                          {...params}
                           variant="outlined"
-                          size="small"
-                          // fullWidth
-                          style={{ border: "none" }}
                           error={errors.mata_pelajaran}
                           helperText={errors.mata_pelajaran}
+                          {...params}
                         />
                       )}
                     />
                   </FormControl>
                 </Grid>
-                {/* <Grid item >
-                  <Typography component="label" for="ukuran" color="primary">
-                    Jumlah Murid
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    id="ukuran"
-                    onChange={this.onChange}
-                    value={2}
-                    error={errors.ukuran}
-                    type="number"
-                    helperText={errors.ukuran}
-                    className={classnames("", {
-                      invalid: errors.ukuran
-                    })}
-                  />
-                </Grid> */}
               </Grid>
               <Divider />
               <div
@@ -316,17 +278,15 @@ class CreateClass extends Component {
               </div>
             </form>
           </Paper>
+          <UploadDialog
+            openUploadDialog={this.state.openUploadDialog}
+            success={success}
+            messageUploading="Kelas sedang dibuat"
+            messageSuccess="Kelas telah dibuat"
+            redirectLink={`/kelas/${success}`}
+          />
         </div>
       );
-    } else {
-      return (
-        <div className={classes.root}>
-          <Typography variant="h5" align="center">
-            <b>Anda tidak mempunyai izin akses halaman ini.</b>
-          </Typography>
-        </div>
-      );
-    }
   }
 }
 
@@ -349,9 +309,9 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   createClass,
+  getAllClass,
   getTeachers,
   getAllSubjects,
   clearErrors,
-  clearSuccess,
-  getAllClass
+  clearSuccess
 })(withStyles(styles)(CreateClass));

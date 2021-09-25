@@ -30,7 +30,7 @@ import {
   Typography
 } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -605,14 +605,14 @@ class Register extends Component {
           onClose={handleCloseSnackbar}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          <MuiAlert
+          <Alert
             elevation={6}
             variant="filled"
             onClose={handleCloseSnackbar}
             severity="error"
           >
             Terdapat kesalahan dalam pengisian!
-          </MuiAlert>
+          </Alert>
         </Snackbar>
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}

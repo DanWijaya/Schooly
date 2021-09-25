@@ -29,6 +29,7 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     zIndex: theme.zIndex.drawer + 1,
+    boxShadow: "0 1px 6px 0px rgba(32,33,36,0.28), 0px 1px 10px 0px rgb(0,0,0,0.12)",
   },
   startButtonContainer: {
     flex: "1",

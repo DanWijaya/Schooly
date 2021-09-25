@@ -32,7 +32,7 @@ import {
 import { withStyles } from "@material-ui/core/styles";
 import { AiFillNotification } from "react-icons/ai";
 import { BsClipboardData } from "react-icons/bs";
-import { FaChalkboardTeacher, FaSchool, FaUserCog } from "react-icons/fa";
+import { FaChalkboard, FaSchool, FaUserCog } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
 
 const styles = (theme) => ({
@@ -334,7 +334,7 @@ class Landing extends Component {
                       <ListItem alignItems="flex-start">
                         <ListItemAvatar>
                           <Avatar className={classes.featuresAvatarMobile}>
-                            <FaChalkboardTeacher />
+                            <FaChalkboard />
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
@@ -557,7 +557,7 @@ class Landing extends Component {
                 <Grid item xs={4} lg={3}>
                   <Paper variant="outlined" className={classes.featuresPaperDesktop}>
                     <Avatar className={classes.featuresAvatarDesktop}>
-                      <FaChalkboardTeacher className={classes.featuresIconDesktop} />
+                      <FaChalkboard className={classes.featuresIconDesktop} />
                     </Avatar>
                     <Typography align="center" paragraph>Kelas</Typography>
                     <Typography variant="body2" align="center">

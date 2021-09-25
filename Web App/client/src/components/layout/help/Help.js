@@ -315,7 +315,7 @@ function Help(props) {
                             </li>
                             <li>
                               Atur mata pelajaran dan kelas yang diajar masing-masing guru
-                              pada <Link to="/sunting-guru">halaman Sunting Data Ajar Guru</Link>.
+                              pada <Link to="/data-ajar-guru">halaman Sunting Data Ajar Guru</Link>.
                             </li>
                             <li>
                               Lakukan penyuntingan kelas untuk memberikan peran

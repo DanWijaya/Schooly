@@ -34,7 +34,7 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LinkIcon from "@material-ui/icons/Link";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import SwitchBase from "@material-ui/core/internal/SwitchBase";
 import Latex from "../../misc/latex/Latex";
 
@@ -599,9 +599,9 @@ function ViewAssessmentTeacher(props) {
         autoHideDuration={3000}
         onClose={handleCloseCopySnackBar}
       >
-        <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
+        <Alert onClose={handleCloseCopySnackBar} severity="success">
           Tautan {type} berhasil disalin ke Clipboard Anda!
-        </MuiAlert>
+        </Alert>
       </Snackbar>
     </div>
   );

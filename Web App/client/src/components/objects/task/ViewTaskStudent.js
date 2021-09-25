@@ -60,7 +60,7 @@ import {
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PublishIcon from "@material-ui/icons/Publish";
 import {
@@ -1636,9 +1636,9 @@ function ViewTaskStudent(props) {
         onClose={handleCloseErrorSnackbar}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <MuiAlert elevation={6} variant="filled" severity="error">
+        <Alert elevation={6} variant="filled" severity="error">
           {over_limit.length} file melebihi batas {props.settingsCollection.upload_limit}MB!
-        </MuiAlert>
+        </Alert>
       </Snackbar>
       <Snackbar
         open={openCommentSnackbar}
@@ -1647,7 +1647,7 @@ function ViewTaskStudent(props) {
           handleCloseCommentSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity={severity}
           onClose={(event, reason) => {
@@ -1655,7 +1655,7 @@ function ViewTaskStudent(props) {
           }}
         >
           {snackbarContent}
-        </MuiAlert>
+        </Alert>
       </Snackbar>
       <Snackbar
         open={openDeleteSnackbar}
@@ -1664,7 +1664,7 @@ function ViewTaskStudent(props) {
           handleCloseDeleteSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity="success"
           onClose={(event, reason) => {
@@ -1672,7 +1672,7 @@ function ViewTaskStudent(props) {
           }}
         >
           Tugas File anda berhasil dihapus
-        </MuiAlert>
+        </Alert>
       </Snackbar>
     </div>
   );

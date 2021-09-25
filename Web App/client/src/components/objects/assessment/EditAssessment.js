@@ -55,7 +55,7 @@ import LinkIcon from "@material-ui/icons/Link";
 import CancelIcon from "@material-ui/icons/Cancel";
 import SendIcon from "@material-ui/icons/Send";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import {
   RadioButtonChecked,
   CheckBox,
@@ -2309,33 +2309,33 @@ class EditAssessment extends Component {
           autoHideDuration={6000}
           onClose={this.handleCloseCheckboxErrorSnackBar}
         >
-          <MuiAlert
+          <Alert
             onClose={this.handleCloseCheckboxErrorSnackBar}
             severity="error"
           >
             Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
-          </MuiAlert>
+          </Alert>
         </Snackbar>
         <Snackbar
           open={this.state.radioSnackbarOpen}
           autoHideDuration={6000}
           onClose={this.handleCloseRadioErrorSnackBar}
         >
-          <MuiAlert
+          <Alert
             onClose={this.handleCloseRadioErrorSnackBar}
             severity="error"
           >
             Soal Dalam Bentuk Pilihan Ganda Minimal Memiliki Satu Jawaban.
-          </MuiAlert>
+          </Alert>
         </Snackbar>
         <Snackbar
           open={this.state.copySnackbarOpen}
           autoHideDuration={6000}
           onClose={this.handleCloseCopySnackBar}
         >
-          <MuiAlert onClose={this.handleCloseCopySnackBar} severity="success">
+          <Alert onClose={this.handleCloseCopySnackBar} severity="success">
             Tautan {this.state.type} berhasil disalin ke Clipboard Anda!
-          </MuiAlert>
+          </Alert>
         </Snackbar>
         <Snackbar
           open={this.state.snackbarOpen}
@@ -2343,7 +2343,7 @@ class EditAssessment extends Component {
           onClose={this.handleCloseErrorSnackbar}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          <MuiAlert
+          <Alert
             elevation={6}
             variant="filled"
             onClose={this.handleCloseSnackbar}
@@ -2351,7 +2351,7 @@ class EditAssessment extends Component {
           >
             Masih ada bagian yang belum diisi atau salah, silakan diperiksa
             kembali!
-          </MuiAlert>
+          </Alert>
         </Snackbar>
         <Snackbar
           open={this.state.fileLimitSnackbar}
@@ -2359,9 +2359,9 @@ class EditAssessment extends Component {
           onClose={this.handleFileLimitSnackbar}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          <MuiAlert elevation={6} variant="filled" severity="error">
+          <Alert elevation={6} variant="filled" severity="error">
             {this.state.over_limit.length} file melebihi batas {this.props.settingsCollection.upload_limit}MB!
-          </MuiAlert>
+          </Alert>
         </Snackbar>
       </div>
     );

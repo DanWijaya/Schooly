@@ -15,27 +15,29 @@ import subjectBackground from "./subject-background/SubjectBackground";
 import Empty from "../../misc/empty/Empty";
 import {
   Avatar,
+  Badge,
+  Dialog,
   Divider,
   ExpansionPanel,
   ExpansionPanelSummary,
   Grid,
+  Hidden,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
   Paper,
   Typography,
-  Hidden,
-  Dialog,
-  Badge,
 } from "@material-ui/core";
+import {
+  AssignmentOutlined as AssignmentIcon,
+  CheckCircle as CheckCircleIcon,
+  Error as ErrorIcon,
+  ExpandMore as ExpandMoreIcon,
+  MenuBook as MenuBookIcon,
+  Warning as WarningIcon,
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
-import ErrorIcon from "@material-ui/icons/Error";
-import WarningIcon from "@material-ui/icons/Warning";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
@@ -68,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(2.5),
     color: theme.palette.primary.main,
   },
-  subjectCardPaper: {
+  subjectPaper: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -109,9 +111,6 @@ const useStyles = makeStyles((theme) => ({
   material: {
     backgroundColor: theme.palette.primary.main,
   },
-  // listItem: {
-  //   minHeight: "70px",
-  // },
   subtitleColor: {
     color: "rgba(255, 255, 255, 0.7)",
   },
@@ -130,22 +129,6 @@ const useStyles = makeStyles((theme) => ({
     color: "grey",
   },
 }));
-
-// function SubjectListitem(props) {
-//   const classes = useStyles();
-
-//   return (
-//     <Link to={props.work_link}>
-//       <ListItem button className={classes.listItem}>
-//         <ListItemAvatar>{props.work_category_avatar}</ListItemAvatar>
-//         <ListItemText
-//           primary={<Typography variant="h6">{props.work_title}</Typography>}
-//           secondary={!props.work_subject ? " " : props.work_subject}
-//         />
-//       </ListItem>
-//     </Link>
-//   );
-// }
 
 function MaterialListitem(props) {
   const classes = useStyles();
@@ -307,6 +290,7 @@ function AssignmentListItem(props) {
     </div>
   );
 }
+
 function AssessmentListItem(props) {
   const classes = useStyles();
 
@@ -473,9 +457,6 @@ function AssessmentListItem(props) {
 }
 
 function ViewSubject(props) {
-
-  const { user, all_teachers } = props.auth;
-  const id = props.match.params.id;
   const {
     setCurrentClass,
     getAllTask,
@@ -484,16 +465,20 @@ function ViewSubject(props) {
     getAllTaskFilesByUser,
     getMaterial,
     getAllAssessments,
-    assessmentsCollection,
-    getTeachers
+    getTeachers,
+    assessmentsCollection
   } = props;
-  const all_assessments = assessmentsCollection.all_assessments;
+  const { user, all_teachers } = props.auth;
+
+  const id = props.match.params.id;
+  const classId = user.kelas;
   const { kelas } = props.classesCollection;
-  // const {all_user_files} = props.filesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
   const classId = user.kelas;
   const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
+  const all_assessments = assessmentsCollection.all_assessments;
+  // const {all_user_files} = props.filesCollection;
 
   let subjects_list = Array.from(all_subjects_map.keys());
   let background_idx = subjects_list.indexOf(id) % subjectBackground.length;
@@ -503,6 +488,7 @@ function ViewSubject(props) {
     background_image = Object.values(subjectBackground[background_idx])[0];
     background_color = Object.keys(subjectBackground[background_idx])[0];
   }
+
   const classes = useStyles({
     backgroundColor: background_color,
     backgroundImage: background_image,
@@ -540,8 +526,7 @@ function ViewSubject(props) {
   console.log(all_subjects_map);
   let tasksByClass = []; // Tasks on specific class.
 
-  console.log(selectedMaterials);
-  // All actions to retrive datas from Database...
+  // All actions to retrieve datas from Database.
   if (tasksCollection.length !== undefined) {
     tasksCollection.map((task) => {
       let class_assigned = task.class_assigned;
@@ -635,10 +620,10 @@ function ViewSubject(props) {
         }
         if (tab === "pekerjaan_kelas") {
           if (!category && materialList.length === 5)
-            // item ke index tsb, brarti harus harus pas index ke selectedMaterials.length - 5.
+            // number of item to the index, so that it has to be index = selectedMaterials.length - 5.
             break;
           if (category === "subject" && materialList.length === 3)
-            // item ke index tsb, brarti harus harus pas index ke selectedMaterials.length - 5.
+            // number of item to the index, so that it has to be index = selectedMaterials.length - 5.
             break;
         }
       }
@@ -657,7 +642,7 @@ function ViewSubject(props) {
         if (class_assigned.indexOf(classId) !== -1) {
           tasksList.push(task);
         }
-        // if(i === tasksCollection.length - 5){ // item terakhir harus pas index ke 4.
+        // if(i === tasksCollection.length - 5){ // Last Item must be at 4th index.
         //   break;
         // }
       }
@@ -929,7 +914,7 @@ function ViewSubject(props) {
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.subjectCardPaper}>
+      <Paper className={classes.subjectPaper}>
         <Typography variant="h4" gutterBottom style={{ color: "white" }}>
           <b>{all_subjects_map.get(id)}</b>
         </Typography>
@@ -940,97 +925,67 @@ function ViewSubject(props) {
       <div style={{ marginTop: "20px" }}>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Grid
-              item
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center" }}>
               <MenuBookIcon className={classes.itemIcon} />
               <Typography variant="h6">Materi</Typography>
-            </Grid>
+            </div>
           </ExpansionPanelSummary>
           <Divider />
-          <List className={classes.expansionPanelList}>
-            {listMaterials("subject", id, "mata_pelajaran").length === 0 ? (
-              <Empty />
-            ) : (
-              <>{listMaterials("subject", id, "mata_pelajaran")}</>
-            )}
-          </List>
+          {listMaterials("subject", id, "mata_pelajaran").length === 0 ? (
+            <Empty />
+          ) : (
+            <List className={classes.expansionPanelList}>
+              {listMaterials("subject", id, "mata_pelajaran")}
+            </List>
+          )}
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Grid
-              item
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center" }}>
               <AssignmentIcon className={classes.itemIcon} />
               <Typography variant="h6">Tugas</Typography>
-            </Grid>
+            </div>
           </ExpansionPanelSummary>
           <Divider />
-          <List className={classes.expansionPanelList}>
-            {listTasks("subject", id, "mata_pelajaran").length === 0 ? (
-              <Empty />
-            ) : (
-              <>{listTasks("subject", id, "mata_pelajaran")}</>
-            )}
-          </List>
+          {listTasks("subject", id, "mata_pelajaran").length === 0 ? (
+            <Empty />
+          ) : (
+            <List className={classes.expansionPanelList}>
+              {listTasks("subject", id, "mata_pelajaran")}
+            </List>
+          )}
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Grid
-              item
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center" }}>
               <FaClipboardList className={classes.itemIcon} />
               <Typography variant="h6">Kuis</Typography>
-            </Grid>
+            </div>
           </ExpansionPanelSummary>
           <Divider />
-          <List className={classes.expansionPanelList}>
-            {listAssessments("subject", id, "Kuis", "mata_pelajaran").length ===
-            0 ? (
-              <Empty />
-            ) : (
-              <>{listAssessments("subject", id, "Kuis", "mata_pelajaran")}</>
-            )}
-          </List>
+          {listAssessments("subject", id, "Kuis", "mata_pelajaran").length === 0 ? (
+            <Empty />
+          ) : (
+            <List className={classes.expansionPanelList}>
+              {listAssessments("subject", id, "Kuis", "mata_pelajaran")}
+              </List>
+          )}
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Grid
-              item
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center" }}>
               <BsClipboardData className={classes.itemIcon} />
               <Typography variant="h6">Ujian</Typography>
-            </Grid>
+            </div>
           </ExpansionPanelSummary>
           <Divider />
-          <List className={classes.expansionPanelList}>
-            {listAssessments("subject", id, "Ujian", "mata_pelajaran")
-              .length === 0 ? (
-              <Empty />
-            ) : (
-              <>{listAssessments("subject", id, "Ujian", "mata_pelajaran")}</>
-            )}
-          </List>
+          {listAssessments("subject", id, "Ujian", "mata_pelajaran").length === 0 ? (
+            <Empty />
+          ) : (
+            <List className={classes.expansionPanelList}>
+              {listAssessments("subject", id, "Ujian", "mata_pelajaran")}
+            </List>
+          )}
         </ExpansionPanel>
       </div>
     </div>

@@ -28,7 +28,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import {
   ArrowBack as ArrowBackIcon,
   Clear as ClearIcon,
@@ -124,7 +124,7 @@ function TeacherListToolbar(props) {
 
   return (
     <div className={classes.toolbar}>
-      <Grid container justify="flex-end" spacing={1}>
+      <Grid container justify="flex-end" alignItems="center" spacing={1}>
         <Grid item>
           <TextField
             variant="outlined"
@@ -157,9 +157,7 @@ function TeacherListToolbar(props) {
                       e.stopPropagation();
                       onClear(e, "searchFilterDesktop");
                     }}
-                    style={{
-                      visibility: !searchFilter ? "hidden" : "visible",
-                    }}
+                    style={{ visibility: !searchFilter ? "hidden" : "visible" }}
                   >
                     <ClearIcon />
                   </IconButton>
@@ -251,7 +249,7 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  teacherPanelSummary: {
+  teacherPanel: {
     "&:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
@@ -259,12 +257,6 @@ const useStyles = makeStyles((theme) => ({
   teacherAvatar: {
     backgroundColor: theme.palette.primary.main,
     marginRight: "10px",
-  },
-  listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
-    padding: "6px 16px"
   },
   saveButton: {
     maxWidth: "100px",
@@ -507,13 +499,13 @@ function TeacherList(props) {
           <Empty />
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
+            const labelId = index;
             return (
               <Grid item>
                 <ExpansionPanel variant="outlined">
                   <ExpansionPanelSummary
                     expandIcon={<ExpandMoreIcon />}
-                    className={classes.teacherPanelSummary}
+                    className={classes.teacherPanel}
                   >
                   <Grid container alignItems="center" spacing={2}>
                     <Hidden xsDown>
@@ -615,7 +607,7 @@ function TeacherList(props) {
           handleCloseSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity={severity}
           onClose={(event, reason) => {
@@ -623,7 +615,7 @@ function TeacherList(props) {
           }}
         >
           {snackbarContent}
-        </MuiAlert>
+        </Alert>
       </Snackbar>
     </div>
   );

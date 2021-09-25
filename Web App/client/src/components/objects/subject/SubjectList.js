@@ -25,9 +25,6 @@ import {
   Grid,
   Hidden,
   IconButton,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
   InputAdornment,
   Menu,
   MenuItem,
@@ -37,7 +34,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import {
   ArrowBack as ArrowBackIcon,
   Cancel as CancelIcon,
@@ -46,6 +43,7 @@ import {
   Delete as DeleteIcon,
   Edit as EditIcon,
   MoreVert as MoreVertIcon,
+  LibraryAdd as LibraryAddIcon,
   LibraryBooks as LibraryBooksIcon,
   Search as SearchIcon,
   SortByAlpha as SortByAlphaIcon
@@ -135,28 +133,28 @@ function SubjectListToolbar(props) {
           <Hidden mdUp>
             <LightTooltip title="Buat Mata Pelajaran">
               <Fab
-                size="small"
+                size="medium"
                 onClick={handleOpenFormDialog}
                 className={classes.createSubjectButton}
               >
-                <LibraryBooksIcon className={classes.createSubjectIconMobile} />
+                <LibraryAddIcon className={classes.createSubjectIconMobile} />
               </Fab>
             </LightTooltip>
           </Hidden>
           <Hidden smDown>
             <Fab
-              size="medium"
+              size="large"
               variant="extended"
               onClick={handleOpenFormDialog}
               className={classes.createSubjectButton}
             >
-              <LibraryBooksIcon className={classes.createSubjectIconDesktop} />
+              <LibraryAddIcon className={classes.createSubjectIconDesktop} />
               Buat Mata Pelajaran
             </Fab>
           </Hidden>
         </Grid>
         <Grid item>
-          <Grid container spacing={1}>
+          <Grid container alignItems="center" spacing={1}>
             <Grid item>
               <TextField
                 variant="outlined"
@@ -191,10 +189,7 @@ function SubjectListToolbar(props) {
                           e.stopPropagation();
                           onClear(e, "searchFilterDesktop");
                         }}
-                        style={{
-                          opacity: 0.5,
-                          visibility: !searchFilter ? "hidden" : "visible",
-                        }}
+                        style={{ visibility: !searchFilter ? "hidden" : "visible" }}
                       >
                         <ClearIcon />
                       </IconButton>
@@ -289,8 +284,10 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     padding: "16px 0px",
+    marginBottom: "15px",
   },
   createSubjectButton: {
+    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -301,7 +298,7 @@ const useStyles = makeStyles((theme) => ({
   createSubjectIconDesktop: {
     width: "25px",
     height: "25px",
-    marginRight: "7.5px",
+    marginRight: "8px",
   },
   createSubjectIconMobile: {
     width: "25px",
@@ -669,7 +666,7 @@ function SubjectList(props) {
           <Empty />
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
+            const labelId = index;
             return (
               <Grid item>
                 <Grid container alignItems="stretch" className={classes.subjectItem}>
@@ -811,7 +808,7 @@ function SubjectList(props) {
           handleCloseSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity="success"
           onClose={(event, reason) => {
@@ -819,7 +816,7 @@ function SubjectList(props) {
           }}
         >
           {snackbarContent}
-        </MuiAlert>
+        </Alert>
       </Snackbar>
     </div>
   );

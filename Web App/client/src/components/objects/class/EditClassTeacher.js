@@ -22,7 +22,7 @@ import {
   ListItemText,
   Snackbar,
 } from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -309,7 +309,7 @@ function EditClassTeacher(props) {
           handleCloseSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity={severity}
           onClose={(event, reason) => {
@@ -317,7 +317,7 @@ function EditClassTeacher(props) {
           }}
         >
           {snackbarContent}
-        </MuiAlert>
+        </Alert>
       </Snackbar>
 
       <Paper>

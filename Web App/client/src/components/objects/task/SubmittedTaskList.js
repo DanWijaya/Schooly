@@ -49,7 +49,7 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import {
   getFileSubmitTasks_T,
   viewFileSubmitTasks,
@@ -148,10 +148,6 @@ const useStyles = makeStyles((theme) => ({
     // marginBottom: "5px"
   },
 }));
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -757,7 +753,7 @@ function SubmittedTaskList(props) {
         onClose={handleCloseAlert}
         anchorOrigin={{ vertical: "center", horizontal: "center" }}
       >
-        <Alert onClose={handleCloseAlert} severity="success">
+        <Alert elevation={6} variant="filled" onClose={handleCloseAlert} severity="success">
           Nilai {!success ? null : success[2]} berhasil diganti menjadi{" "}
           {!success ? null : success[1]}
         </Alert>

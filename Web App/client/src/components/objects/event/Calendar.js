@@ -47,7 +47,7 @@ import {
   KeyboardDateTimePicker,
   KeyboardDatePicker
 } from "@material-ui/pickers";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import EventNoteIcon from '@material-ui/icons/EventNote';
@@ -4479,14 +4479,14 @@ function Calendar(props) {
         autoHideDuration={4000}
         onClose={() => { handleCloseSnackbar() }}
       >
-        <MuiAlert
+        <Alert
           elevation={6}
           variant="filled"
           severity={severity}
           onClose={() => { handleCloseSnackbar() }}
         >
           {snackbarContent}
-        </MuiAlert>
+        </Alert>
       </Snackbar>
     </div>
   );
