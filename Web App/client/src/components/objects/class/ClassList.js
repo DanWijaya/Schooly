@@ -31,6 +31,7 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
+  Add as AddIcon,
   AccountTree as AccountTreeIcon,
   ArrowBack as ArrowBackIcon,
   AssignmentInd as AssignmentIndIcon,
