@@ -40,10 +40,10 @@ import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
-import ClassItem from "../../objects/object-item/ClassItem";
-import SubjectItem from "../../objects/object-item/SubjectItem";
+import ClassItem from "../../objects/item/ClassItem";
+import SubjectItem from "../../objects/item/SubjectItem";
 import { getStudents, getTeachers, getAdmins, getAllUsers } from "../../../actions/UserActions"
-import UserItem from "../../objects/object-item/UserItem";
+import UserItem from "../../objects/item/UserItem";
 import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
 const path = require("path");
 

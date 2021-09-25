@@ -51,7 +51,7 @@ import { GiTeacher } from "react-icons/gi";
 import ClearIcon from "@material-ui/icons/Clear";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import ClassItem from "../../objects/object-item/ClassItem";
+import ClassItem from "../../objects/item/ClassItem";
 
 function createData(_id, name, homeroomTeacher, size, absent) {
   return { _id, name, homeroomTeacher, size, absent };

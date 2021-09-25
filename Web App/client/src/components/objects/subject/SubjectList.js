@@ -47,7 +47,7 @@ import SortIcon from "@material-ui/icons/Sort";
 import ClearIcon from "@material-ui/icons/Clear";
 import { GoSearch } from "react-icons/go";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import SubjectItem from "../../objects/object-item/SubjectItem";
+import SubjectItem from "../../objects/item/SubjectItem";
 
 function createData(_id, name, all_class) {
   return { _id, name, all_class };
