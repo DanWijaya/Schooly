@@ -1,5 +1,6 @@
 import axios from "axios";
 import { setCurrentUser } from "../UserActions";
+import { GET_AVATAR } from "../Types";
 
 export const uploadFileAvatar = (id, formData) => (dispatch) => {
   console.log("uploading file avatar actions");
@@ -7,10 +8,10 @@ export const uploadFileAvatar = (id, formData) => (dispatch) => {
     .post(`/api/files/avatar/upload/${id}`, formData)
     .then((res) => {
       dispatch(setCurrentUser(res.data.user));
-      return true
+      return true;
     })
     .catch((err) => {
-      throw new Error(err)
+      throw new Error(err);
     });
 };
 
@@ -18,6 +19,10 @@ export const getFileAvatar = (id) => (dispatch) => {
   return axios
     .get(`/api/files/avatar/by_user/${id}`)
     .then((res) => {
+      dispatch({
+        type: GET_AVATAR,
+        payload: res.data,
+      });
       return res.data;
     })
     .catch((err) => new Error(err));

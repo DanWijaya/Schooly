@@ -151,8 +151,8 @@ export const getAllAssessments = () => (dispatch) => {
   axios
     .get("/api/assessments/viewall")
     .then((res) => {
-      // console.log(res.data)
       console.log("getAllAssessments completed");
+      console.log("Ini hasilnya : ", res);
       dispatch({
         type: GET_ALL_ASSESSMENTS,
         payload: res.data,
@@ -190,7 +190,9 @@ export const getOneAssessment = (id, rslv = null) => (dispatch) => {
     });
 };
 
-export const deleteAssessment = (id, type = "Kuis", history=null) => (dispatch) => {
+export const deleteAssessment = (id, type = "Kuis", history = null) => (
+  dispatch
+) => {
   return axios
     .delete(`/api/assessments/delete/${id}`)
     .then((res) => {
@@ -213,22 +215,22 @@ export const deleteAssessment = (id, type = "Kuis", history=null) => (dispatch) 
     })
     .then((res) => {
       console.log(res);
-      if(history){
+      if (history) {
         if (type === "Kuis") {
           history.push({
             pathname: "/daftar-kuis",
-            openDeleteSnackbar: true 
-          })
+            openDeleteSnackbar: true,
+          });
           // window.location.href = "/daftar-kuis";
         } else {
           history.push({
             pathname: "/daftar-ujian",
-            openDeleteSnackbar: true 
-          })
+            openDeleteSnackbar: true,
+          });
           // window.location.href = "/daftar-ujian";
         }
-    }
-    return "Succesfully deleted Assessment"
+      }
+      return "Succesfully deleted Assessment";
     })
     .catch((err) => {
       console.log(err);
@@ -303,56 +305,57 @@ export const updateAssessmentGrades = (
 
 export const getStatus = (assessmentId) => {
   return axios
-  .get(`/api/assessments/status/${assessmentId}`)
-  .then((res) => {return res})
-  .catch((err) => {
-    throw new Error(err.response.data);
-  });
+    .get(`/api/assessments/status/${assessmentId}`)
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      throw new Error(err.response.data);
+    });
 };
 
-export const validateAssessment = (assessmentData) => (
-  dispatch
-) => {
-  return axios.post(`/api/assessments/validity`, assessmentData)
-  .then((res) => {
-    dispatch({
-      type: GET_ERRORS,
-      payload: false,
-    });
-    return res;
-  })
-  .catch((err) => {
-    if (err.response) {
+export const validateAssessment = (assessmentData) => (dispatch) => {
+  return axios
+    .post(`/api/assessments/validity`, assessmentData)
+    .then((res) => {
       dispatch({
         type: GET_ERRORS,
-        payload: err.response.data,
+        payload: false,
       });
-      throw err.response.data;
-    }
-  });
+      return res;
+    })
+    .catch((err) => {
+      if (err.response) {
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data,
+        });
+        throw err.response.data;
+      }
+    });
 };
 
 export const getKeyAnswers = (assessmentId) => {
-  return axios.get(`/api/assessments/keyanswers/${assessmentId}`)
-  .then((res) => {
-    return res.data;
-  })
-  .catch((err) => {
-    throw err.response.data;
-  })
-}
+  return axios
+    .get(`/api/assessments/keyanswers/${assessmentId}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      throw err.response.data;
+    });
+};
 
 // export const getSubmissionsByStd = (assessmentId) => {
 //   return axios.get(`/api/assessments/submissionsByStd/${assessmentId}`)
 
 // }
 
-// Implementasinya dengan cara urutkan soal berdasarkan jumlah benar oleh murid murid. 
-export const getQuestionAnalytics = (assessmentId, top_K=10) => {
+// Implementasinya dengan cara urutkan soal berdasarkan jumlah benar oleh murid murid.
+export const getQuestionAnalytics = (assessmentId, top_K = 10) => {
   return axios.get(`/qnsDifficultyRanking/${assessmentId}`);
   /* @params : {
     1. assessmentID -> Id of the assessment
     2. top_K -> untuk pilih mau munculin berapa soal tersulit
     */
-  
-}
+};

@@ -188,8 +188,6 @@ function Profile(props) {
 
   console.log("Avatarnya: ", avatar);
   React.useEffect(() => {
-
-    // let id = user._id ? user._id : user._id
     getFileAvatar(user._id)
       .then((result) => setAvatar(result))
       .catch((err) => console.log(err));
@@ -316,7 +314,7 @@ function Profile(props) {
                 <ProfilePictureEditorDialog
                   user={user}
                   avatar={avatar}
-                  // updateAvatar={uploadFileAvatar}
+                  setAvatar={setAvatar}
                   setFileLimitSnackbar={setFileLimitSnackbar}
                   fileLimitSnackbar={fileLimitSnackbar}
                   handleOpenAlert={handleOpenAlert}

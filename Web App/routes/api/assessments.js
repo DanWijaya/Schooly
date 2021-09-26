@@ -52,7 +52,6 @@ router.post("/create", (req, res) => {
   );
 });
 
-
 router.put("/update/:id", (req, res) => {
   const { errors, isValid } = validateAssessmentInput(req.body);
   if (!isValid) {
@@ -367,19 +366,29 @@ router.put("/submit/:id", (req, res) => {
 });
 
 router.get("/viewall", (req, res) => {
-  Assessment.find({}).lean().then((assessments) => {
-    if (!assessments) {
-      res.status(404).json("Assessments are not found");
-    } else {
-      res.json(assessments.map((assessment) => {
-        if (assessment.posted === null) {
-          return { ...assessment, posted: new Date() >= new Date(assessment.post_date) };
-        } else {
-          return assessment;
-        }
-      }));
-    }
-  });
+  Assessment.find({})
+    .lean()
+    .then((assessments) => {
+      if (!assessments) {
+        res.status(404).json("Assessments are not found");
+      } else {
+        res.json(
+          assessments.map((assessment) => {
+            console.log("Munculin assessment:", assessment);
+            let ended = new Date() >= new Date(assessment.end_date);
+            if (assessment.posted === null) {
+              return {
+                ...assessment,
+                posted: new Date() >= new Date(assessment.post_date),
+                ended: ended,
+              };
+            } else {
+              return { ...assessment, ended: ended };
+            }
+          })
+        );
+      }
+    });
 });
 
 router.get("/view/:id", (req, res) => {
@@ -389,7 +398,10 @@ router.get("/view/:id", (req, res) => {
       res.status(404).json("Assessment is not found");
     } else {
       if (assessment.posted === null) {
-        res.json({ ...assessment, posted: new Date() >= new Date(assessment.post_date) });
+        res.json({
+          ...assessment,
+          posted: new Date() >= new Date(assessment.post_date),
+        });
       } else {
         res.json(assessment);
       }
@@ -421,19 +433,26 @@ router.get("/view", (req, res) => {
     query.type = type;
   }
 
-  Assessment.find(query).lean().then((assessments) => {
-    if (assessments.length === 0) {
-      res.status(404).json(`Belum ada ${type}`);
-    } else {
-      res.json(assessments.map((assessment) => {
-        if (assessment.posted === null) {
-          return { ...assessment, posted: new Date() >= new Date(assessment.post_date) };
-        } else {
-          return assessment;
-        }
-      }));
-    }
-  });
+  Assessment.find(query)
+    .lean()
+    .then((assessments) => {
+      if (assessments.length === 0) {
+        res.status(404).json(`Belum ada ${type}`);
+      } else {
+        res.json(
+          assessments.map((assessment) => {
+            if (assessment.posted === null) {
+              return {
+                ...assessment,
+                posted: new Date() >= new Date(assessment.post_date),
+              };
+            } else {
+              return assessment;
+            }
+          })
+        );
+      }
+    });
 });
 
 router.put("/suspects/:assessmentId", (req, res) => {
@@ -446,9 +465,7 @@ router.put("/suspects/:assessmentId", (req, res) => {
         .save()
         .then(() => res.json(req.body))
         .catch(() =>
-          res
-            .status(400)
-            .send(`Unable to update assessment suspects`)
+          res.status(400).send(`Unable to update assessment suspects`)
         );
     }
   });
@@ -584,7 +601,8 @@ router.get("/status/:id", (req, res) => {
       status = -1;
     } else if (now >= startDate && now <= endDate) {
       status = 0;
-    } else { // (now > endDate)
+    } else {
+      // (now > endDate)
       status = 1;
     }
     res.json({ status, now });
@@ -601,67 +619,67 @@ router.post("/validity", (req, res) => {
   }
 });
 
-router.get("/qnsDifficultyRanking/:id", async (req,res) => {
+router.get("/qnsDifficultyRanking/:id", async (req, res) => {
   let { id } = req.params;
 
   //Dapatin Kunci Jawabannya dulu
   const getKeyAnswers = new Promise((resolve, reject) => {
-      Assessment.findById(id, (err, assessmentData) => {
-      if(!assessmentData) reject("Assessment not found");
+    Assessment.findById(id, (err, assessmentData) => {
+      if (!assessmentData) reject("Assessment not found");
       else {
         let { questions } = assessmentData;
         let key_answers;
-        if(Array.isArray(questions)){
+        if (Array.isArray(questions)) {
           key_answers = questions.map((qns) => qns.answer);
           resolve({
-            assessmentData: assessmentData , 
-            key_answers: key_answers
+            assessmentData: assessmentData,
+            key_answers: key_answers,
           });
-        }else {
+        } else {
           reject("Question for this assessment is still empty");
         }
-  
       }
-      
-    })
+    });
   });
 
-  try{
+  try {
     const result = await getKeyAnswers;
-    const { key_answers, assessmentData} = result;
-    // Setelah itu diproses jawabannya. 
+    const { key_answers, assessmentData } = result;
+    // Setelah itu diproses jawabannya.
     let { submissions } = assessmentData;
-    if(Object.keys(submissions).length == 0) {
+    if (Object.keys(submissions).length == 0) {
       return res.status(404).json("Submission for this assessment is empty");
-    }
-    else {
-    let submissions= assessmentData.submissions;
-     const qns_length = assessmentData.questions.length;
+    } else {
+      let submissions = assessmentData.submissions;
+      const qns_length = assessmentData.questions.length;
 
-     let correctCountByQns = [];
-       for (var i=0; i < qns_length; i++){
-       let correctCount = 0;
-        for (const [key, val] of submissions.entries()){
-          console.log(val[i], key_answers[i])
-          if(val[i][0] == key_answers[i][0]){
+      let correctCountByQns = [];
+      for (var i = 0; i < qns_length; i++) {
+        let correctCount = 0;
+        for (const [key, val] of submissions.entries()) {
+          console.log(val[i], key_answers[i]);
+          if (val[i][0] == key_answers[i][0]) {
             correctCount += 1;
           }
         }
         correctCountByQns.push(correctCount);
-     }
-     let qns_ranking = correctCountByQns
-           .map((val, ind) => {return {ind, val}})
-           .sort((a, b) => {return a.val > b.val ? 1 : a.val == b.val ? 0 : -1 })
-           .map((obj) => obj.ind + 1);
+      }
+      let qns_ranking = correctCountByQns
+        .map((val, ind) => {
+          return { ind, val };
+        })
+        .sort((a, b) => {
+          return a.val > b.val ? 1 : a.val == b.val ? 0 : -1;
+        })
+        .map((obj) => obj.ind + 1);
 
-    //Hasilnya berupa nomor nomor soal. Pertama yang paling dikit benar, terakhir yang paling banyak benar. 
-     return res.json(qns_ranking);
+      //Hasilnya berupa nomor nomor soal. Pertama yang paling dikit benar, terakhir yang paling banyak benar.
+      return res.json(qns_ranking);
     }
-    
-  }catch(err) {
+  } catch (err) {
     return res.status(404).json(err);
   }
-})
+});
 // router.get("/ansByStd")
 
 module.exports = router;

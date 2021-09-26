@@ -20,7 +20,6 @@ import {
   getFileAvatar,
 } from "../../../actions/files/FileAvatarActions";
 import { connect } from "react-redux";
-import MuiAlert from "@material-ui/lab/Alert";
 const useStyles = makeStyles((theme) => ({
   avatar: {
     width: theme.spacing(25),
@@ -95,10 +94,11 @@ function ProfilePictureEditorDialog(props) {
   };
 
   const {
+    setAvatar,
     user,
-    updateAvatar,
     uploadFileAvatar,
     avatar,
+    getFileAvatar,
     setFileLimitSnackbar,
   } = props;
 
@@ -123,19 +123,22 @@ function ProfilePictureEditorDialog(props) {
     }
   };
 
-  const onSubmitForm = (e) => {
+  const onSubmitForm = async (e) => {
     e.preventDefault();
     let formData = new FormData();
     formData.append("avatar", profileImg);
 
-    let userId = user._id;
-    uploadFileAvatar(userId, formData).then((res) => {
+    try {
+      await uploadFileAvatar(user._id, formData);
+      console.log("Avatar is uploaded successfully");
+      const new_avatar = await getFileAvatar(user._id);
+      console.log("Avatar is retrieved successfully");
+      setAvatar(new_avatar);
       props.handleOpenAlert();
       handleCloseDialog();
-    });
-    // Fitur_4 punya:
-    // updateAvatar(userData, userId, formData);
-    
+    } catch (err) {
+      throw err;
+    }
   };
 
   function onImgLoad({ target: img }) {

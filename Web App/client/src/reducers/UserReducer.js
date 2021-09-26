@@ -10,6 +10,7 @@ import {
   GET_PENDING_STUDENTS,
   GET_PENDING_TEACHERS,
   SET_DROPBOX_TOKEN,
+  GET_AVATAR,
 } from "../actions/Types";
 
 const isEmpty = require("is-empty");
@@ -88,6 +89,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         pending_teachers: action.payload,
+      };
+    case GET_AVATAR:
+      return {
+        ...state,
+        user: { ...state.user, avatar: action.payload },
       };
     default:
       return state;
