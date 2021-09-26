@@ -9,7 +9,7 @@ import { MoreVert as MoreVertIcon } from "@material-ui/icons";
 
 function UserMenu(props) {
   const { options, row, rowCount, role } = props;
-  const { handleOpenDeleteDialog, handleOpenDisableApproveDialog, CheckboxDialog } = props'
+  const { handleOpenDeleteDialog, handleOpenDisableApproveDialog, CheckboxDialog } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const open = Boolean(anchorEl);
