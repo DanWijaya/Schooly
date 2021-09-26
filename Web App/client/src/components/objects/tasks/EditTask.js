@@ -11,10 +11,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { refreshTeacher } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
-import {
-  deleteFileTasks,
-  getFileTasks,
-} from "../../../actions/files/FileTaskActions";
+import { getFileTasks } from "../../../actions/files/FileTaskActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -140,12 +137,12 @@ const styles = (theme) => ({
   customSpacing: {
     [theme.breakpoints.down("sm")]: {
       marginTop: theme.spacing(2),
-    }
+    },
   },
   zeroHeightHelperText: {
     height: "0",
-    display: "flex" // untuk men-disable "collapsing margin"
-  }
+    display: "flex", // untuk men-disable "collapsing margin"
+  },
 });
 
 function LampiranFile(props) {
@@ -239,9 +236,9 @@ class EditTask extends Component {
       errors: {},
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
-      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
       allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
-      success: null
+      success: null,
     };
   }
 
@@ -287,65 +284,101 @@ class EditTask extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas dan mata pelajaran
-    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
+    if (
+      prevState.classOptions === null ||
+      JSON.stringify(prevProps.auth.user) !==
+        JSON.stringify(this.props.auth.user)
+    ) {
       const selectedTaskProps = this.props.tasksCollection;
 
-      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
-      selectedTaskProps && selectedTaskProps.constructor === Object && (Object.keys(selectedTaskProps).length !== 0)) {
-        
+      if (
+        this.props.classesCollection.all_classes &&
+        this.props.classesCollection.all_classes.length !== 0 &&
+        selectedTaskProps &&
+        selectedTaskProps.constructor === Object &&
+        Object.keys(selectedTaskProps).length !== 0
+      ) {
         let all_classes_obj = {};
         this.props.classesCollection.all_classes.forEach((classInfo) => {
-          all_classes_obj[classInfo._id] = classInfo.name; 
+          all_classes_obj[classInfo._id] = classInfo.name;
         });
 
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
         let newClassOptions = [];
         if (this.props.auth.user.class_to_subject) {
-          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+          for (let [classId, subjectIdArray] of Object.entries(
+            this.props.auth.user.class_to_subject
+          )) {
             if (subjectIdArray.includes(selectedTaskProps.subject)) {
-              newClassOptions.push({ _id: classId, name: all_classes_obj[classId] });
+              newClassOptions.push({
+                _id: classId,
+                name: all_classes_obj[classId],
+              });
             }
           }
         }
-        
-        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+
+        this.setState({
+          classOptions: newClassOptions,
+          allClassObject: all_classes_obj,
+        });
       }
     }
 
-    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
+    if (
+      prevState.subjectOptions === null ||
+      JSON.stringify(prevProps.auth.user) !==
+        JSON.stringify(this.props.auth.user)
+    ) {
       const selectedTaskProps = this.props.tasksCollection;
 
-      if ( this.props.subjectsCollection.all_subjects && ( this.props.subjectsCollection.all_subjects.length !== 0) &&
-      selectedTaskProps && selectedTaskProps.constructor === Object && (Object.keys(selectedTaskProps).length !== 0)) {
-        
+      if (
+        this.props.subjectsCollection.all_subjects &&
+        this.props.subjectsCollection.all_subjects.length !== 0 &&
+        selectedTaskProps &&
+        selectedTaskProps.constructor === Object &&
+        Object.keys(selectedTaskProps).length !== 0
+      ) {
         let all_subjects_obj = {};
-         this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
-          all_subjects_obj[subjectInfo._id] = subjectInfo.name; 
+        this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
+          all_subjects_obj[subjectInfo._id] = subjectInfo.name;
         });
-  
+
         // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
         let subjectMatrix = [];
         if (this.props.auth.user.class_to_subject) {
           for (let classId of selectedTaskProps.class_assigned) {
             if (this.props.auth.user.class_to_subject[classId]) {
-              subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+              subjectMatrix.push(
+                this.props.auth.user.class_to_subject[classId]
+              );
             }
           }
         }
         let subjects = [];
         if (subjectMatrix.length !== 0) {
-          subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
-            return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
-          });
+          subjects = subjectMatrix.reduce(
+            (prevIntersectionResult, currentArray) => {
+              return currentArray.filter((subjectId) =>
+                prevIntersectionResult.includes(subjectId)
+              );
+            }
+          );
         }
 
         // menambahkan matpel tersebut ke opsi matpel
         let newSubjectOptions = [];
         subjects.forEach((subjectId) => {
-          newSubjectOptions.push({ _id: subjectId, name: all_subjects_obj[subjectId] });
-        })
+          newSubjectOptions.push({
+            _id: subjectId,
+            name: all_subjects_obj[subjectId],
+          });
+        });
 
-        this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
+        this.setState({
+          subjectOptions: newSubjectOptions,
+          allSubjectObject: all_subjects_obj,
+        });
       }
     }
   }
@@ -393,7 +426,7 @@ class EditTask extends Component {
       formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i]);
     }
     console.log(taskObject);
-    this.handleOpenUploadDialog()
+    this.handleOpenUploadDialog();
     this.props
       .updateTask(
         formData,
@@ -405,7 +438,7 @@ class EditTask extends Component {
       )
       .then((res) => this.setState({ success: res }))
       .catch((err) => {
-        this.handleCloseUploadDialog()
+        this.handleCloseUploadDialog();
         this.setState({
           errors: err,
           fileLampiran: [
@@ -413,17 +446,16 @@ class EditTask extends Component {
             ...this.state.fileLampiranToAdd,
           ],
           fileLampiranToDelete: [],
-        })
-      }
-      );
+        });
+      });
   };
 
   handleLampiranUpload = (e) => {
     const files = Array.from(e.target.files);
     if (this.state.fileLampiran.length === 0) {
-      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 12);
       let allowed_file = files.filter(
-        (file) => file.size / Math.pow(10, 6) <= 10
+        (file) => file.size / Math.pow(10, 6) <= 12
       );
       this.setState({
         fileLampiran: allowed_file,
@@ -434,10 +466,10 @@ class EditTask extends Component {
     } else {
       if (files.length !== 0) {
         let allowed_file = files.filter(
-          (file) => file.size / Math.pow(10, 6) <= 10
+          (file) => file.size / Math.pow(10, 6) <= 12
         );
         let over_limit = files.filter(
-          (file) => file.size / Math.pow(10, 6) > 10
+          (file) => file.size / Math.pow(10, 6) > 12
         );
 
         let temp = [...this.state.fileLampiran, ...allowed_file];
@@ -506,7 +538,7 @@ class EditTask extends Component {
 
   handleCloseUploadDialog = () => {
     this.setState({ openUploadDialog: false });
-  }
+  };
 
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
@@ -516,61 +548,89 @@ class EditTask extends Component {
     this.setState({ openDeleteDialog: false });
   };
 
-  onChange = (e, otherfield=null) => {
+  onChange = (e, otherfield = null) => {
     let field = otherfield ? otherfield : e.target.id;
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
-    
-    if(otherfield){
-      if (otherfield === "subject") { // jika guru memilih mata pelajaran
+
+    if (otherfield) {
+      if (otherfield === "subject") {
+        // jika guru memilih mata pelajaran
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
         let newClassOptions = [];
         if (this.props.auth.user.class_to_subject) {
-          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+          for (let [classId, subjectIdArray] of Object.entries(
+            this.props.auth.user.class_to_subject
+          )) {
             if (subjectIdArray.includes(e.target.value)) {
-              newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+              newClassOptions.push({
+                _id: classId,
+                name: this.state.allClassObject[classId],
+              });
             }
           }
         }
 
-        this.setState({ subject: e.target.value, classOptions: newClassOptions });
-
-      } else if (otherfield === "class_assigned") { // jika guru memilih kelas
+        this.setState({
+          subject: e.target.value,
+          classOptions: newClassOptions,
+        });
+      } else if (otherfield === "class_assigned") {
+        // jika guru memilih kelas
         let selectedClasses = e.target.value;
 
-        if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
+        if (selectedClasses.length === 0) {
+          // jika guru membatalkan semua pilihan kelas
           this.setState((prevState, props) => {
             return {
               class_assigned: selectedClasses,
               // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
-              subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
-            }
+              subjectOptions: props.auth.user.subject_teached.map(
+                (subjectId) => ({
+                  _id: subjectId,
+                  name: prevState.allSubjectObject[subjectId],
+                })
+              ),
+            };
           });
-        } else { // jika guru menambahkan atau mengurangi pilihan kelas
+        } else {
+          // jika guru menambahkan atau mengurangi pilihan kelas
           // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
           let subjectMatrix = [];
           if (this.props.auth.user.class_to_subject) {
             for (let classId of selectedClasses) {
               if (this.props.auth.user.class_to_subject[classId]) {
-                subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+                subjectMatrix.push(
+                  this.props.auth.user.class_to_subject[classId]
+                );
               }
             }
           }
           let subjects = [];
           if (subjectMatrix.length !== 0) {
-            subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
-              return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
-            });
+            subjects = subjectMatrix.reduce(
+              (prevIntersectionResult, currentArray) => {
+                return currentArray.filter((subjectId) =>
+                  prevIntersectionResult.includes(subjectId)
+                );
+              }
+            );
           }
 
           // menambahkan matpel tersebut ke opsi matpel
           let newSubjectOptions = [];
           subjects.forEach((subjectId) => {
-            newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
-          })
+            newSubjectOptions.push({
+              _id: subjectId,
+              name: this.state.allSubjectObject[subjectId],
+            });
+          });
 
-          this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
+          this.setState({
+            subjectOptions: newSubjectOptions,
+            class_assigned: selectedClasses,
+          });
         }
       } else {
         // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
@@ -725,12 +785,13 @@ class EditTask extends Component {
                           invalid: errors.name,
                         })}
                       />
-                      {errors.name
-                        ?
+                      {errors.name ? (
                         <div className={classes.zeroHeightHelperText}>
-                          <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
+                          <FormHelperText variant="outlined" error>
+                            {errors.name}
+                          </FormHelperText>
                         </div>
-                        : null}
+                      ) : null}
                     </Grid>
                     <Grid item>
                       <Typography
@@ -756,12 +817,13 @@ class EditTask extends Component {
                           invalid: errors.description,
                         })}
                       />
-                      {errors.description
-                        ?
+                      {errors.description ? (
                         <div className={classes.zeroHeightHelperText}>
-                          <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                          <FormHelperText variant="outlined" error>
+                            {errors.description}
+                          </FormHelperText>
                         </div>
-                        : null}
+                      ) : null}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -794,25 +856,32 @@ class EditTask extends Component {
                               this.onChange(event, "subject");
                             }}
                           >
-                          {(this.state.subjectOptions !== null) ? (
-                            this.state.subjectOptions.map((subject) => (
-                              <MenuItem key={subject._id} value={subject._id}>
-                                {subject.name}
-                              </MenuItem>
-                            ))
-                          ) : (
-                            null
-                          )}
+                            {this.state.subjectOptions !== null
+                              ? this.state.subjectOptions.map((subject) => (
+                                  <MenuItem
+                                    key={subject._id}
+                                    value={subject._id}
+                                  >
+                                    {subject.name}
+                                  </MenuItem>
+                                ))
+                              : null}
                           </Select>
-                          {Boolean(errors.subject)
-                            ?
+                          {Boolean(errors.subject) ? (
                             <div className={classes.zeroHeightHelperText}>
-                              <FormHelperText variant="outlined" error>{errors.subject}</FormHelperText>
+                              <FormHelperText variant="outlined" error>
+                                {errors.subject}
+                              </FormHelperText>
                             </div>
-                            : null}
+                          ) : null}
                         </FormControl>
                       </Grid>
-                      <Grid item xs={12} md={6} className={classes.customSpacing}>
+                      <Grid
+                        item
+                        xs={12}
+                        md={6}
+                        className={classes.customSpacing}
+                      >
                         <Typography
                           component="label"
                           for="deadline"
@@ -840,16 +909,19 @@ class EditTask extends Component {
                             onChange={(date) => this.onDateChange(date)}
                             onError={(err) => {
                               if (errors.deadline !== err) {
-                                this.setState({ errors: { ...errors, deadline: err } });
+                                this.setState({
+                                  errors: { ...errors, deadline: err },
+                                });
                               }
                             }}
                           />
-                          {errors.deadline
-                            ?
+                          {errors.deadline ? (
                             <div className={classes.zeroHeightHelperText}>
-                              <FormHelperText variant="outlined" error>{errors.deadline}</FormHelperText>
+                              <FormHelperText variant="outlined" error>
+                                {errors.deadline}
+                              </FormHelperText>
                             </div>
-                            : null}
+                          ) : null}
                         </MuiPickersUtilsProvider>
                       </Grid>
                     </Grid>
@@ -880,7 +952,11 @@ class EditTask extends Component {
                                 return (
                                   <Chip
                                     key={classId}
-                                    label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
+                                    label={
+                                      this.state.allClassObject
+                                        ? this.state.allClassObject[classId]
+                                        : null
+                                    }
                                     className={classes.chip}
                                   />
                                 );
@@ -888,22 +964,25 @@ class EditTask extends Component {
                             </div>
                           )}
                         >
-                          {(this.state.classOptions !== null) ? (
-                            this.state.classOptions.map((classInfo) => (
-                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
-                                {classInfo.name}
-                              </MenuItem>
-                            ))
-                          ) : (
-                            null
-                          )}
+                          {this.state.classOptions !== null
+                            ? this.state.classOptions.map((classInfo) => (
+                                <MenuItem
+                                  selected={true}
+                                  key={classInfo._id}
+                                  value={classInfo._id}
+                                >
+                                  {classInfo.name}
+                                </MenuItem>
+                              ))
+                            : null}
                         </Select>
-                        {Boolean(errors.class_assigned)
-                          ?
+                        {Boolean(errors.class_assigned) ? (
                           <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                            <FormHelperText variant="outlined" error>
+                              {errors.class_assigned}
+                            </FormHelperText>
                           </div>
-                          : null}
+                        ) : null}
                       </FormControl>
                     </Grid>
                     <Grid item>
@@ -1013,5 +1092,5 @@ export default connect(mapStateToProps, {
   clearErrors,
   clearSuccess,
   getFileTasks,
-  refreshTeacher
+  refreshTeacher,
 })(withStyles(styles)(EditTask));
