@@ -64,7 +64,6 @@ router.post(
             .upload(params, function (err, data) {
               if (err) {
                 reject({ error: true, Message: err });
-                // return res.status(500).json({ error: true, Message: err });
               }
             })
             .on("httpUploadProgress", function (data) {
@@ -72,7 +71,7 @@ router.post(
                 let newFileUploaded = {
                   filename: file.originalname,
                   s3_key: params.Key,
-                  s3_directory: "tasks/",
+                  s3_directory: "task/",
                   task_id: task_id,
                 };
                 let document = new FileTask(newFileUploaded);
@@ -119,7 +118,7 @@ router.delete("/all/:id", async (req, res) => {
     const file_to_delete = await FileTask.find({ task_id: req.params.id });
     // file_to_delete ini berupa ID dari file filenya.
     if (!file_to_delete) {
-      return res.status(200).json("No file tasks to delete");
+      return res.status(200).json("No file task to delete");
     }
     await FileTask.deleteMany({
       task_id: req.params.id,
@@ -155,17 +154,13 @@ router.delete("/all/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const { file_to_delete } = req.body;
   // file_to_delete ini berupa ID dari file filenya.
-  console.log("Ini file to deletenya: ", file_to_delete);
   if (!file_to_delete) {
-    console.log("Jancuk");
     return res.status(200).send("No file tasks to delete");
   }
   try {
     // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
     let id_list = file_to_delete.map((m) => ObjectId(m._id));
-    console.log("Ini id list: ", id_list);
     const results = await FileTask.find({ _id: { $in: id_list } });
-    console.log(results);
     await FileTask.deleteMany({ _id: { $in: id_list } });
 
     const promises = results.map((file) => {

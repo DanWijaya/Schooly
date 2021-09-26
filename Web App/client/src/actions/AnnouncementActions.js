@@ -29,8 +29,7 @@ export const createAnnouncement = (formData, announcementData, history) => (
           formData
         );
       } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
-      else
-        return res;
+      else return res;
     })
     .then((res) => {
       console.log("Announcement is Created!!!!");
@@ -112,7 +111,7 @@ export const getAdminAnnouncements = () => (dispatch) => {
 
 export const deleteAnnouncement = (
   announcementId,
-  history=null,
+  history = null,
   lampiran_to_delete = null
 ) => (dispatch) => {
   return axios
@@ -120,7 +119,7 @@ export const deleteAnnouncement = (
     .then((res) => {
       console.log("Deleted: ", res.data);
       // let lampiran_to_delete = Array.from(res.data.lampiran)
-      return axios.delete(`/api/files/announcements/${announcementId}`);
+      return axios.delete(`/api/files/announcements/all/${announcementId}`);
       // if (lampiran_to_delete.length > 0){
       //   return axios.delete(`/api/upload/att_announcement/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete}})
       // }
@@ -128,13 +127,13 @@ export const deleteAnnouncement = (
     })
     .then((res) => {
       console.log(res);
-      if(history){
+      if (history) {
         history.push({
           pathname: "/daftar-pengumuman",
-          openDeleteSnackbar: true 
-        })
+          openDeleteSnackbar: true,
+        });
       }
-      return true
+      return true;
       // window.location.href = "/daftar-pengumuman";
     })
     .catch((err) => {
@@ -143,7 +142,7 @@ export const deleteAnnouncement = (
         type: GET_ERRORS,
         payload: err.response.data,
       });
-      throw err
+      throw err;
     });
 };
 export const getOneAnnouncement = (annId) => (dispatch) => {

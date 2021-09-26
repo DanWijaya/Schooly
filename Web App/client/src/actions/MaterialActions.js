@@ -122,23 +122,23 @@ export const getOneMaterial = (materialId) => (dispatch) => {
     });
 };
 
-export const deleteMaterial = (materialId, history=null) => (dispatch) => {
+export const deleteMaterial = (materialId, history = null) => (dispatch) => {
   return axios
     .delete(`/api/materials/delete/${materialId}`)
     .then((res) => {
       // let lampiran_to_delete = Array.from(res.data.lampiran)
       // return axios.delete(`/api/upload/att_material/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete} })
-      return axios.delete(`/api/files/materials/${materialId}`);
+      return axios.delete(`/api/files/materials/all/${materialId}`);
     })
     .then((res) => {
-      if(history){
+      if (history) {
         history.push({
           pathname: "/daftar-materi",
-          openDeleteSnackbar: true 
-        })
+          openDeleteSnackbar: true,
+        });
       }
       console.log(res);
-      return true
+      return true;
       // window.location.href = "/daftar-materi";
     })
     .catch((err) => {
@@ -189,8 +189,7 @@ export const updateMaterial = (
           formData
         );
       } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
-      else
-        return res;
+      else return res;
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");
@@ -207,10 +206,7 @@ export const updateMaterial = (
     });
 };
 
-export const createMaterialComment = (
-  materialId,
-  comment
-) => {
+export const createMaterialComment = (materialId, comment) => {
   return axios
     .post(`/api/materials/comment/${materialId}`, comment)
     .catch(() => {
@@ -218,11 +214,7 @@ export const createMaterialComment = (
     });
 };
 
-export const editMaterialComment = (
-  materialId,
-  updatedContent,
-  commentId
-) => {
+export const editMaterialComment = (materialId, updatedContent, commentId) => {
   return axios
     .put(`/api/materials/comment/${materialId}`, { updatedContent, commentId })
     .catch(() => {
@@ -230,10 +222,7 @@ export const editMaterialComment = (
     });
 };
 
-export const deleteMaterialComment = (
-  materialId,
-  commentId
-) => {
+export const deleteMaterialComment = (materialId, commentId) => {
   return axios
     .delete(`/api/materials/comment/${materialId}&${commentId}`)
     .catch(() => {
