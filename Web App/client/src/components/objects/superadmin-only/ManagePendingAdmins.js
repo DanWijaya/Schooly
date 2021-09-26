@@ -11,7 +11,7 @@ import {
 } from "../../../actions/UserActions";
 import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import UserMenu from "../../misc/menu-user/UserMenu";
+import OptionMenu from "../../misc/menu/OptionMenu";
 import {
   Avatar,
   Button,
@@ -275,7 +275,7 @@ function ManageUsersToolbar(props) {
           )}
           <>
             {CheckboxDialog("Delete", "Student")}
-            <UserMenu
+            <OptionMenu
               actions={["Hapus"]}
               row={null}
               handleActionOnClick={[OpenDialogCheckboxDelete]}
@@ -1304,7 +1304,7 @@ function ManagePendingAdmins(props) {
                               e.stopPropagation();
                             }}
                           >
-                            <UserMenu
+                            <OptionMenu
                               actions={["Aktifkan", "Hapus"]}
                               row={row}
                               handleActionOnClick={[

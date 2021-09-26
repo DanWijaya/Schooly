@@ -5,7 +5,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
-function UserMenu(props) {
+function OptionMenu(props) {
   const { actions, row, rowCount, handleActionOnClick } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -60,4 +60,4 @@ function UserMenu(props) {
     </div>
   );
 }
-export default UserMenu;
+export default OptionMenu;

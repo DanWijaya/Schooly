@@ -12,7 +12,7 @@ import {
     Avatar,
   } from "@material-ui/core/";
   import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
-  import LightTooltip from "../light-tooltip/LightTooltip";
+  import LightTooltip from "../../misc/light-tooltip/LightTooltip";
   import { makeStyles } from "@material-ui/core/styles";
   import EditIcon from "@material-ui/icons/Edit";
   import DeleteIcon from "@material-ui/icons/Delete";
@@ -41,7 +41,7 @@ import {
         },
       },
   }))
-  function SubjectPaper(props) {
+  function SubjectItem(props) {
       const classes = useStyles();
     const { data, isEditable, handleOpenDeleteDialog, handleOpenFormDialog } = props;
     return (
@@ -109,7 +109,7 @@ import {
                 />
                 </div>
             </Hidden>
-            {isEditable ? 
+            {isEditable ?
             <ListItemText
                 align="right"
                 primary={
@@ -148,7 +148,7 @@ import {
                 </Grid>
                 }
             />
-            : 
+            :
             null
             }
             </ListItem>
@@ -157,4 +157,4 @@ import {
     )))
 }
 
-export default SubjectPaper;
+export default SubjectItem;
