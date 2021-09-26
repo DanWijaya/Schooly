@@ -166,9 +166,7 @@ export const deleteTask = (taskId, history = null) => (dispatch) => {
   return axios
     .delete("/api/tasks/delete/" + taskId)
     .then((res) => {
-      return axios.delete(`/api/files/tasks/${taskId}`, {
-        data: { delete_all: true },
-      });
+      return axios.delete(`/api/files/tasks/all/${taskId}`);
     })
     .then((res) => {
       return axios.delete(`/api/files/submit_tasks/${taskId}`, {

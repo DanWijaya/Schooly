@@ -11,10 +11,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { refreshTeacher } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
-import {
-  deleteFileTasks,
-  getFileTasks,
-} from "../../../actions/files/FileTaskActions";
+import { getFileTasks } from "../../../actions/files/FileTaskActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -457,9 +454,9 @@ class EditTask extends Component {
   handleLampiranUpload = (e) => {
     const files = Array.from(e.target.files);
     if (this.state.fileLampiran.length === 0) {
-      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 12);
       let allowed_file = files.filter(
-        (file) => file.size / Math.pow(10, 6) <= 10
+        (file) => file.size / Math.pow(10, 6) <= 12
       );
       this.setState({
         fileLampiran: allowed_file,
@@ -470,10 +467,10 @@ class EditTask extends Component {
     } else {
       if (files.length !== 0) {
         let allowed_file = files.filter(
-          (file) => file.size / Math.pow(10, 6) <= 10
+          (file) => file.size / Math.pow(10, 6) <= 12
         );
         let over_limit = files.filter(
-          (file) => file.size / Math.pow(10, 6) > 10
+          (file) => file.size / Math.pow(10, 6) > 12
         );
 
         let temp = [...this.state.fileLampiran, ...allowed_file];
