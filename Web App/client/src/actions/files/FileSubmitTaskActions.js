@@ -1,21 +1,29 @@
 import axios from "axios";
 import { GET_ERRORS, GET_SUCCESS_RESPONSE } from "../Types";
 
-export const uploadFileSubmitTasks = (formData, task_id, author_id, task_deadline) => (
-  dispatch
-) => {
+export const uploadFileSubmitTasks = (
+  formData,
+  task_id,
+  author_id,
+  task_deadline
+) => (dispatch) => {
   console.log("uploadFileSubmitTasks di run");
   return axios
-    .post(`/api/files/submit_tasks/upload/${task_id}&${author_id}&${task_deadline}`, formData)
+    .post(
+      `/api/files/submit_tasks/upload/${task_id}&${author_id}&${task_deadline}`,
+      formData
+    )
     .then((res) => {
       console.log(res.data);
       dispatch({
         type: GET_SUCCESS_RESPONSE,
         payload: res.data,
       });
-      return "File Submit tasks is successfully uploaded"
+      return "File Submit tasks is successfully uploaded";
     })
-    .catch((err) => {throw err});
+    .catch((err) => {
+      throw err;
+    });
 };
 
 export const getFileSubmitTasks_T = (task_id) => (dispatch) => {
@@ -36,10 +44,6 @@ export const getFileSubmitTasks_AT = (task_id, author_id) => (dispatch) => {
     .then((res) => {
       console.log("Tasknya: ", res.data);
       return res.data;
-      // dispatch({
-      //     type: GET_MATERIAL_FILES,
-      //     payload: res.data
-      // })
     })
     .catch((err) => {
       dispatch({
@@ -90,18 +94,15 @@ export const viewFileSubmitTasks = (id) => (dispatch) => {
   // window.open(`http://${window.location.hostname}:5000/api/files/file_submit_tasks/${id}`)
 };
 
-export const deleteFileSubmitTasks = (id, delete_all = false) => (dispatch) => {
+export const deleteFileSubmitTasks = (id) => (dispatch) => {
+  console.log(id);
   return axios
-    .delete(`/api/files/submit_tasks/${id}`, {
-      data: { delete_all: delete_all },
+    .delete(`/api/files/submit_tasks/`, {
+      data: { id_to_delete: id },
     })
     .then((res) => {
       console.log(res.data);
-      // dispatch({
-      //   type: GET_SUCCESS_RESPONSE,
-      //   payload: res.data,
-      // });
-      return "File submmited is deleted successfully"
+      return "File submmited is deleted successfully";
       // window.location.reload();
     });
 };

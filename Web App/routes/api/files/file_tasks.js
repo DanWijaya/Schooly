@@ -43,14 +43,14 @@ router.post(
   async (req, res) => {
     try {
       const { files } = req;
-      const { task_id, author_id } = req.params;
+      const { task_id } = req.params;
       let s3bucket = new AWS.S3({
         accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
         secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
         region: keys.awsKey.AWS_REGION,
       });
 
-      let promises = files.map((file) => {
+      const promises = files.map((file) => {
         var params = {
           Bucket: keys.awsKey.AWS_BUCKET_NAME,
           Key: "task/" + uuidv4() + "_" + file.originalname,
@@ -85,7 +85,7 @@ router.post(
       await FileTask.insertMany(documents);
       return res.json({
         _id: task_id,
-        success: "Successfully uploaded the lampiran file",
+        success: "Successfully uploaded the file",
       });
     } catch (err) {
       return res.status(500).json({ error: true, Message: err });
