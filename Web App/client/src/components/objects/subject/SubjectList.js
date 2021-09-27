@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import "moment/locale/id";
 import {
-  createSubject,
-  getAllSubjects,
   getSubject,
+  getAllSubjects,
+  createSubject,
   editSubject,
   deleteSubject,
 } from "../../../actions/SubjectActions";
@@ -130,17 +130,6 @@ function SubjectListToolbar(props) {
     <div className={classes.toolbar}>
       <Grid container justify="space-between" alignItems="center">
         <Grid item>
-          <Hidden mdUp>
-            <LightTooltip title="Buat Mata Pelajaran">
-              <Fab
-                size="medium"
-                onClick={handleOpenFormDialog}
-                className={classes.createSubjectButton}
-              >
-                <LibraryAddIcon className={classes.createSubjectIconMobile} />
-              </Fab>
-            </LightTooltip>
-          </Hidden>
           <Hidden smDown>
             <Fab
               size="large"
@@ -151,6 +140,17 @@ function SubjectListToolbar(props) {
               <LibraryAddIcon className={classes.createSubjectIconDesktop} />
               Buat Mata Pelajaran
             </Fab>
+          </Hidden>
+          <Hidden mdUp>
+            <LightTooltip title="Buat Mata Pelajaran">
+              <Fab
+                size="medium"
+                onClick={handleOpenFormDialog}
+                className={classes.createSubjectButton}
+              >
+                <LibraryAddIcon className={classes.createSubjectIconMobile} />
+              </Fab>
+            </LightTooltip>
           </Hidden>
         </Grid>
         <Grid item>
@@ -247,19 +247,6 @@ function SubjectListToolbar(props) {
     </div>
   );
 }
-
-SubjectListToolbar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-  searchFilter: PropTypes.string,
-  updateSearchFilter: PropTypes.func,
-  setSearchBarFocus: PropTypes.func,
-  searchBarFocus: PropTypes.bool,
-};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -425,7 +412,6 @@ function SubjectList(props) {
   const { all_subjects } = props.subjectsCollection;
   const { user, retrieved_users } = props.auth;
 
-  console.log(action);
   const subjectRowItem = (data) => {
     rows.push(createData(data._id, data.name, data.all_class));
   };
@@ -436,7 +422,6 @@ function SubjectList(props) {
   }, []);
 
   const retrieveSubjects = () => {
-    console.log(retrieved_users);
     // If all_subjects is not undefined or an empty array
     rows = [];
     all_subjects
@@ -524,7 +509,6 @@ function SubjectList(props) {
 
   const onChange = (e) => {
     const { id, value } = e.target;
-    console.log(value);
     setSubject((prev) => ({
       ...prev,
       [id]: value,
@@ -653,136 +637,136 @@ function SubjectList(props) {
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
       />
-      <Grid container direction="column" spacing={2}>
-        {rows.length === 0 ? (
-          <Empty />
-        ) : (
-          stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            const labelId = index;
-            return (
-              <Grid item>
-                <Grid container alignItems="stretch" className={classes.subjectItem}>
-                  <Grid item className={classes.subjectIcon}>
-                    <LibraryBooksIcon />
+      {rows.length === 0 ? (
+        <Empty />
+      ) : (
+        <Grid container direction="column" spacing={2}>
+          {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+          const labelId = index;
+          return (
+            <Grid item>
+              <Grid container alignItems="stretch" className={classes.subjectItem}>
+                <Grid item className={classes.subjectIcon}>
+                  <LibraryBooksIcon />
+                </Grid>
+                <Grid item xs container justify="space-between" alignItems="center" className={classes.subjectItemContent}>
+                  <Grid item>
+                    <Typography noWrap>
+                      {row.name}
+                    </Typography>
                   </Grid>
-                  <Grid item xs container justify="space-between" alignItems="center" className={classes.subjectItemContent}>
-                    <Grid item>
-                      <Typography noWrap>
-                        {row.name}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <IconButton>
-                        <MoreVertIcon />
-                      </IconButton>
-                    </Grid>
+                  <Grid item>
+                    <IconButton>
+                      <MoreVertIcon />
+                    </IconButton>
                   </Grid>
                 </Grid>
-                {/*<ListItem
-                  className={classes.listItem}
-                >
-                  <Hidden smUp implementation="css">
-                    <ListItemText
-                      style={{ margin: "6px 0" }}
-                      primary={
-                        <Grid container alignItems="center">
-                          <Typography variant="subtitle1" color="textPrimary">
-                            {row.name}
-                          </Typography>
-
-                          <Grid item style={{ visibility: "hidden" }}>
-                            <Typography variant="subtitle1">
-                              {"\u200B"}
-                            </Typography>
-                            <Typography variant="caption">
-                              {"\u200B"}
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      }
-                    />
-                  </Hidden>
-                  <Hidden xsDown implementation="css">
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <ListItemAvatar>
-                        <Avatar className={classes.listAvatar}>
-                          <LibraryBooksIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        style={{ margin: "6px 0" }}
-                        primary={
-                          <Grid container alignItems="center">
-                            <Typography variant="h6" color="textPrimary">
-                              {row.name}
-                            </Typography>
-
-                            <Grid item style={{ visibility: "hidden" }}>
-                              <Grid container direction="column">
-                                <Typography variant="h6">
-                                  {"\u200B"}
-                                </Typography>
-                                <Typography variant="body2">
-                                  {"\u200B"}
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        }
-                      />
-                    </div>
-                  </Hidden>
+              </Grid>
+              {/*<ListItem
+                className={classes.listItem}
+              >
+                <Hidden smUp implementation="css">
                   <ListItemText
-                    align="right"
+                    style={{ margin: "6px 0" }}
                     primary={
-                      <Grid container spacing={1} justify="flex-end">
-                        <Grid item>
-                          <LightTooltip title="Sunting">
-                            <IconButton
-                              size="small"
-                              className={classes.editSubjectButton}
-                              onClick={(e) =>
-                                handleOpenFormDialog(
-                                  e,
-                                  row._id,
-                                  row.name,
-                                  true
-                                )
-                              }
-                            >
-                              <EditIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Hapus">
-                            <IconButton
-                              size="small"
-                              className={classes.deleteSubjectlButton}
-                              onClick={(e) => {
-                                handleOpenDeleteDialog(e, row._id, row.name);
-                              }}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
+                      <Grid container alignItems="center">
+                        <Typography variant="subtitle1" color="textPrimary">
+                          {row.name}
+                        </Typography>
+
+                        <Grid item style={{ visibility: "hidden" }}>
+                          <Typography variant="subtitle1">
+                            {"\u200B"}
+                          </Typography>
+                          <Typography variant="caption">
+                            {"\u200B"}
+                          </Typography>
                         </Grid>
                       </Grid>
                     }
                   />
-                </ListItem>*/}
-              </Grid>
-            );
-          })
-        )}
-      </Grid>
+                </Hidden>
+                <Hidden xsDown implementation="css">
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <ListItemAvatar>
+                      <Avatar className={classes.listAvatar}>
+                        <LibraryBooksIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      style={{ margin: "6px 0" }}
+                      primary={
+                        <Grid container alignItems="center">
+                          <Typography variant="h6" color="textPrimary">
+                            {row.name}
+                          </Typography>
+
+                          <Grid item style={{ visibility: "hidden" }}>
+                            <Grid container direction="column">
+                              <Typography variant="h6">
+                                {"\u200B"}
+                              </Typography>
+                              <Typography variant="body2">
+                                {"\u200B"}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      }
+                    />
+                  </div>
+                </Hidden>
+                <ListItemText
+                  align="right"
+                  primary={
+                    <Grid container spacing={1} justify="flex-end">
+                      <Grid item>
+                        <LightTooltip title="Sunting">
+                          <IconButton
+                            size="small"
+                            className={classes.editSubjectButton}
+                            onClick={(e) =>
+                              handleOpenFormDialog(
+                                e,
+                                row._id,
+                                row.name,
+                                true
+                              )
+                            }
+                          >
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                        </LightTooltip>
+                      </Grid>
+                      <Grid item>
+                        <LightTooltip title="Hapus">
+                          <IconButton
+                            size="small"
+                            className={classes.deleteSubjectlButton}
+                            onClick={(e) => {
+                              handleOpenDeleteDialog(e, row._id, row.name);
+                            }}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </LightTooltip>
+                      </Grid>
+                    </Grid>
+                  }
+                />
+              </ListItem>*/}
+            </Grid>
+          );
+        })}
+        </Grid>
+      )}
       {FormDialog()}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
@@ -815,31 +799,31 @@ function SubjectList(props) {
 }
 
 SubjectList.propTypes = {
+  auth: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
-  deleteSubject: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   createSubject: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
   editSubject: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired,
+  deleteSubject: PropTypes.func.isRequired,
   success: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  clearErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  errors: state.errors,
-  success: state.success,
   auth: state.auth,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
+  errors: state.errors,
+  success: state.success,
 });
 
 export default connect(mapStateToProps, {
-  deleteSubject,
-  getAllSubjects,
-  editSubject,
   getSubject,
+  getAllSubjects,
   createSubject,
-  clearErrors,
+  editSubject,
+  deleteSubject,
   clearSuccess,
+  clearErrors,
 })(SubjectList);

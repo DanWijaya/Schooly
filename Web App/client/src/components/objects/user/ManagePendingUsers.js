@@ -289,9 +289,7 @@ const ManageUsersToolbar = (props) => {
                           e.stopPropagation();
                           onClear(e);
                         }}
-                        style={{
-                          visibility: !searchFilter ? "hidden" : "visible",
-                        }}
+                        style={{ visibility: !searchFilter ? "hidden" : "visible" }}
                       >
                         <ClearIcon />
                       </IconButton>
@@ -311,12 +309,11 @@ const ManageUsersToolbar = (props) => {
                   <ArrowBackIcon />
                 </IconButton> */
                 <TextField
-                  fullWidth
-                  autoFocus
                   variant="outlined"
                   id="searchFilterMobile"
                   value={searchFilter}
                   onChange={onChange}
+                  autoFocus
                   onClick={(e) => setSearchBarFocus(true)}
                   placeholder={searchFilterHint}
                   ref={searchRef}
@@ -334,9 +331,7 @@ const ManageUsersToolbar = (props) => {
                             e.stopPropagation();
                             onClear(e);
                           }}
-                          style={{
-                            visibility: !searchFilter ? "hidden" : "visible",
-                          }}
+                          style={{ visibility: !searchFilter ? "hidden" : "visible" }}
                         >
                           <ClearIcon />
                         </IconButton>
@@ -517,23 +512,6 @@ const useStyles = makeStyles((theme) => ({
 
 function ManageUsers(props) {
   const classes = useStyles();
-
-  const [order_student, setOrderStudent] = React.useState("asc");
-  const [order_teacher, setOrderTeacher] = React.useState("asc");
-
-  const [orderBy_student, setOrderByStudent] = React.useState("name");
-  const [orderBy_teacher, setOrderByTeacher] = React.useState("name");
-
-  const [openApproveDialog, setOpenApproveDialog] = React.useState(null);
-  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [selectedUserId, setSelectedUserId] = React.useState(null);
-  const [selectedUserName, setSelectedUserName] = React.useState(null);
-  const [searchFilterS, updateSearchFilterS] = React.useState("");
-  const [searchBarFocusS, setSearchBarFocusS] = React.useState(false);
-
-  const [searchFilterT, updateSearchFilterT] = React.useState("");
-  const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
-
   const {
     deleteUser,
     setUserActive,
@@ -541,6 +519,19 @@ function ManageUsers(props) {
     getPendingStudents,
   } = props;
   const { pending_students, pending_teachers, pending_users } = props.auth;
+
+  const [order_student, setOrderStudent] = React.useState("asc");
+  const [order_teacher, setOrderTeacher] = React.useState("asc");
+  const [orderBy_student, setOrderByStudent] = React.useState("name");
+  const [orderBy_teacher, setOrderByTeacher] = React.useState("name");
+  const [openApproveDialog, setOpenApproveDialog] = React.useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [selectedUserId, setSelectedUserId] = React.useState(null);
+  const [selectedUserName, setSelectedUserName] = React.useState(null);
+  const [searchFilterS, updateSearchFilterS] = React.useState("");
+  const [searchBarFocusS, setSearchBarFocusS] = React.useState(false);
+  const [searchFilterT, updateSearchFilterT] = React.useState("");
+  const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
 
   let student_rows = [];
   let teacher_rows = [];
@@ -1174,77 +1165,85 @@ function ManageUsers(props) {
           searchFilter={searchFilterS}
           updateSearchFilter={updateSearchFilterS}
         />
-        <List className={classes.userList}>
-          <Divider />
-          {student_rows.length === 0 ? (
-            <Empty />
-          ) : (
-            stableSort(
+        <Divider />
+        {student_rows.length === 0 ? (
+          <Empty />
+        ) : (
+          <List className={classes.userList}>
+            {stableSort(
               student_rows,
               getComparator(order_student, orderBy_student)
             ).map((row, index) => {
               const labelId = index;
               return (
                 <div>
-                  <ListItem>
-                    <ListItemIcon>
-                    {booleanCheckboxStudent[index] ?
-                      <Checkbox
-                        onChange={(e) => {
-                          handleChangeListStudent(e, index, row);
-                          autoReloader();
-                        }}
-                        color="primary"
-                        checked={booleanCheckboxStudent[index]}
-                      />
-                    :
-                      <Checkbox
-                        onChange={(e) => {
-                          handleChangeListStudent(e, index, row);
-                          autoReloader();
-                        }}
-                        color="primary"
-                        checked={false}
-                      />
-                    }
-                    </ListItemIcon>
-                    <Hidden xsDown>
-                      <ListItemAvatar>
-                        {!row.avatar ? (
-                          <Avatar />
-                        ) : (
-                          <Avatar src={`/api/upload/avatar/${row.avatar}`} />
-                        )}
-                      </ListItemAvatar>
-                    </Hidden>
-                    <ListItemText
-                      primary={
-                        <Typography id={labelId} noWrap>
-                          {row.name}
-                        </Typography>
+                  <Link to={`/lihat-profil/${row._id}`}>
+                    <ListItem>
+                      <ListItemIcon>
+                      {booleanCheckboxStudent[index] ?
+                        <Checkbox
+                          color="primary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                          onChange={(e) => {
+                            handleChangeListStudent(e, index, row);
+                            autoReloader();
+                          }}
+                          checked={booleanCheckboxStudent[index]}
+                        />
+                      :
+                        <Checkbox
+                          color="primary"
+                          checked={false}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                          onChange={(e) => {
+                            handleChangeListStudent(e, index, row);
+                            autoReloader();
+                          }}
+                        />
                       }
-                      secondary={
-                        <Typography variant="body2" color="textSecondary" noWrap>
-                          {row.email}
-                        </Typography>
-                      }
-                    />
-                    <ListItemSecondaryAction>
-                      <UserMenu
-                        options={["Aktifkan", "Hapus"]}
-                        role={null}
-                        row={row}
-                        handleOpenDeleteDialog={handleOpenDeleteDialog}
-                        handleOpenDisableApproveDialog={handleOpenApproveDialog}
+                      </ListItemIcon>
+                      <Hidden xsDown>
+                        <ListItemAvatar>
+                          {!row.avatar ? (
+                            <Avatar />
+                          ) : (
+                            <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                          )}
+                        </ListItemAvatar>
+                      </Hidden>
+                      <ListItemText
+                        primary={
+                          <Typography id={labelId} noWrap>
+                            {row.name}
+                          </Typography>
+                        }
+                        secondary={
+                          <Typography variant="body2" color="textSecondary" noWrap>
+                            {row.email}
+                          </Typography>
+                        }
                       />
-                    </ListItemSecondaryAction>
-                  </ListItem>
+                      <ListItemSecondaryAction>
+                        <UserMenu
+                          options={["Aktifkan", "Hapus"]}
+                          role={null}
+                          row={row}
+                          handleOpenDeleteDialog={handleOpenDeleteDialog}
+                          handleOpenDisableApproveDialog={handleOpenApproveDialog}
+                        />
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  </Link>
                   <Divider />
                 </div>
               );
-            })
-          )}
-        </List>
+            })}
+          </List>
+        )}
       </TabPanel>
       <TabPanel value={value} index={1}>
         <ManageUsersToolbar
@@ -1277,15 +1276,15 @@ function ManageUsers(props) {
           searchFilter={searchFilterT}
           updateSearchFilter={updateSearchFilterT}
         />
-        <List className={classes.userList}>
-          <Divider />
+        <Divider />
           {teacher_rows.length === 0 ? (
             <Empty />
           ) : (
-            stableSort(
-              teacher_rows,
-              getComparator(order_teacher, orderBy_teacher)
-            ).map((row, index) => {
+            <List className={classes.userList}>
+              {stableSort(
+                teacher_rows,
+                getComparator(order_teacher, orderBy_teacher)
+              ).map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;
               return (
                 <div>
@@ -1345,9 +1344,9 @@ function ManageUsers(props) {
                   <Divider />
                 </div>
               )
-            })
+            })}
+            </List>
           )}
-        </List>
       </TabPanel>
       {ApproveDialog()}
       <DeleteDialog

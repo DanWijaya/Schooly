@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getTeachers, updateTeacher } from "../../../actions/UserActions";
-import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllClass } from "../../../actions/ClassActions";
-import { clearErrors } from "../../../actions/ErrorActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getTeachers, updateTeacher } from "../../../actions/UserActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -494,112 +494,112 @@ function TeacherList(props) {
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
       />
-      <Grid container direction="column" spacing={2}>
-        {rows.length === 0 ? (
-          <Empty />
-        ) : (
-          stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            const labelId = index;
-            return (
-              <Grid item>
-                <ExpansionPanel variant="outlined">
-                  <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    className={classes.teacherPanel}
-                  >
-                  <Grid container alignItems="center" spacing={2}>
-                    <Hidden xsDown>
-                      <Grid item>
-                        {!row.avatar ? (
-                          <Avatar />
-                        ) : (
-                          <Avatar
-                            src={`/api/upload/avatar/${row.avatar}`}
-                          />
-                        )}
-                      </Grid>
-                    </Hidden>
+      {rows.length === 0 ? (
+        <Empty />
+      ) : (
+        <Grid container direction="column" spacing={2}>
+          {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+          const labelId = index;
+          return (
+            <Grid item>
+              <ExpansionPanel variant="outlined">
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  className={classes.teacherPanel}
+                >
+                <Grid container alignItems="center" spacing={2}>
+                  <Hidden xsDown>
                     <Grid item>
-                      <Typography id={labelId} noWrap>
-                        {row.name}
+                      {!row.avatar ? (
+                        <Avatar />
+                      ) : (
+                        <Avatar
+                          src={`/api/upload/avatar/${row.avatar}`}
+                        />
+                      )}
+                    </Grid>
+                  </Hidden>
+                  <Grid item>
+                    <Typography id={labelId} noWrap>
+                      {row.name}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" noWrap>
+                      {row.email}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                </ExpansionPanelSummary>
+                <Divider />
+                <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
+                  <Grid container direction="column" spacing={2}>
+                    <Grid item>
+                      <Typography color="primary">
+                        Mata Pelajaran
                       </Typography>
-                      <Typography variant="body2" color="textSecondary" noWrap>
-                        {row.email}
+                      <Autocomplete
+                        multiple
+                        size="small"
+                        filterSelectedOptions
+                        options={all_subjects}
+                        getOptionLabel={(option) => option.name}
+                        getOptionSelected={(option, value) =>
+                          option._id === value._id
+                        }
+                        onChange={(event, value) => {
+                          handleChangeSubject(value, row._id);
+                        }}
+                        value={
+                          selectedValues[row._id]
+                          ? selectedValues[row._id].subject
+                          : null
+                        }
+                        renderInput={(params) => (
+                          <TextField variant="outlined" {...params} />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Typography color="primary">
+                        Kelas
                       </Typography>
+                      <Autocomplete
+                        multiple
+                        size="small"
+                        options={all_classes ? all_classes : null}
+                        getOptionLabel={(option) => option.name}
+                        getOptionSelected={(option, value) => option._id === value._id}
+                        filterSelectedOptions
+                        onChange={(event, value) => {
+                          handleChangeClass(value, row._id);
+                        }}
+                        value={
+                          selectedValues[row._id]
+                          ? selectedValues[row._id].class
+                          : null
+                        }
+                        renderInput={(params) => (
+                          <TextField variant="outlined" {...params} />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item container justify="flex-end">
+                      <Button
+                        className={classes.saveButton}
+                        onClick={() => {
+                          handleSave(row._id);
+                        }}
+                      >
+                        Simpan
+                      </Button>
                     </Grid>
                   </Grid>
-                  </ExpansionPanelSummary>
-                  <Divider />
-                  <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
-                    <Grid container direction="column" spacing={2}>
-                      <Grid item>
-                        <Typography color="primary">
-                          Mata Pelajaran
-                        </Typography>
-                        <Autocomplete
-                          multiple
-                          size="small"
-                          filterSelectedOptions
-                          options={all_subjects}
-                          getOptionLabel={(option) => option.name}
-                          getOptionSelected={(option, value) =>
-                            option._id === value._id
-                          }
-                          onChange={(event, value) => {
-                            handleChangeSubject(value, row._id);
-                          }}
-                          value={
-                            selectedValues[row._id]
-                            ? selectedValues[row._id].subject
-                            : null
-                          }
-                          renderInput={(params) => (
-                            <TextField variant="outlined" {...params} />
-                          )}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Typography color="primary">
-                          Kelas
-                        </Typography>
-                        <Autocomplete
-                          multiple
-                          size="small"
-                          options={all_classes ? all_classes : null}
-                          getOptionLabel={(option) => option.name}
-                          getOptionSelected={(option, value) => option._id === value._id}
-                          filterSelectedOptions
-                          onChange={(event, value) => {
-                            handleChangeClass(value, row._id);
-                          }}
-                          value={
-                            selectedValues[row._id]
-                            ? selectedValues[row._id].class
-                            : null
-                          }
-                          renderInput={(params) => (
-                            <TextField variant="outlined" {...params} />
-                          )}
-                        />
-                      </Grid>
-                      <Grid item container justify="flex-end">
-                        <Button
-                          className={classes.saveButton}
-                          onClick={() => {
-                            handleSave(row._id);
-                          }}
-                        >
-                          Simpan
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
-              </Grid>
-            );
-          })
-        )}
-      </Grid>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </Grid>
+          );
+        })}
+        </Grid>
+      )}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
@@ -638,17 +638,17 @@ function TeacherList(props) {
 // };
 
 const mapStateToProps = (state) => ({
-  errors: state.errors,
-  success: state.success,
   auth: state.auth,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
+  success: state.success,
+  errors: state.errors
 });
 
 export default connect(mapStateToProps, {
+  getAllClass,
   getAllSubjects,
   getTeachers,
-  getAllClass,
   updateTeacher,
   clearErrors,
   clearSuccess

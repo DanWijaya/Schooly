@@ -20,8 +20,8 @@ import MaterialItem from "../item/MaterialItem";
 import {
   Divider,
   ExpansionPanel,
-  ExpansionPanelSummary,
   ExpansionPanelDetails,
+  ExpansionPanelSummary,
   Grid,
   Hidden,
   List,
@@ -31,7 +31,7 @@ import {
 import {
   AssignmentOutlined as AssignmentIcon,
   ExpandMore as ExpandMoreIcon,
-  MenuBook as MenuBookIcon,
+  MenuBook as MenuBookIcon
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaClipboardList } from "react-icons/fa";
@@ -584,7 +584,7 @@ function ViewSubject(props) {
           <b>{all_subjects_map.get(id)}</b>
         </Typography>
         <Typography variant="h5" noWrap style={{ color: "rgba(255, 255, 255, 0.7)" }}>
-          Kelas: {kelas.name}
+          {kelas.name}
         </Typography>
       </Paper>
       <div style={{ marginTop: "30px" }}>

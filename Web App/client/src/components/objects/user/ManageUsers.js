@@ -285,9 +285,7 @@ function ManageUsersToolbar(props) {
                           e.stopPropagation();
                           onClear(e);
                         }}
-                        style={{
-                          visibility: !searchFilter ? "hidden" : "visible",
-                        }}
+                        style={{ visibility: !searchFilter ? "hidden" : "visible" }}
                       >
                         <ClearIcon />
                       </IconButton>
@@ -299,13 +297,12 @@ function ManageUsersToolbar(props) {
             <Hidden mdUp>
               {searchBarFocus ? (
                 <TextField
-                  fullWidth
-                  autoFocus
                   variant="outlined"
                   id="searchFilterMobile"
                   value={searchFilter}
                   placeholder={searchFilterHint}
                   onChange={onChange}
+                  autoFocus
                   onClick={(e) => {
                     setSearchBarFocus(true)
                   }}
@@ -323,9 +320,7 @@ function ManageUsersToolbar(props) {
                             e.stopPropagation();
                             onClear(e);
                           }}
-                          style={{
-                            visibility: !searchFilter ? "hidden" : "visible",
-                          }}
+                          style={{ visibility: !searchFilter ? "hidden" : "visible" }}
                         >
                           <ClearIcon />
                         </IconButton>
@@ -512,27 +507,21 @@ const useStyles = makeStyles((theme) => ({
 
 function ManageUsers(props) {
   const classes = useStyles();
+  const { setUserDisabled, deleteUser, getTeachers, getStudents } = props;
+  const { all_students, all_teachers, pending_users, user } = props.auth;
 
   const [order_student, setOrderStudent] = React.useState("asc");
   const [order_teacher, setOrderTeacher] = React.useState("asc");
-
   const [orderBy_student, setOrderByStudent] = React.useState("name");
   const [orderBy_teacher, setOrderByTeacher] = React.useState("name");
-
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [openDisableDialog, setOpenDisableDialog] = React.useState(null);
   const [selectedUserId, setSelectedUserId] = React.useState(null);
   const [selectedUserName, setSelectedUserName] = React.useState(null);
   const [searchFilterS, updateSearchFilterS] = React.useState("");
   const [searchBarFocusS, setSearchBarFocusS] = React.useState(false);
-
   const [searchFilterT, updateSearchFilterT] = React.useState("");
   const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
-
-  const { setUserDisabled, deleteUser, getTeachers, getStudents } = props;
-  const { all_students, all_teachers, pending_users, user } = props.auth;
-
-  console.log(all_students);
 
   let student_rows = [];
   let teacher_rows = [];
@@ -1243,12 +1232,12 @@ function ManageUsers(props) {
           updateSearchFilter={updateSearchFilterS}
           tabValueCheck={value === 0}
         />
-        <List className={classes.userList}>
-          <Divider />
-          {student_rows.length === 0 ? (
-            <Empty />
-          ) : (
-            stableSort(
+        <Divider />
+        {student_rows.length === 0 ? (
+          <Empty />
+        ) : (
+          <List className={classes.userList}>
+            {stableSort(
               student_rows,
               getComparator(order_student, orderBy_student)
             ).map((row, index) => {
@@ -1325,9 +1314,9 @@ function ManageUsers(props) {
                   <Divider />
                 </div>
               );
-            })
-          )}
-        </List>
+            })}
+          </List>
+        )}
       </TabPanel>
       <TabPanel value={value} index={1}>
         <ManageUsersToolbar
@@ -1365,89 +1354,89 @@ function ManageUsers(props) {
           updateSearchFilter={updateSearchFilterT}
           tabValueCheck={value === 1}
         />
-        <List className={classes.userList}>
-          <Divider />
-          {teacher_rows.length === 0 ? (
-            <Empty />
-          ) : (
-            stableSort(
+        <Divider />
+        {teacher_rows.length === 0 ? (
+          <Empty />
+        ) : (
+          <List className={classes.userList}>
+            {stableSort(
               teacher_rows,
               getComparator(order_teacher, orderBy_teacher)
             ).map((row, index) => {
-              const labelId = index;
-              return (
-                <div>
-                  <Link to={`/lihat-profil/${row._id}`}>
-                    <ListItem className={classes.accountItem}>
-                      <ListItemIcon>
-                        <Checkbox
-                          color="primary"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          onChange={(e) => {
-                            handleChangeListTeacher(e, index, row);
-                            autoReloader();
-                          }}
-                          checked={Boolean(booleanCheckboxTeacher[index])}
-                        />
-                        {/*Ini yang propagationnya berhasil ke handle
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              color="primary"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                              }}
-                              onChange={(e) => {
-                                handleChangeListTeacher(e, index, row);
-                                autoReloader();
-                              }}
-                              checked={Boolean(booleanCheckboxTeacher[index])}
-                            />
-                          }
-                        />*/}
-                      </ListItemIcon>
-                      <Hidden xsDown>
-                        {!row.avatar ? (
-                          <ListItemAvatar>
-                            <Avatar />
-                          </ListItemAvatar>
-                        ) : (
-                          <ListItemAvatar>
-                            <Avatar src={`/api/upload/avatar/${row.avatar}`} />
-                          </ListItemAvatar>
-                        )}
-                      </Hidden>
-                      <ListItemText
-                        primary={
-                          <Typography id={labelId} noWrap>
-                            {row.name}
-                          </Typography>
-                        }
-                        secondary={
-                          <Typography variant="body2" color="textSecondary" noWrap>
-                            {row.email}
-                          </Typography>
-                        }
+            const labelId = index;
+            return (
+              <div>
+                <Link to={`/lihat-profil/${row._id}`}>
+                  <ListItem className={classes.accountItem}>
+                    <ListItemIcon>
+                      <Checkbox
+                        color="primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        onChange={(e) => {
+                          handleChangeListTeacher(e, index, row);
+                          autoReloader();
+                        }}
+                        checked={Boolean(booleanCheckboxTeacher[index])}
                       />
-                      <ListItemSecondaryAction>
-                        <UserMenu
-                          options={["Nonaktifkan", "Hapus"]}
-                          role={null}
-                          row={row}
-                          handleOpenDeleteDialog={handleOpenDeleteDialog}
-                          handleOpenDisableApproveDialog={handleOpenDisableDialog}
-                        />
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  </Link>
-                  <Divider />
-                </div>
-              );
-            })
-          )}
-        </List>
+                      {/*Ini yang propagationnya berhasil ke handle
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            color="primary"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                            onChange={(e) => {
+                              handleChangeListTeacher(e, index, row);
+                              autoReloader();
+                            }}
+                            checked={Boolean(booleanCheckboxTeacher[index])}
+                          />
+                        }
+                      />*/}
+                    </ListItemIcon>
+                    <Hidden xsDown>
+                      {!row.avatar ? (
+                        <ListItemAvatar>
+                          <Avatar />
+                        </ListItemAvatar>
+                      ) : (
+                        <ListItemAvatar>
+                          <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                        </ListItemAvatar>
+                      )}
+                    </Hidden>
+                    <ListItemText
+                      primary={
+                        <Typography id={labelId} noWrap>
+                          {row.name}
+                        </Typography>
+                      }
+                      secondary={
+                        <Typography variant="body2" color="textSecondary" noWrap>
+                          {row.email}
+                        </Typography>
+                      }
+                    />
+                    <ListItemSecondaryAction>
+                      <UserMenu
+                        options={["Nonaktifkan", "Hapus"]}
+                        role={null}
+                        row={row}
+                        handleOpenDeleteDialog={handleOpenDeleteDialog}
+                        handleOpenDisableApproveDialog={handleOpenDisableDialog}
+                      />
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Link>
+                <Divider />
+              </div>
+            );
+          })}
+          </List>
+        )}
       </TabPanel>
       {DisableDialog()}
       <DeleteDialog
