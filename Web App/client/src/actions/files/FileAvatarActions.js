@@ -11,6 +11,7 @@ export const uploadFileAvatar = (id, formData) => (dispatch) => {
       return true;
     })
     .catch((err) => {
+      console.log(err);
       throw new Error(err);
     });
 };
