@@ -179,7 +179,7 @@ function MaterialListToolbar(props) {
             <Hidden mdUp>
               <LightTooltip title="Buat Materi">
                 <Link to="/buat-materi">
-                  <Fab size="small" className={classes.createMaterialButton}>
+                  <Fab size="medium" className={classes.createMaterialButton}>
                     <MenuBookIcon className={classes.createMaterialIconMobile} />
                   </Fab>
                 </Link>
@@ -360,7 +360,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
   },
   toolbar: {
-    padding: "16px",
+    padding: "16px 0px",
+    marginBottom: "15px",
   },
   createMaterialButton: {
     boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",

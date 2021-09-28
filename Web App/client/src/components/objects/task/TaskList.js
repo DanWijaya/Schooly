@@ -358,7 +358,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
   },
   toolbar: {
-    padding: "16px",
+    padding: "16px 0px",
+    marginBottom: "15px",
   },
   createTaskButton: {
     boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",

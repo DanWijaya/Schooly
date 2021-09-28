@@ -196,7 +196,7 @@ function AssessmentListToolbar(props) {
             <Hidden mdUp>
               <LightTooltip title="Buat Ujian">
                 <Link to="/buat-ujian">
-                  <Fab size="small" className={classes.createExamButton}>
+                  <Fab size="medium" className={classes.createExamButton}>
                     <BsClipboardData className={classes.createExamIconMobile}/>
                   </Fab>
                 </Link>
@@ -302,8 +302,7 @@ function AssessmentListToolbar(props) {
                         <SearchIcon />
                       </IconButton>
                     </LightTooltip>
-                  )
-                }
+                  )}
               </Hidden>
             </Grid>
             <Grid item>
@@ -378,7 +377,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
   },
   toolbar: {
-    padding: "16px",
+    padding: "16px 0px",
+    marginBottom: "15px",
   },
   createExamButton: {
     boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
@@ -1069,29 +1069,29 @@ function AssessmentList(props) {
 }
 
 AssessmentList.propTypes = {
-  getAllAssessments: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
   getAllClass: PropTypes.func.isRequired,
-  deleteAssessment: PropTypes.func.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
   getTeachers: PropTypes.func.isRequired,
   assessmentsCollection: PropTypes.object.isRequired,
-  subjectsCollection: PropTypes.object.isRequired,
-  classesCollection: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
+  getAllAssessments: PropTypes.func.isRequired,
+  deleteAssessment: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  errors: state.errors,
   auth: state.auth,
-  assessmentsCollection: state.assessmentsCollection,
-  subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
+  assessmentsCollection: state.assessmentsCollection,
+  errors: state.errors
 });
 
 export default connect(mapStateToProps, {
-  getAllAssessments,
-  deleteAssessment,
   getAllClass,
   getAllSubjects,
-  getTeachers
+  getTeachers,
+  getAllAssessments,
+  deleteAssessment
 })(AssessmentList);
