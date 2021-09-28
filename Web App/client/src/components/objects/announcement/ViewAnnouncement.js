@@ -4,26 +4,17 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import CustomLinkify from "../../misc/linkify/Linkify";
-import {
-  getFileAnnouncements,
-  downloadFileAnnouncements,
-  viewFileAnnouncement,
-} from "../../../actions/files/FileAnnouncementActions";
-import {
-  getOneAnnouncement,
-  deleteAnnouncement,
-} from "../../../actions/AnnouncementActions";
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { getUsers } from "../../../actions/UserActions";
-import {
-  downloadLampiranAnnouncement,
-  previewLampiranAnnouncement,
-} from "../../../actions/UploadActions";
+import { getFileAnnouncements, downloadFileAnnouncements, viewFileAnnouncement } from "../../../actions/files/FileAnnouncementActions";
+import { getOneAnnouncement, deleteAnnouncement } from "../../../actions/AnnouncementActions";
+import { downloadLampiranAnnouncement, previewLampiranAnnouncement } from "../../../actions/UploadActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
+  Divider,
   Fab,
   Grid,
   IconButton,
@@ -31,13 +22,12 @@ import {
   ListItemAvatar,
   ListItemText,
   Paper,
-  Typography,
-  Divider,
+  Typography
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   FaFile,
   FaFileAlt,
@@ -48,23 +38,18 @@ import {
   FaFileWord,
 } from "react-icons/fa";
 
-const path = require("path");
-
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    padding: "10px",
   },
   paperBox: {
     padding: "20px",
-    // marginBottom: "10px",
   },
   listItemPaper: {
     marginBottom: "10px",
@@ -77,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
   teacherButtonContainer: {
     display: "flex",
     justifyContent: "flex-end",
-    // marginTop: "20px",
   },
   editAnnouncementButton: {
     marginRight: "10px",
@@ -134,9 +118,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const path = require("path");
+
 function LampiranFile(props) {
   const classes = useStyles();
-
   const { file_id, filename, filetype, onDownloadFile, onPreviewFile } = props;
 
   let displayedName = "";
@@ -194,16 +179,6 @@ function LampiranFile(props) {
             }
             secondary={filetype}
           />
-          {/* <IconButton
-            size="small"
-            className={classes.downloadIconButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              onDownloadFile(file_id, "lampiran_announcement");
-            }}
-          >
-            <CloudDownloadIcon fontSize="small" />
-          </IconButton> */}
         </ListItem>
       </Paper>
     </Grid>
@@ -211,12 +186,8 @@ function LampiranFile(props) {
 }
 
 function ViewAnnouncement(props) {
-  document.title = "Schooly | Lihat Pengumuman";
-
   const classes = useStyles();
   const history = useHistory();
-
-  const { selectedAnnouncements } = props.announcements;
   const {
     getUsers,
     classesCollection,
@@ -230,17 +201,15 @@ function ViewAnnouncement(props) {
     viewFileAnnouncement,
     downloadFileAnnouncements,
   } = props;
+  const { selectedAnnouncements } = props.announcements;
   const { all_classes_map } = props.classesCollection;
   const { user, retrieved_users } = props.auth;
+  const announcement_id = props.match.params.id;
+
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [fileLampiran, setFileLampiran] = React.useState([]);
 
-  const announcement_id = props.match.params.id;
-
-  React.useEffect(() => {}, []);
-
   React.useEffect(() => {
-    console.log(announcement_id)
     getOneAnnouncement(announcement_id);
     getAllClass("map");
     getSelectedClasses(selectedAnnouncements.class_assigned);
@@ -251,8 +220,7 @@ function ViewAnnouncement(props) {
       setFileLampiran(result);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAnnouncements._id]); // beacause only receive one announcement.
-
+  }, [selectedAnnouncements._id]); // Because only receive one announcement.
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
@@ -284,46 +252,30 @@ function ViewAnnouncement(props) {
     }
   };
 
+  const onDownloadFile = (id, fileCategory = "none") => {
+    if (fileCategory === "lampiran_announcement");
+  };
+  const onPreviewFile = (id, fileCategory = "none") => {
+    if (fileCategory === "lampiran_announcement");
+  };
+
   const onDeleteAnnouncement = (announcement_id) => {
     deleteAnnouncement(announcement_id, history).then((res) => {
-      console.log(res);
     });
-    // setFileTugas(null)
   };
 
   // Delete Dialog
   const handleOpenDeleteDialog = (fileid, filename) => {
     setOpenDeleteDialog(true);
   };
-
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
 
-  const onDownloadFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran_announcement") console.log(":Download");
-    // downloadLampiranAnnouncement(id)
-    else console.log("File Category is not specified");
-  };
+  document.title = "Schooly | Lihat Pengumuman";
 
-  const onPreviewFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran_announcement") console.log("Download");
-    // previewLampiranAnnouncement(id)
-    else console.log("File Category is not specified");
-  };
-  // console.log(user);
-  console.log(retrieved_users.get(selectedAnnouncements.author_id))
   return (
     <div className={classes.root}>
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Pengumuman"
-        itemName={selectedAnnouncements.title}
-        deleteItem={() => {
-          onDeleteAnnouncement(announcement_id);
-        }}
-      />
       <Grid container direction="column" spacing={2}>
         <Grid item>
           <Paper className={classes.paperBox}>
@@ -334,8 +286,6 @@ function ViewAnnouncement(props) {
                 </Typography>
               </Grid>
               <Grid item xs={12} style={{ paddingTop: "0" }}>
-              {/* h6 ditambahkan agar margin teks ini dengan teks nama pengumuman 
-              memiliki margin yang sama seperti pada halaman-halaman view objek lainnya */}
                 <h6 style={{ marginBottom: "0" }}>
                   <Typography
                     variant="body2"
@@ -451,21 +401,30 @@ function ViewAnnouncement(props) {
         ) : // {/* </div> */}
         null}
       </Grid>
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Pengumuman"
+        itemName={selectedAnnouncements.title}
+        deleteItem={() => {
+          onDeleteAnnouncement(announcement_id);
+        }}
+      />
     </div>
   );
 }
 
 ViewAnnouncement.propTypes = {
   auth: PropTypes.object.isRequired,
-  announcements: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
-  getOneAnnouncement: PropTypes.func.isRequired,
-  deleteAnnouncement: PropTypes.func.isRequired,
-  downloadLampiranAnnouncement: PropTypes.func.isRequired,
-  previewLampiranAnnouncement: PropTypes.func.isRequired,
   getSelectedClasses: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
+  getOneAnnouncement: PropTypes.func.isRequired,
+  announcements: PropTypes.object.isRequired,
+  deleteAnnouncement: PropTypes.func.isRequired,
+  downloadLampiranAnnouncement: PropTypes.func.isRequired,
+  previewLampiranAnnouncement: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -475,14 +434,14 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  getOneAnnouncement,
-  getUsers,
-  deleteAnnouncement,
-  previewLampiranAnnouncement,
-  downloadLampiranAnnouncement,
-  getSelectedClasses,
   getAllClass,
+  getSelectedClasses,
+  getUsers,
+  getOneAnnouncement,
+  deleteAnnouncement,
   getFileAnnouncements,
   viewFileAnnouncement,
   downloadFileAnnouncements,
+  previewLampiranAnnouncement,
+  downloadLampiranAnnouncement,
 })(ViewAnnouncement);

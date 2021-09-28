@@ -987,7 +987,7 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: "flex-start",
   },
   toolbar: {
-    padding: "16px",
+    padding: "16px 0px",
     marginBottom: "15px",
   },
   createAnnouncementButton: {
@@ -1273,8 +1273,11 @@ function AnnouncementList(props) {
         {rows.length === 0 ? (
           <Empty />
         ) : (
-          /* Masih belum oke, belum disesuain itemnya untuk guru bisa edit dll (konek dengan option menu),
+          /* - Masih belum oke, belum disesuain itemnya untuk guru bisa edit dll (konek dengan option menu),
           belum kepisah yang mana masuk dengan yang mana dari dia (tabpanel selanjutnya)
+          - Isi subprimary textnya bakal author name buat tab yang ini, tab yang dari dia ga usah isi.
+          - Belum apply yang ketua kelas buat di toolbarnya juga
+          - Kalau murid biasa (full penerima doang) mau bikin ga pake tab
            */
           <Grid container direction="column" spacing={2}>
             {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
