@@ -444,33 +444,33 @@ function ViewSubject(props) {
               result.push(
                 <Grid item>
                   <AssessmentItem
-                  type="Ujian"
-                  primaryText={assessment.name}
-                  status={assessmentStatus}
-                  missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
-                  secondaryText={
-                    moment(assessment.createdAt)
+                    type="Ujian"
+                    primaryText={assessment.name}
+                    status={assessmentStatus}
+                    missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
+                    secondaryText={
+                      moment(assessment.createdAt)
+                        .locale("id")
+                        .format("DD MMM YYYY")
+                    }
+                    subSecondaryText={
+                      moment(assessment.createdAt)
+                        .locale("id")
+                        .format("HH.mm")
+                    }
+                    title={assessment.name}
+                    subject={
+                      category === "subject"
+                        ? null
+                        : all_subjects_map.get(assessment.subject)
+                    }
+                    teacher={all_teachers.get(assessment.author_id).name}
+                    startTime={moment(assessment.start_date)
                       .locale("id")
-                      .format("DD MMM YYYY")
-                  }
-                  subSecondaryText={
-                    moment(assessment.createdAt)
+                      .format("DD MMM YYYY, HH:mm")}
+                    endTime={moment(assessment.end_date)
                       .locale("id")
-                      .format("HH.mm")
-                  }
-                  title={assessment.name}
-                  subject={
-                    category === "subject"
-                      ? null
-                      : all_subjects_map.get(assessment.subject)
-                  }
-                  teacher={all_teachers.get(assessment.author_id).name}
-                  startTime={moment(assessment.start_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  endTime={moment(assessment.end_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
+                      .format("DD MMM YYYY, HH:mm")}
                 />
                 </Grid>
               );

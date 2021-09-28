@@ -420,8 +420,23 @@ const useStyles = makeStyles((theme) => ({
     padding: "7.5px",
     borderRadius: "5px",
   },
+  userTabs: {
+    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+  },
+  userTabTitle: {
+    alignSelf: "flex-start",
+  },
+  userList: {
+    padding: "0px",
+  },
   toolbar: {
     padding: "16px",
+  },
+  accountItem: {
+    color: "black",
+    "&:focus, &:hover": {
+      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
+    },
   },
   dialogBox: {
     width: "300px",
@@ -485,23 +500,8 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  accountItem: {
-    color: "black",
-    "&:focus, &:hover": {
-      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
-    },
-  },
   checkboxIcon: {
     color: theme.palette.primary.main,
-  },
-  userTabs: {
-    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-  },
-  userTabTitle: {
-    alignSelf: "flex-start",
-  },
-  userList: {
-    padding: "0px",
   },
 }));
 
@@ -1194,9 +1194,9 @@ function ManageUsers(props) {
         </Grid>
       </Grid>
       <Tabs
-        value={value}
         indicatorColor="primary"
         textColor="primary"
+        value={value}
         onChange={handleTabs}
         className={classes.userTabs}
       >

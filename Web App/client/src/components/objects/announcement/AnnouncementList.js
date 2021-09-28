@@ -10,6 +10,8 @@ import { getUsers } from "../../../actions/UserActions";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
+import AnnouncementItem from "../item/AnnouncementItem";
 import {
   Avatar,
   Divider,
@@ -25,6 +27,8 @@ import {
   MenuItem,
   Paper,
   Snackbar,
+  Tab,
+  Tabs,
   TableSortLabel,
   TextField,
   Typography
@@ -47,16 +51,16 @@ import { makeStyles } from "@material-ui/core/styles";
 function createData(
   sender_icon,
   author_name,
-  notification_title,
-  notification_id,
+  announcementtitle,
+  _id,
   createdAt,
   name_lowcased
 ) {
   return {
     sender_icon,
     author_name,
-    notification_title,
-    notification_id,
+    announcementtitle,
+    _id,
     createdAt,
     name_lowcased,
   };
@@ -92,6 +96,7 @@ function AnnouncementListToolbar(props) {
   const {
     classes,
     role,
+    mine,
     order,
     orderBy,
     onRequestSort,
@@ -113,7 +118,7 @@ function AnnouncementListToolbar(props) {
       label: "Nama Pembuat",
     },
     {
-      id: "notification_title",
+      id: "announcementtitle",
       numeric: false,
       disablePadding: false,
       label: "Judul Pengumuman",
@@ -147,7 +152,7 @@ function AnnouncementListToolbar(props) {
   return (
     <div className={classes.toolbar}>
       <Grid container justify="space-between" alignItems="center">
-        {role === "Teacher" ? (
+        {(role === "Teacher" || "Admin") && mine ? (
           <Grid item>
             <Hidden smDown>
               <Link to="/buat-pengumuman">
@@ -368,7 +373,7 @@ function AnnouncementListSubToolbar(props) {
       label: "Nama Pembuat",
     },
     {
-      id: "notification_title",
+      id: "announcementtitle",
       numeric: false,
       disablePadding: false,
       label: "Judul Pengumuman",
@@ -651,7 +656,6 @@ function AnnouncementListItems(props) {
     orderBy,
     mine,
     handleOpenDeleteDialog,
-    addBottomMargin,
   } = props;
 
   return (
@@ -659,7 +663,6 @@ function AnnouncementListItems(props) {
       container
       direction="column"
       spacing={2}
-      style={{ marginBottom: addBottomMargin ? "100px" : "0" }}
     >
       {rows.length === 0 ? (
         <Empty />
@@ -672,7 +675,7 @@ function AnnouncementListItems(props) {
                 <ListItemText
                   primary={
                     <Typography variant="subtitle1" color="textPrimary">
-                      {row.notification_title}
+                      {row.announcementtitle}
                     </Typography>
                   }
                   secondary={
@@ -699,7 +702,7 @@ function AnnouncementListItems(props) {
                   <ListItemText
                     primary={
                       <Typography variant="h6" color="textPrimary">
-                        {row.notification_title}
+                        {row.announcementtitle}
                       </Typography>
                     }
                     secondary={
@@ -717,7 +720,7 @@ function AnnouncementListItems(props) {
                     <Grid container spacing={1} justify="flex-end">
                       <Grid item>
                         <LightTooltip title="Lihat Lebih Lanjut">
-                          <Link to={`/pengumuman/${row.notification_id}`}>
+                          <Link to={`/pengumuman/${row._id}`}>
                             <IconButton
                               size="small"
                               className={classes.viewMaterialButton}
@@ -730,7 +733,7 @@ function AnnouncementListItems(props) {
                       <Grid item>
                         <LightTooltip title="Sunting">
                           <Link
-                            to={`/sunting-pengumuman/${row.notification_id}`}
+                            to={`/sunting-pengumuman/${row._id}`}
                           >
                             <IconButton
                               size="small"
@@ -749,10 +752,10 @@ function AnnouncementListItems(props) {
                             onClick={(e) => {
                               handleOpenDeleteDialog(
                                 e,
-                                row.notification_id,
-                                row.notification_title
+                                row._id,
+                                row.announcementtitle
                               );
-                              console.log(row.notification_id);
+                              console.log(row._id);
                             }}
                           >
                             <DeleteIcon fontSize="small" />
@@ -780,7 +783,7 @@ function AnnouncementListItems(props) {
                 {mine ? (
                   content
                 ) : (
-                  <Link to={`/pengumuman/${row.notification_id}`}>
+                  <Link to={`/pengumuman/${row._id}`}>
                     {content}
                   </Link>
                 )}
@@ -804,7 +807,6 @@ function AnnouncementSubList(props) {
     mine,
     author_role,
     handleOpenDeleteDialog,
-    addBottomMargin,
   } = props;
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
@@ -943,7 +945,6 @@ function AnnouncementSubList(props) {
         classes={classes}
         mine={mine}
         handleOpenDeleteDialog={handleOpenDeleteDialog}
-        addBottomMargin={addBottomMargin}
       />
     </>
   );
@@ -956,7 +957,6 @@ AnnouncementSubList.propTypes = {
   mine: PropTypes.bool.isRequired,
   author_role: PropTypes.string.isRequired,
   handleOpenDeleteDialog: PropTypes.func,
-  addBottomMargin: PropTypes.bool.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -980,8 +980,15 @@ const useStyles = makeStyles((theme) => ({
     padding: "7.5px",
     borderRadius: "5px",
   },
+  announcementTabs: {
+    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+  },
+  announcementTabTitle: {
+    alignSelf: "flex-start",
+  },
   toolbar: {
     padding: "16px",
+    marginBottom: "15px",
   },
   createAnnouncementButton: {
     boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
@@ -1051,7 +1058,6 @@ const useStyles = makeStyles((theme) => ({
 
 function AnnouncementList(props) {
   const classes = useStyles();
-  const { selectedAnnouncements, adminAnnouncements } = props.announcements;
   const {
     getAnnouncement,
     getUsers,
@@ -1059,12 +1065,17 @@ function AnnouncementList(props) {
     getAdminAnnouncements,
     deleteAnnouncement,
   } = props;
-  const { kelas } = props.classesCollection;
   const { user, retrieved_users } = props.auth;
-  // const [annIsRetrieved, setAnnIsRetrieved] = React.useState(false);
+  const { kelas } = props.classesCollection;
+  const { selectedAnnouncements, adminAnnouncements } = props.announcements;
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
+
+  const [tabValue, setTabValue] = React.useState(0);
+  const handleChangeTab = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedAnnouncementId, setSelectedAnnouncementId] = React.useState(
@@ -1237,26 +1248,99 @@ function AnnouncementList(props) {
           </Typography>
         </Grid>
       </Grid>
-      <Divider />
-      <AnnouncementListToolbar
-        user={user}
-        classes={classes}
-        order={order}
-        orderBy={orderBy}
-        onRequestSort={handleRequestSort}
-        searchFilter={searchFilter}
-        updateSearchFilter={updateSearchFilter}
-        setSearchBarFocus={setSearchBarFocus}
-        searchBarFocus={searchBarFocus}
-      />
-      <Divider
-        variant="inset"
-        className={
-          user.role === "Admin"
-            ? classes.adminTitleDivider
-            : classes.titleDivider
-        }
-      />
+      <Tabs
+        indicatorColor="primary"
+        textColor="primary"
+        value={tabValue}
+        onChange={handleChangeTab}
+        className={classes.announcementTabs}
+      >
+        <Tab label={<Typography className={classes.announcementTabTitle}>Masuk</Typography>} />
+        <Tab label={<Typography className={classes.announcementTabTitle}>Dari Saya</Typography>} />
+      </Tabs>
+      <TabPanel value={tabValue} index={0}>
+        <AnnouncementListToolbar
+          classes={classes}
+          user={user}
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={handleRequestSort}
+          searchFilter={searchFilter}
+          updateSearchFilter={updateSearchFilter}
+          setSearchBarFocus={setSearchBarFocus}
+          searchBarFocus={searchBarFocus}
+        />
+        {rows.length === 0 ? (
+          <Empty />
+        ) : (
+          /* Masih belum oke, belum disesuain itemnya untuk guru bisa edit dll (konek dengan option menu),
+          belum kepisah yang mana masuk dengan yang mana dari dia (tabpanel selanjutnya)
+           */
+          <Grid container direction="column" spacing={2}>
+            {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+              return (
+                <AnnouncementItem
+                  link={`/materi/${row._id}`}
+                  primaryText={row.announcementtitle}
+                  subPrimaryText={row.author_name}
+                  secondaryText={
+                    moment(row.createdAt)
+                      .locale("id")
+                      .format("DD MMM YYYY")
+                  }
+                  subSecondaryText={
+                    moment(row.createdAt)
+                      .locale("id")
+                      .format("HH.mm")
+                  }
+                />
+              );
+            })}
+          </Grid>
+        )}
+      </TabPanel>
+      <TabPanel value={tabValue} index={1}>
+        <AnnouncementListToolbar
+          classes={classes}
+          user={user}
+          mine={true}
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={handleRequestSort}
+          searchFilter={searchFilter}
+          updateSearchFilter={updateSearchFilter}
+          setSearchBarFocus={setSearchBarFocus}
+          searchBarFocus={searchBarFocus}
+        />
+        {rows.length === 0 ? (
+          <Empty />
+        ) : (
+          /* Masih belum oke, belum disesuain itemnya untuk guru bisa edit dll */
+          <Grid container direction="column" spacing={2}>
+            {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+              return (
+                <AnnouncementItem
+                  link={`/materi/${row._id}`}
+                  primaryText={row.announcementtitle}
+                  subPrimaryText={row.author_name}
+                  secondaryText={
+                    moment(row.createdAt)
+                      .locale("id")
+                      .format("DD MMM YYYY")
+                  }
+                  subSecondaryText={
+                    moment(row.createdAt)
+                      .locale("id")
+                      .format("HH.mm")
+                  }
+                />
+              );
+            })}
+          </Grid>
+        )}
+      </TabPanel>
+
+      {/* Mau dihapus */}
       {user.role === "Admin" ? (
         <AnnouncementListItems
           order={order}
@@ -1265,7 +1349,6 @@ function AnnouncementList(props) {
           classes={classes}
           mine={true}
           handleOpenDeleteDialog={handleOpenDeleteDialog}
-          addBottomMargin={true}
         />
       ) : user.role === "Teacher" ? (
         <>
@@ -1273,14 +1356,12 @@ function AnnouncementList(props) {
             {...propsToPass}
             mine={true}
             author_role="Teacher"
-            addBottomMargin={true}
             handleOpenDeleteDialog={handleOpenDeleteDialog}
           />
           <AnnouncementSubList
             {...propsToPass}
             mine={false}
             author_role="Admin"
-            addBottomMargin={false}
           />
         </>
       ) : user.role === "Student" ? (
@@ -1289,23 +1370,21 @@ function AnnouncementList(props) {
             {...propsToPass}
             mine={user._id === kelas.ketua_kelas}
             author_role="Student"
-            addBottomMargin={true}
             handleOpenDeleteDialog={handleOpenDeleteDialog}
           />
           <AnnouncementSubList
             {...propsToPass}
             mine={false}
             author_role="Teacher"
-            addBottomMargin={true}
           />
           <AnnouncementSubList
             {...propsToPass}
             mine={false}
             author_role="Admin"
-            addBottomMargin={false}
           />
         </>
       ) : null}
+
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
@@ -1338,25 +1417,25 @@ function AnnouncementList(props) {
 
 AnnouncementList.propTypes = {
   auth: PropTypes.object.isRequired,
+  setCurrentClass: PropTypes.func.isRequired,
+  getUsers: PropTypes.func.isRequired,
   announcements: PropTypes.object.isRequired,
   getAnnouncement: PropTypes.func.isRequired,
   getAllAnnouncements: PropTypes.func.isRequired,
-  setCurrentClass: PropTypes.func.isRequired,
-  getUsers: PropTypes.func.isRequired,
   getAdminAnnouncements: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  announcements: state.announcementsCollection,
   classesCollection: state.classesCollection,
+  announcements: state.announcementsCollection,
 });
 
 export default connect(mapStateToProps, {
+  setCurrentClass,
+  getUsers,
   getAnnouncement,
   getAllAnnouncements,
   getAdminAnnouncements,
-  getUsers,
-  setCurrentClass,
   deleteAnnouncement,
 })(AnnouncementList);

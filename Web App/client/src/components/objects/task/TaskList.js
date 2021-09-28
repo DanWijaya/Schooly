@@ -630,7 +630,6 @@ function TaskList(props) {
         rowCount={rows ? rows.length : 0}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
-        //Two props added for search filter.
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
       />
