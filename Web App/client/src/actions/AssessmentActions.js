@@ -59,29 +59,6 @@ export const createAssessment = (formData, assessment, history) => (
     });
 };
 
-/* export const gradeAssessment = (assessment_id, gradingData, rslv) => (
-  dispatch
-) => {
-  axios
-    .post(`/api/assessments/grade/${assessment_id}`, gradingData)
-    .then((res) => {
-      console.log("Assessment updated to be :", res.data);
-      rslv(res.data);
-      dispatch({
-        type: GET_SUCCESS_RESPONSE,
-        payload: true,
-      });
-      return res.data;
-    })
-    .catch((err) => {
-      console.log(err);
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      });
-    });
-}; */
-
 export const updateAssessment = (
   formData,
   assessmentData,
@@ -93,14 +70,13 @@ export const updateAssessment = (
   return axios
     .put(`/api/assessments/update/${assessmentId}`, assessmentData)
     .then((res) => {
-      console.log(lampiran_to_delete);
       dispatch({
         type: GET_ERRORS,
         payload: false,
       });
       if (lampiran_to_delete.length > 0) {
         return axios.delete(`/api/files/assessments/${assessmentId}`, {
-          data: { file_to_delete: lampiran_to_delete },
+          data: { id_to_delete: lampiran_to_delete },
         });
       } else {
         // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
@@ -129,10 +105,6 @@ export const updateAssessment = (
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");
-      // dispatch({
-      //   type: GET_SUCCESS_RESPONSE,
-      //   payload: true,
-      // });
       return true;
     })
 
@@ -196,7 +168,6 @@ export const deleteAssessment = (id, type = "Kuis", history = null) => (
   return axios
     .delete(`/api/assessments/delete/${id}`)
     .then((res) => {
-      console.log(res.data);
       let lampiran_to_delete = [];
       let { questions } = res.data;
       questions.forEach((question) => {
@@ -205,12 +176,8 @@ export const deleteAssessment = (id, type = "Kuis", history = null) => (
       });
       console.log("Lampiran to delete: ", lampiran_to_delete);
       if (lampiran_to_delete.length > 0) {
-        return axios.delete(`/api/files/assessments/${id}`);
+        return axios.delete(`/api/files/assessments/all/${id}`);
       }
-      // return axios.delete(
-      //   `/api/upload/att_assessment/lampiran/${"deleteall"}`,
-      //   { data: { lampiran_to_delete: lampiran_to_delete } }
-      // );
       return "Assessment deleted has no lampiran";
     })
     .then((res) => {
@@ -221,7 +188,6 @@ export const deleteAssessment = (id, type = "Kuis", history = null) => (
             pathname: "/daftar-kuis",
             openDeleteSnackbar: true,
           });
-          // window.location.href = "/daftar-kuis";
         } else {
           history.push({
             pathname: "/daftar-ujian",
@@ -345,11 +311,6 @@ export const getKeyAnswers = (assessmentId) => {
       throw err.response.data;
     });
 };
-
-// export const getSubmissionsByStd = (assessmentId) => {
-//   return axios.get(`/api/assessments/submissionsByStd/${assessmentId}`)
-
-// }
 
 // Implementasinya dengan cara urutkan soal berdasarkan jumlah benar oleh murid murid.
 export const getQuestionAnalytics = (assessmentId, top_K = 10) => {

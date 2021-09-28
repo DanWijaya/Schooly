@@ -120,10 +120,6 @@ export const deleteAnnouncement = (
       console.log("Deleted: ", res.data);
       // let lampiran_to_delete = Array.from(res.data.lampiran)
       return axios.delete(`/api/files/announcements/all/${announcementId}`);
-      // if (lampiran_to_delete.length > 0){
-      //   return axios.delete(`/api/upload/att_announcement/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete}})
-      // }
-      // return "Announcement deleted has no lampiran"
     })
     .then((res) => {
       console.log(res);
@@ -134,7 +130,6 @@ export const deleteAnnouncement = (
         });
       }
       return true;
-      // window.location.href = "/daftar-pengumuman";
     })
     .catch((err) => {
       console.log(err);
