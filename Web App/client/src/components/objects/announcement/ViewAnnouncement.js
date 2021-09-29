@@ -14,6 +14,7 @@ import CustomLinkify from "../../misc/linkify/Linkify";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
+  Button,
   Divider,
   Fab,
   Grid,
@@ -24,9 +25,12 @@ import {
   Paper,
   Typography
 } from "@material-ui/core";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
+import {
+  Announcement as AnnouncementIcon,
+  CloudDownload as CloudDownloadIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   FaFile,
@@ -48,16 +52,11 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "100%",
     },
   },
-  paperBox: {
+  announcementPaper: {
     padding: "20px",
   },
-  listItemPaper: {
-    marginBottom: "10px",
-  },
-  listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
+  announcementDivider: {
+    backgroundColor: theme.palette.primary.light,
   },
   teacherButtonContainer: {
     display: "flex",
@@ -72,6 +71,19 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
   },
+  deleteAnnouncementButton: {
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
+  },
+  listItem: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.fade,
+    },
+  },
   downloadIconButton: {
     marginLeft: "5px",
     backgroundColor: theme.palette.primary.main,
@@ -79,14 +91,6 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: "white",
       color: theme.palette.primary.main,
-    },
-  },
-  deleteAnnouncementButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
     },
   },
   wordFileTypeIcon: {
@@ -113,9 +117,6 @@ const useStyles = makeStyles((theme) => ({
   deadlineWarningText: {
     color: theme.palette.warning.main,
   },
-  dividerColor: {
-    backgroundColor: theme.palette.primary.main,
-  },
 }));
 
 const path = require("path");
@@ -131,7 +132,7 @@ function LampiranFile(props) {
 
   return (
     <Grid item xs={12} sm={6}>
-      <Paper variant="outlined" className={classes.listItemPaper}>
+      <Paper variant="outlined">
         <ListItem
           button
           disableRipple
@@ -278,40 +279,49 @@ function ViewAnnouncement(props) {
     <div className={classes.root}>
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          <Paper className={classes.paperBox}>
+          <Paper className={classes.announcementPaper}>
             <Grid container spacing={2}>
-              <Grid item xs={12} style={{ paddingBottom: "0" }}>
-                <Typography variant="h4">
+              <Grid item xs={12}>
+                <Typography variant="h4" style={{ marginBottom: "5px" }}>
                   {selectedAnnouncements.title}
                 </Typography>
-              </Grid>
-              <Grid item xs={12} style={{ paddingTop: "0" }}>
-                <h6 style={{ marginBottom: "0" }}>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    // style={{ marginTop: "10px" }}
-                  >
-                    Oleh:{" "}
-                    <b>
-                      {!retrieved_users.size ||
-                      !selectedAnnouncements.author_id ||
-                      !retrieved_users.get(selectedAnnouncements.author_id)
-                        ? ""
-                        : retrieved_users.get(selectedAnnouncements.author_id)
-                            .name}
-                    </b>
-                  </Typography>
-                </h6>
+                <Typography color="primary" paragraph>
+                  Pengumuman
+                </Typography>
+                {/*Ini mau bikin logicnya ngapit typographynya kalau ada <typography> Oleh: user.name</typo> : null */}
                 <Typography variant="body2" color="textSecondary">
-                  Waktu Dibuat:{" "}
-                  {moment(selectedAnnouncements.createdAt)
+                  Oleh: {!retrieved_users.size || !selectedAnnouncements.author_id || !retrieved_users.get(selectedAnnouncements.author_id)
+                    ? ""
+                    : retrieved_users.get(selectedAnnouncements.author_id).name}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Waktu Dibuat: {moment(selectedAnnouncements.createdAt)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Divider className={classes.dividerColor} />
+                <Divider className={classes.announcementDivider} />
+              </Grid>
+              <Grid item xs={12} container justify="flex-end">
+                <Grid item>
+                  <Button
+                    color="primary"
+                    startIcon={<EditIcon />}
+                  >
+                    <Typography variant="body2">
+                      Sunting
+                    </Typography>
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    color="error"
+                    startIcon={<DeleteIcon />}
+                  >
+                    Hapus
+                  </Button>
+                </Grid>
               </Grid>
               {retrieved_users.get(selectedAnnouncements.author_id) ? user.role === "Teacher" &&
               retrieved_users.size &&
@@ -340,8 +350,7 @@ function ViewAnnouncement(props) {
                   </Typography>
                 </Grid>
               ) : null :null}
-
-              <Grid item xs={12}>
+              <Grid item>
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Pengumuman:
                 </Typography>
@@ -374,11 +383,9 @@ function ViewAnnouncement(props) {
             </Grid>
           </Paper>
         </Grid>
-        {user.role === "Admin" ||
-        user._id === selectedAnnouncements.author_id ? ( // kalau studentnya ketua kelas yang buat pengumumannya
+        {user.role === "Admin" || user._id === selectedAnnouncements.author_id ? (
           <Grid item container justify="flex-end" alignItems="center">
             <Grid item>
-              {/* <div className={classes.teacherButtonContainer}> */}
               <Link to={`/sunting-pengumuman/${announcement_id}`}>
                 <LightTooltip title="Sunting Pengumuman" placement="bottom">
                   <Fab className={classes.editAnnouncementButton}>
@@ -398,8 +405,7 @@ function ViewAnnouncement(props) {
               </LightTooltip>
             </Grid>
           </Grid>
-        ) : // {/* </div> */}
-        null}
+        ) : null}
       </Grid>
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
