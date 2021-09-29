@@ -58,11 +58,6 @@ function FileAttachment(props) {
   const classes = useStyles();
   const { file_id, fileCategory, filename, filetype, onDownloadFile, onPreviewFile } = props;
 
-  let displayedName = "";
-  filename.length >= 26
-    ? (displayedName = `${filename.slice(0, 25)}..${path.extname(filename)}`)
-    : (displayedName = filename);
-
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
     switch (ext_file) {
@@ -135,7 +130,7 @@ function FileAttachment(props) {
         <ListItemText
           primary={
             <Typography noWrap>
-              {displayedName}
+              {filename}
             </Typography>
           }
           secondary={

@@ -32,6 +32,7 @@ import {
   Edit as EditIcon
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import { fade } from "@material-ui/core/styles/colorManipulator";
 import {
   FaFile,
   FaFileAlt,
@@ -54,29 +55,28 @@ const useStyles = makeStyles((theme) => ({
   },
   announcementPaper: {
     padding: "20px",
-  },
-  announcementDivider: {
-    backgroundColor: theme.palette.primary.light,
-  },
-  teacherButtonContainer: {
-    display: "flex",
-    justifyContent: "flex-end",
-  },
-  editAnnouncementButton: {
-    marginRight: "10px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
+    [theme.breakpoints.down("xs")]: {
+      padding: "15px",
     },
   },
-  deleteAnnouncementButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
+  announcementDivider: {
+    margin: "22.5px 0px",
+    backgroundColor: theme.palette.primary.light,
+  },
+  editButton: {
+    width: "110px",
+    textTransform: "none",
+    color: theme.palette.primary.main,
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
+      backgroundColor: theme.palette.primary.fade,
+    },
+  },
+  deleteButton: {
+    width: "110px",
+    textTransform: "none",
+    color: theme.palette.error.main,
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.fade,
     },
   },
   listItem: {
@@ -131,58 +131,56 @@ function LampiranFile(props) {
     : (displayedName = filename);
 
   return (
-    <Grid item xs={12} sm={6}>
-      <Paper variant="outlined">
-        <ListItem
-          button
-          disableRipple
-          className={classes.listItem}
-          onClick={() => {
-            onPreviewFile(file_id, "lampiran_announcement");
-          }}
-        >
-          <ListItemAvatar>
-            {filetype === "Word" ? (
-              <Avatar className={classes.wordFileTypeIcon}>
-                <FaFileWord />
-              </Avatar>
-            ) : filetype === "Excel" ? (
-              <Avatar className={classes.excelFileTypeIcon}>
-                <FaFileExcel />
-              </Avatar>
-            ) : filetype === "Gambar" ? (
-              <Avatar className={classes.imageFileTypeIcon}>
-                <FaFileImage />
-              </Avatar>
-            ) : filetype === "PDF" ? (
-              <Avatar className={classes.pdfFileTypeIcon}>
-                <FaFilePdf />
-              </Avatar>
-            ) : filetype === "Teks" ? (
-              <Avatar className={classes.textFileTypeIcon}>
-                <FaFileAlt />
-              </Avatar>
-            ) : filetype === "Presentasi" ? (
-              <Avatar className={classes.presentationFileTypeIcon}>
-                <FaFilePowerpoint />
-              </Avatar>
-            ) : filetype === "File Lainnya" ? (
-              <Avatar className={classes.otherFileTypeIcon}>
-                <FaFile />
-              </Avatar>
-            ) : null}
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <LightTooltip title={filename} placement="top">
-                <Typography variant="subtitle2">{displayedName}</Typography>
-              </LightTooltip>
-            }
-            secondary={filetype}
-          />
-        </ListItem>
-      </Paper>
-    </Grid>
+    <Paper variant="outlined">
+      <ListItem
+        button
+        disableRipple
+        className={classes.listItem}
+        onClick={() => {
+          onPreviewFile(file_id, "lampiran_announcement");
+        }}
+      >
+        <ListItemAvatar>
+          {filetype === "Word" ? (
+            <Avatar className={classes.wordFileTypeIcon}>
+              <FaFileWord />
+            </Avatar>
+          ) : filetype === "Excel" ? (
+            <Avatar className={classes.excelFileTypeIcon}>
+              <FaFileExcel />
+            </Avatar>
+          ) : filetype === "Gambar" ? (
+            <Avatar className={classes.imageFileTypeIcon}>
+              <FaFileImage />
+            </Avatar>
+          ) : filetype === "PDF" ? (
+            <Avatar className={classes.pdfFileTypeIcon}>
+              <FaFilePdf />
+            </Avatar>
+          ) : filetype === "Teks" ? (
+            <Avatar className={classes.textFileTypeIcon}>
+              <FaFileAlt />
+            </Avatar>
+          ) : filetype === "Presentasi" ? (
+            <Avatar className={classes.presentationFileTypeIcon}>
+              <FaFilePowerpoint />
+            </Avatar>
+          ) : filetype === "File Lainnya" ? (
+            <Avatar className={classes.otherFileTypeIcon}>
+              <FaFile />
+            </Avatar>
+          ) : null}
+        </ListItemAvatar>
+        <ListItemText
+          primary={
+            <LightTooltip title={filename} placement="top">
+              <Typography variant="subtitle2">{displayedName}</Typography>
+            </LightTooltip>
+          }
+          secondary={filetype}
+        />
+      </ListItem>
+    </Paper>
   );
 }
 
@@ -277,136 +275,116 @@ function ViewAnnouncement(props) {
 
   return (
     <div className={classes.root}>
-      <Grid container direction="column" spacing={2}>
-        <Grid item>
-          <Paper className={classes.announcementPaper}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography variant="h4" style={{ marginBottom: "5px" }}>
-                  {selectedAnnouncements.title}
-                </Typography>
-                <Typography color="primary" paragraph>
-                  Pengumuman
-                </Typography>
-                {/*Ini mau bikin logicnya ngapit typographynya kalau ada <typography> Oleh: user.name</typo> : null */}
-                <Typography variant="body2" color="textSecondary">
-                  Oleh: {!retrieved_users.size || !selectedAnnouncements.author_id || !retrieved_users.get(selectedAnnouncements.author_id)
-                    ? ""
-                    : retrieved_users.get(selectedAnnouncements.author_id).name}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Waktu Dibuat: {moment(selectedAnnouncements.createdAt)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider className={classes.announcementDivider} />
-              </Grid>
-              <Grid item xs={12} container justify="flex-end">
-                <Grid item>
+      <Paper className={classes.announcementPaper}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h4" style={{ marginBottom: "5px" }}>
+              {selectedAnnouncements.title}
+            </Typography>
+            <Typography color="primary" paragraph>
+              Pengumuman
+            </Typography>
+            {/*Ini mau bikin logicnya ngapit typographynya kalau ada <typography> Oleh: user.name</typo> : null */}
+            <Typography variant="body2" color="textSecondary">
+              Oleh: {!retrieved_users.size || !selectedAnnouncements.author_id || !retrieved_users.get(selectedAnnouncements.author_id)
+                ? ""
+                : retrieved_users.get(selectedAnnouncements.author_id).name}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Waktu Dibuat: {moment(selectedAnnouncements.createdAt)
+                .locale("id")
+                .format("DD MMM YYYY, HH:mm")}
+            </Typography>
+          </Grid>
+          {user.role === "Admin" || user._id === selectedAnnouncements.author_id ? (
+            <Grid item xs={12} container justify="flex-start" spacing={1}>
+              <Grid item>
+                <Link to={`/sunting-pengumuman/${announcement_id}`}>
                   <Button
-                    color="primary"
-                    startIcon={<EditIcon />}
+                    variant="outlined"
+                    className={classes.editButton}
+                    startIcon={<EditIcon style={{ color: "grey" }} />}
                   >
-                    <Typography variant="body2">
+                    <Typography>
                       Sunting
                     </Typography>
                   </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    color="error"
-                    startIcon={<DeleteIcon />}
-                  >
-                    Hapus
-                  </Button>
-                </Grid>
+                </Link>
               </Grid>
-              {retrieved_users.get(selectedAnnouncements.author_id) ? user.role === "Teacher" &&
-              retrieved_users.size &&
-              selectedAnnouncements.author_id &&
-              retrieved_users.get(selectedAnnouncements.author_id).role ===
-                "Teacher" ? (
-                <Grid item xs={12} style={{ marginBottom: "15px" }}>
-                  <Typography color="textSecondary" gutterBottom>
-                    Kelas yang Diberikan:
-                  </Typography>
-                  <Typography>
-                    {!selectedAnnouncements.class_assigned ||
-                    !all_classes_map.size
-                      ? null
-                      : selectedAnnouncements.class_assigned.map((kelas, i) => {
-                          if (all_classes_map.get(kelas)) {
-                            if (
-                              i ===
-                              selectedAnnouncements.class_assigned.length - 1
-                            )
-                              return `${all_classes_map.get(kelas).name}`;
-                            return `${all_classes_map.get(kelas).name}, `;
-                          }
-                          return null;
-                        })}
-                  </Typography>
-                </Grid>
-              ) : null :null}
               <Grid item>
-                <Typography color="textSecondary" gutterBottom>
-                  Deskripsi Pengumuman:
-                </Typography>
-                <Typography
-                  variant="body1"
-                  align="justify"
-                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-                >
-                  <CustomLinkify text={selectedAnnouncements.description} />
-                </Typography>
-              </Grid>
-              {!fileLampiran.length === 0 ? null : (
-                <Grid item xs={12} style={{ marginTop: "15px" }}>
-                  <Typography color="textSecondary" gutterBottom>
-                    Lampiran Berkas:
-                  </Typography>
-                  <Grid item container spacing={1}>
-                    {fileLampiran.map((lampiran) => (
-                      <LampiranFile
-                        file_id={lampiran._id}
-                        onPreviewFile={viewFileAnnouncement}
-                        onDownloadFile={downloadFileAnnouncements}
-                        filename={lampiran.filename}
-                        filetype={fileType(lampiran.filename)}
-                      />
-                    ))}
-                  </Grid>
-                </Grid>
-              )}
-            </Grid>
-          </Paper>
-        </Grid>
-        {user.role === "Admin" || user._id === selectedAnnouncements.author_id ? (
-          <Grid item container justify="flex-end" alignItems="center">
-            <Grid item>
-              <Link to={`/sunting-pengumuman/${announcement_id}`}>
-                <LightTooltip title="Sunting Pengumuman" placement="bottom">
-                  <Fab className={classes.editAnnouncementButton}>
-                    <EditIcon />
-                  </Fab>
-                </LightTooltip>
-              </Link>
-            </Grid>
-            <Grid item>
-              <LightTooltip title="Hapus Pengumuman" placement="bottom">
-                <Fab
-                  className={classes.deleteAnnouncementButton}
+                <Button
+                  variant="outlined"
+                  className={classes.deleteButton}
+                  startIcon={<DeleteIcon style={{ color: "grey" }} />}
                   onClick={(e) => handleOpenDeleteDialog(e, announcement_id)}
                 >
-                  <DeleteIcon />
-                </Fab>
-              </LightTooltip>
+                  <Typography>
+                    Hapus
+                  </Typography>
+                </Button>
+              </Grid>
             </Grid>
+          ) : null}
+        </Grid>
+        <Divider className={classes.announcementDivider} />
+        <Grid container spacing={4}>
+          {retrieved_users.get(selectedAnnouncements.author_id) ? user.role === "Teacher" &&
+            retrieved_users.size &&
+            selectedAnnouncements.author_id &&
+            retrieved_users.get(selectedAnnouncements.author_id).role === "Teacher" ? (
+            <Grid item xs={12}>
+              <Typography color="textSecondary" gutterBottom>
+                Diberikan kepada:
+              </Typography>
+              <Typography>
+                {!selectedAnnouncements.class_assigned ||
+                !all_classes_map.size
+                  ? null
+                  : selectedAnnouncements.class_assigned.map((kelas, i) => {
+                      if (all_classes_map.get(kelas)) {
+                        if (i === selectedAnnouncements.class_assigned.length - 1)
+                          return `${all_classes_map.get(kelas).name}`;
+                        return `${all_classes_map.get(kelas).name}, `;
+                      }
+                      return null;
+                    })}
+              </Typography>
+            </Grid>
+          ) : null : null}
+          <Grid item>
+            <Typography color="textSecondary" gutterBottom>
+              Deskripsi Pengumuman:
+            </Typography>
+            <Typography
+              variant="body1"
+              align="justify"
+              style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+            >
+              <CustomLinkify text={selectedAnnouncements.description} />
+            </Typography>
           </Grid>
-        ) : null}
-      </Grid>
+          {!fileLampiran.length === 0 ? null : (
+            <Grid item xs={12}>
+              <Typography color="textSecondary" gutterBottom>
+                Lampiran Berkas:
+              </Typography>
+              <Grid container spacing={1}>
+                {fileLampiran.map((lampiran) => (
+                  <Grid item xs={12} sm={6}>
+                    <LampiranFile
+                      file_id={lampiran._id}
+                      onPreviewFile={viewFileAnnouncement}
+                      onDownloadFile={downloadFileAnnouncements}
+                      filename={lampiran.filename}
+                      filetype={fileType(lampiran.filename)}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+          )}
+        </Grid>
+      </Paper>
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}

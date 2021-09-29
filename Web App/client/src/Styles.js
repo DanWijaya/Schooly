@@ -34,6 +34,7 @@ const Styles = responsiveFontSizes(
         main: "#F44336",
         light: "#E57373",
         dark: "#D32F2F",
+        fade: fade("#F44336", 0.15),
       },
       dropbox: {
         main: "#0D2481",
