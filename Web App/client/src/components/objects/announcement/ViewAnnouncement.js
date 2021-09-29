@@ -26,7 +26,6 @@ import {
   Typography
 } from "@material-ui/core";
 import {
-  Announcement as AnnouncementIcon,
   CloudDownload as CloudDownloadIcon,
   Delete as DeleteIcon,
   Edit as EditIcon
@@ -84,15 +83,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  downloadIconButton: {
-    marginLeft: "5px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
   wordFileTypeIcon: {
     backgroundColor: "#16B0DD",
   },
@@ -113,9 +103,6 @@ const useStyles = makeStyles((theme) => ({
   },
   otherFileTypeIcon: {
     backgroundColor: "#808080",
-  },
-  deadlineWarningText: {
-    color: theme.palette.warning.main,
   },
 }));
 
@@ -174,7 +161,7 @@ function LampiranFile(props) {
         <ListItemText
           primary={
             <LightTooltip title={filename} placement="top">
-              <Typography variant="subtitle2">{displayedName}</Typography>
+              <Typography variant="subtitle2" noWrap>{displayedName}</Typography>
             </LightTooltip>
           }
           secondary={filetype}
@@ -271,13 +258,15 @@ function ViewAnnouncement(props) {
     setOpenDeleteDialog(false);
   };
 
-  document.title = "Schooly | Lihat Pengumuman";
+  document.title = !selectedAnnouncements.title
+    ? "Schooly | Lihat Pengumuman"
+    : `Schooly | ${selectedAnnouncements.title}`;
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.announcementPaper}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
+      <Grid container direction="column" spacing={3}>
+        <Grid item>
+          <Paper className={classes.announcementPaper}>
             <Typography variant="h4" style={{ marginBottom: "5px" }}>
               {selectedAnnouncements.title}
             </Typography>
@@ -295,96 +284,95 @@ function ViewAnnouncement(props) {
                 .locale("id")
                 .format("DD MMM YYYY, HH:mm")}
             </Typography>
-          </Grid>
-          {user.role === "Admin" || user._id === selectedAnnouncements.author_id ? (
-            <Grid item xs={12} container justify="flex-start" spacing={1}>
+            <Divider className={classes.announcementDivider} />
+            <Grid container spacing={4}>
+              {retrieved_users.get(selectedAnnouncements.author_id) ? user.role === "Teacher" &&
+                retrieved_users.size &&
+                selectedAnnouncements.author_id &&
+                retrieved_users.get(selectedAnnouncements.author_id).role === "Teacher" ? (
+                <Grid item xs={12}>
+                  <Typography color="textSecondary" gutterBottom>
+                    Diberikan kepada:
+                  </Typography>
+                  <Typography>
+                    {!selectedAnnouncements.class_assigned ||
+                    !all_classes_map.size
+                      ? null
+                      : selectedAnnouncements.class_assigned.map((kelas, i) => {
+                          if (all_classes_map.get(kelas)) {
+                            if (i === selectedAnnouncements.class_assigned.length - 1)
+                              return `${all_classes_map.get(kelas).name}`;
+                            return `${all_classes_map.get(kelas).name}, `;
+                          }
+                          return null;
+                        })}
+                  </Typography>
+                </Grid>
+              ) : null : null}
               <Grid item>
-                <Link to={`/sunting-pengumuman/${announcement_id}`}>
-                  <Button
-                    variant="outlined"
-                    className={classes.editButton}
-                    startIcon={<EditIcon style={{ color: "grey" }} />}
-                  >
-                    <Typography>
-                      Sunting
-                    </Typography>
-                  </Button>
-                </Link>
+                <Typography color="textSecondary" gutterBottom>
+                  Deskripsi Pengumuman:
+                </Typography>
+                <Typography
+                  align="justify"
+                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                >
+                  <CustomLinkify text={selectedAnnouncements.description} />
+                </Typography>
               </Grid>
-              <Grid item>
+              {!fileLampiran.length === 0 ? null : (
+                <Grid item xs={12}>
+                  <Typography color="textSecondary" gutterBottom>
+                    Lampiran Berkas:
+                  </Typography>
+                  <Grid container spacing={1}>
+                    {fileLampiran.map((lampiran) => (
+                      <Grid item xs={12} sm={6}>
+                        <LampiranFile
+                          file_id={lampiran._id}
+                          onPreviewFile={viewFileAnnouncement}
+                          onDownloadFile={downloadFileAnnouncements}
+                          filename={lampiran.filename}
+                          filetype={fileType(lampiran.filename)}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Grid>
+              )}
+            </Grid>
+          </Paper>
+        </Grid>
+        {user.role === "Admin" || user._id === selectedAnnouncements.author_id ? (
+          <Grid item container justify="flex-end" alignItems="center" spacing={1}>
+            <Grid item>
+              <Link to={`/sunting-pengumuman/${announcement_id}`}>
                 <Button
                   variant="outlined"
-                  className={classes.deleteButton}
-                  startIcon={<DeleteIcon style={{ color: "grey" }} />}
-                  onClick={(e) => handleOpenDeleteDialog(e, announcement_id)}
+                  className={classes.editButton}
+                  startIcon={<EditIcon style={{ color: "grey" }} />}
                 >
                   <Typography>
-                    Hapus
+                    Sunting
                   </Typography>
                 </Button>
-              </Grid>
+              </Link>
             </Grid>
-          ) : null}
-        </Grid>
-        <Divider className={classes.announcementDivider} />
-        <Grid container spacing={4}>
-          {retrieved_users.get(selectedAnnouncements.author_id) ? user.role === "Teacher" &&
-            retrieved_users.size &&
-            selectedAnnouncements.author_id &&
-            retrieved_users.get(selectedAnnouncements.author_id).role === "Teacher" ? (
-            <Grid item xs={12}>
-              <Typography color="textSecondary" gutterBottom>
-                Diberikan kepada:
-              </Typography>
-              <Typography>
-                {!selectedAnnouncements.class_assigned ||
-                !all_classes_map.size
-                  ? null
-                  : selectedAnnouncements.class_assigned.map((kelas, i) => {
-                      if (all_classes_map.get(kelas)) {
-                        if (i === selectedAnnouncements.class_assigned.length - 1)
-                          return `${all_classes_map.get(kelas).name}`;
-                        return `${all_classes_map.get(kelas).name}, `;
-                      }
-                      return null;
-                    })}
-              </Typography>
+            <Grid item>
+              <Button
+                variant="outlined"
+                className={classes.deleteButton}
+                startIcon={<DeleteIcon style={{ color: "grey" }} />}
+                onClick={(e) => handleOpenDeleteDialog(e, announcement_id)}
+              >
+                <Typography>
+                  Hapus
+                </Typography>
+              </Button>
             </Grid>
-          ) : null : null}
-          <Grid item>
-            <Typography color="textSecondary" gutterBottom>
-              Deskripsi Pengumuman:
-            </Typography>
-            <Typography
-              variant="body1"
-              align="justify"
-              style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-            >
-              <CustomLinkify text={selectedAnnouncements.description} />
-            </Typography>
           </Grid>
-          {!fileLampiran.length === 0 ? null : (
-            <Grid item xs={12}>
-              <Typography color="textSecondary" gutterBottom>
-                Lampiran Berkas:
-              </Typography>
-              <Grid container spacing={1}>
-                {fileLampiran.map((lampiran) => (
-                  <Grid item xs={12} sm={6}>
-                    <LampiranFile
-                      file_id={lampiran._id}
-                      onPreviewFile={viewFileAnnouncement}
-                      onDownloadFile={downloadFileAnnouncements}
-                      filename={lampiran.filename}
-                      filetype={fileType(lampiran.filename)}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
-          )}
-        </Grid>
-      </Paper>
+        ) : null}
+      </Grid>
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
