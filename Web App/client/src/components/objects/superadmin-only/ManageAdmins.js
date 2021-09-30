@@ -489,7 +489,6 @@ function ManageUsersToolbar(props) {
                   <LightTooltip title="Sunting Unit Pengelola">
                     <Link to="/sunting-pengelola">
                       <IconButton
-                        disabled
                         className={classes.checkboxModeButton}
                       >
                         <BiSitemap />

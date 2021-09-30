@@ -89,12 +89,10 @@ import ManageAdmins from "./components/objects/superadmin-only/ManageAdmins";
 import ManagePendingAdmins from "./components/objects/superadmin-only/ManagePendingAdmins";
 import CreateUnit from "./components/objects/superadmin-only/CreateUnit";
 import EditUnit from "./components/objects/superadmin-only/CreateUnit";
-//Dropbox
-// import DropboxConnect from "./components/dropbox/DropboxConnect";
-// import DropboxAuth from "./components/dropbox/DropboxAuth";
-
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
 import ViewUnit from "./components/objects/superadmin-only/ViewUnit";
+import AdminList from "./components/objects/user/AdminList";
+
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -578,6 +576,12 @@ class App extends Component {
                         access={[Role.ADMIN]}
                         path="/sunting-guru"
                         component={TeacherList}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/sunting-pengelola"
+                        component={AdminList}
                       />
                       {/* Route Event */}
                       <PrivateRoute

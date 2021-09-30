@@ -7,6 +7,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 
 const useStyles = makeStyles((theme) => ({
     classPaper: {
@@ -54,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
     function ClassItem(props) {
-    const { data } = props;
+    const { data, handleOpenDeleteDialog } = props;
     const { user } = props.auth;
     const classes = useStyles();
     const [colorMap, setColorMap] = React.useState(new Map());
@@ -139,63 +141,80 @@ const useStyles = makeStyles((theme) => ({
                   alignItems="center"
                   className={classes.classActionContainer}
                 >
-                  {user.role === "Admin" ? (
-                    <Grid
-                      item
-                      xs
-                      container
-                      spacing={1}
-                      justify="flex-end"
-                      alignItems="center"
-                    >
-                      <Grid item>
-                        <LightTooltip title="Jumlah Murid">
-                          <Badge
-                            badgeContent={cl.size}
-                            color="secondary"
-                            anchorOrigin={{
-                              vertical: "bottom",
-                              horizontal: "left",
-                            }}
-                            showZero
-                          >
-                            <IconButton size="small" disabled>
-                              <SupervisorAccountIcon
-                                className={classes.classPersonIcon}
-                              />
+                   {user.role === "Admin" ? (
+                      <Grid
+                        container
+                        spacing={1}
+                        justify="flex-end"
+                        alignItems="center"
+                      >
+                        <Grid item>
+                          <LightTooltip title="Jumlah Murid">
+                            <Badge
+                              showZero
+                              color={cl.size === 0 ? "error" : "primary"}
+                              badgeContent={cl.size}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                            >
+                              <SupervisorAccountIcon className={classes.classPersonIcon} />
+                            </Badge>
+                          </LightTooltip>
+                        </Grid>
+                        <Grid item>
+                          <LightTooltip title="Sunting">
+                            <Link
+                              to={`/sunting-kelas/${cl._id}`}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <IconButton size="small" className={classes.editClassButton}>
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
+                        </Grid>
+                        <Grid item>
+                          <LightTooltip title="Hapus">
+                            <IconButton
+                              size="small"
+                              className={classes.deleteClassButton}
+                              onClick={(e) =>
+                                handleOpenDeleteDialog(
+                                  e,
+                                  cl._id,
+                                  cl.name
+                                )
+                              }
+                            >
+                              <DeleteIcon fontSize="small" />
                             </IconButton>
-                          </Badge>
-                        </LightTooltip>
+                          </LightTooltip>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  ) : (
-                    <Grid
-                      container
-                      direction="row"
-                      justify="flex-end"g31
-                      alignItems="center"
-                    >
-                      <Grid item>
-                        <LightTooltip title="Jumlah Murid">
-                          <Badge
-                            badgeContent={cl.size}
-                            color="secondary"
-                            anchorOrigin={{
-                              vertical: "bottom",
-                              horizontal: "left",
-                            }}
-                            showZero
-                          >
-                            <IconButton size="small" disabled>
-                              <SupervisorAccountIcon
-                                className={classes.classPersonIcon}
-                              />
-                            </IconButton>
-                          </Badge>
-                        </LightTooltip>
+                    ) : (
+                      <Grid
+                        container
+                        justify="flex-end"
+                      >
+                        <Grid item>
+                          <LightTooltip title="Jumlah Murid">
+                            <Badge
+                              showZero
+                              color={cl.size === 0 ? "error" : "primary"}
+                              badgeContent={cl.size}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                            >
+                              <SupervisorAccountIcon className={classes.classPersonIcon} />
+                            </Badge>
+                          </LightTooltip>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  )}
+                    )}
                 </Grid>
               </Paper>
               </Link>

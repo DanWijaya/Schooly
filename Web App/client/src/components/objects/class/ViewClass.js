@@ -1612,7 +1612,7 @@ function ViewClass(props) {
                         {[
                           <Grid item>
                             <PersonListItem
-                              person_avatar={walikelas._id ? avatar[walikelas._id] : null}
+                              person_avatar={isObjEmpty(walikelas) ? null : avatar[walikelas._id]}
                               person_name={student.name}
                               person_role={student_role(student._id)}
                             />
