@@ -149,23 +149,18 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer"
     },
   },
-  checkButton: {
+  cancelButton: {
+    width: "100px",
+    color: theme.palette.text.secondary,
+  },
+  saveButton: {
+    width: "100px",
     backgroundColor: theme.palette.success.main,
     color: "white",
-    marginTop: "6px",
-    marginRight: "3px",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.dark
     },
   },
-  cancelButton: {
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    marginTop: "6px",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark
-    },
-  }
 }));
 
 const path = require("path");
@@ -476,48 +471,51 @@ function ViewMaterial(props) {
   // Comment
   const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
     return (
-      <Grid container spacing={2}>
+      <Grid container spacing={2} wrap="nowrap">
         <Grid item>
-          <Avatar src={commentAvatar[author_id]}/>
+          <Avatar src={commentAvatar[author_id]} />
         </Grid>
-        <Grid item xs container direction="column">
-          <Grid item>
+        <Grid item xs zeroMinWidth container>
+          <Grid item xs={12}>
             <Typography variant="body2" noWrap>
-              {authorName}
-               {edited === true ? "Disunting" : null} • {moment(date)
-              .locale("id").format("DD MMM YYYY, HH.mm")}
+              {authorName} <span style={{ color: "grey" }}>
+              {edited === true ? "(Disunting)" : null} • {moment(date)
+              .locale("id").format("DD MMM YYYY, HH.mm")}</span>
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item xs={12}>
           {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
-            <div style={{display: "flex", flexDirection: "column"}}>
-              <TextField
-                multiline
-                variant="outlined"
-                onChange={handleCommentEditorChange}
-                value={commentEditorValue}
-              />
-              <div style={{display: "flex", alignItems: "center"}}>
-                <Button
-                  variant="contained"
-                  color="default"
-                  className={classes.checkButton}
-                  startIcon={<CheckCircleIcon />}
-                  onClick={handleEditComment}
-                >
-                  Simpan
-                </Button>
-                <Button
-                  variant="contained"
-                  color="default"
-                  className={classes.cancelButton}
-                  startIcon={<CancelIcon />}
-                  onClick={closeEditMode}
-                >
-                  Batal
-                </Button>
-              </div>
-            </div>
+            <Grid container direction="column" spacing={1}>
+              <Grid item>
+                <TextField
+                  fullWidth
+                  multiline
+                  variant="outlined"
+                  onChange={handleCommentEditorChange}
+                  value={commentEditorValue}
+                />
+              </Grid>
+              <Grid item container spacing={1}>
+                <Grid item>
+                  <Button
+                    className={classes.cancelButton}
+                    startIcon={<CancelIcon />}
+                    onClick={closeEditMode}
+                  >
+                    Batal
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    className={classes.saveButton}
+                    startIcon={<CheckCircleIcon />}
+                    onClick={handleEditComment}
+                  >
+                    Simpan
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
           :
             <Typography align="justify" style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}>
               {comment}

@@ -10,7 +10,7 @@ import { getUsers } from "../../../actions/UserActions";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
+import { TabPanel } from "../../misc/tab-panel/TabPanel";
 import AnnouncementItem from "../item/AnnouncementItem";
 import {
   Avatar,

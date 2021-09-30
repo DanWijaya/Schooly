@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Grid, List, ListItem } from "@material-ui/core";
+import { Avatar, IconButton, Button, Grid, List, ListItem, Typography } from "@material-ui/core";
 import {
   LibraryBooks as LibraryBooksIcon,
 } from "@material-ui/icons";
@@ -71,6 +71,29 @@ function Tester(props) {
         // onSubmit={onSubmit}
         messageLoading="Jawaban Anda sedang disimpan"
       />
+      <Grid container spacing={2} wrap="nowrap">
+        <Grid item>
+          <Avatar/>
+        </Grid>
+        <Grid item xs container zeroMinWidth>
+          <Grid item xs={12}>
+            <Typography noWrap>
+              AAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAa
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}>
+              AAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAa
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Avatar/>
+          <Avatar/>
+        </Grid>
+      </Grid>
+
+
       <Grid>
         <Grid container alignItems="stretch" justify="space-between" style={{border: "1px solid black"}}>
           <Grid item
@@ -85,7 +108,6 @@ function Tester(props) {
           </Grid>
         </Grid>
       </Grid>
-
       <div>
         <div style={{display: "flex", justifyContent: "space-between", alignItems: "stretch", border: "1px solid black"}}>
           <div

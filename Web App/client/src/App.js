@@ -186,12 +186,7 @@ class App extends Component {
                   showNavBar={this.state.showNavBar}
                   sideDrawerExist={this.state.sideDrawerExist}
                 />
-                <div
-                  style={{
-                    flexGrow: "1",
-                    overflowX: "hidden",
-                  }}
-                >
+                <div style={{ flexGrow: "1", overflow: "hidden" }}>
                   {this.state.showNavBar ? <Toolbar /> : null}
                   {this.state.problemEncountered ? (
                     <ProblemEncountered

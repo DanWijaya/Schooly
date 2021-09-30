@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import CustomLinkify from "../../misc/linkify/Linkify";
-//Actions
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import {
@@ -36,6 +34,7 @@ import {
   getFileAvatar,
   getMultipleFileAvatar
 } from "../../../actions/files/FileAvatarActions";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -190,9 +189,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "20px"
   },
   mobileName: {
-    marginRight: "7px", 
-    whiteSpace: "nowrap", 
-    textOverflow: "ellipsis", 
+    marginRight: "7px",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
     overflow: "hidden",
     maxWidth: "50px",
   },
@@ -617,7 +616,7 @@ function ViewTaskTeacher(props) {
             </Hidden>
             <Hidden xsDown>
                 <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
-                {edited === true ? 
+                {edited === true ?
                   <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography>
                 : null}
                   <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>

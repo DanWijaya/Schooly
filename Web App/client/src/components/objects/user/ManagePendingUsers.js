@@ -1178,7 +1178,7 @@ function ManageUsers(props) {
               return (
                 <div>
                   <Link to={`/lihat-profil/${row._id}`}>
-                    <ListItem>
+                    <ListItem className={classes.accountItem}>
                       <ListItemIcon>
                       {booleanCheckboxStudent[index] ?
                         <Checkbox

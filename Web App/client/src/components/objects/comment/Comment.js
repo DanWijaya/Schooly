@@ -12,66 +12,55 @@ function Comment(props) {
 
   const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
     return (
-      <Grid container spacing={1}>
+      <Grid container spacing={2}>
         <Grid item>
           <Avatar src={commentAvatar[author_id]}/>
         </Grid>
-        <Grid item xs container direction="column">
-          <Grid item>
-            <Grid container spacing={1}>
-              <Grid item>
-                <Typography>
-                  {authorName}
-                </Typography>
-              </Grid>
-              {edited === true ?
-                <Grid item>
-                  <Typography color="textSecondary">
-                    Disunting
-                  </Typography>
-                </Grid>
-              : null}
-              <Grid item>
-                <Typography color="textSecondary" noWrap>
-                  • {moment(date).locale("id").format("DD MMM YYYY, HH.mm")}
-                </Typography>
-              </Grid>
-            </Grid>
+        <Grid item xs container>
+          <Grid item xs={12}>
+            <Typography variant="body2">
+              {authorName} <span style={{ color: "grey", display: "inline" }}>
+              {edited === true ? "(Disunting)" : null} • {moment(date)
+              .locale("id").format("DD MMM YYYY, HH.mm")}</span>
+            </Typography>
           </Grid>
-          <Grid item>
+          <Grid item xs={12}>
           {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
-              <div style={{display: "flex", flexDirection: "column"}}>
+            <Grid container direction="column" spacing={1}>
+              <Grid item>
                 <TextField
+                  fullWidth
                   multiline
                   variant="outlined"
                   onChange={handleCommentEditorChange}
                   value={commentEditorValue}
                 />
-                <div style={{display: "flex", alignItems: "center"}}>
+              </Grid>
+              <Grid item container spacing={1}>
+                <Grid item>
                   <Button
-                    variant="contained"
-                    color="default"
-                    className={classes.checkButton}
-                    startIcon={<CheckCircleIcon />}
-                    onClick={handleEditComment}
-                  >
-                    Simpan
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="default"
                     className={classes.cancelButton}
                     startIcon={<CancelIcon />}
                     onClick={closeEditMode}
                   >
                     Batal
                   </Button>
-                </div>
-              </div>
-            :
-              <Typography align="justify" style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}>
-                {comment}
-              </Typography>
+                </Grid>
+                <Grid item>
+                  <Button
+                    className={classes.saveButton}
+                    startIcon={<CheckCircleIcon />}
+                    onClick={handleEditComment}
+                  >
+                    Simpan
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          :
+            <Typography align="justify" style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}>
+              {comment}
+            </Typography>
           }
           </Grid>
         </Grid>

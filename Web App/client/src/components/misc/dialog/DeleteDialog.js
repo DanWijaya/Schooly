@@ -20,28 +20,16 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   deleteButton: {
-    maxWidth: "110px",
+    maxWidth: "90px",
     width: "100%",
-    border: `1px solid ${theme.palette.error.main}`,
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    "&:focus, &:hover": {
-      border: `1px solid ${theme.palette.error.dark}`,
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-    },
+    fontSize: "12px",
+    color: theme.palette.error.main,
   },
   cancelButton: {
-    maxWidth: "110px",
+    maxWidth: "90px",
     width: "100%",
-    border: `1px solid ${theme.palette.error.main}`,
-    backgroundColor: "white",
-    color: theme.palette.error.main,
-    "&:focus, &:hover": {
-      border: `1px solid ${theme.palette.error.dark}`,
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
+    fontSize: "12px",
+    color: theme.palette.text.secondary,
   },
 }));
 

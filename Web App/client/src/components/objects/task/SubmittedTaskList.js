@@ -1,17 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getOneTask, gradeTask } from "../../../actions/TaskActions";
 import moment from "moment";
-import {
-  getTaskFilesByUser,
-  // moveToDropbox,
-  downloadTugas,
-  previewTugas,
-} from "../../../actions/UploadActions";
-import { getStudents } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getStudents } from "../../../actions/UserActions";
+import { getTaskFilesByUser, downloadTugas, previewTugas } from "../../../actions/UploadActions";
+import { getFileSubmitTasks_T, viewFileSubmitTasks } from "../../../actions/files/FileSubmitTaskActions";
+import { getOneTask, gradeTask } from "../../../actions/TaskActions";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Box,
@@ -19,6 +16,8 @@ import {
   Divider,
   ExpansionPanel,
   ExpansionPanelSummary,
+  Grid,
+  Hidden,
   IconButton,
   List,
   ListItem,
@@ -27,14 +26,12 @@ import {
   ListItemText,
   Paper,
   Snackbar,
-  Tabs,
   Tab,
+  Tabs,
   TextField,
   Typography,
-  Grid,
-  Hidden,
 } from "@material-ui/core";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import GetAppIcon from "@material-ui/icons/GetApp";
@@ -49,13 +46,6 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import Alert from "@material-ui/lab/Alert";
-import {
-  getFileSubmitTasks_T,
-  viewFileSubmitTasks,
-} from "../../../actions/files/FileSubmitTaskActions";
-
-const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -149,6 +139,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const path = require("path");
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -193,9 +185,9 @@ function WorkFile(props) {
 
   let name_to_show;
   if(isLate){
-    name_to_show = <Typography color="error"> {`${file_name} (TELAT)` }</Typography>
+    name_to_show = <Typography color="error"> {`${file_name} (TELAT)`}</Typography>
   } else {
-    name_to_show = <Typography color="textPrimary"> {file_name}</Typography>
+    name_to_show = <Typography color="textPrimary">{file_name}</Typography>
   }
 
   return (
@@ -247,25 +239,11 @@ function WorkFile(props) {
             </Typography>
           }
         />
-        {/* <ListItemText
-          align="right"
-          primary={
-            <IconButton
-              size="small"
-              className={classes.downloadIconButton}
-              onClick={(e) => {
-                e.stopPropagation();
-                onDownloadFile(file_id, "lampiran");
-              }}
-            >
-              <CloudDownloadIcon fontSize="small" />
-            </IconButton>
-          }
-        /> */}
       </ListItem>
     </Paper>
   );
 }
+
 function GradeButton(props) {
   const classes = useStyles();
   const {
@@ -297,21 +275,6 @@ function GradeButton(props) {
   );
 }
 
-function UnduhSemuaButton(props) {
-  const classes = useStyles();
-  const { onDownloadFile, student_task_files_id } = props;
-  return (
-    <Button
-      variant="contained"
-      startIcon={<GetAppIcon />}
-      className={classes.downloadAllButton}
-      onClick={() => onDownloadFile(student_task_files_id, "lampiran/bulk")}
-    >
-      Unduh Semua
-    </Button>
-  );
-}
-
 function SubmittedTaskList(props) {
   const classes = useStyles();
   const {
@@ -321,18 +284,13 @@ function SubmittedTaskList(props) {
     getStudents,
     downloadTugas,
     previewTugas,
-    // moveToDropbox,
     gradeTask,
     success,
     getFileSubmitTasks_T,
     viewFileSubmitTasks,
   } = props;
+  const { all_students, user } = props.auth;
   const { all_classes } = props.classesCollection;
-  const {
-    all_students,
-    // dropbox_token,
-    user,
-  } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
   const task_id = props.match.params.id;
 
@@ -340,9 +298,6 @@ function SubmittedTaskList(props) {
   const [gradeStatus, setGradeStatus] = React.useState(new Map());
   const [openAlert, setOpenAlert] = React.useState(false);
   const [submittedFiles, setSubmittedFiles] = React.useState([]);
-
-  console.log(grade);
-  console.log(all_students);
 
   const handleOpenAlert = () => {
     setOpenAlert(true);
@@ -361,9 +316,6 @@ function SubmittedTaskList(props) {
       .then((res) => {
         setSubmittedFiles(res);
       })
-      .catch((err) =>
-        console.log("Terjadi error di fetching submitted task files")
-      );
   }, []);
 
   React.useEffect(() => {
@@ -377,7 +329,6 @@ function SubmittedTaskList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasksCollection._id, success]);
 
-  console.log(success);
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -392,17 +343,14 @@ function SubmittedTaskList(props) {
   const onDownloadFile = (id, fileCategory = "none") => {
     if (fileCategory === "lampiran") downloadTugas(id);
     else if (fileCategory === "lampiran/bulk") {
-      console.log(id);
       for (var i = 0; i < id.length; i++) {
         downloadTugas(id[i]);
       }
     }
-    console.log("File Category is not specified");
   };
 
   const onPreviewFile = (id, fileCategory = "none") => {
     if (fileCategory === "lampiran") viewFileSubmitTasks(id);
-    else console.log("File Category is not specified");
   };
 
   const onGradeTugas = (
@@ -412,13 +360,10 @@ function SubmittedTaskList(props) {
     student_name,
     grade
   ) => {
-    console.log(studentId, grade);
-    console.log(grade.get(studentId));
     let gradingData = {
       grade: parseInt(grade.get(studentId)),
       studentId: studentId,
     };
-    console.log(gradingData);
     let gradeStatusMap = gradeStatus;
 
     if (grade.has(studentId)) {
@@ -471,7 +416,6 @@ function SubmittedTaskList(props) {
   }
 
   const handleExportTask = () => {
-    console.log(tasksCollection);
     let result = "";
     let classArray = [];
     tasksCollection.class_assigned.forEach((kelas, i) => {
@@ -485,11 +429,9 @@ function SubmittedTaskList(props) {
       }
       classArray.push([kelas]);
     });
-    console.log(Object.keys(tasksCollection.grades));
 
     let gradeKeys = Object.keys(tasksCollection.grades);
     let gradeValues = Object.values(tasksCollection.grades);
-    console.log(gradeValues);
     gradeKeys.forEach((student_id, i) => {
       let studentData = all_students.find((std) => std._id === student_id);
       if (studentData) {
@@ -529,7 +471,6 @@ function SubmittedTaskList(props) {
         }
       }
     }
-    console.log(result);
     const blob = new Blob([result], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -588,12 +529,9 @@ function SubmittedTaskList(props) {
         .filter((s) => tasksCollection.class_assigned[value] === s.kelas)
         .map((student, idx) => {
           // untuk setiap file yang pernah dikumpulkan murid ini.
-          console.log(submittedFiles);
           let students_files = submittedFiles.filter((f) => {
             return f.author_id == student._id;
           });
-          console.log(student._id);
-          console.log(students_files);
           let task_list_on_panel;
 
           if (students_files.length > 0) {
@@ -603,7 +541,6 @@ function SubmittedTaskList(props) {
               if(file.createdAt > tasksCollection.deadline){
                 isLate=true;
               }
-              console.log("Ini filenya:", file);
               return (
               <WorkFile
                 isLate={isLate}
@@ -645,7 +582,6 @@ function SubmittedTaskList(props) {
                     primary={
                       <Typography variant="h6">{student.name}</Typography>
                     }
-                    //  secondary={task_list_on_panel.length === 0 || !tasksCollection.grades ? "Belum dikumpul" : Boolean(tasksCollection.grades[student._id]) ? "Graded" : "Not Graded" }/>
                     secondary={
                       !tasksCollection.grades
                         ? "Not graded"
@@ -701,16 +637,11 @@ function SubmittedTaskList(props) {
                     <div>
                       <GradeButton
                         onGradeTugas={onGradeTugas}
-                        // student_task_files_id={student_task_files_id}
                         task_id={task_id}
                         student_id={student._id}
                         student_name={student.name}
                         grade={grade}
                       />
-                      {/* <UnduhSemuaButton
-                          onDownloadFile={onDownloadFile}
-                          // student_task_files_id={student_task_files_id}
-                        /> */}
                     </div>
                   </div>
                 ) : null}
@@ -738,26 +669,12 @@ function SubmittedTaskList(props) {
       );
       return TabPanelList;
     }
-
-    // return tasksCollection.class_assigned.length > 0 ? TabPanelList : null;
   };
 
   document.title = "Schooly | Daftar Tugas Terkumpul";
-  console.log(success);
-  // Before that, run this :
+
   return (
     <div className={classes.root}>
-      <Snackbar
-        open={openAlert}
-        autoHideDuration={4000}
-        onClose={handleCloseAlert}
-        anchorOrigin={{ vertical: "center", horizontal: "center" }}
-      >
-        <Alert elevation={6} variant="filled" onClose={handleCloseAlert} severity="success">
-          Nilai {!success ? null : success[2]} berhasil diganti menjadi{" "}
-          {!success ? null : success[1]}
-        </Alert>
-      </Snackbar>
       <Paper className={classes.paperBox}>
         <Grid container spacing={2}>
           <Grid item xs={12} style={{ paddingBottom: "0" }}>
@@ -828,6 +745,17 @@ function SubmittedTaskList(props) {
         </Grid>
       </Paper>
       {listClassTabPanel()}
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={4000}
+        onClose={handleCloseAlert}
+        anchorOrigin={{ vertical: "center", horizontal: "center" }}
+      >
+        <Alert elevation={6} variant="filled" onClose={handleCloseAlert} severity="success">
+          Nilai {!success ? null : success[2]} berhasil diganti menjadi{" "}
+          {!success ? null : success[1]}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
