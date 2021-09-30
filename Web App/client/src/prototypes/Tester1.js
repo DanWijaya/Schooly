@@ -71,25 +71,30 @@ function Tester(props) {
         // onSubmit={onSubmit}
         messageLoading="Jawaban Anda sedang disimpan"
       />
-      <Grid container spacing={2} wrap="nowrap">
+      {/*Comment Model*/}
+      <Grid container direction="column" wrap="nowrap">
         <Grid item>
-          <Avatar/>
-        </Grid>
-        <Grid item xs container zeroMinWidth>
-          <Grid item xs={12}>
-            <Typography noWrap>
-              AAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAa
-            </Typography>
+          <Grid container spacing={2} wrap="nowrap">
+            <Grid item>
+              <Avatar/>
+            </Grid>
+            <Grid item xs zeroMinWidth container>
+              <Grid item xs={12}>
+                <Typography variant="body2" noWrap>
+                  AAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAa
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}>
+                  AAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAa
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Avatar/>
+              <Avatar/>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Typography style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}>
-              AAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAa
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Avatar/>
-          <Avatar/>
         </Grid>
       </Grid>
 

@@ -471,7 +471,7 @@ function ViewMaterial(props) {
   // Comment
   const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
     return (
-      <Grid container spacing={2} wrap="nowrap">
+      <Grid container wrap="nowrap" spacing={2}>
         <Grid item>
           <Avatar src={commentAvatar[author_id]} />
         </Grid>
@@ -552,7 +552,7 @@ function ViewMaterial(props) {
 
   return (
     <div className={classes.root}>
-      <Grid container direction="column" spacing={3}>
+      <Grid container wrap="nowrap" direction="column" spacing={3}>
         <Grid item>
           <Paper className={classes.materialPaper}>
             <Typography variant="h4" style={{ marginBottom: "5px" }}>
@@ -662,7 +662,7 @@ function ViewMaterial(props) {
             <Divider />
             {(commentList.length !== 0) ?
                 <div style={{ padding: "16px 0px" }}>
-                  <Grid container direction="column" spacing={2}>
+                  <Grid container wrap="nowrap" direction="column" spacing={2}>
                     {commentList.map((comment, idx) => (
                         <Grid item>
                           {generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)}

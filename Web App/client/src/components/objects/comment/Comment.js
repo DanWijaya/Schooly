@@ -1,5 +1,26 @@
 import React from "react";
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: "20px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "15px",
+    },
+  },
+  cancelButton: {
+    width: "100px",
+    color: theme.palette.text.secondary,
+  },
+  saveButton: {
+    width: "100px",
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.dark
+    },
+  },
+}));
+
 function Comment(props) {
   const [commentValue, setCommentValue] = React.useState("");
   const [commentEditorValue, setCommentEditorValue] = React.useState("");
@@ -12,14 +33,14 @@ function Comment(props) {
 
   const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
     return (
-      <Grid container spacing={2}>
+      <Grid container wrap="nowrap" spacing={2}>
         <Grid item>
-          <Avatar src={commentAvatar[author_id]}/>
+          <Avatar src={commentAvatar[author_id]} />
         </Grid>
-        <Grid item xs container>
+        <Grid item xs zeroMinWidth container>
           <Grid item xs={12}>
-            <Typography variant="body2">
-              {authorName} <span style={{ color: "grey", display: "inline" }}>
+            <Typography variant="body2" noWrap>
+              {authorName} <span style={{ color: "grey" }}>
               {edited === true ? "(Disunting)" : null} • {moment(date)
               .locale("id").format("DD MMM YYYY, HH.mm")}</span>
             </Typography>
@@ -88,14 +109,14 @@ function Comment(props) {
   };
 
   return (
-    <Paper className={classes.commentPaper}>
+    <Paper className={classes.root}>
       <Typography variant="h6" gutterBottom>
         Komentar Kelas
       </Typography>
       <Divider />
       {(commentList.length !== 0) ?
           <div style={{ padding: "16px 0px" }}>
-            <Grid container direction="column" spacing={2}>
+            <Grid container wrap="nowrap" direction="column" spacing={2}>
               {commentList.map((comment, idx) => (
                   <Grid item>
                     {generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)}
