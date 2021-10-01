@@ -463,9 +463,8 @@ function ViewMaterial(props) {
     : () => {
       handleDeleteComment(idx);
     }  };
-
   const handleCloseDeleteCommentDialog = () => {
-    // setDeleteCommentIdx(null) will be tun after material is reloaded.
+    // setDeleteCommentIdx(null) will be run after material is reloaded.
     setOpenDeleteCommentDialog(false);
   };
 
@@ -553,7 +552,6 @@ function ViewMaterial(props) {
 
   return (
     <div className={classes.root}>
-      {/* noWrap is used for comment section */}
       <Grid container wrap="nowrap" direction="column" spacing={3}>
         <Grid item>
           <Paper className={classes.materialPaper}>
@@ -609,7 +607,7 @@ function ViewMaterial(props) {
               {fileLampiran.length === 0 ? null : (
                 <Grid item xs={12}>
                   <Typography color="textSecondary" gutterBottom>
-                    Lampiran Berkas:
+                    Lampiran:
                   </Typography>
                   <Grid container spacing={1}>
                     {fileLampiran.map((lampiran) => (
@@ -684,7 +682,7 @@ function ViewMaterial(props) {
         <Grid item>
           <Paper className={classes.commentPaper}>
             <Typography variant="h6" gutterBottom>
-              Komentar Kelas
+              Komentar
             </Typography>
             <Divider />
             {(commentList.length !== 0) ?

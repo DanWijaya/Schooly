@@ -327,7 +327,7 @@ function ViewAnnouncement(props) {
               {!fileLampiran.length === 0 ? null : (
                 <Grid item xs={12}>
                   <Typography color="textSecondary" gutterBottom>
-                    Lampiran Berkas:
+                    Lampiran:
                   </Typography>
                   <Grid container spacing={1}>
                     {fileLampiran.map((lampiran) => (

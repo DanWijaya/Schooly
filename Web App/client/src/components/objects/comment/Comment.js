@@ -111,21 +111,21 @@ function Comment(props) {
   return (
     <Paper className={classes.root}>
       <Typography variant="h6" gutterBottom>
-        Komentar Kelas
+        Komentar
       </Typography>
       <Divider />
       {(commentList.length !== 0) ?
-          <div style={{ padding: "16px 0px" }}>
-            <Grid container wrap="nowrap" direction="column" spacing={2}>
-              {commentList.map((comment, idx) => (
-                  <Grid item>
-                    {generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)}
-                  </Grid>
-                ))
-              }
-            </Grid>
-            <Divider style={{ marginTop: "16px" }} />
-          </div>
+        <div style={{ padding: "16px 0px" }}>
+          <Grid container wrap="nowrap" direction="column" spacing={2}>
+            {commentList.map((comment, idx) => (
+                <Grid item>
+                  {generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)}
+                </Grid>
+              ))
+            }
+          </Grid>
+          <Divider style={{ marginTop: "16px" }} />
+        </div>
         : null
       }
       <Grid container spacing={2}>
