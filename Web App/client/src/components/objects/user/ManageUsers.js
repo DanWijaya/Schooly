@@ -17,7 +17,6 @@ import {
   Checkbox,
   Dialog,
   Divider,
-  FormControlLabel,
   Grid,
   Hidden,
   IconButton,
@@ -37,7 +36,6 @@ import {
   Typography
 } from "@material-ui/core";
 import {
-  ArrowBack as ArrowBackIcon,
   Block as BlockIcon,
   Cancel as CancelIcon,
   CheckBox as CheckBoxIcon,

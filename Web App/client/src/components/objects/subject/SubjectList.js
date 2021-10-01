@@ -13,11 +13,9 @@ import {
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import UploadDialog from "../../misc/dialog/UploadDialog";
 import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
-  Avatar,
   Button,
   Dialog,
   Divider,
@@ -28,7 +26,6 @@ import {
   InputAdornment,
   Menu,
   MenuItem,
-  Paper,
   Snackbar,
   TableSortLabel,
   TextField,
@@ -36,14 +33,10 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
-  ArrowBack as ArrowBackIcon,
   Cancel as CancelIcon,
   Clear as ClearIcon,
-  Close as CloseIcon,
-  Delete as DeleteIcon,
   Edit as EditIcon,
   MoreVert as MoreVertIcon,
-  LibraryAdd as LibraryAddIcon,
   LibraryBooks as LibraryBooksIcon,
   Search as SearchIcon,
   SortByAlpha as SortByAlphaIcon
@@ -137,7 +130,7 @@ function SubjectListToolbar(props) {
               onClick={handleOpenFormDialog}
               className={classes.createSubjectButton}
             >
-              <LibraryAddIcon className={classes.createSubjectIconDesktop} />
+              <LibraryBooksIcon className={classes.createSubjectIconDesktop} />
               Buat Mata Pelajaran
             </Fab>
           </Hidden>
@@ -148,7 +141,7 @@ function SubjectListToolbar(props) {
                 onClick={handleOpenFormDialog}
                 className={classes.createSubjectButton}
               >
-                <LibraryAddIcon className={classes.createSubjectIconMobile} />
+                <LibraryBooksIcon className={classes.createSubjectIconMobile} />
               </Fab>
             </LightTooltip>
           </Hidden>
@@ -463,19 +456,18 @@ function SubjectList(props) {
 
   const handleOpenSnackbar = (action) => {
     let content = "Mata Pelajaran berhasil "
-    if(action == "Create"){
+    if(action === "Create"){
       content += "dibuat"
       setSnackbarContent(content);
-    } else if(action == "Edit"){
+    } else if(action === "Edit"){
       content += "disunting"
       setSnackbarContent(content);
-    } else if(action == "Delete"){
+    } else if(action === "Delete"){
       content += "dihapus"
       setSnackbarContent(content)
     } else{
       return;
     }
-
     setOpenSnackbar(true);
   }
 

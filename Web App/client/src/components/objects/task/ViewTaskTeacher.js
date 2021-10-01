@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -57,7 +57,6 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import Alert from "@material-ui/lab/Alert";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import {
@@ -73,7 +72,6 @@ import SendIcon from '@material-ui/icons/Send';
 import CreateIcon from '@material-ui/icons/Create';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
-import axios from "axios";
 import { getFileSubmitTasks_T } from "../../../actions/files/FileSubmitTaskActions";
 
 const path = require("path");

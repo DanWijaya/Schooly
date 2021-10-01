@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -23,8 +22,6 @@ import {
   ExpansionPanelDetails,
   ExpansionPanelSummary,
   Grid,
-  Hidden,
-  List,
   Paper,
   Typography
 } from "@material-ui/core";

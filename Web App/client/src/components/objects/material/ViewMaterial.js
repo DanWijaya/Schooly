@@ -33,30 +33,25 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
-  Box,
   Button,
-  CircularProgress,
   Divider,
-  Fab,
   Grid,
   Hidden,
   IconButton,
   InputAdornment,
-  List,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  ListItemSecondaryAction,
   Paper,
   Snackbar,
   TextField,
+  Tooltip,
   Typography
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
   Cancel as CancelIcon,
   CheckCircle as CheckCircleIcon,
-  CloudDownload as CloudDownloadIcon,
   Create as CreateIcon,
   Delete as DeleteIcon,
   Edit as EditIcon,
@@ -97,16 +92,22 @@ const useStyles = makeStyles((theme) => ({
     width: "110px",
     textTransform: "none",
     color: theme.palette.primary.main,
-    "&:focus, &:hover": {
+    "&:hover": {
       backgroundColor: theme.palette.primary.fade,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
     },
   },
   deleteButton: {
     width: "110px",
     textTransform: "none",
     color: theme.palette.error.main,
-    "&:focus, &:hover": {
+    "&:hover": {
       backgroundColor: theme.palette.error.fade,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
     },
   },
   listItem: {
@@ -552,6 +553,7 @@ function ViewMaterial(props) {
 
   return (
     <div className={classes.root}>
+      {/* noWrap is used for comment section */}
       <Grid container wrap="nowrap" direction="column" spacing={3}>
         <Grid item>
           <Paper className={classes.materialPaper}>
@@ -629,28 +631,53 @@ function ViewMaterial(props) {
           <Grid item container justify="flex-end" alignItems="center" spacing={1}>
             <Grid item>
               <Link to={`/sunting-materi/${materi_id}`}>
-                <Button
-                  variant="outlined"
-                  className={classes.editButton}
-                  startIcon={<EditIcon style={{ color: "grey" }} />}
-                >
-                  <Typography>
-                    Sunting
-                  </Typography>
-                </Button>
+                <Hidden xsDown>
+                  <Button
+                    variant="outlined"
+                    className={classes.editButton}
+                    startIcon={<EditIcon style={{ color: "grey" }} />}
+                  >
+                    <Typography>
+                      Sunting
+                    </Typography>
+                  </Button>
+                </Hidden>
+                <Hidden smUp>
+                  <Tooltip title="Sunting">
+                    <Button
+                      variant="outlined"
+                      className={classes.editButton}
+                    >
+                      <EditIcon />
+                    </Button>
+                  </Tooltip>
+                </Hidden>
               </Link>
             </Grid>
             <Grid item>
-              <Button
-                variant="outlined"
-                className={classes.deleteButton}
-                startIcon={<DeleteIcon style={{ color: "grey" }} />}
-                onClick={(e) => handleOpenDeleteDialog(e, materi_id)}
-              >
-                <Typography>
-                  Hapus
-                </Typography>
-              </Button>
+              <Hidden xsDown>
+                <Button
+                  variant="outlined"
+                  className={classes.deleteButton}
+                  startIcon={<DeleteIcon style={{ color: "grey" }} />}
+                  onClick={(e) => handleOpenDeleteDialog(e, materi_id)}
+                >
+                  <Typography>
+                    Hapus
+                  </Typography>
+                </Button>
+              </Hidden>
+              <Hidden smUp>
+                <Tooltip title="Hapus">
+                  <Button
+                    variant="outlined"
+                    className={classes.deleteButton}
+                    onClick={(e) => handleOpenDeleteDialog(e, materi_id)}
+                  >
+                    <DeleteIcon />
+                  </Button>
+                </Tooltip>
+              </Hidden>
             </Grid>
           </Grid>
         ) : null}

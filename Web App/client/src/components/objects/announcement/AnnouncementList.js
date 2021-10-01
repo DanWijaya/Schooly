@@ -40,7 +40,6 @@ import {
   ArrowBack as ArrowBackIcon,
   Clear as ClearIcon,
   Edit as EditIcon,
-  Error as ErrorIcon,
   Delete as DeleteIcon,
   Pageview as PageviewIcon,
   Search as SearchIcon,
