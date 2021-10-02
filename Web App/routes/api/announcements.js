@@ -107,14 +107,14 @@ router.get("/viewAdmin", (req, res) => {
     },
   ])
     .then((result) => {
-      res.json(
+      return res.json(
         result.filter((ann) => {
           return ann.author_info[0].role === "Admin";
         })
       );
     })
-    .catch(() => {
-      res.status(500).json(err);
+    .catch((err) => {
+      throw res.status(500).json(err);
     });
 });
 
