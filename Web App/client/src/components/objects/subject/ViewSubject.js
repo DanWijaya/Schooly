@@ -14,7 +14,7 @@ import { getAllAssessments } from "../../../actions/AssessmentActions";
 import subjectBackground from "./subject-background/SubjectBackground";
 import Empty from "../../misc/empty/Empty";
 import AssessmentItem from "../item/AssessmentItem";
-import AssignmentItem from "../item/AssignmentItem";
+import TaskItem from "../item/TaskItem";
 import MaterialItem from "../item/MaterialItem";
 import {
   Divider,
@@ -299,7 +299,7 @@ function ViewSubject(props) {
           ) {
             result.push(
               <Grid item>
-                <AssignmentItem
+                <TaskItem
                   link={`/tugas-murid/${task._id}`}
                   primaryText={task.name}
                   status={assignmentStatus}
@@ -327,7 +327,7 @@ function ViewSubject(props) {
           ) {
             result.push(
               <Grid item>
-                <AssignmentItem
+                <TaskItem
                   link={`/tugas-murid/${task._id}`}
                   primaryText={task.name}
                   status={assignmentStatus}

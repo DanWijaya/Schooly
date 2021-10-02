@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AssignmentItem(props) {
+function TaskItem(props) {
   const classes = useStyles();
   const { link, status, missing, primaryText, subPrimaryText, secondaryText, subSecondaryText } = props;
 
@@ -98,4 +98,4 @@ function AssignmentItem(props) {
   );
 }
 
-export default AssignmentItem;
+export default TaskItem;
