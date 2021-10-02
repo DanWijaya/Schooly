@@ -234,32 +234,28 @@ router.get("/by_user/:id", (req, res) => {
       console.log("No avatar added");
       return res.json("No avatar is added");
     }
-    // let params = {
-    //   Bucket: keys.awsKey.AWS_BUCKET_NAME,
-    //   Key: result.s3_key,
-    //   Expires: 5 * 60,
-    //   ResponseContentDisposition: `inline;filename=${result.filename}`,
-    // };
-    // const url = s3bucket.getSignedUrl("getObject", params);
+  
     const url = `${keys.cdn}/${result.s3_key}`;
     return res.status(200).json(url);
   });
 });
 
-router.get("/multi_user", (req, res) => {
+router.get("/multiuser", (req, res) => {
   // req.body is in list.
   let { id_list } = req.query;
-  console.log(id_list);
-  id_list = id_list.map((id) => ObjectId(String(id)));
+  if(!Array.isArray(id_list)){
+    id_list = [];
+  }
+  id_list = id_list.map((id) => ObjectId(id));
   FileAvatar.find({ user_id: { $in: id_list } }, (err, avatars) => {
     if (!avatars) {
-      return res.status(400).json("Users not found");
+      console.log("Users avatar is not found at all")
+      return res.status(400).json({});
     }
     console.log(avatars);
     var urls = {};
     avatars.forEach((a) => {
       urls[a.user_id] = `${keys.cdn}/${a.s3_key}`;
-      // urls.set(u._id, `${keys.cdn}/${u.s3_key}`)
     });
     console.log("URL:", urls);
 

@@ -7,7 +7,7 @@ import "moment/locale/id";
 import {
   setUserDeactivated,
   deleteUser,
-  getAdmins,
+  getAllAdmins,
 } from "../../../actions/UserActions";
 import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -488,9 +488,7 @@ function ManageUsersToolbar(props) {
                 <>
                   <LightTooltip title="Sunting Unit Pengelola">
                     <Link to="/sunting-pengelola">
-                      <IconButton
-                        className={classes.checkboxModeButton}
-                      >
+                      <IconButton className={classes.checkboxModeButton}>
                         <BiSitemap />
                       </IconButton>
                     </Link>
@@ -762,7 +760,7 @@ function ManageAdmins(props) {
   const [searchFilterT, updateSearchFilterT] = React.useState("");
   const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
 
-  const { setUserDeactivated, deleteUser, getAdmins } = props;
+  const { setUserDeactivated, deleteUser, getAllAdmins } = props;
   const { all_admins, user } = props.auth;
 
   let rows = [];
@@ -801,7 +799,7 @@ function ManageAdmins(props) {
   let currentListBooleanTeacher;
 
   React.useEffect(() => {
-    getAdmins();
+    getAllAdmins();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -983,15 +981,14 @@ function ManageAdmins(props) {
 
   const onDeleteUser = (id) => {
     deleteUser(id).then((res) => {
-      getAdmins();
+      getAllAdmins();
       handleOpenSnackbar("Pengelola berhasil dihapus");
       handleCloseDeleteDialog();
-
     });
   };
   const onDeactivateUser = (id) => {
     setUserDeactivated(id).then((res) => {
-      getAdmins();
+      getAllAdmins();
       handleOpenSnackbar("Pengelola berhasil dinonaktifkan");
       handleCloseDeactivateDialog();
     });
@@ -1150,7 +1147,7 @@ function ManageAdmins(props) {
         onClose={handleCloseDeactivateDialog}
         itemName={selectedUserName}
         onAction={() => {
-          onDeactivateUser(selectedUserId)
+          onDeactivateUser(selectedUserId);
         }}
       />
       <DeleteDialog
@@ -1350,7 +1347,7 @@ function ManageAdmins(props) {
 ManageAdmins.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   setUserDeactivated: PropTypes.func.isRequired,
-  getAdmins: PropTypes.func.isRequired,
+  getAllAdmins: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   deleteUser: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
@@ -1365,5 +1362,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   setUserDeactivated,
   deleteUser,
-  getAdmins,
+  getAllAdmins,
 })(ManageAdmins);

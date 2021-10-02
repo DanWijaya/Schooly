@@ -1,30 +1,35 @@
 import React from "react";
-// import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { getAdmins, getTeachers, updateTeacher } from "../../../actions/UserActions";
-import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getAllClass } from "../../../actions/ClassActions";
+import { getAllAdmins, updateTeacher } from "../../../actions/UserActions";
+import { getAllUnits } from "../../../actions/UnitActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Divider,
+  FormControl,
   ExpansionPanel,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
   Grid,
   InputAdornment,
+  InputLabel,
   IconButton,
   Hidden,
   Menu,
   MenuItem,
+  ListItem,
+  ListItemText,
   TableSortLabel,
   TextField,
   Typography,
+  FormHelperText,
   ListItemAvatar,
   Dialog,
   Avatar,
   Button,
+  Chip,
+  Select,
   Snackbar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
@@ -35,12 +40,11 @@ import { GoSearch } from "react-icons/go";
 import { BiSitemap } from "react-icons/bi";
 import CloseIcon from "@material-ui/icons/Close";
 import ClearIcon from "@material-ui/icons/Clear";
-import { Autocomplete } from "@material-ui/lab";
 import MuiAlert from "@material-ui/lab/Alert";
-import { getAllUnits, getAllUnitsMap } from "../../../actions/UnitActions"
 
-function createData(_id, name, email) {
-  return { _id, name, email };
+function createData(data) {
+  const { _id, name, email, unit } = data;
+  return { _id, name, email, unit };
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -131,7 +135,7 @@ function AdminListToolbar(props) {
               }}
             >
               <BiSitemap className={classes.titleIcon} fontSize="large" />
-              <Typography variant="h4">Sunting Data Ajar Pengelola</Typography>
+              <Typography variant="h4">Sunting Unit Pengelola</Typography>
             </div>
           )}
         </Hidden>
@@ -144,7 +148,7 @@ function AdminListToolbar(props) {
             }}
           >
             <BiSitemap className={classes.titleIcon} fontSize="large" />
-            <Typography variant="h4">Sunting Data Ajar Pengelola</Typography>
+            <Typography variant="h4">Sunting Unit Pengelola</Typography>
           </div>
         </Hidden>
         <Hidden mdUp implementation="css">
@@ -321,6 +325,15 @@ function AdminListToolbar(props) {
   );
 }
 
+// TeacherListToolbar.propTypes = {
+//   classes: PropTypes.object.isRequired,
+//   onRequestSort: PropTypes.func.isRequired,
+//   onSelectAllClick: PropTypes.func.isRequired,
+//   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+//   orderBy: PropTypes.string.isRequired,
+//   rowCount: PropTypes.number.isRequired,
+// };
+
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
@@ -383,9 +396,6 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
   },
   listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
     padding: "6px 16px",
   },
   saveButton: {
@@ -394,6 +404,14 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       color: theme.palette.primary.main,
       backgroundColor: "white",
+    },
+  },
+  select: {
+    minWidth: "150px",
+    maxWidth: "150px",
+    [theme.breakpoints.down("xs")]: {
+      minWidth: "100px",
+      maxWidth: "100px",
     },
   },
   cancelButton: {
@@ -406,25 +424,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AdminList(props) {
+function TeacherList(props) {
   const classes = useStyles();
 
   const {
-    getAllSubjects,
-    getAllClass,
-    getTeachers,
+    getAllAdmins,
     updateTeacher,
     clearErrors,
     clearSuccess,
-    getAdmins,
-    getAllUnits
+    getAllUnits,
   } = props;
   const { user, all_admins } = props.auth;
   const { all_units } = props.unitsCollection;
   const errors = props.errors;
   const success = props.success;
 
-  const all_teacher_obj = React.useRef({});
+  const all_admin_obj = React.useRef({});
   const [rows, setRows] = React.useState([]);
   /*
     isi:
@@ -438,7 +453,7 @@ function AdminList(props) {
     } key -> id semua Pengelola yang ada di db
   */
   const [selectedValues, setSelectedValues] = React.useState({});
-  const [inputValues, setInputValues] = React.useState({});
+
   // SEARCH
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
@@ -451,35 +466,61 @@ function AdminList(props) {
   const [snackbarContent, setSnackbarContent] = React.useState("");
   const [severity, setSeverity] = React.useState("info");
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
-  
 
   React.useEffect(() => {
-
-    const request = async () => {
-      //Dapatin data data admin dan semua units yang diperlukan.
-      const admins = await getAdmins();
-      const unitsMap = await getAllUnitsMap();
-      setRows(admins);
-      let tempSelectedValues = {};
-      let tempInputValues = {};
-      admins.forEach((a) => {
-        tempSelectedValues[a._id] = a.unit;
-        tempInputValues[a._id] = unitsMap[a.unit];
-      });
-
-      setSelectedValues(tempSelectedValues);
-      setInputValues(tempInputValues);
-    }
-    request();
-
+    getAllAdmins();
+    getAllUnits();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  React.useEffect(() => {
+    if (all_admins) {
+      let tempRows = [];
+      let tempSelectedValues = {};
+      tempRows = all_admins
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchFilter.toLowerCase())
+        )
+        .map((data) => {
+          //   tempRows.push(createData(data._id, data.name, data.email));
+          all_admin_obj.current[data._id] = data;
+          tempSelectedValues[data._id] = data.unit;
+          return createData(data);
+        });
+      setRows(tempRows);
+      setSelectedValues(tempSelectedValues);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [all_admins]);
 
+  React.useEffect(() => {
+    if (all_admins) {
+      setRows(
+        all_admins
+          .filter((item) =>
+            item.name.toLowerCase().includes(searchFilter.toLowerCase())
+          )
+          .map((data) => createData(data))
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchFilter]);
+
+  React.useEffect(() => {
+    if (
+      errors &&
+      errors.constructor === Object &&
+      Object.keys(errors).length !== 0
+    ) {
+      handleOpenSnackbar("error", "Data Pengelola gagal disimpan");
+      clearErrors();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errors]);
 
   React.useEffect(() => {
     if (success) {
-      handleOpenSnackbar("success", "Data pengelola berhasil disimpan");
+      handleOpenSnackbar("success", "Data Pengelola berhasil disimpan");
       clearSuccess();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -494,20 +535,6 @@ function AdminList(props) {
   }, []);
 
   // AUTOCOMPLETE: untuk memilih subject yang diajar dan kelas yang diajar tiap Pengelola
-
-  function handleSelectedValues(data, adminId){
-    setSelectedValues({
-      ...selectedValues,
-      [adminId] : data._id
-    });
-  }
-
-  function handleInputValues(data, adminId){
-    setInputValues({
-      ...inputValues,
-      [adminId] : data.name
-    })
-  }
 
   function handleRequestSort(event, property) {
     const isAsc = orderBy === property && order === "asc";
@@ -528,8 +555,15 @@ function AdminList(props) {
     setOpenSnackbar(false);
   }
 
-  function handleSave(teacherId) {
-    let teacher = selectedValues[teacherId];
+  function onUnitChange(e, adminId) {
+    setSelectedValues({
+      ...selectedValues,
+      [adminId]: e.target.value,
+    });
+  }
+
+  function handleSave(adminId) {
+    let teacher = selectedValues[adminId];
     let newSubjectTeached = teacher.subject.map(
       (subjectInfo) => subjectInfo._id
     );
@@ -542,13 +576,13 @@ function AdminList(props) {
     }
 
     let newTeacherData = {
-      ...all_teacher_obj.current[teacherId],
+      ...all_admin_obj.current[adminId],
       subject_teached: newSubjectTeached,
       class_teached: newClassTeached,
       class_to_subject: tempClassToSubject,
     };
 
-    updateTeacher(newTeacherData, teacherId);
+    updateTeacher(newTeacherData, adminId);
   }
 
   // DIALOG SUNTING
@@ -564,8 +598,19 @@ function AdminList(props) {
     setOpenSuntingDialog(false);
   };
 
-  document.title = "Schooly | Sunting Data Ajar Pengelola";
-  console.log(inputValues)
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  document.title = "Schooly | Sunting Unit Pengelola";
+
   return (
     <div className={classes.root}>
       <AdminListToolbar
@@ -573,7 +618,7 @@ function AdminList(props) {
         order={order}
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
-        rowCount={rows.length}
+        rowCount={rows ? rows.length : 0}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
         //Two props added for search filter.
@@ -589,213 +634,67 @@ function AdminList(props) {
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
-
+            console.log(row.unit);
             return (
               <Grid item>
-                <Hidden xsDown>
-                  <ExpansionPanel button variant="outlined" defaultExpanded>
-                    <ExpansionPanelSummary
-                      className={classes.teacherPanelSummary}
-                    >
-                      <Grid
-                        container
-                        spacing={1}
-                        justify="space-between"
-                        alignItems="center"
-                      >
-                        <Grid item>
-                          <Hidden smUp implementation="css">
-                            <Typography variant="subtitle1" id={labelId}>
-                              {row.name}
-                            </Typography>
-                            <Typography variant="caption" color="textSecondary">
-                              {row.email}
-                            </Typography>
-                          </Hidden>
-                          <Hidden xsDown implementation="css">
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              <ListItemAvatar>
-                                {!row.avatar ? (
-                                  <Avatar />
-                                ) : (
-                                  <Avatar
-                                    src={`/api/upload/avatar/${row.avatar}`}
-                                  />
-                                )}
-                              </ListItemAvatar>
-                              <div>
-                                <Typography variant="h6" color="textPrimary">
-                                  {row.name}
-                                </Typography>
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  {row.email}
-                                </Typography>
-                              </div>
-                            </div>
-                          </Hidden>
-                        </Grid>
-                        <Hidden smUp implementation="css">
-                          <Grid
-                            item
-                            xs
-                            container
-                            spacing={1}
-                            justify="flex-end"
-                          >
-                            <Grid item>
-                              <LightTooltip title="Sunting">
-                                <IconButton
-                                  size="small"
-                                  className={classes.editTeacherButton}
-                                >
-                                  <EditIcon fontSize="small" />
-                                </IconButton>
-                              </LightTooltip>
-                            </Grid>
-                          </Grid>
-                        </Hidden>
-                      </Grid>
-                    </ExpansionPanelSummary>
-                    <Divider />
-                    <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
-                      <Grid container spacing={4}>
-                        <Grid item xs={12}>
-                          <Typography variant="body1" color="primary">
-                            Unit
-                          </Typography>
-                          <Autocomplete
+                <ListItem className={classes.listItem}>
+                  <Hidden xsDown>
+                    <ListItemAvatar>
+                      {!row.avatar ? (
+                        <Avatar />
+                      ) : (
+                        <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                      )}
+                    </ListItemAvatar>
+                  </Hidden>
+                  <ListItemText
+                    primary={
+                      <Typography variant="h6" color="textPrimary">
+                        {row.name}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography variant="body2" color="textSecondary">
+                        {row.email}
+                      </Typography>
+                    }
+                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <ListItemText
+                      align="left"
+                      primary={
+                        <FormControl
+                          variant="outlined"
+                          error={Boolean(errors.to)}
+                          color="primary"
+                          fullWidth
+                        >
+                          <InputLabel id="unit-label">Unit</InputLabel>
+                          <Select
+                            labelId="unit-label"
+                            label="Unit"
                             value={selectedValues[row._id]}
-                            onChange={(event, value) => {
-                              handleSelectedValues(value, row._id);
+                            onChange={(event) => {
+                              onUnitChange(event, row._id);
                             }}
-                            inputValue={inputValues[row._id]}
-                            onInputChange={(event, value) => {
-                              handleInputValues(value, row._id);
-                            }}
-                            options={all_units}
-                            renderInput={(params) => <TextField {...params} label="Controllable" />}
-                          />
-                          {/* <Autocomplete
-                            multiple={false}
-                            id="tags-outlined"
-                            options={all_units}
-                            getOptionLabel={(option) => option.name}
-                            // defaultValue={[top100Films[13]]}
-                            filterSelectedOptions
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                variant="outlined"
-                                size="small"
-                                style={{ border: "none" }}
-                              />
-                            )}
-                          /> */}
-                        </Grid>
-
-                        <Grid item xs={12}>
-                          <Grid
-                            container
-                            justify="flex-end"
-                            alignItems="center"
+                            className={classes.select}
                           >
-                            <Button
-                              className={classes.saveButton}
-                              onClick={() => {
-                                handleSave(row._id);
-                                handleCloseSuntingDialog();
-                              }}
-                            >
-                              Simpan
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
-                </Hidden>
-                <Hidden smUp>
-                  <ExpansionPanel button variant="outlined" expanded={false}>
-                    <ExpansionPanelSummary
-                      className={classes.teacherPanelSummary}
-                    >
-                      <Grid
-                        container
-                        spacing={1}
-                        justify="space-between"
-                        alignItems="center"
-                      >
-                        <Grid item>
-                          <Hidden smUp implementation="css">
-                            <Typography variant="subtitle1" id={labelId}>
-                              {row.name}
-                            </Typography>
-                            <Typography variant="caption" color="textSecondary">
-                              {row.email}
-                            </Typography>
-                          </Hidden>
-                          <Hidden xsDown implementation="css">
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              <ListItemAvatar>
-                                {!row.avatar ? (
-                                  <Avatar />
-                                ) : (
-                                  <Avatar
-                                    src={`/api/upload/avatar/${row.avatar}`}
-                                  />
-                                )}
-                              </ListItemAvatar>
-                              <div>
-                                <Typography variant="h6" color="textPrimary">
-                                  {row.name}
-                                </Typography>
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  {row.email}
-                                </Typography>
-                              </div>
-                            </div>
-                          </Hidden>
-                        </Grid>
-                        <Grid item xs container spacing={1} justify="flex-end">
-                          <Grid item>
-                            <LightTooltip title="Sunting">
-                              <IconButton
-                                size="small"
-                                className={classes.editTeacherButton}
-                                onClick={() =>
-                                  handleClickOpenSuntingDialog(row)
-                                }
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                            </LightTooltip>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </ExpansionPanelSummary>
-                    <Divider />
-                  </ExpansionPanel>
-                </Hidden>
+                            {all_units.map((u) => (
+                              <MenuItem key={u._id} value={u._id}>
+                                {u.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      }
+                    />
+                  </div>
+                </ListItem>
               </Grid>
             );
           })
@@ -826,17 +725,16 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
   success: state.success,
   auth: state.auth,
-  unitsCollection: state.unitsCollection
+  classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
+  unitsCollection: state.unitsCollection,
 });
 
 // parameter 1 : reducer , parameter 2 : actions
 export default connect(mapStateToProps, {
-  getAllSubjects,
-  getTeachers,
-  getAllClass,
+  getAllAdmins,
+  getAllUnits,
   updateTeacher,
   clearErrors,
   clearSuccess,
-  getAdmins,
-  getAllUnits
-})(AdminList);
+})(TeacherList);

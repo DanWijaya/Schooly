@@ -138,8 +138,6 @@ export const setCurrentClass = (classId) => (dispatch) => {
   return axios
     .get("/api/classes/setCurrentClass/" + classId)
     .then((res) => {
-      // console.log("Class to be edited");
-      // dispatch(setCurrentClass(res.data))
       dispatch({
         type: SET_CURRENT_CLASS,
         payload: res.data,

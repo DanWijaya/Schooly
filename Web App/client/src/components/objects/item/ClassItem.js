@@ -59,17 +59,22 @@ const useStyles = makeStyles((theme) => ({
     const { data, handleOpenDeleteDialog } = props;
     const { user } = props.auth;
     const classes = useStyles();
-    const [colorMap, setColorMap] = React.useState(new Map());
+    const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"];
+    // const [colorMap, setColorMap] = React.useState(new Map());
 
-    React.useEffect(() => {
-        const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"];
-        let temp = new Map();
+    // React.useEffect(() => {
+    //     const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"];
+    //     let temp = new Map();
 
-        data.forEach((d, i) => temp.set(d._id, colorList[i % colorList.length]));
-        setColorMap(temp);
-    }, [data.length])
+    //     if(Array.isArray(data)){
+    //       data.forEach((d, i) => temp.set(d._id, colorList[i % colorList.length]));
+    //     }
+    //     setColorMap(temp);
+    // }, [])
 
-    if(Array.isArray(data)){
+    let colorMap = new Map();
+    data.forEach((d, i) => colorMap.set(d._id, colorList[i % colorList.length]));
+
     return (
         <>
         {data.map((cl, index) => {
@@ -222,11 +227,7 @@ const useStyles = makeStyles((theme) => ({
         )
     })}
     </>
-    )}
-    else{
-        return null;
-    }
-
+    )
 }
 
 ClassItem.propTypes = {

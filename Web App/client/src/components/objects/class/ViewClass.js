@@ -1096,20 +1096,18 @@ function ViewClass(props) {
     //Untuk mendapatkan kelas current, digunakan untuk:
     //  -> Dapatin id walikelas
     // -> pindahkan getTeachers(user.unit, "map") di sini karena mau execute setWalikelas hanya setelah itu selesai.
-    var id_list;
     setCurrentClass(classId).then((kelas) => {
-      if (kelas) {
-        id_list = [kelas.walikelas];
-        console.log("ID LIST: ", id_list);
-        students_by_class.forEach((s) => id_list.push(s._id));
-        getMultipleFileAvatar(id_list).then((results) => {
-          console.log(results);
+        let listId = [];
+        if(kelas.walikelas){
+          listId.push(kelas.walikelas);
+        }
+        students_by_class.forEach((s) => listId.push(s._id));
+        getMultipleFileAvatar(listId).then((results) => {
           setAvatar(results);
         });
-        getTeachers(user.unit,"map").then((results) =>
+        getTeachers(kelas.unit,"map").then((results) =>
           setWalikelas(results.get(kelas.walikelas))
         );
-      }
       // setWalikelas(all_teachers_map.get(kelas.walikelas));
     });
   }, [students_by_class.length, kelas.walikelas]);

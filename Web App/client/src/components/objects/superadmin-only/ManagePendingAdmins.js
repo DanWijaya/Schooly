@@ -487,40 +487,6 @@ function ManageUsersToolbar(props) {
             <>
               {lengthListCheckbox === 0 ? (
                 <>
-                  <LightTooltip title="Sunting Unit Pengelola">
-                    <Link to="/sunting-pengelola">
-                      <IconButton
-                        disabled
-                        className={classes.checkboxModeButton}
-                      >
-                        <BiSitemap />
-                      </IconButton>
-                    </Link>
-                  </LightTooltip>
-                  {/* =========== MODE KOTAK CENTANG ================ */}
-
-                  {/* <LightTooltip
-                  title={
-                    !currentCheckboxMode
-                      ? "Mode Kotak Centang"
-                      : "Mode Individu"
-                  }
-                >
-                  <IconButton
-                    className={classes.checkboxModeButton}
-                    onClick={
-                      !currentCheckboxMode
-                        ? () => activateCheckboxMode("Teacher")
-                        : () => deactivateCheckboxMode("Teacher")
-                    }
-                  >
-                    {!currentCheckboxMode ? (
-                      <CheckBoxIcon />
-                    ) : (
-                      <RecentActorsIcon />
-                    )}
-                  </IconButton>
-                </LightTooltip> */}
                   <LightTooltip title="Urutkan Akun">
                     <IconButton
                       onClick={handleOpenSortMenu}

@@ -18,7 +18,7 @@ import {
   GET_PENDING_ADMINS,
   // SET_DROPBOX_TOKEN,
   GET_SUCCESS_RESPONSE,
-  GET_ALL_USERS
+  GET_ALL_USERS,
 } from "./Types";
 
 // Register User
@@ -210,20 +210,20 @@ export const getTeachers = (unit_id, data = "array") => (dispatch) => {
 };
 
 export const getAllUsers = (unit_id) => (dispatch) => {
-    return axios.get(`/api/users/getAllUsers/${unit_id}`)
-        .then((res) => {
-          dispatch({
-            type: GET_ALL_USERS,
-            payload: res.data
-          });
-          return res.data;
-        })
-        .catch((err) => {
-          console.log("Error in getting one user");
-          throw err;
-        }); 
-
-}
+  return axios
+    .get(`/api/users/getAllUsers/${unit_id}`)
+    .then((res) => {
+      dispatch({
+        type: GET_ALL_USERS,
+        payload: res.data,
+      });
+      return res.data;
+    })
+    .catch((err) => {
+      console.log("Error in getting one user");
+      throw err;
+    });
+};
 export const getOneUser = (userId) => (dispatch) => {
   console.log(userId);
   return axios
@@ -256,7 +256,7 @@ export const getUsers = (userIds) => (dispatch) => {
 };
 
 export const getStudentsByClass = (classId) => (dispatch) => {
-  axios
+  return axios
     .get("/api/users/getstudentsbyclass/" + classId)
     .then((res) => {
       // console.log(res.data)
@@ -264,7 +264,7 @@ export const getStudentsByClass = (classId) => (dispatch) => {
         type: GET_STUDENTS_BY_CLASS,
         payload: res.data,
       });
-      console.log("getStudentsByClass completed");
+      return res.data;
     })
     .catch((err) => {
       console.log("Error in getting Students by class");
@@ -302,32 +302,32 @@ export const getPendingTeachers = () => (dispatch) => {
     });
 };
 
-export const getAdmins = (unit_id=null) => (dispatch) => {
-  if(unit_id == null){
-    axios
-      .get(`/api/users/getAllAdmins/`)
-      .then((res) => {
-        dispatch({
-          type: GET_ALL_ADMINS,
-          payload: res.data,
-        });
-      })
-      .catch((err) => {
-        console.log("Error in getting Students by class");
+export const getAllAdmins = () => (dispatch) => {
+  axios
+    .get(`/api/users/getAllAdmins/`)
+    .then((res) => {
+      dispatch({
+        type: GET_ALL_ADMINS,
+        payload: res.data,
       });
-  }else{
-    axios
-      .get(`/api/users/getAdmins/${unit_id}`)
-      .then((res) => {
-        dispatch({
-          type: GET_ALL_ADMINS,
-          payload: res.data,
-        });
-      })
-      .catch((err) => {
-        console.log("Error in getting Students by class");
+    })
+    .catch((err) => {
+      console.log("Error in getting Students by class");
+    });
+};
+
+export const getAdmins = (unit_id) => (dispatch) => {
+  axios
+    .get(`/api/users/getAdmins/${unit_id}`)
+    .then((res) => {
+      dispatch({
+        type: GET_ALL_ADMINS,
+        payload: res.data,
       });
-  }
+    })
+    .catch((err) => {
+      console.log("Error in getting Students by class");
+    });
 };
 
 export const getPendingAdmins = () => (dispatch) => {
@@ -347,7 +347,7 @@ export const getPendingAdmins = () => (dispatch) => {
 };
 
 export const setUserActive = (userId) => (dispatch) => {
- return axios
+  return axios
     .put(`/api/users/setuseractive/${userId}`)
     .then((res) => {
       return res.data;
@@ -359,7 +359,7 @@ export const setUserActive = (userId) => (dispatch) => {
 };
 
 export const bulkSetUserActive = (id_list) => (dispatch) => {
-  let data = {id_list : id_list}
+  let data = { id_list: id_list };
   return axios
     .put(`/api/users/bulksetuseractive/`, data)
     .then((res) => {
@@ -369,7 +369,7 @@ export const bulkSetUserActive = (id_list) => (dispatch) => {
       throw err;
       console.error(err);
     });
-}
+};
 
 export const setUserDeactivated = (userId) => (dispatch) => {
   return axios
@@ -384,7 +384,7 @@ export const setUserDeactivated = (userId) => (dispatch) => {
 };
 
 export const bulkSetUserDeactivated = (id_list) => (dispatch) => {
-  let data = {id_list : id_list}
+  let data = { id_list: id_list };
   return axios
     .put(`/api/users/bulksetuseractive/`, data)
     .then((res) => {
@@ -394,7 +394,7 @@ export const bulkSetUserDeactivated = (id_list) => (dispatch) => {
       throw err;
       console.error(err);
     });
-}
+};
 export const deleteUser = (userId) => (dispatch) => {
   return axios
     .delete(`/api/users/delete/${userId}`)
@@ -432,6 +432,20 @@ export const updateTeacher = (data, teacherId) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+    });
+};
+
+export const updateUnitAdmins = (data, adminId) => (dispatch) => {
+  axios
+    .put(`/api/users/updateunitadmins`, data)
+    .then((res) => {
+      dispatch({
+        type: GET_ALL_ADMINS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      throw err;
     });
 };
 

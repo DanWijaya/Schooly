@@ -126,7 +126,7 @@ router.post("/login", (req, res) => {
           uni_impian: user.uni_impian,
 
           //Unit
-          unit: user.unit
+          unit: user.unit,
         };
         if (user.role === "Student") {
           payload.kelas = user.kelas;
@@ -332,7 +332,7 @@ router.get("/getTeachers/:unit_id", (req, res) => {
 
 router.get("/getStudents/:unit_id", (req, res) => {
   let { unit_id } = req.params;
-  Student.find({ active: true , unit: unit_id})
+  Student.find({ active: true, unit: unit_id })
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) console.log("No students yet in Schooly System");
@@ -342,7 +342,7 @@ router.get("/getStudents/:unit_id", (req, res) => {
 
 router.get("/getAdmins/:unit_id", (req, res) => {
   let { unit_id } = req.params;
-  Admin.find({ active: true, unit:unit_id })
+  Admin.find({ active: true, unit: unit_id })
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) console.log("No unit admins yet in Schooly System");
@@ -351,7 +351,6 @@ router.get("/getAdmins/:unit_id", (req, res) => {
 });
 
 router.get("/getAllAdmins/", (req, res) => {
-
   Admin.find({ active: true })
     .sort({ name: 1 })
     .then((users, err) => {
@@ -401,12 +400,11 @@ router.get("/getstudentsbyclass/:id", (req, res) => {
 router.get("/getAllUsers/:unit_id", (req, res) => {
   let { unit_id } = req.params;
 
-  User.find({ active: true , unit: unit_id})
+  User.find({ active: true, unit: unit_id })
     .sort({ name: 1 })
     .lean()
     .then((users, err) => {
-      if (!users)
-        return res.status(404).json("No users yet in Schooly system");
+      if (!users) return res.status(404).json("No users yet in Schooly system");
       else return res.json(users);
     });
 });
@@ -454,18 +452,16 @@ router.put("/setuseractive/:id", (req, res) => {
 
 router.put("/bulksetuseractive/", (req, res) => {
   let { id_list } = req.body;
-  User.updateMany({_id : {$in : id_list}}, {active: true}, (err,user) => {
-    if (err){
-      console.log(err)
+  User.updateMany({ _id: { $in: id_list } }, { active: true }, (err, user) => {
+    if (err) {
+      console.log(err);
       return res.status(404).json("There is an error");
+    } else {
+      console.log("Updated Docs : ", user);
+      return res.json(user);
     }
-    else{
-        console.log("Updated Docs : ", user);
-        return res.json(user);
-    }
-  })
+  });
 });
-
 
 router.put("/setuserdeactivated/:id", (req, res) => {
   let id = req.params.id;
@@ -483,16 +479,15 @@ router.put("/setuserdeactivated/:id", (req, res) => {
 
 router.put("/bulksetuserdeactivated/", (req, res) => {
   let { id_list } = req.body;
-  User.updateMany({_id : {$in : id_list}}, {active: false}, (err,user) => {
-    if (err){
-      console.log(err)
+  User.updateMany({ _id: { $in: id_list } }, { active: false }, (err, user) => {
+    if (err) {
+      console.log(err);
       return res.status(404).json("There is an error");
+    } else {
+      console.log("Updated Docs : ", user);
+      return res.json(user);
     }
-    else{
-        console.log("Updated Docs : ", user);
-        return res.json(user);
-    }
-  })
+  });
 });
 
 router.delete("/delete/:id", (req, res) => {
@@ -575,4 +570,23 @@ router.post("/register_students_bulk", (req, res) => {
     });
 });
 
+// SuperAdmin Only
+router.put("/updateunitadmins", async (req, res) => {
+  // userToUnit is an object with (key,value) = (userId,unitId)
+  try {
+    let { userToUnit } = req.body;
+    const userIds = Object.keys(userToUnit).map((id) => ObjectId(id));
+    // const unitIds = Object.values(userToUnit);
+
+    const promises = Admin.find({ _id: { $in: userIds } }).map((document) => {
+      document.unit = userToUnit[document._id];
+      return document.save();
+    });
+
+    const results = await Promise.all(promises);
+    return res.json(results);
+  } catch (err) {
+    throw err;
+  }
+});
 module.exports = router;
