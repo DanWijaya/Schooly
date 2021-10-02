@@ -52,6 +52,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  ListItemSecondaryAction,
   Link,
   Paper,
   Snackbar,
@@ -137,7 +138,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
   deleteTaskButton: {
-    marginLeft: "7.5px",
+    marginLeft: "10px",
     backgroundColor: theme.palette.error.dark,
     color: "white",
     "&:focus, &:hover": {
@@ -650,7 +651,7 @@ function ViewTaskStudent(props) {
     // Task that has not been uplaoded.
     if (fileTugas.length === 0 && fileToSubmit.length === 0) {
       return (
-        <Typography color="textSecondary" align="center">
+        <Typography color="textSecondary" align="center" style={{ padding: "17.5px 0px" }}>
           Kosong
         </Typography>
       );
@@ -1061,7 +1062,7 @@ function ViewTaskStudent(props) {
             </form>
             <Grid container direction="column" alignItems="center">
               <Typography>
-                Status: {!tasksCollection.grades
+                {!tasksCollection.grades
                   ? "Belum Diperiksa"
                   : !tasksCollection.grades[user._id]
                   ? "Belum Diperiksa"
@@ -1143,7 +1144,7 @@ function ViewTaskStudent(props) {
             handleCloseDeleteSnackbar(event, reason);
           }}
         >
-          Tugas File anda berhasil dihapus
+          Berkas Tugas Anda berhasil dihapus
         </Alert>
       </Snackbar>
     </div>

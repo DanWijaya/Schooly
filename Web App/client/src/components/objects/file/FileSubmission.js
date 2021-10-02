@@ -15,8 +15,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.success.main,
     color: "white",
   },
+  submittedLateBadge: {
+    fontSize: "16px",
+    borderRadius: "8px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+  },
   deleteTaskButton: {
-    marginLeft: "7.5px",
+    marginLeft: "10px",
     backgroundColor: theme.palette.error.dark,
     color: "white",
     "&:focus, &:hover": {
@@ -128,49 +134,51 @@ function FileSubmission(props) {
           }}
         >
           <ListItemAvatar>
-            <Badge
-              overlap="circle"
-              badgeContent={
-                <PublishIcon
-                  className={classes.submittedBadge}
-                  fontSize="small"
-                />
-              }
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-            >
-              {file_type === "Word" ? (
-                <Avatar className={classes.wordFileTypeIcon}>
-                  <FaFileWord />
-                </Avatar>
-              ) : file_type === "Excel" ? (
-                <Avatar className={classes.excelFileTypeIcon}>
-                  <FaFileExcel />
-                </Avatar>
-              ) : file_type === "Gambar" ? (
-                <Avatar className={classes.imageFileTypeIcon}>
-                  <FaFileImage />
-                </Avatar>
-              ) : file_type === "PDF" ? (
-                <Avatar className={classes.pdfFileTypeIcon}>
-                  <FaFilePdf />
-                </Avatar>
-              ) : file_type === "Teks" ? (
-                <Avatar className={classes.textFileTypeIcon}>
-                  <FaFileAlt />
-                </Avatar>
-              ) : file_type === "Presentasi" ? (
-                <Avatar className={classes.presentationFileTypeIcon}>
-                  <FaFilePowerpoint />
-                </Avatar>
-              ) : file_type === "File Lainnya" ? (
-                <Avatar className={classes.otherFileTypeIcon}>
-                  <FaFile />
-                </Avatar>
-              ) : null}
-            </Badge>
+            <Tooltip title={late ? "Terkumpul Telat" : "Telat"}>
+              <Badge
+                overlap="circle"
+                badgeContent={
+                  <PublishIcon
+                    className={late ? classes.submittedLateBadge : classes.submittedBadge}
+                    fontSize="small"
+                  />
+                }
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+              >
+                {file_type === "Word" ? (
+                  <Avatar className={classes.wordFileTypeIcon}>
+                    <FaFileWord />
+                  </Avatar>
+                ) : file_type === "Excel" ? (
+                  <Avatar className={classes.excelFileTypeIcon}>
+                    <FaFileExcel />
+                  </Avatar>
+                ) : file_type === "Gambar" ? (
+                  <Avatar className={classes.imageFileTypeIcon}>
+                    <FaFileImage />
+                  </Avatar>
+                ) : file_type === "PDF" ? (
+                  <Avatar className={classes.pdfFileTypeIcon}>
+                    <FaFilePdf />
+                  </Avatar>
+                ) : file_type === "Teks" ? (
+                  <Avatar className={classes.textFileTypeIcon}>
+                    <FaFileAlt />
+                  </Avatar>
+                ) : file_type === "Presentasi" ? (
+                  <Avatar className={classes.presentationFileTypeIcon}>
+                    <FaFilePowerpoint />
+                  </Avatar>
+                ) : file_type === "File Lainnya" ? (
+                  <Avatar className={classes.otherFileTypeIcon}>
+                    <FaFile />
+                  </Avatar>
+                ) : null}
+              </Badge>
+            </Tooltip>
           </ListItemAvatar>
           <ListItemText
             primary={
