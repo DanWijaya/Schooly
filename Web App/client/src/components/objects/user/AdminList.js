@@ -6,7 +6,6 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
-
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Divider,
@@ -38,6 +37,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import ClearIcon from "@material-ui/icons/Clear";
 import { Autocomplete } from "@material-ui/lab";
 import MuiAlert from "@material-ui/lab/Alert";
+import { getAllUnits, getAllUnitsMap } from "../../../actions/UnitActions"
 
 function createData(_id, name, email) {
   return { _id, name, email };
@@ -69,7 +69,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function TeacherListToolbar(props) {
+function AdminListToolbar(props) {
   const {
     classes,
     order,
@@ -321,15 +321,6 @@ function TeacherListToolbar(props) {
   );
 }
 
-// TeacherListToolbar.propTypes = {
-//   classes: PropTypes.object.isRequired,
-//   onRequestSort: PropTypes.func.isRequired,
-//   onSelectAllClick: PropTypes.func.isRequired,
-//   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-//   orderBy: PropTypes.string.isRequired,
-//   rowCount: PropTypes.number.isRequired,
-// };
-
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
@@ -349,24 +340,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "15px",
     marginBottom: "15px",
   },
-  // newMaterialButton: {
-  //   marginRight: "10px",
-  //   backgroundColor: theme.palette.success.main,
-  //   color: "white",
-  //   "&:focus, &:hover": {
-  //     backgroundColor: theme.palette.success.main,
-  //     color: "white",
-  //   },
-  // },
-  // newMaterialIconDesktop: {
-  //   width: theme.spacing(3),
-  //   height: theme.spacing(3),
-  //   marginRight: "7.5px",
-  // },
-  // newMaterialIconMobile: {
-  //   width: theme.spacing(3),
-  //   height: theme.spacing(3),
-  // },
   sortButton: {
     backgroundColor: theme.palette.action.selected,
     color: "black",
@@ -386,30 +359,6 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  // viewMaterialButton: {
-  //   backgroundColor: theme.palette.warning.main,
-  //   color: "white",
-  //   "&:focus, &:hover": {
-  //     backgroundColor: "white",
-  //     color: theme.palette.warning.main,
-  //   },
-  // },
-  // editMaterialButton: {
-  //   backgroundColor: theme.palette.primary.main,
-  //   color: "white",
-  //   "&:focus, &:hover": {
-  //     backgroundColor: "white",
-  //     color: theme.palette.primary.main,
-  //   },
-  // },
-  // deleteMaterialButton: {
-  //   backgroundColor: theme.palette.error.dark,
-  //   color: "white",
-  //   "&:focus, &:hover": {
-  //     backgroundColor: "white",
-  //     color: theme.palette.error.dark,
-  //   },
-  // },
   editTeacherButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -467,9 +416,11 @@ function AdminList(props) {
     updateTeacher,
     clearErrors,
     clearSuccess,
-    getAdmins
+    getAdmins,
+    getAllUnits
   } = props;
   const { user, all_admins } = props.auth;
+  const { all_units } = props.unitsCollection;
   const errors = props.errors;
   const success = props.success;
 
@@ -487,7 +438,7 @@ function AdminList(props) {
     } key -> id semua Pengelola yang ada di db
   */
   const [selectedValues, setSelectedValues] = React.useState({});
-
+  const [inputValues, setInputValues] = React.useState({});
   // SEARCH
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
@@ -500,27 +451,31 @@ function AdminList(props) {
   const [snackbarContent, setSnackbarContent] = React.useState("");
   const [severity, setSeverity] = React.useState("info");
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  
 
   React.useEffect(() => {
-    getAdmins();
+
+    const request = async () => {
+      //Dapatin data data admin dan semua units yang diperlukan.
+      const admins = await getAdmins();
+      const unitsMap = await getAllUnitsMap();
+      setRows(admins);
+      let tempSelectedValues = {};
+      let tempInputValues = {};
+      admins.forEach((a) => {
+        tempSelectedValues[a._id] = a.unit;
+        tempInputValues[a._id] = unitsMap[a.unit];
+      });
+
+      setSelectedValues(tempSelectedValues);
+      setInputValues(tempInputValues);
+    }
+    request();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
-    setRows(all_admins);
-  }, [all_admins]);
 
-  React.useEffect(() => {
-    if (
-      errors && 
-      errors.constructor === Object &&
-      Object.keys(errors).length !== 0
-    ) {
-      handleOpenSnackbar("error", "Data pengelola gagal disimpan");
-      clearErrors();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [errors]);
 
   React.useEffect(() => {
     if (success) {
@@ -540,14 +495,18 @@ function AdminList(props) {
 
   // AUTOCOMPLETE: untuk memilih subject yang diajar dan kelas yang diajar tiap Pengelola
 
-  function handleChangeAdmins(selectedAdminsInfo, adminId){
+  function handleSelectedValues(data, adminId){
     setSelectedValues({
       ...selectedValues,
-      [adminId] : {
-        ...selectedValues[adminId],
-        admin: selectedAdminsInfo
-      }
+      [adminId] : data._id
     });
+  }
+
+  function handleInputValues(data, adminId){
+    setInputValues({
+      ...inputValues,
+      [adminId] : data.name
+    })
   }
 
   function handleRequestSort(event, property) {
@@ -606,125 +565,15 @@ function AdminList(props) {
   };
 
   document.title = "Schooly | Sunting Data Ajar Pengelola";
-
+  console.log(inputValues)
   return (
     <div className={classes.root}>
-      {dialogData ? (
-        <Hidden smUp>
-          <Dialog
-            onClose={handleCloseSuntingDialog}
-            open={openSuntingDialog}
-            // fullWidth
-          >
-            <div
-              style={{ width: "450px", maxWidth: "100%", minHeight: "420px" }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  margin: "20px 23px 0 0px",
-                  justifyContent: "flex-end",
-                  alignItems: "flex-end",
-                }}
-              >
-                <IconButton size="small" onClick={handleCloseSuntingDialog}>
-                  <CloseIcon />
-                </IconButton>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  padding: "5px 30px 20px 30px",
-                  alignItems: "center",
-                }}
-              >
-                <ListItemAvatar>
-                  {!dialogData.avatar ? (
-                    <Avatar />
-                  ) : (
-                    <Avatar src={`/api/upload/avatar/${dialogData.avatar}`} />
-                  )}
-                </ListItemAvatar>
-                <div>
-                  <Typography variant="h6" color="textPrimary">
-                    {dialogData.name}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    {dialogData.email}
-                  </Typography>
-                </div>
-              </div>
-              <div style={{ padding: "12px 30px" }}>
-                <Typography
-                  variant="body2"
-                  color="primary"
-                  style={{ marginBottom: "3px" }}
-                >
-                  Kelas
-                </Typography>
-                <Autocomplete
-                  multiple
-                  value={
-                    selectedValues[dialogData._id]
-                      ? selectedValues[dialogData._id].class
-                      : null
-                  }
-                  options={all_admins}
-                  getOptionLabel={(option) => option.name}
-                  getOptionSelected={(option, value) =>
-                    option._id === value._id
-                  }
-                  filterSelectedOptions
-                  onChange={(event, value) => {
-                    handleChangeAdmins(value, dialogData._id);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      size="small"
-                      style={{ border: "none" }}
-                    />
-                  )}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginTop: "20px",
-                }}
-                className={classes.content}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "15px 30px 15px 5px",
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    className={classes.saveButton}
-                    onClick={() => {
-                      handleSave(dialogData._id);
-                    }}
-                  >
-                    Simpan
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Dialog>
-        </Hidden>
-      ) : null}
-      <TeacherListToolbar
+      <AdminListToolbar
         classes={classes}
         order={order}
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
-        rowCount={rows ? rows.length : 0}
+        rowCount={rows.length}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
         //Two props added for search filter.
@@ -822,24 +671,27 @@ function AdminList(props) {
                       <Grid container spacing={4}>
                         <Grid item xs={12}>
                           <Typography variant="body1" color="primary">
-                            Kelas
+                            Unit
                           </Typography>
                           <Autocomplete
-                            multiple
-                            value={
-                              selectedValues[row._id]
-                                ? selectedValues[row._id].class
-                                : null
-                            }
-                            options={all_admins ? all_admins : null}
-                            getOptionLabel={(option) => option.name}
-                            getOptionSelected={(option, value) =>
-                              option._id === value._id
-                            }
-                            filterSelectedOptions
+                            value={selectedValues[row._id]}
                             onChange={(event, value) => {
-                              handleChangeAdmins(value, row._id);
+                              handleSelectedValues(value, row._id);
                             }}
+                            inputValue={inputValues[row._id]}
+                            onInputChange={(event, value) => {
+                              handleInputValues(value, row._id);
+                            }}
+                            options={all_units}
+                            renderInput={(params) => <TextField {...params} label="Controllable" />}
+                          />
+                          {/* <Autocomplete
+                            multiple={false}
+                            id="tags-outlined"
+                            options={all_units}
+                            getOptionLabel={(option) => option.name}
+                            // defaultValue={[top100Films[13]]}
+                            filterSelectedOptions
                             renderInput={(params) => (
                               <TextField
                                 {...params}
@@ -848,7 +700,7 @@ function AdminList(props) {
                                 style={{ border: "none" }}
                               />
                             )}
-                          />
+                          /> */}
                         </Grid>
 
                         <Grid item xs={12}>
@@ -974,6 +826,7 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
   success: state.success,
   auth: state.auth,
+  unitsCollection: state.unitsCollection
 });
 
 // parameter 1 : reducer , parameter 2 : actions
@@ -984,5 +837,6 @@ export default connect(mapStateToProps, {
   updateTeacher,
   clearErrors,
   clearSuccess,
-  getAdmins
+  getAdmins,
+  getAllUnits
 })(AdminList);

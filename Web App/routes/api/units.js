@@ -63,6 +63,13 @@ router.get("/viewall", (req, res) => {
   });
 });
 
+router.get("/viewallmap", (req,res) => {
+  Unit.find({}, (err, units) => {
+    let map = {};
+    units.map((u) => map[u._id] = u.name);
+    return res.json(map);
+  })
+})
 router.get("/view/:id", (req, res) => {
   let { id } = req.params;
   Unit.findById(id, (err, unit) => {
