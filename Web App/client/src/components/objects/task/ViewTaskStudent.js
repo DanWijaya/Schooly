@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import CustomLinkify from "../../misc/linkify/Linkify";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { uploadTugas, deleteTugas } from "../../../actions/UploadActions";
@@ -23,19 +22,21 @@ import {
   getFileAvatar,
   getMultipleFileAvatar
 } from "../../../actions/files/FileAvatarActions";
-import { 
-  getOneTask, 
+import {
+  getOneTask,
   createTaskComment,
   editTaskComment,
   deleteTaskComment,
 } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
-import { 
+import {
   getOneUser,
-  getTeachers, 
-  getStudents  
+  getTeachers,
+  getStudents
 } from "../../../actions/UserActions";
+import { getSetting } from "../../../actions/SettingActions";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -57,12 +58,17 @@ import {
   Snackbar,
   Box
 } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/Add";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import Alert from "@material-ui/lab/Alert";
-import DeleteIcon from "@material-ui/icons/Delete";
-import PublishIcon from "@material-ui/icons/Publish";
+import {
+  Add as AddIcon,
+  Cancel as CancelIcon,
+  CheckCircle as CheckCircleIcon,
+  Create as CreateIcon,
+  Delete as DeleteIcon,
+  Publish as PublishIcon,
+  Send as SendIcon
+} from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   FaFile,
   FaFileAlt,
@@ -72,28 +78,26 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import SendIcon from '@material-ui/icons/Send';
-import CreateIcon from '@material-ui/icons/Create';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
-import {getSetting} from "../../../actions/SettingActions";
-
-const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
-  paperBox: {
+  taskPaper: {
     padding: "20px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "15px",
+    },
   },
-  deadlineWarningText: {
-    color: theme.palette.warning.main,
+  taskDivider: {
+    margin: "22.5px 0px",
+    backgroundColor: theme.palette.primary.light,
   },
   workChosenFile: {
     width: "200px",
@@ -207,9 +211,9 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "20px"
   },
   mobileName: {
-    marginRight: "7px", 
-    whiteSpace: "nowrap", 
-    textOverflow: "ellipsis", 
+    marginRight: "7px",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
     overflow: "hidden",
     maxWidth: "50px",
   },
@@ -243,6 +247,8 @@ const useStyles = makeStyles((theme) => ({
     },
   }
 }));
+
+const path = require("path");
 
 function LampiranFile(props) {
   const classes = useStyles();
@@ -587,13 +593,6 @@ function WorkFile(props) {
 
 function ViewTaskStudent(props) {
   const classes = useStyles();
-
-  const { 
-    user, 
-    selectedUser,
-    all_students,
-    all_teachers 
-  } = props.auth;
   const {
     uploadFileSubmitTasks,
     viewFileSubmitTasks,
@@ -613,16 +612,18 @@ function ViewTaskStudent(props) {
     getFileTasks,
     viewFileTasks,
     downloadFileTasks,
-    getTeachers, 
+    getTeachers,
     getStudents,
     getMultipleFileAvatar,
     getSetting
   } = props;
+  const {
+    user,
+    selectedUser,
+    all_students,
+    all_teachers
+  } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
-  // console.log(tasksCollection)
-
-  // const theme = useTheme();
-  // ref itu untuk ngerefer html yang ada di render.
 
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
@@ -633,14 +634,13 @@ function ViewTaskStudent(props) {
   const [over_limit, setOverLimit] = React.useState([]);
   // const [success, setSuccess] = React.useState(null);
   const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
-  
-  // setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
+
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
-  // USER COMMENT
+  // Comment
   const [commentValue, setCommentValue] = React.useState("");
   const [commentEditorValue, setCommentEditorValue] = React.useState("");
   const [commentList, setCommentList] = React.useState([]);
@@ -650,13 +650,13 @@ function ViewTaskStudent(props) {
   const [deleteCommentIdx, setDeleteCommentIdx] = React.useState(null);
   const deleteDialogHandler = React.useRef(null);
 
-  // SNACKBAR
+  // Snackbar
   const [snackbarContent, setSnackbarContent] = React.useState("");
   const [severity, setSeverity] = React.useState("info");
   const [openCommentSnackbar, setOpenCommentSnackbar] = React.useState(false);
 
   let tugasId = props.match.params.id;
-  // kalau misalnya parameter keduanya masukkin aja array kosong, dia acts like compomnentDidMount()
+  // If an empty array is inserted to the second parameter, it will acts like compomnentDidMount().
   // useEffect(() => {getAllSubjects("map")}, [])
 
   useEffect(() => {
@@ -667,9 +667,9 @@ function ViewTaskStudent(props) {
     getSetting();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   // This page is only for student later on, so for now put the user.role logic condition
-  // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
+  // This is like componentDidUpdate(). If the value inside the array changes, it will be rerun.
   useEffect(() => {
     // getTaskFilesByUser(user._id, tugasId)
     getFileSubmitTasks_AT(tugasId, user._id).then((results) =>
@@ -677,12 +677,11 @@ function ViewTaskStudent(props) {
     );
     getOneTask(tugasId);
     getAllSubjects("map");
-    // Will run getOneUser again once the tasksCollection is retrieved
+    // Will run getOneUser again once the tasksCollection is retrieved.
     getFileTasks(tugasId).then((results) => setFileLampiran(results));
     if (tasksCollection.person_in_charge_id) {
       getOneUser(tasksCollection.person_in_charge_id);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [success, tasksCollection.person_in_charge_id]);
 
@@ -705,7 +704,7 @@ function ViewTaskStudent(props) {
       setCommentList(tasksCollection.comments.map((comment) => ({ ...comment, name: usernames[comment.author_id] })));
 
       if (selectedCommentIdx !== null && deleteCommentIdx !== null && deleteCommentIdx < selectedCommentIdx) {
-        // memindahkan textfield edit
+        // To move edit textfield.
         setSelectedCommentIdx(selectedCommentIdx - 1);
       }
       setDeleteCommentIdx(null);
@@ -736,7 +735,6 @@ function ViewTaskStudent(props) {
   const handleCommentInputChange = (e) => {
     setCommentValue(e.target.value);
   };
-
   const handleCommentEditorChange = (e) => {
     setCommentEditorValue(e.target.value);
   };
@@ -745,12 +743,10 @@ function ViewTaskStudent(props) {
     setCommentEditorValue("");
     setSelectedCommentIdx(null);
   };
-
   const handleClickEdit = (idx) => {
     setCommentEditorValue(commentList[idx].content);
     setSelectedCommentIdx(idx)
   };
-
   const handleCreateComment = () => {
     if (commentValue.length === 0) {
       handleOpenCommentSnackbar("error", "Isi komentar tidak boleh kosong");
@@ -805,7 +801,7 @@ function ViewTaskStudent(props) {
     }
     setOpenCommentSnackbar(false);
   };
-  
+
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
     switch (ext_file) {
@@ -837,7 +833,7 @@ function ViewTaskStudent(props) {
   };
 
   const listWorkFile = () => {
-    // Yang udah diupload
+    // Task that has already been uplaoded.
     return fileTugas.map((item) => (
       <WorkFile
         handleOpenDeleteDialog={handleOpenDeleteDialog}
@@ -852,7 +848,7 @@ function ViewTaskStudent(props) {
   };
 
   const listFileChosen = () => {
-    // Yang belum diupload
+    // Task that has not been uplaoded.
     if (fileTugas.length === 0 && fileToSubmit.length === 0) {
       return (
         <Paper className={classes.submittedButton}>
@@ -904,7 +900,7 @@ function ViewTaskStudent(props) {
   const onSubmitTugas = (e) => {
     e.preventDefault();
     let formData = new FormData();
-    // fileToSubmit ini bukan array biasa, itu FileList object.
+    // fileToSubmit is not a usual array, itu FileList object.
     for (var i = 0; i < fileToSubmit.length; i++) {
       formData.append("tugas", fileToSubmit[i]);
     }
@@ -946,7 +942,7 @@ function ViewTaskStudent(props) {
 
   const handleOpenDeleteCommentDialog = (idx) => {
     setOpenDeleteCommentDialog(true);
-    deleteDialogHandler.current =  (idx === selectedCommentIdx) 
+    deleteDialogHandler.current =  (idx === selectedCommentIdx)
     ? () => {
       handleDeleteComment(idx);
       closeEditMode();
@@ -957,7 +953,7 @@ function ViewTaskStudent(props) {
   };
 
   const handleCloseDeleteCommentDialog = () => {
-    // setDeleteCommentIdx(null) akan dijalankan setelah task dimuat ulang 
+    // setDeleteCommentIdx(null) akan dijalankan setelah task dimuat ulang
     setOpenDeleteCommentDialog(false);
   };
 
@@ -971,8 +967,7 @@ function ViewTaskStudent(props) {
     clearSuccess();
   };
 
-  // Komentar
-  // Kalau avatar belum ada, pakai default
+  // Comment
   const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
     return (
     <Grid container item direction="row" style={{flexWrap: "nowrap"}}>
@@ -999,7 +994,7 @@ function ViewTaskStudent(props) {
             </Hidden>
             <Hidden xsDown>
                 <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
-                {edited === true ? 
+                {edited === true ?
                   <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography>
                 : null}
                   <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
@@ -1069,88 +1064,6 @@ function ViewTaskStudent(props) {
     )
   }
 
-  // const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
-  //   return (
-  //     <Grid container item xs={12} direction="row" spacing={2}>
-  //       <Hidden smUp>
-  //         <Grid item xs={1} sm={0} className={classes.smAvatar}>
-  //           <Avatar src={commentAvatar[author_id]}/>
-  //         </Grid>
-  //       </Hidden>
-  //       <Hidden xsDown>
-  //         <Grid item className={classes.smAvatar}>
-  //           <Avatar src={commentAvatar[author_id]}/>
-  //         </Grid>
-  //       </Hidden>
-  //       <Grid item xs={10} sm={10} md={11}>
-  //         <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-  //           <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
-  //           {edited === true ? 
-  //             <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography> 
-  //           : null}
-  //           <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
-  //             {moment(date)
-  //                   .locale("id")
-  //                   .format("DD MMM YYYY, HH.mm")}
-  //           </Typography>
-  //           {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
-  //             <>
-  //               <LightTooltip title="Sunting">
-  //                 <CreateIcon
-  //                   style={{marginRight: "2px"}}
-  //                   className={classes.commentLittleIcon}
-  //                   fontSize="small"
-  //                   onClick={() => handleClickEdit(idx)}
-  //                 />
-  //               </LightTooltip>
-  //               <LightTooltip title="Hapus">
-  //                 <DeleteIcon
-  //                   className={classes.commentLittleIcon}
-  //                   fontSize="small"
-  //                   onClick={() => handleDeleteComment(idx)}
-  //                 />
-  //               </LightTooltip>
-  //             </>
-  //           : null}
-  //         </div>
-  //         {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
-  //             <div style={{display: "flex", flexDirection: "column"}}>
-  //               <TextField
-  //                 variant="outlined"
-  //                 onChange={handleCommentEditorChange}
-  //                 value={commentEditorValue}
-  //                 style={{marginTop: "5px"}}
-  //                 multiline
-  //               />
-  //               <div style={{display: "flex", alignItems: "center"}}>
-  //                 <Button
-  //                   variant="contained"
-  //                   color="default"
-  //                   className={classes.checkButton}
-  //                   startIcon={<CheckCircleIcon />}
-  //                   onClick={handleEditComment}
-  //                 >
-  //                   Simpan
-  //                 </Button>
-  //                 <Button
-  //                   variant="contained"
-  //                   color="default"
-  //                   className={classes.cancelButton}
-  //                   startIcon={<CancelIcon />}
-  //                   onClick={closeEditMode}
-  //                 >
-  //                   Batal
-  //                 </Button>
-  //               </div>
-  //             </div>
-  //           :
-  //             <Typography style={{marginTop: "5px"}}>{comment}</Typography>
-  //         }
-  //       </Grid>
-  //     </Grid>
-  //   )
-  // }
-
   const onDeleteFileSubmitTasks = (id) => {
     deleteFileSubmitTasks(id).then((res) => {
       getFileSubmitTasks_AT(tugasId, user._id).then((results) => {
@@ -1165,35 +1078,8 @@ function ViewTaskStudent(props) {
     ? "Schooly | Lihat Tugas"
     : `Schooly | ${tasksCollection.name}`;
 
-  // console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline));
-  // console.log(success, filesCollection.files);
-
   return (
     <div className={classes.root}>
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Berkas"
-        itemName={selectedFileName}
-        deleteItem={() => { 
-          onDeleteFileSubmitTasks(selectedFileId);
-        }}
-      />
-      <DeleteDialog
-        openDeleteDialog={openDeleteCommentDialog}
-        handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
-        itemType="Komentar"
-        itemName=""
-        deleteItem={deleteDialogHandler.current}
-      />
-      <UploadDialog
-        openUploadDialog={openUploadDialog}
-        success={success}
-        messageUploading="Tugas sedang dikumpul"
-        messageSuccess="Tugas telah dikumpul"
-        handleCloseUploadDialog={handleCloseUploadDialog}
-        redirectLink={false}
-      />
       <Grid
         container
         spacing={2}
@@ -1202,88 +1088,37 @@ function ViewTaskStudent(props) {
         style={{ marginBottom: "30px" }}
       >
         <Grid item xs={12} md={8}>
-          <Paper className={classes.paperBox}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} style={{ paddingBottom: "0" }}>
-                <Typography variant="h4">{tasksCollection.name}</Typography>
-                <Typography
-                  variant="caption"
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  <h6>{all_subjects_map.get(tasksCollection.subject)}</h6>
+          <Paper className={classes.taskPaper}>
+            <Typography variant="h4" style={{ marginBottom: "5px" }}>
+              {tasksCollection.name}
+            </Typography>
+            <Typography color="primary" paragraph>
+              Tugas {all_subjects_map.get(tasksCollection.subject)}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Oleh: {selectedUser._id !== tasksCollection.person_in_charge_id
+                ? null
+                : selectedUser.name}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Waktu Dibuat:{" "}
+              {moment(tasksCollection.createdAt)
+                .locale("id")
+                .format("DD MMM YYYY, HH.mm")}
+            </Typography>
+            <Divider className={classes.taskDivider} />
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" gutterBottom>
+                  Tenggat:
                 </Typography>
-              </Grid>
-
-              <Grid item xs={12} md={7} style={{ paddingTop: "0" }}>
-                <Typography variant="body2" color="textSecondary">
-                  Oleh: &nbsp;
-                  <b>
-                    {selectedUser._id !== tasksCollection.person_in_charge_id
-                      ? null
-                      : selectedUser.name}
-                  </b>
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Waktu Dibuat:{" "}
-                  {moment(tasksCollection.createdAt)
+                <Typography>
+                  Tenggat:{" "}
+                  {moment(tasksCollection.deadline)
                     .locale("id")
                     .format("DD MMM YYYY, HH.mm")}
                 </Typography>
-                <Hidden mdUp>
-                  <Typography variant="body2" color="textSecondary">
-                    Tenggat:{" "}
-                    {moment(tasksCollection.deadline)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH.mm")}
-                  </Typography>
-                </Hidden>
               </Grid>
-              <Hidden smDown style={{ display: "flex" }}>
-                <Grid
-                  item
-                  xs={12}
-                  md={5}
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    align="right"
-                    color="textSecondary"
-                  >
-                    Tenggat:{" "}
-                    {moment(tasksCollection.deadline)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH.mm")}
-                  </Typography>
-                </Grid>
-              </Hidden>
-
-              <Grid item xs={12}>
-                <Divider className={classes.dividerColor} />
-              </Grid>
-
-              {/* <Grid item xs={12} style={{ marginTop: "30px" }}>
-                <Typography color="primary" gutterBottom>
-                  Kelas yang Diberikan:
-                </Typography>
-                <Typography>
-                  {!tasksCollection.class_assigned || !all_classes_map.size
-                    ? null
-                    : tasksCollection.class_assigned.map((kelas, i) => {
-                      if (all_classes_map.get(kelas)) {
-                        if (i === tasksCollection.class_assigned.length - 1)
-                          return `${all_classes_map.get(kelas).name}`;
-                        return `${all_classes_map.get(kelas).name}, `;
-                      }
-                      return null;
-                    })}
-                </Typography>
-              </Grid> */}
               {!tasksCollection.description ? null : (
                 <Grid item xs={12}>
                   <Typography color="textSecondary" gutterBottom>
@@ -1298,7 +1133,7 @@ function ViewTaskStudent(props) {
                 </Grid>
               )}
               {fileLampiran.length === 0 ? null : (
-                <Grid item xs={12} style={{ marginTop: "15px" }}>
+                <Grid item xs={12}>
                   <Typography color="textSecondary" gutterBottom>
                     Lampiran Berkas:
                   </Typography>
@@ -1319,30 +1154,11 @@ function ViewTaskStudent(props) {
           </Paper>
           <Hidden smUp>
             <Grid item xs={12} md={4}>
-              <Paper className={classes.paperBox} style={{paddingBottom: "10px", marginTop: "20px"}}>
-                <Grid item>
-                  <Typography
-                    variant="h5"
-                    align="center"
-                    style={{ marginBottom: "20px" }}
-                  >
-                    Hasil Pekerjaan
-                  </Typography>
-                </Grid>
+              <Paper className={classes.taskPaper}>
+                <Typography variant="h5" align="center" paragraph>
+                  Hasil Pekerjaan
+                </Typography>
                 <Divider />
-                {/* <Grid
-                    item
-                    style={{
-                      padding: "10px",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                    }}
-                  >
-                      {listWorkFile()}
-                      {listFileChosen()}
-                  </Grid> */}
-
                 {fileTugas.length === 0 ? (
                   <Grid
                     item
@@ -1426,7 +1242,7 @@ function ViewTaskStudent(props) {
                   </form>
                 </Grid>
               </Paper>
-              <Paper className={classes.paperBox} style={{marginTop: "20px", paddingBottom: "10px"}}>
+              <Paper className={classes.taskPaper} style={{marginTop: "20px", paddingBottom: "10px"}}>
                 <Grid container direction="column" alignItems="center">
                   <Typography variant="subtitle1">
                     Status:{" "}
@@ -1448,7 +1264,7 @@ function ViewTaskStudent(props) {
               </Paper>
             </Grid>
           </Hidden>
-          <Paper className={classes.paperBox} style={{marginTop: "20px"}}>
+          <Paper className={classes.taskPaper} style={{marginTop: "20px"}}>
             <Typography variant="h6" gutterBottom>Komentar Kelas</Typography>
             <Divider style={{ marginBottom: "17.5px" }} />
             <Grid container spacing={2}>
@@ -1500,7 +1316,7 @@ function ViewTaskStudent(props) {
         </Grid>
         <Hidden xsDown>
           <Grid item xs={12} md={4}>
-            <Paper className={classes.paperBox} style={{paddingBottom: "10px"}}>
+            <Paper className={classes.taskPaper} style={{paddingBottom: "10px"}}>
               <Grid item>
                 <Typography
                   variant="h5"
@@ -1607,7 +1423,7 @@ function ViewTaskStudent(props) {
                 </form>
               </Grid>
             </Paper>
-            <Paper className={classes.paperBox} style={{marginTop: "20px", paddingBottom: "10px"}}>
+            <Paper className={classes.taskPaper} style={{marginTop: "20px", paddingBottom: "10px"}}>
               <Grid container direction="column" alignItems="center">
                 <Typography variant="subtitle1">
                   Status:{" "}
@@ -1630,6 +1446,30 @@ function ViewTaskStudent(props) {
           </Grid>
         </Hidden>
       </Grid>
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Berkas"
+        itemName={selectedFileName}
+        deleteItem={() => {
+          onDeleteFileSubmitTasks(selectedFileId);
+        }}
+      />
+      <DeleteDialog
+        openDeleteDialog={openDeleteCommentDialog}
+        handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
+        itemType="Komentar"
+        itemName=""
+        deleteItem={deleteDialogHandler.current}
+      />
+      <UploadDialog
+        openUploadDialog={openUploadDialog}
+        success={success}
+        messageUploading="Tugas sedang dikumpul"
+        messageSuccess="Tugas telah dikumpul"
+        handleCloseUploadDialog={handleCloseUploadDialog}
+        redirectLink={false}
+      />
       <Snackbar
         open={fileLimitSnackbar}
         autoHideDuration={4000}

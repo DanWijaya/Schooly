@@ -7,6 +7,16 @@ const useStyles = makeStyles((theme) => ({
       padding: "15px",
     },
   },
+  commentActionButton: {
+    width: "18px",
+    height: "18px",
+    "&:focus, &:hover": {
+      backgroundColor: "#F1F1F1",
+    },
+  },
+  commentActionIcon: {
+    fontSize: "18px",
+  },
   cancelButton: {
     width: "100px",
     color: theme.palette.text.secondary,
@@ -114,20 +124,20 @@ function Comment(props) {
         Komentar
       </Typography>
       <Divider />
-      {(commentList.length !== 0) ?
-        <div style={{ padding: "16px 0px" }}>
-          <Grid container wrap="nowrap" direction="column" spacing={2}>
-            {commentList.map((comment, idx) => (
-                <Grid item>
-                  {generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)}
-                </Grid>
-              ))
-            }
-          </Grid>
-          <Divider style={{ marginTop: "16px" }} />
-        </div>
-        : null
-      }
+      <div style={{ padding: "16px 0px" }}>
+        {(commentList.length !== 0) ?
+            <Grid container wrap="nowrap" direction="column" spacing={2}>
+              {commentList.map((comment, idx) => (
+                  <Grid item>
+                    {generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)}
+                  </Grid>
+                ))
+              }
+            </Grid>
+          : null
+        }
+        <Divider style={{ marginTop: "16px" }} />
+      </div>
       <Grid container spacing={2}>
         <Grid item>
           <Avatar src={commentAvatar[user._id]}/>
