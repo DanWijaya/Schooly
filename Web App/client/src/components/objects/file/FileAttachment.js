@@ -44,12 +44,6 @@ const useStyles = makeStyles((theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
-  deadlineWarningText: {
-    color: theme.palette.warning.main,
-  },
-  dividerColor: {
-    backgroundColor: theme.palette.primary.main,
-  },
 }));
 
 const path = require("path");

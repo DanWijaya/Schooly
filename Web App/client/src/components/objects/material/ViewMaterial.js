@@ -55,6 +55,7 @@ import {
   Create as CreateIcon,
   Delete as DeleteIcon,
   Edit as EditIcon,
+  MoreVert as MoreVertIcon,
   Send as SendIcon
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
@@ -141,6 +142,16 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("xs")]: {
       padding: "15px",
     },
+  },
+  commentActionButton: {
+    width: "18px",
+    height: "18px",
+    "&:focus, &:hover": {
+      backgroundColor: "#F1F1F1",
+    },
+  },
+  commentActionIcon: {
+    fontSize: "18px",
   },
   commentLittleIcon: {
     color: theme.palette.text.disabled,
@@ -476,12 +487,36 @@ function ViewMaterial(props) {
           <Avatar src={commentAvatar[author_id]} />
         </Grid>
         <Grid item xs zeroMinWidth container>
-          <Grid item xs={12}>
-            <Typography variant="body2" noWrap>
-              {authorName} <span style={{ color: "grey" }}>
-              {edited === true ? "(Disunting)" : null} • {moment(date)
-              .locale("id").format("DD MMM YYYY, HH.mm")}</span>
-            </Typography>
+          <Grid item xs={12} container alignItems="center" spacing={1}>
+            <Grid item xs zeroMinWidth>
+              <Typography variant="body2" noWrap gutterBottom>
+                {authorName} <span style={{ color: "grey" }}>
+                {edited === true ? "(Disunting)" : null} • {moment(date)
+                .locale("id").format("DD MMM YYYY, HH.mm")}</span>
+              </Typography>
+            </Grid>
+            {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
+              <Grid item>
+                <IconButton className={classes.commentActionButton}>
+                  <MoreVertIcon className={classes.commentActionIcon}/>
+                </IconButton>
+                {/*<LightTooltip title="Sunting">
+                  <CreateIcon
+                    style={{marginRight: "2px"}}
+                    className={classes.commentLittleIcon}
+                    fontSize="small"
+                    onClick={() => handleClickEdit(idx)}
+                  />
+                </LightTooltip>
+                <LightTooltip title="Hapus">
+                  <DeleteIcon
+                    className={classes.commentLittleIcon}
+                    fontSize="small"
+                    onClick={() => handleOpenDeleteCommentDialog(idx)}
+                  />
+                </LightTooltip>*/}
+              </Grid>
+            : null}
           </Grid>
           <Grid item xs={12}>
           {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
@@ -523,25 +558,6 @@ function ViewMaterial(props) {
           }
           </Grid>
         </Grid>
-        {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
-          <Grid item>
-            <LightTooltip title="Sunting">
-              <CreateIcon
-                style={{marginRight: "2px"}}
-                className={classes.commentLittleIcon}
-                fontSize="small"
-                onClick={() => handleClickEdit(idx)}
-              />
-            </LightTooltip>
-            <LightTooltip title="Hapus">
-              <DeleteIcon
-                className={classes.commentLittleIcon}
-                fontSize="small"
-                onClick={() => handleOpenDeleteCommentDialog(idx)}
-              />
-            </LightTooltip>
-          </Grid>
-        : null}
       </Grid>
     )
   }

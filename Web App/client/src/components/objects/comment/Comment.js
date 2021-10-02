@@ -48,12 +48,36 @@ function Comment(props) {
           <Avatar src={commentAvatar[author_id]} />
         </Grid>
         <Grid item xs zeroMinWidth container>
-          <Grid item xs={12}>
-            <Typography variant="body2" noWrap>
-              {authorName} <span style={{ color: "grey" }}>
-              {edited === true ? "(Disunting)" : null} • {moment(date)
-              .locale("id").format("DD MMM YYYY, HH.mm")}</span>
-            </Typography>
+          <Grid item xs={12} container alignItems="center" spacing={1}>
+            <Grid item xs zeroMinWidth>
+              <Typography variant="body2" noWrap gutterBottom>
+                {authorName} <span style={{ color: "grey" }}>
+                {edited === true ? "(Disunting)" : null} • {moment(date)
+                .locale("id").format("DD MMM YYYY, HH.mm")}</span>
+              </Typography>
+            </Grid>
+            {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
+              <Grid item>
+                <IconButton className={classes.commentActionButton}>
+                  <MoreVertIcon className={classes.commentActionIcon}/>
+                </IconButton>
+                {/*<LightTooltip title="Sunting">
+                  <CreateIcon
+                    style={{marginRight: "2px"}}
+                    className={classes.commentLittleIcon}
+                    fontSize="small"
+                    onClick={() => handleClickEdit(idx)}
+                  />
+                </LightTooltip>
+                <LightTooltip title="Hapus">
+                  <DeleteIcon
+                    className={classes.commentLittleIcon}
+                    fontSize="small"
+                    onClick={() => handleOpenDeleteCommentDialog(idx)}
+                  />
+                </LightTooltip>*/}
+              </Grid>
+            : null}
           </Grid>
           <Grid item xs={12}>
           {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
@@ -95,25 +119,6 @@ function Comment(props) {
           }
           </Grid>
         </Grid>
-        {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
-          <Grid item>
-            <LightTooltip title="Sunting">
-              <CreateIcon
-                style={{marginRight: "2px"}}
-                className={classes.commentLittleIcon}
-                fontSize="small"
-                onClick={() => handleClickEdit(idx)}
-              />
-            </LightTooltip>
-            <LightTooltip title="Hapus">
-              <DeleteIcon
-                className={classes.commentLittleIcon}
-                fontSize="small"
-                onClick={() => handleOpenDeleteCommentDialog(idx)}
-              />
-            </LightTooltip>
-          </Grid>
-        : null}
       </Grid>
     );
   };
