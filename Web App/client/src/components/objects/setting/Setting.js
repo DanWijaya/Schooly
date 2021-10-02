@@ -7,7 +7,6 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import {
   AppBar,
   Button,
-  Divider,
   Drawer,
   Grid,
   Hidden,

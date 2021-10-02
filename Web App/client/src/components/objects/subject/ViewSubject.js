@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -15,7 +14,7 @@ import { getAllAssessments } from "../../../actions/AssessmentActions";
 import subjectBackground from "./subject-background/SubjectBackground";
 import Empty from "../../misc/empty/Empty";
 import AssessmentItem from "../item/AssessmentItem";
-import AssignmentItem from "../item/AssignmentItem";
+import TaskItem from "../item/TaskItem";
 import MaterialItem from "../item/MaterialItem";
 import {
   Divider,
@@ -23,8 +22,6 @@ import {
   ExpansionPanelDetails,
   ExpansionPanelSummary,
   Grid,
-  Hidden,
-  List,
   Paper,
   Typography
 } from "@material-ui/core";
@@ -302,7 +299,7 @@ function ViewSubject(props) {
           ) {
             result.push(
               <Grid item>
-                <AssignmentItem
+                <TaskItem
                   link={`/tugas-murid/${task._id}`}
                   primaryText={task.name}
                   status={assignmentStatus}
@@ -330,7 +327,7 @@ function ViewSubject(props) {
           ) {
             result.push(
               <Grid item>
-                <AssignmentItem
+                <TaskItem
                   link={`/tugas-murid/${task._id}`}
                   primaryText={task.name}
                   status={assignmentStatus}

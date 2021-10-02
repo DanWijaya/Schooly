@@ -24,7 +24,6 @@ import {
   VisibilityOff as VisibilityOffIcon
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
-import Latex from "../../misc/latex/Latex";
 
 const styles = (theme) => ({
   root: {
@@ -236,7 +235,7 @@ class Login extends Component {
                           value={this.state.password}
                           helperText={errors.password}
                           error={Boolean(
-                            errors.password 
+                            errors.password
                           )}
                           className={classnames("", {
                             invalid: errors.password

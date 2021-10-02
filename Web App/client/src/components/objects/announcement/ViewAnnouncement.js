@@ -16,22 +16,20 @@ import {
   Avatar,
   Button,
   Divider,
-  Fab,
   Grid,
-  IconButton,
+  Hidden,
   ListItem,
   ListItemAvatar,
   ListItemText,
   Paper,
+  Tooltip,
   Typography
 } from "@material-ui/core";
 import {
-  CloudDownload as CloudDownloadIcon,
   Delete as DeleteIcon,
   Edit as EditIcon
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import { fade } from "@material-ui/core/styles/colorManipulator";
 import {
   FaFile,
   FaFileAlt,
@@ -66,16 +64,22 @@ const useStyles = makeStyles((theme) => ({
     width: "110px",
     textTransform: "none",
     color: theme.palette.primary.main,
-    "&:focus, &:hover": {
+    "&:hover": {
       backgroundColor: theme.palette.primary.fade,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
     },
   },
   deleteButton: {
     width: "110px",
     textTransform: "none",
     color: theme.palette.error.main,
-    "&:focus, &:hover": {
+    "&:hover": {
       backgroundColor: theme.palette.error.fade,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
     },
   },
   listItem: {
@@ -323,7 +327,7 @@ function ViewAnnouncement(props) {
               {!fileLampiran.length === 0 ? null : (
                 <Grid item xs={12}>
                   <Typography color="textSecondary" gutterBottom>
-                    Lampiran Berkas:
+                    Lampiran:
                   </Typography>
                   <Grid container spacing={1}>
                     {fileLampiran.map((lampiran) => (
@@ -347,28 +351,53 @@ function ViewAnnouncement(props) {
           <Grid item container justify="flex-end" alignItems="center" spacing={1}>
             <Grid item>
               <Link to={`/sunting-pengumuman/${announcement_id}`}>
-                <Button
-                  variant="outlined"
-                  className={classes.editButton}
-                  startIcon={<EditIcon style={{ color: "grey" }} />}
-                >
-                  <Typography>
-                    Sunting
-                  </Typography>
-                </Button>
+                <Hidden xsDown>
+                  <Button
+                    variant="outlined"
+                    className={classes.editButton}
+                    startIcon={<EditIcon style={{ color: "grey" }} />}
+                  >
+                    <Typography>
+                      Sunting
+                    </Typography>
+                  </Button>
+                </Hidden>
+                <Hidden smUp>
+                  <Tooltip title="Sunting">
+                    <Button
+                      variant="outlined"
+                      className={classes.editButton}
+                    >
+                      <EditIcon />
+                    </Button>
+                  </Tooltip>
+                </Hidden>
               </Link>
             </Grid>
             <Grid item>
-              <Button
-                variant="outlined"
-                className={classes.deleteButton}
-                startIcon={<DeleteIcon style={{ color: "grey" }} />}
-                onClick={(e) => handleOpenDeleteDialog(e, announcement_id)}
-              >
-                <Typography>
-                  Hapus
-                </Typography>
-              </Button>
+              <Hidden xsDown>
+                <Button
+                  variant="outlined"
+                  className={classes.deleteButton}
+                  startIcon={<DeleteIcon style={{ color: "grey" }} />}
+                  onClick={(e) => handleOpenDeleteDialog(e, announcement_id)}
+                >
+                  <Typography>
+                    Hapus
+                  </Typography>
+                </Button>
+              </Hidden>
+              <Hidden smUp>
+                <Tooltip title="Hapus">
+                  <Button
+                    variant="outlined"
+                    className={classes.deleteButton}
+                    onClick={(e) => handleOpenDeleteDialog(e, announcement_id)}
+                  >
+                    <DeleteIcon />
+                  </Button>
+                </Tooltip>
+              </Hidden>
             </Grid>
           </Grid>
         ) : null}

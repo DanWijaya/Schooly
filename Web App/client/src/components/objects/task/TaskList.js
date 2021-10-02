@@ -43,7 +43,6 @@ import {
   Edit as EditIcon,
   Error as ErrorIcon,
   Delete as DeleteIcon,
-  ExpandMore as ExpandMoreIcon,
   Pageview as PageviewIcon,
   Search as SearchIcon,
   Sort as SortIcon

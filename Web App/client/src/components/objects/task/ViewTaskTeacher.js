@@ -1,18 +1,12 @@
 import React from "react";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import {
-  getOneTask,
-  deleteTask,
-  createTaskComment,
-  editTaskComment,
-  deleteTaskComment
- } from "../../../actions/TaskActions";
+import { getOneTask, deleteTask, createTaskComment, editTaskComment, deleteTaskComment } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import {
   uploadTugas,
@@ -34,11 +28,15 @@ import {
   getFileAvatar,
   getMultipleFileAvatar
 } from "../../../actions/files/FileAvatarActions";
+import { getFileSubmitTasks_T } from "../../../actions/files/FileSubmitTaskActions";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
+  Box,
+  Button,
+  Divider,
   Fab,
   Grid,
   Hidden,
@@ -47,19 +45,22 @@ import {
   ListItemAvatar,
   ListItemText,
   Paper,
-  Typography,
-  Divider,
-  TextField,
-  Button,
   Snackbar,
-  Box
+  TextField,
+  Tooltip,
+  Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Alert from "@material-ui/lab/Alert";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
+import {
+  Cancel as CancelIcon,
+  CheckCircle as CheckCircleIcon,
+  Create as CreateIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  PlaylistAddCheck as PlaylistAddCheckIcon,
+  Send as SendIcon
+} from "@material-ui/icons";
 import {
   FaFile,
   FaFileAlt,
@@ -69,69 +70,61 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import SendIcon from '@material-ui/icons/Send';
-import CreateIcon from '@material-ui/icons/Create';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
-import axios from "axios";
-import { getFileSubmitTasks_T } from "../../../actions/files/FileSubmitTaskActions";
-
-const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    padding: "10px",
   },
-  paperBox: {
+  taskPaper: {
     padding: "20px",
-    // marginBottom: "10px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "15px",
+    },
   },
-  seeAllTaskButton: {
+  taskDivider: {
+    margin: "22.5px 0px",
+    backgroundColor: theme.palette.primary.light,
+  },
+  seeResultsButton: {
+    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.success.main,
+      backgroundColor: theme.palette.success.main,
+      color: "white",
     },
   },
-  editTaskButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
+  editButton: {
+    width: "110px",
+    textTransform: "none",
+    color: theme.palette.primary.main,
+    "&:hover": {
+      backgroundColor: theme.palette.primary.fade,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
     },
   },
-  deleteTaskButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
+  deleteButton: {
+    width: "110px",
+    textTransform: "none",
+    color: theme.palette.error.main,
+    "&:hover": {
+      backgroundColor: theme.palette.error.fade,
     },
-  },
-  listItemPaper: {
-    marginBottom: "10px",
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
   },
   listItem: {
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
-    },
-  },
-  downloadIconButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
     },
   },
   wordFileTypeIcon: {
@@ -155,8 +148,11 @@ const useStyles = makeStyles((theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
-  dividerColor: {
-    backgroundColor: theme.palette.primary.main,
+  commentPaper: {
+    padding: "20px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "15px",
+    },
   },
   commentLittleIcon: {
     color: theme.palette.text.disabled,
@@ -166,53 +162,21 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer"
     },
   },
-  sendIcon: {
-    color: theme.palette.text.disabled,
-    "&:focus, &:hover": {
-      cursor: "pointer"
-    },
-    [theme.breakpoints.down("xs")]: {
-      marginLeft: "15px"
-    },
-    marginLeft: "20px"
+  cancelButton: {
+    width: "100px",
+    color: theme.palette.text.secondary,
   },
-  marginMobile: {
-    [theme.breakpoints.down("sm")]: {
-      marginRight: "14px",
-      marginLeft: "7.6px"
-    },
-  },
-  smAvatar: {
-    [theme.breakpoints.down("xs")]: {
-      marginRight: "15px"
-    },
-    marginRight: "20px"
-  },
-  mobileName: {
-    marginRight: "7px",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    overflow: "hidden",
-    maxWidth: "50px",
-  },
-  checkButton: {
+  saveButton: {
+    width: "100px",
     backgroundColor: theme.palette.success.main,
     color: "white",
-    marginTop: "6px",
-    marginRight: "3px",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.dark
     },
   },
-  cancelButton: {
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    marginTop: "6px",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark
-    },
-  }
 }));
+
+const path = require("path");
 
 function LampiranFile(props) {
   const classes = useStyles();
@@ -290,15 +254,9 @@ function LampiranFile(props) {
   );
 }
 
-// component ini akan view task yang teacher dia sendiri buat.
 function ViewTaskTeacher(props) {
   const classes = useStyles();
   const history = useHistory();
-  const {
-    user,
-    all_students,
-    all_teachers
-  } = props.auth;
   const {
     deleteTask,
     tasksCollection,
@@ -319,16 +277,22 @@ function ViewTaskTeacher(props) {
     getMultipleFileAvatar,
     getFileSubmitTasks_T
   } = props;
+  const {
+    user,
+    all_students,
+    all_teachers
+  } = props.auth;
   const { all_classes_map } = props.classesCollection;
-  const task_id = props.match.params.id;
   const { all_subjects_map } = props.subjectsCollection;
+  const task_id = props.match.params.id;
+
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [fileLampiran, setFileLampiran] = React.useState([]);
 
-  // untuk men-disable tombol yang mengarahkan pengguna ke SubmittedTaskList ketika belum ada satupun murid yang mengumpulkan tugas
+  // To disable button that redirect teacher to SubmittedTaskList when there is still no submitted task.
   const [disableButton, setDisableButton] = React.useState(true);
 
-  // USER COMMENT
+  // Comment
   const [commentValue, setCommentValue] = React.useState("");
   const [commentEditorValue, setCommentEditorValue] = React.useState("");
   const [commentList, setCommentList] = React.useState([]);
@@ -338,7 +302,7 @@ function ViewTaskTeacher(props) {
   const [deleteCommentIdx, setDeleteCommentIdx] = React.useState(null);
   const deleteDialogHandler = React.useRef(null);
 
-  // SNACKBAR
+  // Snackbar
   const [snackbarContent, setSnackbarContent] = React.useState("");
   const [severity, setSeverity] = React.useState("info");
   const [openCommentSnackbar, setOpenCommentSnackbar] = React.useState(false);
@@ -444,7 +408,6 @@ function ViewTaskTeacher(props) {
   const handleCommentInputChange = (e) => {
     setCommentValue(e.target.value);
   };
-
   const handleCommentEditorChange = (e) => {
     setCommentEditorValue(e.target.value);
   };
@@ -453,12 +416,10 @@ function ViewTaskTeacher(props) {
     setCommentEditorValue("");
     setSelectedCommentIdx(null);
   };
-
   const handleClickEdit = (idx) => {
     setCommentEditorValue(commentList[idx].content);
     setSelectedCommentIdx(idx)
   };
-
   const handleCreateComment = () => {
     if (commentValue.length === 0) {
       handleOpenCommentSnackbar("error", "Isi komentar tidak boleh kosong");
@@ -543,17 +504,6 @@ function ViewTaskTeacher(props) {
         return "File Lainnya";
     }
   };
-  /* UNTUK YANG BUKAN CDN
-  // const onDownloadFile = (id, fileCategory = "none") => {
-  //   if (fileCategory === "lampiran") downloadLampiran(id);
-  //   else console.log("File Category is not specified");
-  // };
-
-  // const onPreviewFile = (id, fileCategory = "none") => {
-  //   if (fileCategory === "lampiran") previewLampiran(id);
-  //   else console.log("File Category is not specified");
-  // };
-  */
 
   const onDeleteTask = (id) => {
     deleteTask(id, history).then((res) => {
@@ -565,11 +515,11 @@ function ViewTaskTeacher(props) {
   const handleOpenDeleteDialog = (fileid, filename) => {
     setOpenDeleteDialog(true);
   };
-
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
 
+  // Comment Dialog
   const handleOpenDeleteCommentDialog = (idx) => {
     setOpenDeleteCommentDialog(true);
     deleteDialogHandler.current =  (idx === selectedCommentIdx)
@@ -581,108 +531,86 @@ function ViewTaskTeacher(props) {
       handleDeleteComment(idx);
     }
   };
-
   const handleCloseDeleteCommentDialog = () => {
-    // setDeleteCommentIdx(null) akan dijalankan setelah task dimuat ulang
+    // setDeleteCommentIdx(null) will be run after material is reloaded.
     setOpenDeleteCommentDialog(false);
   };
 
-  // Komentar
-  // Kalau avatar belum ada, pakai default
-
+  // Comment
   const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
     return (
-    <Grid container item direction="row" style={{flexWrap: "nowrap"}}>
-      <div className={classes.smAvatar}>
-        <Avatar src={commentAvatar[author_id]}/>
-      </div>
-      <Box flexGrow={1}>
-        <div style={{display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
-          <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-            <Hidden smUp>
-              <Typography className={classes.mobileName}>
-                <b>{authorName}</b>
-              </Typography>
-              <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-                {edited === true ?
-                  <Typography color="textSecondary" variant="body2" style={{marginRight: "5px", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>Edited</Typography>
-                : null}
-                <Typography color="textSecondary" variant="body2" style={{marginRight: "5px", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
-                  {moment(date)
-                        .locale("id")
-                        .format("DD MMM YYYY, HH.mm")}
-                </Typography>
-              </div>
-            </Hidden>
-            <Hidden xsDown>
-                <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
-                {edited === true ?
-                  <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography>
-                : null}
-                  <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
-                    {moment(date)
-                          .locale("id")
-                          .format("DD MMM YYYY, HH.mm")}
-                  </Typography>
-            </Hidden>
-          </div>
-          <div>
-            {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
-              <>
-                <LightTooltip title="Sunting">
-                  <CreateIcon
-                    style={{marginRight: "2px"}}
-                    className={classes.commentLittleIcon}
-                    fontSize="small"
-                    onClick={() => handleClickEdit(idx)}
-                  />
-                </LightTooltip>
-                <LightTooltip title="Hapus">
-                  <DeleteIcon
-                    className={classes.commentLittleIcon}
-                    fontSize="small"
-                    onClick={() => handleOpenDeleteCommentDialog(idx)}
-                  />
-                </LightTooltip>
-              </>
-            : null}
-          </div>
-        </div>
-        {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
-          <div style={{display: "flex", flexDirection: "column"}}>
-            <TextField
-              variant="outlined"
-              onChange={handleCommentEditorChange}
-              value={commentEditorValue}
-              style={{marginTop: "5px"}}
-              multiline
-            />
-            <div style={{display: "flex", alignItems: "center"}}>
-              <Button
-                variant="contained"
-                color="default"
-                className={classes.checkButton}
-                startIcon={<CheckCircleIcon />}
-                onClick={handleEditComment}
-              >
-                Simpan
-              </Button>
-              <Button
-                variant="contained"
-                color="default"
-                className={classes.cancelButton}
-                startIcon={<CancelIcon />}
-                onClick={closeEditMode}
-              >
-                Batal
-              </Button>
-            </div>
-          </div>
-        :
-          <Typography style={{marginTop: "5px", wordBreak: "break-word", whiteSpace: "pre-wrap"}} align="justify">{comment}</Typography>
-        }
-      </Box>
-    </Grid>
+      <Grid container wrap="nowrap" spacing={2}>
+        <Grid item>
+          <Avatar src={commentAvatar[author_id]} />
+        </Grid>
+        <Grid item xs zeroMinWidth container>
+          <Grid item xs={12}>
+            <Typography variant="body2" noWrap>
+              {authorName} <span style={{ color: "grey" }}>
+              {edited === true ? "(Disunting)" : null} • {moment(date)
+              .locale("id").format("DD MMM YYYY, HH.mm")}</span>
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+          {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
+            <Grid container direction="column" spacing={1}>
+              <Grid item>
+                <TextField
+                  fullWidth
+                  multiline
+                  variant="outlined"
+                  onChange={handleCommentEditorChange}
+                  value={commentEditorValue}
+                />
+              </Grid>
+              <Grid item container spacing={1}>
+                <Grid item>
+                  <Button
+                    className={classes.cancelButton}
+                    startIcon={<CancelIcon />}
+                    onClick={closeEditMode}
+                  >
+                    Batal
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    className={classes.saveButton}
+                    startIcon={<CheckCircleIcon />}
+                    onClick={handleEditComment}
+                  >
+                    Simpan
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          :
+            <Typography align="justify" style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}>
+              {comment}
+            </Typography>
+          }
+          </Grid>
+        </Grid>
+        {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
+          <Grid item>
+            <LightTooltip title="Sunting">
+              <CreateIcon
+                style={{marginRight: "2px"}}
+                className={classes.commentLittleIcon}
+                fontSize="small"
+                onClick={() => handleClickEdit(idx)}
+              />
+            </LightTooltip>
+            <LightTooltip title="Hapus">
+              <DeleteIcon
+                className={classes.commentLittleIcon}
+                fontSize="small"
+                onClick={() => handleOpenDeleteCommentDialog(idx)}
+              />
+            </LightTooltip>
+          </Grid>
+        : null}
+      </Grid>
     )
   }
 
@@ -692,87 +620,28 @@ function ViewTaskTeacher(props) {
 
   return (
     <div className={classes.root}>
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Tugas"
-        itemName={tasksCollection.name}
-        deleteItem={() => {
-          onDeleteTask(task_id);
-        }}
-      />
-      <DeleteDialog
-        openDeleteDialog={openDeleteCommentDialog}
-        handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
-        itemType="Komentar"
-        itemName=""
-        deleteItem={deleteDialogHandler.current}
-      />
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          <Paper className={classes.paperBox}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} style={{ paddingBottom: "0" }}>
-                <Typography variant="h4">{tasksCollection.name}</Typography>
-                <Typography
-                  variant="caption"
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  <h6>{all_subjects_map.get(tasksCollection.subject)}</h6>
-                </Typography>
-              </Grid>
-
-              <Grid item xs={12} md={7} style={{ paddingTop: "0" }}>
-                <Typography variant="body2" color="textSecondary">
-                  Oleh: <b>{user.name}</b>
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Waktu Dibuat:{" "}
-                  {moment(tasksCollection.createdAt)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH.mm")}
-                </Typography>
-                <Hidden mdUp>
-                  <Typography variant="body2" color="textSecondary">
-                    Tenggat:{" "}
-                    {moment(tasksCollection.deadline)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH.mm")}
-                  </Typography>
-                </Hidden>
-              </Grid>
-              <Hidden smDown style={{ display: "flex" }}>
-                <Grid
-                  item
-                  xs={12}
-                  md={5}
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    align="right"
-                    color="textSecondary"
-                  >
-                    Tenggat:{" "}
-                    {moment(tasksCollection.deadline)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH.mm")}
-                  </Typography>
-                </Grid>
-              </Hidden>
-
-              <Grid item xs={12}>
-                <Divider className={classes.dividerColor} />
-              </Grid>
-
+          <Paper className={classes.taskPaper}>
+            <Typography variant="h4" style={{ marginBottom: "5px" }}>
+              {tasksCollection.name}
+            </Typography>
+            <Typography color="primary" paragraph>
+              Tugas {all_subjects_map.get(tasksCollection.subject)}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Oleh: {user.name}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Waktu Dibuat: {moment(tasksCollection.createdAt)
+                .locale("id")
+                .format("DD MMM YYYY, HH.mm")}
+            </Typography>
+            <Divider className={classes.taskDivider} />
+            <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Typography color="textSecondary" gutterBottom>
-                  Kelas yang Diberikan:
+                  Diberikan kepada:
                 </Typography>
                 <Typography>
                   {!tasksCollection.class_assigned || !all_classes_map.size
@@ -787,13 +656,19 @@ function ViewTaskTeacher(props) {
                       })}
                 </Typography>
               </Grid>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" gutterBottom>
+                  Tenggat:
+                </Typography>
+                <Typography>
+                  {moment(tasksCollection.deadline)
+                    .locale("id")
+                    .format("DD MMM YYYY, HH.mm")}
+                </Typography>
+              </Grid>
               {!tasksCollection.description ? null : (
-                <Grid item xs={12} style={{ marginTop: "15px" }}>
-                  <Typography
-                    color="textSecondary"
-                    gutterBottom
-                    style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-                  >
+                <Grid item xs={12}>
+                  <Typography color="textSecondary" gutterBottom>
                     Deskripsi Tugas:
                   </Typography>
                   <Typography
@@ -802,14 +677,12 @@ function ViewTaskTeacher(props) {
                   >
                     <CustomLinkify text={tasksCollection.description} />
                   </Typography>
-                  {/* <Link href="https://www.google.com">{tasksCollection.description}</Link> */}
-                  {/* <Typography>{tasksCollection.description}</Typography> */}
                 </Grid>
               )}
               {fileLampiran.length === 0 ? null : (
-                <Grid item xs={12} style={{ marginTop: "15px" }}>
+                <Grid item xs={12}>
                   <Typography color="textSecondary" gutterBottom>
-                    Lampiran Berkas:
+                    Lampiran:
                   </Typography>
                   <Grid container spacing={1}>
                     {fileLampiran.map((lampiran) => (
@@ -827,8 +700,88 @@ function ViewTaskTeacher(props) {
             </Grid>
           </Paper>
         </Grid>
+        <Grid item container justify="space-between" alignItems="center" spacing={1}>
+          <Grid item>
+            <Link to={`/daftar-tugas-terkumpul/${task_id}`} style={{ pointerEvents: disableButton ? "none" : null }}>
+              <Hidden smDown>
+                <Fab
+                  size="large"
+                  variant="extended"
+                  className={classes.seeResultsButton}
+                  disabled={disableButton}
+                >
+                  <PlaylistAddCheckIcon style={{ marginRight: "8px" }} />
+                  Periksa
+                </Fab>
+              </Hidden>
+              <Hidden mdUp>
+                <Tooltip title="Periksa">
+                  <Fab
+                    size="medium"
+                    className={classes.seeResultsButton}
+                    disabled={disableButton}
+                  >
+                    <PlaylistAddCheckIcon />
+                  </Fab>
+                </Tooltip>
+              </Hidden>
+            </Link>
+          </Grid>
+          <Grid item xs container justify="flex-end" alignItems="center" spacing={1}>
+            <Grid item>
+              <Link to={`/sunting-tugas/${task_id}`}>
+                <Hidden xsDown>
+                  <Button
+                    variant="outlined"
+                    className={classes.editButton}
+                    startIcon={<EditIcon style={{ color: "grey" }} />}
+                  >
+                    <Typography>
+                      Sunting
+                    </Typography>
+                  </Button>
+                </Hidden>
+                <Hidden smUp>
+                  <Tooltip title="Sunting">
+                    <Button
+                      variant="outlined"
+                      className={classes.editButton}
+                    >
+                      <EditIcon />
+                    </Button>
+                  </Tooltip>
+                </Hidden>
+              </Link>
+            </Grid>
+            <Grid item>
+              <Hidden xsDown>
+                <Button
+                  variant="outlined"
+                  className={classes.deleteButton}
+                  startIcon={<DeleteIcon style={{ color: "grey" }} />}
+                  onClick={(e) => handleOpenDeleteDialog(e, task_id)}
+                >
+                  <Typography>
+                    Hapus
+                  </Typography>
+                </Button>
+              </Hidden>
+              <Hidden smUp>
+                <Tooltip title="Hapus">
+                  <Button
+                    variant="outlined"
+                    className={classes.deleteButton}
+                    onClick={(e) => handleOpenDeleteDialog(e, task_id)}
+                  >
+                    <DeleteIcon />
+                  </Button>
+                </Tooltip>
+              </Hidden>
+            </Grid>
+          </Grid>
+        </Grid>
         <Grid item>
-          <Paper className={classes.paperBox} style={{marginTop: "20px"}}>
+          <Paper className={classes.commentPaper}>
             <Typography variant="h6" gutterBottom>Komentar Kelas</Typography>
             <Divider style={{ marginBottom: "17.5px" }} />
             <Grid container spacing={2}>
@@ -878,47 +831,23 @@ function ViewTaskTeacher(props) {
             </Grid>
           </Paper>
         </Grid>
-        <Grid item container justify="flex-end" alignItems="center">
-          <Grid item style={{ paddingRight: "10px" }}>
-            {disableButton ? (
-              <Fab
-                variant="extended"
-                className={classes.seeAllTaskButton}
-                disabled
-              >
-                <AssignmentIcon style={{ marginRight: "7.5px" }} />
-                Lihat Hasil
-              </Fab>
-            ) : (
-              <Link to={`/daftar-tugas-terkumpul/${task_id}`}>
-                <Fab variant="extended" className={classes.seeAllTaskButton}>
-                  <AssignmentIcon style={{ marginRight: "7.5px" }} />
-                  Lihat Hasil
-                </Fab>
-              </Link>
-            )}
-          </Grid>
-          <Grid item style={{ paddingRight: "10px" }}>
-            <Link to={`/sunting-tugas/${task_id}`}>
-              <LightTooltip title="Sunting Tugas" placement="bottom">
-                <Fab className={classes.editTaskButton}>
-                  <EditIcon />
-                </Fab>
-              </LightTooltip>
-            </Link>
-          </Grid>
-          <Grid item>
-            <LightTooltip title="Hapus" placement="bottom">
-              <Fab
-                className={classes.deleteTaskButton}
-                onClick={(e) => handleOpenDeleteDialog(e, task_id)}
-              >
-                <DeleteIcon />
-              </Fab>
-            </LightTooltip>
-          </Grid>
-        </Grid>
       </Grid>
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Tugas"
+        itemName={tasksCollection.name}
+        deleteItem={() => {
+          onDeleteTask(task_id);
+        }}
+      />
+      <DeleteDialog
+        openDeleteDialog={openDeleteCommentDialog}
+        handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
+        itemType="Komentar"
+        itemName=""
+        deleteItem={deleteDialogHandler.current}
+      />
       <Snackbar
         open={openCommentSnackbar}
         autoHideDuration={3000}

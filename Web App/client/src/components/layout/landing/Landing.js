@@ -9,7 +9,6 @@ import {
   Button,
   Grid,
   Hidden,
-  List,
   ListItem,
   ListItemAvatar,
   ListItemText,

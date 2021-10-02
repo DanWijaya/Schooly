@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -15,7 +15,6 @@ import {
   Checkbox,
   Dialog,
   Divider,
-  FormControlLabel,
   Grid,
   Hidden,
   IconButton,
@@ -35,15 +34,11 @@ import {
   Typography
 } from "@material-ui/core";
 import {
-  ArrowBack as ArrowBackIcon,
-  Block as BlockIcon,
   Cancel as CancelIcon,
   CheckBox as CheckBoxIcon,
   CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
   CheckCircle as CheckCircleIcon,
   Clear as ClearIcon,
-  Close as CloseIcon,
-  Delete as DeleteIcon,
   IndeterminateCheckBox as IndeterminateCheckBoxIcon,
   Search as SearchIcon,
   Sort as SortIcon

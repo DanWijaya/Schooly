@@ -35,12 +35,9 @@ import {
 import Alert from "@material-ui/lab/Alert";
 import {
   ArrowBack as ArrowBackIcon,
-  CheckCircle as CheckCircleIcon,
   Clear as ClearIcon,
   Edit as EditIcon,
-  Error as ErrorIcon,
   Delete as DeleteIcon,
-  ExpandMore as ExpandMoreIcon,
   MenuBook as MenuBookIcon,
   Pageview as PageviewIcon,
   Search as SearchIcon,

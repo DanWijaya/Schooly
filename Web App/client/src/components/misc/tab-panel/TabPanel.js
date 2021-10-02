@@ -1,12 +1,11 @@
 import React from "react";
-import { Box } from "@material-ui/core";
 import PropTypes from "prop-types";
 
 export const TabPanel = (props) => {
   const { children, value, id, index, ...other } = props; //id is used to customize.
 
   return (
-    <div hidden={value !== index} id={`simple-tabpanel-${index}`} {...other}>
+    <div hidden={value !== index} id={`tabpanel-${index}`} {...other}>
       {value === index && children}
     </div>
   );
@@ -20,6 +19,6 @@ TabPanel.propTypes = {
 
 export const TabIndex = (index) => {
   return {
-    id: `simple-tab-${index}`,
+    id: `tab-${index}`,
   };
 }

@@ -10,7 +10,6 @@ import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Button,
-  Dialog,
   Divider,
   ExpansionPanel,
   ExpansionPanelDetails,
@@ -23,17 +22,13 @@ import {
   MenuItem,
   Snackbar,
   TableSortLabel,
-  OutlinedInput,
   TextField,
   Typography,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Alert from "@material-ui/lab/Alert";
 import {
-  ArrowBack as ArrowBackIcon,
   Clear as ClearIcon,
-  Close as CloseIcon,
-  Edit as EditIcon,
   ExpandMore as ExpandMoreIcon,
   Search as SearchIcon,
   Sort as SortIcon

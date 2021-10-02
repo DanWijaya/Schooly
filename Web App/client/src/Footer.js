@@ -4,8 +4,6 @@ import schoolySymbolLogo from "./images/SchoolySymbolLogo.png";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
 import Hidden from "@material-ui/core/Hidden";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaLine, FaInstagram } from "react-icons/fa";

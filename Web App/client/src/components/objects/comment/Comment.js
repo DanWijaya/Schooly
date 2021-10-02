@@ -7,6 +7,16 @@ const useStyles = makeStyles((theme) => ({
       padding: "15px",
     },
   },
+  commentActionButton: {
+    width: "18px",
+    height: "18px",
+    "&:focus, &:hover": {
+      backgroundColor: "#F1F1F1",
+    },
+  },
+  commentActionIcon: {
+    fontSize: "18px",
+  },
   cancelButton: {
     width: "100px",
     color: theme.palette.text.secondary,
@@ -111,11 +121,11 @@ function Comment(props) {
   return (
     <Paper className={classes.root}>
       <Typography variant="h6" gutterBottom>
-        Komentar Kelas
+        Komentar
       </Typography>
       <Divider />
-      {(commentList.length !== 0) ?
-          <div style={{ padding: "16px 0px" }}>
+      <div style={{ padding: "16px 0px" }}>
+        {(commentList.length !== 0) ?
             <Grid container wrap="nowrap" direction="column" spacing={2}>
               {commentList.map((comment, idx) => (
                   <Grid item>
@@ -124,10 +134,10 @@ function Comment(props) {
                 ))
               }
             </Grid>
-            <Divider style={{ marginTop: "16px" }} />
-          </div>
-        : null
-      }
+          : null
+        }
+        <Divider style={{ marginTop: "16px" }} />
+      </div>
       <Grid container spacing={2}>
         <Grid item>
           <Avatar src={commentAvatar[user._id]}/>

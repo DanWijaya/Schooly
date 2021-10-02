@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -8,6 +9,9 @@ import { getStudents } from "../../../actions/UserActions";
 import { getTaskFilesByUser, downloadTugas, previewTugas } from "../../../actions/UploadActions";
 import { getFileSubmitTasks_T, viewFileSubmitTasks } from "../../../actions/files/FileSubmitTaskActions";
 import { getOneTask, gradeTask } from "../../../actions/TaskActions";
+import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
+import Empty from "../../misc/empty/Empty";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -15,7 +19,9 @@ import {
   Button,
   Divider,
   ExpansionPanel,
+  ExpansionPanelDetails,
   ExpansionPanelSummary,
+  Fab,
   Grid,
   Hidden,
   IconButton,
@@ -29,14 +35,18 @@ import {
   Tab,
   Tabs,
   TextField,
-  Typography,
+  Tooltip,
+  Typography
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import {
+  BarChart as BarChartIcon,
+  CloudDownload as CloudDownloadIcon,
+  ExpandMore as ExpandMoreIcon,
+  GetApp as GetAppIcon,
+  QuestionAnswer as QuestionAnswerIcon,
+} from "@material-ui/icons";
 import {
   FaFile,
   FaFileAlt,
@@ -50,53 +60,63 @@ import {
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
-  studentFileListContainer: {
-    margin: "20px",
+  submittedTaskPaper: {
+    padding: "20px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "15px",
+    },
   },
-  personListContainer: {
-    display: "flex",
-    alignItems: "center",
-    padding: "5px",
+  submittedTaskDivider: {
+    margin: "22.5px 0px",
+    backgroundColor: theme.palette.primary.light,
   },
-  listItemPaper: {
-    marginBottom: "10px",
+  discussionButton: {
+    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+    },
+  },
+  resultButtons: {
+    textTransform: "none",
+    color: theme.palette.primary.main,
+    "&:hover": {
+      backgroundColor: theme.palette.primary.fade,
+    },
+  },
+  resultsPaper: {
+    padding: "20px 20px 0px 20px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "15px 15px 0px 15px",
+    },
+  },
+  studentResultDetails: {
+    padding: "15px 20px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "10px 15px",
+    },
+  },
+  saveScoreButton: {
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+    },
   },
   listItem: {
     padding: "6px 16px",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
-    },
-  },
-  checkCircleIcon: {
-    marginRight: "10px",
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.success.main,
-    },
-  },
-  downloadAllButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  downloadIconButton: {
-    marginLeft: "5px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
     },
   },
   wordFileTypeIcon: {
@@ -120,60 +140,12 @@ const useStyles = makeStyles((theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
-  exportButton: {
-    // marginTop: "15px",
-    backgroundColor: theme.palette.action.selected,
-    color: "black",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.divider,
-      color: "black",
-    },
-  },
-  paperBox: {
-    padding: "20px 20px 0 20px",
-    // marginBottom: "10px",
-  },
-  dividerColor: {
-    backgroundColor: theme.palette.primary.main,
-    // marginBottom: "5px"
-  },
 }));
 
 const path = require("path");
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      hidden={value !== index}
-      id={`scrollable-force-tabpanel-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function TabIndex(index) {
-  return {
-    id: `scrollable-force-tab-${index}`,
-  };
-}
-
 function WorkFile(props) {
   const classes = useStyles();
-
   const {
     file_id,
     file_name,
@@ -185,13 +157,13 @@ function WorkFile(props) {
 
   let name_to_show;
   if(isLate){
-    name_to_show = <Typography color="error"> {`${file_name} (TELAT)`}</Typography>
+    name_to_show = <Typography color="error"> {`${file_name} (Telat)`}</Typography>
   } else {
     name_to_show = <Typography color="textPrimary">{file_name}</Typography>
   }
 
   return (
-    <Paper variant="outlined" className={classes.listItemPaper}>
+    <Paper variant="outlined">
       <ListItem
         button
         disableRipple
@@ -244,37 +216,6 @@ function WorkFile(props) {
   );
 }
 
-function GradeButton(props) {
-  const classes = useStyles();
-  const {
-    onGradeTugas,
-    task_id,
-    student_id,
-    grade,
-    student_name,
-    // student_task_files_id,
-  } = props;
-
-  return (
-    <Button
-      variant="contained"
-      startIcon={<CheckCircleIcon />}
-      className={classes.checkCircleIcon}
-      onClick={() =>
-        onGradeTugas(
-          task_id,
-          // student_task_files_id,
-          student_id,
-          student_name,
-          grade
-        )
-      }
-    >
-      Simpan
-    </Button>
-  );
-}
-
 function SubmittedTaskList(props) {
   const classes = useStyles();
   const {
@@ -322,7 +263,7 @@ function SubmittedTaskList(props) {
     getOneTask(task_id);
     getStudents();
     getAllClass();
-    // ini successnya bakal return 3 barang di list.
+    // If success will return 3 items in the list.
     if (success instanceof Array) {
       if (success.length === 3) handleOpenAlert();
     }
@@ -486,7 +427,7 @@ function SubmittedTaskList(props) {
       return null;
     } else {
       if (temp.size) {
-        // temp ini adalah semua kelas
+        // Temp = all class
         for (var i = 0; i < tasksCollection.class_assigned.length; i++) {
           class_assigned.push(
             <Tab
@@ -501,12 +442,12 @@ function SubmittedTaskList(props) {
         }
         return (
           <Tabs
-            value={value}
             variant="scrollable"
             scrollButtons="on"
-            onChange={handleChange}
             indicatorColor="primary"
             textColor="primary"
+            value={value}
+            onChange={handleChange}
           >
             {class_assigned}
           </Tabs>
@@ -521,14 +462,14 @@ function SubmittedTaskList(props) {
       return;
     } else {
       let { class_assigned } = tasksCollection;
-      // let student_task_files_id; // to handle the download all, this is needed.
+      // let student_task_files_id; // To handle the download all, this is needed.
       let students_in_class = [];
       let isClassSubmissionEmpty = true;
-      // untuk setiap kelas yang diberikan task ini,
+      // For every class that was given this task.
       all_students
         .filter((s) => tasksCollection.class_assigned[value] === s.kelas)
         .map((student, idx) => {
-          // untuk setiap file yang pernah dikumpulkan murid ini.
+          // For every file that the student has submitted.
           let students_files = submittedFiles.filter((f) => {
             return f.author_id == student._id;
           });
@@ -554,11 +495,7 @@ function SubmittedTaskList(props) {
           })
           } else {
             task_list_on_panel = [
-              <Typography
-                align="center"
-                color="textSecondary"
-                variant="subtitle1"
-              >
+              <Typography align="center" color="textSecondary">
                 Kosong
               </Typography>,
             ];
@@ -567,101 +504,93 @@ function SubmittedTaskList(props) {
           students_in_class.push(
             <ExpansionPanel defaultExpanded={true}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <ListItem className={classes.personListContainer}>
-                  <ListItemAvatar>
-                    {!student.avatar ? (
-                      <Avatar style={{ marginRight: "10px" }} />
-                    ) : (
-                      <Avatar
-                        src={`/api/upload/avatar/${student.avatar}`}
-                        style={{ marginRight: "10px" }}
-                      />
-                    )}
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Typography variant="h6">{student.name}</Typography>
-                    }
-                    secondary={
-                      !tasksCollection.grades
+                <Grid container alignItems="center" spacing={2}>
+                  <Hidden xsDown>
+                    <Grid item>
+                      {!student.avatar ? (
+                        <Avatar />
+                      ) : (
+                        <Avatar src={`/api/upload/avatar/${student.avatar}`} />
+                      )}
+                    </Grid>
+                  </Hidden>
+                  <Grid item>
+                    <Typography noWrap>
+                      {student.name}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" noWrap>
+                      {!tasksCollection.grades
                         ? "Not graded"
                         : !gradeStatus.has(student._id) &&
                           !tasksCollection.grades[student._id]
                         ? "Belum Dinilai"
-                        : "Telah Dinilai"
-                    }
-                  />
-                </ListItem>
+                        : "Telah Dinilai"}
+                    </Typography>
+                  </Grid>
+                </Grid>
               </ExpansionPanelSummary>
               <Divider />
-              <div className={classes.studentFileListContainer}>
-                <List>{task_list_on_panel}</List>
-                {students_files.length > 0 ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div
-                      style={{
-                        marginRight: "20px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <TextField
-                        defaultValue={
-                          grade.has(student._id) ||
-                          tasksCollection.grades === null
-                            ? grade.get(student._id)
-                            : tasksCollection.grades[student._id]
-                        }
-                        onChange={(e) => {
-                          handleChangeGrade(e, student._id);
-                        }}
-                        inputProps={{
-                          style: {
-                            borderBottom: "none",
-                            boxShadow: "none",
-                            margin: "0px",
-                            width: "35px",
-                          },
-                        }}
-                        InputProps={{
-                          endAdornment: "/ 100",
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <GradeButton
-                        onGradeTugas={onGradeTugas}
-                        task_id={task_id}
-                        student_id={student._id}
-                        student_name={student.name}
-                        grade={grade}
-                      />
-                    </div>
-                  </div>
-                ) : null}
-              </div>
+              <ExpansionPanelDetails className={classes.studentResultDetails}>
+                <Grid container direction="column" spacing={2}>
+                  <Grid item>
+                    <List>
+                      {task_list_on_panel}
+                    </List>
+                  </Grid>
+                  {students_files.length > 0 ? (
+                    <Grid item container justify="flex-end" alignItems="center" spacing={3}>
+                      <Grid item>
+                        <TextField
+                          defaultValue={
+                            grade.has(student._id) ||
+                            tasksCollection.grades === null
+                              ? grade.get(student._id)
+                              : tasksCollection.grades[student._id]
+                          }
+                          onChange={(e) => {
+                            handleChangeGrade(e, student._id);
+                          }}
+                          inputProps={{
+                            style: {
+                              borderBottom: "none",
+                              boxShadow: "none",
+                              margin: "0px",
+                              width: "35px",
+                            },
+                          }}
+                          InputProps={{
+                            endAdornment: "/ 100",
+                          }}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          variant="contained"
+                          className={classes.saveScoreButton}
+                          onClick={() =>
+                            onGradeTugas(
+                              task_id,
+                              // student_task_files_id,
+                              student._id,
+                              student.name,
+                              grade
+                            )
+                          }
+                        >
+                          Simpan
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  ) : null}
+                </Grid>
+              </ExpansionPanelDetails>
             </ExpansionPanel>
           );
         });
       TabPanelList.push(
         <TabPanel value={value} index={value}>
           {isClassSubmissionEmpty ? (
-            <Grid
-              container
-              alignItems="center"
-              justify="center"
-              style={{ height: "20vh" }}
-            >
-              <Typography variant="h5" color="textSecondary" align="center">
-                Belum ada murid yang mengumpulkan tugas
-              </Typography>
-            </Grid>
+            <Empty />
           ) : (
             students_in_class
           )}
@@ -675,18 +604,17 @@ function SubmittedTaskList(props) {
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paperBox}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} style={{ paddingBottom: "0" }}>
-            <Typography variant="h4">{tasksCollection.name}</Typography>
-            <Typography variant="caption" color="textSecondary" gutterBottom>
-              <h6>{all_subjects_map.get(tasksCollection.subject)}</h6>
+      <Grid container direction="column" spacing={2}>
+        <Grid item>
+          <Paper className={classes.submittedTaskPaper}>
+            <Typography variant="h4" style={{ marginBottom: "5px" }}>
+              {tasksCollection.name}
             </Typography>
-          </Grid>
-
-          <Grid item xs={12} md={7} style={{ paddingTop: "0" }}>
+            <Typography color="primary" paragraph>
+              Tugas {all_subjects_map.get(tasksCollection.subject)}
+            </Typography>
             <Typography variant="body2" color="textSecondary">
-              Oleh: <b>{user.name}</b>
+              Oleh: {user.name}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Waktu Dibuat:{" "}
@@ -694,57 +622,92 @@ function SubmittedTaskList(props) {
                 .locale("id")
                 .format("DD MMM YYYY, HH.mm")}
             </Typography>
-            <Hidden mdUp>
-              <Typography variant="body2" color="textSecondary">
-                Tenggat:{" "}
-                {moment(tasksCollection.deadline)
-                  .locale("id")
-                  .format("DD MMM YYYY, HH.mm")}
-              </Typography>
-            </Hidden>
+            <Divider className={classes.submittedTaskDivider} />
+            {!tasksCollection.description ? null : (
+              <div>
+                <Typography color="textSecondary" gutterBottom>
+                  Deskripsi Tugas:
+                </Typography>
+                <Typography
+                  align="justify"
+                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                >
+                  <CustomLinkify text={tasksCollection.description} />
+                </Typography>
+              </div>
+            )}
+          </Paper>
+        </Grid>
+        <Grid item container justify="space-between" alignItems="center" spacing={1}>
+          <Grid item>
+            <Link to={`/tugas-guru/${task_id}`}>
+              <Hidden smDown>
+                <Fab
+                  size="large"
+                  variant="extended"
+                  className={classes.discussionButton}
+                >
+                  <QuestionAnswerIcon style={{ marginRight: "8px" }} />
+                  Diskusi
+                </Fab>
+              </Hidden>
+              <Hidden mdUp>
+                <Tooltip title="Diskusi">
+                  <Fab
+                    size="medium"
+                    className={classes.discussionButton}
+                  >
+                    <QuestionAnswerIcon />
+                  </Fab>
+                </Tooltip>
+              </Hidden>
+            </Link>
           </Grid>
-
-          <Hidden smDown style={{ display: "flex" }}>
-            <Grid
-              item
-              xs={12}
-              md={5}
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "flex-end",
-              }}
-            >
-              <Typography variant="body2" align="right" color="textSecondary">
-                Tenggat:{" "}
-                {moment(tasksCollection.deadline)
-                  .locale("id")
-                  .format("DD MMM YYYY, HH.mm")}
-              </Typography>
+          <Grid item xs container justify="flex-end" alignItems="center" spacing={1}>
+            <Grid item>
+              <Tooltip title="Unduh Semua Hasil">
+                <Button
+                  disabled
+                  variant="outlined"
+                  className={classes.resultButtons}
+                >
+                  <GetAppIcon />
+                </Button>
+              </Tooltip>
             </Grid>
-          </Hidden>
-
-          <Grid item xs={12}>
-            <Divider className={classes.dividerColor} />
-          </Grid>
-
-          <Grid item container justify="flex-end">
-            <LightTooltip title="Export Hasil Tugas">
-              <IconButton
-                onClick={handleExportTask}
-                className={classes.exportButton}
-              >
-                <GetAppIcon />
-              </IconButton>
-            </LightTooltip>
-          </Grid>
-
-          <Grid item style={{ paddingBottom: "0", width: "100%" }}>
-            {listClassTab()}
+            <Grid item>
+              <Tooltip title="Unduh Nilai">
+                <Button
+                  variant="outlined"
+                  className={classes.resultButtons}
+                  onClick={handleExportTask}
+                >
+                  <BarChartIcon />
+                </Button>
+              </Tooltip>
+            </Grid>
           </Grid>
         </Grid>
-      </Paper>
-      {listClassTabPanel()}
+        <Grid item>
+          <Paper className={classes.resultsPaper}>
+            <Typography variant="h6" gutterBottom>
+              Hasil Pekerjaan
+            </Typography>
+            <Divider />
+            <div style={{ padding: "16px 0px 25px 0px" }}>
+              <Typography gutterBottom>
+                Tenggat: {moment(tasksCollection.deadline)
+                  .locale("id")
+                  .format("DD MMM YYYY, HH.mm")}
+              </Typography>
+            </div>
+            {listClassTab()}
+          </Paper>
+        </Grid>
+        <Grid item>
+          {listClassTabPanel()}
+        </Grid>
+      </Grid>
       <Snackbar
         open={openAlert}
         autoHideDuration={4000}
