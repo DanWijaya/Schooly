@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
-  itemIcon: {
+  objectIcon: {
     color: "grey",
     fontSize: "22.5px",
     marginRight: "12.5px",
@@ -588,8 +588,10 @@ function ViewSubject(props) {
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <div className={classes.objectPanel}>
-              <MenuBookIcon className={classes.itemIcon} />
-              <Typography variant="h6">Materi</Typography>
+              <MenuBookIcon className={classes.objectIcon} />
+              <Typography variant="h6">
+                Materi
+              </Typography>
             </div>
           </ExpansionPanelSummary>
           <Divider />
@@ -608,8 +610,10 @@ function ViewSubject(props) {
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <div className={classes.objectPanel}>
-              <AssignmentIcon className={classes.itemIcon} />
-              <Typography variant="h6">Tugas</Typography>
+              <AssignmentIcon className={classes.objectIcon} />
+              <Typography variant="h6">
+                Tugas
+              </Typography>
             </div>
           </ExpansionPanelSummary>
           <Divider />
@@ -628,8 +632,10 @@ function ViewSubject(props) {
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <div className={classes.objectPanel}>
-              <FaClipboardList className={classes.itemIcon} />
-              <Typography variant="h6">Kuis</Typography>
+              <FaClipboardList className={classes.objectIcon} />
+              <Typography variant="h6">
+                Kuis
+              </Typography>
             </div>
           </ExpansionPanelSummary>
           <Divider />
@@ -648,8 +654,10 @@ function ViewSubject(props) {
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <div className={classes.objectPanel}>
-              <BsClipboardData className={classes.itemIcon} />
-              <Typography variant="h6">Ujian</Typography>
+              <BsClipboardData className={classes.objectIcon} />
+              <Typography variant="h6">
+                Ujian
+              </Typography>
             </div>
           </ExpansionPanelSummary>
           <Divider />

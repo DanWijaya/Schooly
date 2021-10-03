@@ -52,6 +52,7 @@ import {
   ListItemText,
   Tab,
   Tabs,
+  Tooltip,
   Typography
 } from "@material-ui/core";
 import {
@@ -60,6 +61,7 @@ import {
   CheckCircle as CheckCircleIcon,
   DesktopWindows as DesktopWindowsIcon,
   Error as ErrorIcon,
+  ExpandMore as ExpandMoreIcon,
   MenuBook as MenuBookIcon,
   Pageview as PageviewIcon,
   SupervisorAccount as SupervisorAccountIcon,
@@ -89,19 +91,23 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
-  viewMaterialButton: {
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
-    },
+  classMembersDivider: {
+    backgroundColor: theme.palette.primary.main,
   },
-  expansionPanelList: {
-    margin: "20px",
+  objectPanel: {
     display: "flex",
-    flexDirection: "column",
-    alignItems: "stretch",
+    alignItems: "center",
+  },
+  objectIcon: {
+    color: "grey",
+    fontSize: "22.5px",
+    marginRight: "12.5px",
+  },
+  objectDetails: {
+    padding: "30px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "15px",
+    },
   },
   listItemPaper: {
     marginBottom: "20px",
@@ -115,14 +121,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  viewSubjectButton: {
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
-    },
-  },
   material: {
     backgroundColor: theme.palette.primary.main,
   },
@@ -134,14 +132,6 @@ const useStyles = makeStyles((theme) => ({
   },
   warningText: {
     color: theme.palette.warning.main,
-  },
-  personListDivider: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  itemIcon: {
-    marginRight: "10px",
-    fontSize: "22px",
-    color: "grey",
   },
   errorIcon: {
     color: theme.palette.error.main,
@@ -1087,33 +1077,27 @@ function ViewClass(props) {
     <div className={classes.root}>
       {user.role === "Admin" || user.role === "Teacher" ? (
         <div>
-          <Paper elevation={0} className={classes.classWallpaper}>
-            <Typography variant="h3">
-              {kelas.name}
-            </Typography>
-            <Typography variant="h6">
-              {isObjEmpty(walikelas) ? null : walikelas.name}
-            </Typography>
+          <Paper square>
+            <div className={classes.classWallpaper}>
+              <Typography variant="h3">
+                {kelas.name}
+              </Typography>
+              <Typography variant="h6">
+                {isObjEmpty(walikelas) ? null : walikelas.name}
+              </Typography>
+            </div>
           </Paper>
           <Grid container direction="column" spacing={10} style={{ padding: "15px" }}>
             <Grid item>
               <Typography variant="h4" gutterBottom>
                 Wali Kelas
               </Typography>
-              <Divider className={classes.personListDivider} />
+              <Divider className={classes.classMembersDivider} />
               {!isObjEmpty(walikelas) ? (
-                <Grid container justify="space-between" alignItems="center">
-                  {[
+                <div style={{ padding: "8px 0px" }}>
+                  {/* satu grid ini mau diganti dengan useritem gak cuma personlist aja */}
+                  <Grid container justify="space-between" alignItems="center">
                     <Grid item>
-                      <UserItem
-                        avatar_map={avatar[walikelas._id]}
-                        name={walikelas.name}
-                        role={
-                          all_subjects_map
-                            ? all_subjects_map.get(walikelas.subject_teached)
-                            : null
-                        }
-                      />
                       <PersonListItem
                         person_avatar={avatar[walikelas._id]}
                         person_name={walikelas.name}
@@ -1123,8 +1107,8 @@ function ViewClass(props) {
                             : null
                         }
                       />
-                    </Grid>,
-                    user.email === walikelas.email ? null : ( // To disable profile view for the user's own profile
+                    </Grid>
+                    {user.email === walikelas.email ? null : ( // To disable profile view for the user's own profile
                       <Grid item xs container justify="flex-end">
                         <Grid item>
                           <LightTooltip title="Lihat Profil">
@@ -1143,9 +1127,9 @@ function ViewClass(props) {
                           </LightTooltip>
                         </Grid>
                       </Grid>
-                    ),
-                  ]}
-                </Grid>
+                    )}
+                  </Grid>
+                </div>
               ) : (
                 <Typography color="textSecondary" align="center" style={{ padding: "15px" }}>
                   Kosong
@@ -1156,50 +1140,53 @@ function ViewClass(props) {
               <Typography variant="h4" gutterBottom>
                 Murid
               </Typography>
-              <Divider className={classes.personListDivider} />
+              <Divider className={classes.classMembersDivider} />
               {students_by_class.length === 0 ? (
                 <Typography color="textSecondary" align="center" style={{ padding: "15px" }}>
                   Kosong
                 </Typography>
               ) : (
-                students_by_class.map((student) => (
-                  <Grid container justify="space-between" alignItems="center">
-                    <Grid item>
-                      <PersonListItem
-                        // person_avatar={`/api/upload/avatar/${student.avatar}`}
-                        person_avatar={avatar[student._id]}
-                        person_name={student.name}
-                        person_id={student._id}
-                        person_role={student_role(student._id)}
-                      />
-                    </Grid>
-                    <Grid item xs container justify="flex-end">
+                <List>
+                  {students_by_class.map((student) => (
+                    /* satu grid ini mau diganti dengan useritem gak cuma personlist aja */
+                    <Grid container justify="space-between" alignItems="center">
                       <Grid item>
-                        <LightTooltip title="Lihat Profil">
-                          <Link
-                            to={{
-                              pathname: `/lihat-profil/${student._id}`,
-                            }}
-                          >
-                            <IconButton
-                              size="small"
-                              className={classes.viewMaterialButton}
+                        <PersonListItem
+                          // person_avatar={`/api/upload/avatar/${student.avatar}`}
+                          person_avatar={avatar[student._id]}
+                          person_name={student.name}
+                          person_id={student._id}
+                          person_role={student_role(student._id)}
+                        />
+                      </Grid>
+                      <Grid item xs container justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Lihat Profil">
+                            <Link
+                              to={{
+                                pathname: `/lihat-profil/${student._id}`,
+                              }}
                             >
-                              <PageviewIcon fontSize="small" />
-                            </IconButton>
-                          </Link>
-                        </LightTooltip>
+                              <IconButton
+                                size="small"
+                                className={classes.viewMaterialButton}
+                              >
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
+                        </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
-                ))
+                  ))}
+                </List>
               )}
             </Grid>
           </Grid>
         </div>
       ) : (
         <div>
-          <Paper elevation={0}>
+          <Paper square>
             <div className={classes.classWallpaper}>
               <Typography variant="h3">
                 {kelas.name}
@@ -1218,215 +1205,189 @@ function ViewClass(props) {
               <Tab
                 icon={<DesktopWindowsIcon />}
                 label="Pekerjaan Kelas"
-                // {...TabIndex(0)}
               />
               <Tab
                 icon={<BallotIcon />}
                 label="Mata Pelajaran"
-                // {...TabIndex(1)}
               />
               <Tab
                 icon={<SupervisorAccountIcon />}
                 label="Peserta"
-                // {...TabIndex(2)}
               />
             </Tabs>
           </Paper>
-          <TabPanel value={value} index={0}>
+          <TabPanel value={value} index={0} style={{ paddingTop: "15px" }}>
             <ExpansionPanel defaultExpanded>
-              <ExpansionPanelSummary>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Grid container justify="space-between" alignItems="center">
-                  <Grid
-                    item
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <MenuBookIcon className={classes.itemIcon} />
-                    <Typography variant="h6">Materi</Typography>
+                  <Grid item xs>
+                    <div className={classes.objectPanel}>
+                      <MenuBookIcon className={classes.objectIcon} />
+                      <Typography variant="h6">
+                        Materi
+                      </Typography>
+                    </div>
                   </Grid>
                   <Grid item>
-                    <LightTooltip title="Lihat Semua" placement="right">
+                    <Tooltip title="Lihat Semua">
                       <Link to="/daftar-materi">
-                        <IconButton
-                          size="small"
-                          className={classes.viewSubjectButton}
-                        >
+                        <IconButton>
                           <PageviewIcon fontSize="small" />
                         </IconButton>
                       </Link>
-                    </LightTooltip>
+                    </Tooltip>
                   </Grid>
                 </Grid>
               </ExpansionPanelSummary>
               <Divider />
-              <List className={classes.expansionPanelList}>
-                {showMaterials(listMaterials())}
-              </List>
+              <ExpansionPanelDetails className={classes.objectDetails}>
+                <div style={{ width: "100%" }}>
+                  {showMaterials(listMaterials())}
+                </div>
+              </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel defaultExpanded>
-              <ExpansionPanelSummary>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Grid container justify="space-between" alignItems="center">
-                  <Grid
-                    item
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <AssignmentIcon className={classes.itemIcon} />
-                    <Typography variant="h6">Tugas</Typography>
+                  <Grid item xs container alignItems="center">
+                    <div className={classes.objectPanel}>
+                      <AssignmentIcon className={classes.objectIcon} />
+                      <Typography variant="h6">
+                        Tugas
+                      </Typography>
+                    </div>
                   </Grid>
                   <Grid item>
-                    <LightTooltip title="Lihat Semua" placement="right">
+                    <Tooltip title="Lihat Semua" >
                       <Link to="/daftar-tugas">
-                        <IconButton
-                          size="small"
-                          className={classes.viewSubjectButton}
-                        >
+                        <IconButton>
                           <PageviewIcon fontSize="small" />
                         </IconButton>
                       </Link>
-                    </LightTooltip>
+                    </Tooltip>
                   </Grid>
                 </Grid>
               </ExpansionPanelSummary>
               <Divider />
-              <List className={classes.expansionPanelList}>
-                {showTasks(listTasks())}
-              </List>
+              <ExpansionPanelDetails className={classes.objectDetails}>
+                <div style={{ width: "100%" }}>
+                  {showTasks(listTasks())}
+                </div>
+              </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel defaultExpanded>
-              <ExpansionPanelSummary>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Grid container justify="space-between" alignItems="center">
-                  <Grid
-                    item
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <FaClipboardList className={classes.itemIcon} />
-                    <Typography variant="h6">Kuis</Typography>
+                  <Grid item xs container alignItems="center">
+                    <div className={classes.objectPanel}>
+                      <FaClipboardList className={classes.objectIcon} />
+                      <Typography variant="h6">
+                        Kuis
+                      </Typography>
+                    </div>
                   </Grid>
                   <Grid item>
-                    <LightTooltip title="Lihat Semua" placement="right">
+                    <Tooltip title="Lihat Semua">
                       <Link to="/daftar-kuis">
-                        <IconButton
-                          size="small"
-                          className={classes.viewSubjectButton}
-                        >
+                        <IconButton>
                           <PageviewIcon fontSize="small" />
                         </IconButton>
                       </Link>
-                    </LightTooltip>
+                    </Tooltip>
                   </Grid>
                 </Grid>
               </ExpansionPanelSummary>
               <Divider />
-              <List className={classes.expansionPanelList}>
-                {showAssessments(listAssessments(null, {}, "Kuis"))}
-              </List>
+              <ExpansionPanelDetails className={classes.objectDetails}>
+                <div style={{ width: "100%" }}>
+                  {showAssessments(listAssessments(null, {}, "Kuis"))}
+                </div>
+              </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel defaultExpanded>
-              <ExpansionPanelSummary>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Grid container justify="space-between" alignItems="center">
-                  <Grid
-                    item
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <BsClipboardData className={classes.itemIcon} />
-                    <Typography variant="h6">Ujian</Typography>
+                  <Grid item xs container alignItems="center">
+                    <div className={classes.objectPanel}>
+                      <BsClipboardData className={classes.objectIcon} />
+                      <Typography variant="h6">
+                        Ujian
+                      </Typography>
+                    </div>
                   </Grid>
                   <Grid item>
-                    <LightTooltip title="Lihat Semua" placement="right">
+                    <Tooltip title="Lihat Semua">
                       <Link to="/daftar-ujian">
-                        <IconButton
-                          size="small"
-                          className={classes.viewSubjectButton}
-                        >
+                        <IconButton>
                           <PageviewIcon fontSize="small" />
                         </IconButton>
                       </Link>
-                    </LightTooltip>
+                    </Tooltip>
                   </Grid>
                 </Grid>
               </ExpansionPanelSummary>
               <Divider />
-              <List className={classes.expansionPanelList}>
-                {showAssessments(listAssessments(null, {}, "Ujian"))}
-              </List>
+              <ExpansionPanelDetails className={classes.objectDetails}>
+                <div style={{ width: "100%" }}>
+                  {showAssessments(listAssessments(null, {}, "Ujian"))}
+                </div>
+              </ExpansionPanelDetails>
             </ExpansionPanel>
           </TabPanel>
-          <TabPanel value={value} index={1}>
+          <TabPanel value={value} index={1} style={{ paddingTop: "15px" }}>
             {all_subjects.length === 0
               ? null
               : all_subjects.map((subject) => {
-                  // let isEmpty = true
                   if (kelas.subject_assigned && kelas.subject_assigned.includes(subject._id)) {
                     return (
                       <ExpansionPanel>
                         <ExpansionPanelSummary>
-                          <Grid
-                            container
-                            justify="space-between"
-                            alignItems="center"
-                          >
-                            <Typography variant="h6">{subject.name}</Typography>
-                            <LightTooltip
-                              title="Lihat Profil"
-                              placement="right"
-                            >
-                              <Link to={`/mata-pelajaran/${subject._id}`}>
-                                <IconButton
-                                  size="small"
-                                  className={classes.viewSubjectButton}
-                                >
-                                  <PageviewIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
+                          <Grid container justify="space-between" alignItems="center">
+                            <Grid item>
+                              <Typography variant="h6">
+                                {subject.name}
+                              </Typography>
+                            </Grid>
+                            <Grid item>
+                              <Tooltip title="Lihat Mata Pelajaran">
+                                <Link to={`/mata-pelajaran/${subject._id}`}>
+                                  <IconButton>
+                                    <PageviewIcon fontSize="small" />
+                                  </IconButton>
+                                </Link>
+                              </Tooltip>
+                            </Grid>
                           </Grid>
                         </ExpansionPanelSummary>
                         <Divider />
-                        <List className={classes.expansionPanelList}>
-                          {showAllbySubject(
-                            listMaterials("subject", subject, "mata_pelajaran").concat(
-                            listTasks("subject", subject, "mata_pelajaran")).concat(
-                            listAssessments("subject", subject, "Kuis", "mata_pelajaran")).concat(
-                            listAssessments("subject", subject, "Ujian", "mata_pelajaran"))
-                          )}
-                        </List>
+                        <ExpansionPanelDetails className={classes.objectDetails}>
+                          <div style={{ width: "100%" }}>
+                            {showAllbySubject(
+                              listMaterials("subject", subject, "mata_pelajaran").concat(
+                              listTasks("subject", subject, "mata_pelajaran")).concat(
+                              listAssessments("subject", subject, "Kuis", "mata_pelajaran")).concat(
+                              listAssessments("subject", subject, "Ujian", "mata_pelajaran"))
+                            )}
+                          </div>
+                        </ExpansionPanelDetails>
                       </ExpansionPanel>
                     );
                   }
                 })}
           </TabPanel>
-          <TabPanel value={value} index={2}>
-            <Paper>
-              <div style={{ padding: "20px", marginBottom: "40px" }}>
+          <TabPanel value={value} index={2} style={{ paddingTop: "15px" }}>
+            <Grid container direction="column" spacing={10} style={{ padding: "15px" }}>
+              <Grid item>
                 <Typography variant="h4" gutterBottom>
                   Wali Kelas
                 </Typography>
-                <Divider className={classes.personListDivider} />
-                <List>
-                  {isObjEmpty(walikelas) ? (
-                    <Typography
-                      variant="subtitle1"
-                      align="center"
-                      color="textSecondary"
-                    >
-                      Kosong
-                    </Typography>
-                  ) : (
+                <Divider className={classes.classMembersDivider} />
+                {isObjEmpty(walikelas) ? (
+                  <Typography color="textSecondary" align="center" style={{ padding: "15px" }}>
+                    Kosong
+                  </Typography>
+                ) : (
+                  <div style={{ padding: "8px 0px" }}>
                     <Grid container justify="space-between" alignItems="center">
                       <Grid item>
                         <PersonListItem
@@ -1458,65 +1419,61 @@ function ViewClass(props) {
                         </Grid>
                       </Grid>
                     </Grid>
-                  )}
-                </List>
-              </div>
-              <div style={{ padding: "20px" }}>
+                  </div>
+                )}
+              </Grid>
+              <Grid item>
                 <Typography variant="h4" gutterBottom>
                   Murid
                 </Typography>
-                <Divider className={classes.personListDivider} />
-                <List>
+                <Divider className={classes.classMembersDivider} />
                   {students_by_class.length === 0 ? (
-                    <Typography
-                      variant="subtitle1"
-                      align="center"
-                      color="textSecondary"
-                    >
+                    <Typography color="textSecondary" align="center" style={{ padding: "15px" }}>
                       Kosong
                     </Typography>
                   ) : (
-                    students_by_class.map((student) => (
-                      <Grid
-                        container
-                        justify="space-between"
-                        alignItems="center"
-                      >
-                        {[
-                          <Grid item>
-                            <PersonListItem
-                              person_avatar={avatar[walikelas._id]}
-                              person_name={student.name}
-                              person_role={student_role(student._id)}
-                            />
-                          </Grid>,
-                          user.email === student.email ? null : (
-                            <Grid item xs container justify="flex-end">
-                              <Grid item>
-                                <LightTooltip title="Lihat Profil">
-                                  <Link
-                                    to={{
-                                      pathname: `/lihat-profil/${student._id}`,
-                                    }}
-                                  >
-                                    <IconButton
-                                      size="small"
-                                      className={classes.viewMaterialButton}
+                    <List>
+                      {students_by_class.map((student) => (
+                        <Grid
+                          container
+                          justify="space-between"
+                          alignItems="center"
+                        >
+                          {[
+                            <Grid item>
+                              <PersonListItem
+                                person_avatar={avatar[walikelas._id]}
+                                person_name={student.name}
+                                person_role={student_role(student._id)}
+                              />
+                            </Grid>,
+                            user.email === student.email ? null : (
+                              <Grid item xs container justify="flex-end">
+                                <Grid item>
+                                  <LightTooltip title="Lihat Profil">
+                                    <Link
+                                      to={{
+                                        pathname: `/lihat-profil/${student._id}`,
+                                      }}
                                     >
-                                      <PageviewIcon fontSize="small" />
-                                    </IconButton>
-                                  </Link>
-                                </LightTooltip>
+                                      <IconButton
+                                        size="small"
+                                        className={classes.viewMaterialButton}
+                                      >
+                                        <PageviewIcon fontSize="small" />
+                                      </IconButton>
+                                    </Link>
+                                  </LightTooltip>
+                                </Grid>
                               </Grid>
-                            </Grid>
-                          ),
-                        ]}
-                      </Grid>
-                    ))
+                            ),
+                          ]}
+                        </Grid>
+                      ))}
+                    </List>
                   )}
-                </List>
-              </div>
-            </Paper>
+              </Grid>
+            </Grid>
           </TabPanel>
         </div>
       )}
