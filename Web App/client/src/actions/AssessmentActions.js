@@ -147,11 +147,10 @@ export const updateAssessment = (
 };
 
 // View All Assessment
-export const getAllAssessments = () => (dispatch) => {
+export const getAllAssessments = (unitId) => (dispatch) => {
   axios
-    .get("/api/assessments/viewall")
+    .get(`/api/assessments/viewall/${unitId}`)
     .then((res) => {
-      // console.log(res.data)
       console.log("getAllAssessments completed");
       dispatch({
         type: GET_ALL_ASSESSMENTS,

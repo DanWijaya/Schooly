@@ -394,8 +394,10 @@ router.put("/submit/:id", (req, res) => {
   });
 });
 
-router.get("/viewall", (req, res) => {
-  Assessment.find({})
+router.get("/viewall/:unitId", (req, res) => {
+  let { unitId } = req.params;
+
+  Assessment.find({ unit: unitId })
     .lean()
     .then((assessments) => {
       if (!assessments) {

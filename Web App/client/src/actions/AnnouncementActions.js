@@ -11,19 +11,14 @@ import {
 export const createAnnouncement = (formData, announcementData, history) => (
   dispatch
 ) => {
-  console.log("RUNLAH!!", formData, announcementData);
   return axios
     .post("/api/announcements/create", announcementData)
     .then((res) => {
-      console.log("this is the res", res.data);
-      console.log("Will run this");
-      console.log(formData.get("lampiran_announcement"));
       dispatch({
         type: GET_ERRORS,
         payload: false,
       });
       if (formData.has("lampiran_announcement")) {
-        console.log("Post lampiran announcement is running");
         return axios.post(
           `/api/files/announcements/upload/${res.data._id}`,
           formData
@@ -32,14 +27,12 @@ export const createAnnouncement = (formData, announcementData, history) => (
       else return res;
     })
     .then((res) => {
-      console.log("Announcement is Created!!!!");
       let success_res = res.data._id;
       dispatch({
         type: GET_SUCCESS_RESPONSE,
         payload: success_res,
       });
       return success_res;
-      //   history.push("/daftar-pengumuman")
     })
     .catch((err) => {
       console.log("error happened");
@@ -51,8 +44,8 @@ export const createAnnouncement = (formData, announcementData, history) => (
     });
 };
 
-export const getAllAnnouncements = () => (dispatch) => {
-  axios.get("/api/announcements/viewall").then((res) => {
+export const getAllAnnouncements = (userId) => (dispatch) => {
+  axios.get(`/api/announcements/viewall/${userId}`).then((res) => {
     console.log("Announcement data is received");
     dispatch({
       type: GET_ALL_ANNOUNCEMENTS,
@@ -90,9 +83,9 @@ export const getAnnouncement = (Id, category) => (dispatch) => {
   }
 };
 
-export const getAdminAnnouncements = () => (dispatch) => {
-  axios
-    .get(`/api/announcements/viewAdmin`)
+export const getAdminAnnouncements = (unitId) => (dispatch) => {
+  return axios
+    .get(`/api/announcements/viewAdmin/${unitId}`)
     .then((res) => {
       console.log("getAdminAnnouncements completed");
       dispatch({

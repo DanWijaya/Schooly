@@ -661,8 +661,8 @@ function AssessmentList(props) {
 
   React.useEffect(
     () => {
-      getAllAssessments();
-      getAllClass(user.unit ,"map");
+      getAllAssessments(user.unit);
+      getAllClass(user.unit, "map");
       getAllSubjects(user.unit, "map");
       getTeachers(user.unit, "map");
     },
@@ -730,7 +730,7 @@ function AssessmentList(props) {
   const onDeleteAssessment = (id, type) => {
     deleteAssessment(id, type).then((res) => {
       console.log(res);
-      getAllAssessments();
+      getAllAssessments(user.unit);
       handleOpenDeleteSnackbar();
       handleCloseDeleteDialog();
     });

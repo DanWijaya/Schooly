@@ -89,18 +89,27 @@ router.get("/viewOne/:id", (req, res) => {
 
 //Define View classes route
 router.get("/viewall/:unitId", (req, res) => {
-  Announcement.find({ unit: req.params.unitId }).then((announcements, err) => {
+  const { unitId } = req.params;
+  Announcement.find({ unit: unitId }).then((announcements, err) => {
     if (!announcements)
       return res.status(400).json("Announcements are not found");
     else return res.json(announcements);
   });
 });
 
-router.get("/viewAdmin", (req, res) => {
+router.get("/viewAdmin/:unitId", (req, res) => {
+  const { unitId } = req.params;
   Announcement.aggregate([
     {
       $lookup: {
         from: User.collection.name,
+        pipeline: [
+          {
+            $match: {
+              unit: unitId,
+            },
+          },
+        ],
         localField: "author_id",
         foreignField: "_id",
         as: "author_info",
@@ -108,6 +117,7 @@ router.get("/viewAdmin", (req, res) => {
     },
   ])
     .then((result) => {
+      console.log("MUNCUL WOIII : ", result);
       res.json(
         result.filter((ann) => {
           return ann.author_info[0].role === "Admin";

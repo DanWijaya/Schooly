@@ -31,11 +31,9 @@ export const viewFileEvent = (id) => {
     .get(`/api/files/events/${id}`)
     .then((res) => {
       window.open(res.data);
-      // window.location.assign(res.data);
       return res.data;
     })
     .catch((err) => new Error(err));
-  // window.open(`http://${window.location.hostname}:5000/api/files/events/${id}`)
 };
 
 export const deleteFileEvent = (id, file_to_delete, current_file) => {

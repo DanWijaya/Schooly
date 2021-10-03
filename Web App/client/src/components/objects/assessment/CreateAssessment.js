@@ -345,7 +345,6 @@ class CreateAssessment extends Component {
     this.setState({ radioSnackbarOpen: false });
   };
 
-
   onSubmit = (e, id) => {
     e.preventDefault();
     let formData = new FormData();
@@ -501,6 +500,8 @@ class CreateAssessment extends Component {
         );
       });
 
+      const { user } = this.props.auth;
+
       const assessmentData = {
         name: this.state.name,
         start_date: this.state.start_date,
@@ -514,6 +515,7 @@ class CreateAssessment extends Component {
         post_date: this.state.isScheduled ? this.state.post_date : null,
         type: this.state.type,
         question_weight: question_weight,
+        unit: user.unit,
       };
 
       this.handleOpenUploadDialog();

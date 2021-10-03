@@ -1253,10 +1253,10 @@ function AnnouncementList(props) {
     deleteAnnouncement(id).then((res) => {
       if (user.role === "Teacher") {
         getAnnouncement(user._id, "by_author");
-        getAdminAnnouncements();
+        getAdminAnnouncements(user.unit);
       } else if (user.role === "Student") {
         getAnnouncement(user.kelas, "by_class");
-        getAdminAnnouncements();
+        getAdminAnnouncements(user.unit);
         setCurrentClass(user.kelas);
       } else if (user.role === "Admin") {
         console.log("RUN II");
@@ -1317,11 +1317,11 @@ function AnnouncementList(props) {
   React.useEffect(() => {
     if (user.role === "Teacher") {
       getAnnouncement(user._id, "by_author");
-      getAdminAnnouncements();
+      getAdminAnnouncements(user.unit);
       // setAnnIsRetrieved(true);
     } else if (user.role === "Student") {
       getAnnouncement(user.kelas, "by_class");
-      getAdminAnnouncements();
+      getAdminAnnouncements(user.unit);
       setCurrentClass(user.kelas);
       // setAnnIsRetrieved(true);
     } else if (user.role === "Admin") {

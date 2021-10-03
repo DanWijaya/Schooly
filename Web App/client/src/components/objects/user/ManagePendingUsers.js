@@ -27,6 +27,7 @@ import {
   ListItemAvatar,
   Menu,
   MenuItem,
+  Snackbar,
   TableSortLabel,
   TextField,
   Toolbar,
@@ -48,6 +49,7 @@ import RecentActorsIcon from "@material-ui/icons/RecentActors";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from "@material-ui/icons/Clear";
+import MuiAlert from "@material-ui/lab/Alert";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(
@@ -707,6 +709,8 @@ function ManageUsers(props) {
 
   const [searchFilterT, updateSearchFilterT] = React.useState("");
   const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
   // Props
   const {
@@ -944,6 +948,11 @@ function ManageUsers(props) {
     }
   };
 
+  const handleOpenSnackbar = (message) => {
+    setOpenSnackbar(true);
+    setSnackbarMessage(message);
+  };
+
   const userRowItem = (data) => {
     let temp = createData(
       data._id,
@@ -1057,7 +1066,12 @@ function ManageUsers(props) {
     deleteUser(id);
   };
   const onApproveUser = (id) => {
-    setUserActive(id);
+    setUserActive(id).then((res) => {
+      getPendingStudents(user.unit);
+      getPendingTeachers(user.unit);
+      handleOpenSnackbar("Pengguna berhasil diaktifkan");
+      handleCloseApproveDialog();
+    });
   };
 
   // Delete Dialog box
@@ -1287,7 +1301,13 @@ function ManageUsers(props) {
     );
   }
 
-  console.log(pending_users);
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
   return (
     <div className={classes.root}>
       {ApproveDialog()}
@@ -1652,6 +1672,23 @@ function ManageUsers(props) {
           })
         )}
       </Grid>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={(event, reason) => {
+          handleCloseSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity="success"
+          onClose={(event, reason) => {
+            handleCloseSnackbar(event, reason);
+          }}
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }
