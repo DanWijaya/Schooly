@@ -708,12 +708,14 @@ function ManageUsers(props) {
   const [searchFilterT, updateSearchFilterT] = React.useState("");
   const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
 
+  // Props
   const {
     deleteUser,
     setUserActive,
     getPendingTeachers,
     getPendingStudents,
   } = props;
+  const { user } = props.auth;
   const { pending_students, pending_teachers, pending_users } = props.auth;
 
   let student_rows = [];
@@ -995,8 +997,8 @@ function ManageUsers(props) {
   };
 
   React.useEffect(() => {
-    getPendingStudents();
-    getPendingTeachers();
+    getPendingStudents(user.unit);
+    getPendingTeachers(user.unit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -1326,15 +1328,9 @@ function ManageUsers(props) {
         currentCheckboxMode={checkboxModeStudent}
         OpenDialogCheckboxDelete={handleOpenCheckboxDeleteDialog}
         OpenDialogCheckboxApprove={handleOpenCheckboxApproveDialog}
-        // CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
-        // CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
         CheckboxDialog={CheckboxDialog}
         lengthListCheckbox={listCheckboxStudent.length}
         listCheckbox={listCheckboxStudent}
-        // reloader={() => autoReloader}
-        // listBooleanCheckbox={currentListBooleanStudent}
-        // listBooleanCheckboxState={booleanCheckboxStudent}
-        // setListBooleanCheckboxState={setBooleanCheckboxStudent}
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
         setSearchBarFocus={setSearchBarFocusS}

@@ -102,10 +102,8 @@ class EditClass extends Component {
       mata_pelajaran: null,
       allSubjectObject: null,
     };
-    const { id } = this.props.match.params;
     // console.log(id);
     // console.log("Aduh");
-    this.props.setCurrentClass(id);
   }
 
   onChange = (e, otherfield = null) => {
@@ -166,10 +164,11 @@ class EditClass extends Component {
     if (
       Boolean(kelas) &&
       Array.isArray(all_classes) &&
-      all_classes.length !== 0 &&
-      Array.isArray(all_teachers) &&
-      all_teachers.length !== 0
+      Array.isArray(all_teachers)
+      // all_classes.length !== 0 &&
+      // all_teachers.length !== 0
     ) {
+      console.log("Ini kelasnya : ", kelas);
       let all_walikelas = new Set(all_classes.map((cls) => cls.walikelas));
       all_walikelas.delete(kelas.walikelas);
       let teacher_options = [{ _id: null, name: "Kosong" }];
@@ -212,14 +211,17 @@ class EditClass extends Component {
       });
   };
 
-  componentDidMount(){ 
+  componentDidMount() {
     const { user } = this.props.auth;
+    const { id } = this.props.match.params;
     const {
       getTeachers,
       getStudentsByClass,
       getAllClass,
       getAllSubjects,
+      setCurrentClass,
     } = this.props;
+    setCurrentClass(id);
     getTeachers(user.unit);
     getStudentsByClass(this.props.match.params.id);
     getAllClass(user.unit);

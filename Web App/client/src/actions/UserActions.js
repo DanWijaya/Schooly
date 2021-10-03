@@ -163,9 +163,9 @@ export const setUserLoading = () => {
   };
 };
 
-export const getStudents = (unit_id) => (dispatch) => {
+export const getStudents = (unitId) => (dispatch) => {
   axios
-    .get(`/api/users/getStudents/${unit_id}`)
+    .get(`/api/users/getStudents/${unitId}`)
     .then((res) => {
       console.log(res.data);
       dispatch({
@@ -179,10 +179,10 @@ export const getStudents = (unit_id) => (dispatch) => {
     });
 };
 
-export const getTeachers = (unit_id, data = "array") => (dispatch) => {
+export const getTeachers = (unitId, data = "array") => (dispatch) => {
   // console.log('getTeacher start')
   return axios
-    .get(`/api/users/getTeachers/${unit_id}`)
+    .get(`/api/users/getTeachers/${unitId}`)
     .then((res) => {
       // console.log(res.data)
       if (data === "map") {
@@ -209,9 +209,9 @@ export const getTeachers = (unit_id, data = "array") => (dispatch) => {
     });
 };
 
-export const getAllUsers = (unit_id) => (dispatch) => {
+export const getAllUsers = (unitId) => (dispatch) => {
   return axios
-    .get(`/api/users/getAllUsers/${unit_id}`)
+    .get(`/api/users/getAllUsers/${unitId}`)
     .then((res) => {
       dispatch({
         type: GET_ALL_USERS,
@@ -272,9 +272,9 @@ export const getStudentsByClass = (classId) => (dispatch) => {
 };
 
 // actions for admin only
-export const getPendingStudents = () => (dispatch) => {
+export const getPendingStudents = (unitId) => (dispatch) => {
   axios
-    .get("/api/users/getpendingstudents/")
+    .get(`/api/users/getpendingstudents/${unitId}`)
     .then((res) => {
       console.log(res.data);
       dispatch({
@@ -287,9 +287,9 @@ export const getPendingStudents = () => (dispatch) => {
     });
 };
 
-export const getPendingTeachers = () => (dispatch) => {
+export const getPendingTeachers = (unitId) => (dispatch) => {
   axios
-    .get("/api/users/getpendingteachers/")
+    .get(`/api/users/getpendingteachers/${unitId}`)
     .then((res) => {
       console.log(res.data);
       dispatch({
@@ -316,9 +316,9 @@ export const getAllAdmins = () => (dispatch) => {
     });
 };
 
-export const getAdmins = (unit_id) => (dispatch) => {
+export const getAdmins = (unitId) => (dispatch) => {
   axios
-    .get(`/api/users/getAdmins/${unit_id}`)
+    .get(`/api/users/getAdmins/${unitId}`)
     .then((res) => {
       dispatch({
         type: GET_ALL_ADMINS,

@@ -140,11 +140,6 @@ function DrawerContent(props) {
         <FaUserCheck className={classes.drawerListItemIcon} />,
         "Pengelola Aktif",
       ],
-      [
-        "/kalender",
-        <EventNoteIcon className={classes.drawerListItemIcon} />,
-        "Kalender",
-      ],
     ];
   } else if (user.role === "Admin") {
     ListItemContents = [

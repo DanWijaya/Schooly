@@ -36,10 +36,10 @@ export const createClass = (classData, history) => (dispatch) => {
 };
 
 // View All Class
-export const getAllClass = (unit_id, data = "array") => (dispatch) => {
-  // id nya berupa unit_id
+export const getAllClass = (unitId, data = "array") => (dispatch) => {
+  // id nya berupa unitId
   return axios
-    .get(`/api/classes/viewall/${unit_id}`)
+    .get(`/api/classes/viewall/${unitId}`)
     .then((res) => {
       // console.log("Data should be here")
       if (data === "map") {

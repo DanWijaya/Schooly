@@ -568,6 +568,7 @@ class App extends Component {
                       <PrivateRoute
                         exact
                         path="/kalender"
+                        access={["Admin", "Teacher", "Student"]}
                         component={Calendar}
                       />
                       {/* Route Event Admin-Only*/}

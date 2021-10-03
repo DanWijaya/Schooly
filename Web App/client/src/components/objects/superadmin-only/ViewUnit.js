@@ -5,9 +5,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import CustomLinkify from "../../misc/linkify/Linkify";
-import {
-  getOneUnit,
-} from "../../../actions/UnitActions";
+import { getOneUnit } from "../../../actions/UnitActions";
 import { getAllClass, getSelectedClasses } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -32,7 +30,7 @@ import {
   TextField,
   Button,
   Snackbar,
-  Box
+  Box,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import BallotIcon from "@material-ui/icons/Ballot";
@@ -42,7 +40,12 @@ import { FaChalkboardTeacher } from "react-icons/fa";
 import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
 import ClassItem from "../../objects/item/ClassItem";
 import SubjectItem from "../../objects/item/SubjectItem";
-import { getStudents, getTeachers, getAdmins, getAllUsers } from "../../../actions/UserActions"
+import {
+  getStudents,
+  getTeachers,
+  getAdmins,
+  getAllUsers,
+} from "../../../actions/UserActions";
 import UserItem from "../../objects/item/UserItem";
 import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
 const path = require("path");
@@ -142,37 +145,37 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.5,
     "&:focus, &:hover": {
       opacity: 1,
-      cursor: "pointer"
+      cursor: "pointer",
     },
   },
   sendIcon: {
     color: theme.palette.text.disabled,
     "&:focus, &:hover": {
-      cursor: "pointer"
+      cursor: "pointer",
     },
     [theme.breakpoints.down("xs")]: {
-      marginLeft: "15px"
+      marginLeft: "15px",
     },
-    marginLeft: "20px"
+    marginLeft: "20px",
   },
   marginMobile: {
     [theme.breakpoints.down("sm")]: {
       marginRight: "14px",
-      marginLeft: "7.6px"
+      marginLeft: "7.6px",
     },
   },
   mobileName: {
-    marginRight: "7px", 
-    whiteSpace: "nowrap", 
-    textOverflow: "ellipsis", 
+    marginRight: "7px",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
     overflow: "hidden",
     maxWidth: "50px",
   },
   smAvatar: {
     [theme.breakpoints.down("xs")]: {
-      marginRight: "15px"
+      marginRight: "15px",
     },
-    marginRight: "20px"
+    marginRight: "20px",
   },
   textField: {
     // [theme.breakpoints.down("md")]: {
@@ -188,7 +191,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "6px",
     marginRight: "3px",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.dark
+      backgroundColor: theme.palette.success.dark,
     },
   },
   cancelButton: {
@@ -196,7 +199,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     marginTop: "6px",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark
+      backgroundColor: theme.palette.error.dark,
     },
   },
   classPaper: {
@@ -256,16 +259,22 @@ function ViewUnit(props) {
   const { selectedUnits } = props.unitsCollection;
   const { all_subjects } = props.subjectsCollection;
   const { all_classes } = props.classesCollection;
-  const unit_id = props.match.params.id;
-  
+  const unitId = props.match.params.id;
+
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [tabValue, setTabValue] = React.useState(0);
   const [avatar, setAvatar] = React.useState({});
 
-  const { getOneUnit, getAllClass, getAllSubjects, 
-    getStudents, getTeachers, getAdmins, getAllUsers,
-    getMultipleFileAvatar } = props;
-
+  const {
+    getOneUnit,
+    getAllClass,
+    getAllSubjects,
+    getStudents,
+    getTeachers,
+    getAdmins,
+    getAllUsers,
+    getMultipleFileAvatar,
+  } = props;
 
   const unitAuthorName = React.useRef(null);
 
@@ -277,39 +286,39 @@ function ViewUnit(props) {
     ? "Schooly | Lihat Materi"
     : `Schooly | ${selectedUnits.name}`;
 
-    const onDelete = (id) => {
-        console.log(id);
-    }
+  const onDelete = (id) => {
+    console.log(id);
+  };
 
-    const handleCloseDeleteDialog = () => {
-        setOpenDeleteDialog(false);
-    }   
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
 
-    React.useEffect(() => {
-        getOneUnit(unit_id);
-        getAllClass(unit_id);
-        getAllSubjects(unit_id);
-        getStudents(unit_id);
-        getTeachers(unit_id);
-        getAdmins(unit_id);
-    }, []);
+  React.useEffect(() => {
+    getOneUnit(unitId);
+    getAllClass(unitId);
+    getAllSubjects(unitId);
+    getStudents(unitId);
+    getTeachers(unitId);
+    getAdmins(unitId);
+  }, []);
 
   React.useEffect(() => {
     //Can only pass a normal function as argument to useEffect, and not an async function.
-    // So to use async, have to do this: 
+    // So to use async, have to do this:
     const fetchAvatar = async () => {
-      try{
-        const users = await getAllUsers(unit_id);
+      try {
+        const users = await getAllUsers(unitId);
         let id_list = users.map((u) => u._id);
-  
+
         const avatars = await getMultipleFileAvatar(id_list);
         setAvatar(avatars);
-      } catch(err) {
+      } catch (err) {
         console.log(err);
       }
-    }
-    fetchAvatar()
-  }, [])
+    };
+    fetchAvatar();
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -319,7 +328,7 @@ function ViewUnit(props) {
         itemType="Materi"
         itemName={selectedUnits.name}
         deleteItem={() => {
-          onDelete(unit_id);
+          onDelete(unitId);
         }}
       />
       <Grid container direction="column" spacing={2}>
@@ -339,8 +348,8 @@ function ViewUnit(props) {
               <Grid item xs={12}>
                 <Divider className={classes.dividerColor} />
               </Grid>
-            {/* Munculin Kelas kelas yang ada di unit ini */}
-            {/* Munculin Matpel yang ada di unit ini  */}
+              {/* Munculin Kelas kelas yang ada di unit ini */}
+              {/* Munculin Matpel yang ada di unit ini  */}
               <Grid item xs={12} style={{ marginTop: "15px" }}>
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Unit:
@@ -357,91 +366,80 @@ function ViewUnit(props) {
           </Paper>
         </Grid>
         <Grid item>
-        <Paper className={classes.paperBox}>
-        <Tabs
-          variant="fullWidth"
-          indicatorColor="primary"
-          textColor="primary"
-          value={tabValue}
-          onChange={handleChangeTab}>
-          <Tab
-            icon={<DesktopWindowsIcon />}
-            label="Kelas"
-            {...TabIndex(0)}
-          />
-          <Tab
-            icon={<BallotIcon />}
-            label="Mata Pelajaran"
-            {...TabIndex(1)}
-          />
-          <Tab
-            icon={<SupervisorAccountIcon />}
-            label="Peserta"
-            {...TabIndex(2)}
-          />
-        </Tabs>
-        <TabPanel value={tabValue} index={0}>
-        <Grid container spacing={2}>
-          <ClassItem 
-            data={all_classes}
-            user={user}
-            />
-          </Grid>
-        </TabPanel>
-        <TabPanel value={tabValue} index={1}>
-          <Grid container spacing={2} direction="column">
-            <SubjectItem 
-              data={all_subjects}
-              isEditable={false}
+          <Paper className={classes.paperBox}>
+            <Tabs
+              variant="fullWidth"
+              indicatorColor="primary"
+              textColor="primary"
+              value={tabValue}
+              onChange={handleChangeTab}
+            >
+              <Tab
+                icon={<DesktopWindowsIcon />}
+                label="Kelas"
+                {...TabIndex(0)}
               />
-          </Grid>
-        </TabPanel>
-        <TabPanel value={tabValue} index={2}>
-          <Grid container spacing={2} direction="column">
-            <>
-              <Typography variant="h4" gutterButtom>
-                Pengelola
-              </Typography>
-              <Divider className={classes.personListDivider} />
-              <Grid item>
-                <List>
-                  <UserItem 
-                    data={all_admins}
-                    avatar_map={avatar}/>
-                </List>
+              <Tab
+                icon={<BallotIcon />}
+                label="Mata Pelajaran"
+                {...TabIndex(1)}
+              />
+              <Tab
+                icon={<SupervisorAccountIcon />}
+                label="Peserta"
+                {...TabIndex(2)}
+              />
+            </Tabs>
+            <TabPanel value={tabValue} index={0}>
+              <Grid container spacing={2}>
+                <ClassItem data={all_classes} user={user} />
               </Grid>
-            </>
-            <>
-              <Typography variant="h4" gutterButtom>
-                Guru
-              </Typography>
-              <Divider className={classes.personListDivider} />
-              <Grid item>
-                <List>
-                  <UserItem 
-                    data={all_teachers}
-                    avatar_map={avatar}/>
-                </List>
+            </TabPanel>
+            <TabPanel value={tabValue} index={1}>
+              <Grid container spacing={2} direction="column">
+                <SubjectItem data={all_subjects} isEditable={false} />
               </Grid>
-            </>
-            <>
-              <Typography variant="h4" gutterButtom>
-                Murid
-              </Typography>
-              <Divider className={classes.personListDivider} />
-              <Grid item>
-                <List>
-                  <UserItem 
-                    data={all_students}
-                    avatar_map={avatar}/>
-                </List>
+            </TabPanel>
+            <TabPanel value={tabValue} index={2}>
+              <Grid container spacing={2} direction="column">
+                <>
+                  <Typography variant="h4" gutterButtom>
+                    Pengelola
+                  </Typography>
+                  <Divider className={classes.personListDivider} />
+                  <Grid item>
+                    <List>
+                      <UserItem data={all_admins} avatar_map={avatar} />
+                    </List>
+                  </Grid>
+                </>
+                <>
+                  <Typography variant="h4" gutterButtom>
+                    Guru
+                  </Typography>
+                  <Divider className={classes.personListDivider} />
+                  <Grid item>
+                    <List>
+                      <UserItem data={all_teachers} avatar_map={avatar} />
+                    </List>
+                  </Grid>
+                </>
+                <>
+                  <Typography variant="h4" gutterButtom>
+                    Murid
+                  </Typography>
+                  <Divider className={classes.personListDivider} />
+                  <Grid item>
+                    <List>
+                      <UserItem data={all_students} avatar_map={avatar} />
+                    </List>
+                  </Grid>
+                </>
               </Grid>
-            </>
-          </Grid>
-        </TabPanel>
-        </Paper>
+            </TabPanel>
+          </Paper>
         </Grid>
-        </Grid>
+      </Grid>
     </div>
   );
 }
@@ -453,22 +451,22 @@ ViewUnit.propTypes = {
   getOneUnit: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   unitsCollection: state.unitsCollection,
   subjectsCollection: state.subjectsCollection,
-  classesCollection: state.classesCollection
+  classesCollection: state.classesCollection,
 });
 
 export default connect(mapStateToProps, {
-    getOneUnit,
-    getAllClass,
-    getAllSubjects,
-    getTeachers,
-    getStudents,
-    getAdmins,
-    getAllUsers,
-    getMultipleFileAvatar
+  getOneUnit,
+  getAllClass,
+  getAllSubjects,
+  getTeachers,
+  getStudents,
+  getAdmins,
+  getAllUsers,
+  getMultipleFileAvatar,
 })(ViewUnit);

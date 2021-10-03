@@ -320,9 +320,9 @@ router.put(
   }
 );
 
-router.get("/getTeachers/:unit_id", (req, res) => {
-  let { unit_id } = req.params;
-  Teacher.find({ active: true, unit: unit_id })
+router.get("/getTeachers/:unitId", (req, res) => {
+  let { unitId } = req.params;
+  Teacher.find({ active: true, unit: unitId })
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) console.log("No teachers yet in Schooly System");
@@ -330,9 +330,9 @@ router.get("/getTeachers/:unit_id", (req, res) => {
     });
 });
 
-router.get("/getStudents/:unit_id", (req, res) => {
-  let { unit_id } = req.params;
-  Student.find({ active: true, unit: unit_id })
+router.get("/getStudents/:unitId", (req, res) => {
+  let { unitId } = req.params;
+  Student.find({ active: true, unit: unitId })
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) console.log("No students yet in Schooly System");
@@ -340,9 +340,9 @@ router.get("/getStudents/:unit_id", (req, res) => {
     });
 });
 
-router.get("/getAdmins/:unit_id", (req, res) => {
-  let { unit_id } = req.params;
-  Admin.find({ active: true, unit: unit_id })
+router.get("/getAdmins/:unitId", (req, res) => {
+  let { unitId } = req.params;
+  Admin.find({ active: true, unit: unitId })
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) console.log("No unit admins yet in Schooly System");
@@ -397,10 +397,10 @@ router.get("/getstudentsbyclass/:id", (req, res) => {
     });
 });
 
-router.get("/getAllUsers/:unit_id", (req, res) => {
-  let { unit_id } = req.params;
+router.get("/getAllUsers/:unitId", (req, res) => {
+  let { unitId } = req.params;
 
-  User.find({ active: true, unit: unit_id })
+  User.find({ active: true, unit: req.params.unitId })
     .sort({ name: 1 })
     .lean()
     .then((users, err) => {
@@ -410,8 +410,8 @@ router.get("/getAllUsers/:unit_id", (req, res) => {
 });
 
 // for admin only
-router.get("/getpendingstudents", (req, res) => {
-  Student.find({ active: false })
+router.get("/getpendingstudents/:unitId", (req, res) => {
+  Student.find({ active: false, unit: req.params.unitId })
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) return res.json([]);
@@ -419,8 +419,8 @@ router.get("/getpendingstudents", (req, res) => {
     });
 });
 
-router.get("/getpendingteachers", (req, res) => {
-  Teacher.find({ active: false })
+router.get("/getpendingteachers/:unitId", (req, res) => {
+  Teacher.find({ active: false, unit: req.params.unitId })
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) return res.json([]);
@@ -428,8 +428,8 @@ router.get("/getpendingteachers", (req, res) => {
     });
 });
 
-router.get("/getpendingadmins", (req, res) => {
-  Admin.find({ active: false })
+router.get("/getpendingadmins/:unitId", (req, res) => {
+  Admin.find({ active: false, unit: req.params.unitId })
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) return res.json([]);
@@ -598,21 +598,5 @@ router.put("/updateunitadmins", async (req, res) => {
       console.log(err);
       return res.status(500).json(err);
     });
-
-  // try {
-  //   let { userToUnit } = req.body;
-  //   const userIds = Object.keys(userToUnit).map((id) => ObjectId(id));
-  //   // const unitIds = Object.values(userToUnit);
-
-  //   const promises = Admin.find({ _id: { $in: userIds } }).map((document) => {
-  //     document.unit = userToUnit[document._id];
-  //     return document.save();
-  //   });
-
-  //   const results = await Promise.all(promises);
-  //   return res.json(results);
-  // } catch (err) {
-  //   throw err;
-  // }
 });
 module.exports = router;

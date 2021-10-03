@@ -32,7 +32,7 @@ router.post("/create", (req, res) => {
     class_assigned: class_assigned_ids,
     author_id: req.body.author_id,
     to: req.body.to,
-    unit: req.body.unit
+    unit: req.body.unit,
     // date_announced: new Date()
   });
   newAnnouncement
@@ -64,7 +64,7 @@ router.put("/update/:id", (req, res) => {
       announcementData.description = req.body.description;
       announcementData.class_assigned = req.body.class_assigned;
       announcementData.to = req.body.to;
-      
+
       announcementData
         .save()
         .then((taskData) => res.json("Update Task complete"))
@@ -88,8 +88,8 @@ router.get("/viewOne/:id", (req, res) => {
 });
 
 //Define View classes route
-router.get("/viewall/:unit_id", (req, res) => {
-  Announcement.find({unit: req.params.unit_id}).then((announcements, err) => {
+router.get("/viewall/:unitId", (req, res) => {
+  Announcement.find({ unit: req.params.unitId }).then((announcements, err) => {
     if (!announcements)
       return res.status(400).json("Announcements are not found");
     else return res.json(announcements);

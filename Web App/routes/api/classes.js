@@ -28,7 +28,7 @@ router.post("/create", (req, res) => {
         nihil: req.body.nihil,
         ukuran: req.body.ukuran,
         subject_assigned: req.body.mata_pelajaran.map((id) => new ObjectId(id)),
-        unit: ObjectId(req.body.unit)
+        unit: ObjectId(req.body.unit),
       };
 
       if (req.body.walikelas) {
@@ -54,8 +54,8 @@ router.get("/view/:id", (req, res) => {
   });
 });
 
-router.get("/viewall/:unit_id", (req, res) => {
-  Class.find({unit: req.params.unit_id}).then((classes, err) => {
+router.get("/viewall/:unitId", (req, res) => {
+  Class.find({ unit: req.params.unitId }).then((classes, err) => {
     if (!classes) res.status(400).json(err);
     else {
       classes.sort((a, b) => (a.name > b.name ? 1 : -1));
