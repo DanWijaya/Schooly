@@ -36,7 +36,7 @@ export const createClass = (classData, history) => (dispatch) => {
 };
 
 // View All Class
-export const getAllClass = (unit_id,data = "array") => (dispatch) => {
+export const getAllClass = (unit_id, data = "array") => (dispatch) => {
   // id nya berupa unit_id
   return axios
     .get(`/api/classes/viewall/${unit_id}`)
@@ -55,7 +55,6 @@ export const getAllClass = (unit_id,data = "array") => (dispatch) => {
         console.log("getAllClass(array) completed");
       }
       return res.data;
-
     })
 
     .catch((err) => {
@@ -77,7 +76,6 @@ export const getSelectedClasses = (classes_ids) => (dispatch) => {
         type: GET_CLASSES,
         payload: res.data,
       });
-      // res.send(classData);
       console.log("getSelectedClasses completed");
     })
     .catch((err) => {
@@ -153,10 +151,6 @@ export const setCurrentClass = (classId) => (dispatch) => {
         payload: err.response.data,
       });
     });
-  // return {
-  //     type: SET_CURRENT_CLASS,
-  //     payload: decoded,
-  // }
 };
 
 export const unassignClassOfficers = (classesData) => {

@@ -436,13 +436,10 @@ export const updateTeacher = (data, teacherId) => (dispatch) => {
 };
 
 export const updateUnitAdmins = (data, adminId) => (dispatch) => {
-  axios
+  return axios
     .put(`/api/users/updateunitadmins`, data)
     .then((res) => {
-      dispatch({
-        type: GET_ALL_ADMINS,
-        payload: res.data,
-      });
+      return res.data;
     })
     .catch((err) => {
       throw err;
@@ -462,6 +459,6 @@ export const refreshTeacher = (teacherId) => (dispatch) => {
 
 export const bulkRegisterUsers = (data) => {
   return axios.post("/api/users/register_students_bulk", data).then((res) => {
-    return res;
+    return res.data;
   });
 };

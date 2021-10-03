@@ -1,6 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getAllAdmins, updateTeacher } from "../../../actions/UserActions";
+import {
+  getAllAdmins,
+  updateTeacher,
+  updateUnitAdmins,
+} from "../../../actions/UserActions";
 import { getAllUnits } from "../../../actions/UnitActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
@@ -23,14 +27,11 @@ import {
   TableSortLabel,
   TextField,
   Typography,
-  FormHelperText,
   ListItemAvatar,
   Dialog,
   Avatar,
   Button,
-  Chip,
   Select,
-  Snackbar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import EditIcon from "@material-ui/icons/Edit";
@@ -41,6 +42,8 @@ import { BiSitemap } from "react-icons/bi";
 import CloseIcon from "@material-ui/icons/Close";
 import ClearIcon from "@material-ui/icons/Clear";
 import MuiAlert from "@material-ui/lab/Alert";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 
 function createData(data) {
   const { _id, name, email, unit } = data;
@@ -343,6 +346,21 @@ const useStyles = makeStyles((theme) => ({
     },
     padding: "10px",
   },
+  actionButton: {
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    padding: "20px",
+  },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.main,
+    },
+  },
+
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
@@ -422,22 +440,23 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.main,
     },
   },
+  editClassButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      color: theme.palette.primary.main,
+      backgroundColor: "white",
+    },
+  },
 }));
 
 function TeacherList(props) {
   const classes = useStyles();
 
-  const {
-    getAllAdmins,
-    updateTeacher,
-    clearErrors,
-    clearSuccess,
-    getAllUnits,
-  } = props;
+  const { getAllAdmins, updateTeacher, getAllUnits, updateUnitAdmins } = props;
   const { user, all_admins } = props.auth;
   const { all_units } = props.unitsCollection;
   const errors = props.errors;
-  const success = props.success;
 
   const all_admin_obj = React.useRef({});
   const [rows, setRows] = React.useState([]);
@@ -462,10 +481,10 @@ function TeacherList(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
 
-  // SNACKBAR
-  const [snackbarContent, setSnackbarContent] = React.useState("");
-  const [severity, setSeverity] = React.useState("info");
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  // DIALOG SUNTING
+  const [openUploadDialog, setOpenUploadDialog] = React.useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
 
   React.useEffect(() => {
     getAllAdmins();
@@ -494,9 +513,9 @@ function TeacherList(props) {
   }, [all_admins]);
 
   React.useEffect(() => {
-    if (all_admins) {
+    if (rows) {
       setRows(
-        all_admins
+        rows
           .filter((item) =>
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )
@@ -506,53 +525,12 @@ function TeacherList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchFilter]);
 
-  React.useEffect(() => {
-    if (
-      errors &&
-      errors.constructor === Object &&
-      Object.keys(errors).length !== 0
-    ) {
-      handleOpenSnackbar("error", "Data Pengelola gagal disimpan");
-      clearErrors();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [errors]);
-
-  React.useEffect(() => {
-    if (success) {
-      handleOpenSnackbar("success", "Data Pengelola berhasil disimpan");
-      clearSuccess();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success]);
-
-  React.useEffect(() => {
-    return () => {
-      clearErrors();
-      clearSuccess();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // AUTOCOMPLETE: untuk memilih subject yang diajar dan kelas yang diajar tiap Pengelola
 
   function handleRequestSort(event, property) {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
-  }
-
-  function handleOpenSnackbar(severity, content) {
-    setOpenSnackbar(true);
-    setSeverity(severity);
-    setSnackbarContent(content);
-  }
-
-  function handleCloseSnackbar(event, reason) {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnackbar(false);
   }
 
   function onUnitChange(e, adminId) {
@@ -585,17 +563,20 @@ function TeacherList(props) {
     updateTeacher(newTeacherData, adminId);
   }
 
-  // DIALOG SUNTING
-  const [openSuntingDialog, setOpenSuntingDialog] = React.useState(false);
-  const [dialogData, setDialogData] = React.useState(null);
-
-  const handleClickOpenSuntingDialog = (data) => {
-    setDialogData(data);
-    setOpenSuntingDialog(true);
+  const handleOpenDeleteDialog = () => {
+    setOpenDeleteDialog(true);
   };
 
-  const handleCloseSuntingDialog = () => {
-    setOpenSuntingDialog(false);
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+
+  const onSubmit = () => {
+    console.log("JANCUK MUNCUL");
+    setOpenUploadDialog(true);
+    updateUnitAdmins(selectedValues).then((res) => {
+      setSuccess(true);
+    });
   };
 
   const ITEM_HEIGHT = 48;
@@ -613,6 +594,23 @@ function TeacherList(props) {
 
   return (
     <div className={classes.root}>
+      <UploadDialog
+        openUploadDialog={openUploadDialog}
+        success={success}
+        messageUploading={`Unit pengelola sedang disimpan`}
+        messageSuccess={`Unit pengelola berhasil disimpan`}
+        redirectLink="/pengelola-aktif"
+      />
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Pengaturan unit Pengelola"
+        deleteItem={null}
+        itemName={null}
+        isLink={true}
+        redirectLink="/pengelola-aktif"
+        isWarning={false}
+      />
       <AdminListToolbar
         classes={classes}
         order={order}
@@ -700,23 +698,27 @@ function TeacherList(props) {
           })
         )}
       </Grid>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={(event, reason) => {
-          handleCloseSnackbar(event, reason);
-        }}
-      >
-        <MuiAlert
-          variant="filled"
-          severity={severity}
-          onClose={(event, reason) => {
-            handleCloseSnackbar(event, reason);
-          }}
-        >
-          {snackbarContent}
-        </MuiAlert>
-      </Snackbar>
+      <Divider />
+      <div className={classes.actionButton}>
+        <div style={{ display: "flex", alignItems: "center", padding: "4px" }}>
+          <Button
+            variant="contained"
+            onClick={handleOpenDeleteDialog}
+            className={classes.cancelButton}
+          >
+            Batal
+          </Button>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", padding: "4px" }}>
+          <Button
+            variant="contained"
+            onClick={onSubmit}
+            className={classes.editClassButton}
+          >
+            Simpan
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -737,4 +739,5 @@ export default connect(mapStateToProps, {
   updateTeacher,
   clearErrors,
   clearSuccess,
+  updateUnitAdmins,
 })(TeacherList);

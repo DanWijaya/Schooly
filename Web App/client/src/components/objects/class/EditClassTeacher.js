@@ -47,8 +47,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   editClassButton: {
-    // width: "100%",
-    // marginTop: "20px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -65,8 +63,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   cancelButton: {
-    // width: "100%",
-    // marginTop: "20px",
     backgroundColor: theme.palette.error.main,
     color: "white",
     "&:focus, &:hover": {

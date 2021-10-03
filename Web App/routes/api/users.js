@@ -573,20 +573,46 @@ router.post("/register_students_bulk", (req, res) => {
 // SuperAdmin Only
 router.put("/updateunitadmins", async (req, res) => {
   // userToUnit is an object with (key,value) = (userId,unitId)
-  try {
-    let { userToUnit } = req.body;
-    const userIds = Object.keys(userToUnit).map((id) => ObjectId(id));
-    // const unitIds = Object.values(userToUnit);
+  let operations = [];
+  for (let [adminId, unitId] of Object.entries(req.body)) {
+    let updateArgument = {};
 
-    const promises = Admin.find({ _id: { $in: userIds } }).map((document) => {
-      document.unit = userToUnit[document._id];
-      return document.save();
+    if (adminId) {
+      updateArgument = { unit: unitId };
+    }
+
+    operations.push({
+      updateOne: {
+        filter: { _id: adminId },
+        update: updateArgument,
+      },
+    });
+  }
+
+  Admin.bulkWrite(operations, { ordered: false })
+    .then((result) => {
+      console.log(result);
+      return res.json(result);
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).json(err);
     });
 
-    const results = await Promise.all(promises);
-    return res.json(results);
-  } catch (err) {
-    throw err;
-  }
+  // try {
+  //   let { userToUnit } = req.body;
+  //   const userIds = Object.keys(userToUnit).map((id) => ObjectId(id));
+  //   // const unitIds = Object.values(userToUnit);
+
+  //   const promises = Admin.find({ _id: { $in: userIds } }).map((document) => {
+  //     document.unit = userToUnit[document._id];
+  //     return document.save();
+  //   });
+
+  //   const results = await Promise.all(promises);
+  //   return res.json(results);
+  // } catch (err) {
+  //   throw err;
+  // }
 });
 module.exports = router;
