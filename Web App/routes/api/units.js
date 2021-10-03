@@ -23,19 +23,19 @@ router.post("/create", (req, res) => {
     .catch((err) => res.status(400).send("Unable to create unit"));
 });
 
-router.put("/update/:id", (req, res) => {
+router.put("/update", (req, res) => {
   const { errors, isValid } = validateUnitInput(req.body);
   if (!isValid) {
     console.log(errors);
     return res.status(400).json(errors);
   }
-  let { id } = req.params;
+  let { _id, name, description } = req.body;
 
-  Unit.findById(id, (err, unitData) => {
+  Unit.findById(_id, (err, unitData) => {
     if (!unitData) return res.status(404).send("Unit data is not found");
     else {
-      unitData.name = req.body.name;
-      unitData.description = req.body.description;
+      unitData.name = name;
+      unitData.description = description;
 
       unitData
         .save()
@@ -63,13 +63,13 @@ router.get("/viewall", (req, res) => {
   });
 });
 
-router.get("/viewallmap", (req,res) => {
+router.get("/viewallmap", (req, res) => {
   Unit.find({}, (err, units) => {
     let map = {};
-    units.map((u) => map[u._id] = u.name);
+    units.map((u) => (map[u._id] = u.name));
     return res.json(map);
-  })
-})
+  });
+});
 router.get("/view/:id", (req, res) => {
   let { id } = req.params;
   Unit.findById(id, (err, unit) => {

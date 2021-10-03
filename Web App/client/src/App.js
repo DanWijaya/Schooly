@@ -88,7 +88,7 @@ import UnitList from "./components/objects/superadmin-only/UnitList";
 import ManageAdmins from "./components/objects/superadmin-only/ManageAdmins";
 import ManagePendingAdmins from "./components/objects/superadmin-only/ManagePendingAdmins";
 import CreateUnit from "./components/objects/superadmin-only/CreateUnit";
-import EditUnit from "./components/objects/superadmin-only/CreateUnit";
+import EditUnit from "./components/objects/superadmin-only/EditUnit";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
 import ViewUnit from "./components/objects/superadmin-only/ViewUnit";
 import AdminList from "./components/objects/user/AdminList";
@@ -171,7 +171,7 @@ class App extends Component {
       SUPERADMIN: "SuperAdmin",
       ADMIN: "Admin",
       STUDENT: "Student",
-      TEACHER: "Teacher"
+      TEACHER: "Teacher",
     };
 
     console.log(localStorage.getItem(`status`));

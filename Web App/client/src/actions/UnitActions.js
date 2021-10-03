@@ -9,7 +9,7 @@ export const createUnit = (unitData) => {
       return res.data._id;
     })
     .catch((err) => {
-      throw err.response.data;
+      throw new Error(err);
     });
 };
 
@@ -26,10 +26,9 @@ export const getAllUnits = () => (dispatch) => {
       return res.data;
     })
     .catch((err) => {
-      throw err;
+      throw new Error(err);
     });
 };
-
 
 export const getOneUnit = (id) => (dispatch) => {
   return axios
@@ -42,6 +41,28 @@ export const getOneUnit = (id) => (dispatch) => {
       return res.data;
     })
     .catch((err) => {
-      throw err;
+      throw new Error(err);
+    });
+};
+
+export const deleteUnit = (id) => (dispatch) => {
+  return axios
+    .delete(`/api/units/delete/${id}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      throw new Error(err);
+    });
+};
+
+export const updateUnit = (data) => (dispatch) => {
+  return axios
+    .put(`/api/units/update`, data)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      throw new Error(err);
     });
 };
