@@ -19,7 +19,7 @@ function UserItem(props) {
 
   return (
     data.map((user) => {
-      let { name, role, email, _id} = user;
+      let { name, role, email, _id } = user;
       return (
         <Link to={`/lihat-profil/${user._id}`}>
           <ListItem className={classes.root}>

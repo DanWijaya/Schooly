@@ -10,7 +10,7 @@ function Latex(props){
   const { content } = props;
 
   return (
-    <div className="question" style={{fontSize: "1.3rem"}}>
+    <div className="question" style={{ fontSize: "1.3rem" }}>
       {_renderContent(content)}
     </div>
   )

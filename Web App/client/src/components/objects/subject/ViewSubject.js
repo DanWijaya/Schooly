@@ -12,10 +12,10 @@ import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import subjectBackground from "./subject-background/SubjectBackground";
-import Empty from "../../misc/empty/Empty";
 import AssessmentItem from "../item/AssessmentItem";
 import TaskItem from "../item/TaskItem";
 import MaterialItem from "../item/MaterialItem";
+import Empty from "../../misc/empty/Empty";
 import {
   Divider,
   ExpansionPanel,

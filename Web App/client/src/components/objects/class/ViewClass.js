@@ -1,37 +1,46 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import {
   getStudents,
   getStudentsByClass,
   getTeachers,
 } from "../../../actions/UserActions";
-import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getMaterial } from "../../../actions/MaterialActions";
 import {
   getAllTask,
   getSubmittedTasks,
   getTaskAtmpt,
   getTaskByClass,
 } from "../../../actions/TaskActions";
-import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
+import { getAllAssessments } from "../../../actions/AssessmentActions";
+import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 import {
   getFileAvatar,
   getMultipleFileAvatar,
 } from "../../../actions/files/FileAvatarActions";
-import { getMaterial } from "../../../actions/MaterialActions";
-import { getAllAssessments } from "../../../actions/AssessmentActions";
 import viewClassPicture from "./ViewClassPicture.png";
+import AssessmentItem from "../item/AssessmentItem";
+import TaskItem from "../item/TaskItem";
+import MaterialItem from "../item/MaterialItem";
+import UserItem from "../item/UserItem";
 import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
 import {
   Avatar,
+  Badge,
   Box,
+  Dialog,
   Divider,
   ExpansionPanel,
+  ExpansionPanelDetails,
   ExpansionPanelSummary,
   Grid,
   Hidden,
@@ -41,55 +50,36 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Tabs,
   Tab,
-  Typography,
-  Dialog,
-  Badge,
+  Tabs,
+  Typography
 } from "@material-ui/core";
+import {
+  AssignmentOutlined as AssignmentIcon,
+  Ballot as BallotIcon,
+  CheckCircle as CheckCircleIcon,
+  DesktopWindows as DesktopWindowsIcon,
+  Error as ErrorIcon,
+  MenuBook as MenuBookIcon,
+  Pageview as PageviewIcon,
+  SupervisorAccount as SupervisorAccountIcon,
+  Warning as WarningIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-// import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
-import BallotIcon from "@material-ui/icons/Ballot";
-import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
-import PageviewIcon from "@material-ui/icons/Pageview";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
-import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
-import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
-import ErrorIcon from "@material-ui/icons/Error";
-import WarningIcon from "@material-ui/icons/Warning";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
-
-const TASK_STATUS = {
-  SUBMITTED : "Sudah Dikumpulkan",
-  NOT_SUBMITTED : "Belum Dikumpulkan"
-}
-
-const ASSESSMENT_STATUS = {
-  SUBMITTED : "Sudah Ditempuh",
-  NOT_SUBMITTED: "Belum Ditempuh"
-}
+import { FaClipboardList } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
-  viewMaterialButton: {
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
-    },
-  },
-  classPaper: {
+  classWallpaper: {
     height: "250px",
     padding: "30px",
     color: "white",
@@ -98,6 +88,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: "bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
+  },
+  viewMaterialButton: {
+    backgroundColor: theme.palette.warning.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.warning.main,
+    },
   },
   expansionPanelList: {
     margin: "20px",
@@ -156,26 +154,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div hidden={value !== index} id={`simple-tabpanel-${index}`} {...other}>
-      {value === index && <Box p={3}>{children}</Box>}
-    </div>
-  );
+const TASK_STATUS = {
+  SUBMITTED : "Sudah Dikumpulkan",
+  NOT_SUBMITTED : "Belum Dikumpulkan"
 }
 
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function TabIndex(index) {
-  return {
-    id: `simple-tab-${index}`,
-  };
+const ASSESSMENT_STATUS = {
+  SUBMITTED : "Sudah Ditempuh",
+  NOT_SUBMITTED: "Belum Ditempuh"
 }
 
 function sortAscByCreatedAt(rows) {
@@ -310,7 +296,6 @@ function AssessmentListItem(props) {
   const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
     setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
     setOpenDialog(true);
-    console.log(title);
   };
 
   const handleCloseDialog = () => {
@@ -574,7 +559,6 @@ function PersonListItem(props) {
 
 function ViewClass(props) {
   const classes = useStyles();
-
   const {
     setCurrentClass,
     getStudentsByClass,
@@ -591,12 +575,12 @@ function ViewClass(props) {
     getMultipleFileAvatar,
     getTaskByClass
   } = props;
-  // const { all_user_files } = props.filesCollection;
+  const { students_by_class, all_teachers_map, user } = props.auth;
+  const { kelas } = props.classesCollection;
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
-  const { kelas } = props.classesCollection;
-  const { students_by_class, all_teachers_map, user } = props.auth;
   const classId = props.match.params.id;
+  // const { all_user_files } = props.filesCollection;
 
   const [walikelas, setWalikelas] = React.useState({});
   const [taskAtmpt, setTaskAtmpt] = React.useState([]);
@@ -604,8 +588,6 @@ function ViewClass(props) {
   const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
 
   const all_assessments = assessmentsCollection.all_assessments;
-
-  // All actions to retrive datas from Database
 
   function showTasks(data) {
     if (data.length === 0) {
@@ -727,7 +709,6 @@ function ViewClass(props) {
     }
   }
 
-  console.log("Avatar retrieved: ", avatar);
   function listTasks(category = null, subject = {}, tab = "pekerjaan_kelas") {
     let tasksList = [];
     let result = [];
@@ -735,10 +716,10 @@ function ViewClass(props) {
       var i;
       for (i = tasksCollection.length - 1; i >= 0; i--) {
         if (taskAtmpt.indexOf(tasksCollection[i]._id) === -1) {
-          // get the not attempted task.
+          // Get the not attempted task.
           tasksList.push(tasksCollection[i]);
         }
-        // if(i === tasksCollection.length - 5){ // item terakhir harus pas index ke 4.
+        // if(i === tasksCollection.length - 5){ // Last item must be at 4th index.
         //   break;
         // }
       }
@@ -854,25 +835,6 @@ function ViewClass(props) {
                 objectType: "Kuis",
                 category: category,
               });
-              // result.push(
-              //   <AssessmentListItem
-              //     work_title={assessment.name}
-              //     work_category_avatar={workCategoryAvatar}
-              //     work_subject={
-              //       category === "subject"
-              //         ? null
-              //         : all_subjects_map.get(assessment.subject)
-              //     }
-              //     work_status={workStatus}
-              //     work_starttime={moment(assessment.start_date)
-              //       .locale("id")
-              //       .format("DD MMM YYYY, HH:mm")}
-              //     work_endtime={moment(assessment.end_date)
-              //       .locale("id")
-              //       .format("DD MMM YYYY, HH:mm")}
-              //     work_dateposted={assessment.createdAt}
-              //   />
-              // );
             }
           }
           if (type === "Ujian") {
@@ -896,25 +858,6 @@ function ViewClass(props) {
                 objectType: "Ujian",
                 category: category,
               });
-              // result.push(
-              //   <AssessmentListItem
-              //     work_title={assessment.name}
-              //     work_category_avatar={workCategoryAvatar}
-              //     work_subject={
-              //       category === "subject"
-              //         ? null
-              //         : all_subjects_map.get(assessment.subject)
-              //     }
-              //     work_status={workStatus}
-              //     work_starttime={moment(assessment.start_date)
-              //       .locale("id")
-              //       .format("DD MMM YYYY, HH:mm")}
-              //     work_endtime={moment(assessment.end_date)
-              //       .locale("id")
-              //       .format("DD MMM YYYY, HH:mm")}
-              //     work_dateposted={assessment.createdAt}
-              //   />
-              // );
             }
           }
           if (!category && result.length === 5) break;
@@ -943,25 +886,6 @@ function ViewClass(props) {
                 objectType: "Kuis",
                 category: category,
               });
-              // result.push(
-              //   <AssessmentListItem
-              //     work_title={assessment.name}
-              //     work_category_avatar={workCategoryAvatar}
-              //     work_subject={
-              //       category === "subject"
-              //         ? null
-              //         : all_subjects_map.get(assessment.subject)
-              //     }
-              //     work_status={workStatus}
-              //     work_starttime={moment(assessment.start_date)
-              //       .locale("id")
-              //       .format("DD MMM YYYY, HH:mm")}
-              //     work_endtime={moment(assessment.end_date)
-              //       .locale("id")
-              //       .format("DD MMM YYYY, HH:mm")}
-              //     work_dateposted={assessment.createdAt}
-              //   />
-              // );
             }
           }
           if (type === "Ujian") {
@@ -1022,10 +946,10 @@ function ViewClass(props) {
         }
         if (tab === "pekerjaan_kelas") {
           if (!category && materialList.length === 5)
-            // item ke index tsb, brarti harus harus pas index ke selectedMaterials.length - 5.
+            // Number of item to the index, so that it has to be index = selectedMaterials.length - 5.
             break;
           if (category === "subject" && materialList.length === 3)
-            // item ke index tsb, brarti harus harus pas index ke selectedMaterials.length - 5.
+            // Number of item to the index, so that it has to be index = selectedMaterials.length - 5.
             break;
         }
       }
@@ -1036,21 +960,21 @@ function ViewClass(props) {
   React.useEffect(() => {
     if (user.role === "Student") {
       if (user.kelas && user.kelas === classId) {
-        // jika murid ini sudah ditempatkan ke suatu kelas dan
-        // id kelas yang dimasukan sebagai parameter adalah id milik kelas yang ditempati murid ini,
+        // If this student has been assigned to a class.
+        // Clas id that is inserted as a parameter is the class id that is assigned to the student.
         getMaterial(user.kelas, "by_class");
         getTaskByClass(user.kelas)
         //getAllTask(); // get the tasksCollection
       } else {
-        // jika murid ini belum ditempatkan di kelas manapun atau mencoba membuka halaman untuk kelas lain,
-        // tidak load data apa-apa dan langsung redirect ke halaman yang sesuai (di bawah)
+        // If this student has not been assigned to any class or tried to open other class page,
+        // then nothing will be loaded and will be redirected to the corresponding page (below).
         return;
       }
     }
     getAllSubjects("map"); // get the all_subjects_map in map
     getAllSubjects(); // get the all_subjects
     getStudentsByClass(props.match.params.id); // get the students_by_class
-    // getTeachers("map"); // dipindahkan
+    // getTeachers("map"); // Moved
     getStudents();
 
     getAllTaskFilesByUser(user._id); // get the all_user_files
@@ -1059,7 +983,6 @@ function ViewClass(props) {
   }, []);
 
   React.useEffect(() => {
-    console.log("ID User", user._id, user._id);
     getTaskAtmpt(user._id).then((data) => {
       setTaskAtmpt(data);
     });
@@ -1067,17 +990,15 @@ function ViewClass(props) {
   }, [user._id]);
 
   React.useEffect(() => {
-    //Untuk mendapatkan kelas current, digunakan untuk:
-    //  -> Dapatin id walikelas
-    // -> pindahkan getTeachers("map") di sini karena mau execute setWalikelas hanya setelah itu selesai.
+    // To get the current class, then
+    // get the homeroom teacher id
+    // move getTeachers("map") here because wants to execute setWalikelas, only after that finish.
     var id_list;
     setCurrentClass(classId).then((kelas) => {
       if (kelas) {
         id_list = [kelas.walikelas];
-        console.log("ID LIST: ", id_list);
         students_by_class.forEach((s) => id_list.push(s._id));
         getMultipleFileAvatar(id_list).then((results) => {
-          console.log(results);
           setAvatar(results);
         });
         getTeachers("map").then((results) =>
@@ -1096,7 +1017,7 @@ function ViewClass(props) {
           submittedTaskIdSet.add(file.task_id);
         }
       }).finally(() => {
-        // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
+        // If there is error 404 (files.length === 0), submittedTaskIds will be filled with empty set.
         setSubmittedTaskIds(submittedTaskIdSet);
       });
     }
@@ -1106,13 +1027,6 @@ function ViewClass(props) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  console.log(submittedTaskIds);
-  // console.log(selectedMaterials)
-  console.log("Avatars: ", avatar, user._id);
-  document.title = !kelas.name
-    ? "Schooly | Lihat Kelas"
-    : `Schooly | ${kelas.name}`;
 
   function student_role(id) {
     switch (id) {
@@ -1131,7 +1045,7 @@ function ViewClass(props) {
   }
 
   function isObjEmpty(obj) {
-    // return false jika obj !== undefined dan isi object tidak kosong
+    // return false if obj !== undefined dan object's content is not empty.
     if (obj) {
       return Object.keys(obj).length === 0 && obj.constructor === Object;
     } else {
@@ -1142,12 +1056,12 @@ function ViewClass(props) {
   if (user.role === "Student") {
     if (user.kelas) {
       if (classId !== user.kelas) {
-        // jika murid ini membuka halaman kelas lain,
+        // If this student open other class page,
         return <Redirect to="/tidak-ditemukan" />;
       }
-      // jika murid ini membuka kelas sendiri, muat halaman
+      // If this student opens his/her own class, then load the page.
     } else {
-      // jika murid ini belum ditempatkan di kelas manapun,
+      // If this student has not been assigned to any class.
       return (
         <div
           className={classes.root}
@@ -1155,10 +1069,9 @@ function ViewClass(props) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            height: "48vh",
           }}
         >
-          <Typography variant="h5" color="textSecondary">
+          <Typography variant="h5" color="textSecondary" align="center">
             Anda belum ditempatkan di kelas manapun
           </Typography>
         </div>
@@ -1166,26 +1079,41 @@ function ViewClass(props) {
     }
   }
 
+  document.title = !kelas.name
+    ? "Schooly | Lihat Kelas"
+    : `Schooly | ${kelas.name}`;
+
   return (
     <div className={classes.root}>
       {user.role === "Admin" || user.role === "Teacher" ? (
         <div>
-          <Paper className={classes.classPaper}>
-            <Typography variant="h3">{kelas.name}</Typography>
+          <Paper elevation={0} className={classes.classWallpaper}>
+            <Typography variant="h3">
+              {kelas.name}
+            </Typography>
             <Typography variant="h6">
               {isObjEmpty(walikelas) ? null : walikelas.name}
             </Typography>
           </Paper>
-          <div style={{ padding: "20px", marginBottom: "40px" }}>
-            <Typography variant="h4" gutterBottom>
-              Wali Kelas
-            </Typography>
-            <Divider className={classes.personListDivider} />
-            <List className={classes.listContainer}>
+          <Grid container direction="column" spacing={10} style={{ padding: "15px" }}>
+            <Grid item>
+              <Typography variant="h4" gutterBottom>
+                Wali Kelas
+              </Typography>
+              <Divider className={classes.personListDivider} />
               {!isObjEmpty(walikelas) ? (
                 <Grid container justify="space-between" alignItems="center">
                   {[
                     <Grid item>
+                      <UserItem
+                        avatar_map={avatar[walikelas._id]}
+                        name={walikelas.name}
+                        role={
+                          all_subjects_map
+                            ? all_subjects_map.get(walikelas.subject_teached)
+                            : null
+                        }
+                      />
                       <PersonListItem
                         person_avatar={avatar[walikelas._id]}
                         person_name={walikelas.name}
@@ -1196,7 +1124,7 @@ function ViewClass(props) {
                         }
                       />
                     </Grid>,
-                    user.email === walikelas.email ? null : ( // menghilangkan tombol lihat profil di diri sendiri
+                    user.email === walikelas.email ? null : ( // To disable profile view for the user's own profile
                       <Grid item xs container justify="flex-end">
                         <Grid item>
                           <LightTooltip title="Lihat Profil">
@@ -1219,28 +1147,18 @@ function ViewClass(props) {
                   ]}
                 </Grid>
               ) : (
-                <Typography
-                  variant="subtitle1"
-                  align="center"
-                  color="textSecondary"
-                >
+                <Typography color="textSecondary" align="center" style={{ padding: "15px" }}>
                   Kosong
                 </Typography>
               )}
-            </List>
-          </div>
-          <div style={{ padding: "20px" }}>
-            <Typography variant="h4" gutterBottom>
-              Murid
-            </Typography>
-            <Divider className={classes.personListDivider} />
-            <List className={classes.listContainer}>
+            </Grid>
+            <Grid item>
+              <Typography variant="h4" gutterBottom>
+                Murid
+              </Typography>
+              <Divider className={classes.personListDivider} />
               {students_by_class.length === 0 ? (
-                <Typography
-                  variant="subtitle1"
-                  align="center"
-                  color="textSecondary"
-                >
+                <Typography color="textSecondary" align="center" style={{ padding: "15px" }}>
                   Kosong
                 </Typography>
               ) : (
@@ -1276,14 +1194,16 @@ function ViewClass(props) {
                   </Grid>
                 ))
               )}
-            </List>
-          </div>
+            </Grid>
+          </Grid>
         </div>
       ) : (
         <div>
-          <Paper square>
-            <div className={classes.classPaper}>
-              <Typography variant="h3">{kelas.name}</Typography>
+          <Paper elevation={0}>
+            <div className={classes.classWallpaper}>
+              <Typography variant="h3">
+                {kelas.name}
+              </Typography>
               <Typography variant="h6">
                 {isObjEmpty(walikelas) ? null : walikelas.name}
               </Typography>
@@ -1298,17 +1218,17 @@ function ViewClass(props) {
               <Tab
                 icon={<DesktopWindowsIcon />}
                 label="Pekerjaan Kelas"
-                {...TabIndex(0)}
+                // {...TabIndex(0)}
               />
               <Tab
                 icon={<BallotIcon />}
                 label="Mata Pelajaran"
-                {...TabIndex(1)}
+                // {...TabIndex(1)}
               />
               <Tab
                 icon={<SupervisorAccountIcon />}
                 label="Peserta"
-                {...TabIndex(2)}
+                // {...TabIndex(2)}
               />
             </Tabs>
           </Paper>
@@ -1497,7 +1417,7 @@ function ViewClass(props) {
                   Wali Kelas
                 </Typography>
                 <Divider className={classes.personListDivider} />
-                <List className={classes.listContainer}>
+                <List>
                   {isObjEmpty(walikelas) ? (
                     <Typography
                       variant="subtitle1"
@@ -1546,7 +1466,7 @@ function ViewClass(props) {
                   Murid
                 </Typography>
                 <Divider className={classes.personListDivider} />
-                <List className={classes.listContainer}>
+                <List>
                   {students_by_class.length === 0 ? (
                     <Typography
                       variant="subtitle1"
