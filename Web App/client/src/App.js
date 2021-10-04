@@ -38,7 +38,7 @@ import Dashboard from "./components/objects/dashboard/Dashboard";
 // Class
 import CreateClass from "./components/objects/class/CreateClass";
 import EditClass from "./components/objects/class/EditClass";
-import EditClassTeacher from "./components/objects/class/EditClassTeacher";
+import HomeroomTeacher from "./components/objects/class/HomeroomTeacher";
 import ViewClass from "./components/objects/class/ViewClass";
 import ClassList from "./components/objects/class/ClassList";
 // Subject
@@ -326,7 +326,7 @@ class App extends Component {
                         exact
                         access={["Admin"]}
                         path="/atur-walikelas"
-                        component={EditClassTeacher}
+                        component={HomeroomTeacher}
                       />
                       <PrivateRoute
                         exact

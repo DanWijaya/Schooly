@@ -53,6 +53,7 @@ const Styles = responsiveFontSizes(
       },
       copylink: {
         main: "#974994",
+        fade: fade("#974994", 0.15),
       },
     },
     overrides: {

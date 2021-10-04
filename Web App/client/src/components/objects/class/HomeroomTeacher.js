@@ -5,22 +5,20 @@ import { getAllClass, setHomeroomTeachers } from "../../../actions/ClassActions"
 import { getTeachers } from "../../../actions/UserActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-// import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-
 import {
+  Avatar,
   Button,
   Divider,
-  MenuItem,
   Grid,
-  Paper,
-  TextField,
-  Typography,
   Hidden,
-  Avatar,
   ListItem,
   ListItemAvatar,
   ListItemText,
+  MenuItem,
+  Paper,
   Snackbar,
+  TextField,
+  Typography
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
@@ -28,11 +26,12 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
   content: {
     padding: "20px",
@@ -43,16 +42,6 @@ const useStyles = makeStyles((theme) => ({
       height: "1px",
     },
   },
-  editClassButton: {
-    // width: "100%",
-    // marginTop: "20px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      color: theme.palette.primary.main,
-      backgroundColor: "white",
-    },
-  },
   select: {
     minWidth: "150px",
     maxWidth: "150px",
@@ -61,9 +50,15 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "100px",
     },
   },
+  editClassButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      color: theme.palette.primary.main,
+      backgroundColor: "white",
+    },
+  },
   cancelButton: {
-    // width: "100%",
-    // marginTop: "20px",
     backgroundColor: theme.palette.error.main,
     color: "white",
     "&:focus, &:hover": {
@@ -71,21 +66,14 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.main,
     },
   },
-  assessmentSettings: {
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
 }));
 
-function EditClassTeacher(props) {
+function HomeroomTeacher(props) {
   const classes = useStyles();
-
-  // const [selectedClass, setSelectedClass] = React.useState(null);
-
+  const { getTeachers, getAllClass } = props;
   const { all_teachers } = props.auth;
   const { all_classes } = props.classesCollection;
   // const { all_classes_map } = props.classesCollection;
-  const { getTeachers, getAllClass } = props;
 
   React.useEffect(() => {
     getTeachers();
@@ -93,45 +81,12 @@ function EditClassTeacher(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* 
-    isi:
-    {
-      <id guru>: {
-        name: <nama guru>,
-        email: <email guru>,
-        classId: <id kelas yang diwalikan> -> null jika guru ini tidak mewalikan kelas manapun 
-      },
-      ...
-
-    } key -> id semua guru yang ada di db
-  */
   const [statusWali, setStatusWali] = React.useState(null);
-
-  /* 
-    isi:
-    {
-      <id kelas>: [<id guru wali 1>, <id guru wali 2>, ...], -> array kosong jika kelas ini tidak memiliki wali kelas
-      ...
-    } key -> id semua kelas yang ada di db
-
-    <id guru wali> akan berisi id semua guru yang di-assign ke kelas tersebut. akan digunakan untuk memberi tanda pada Select-Select yang memiliki value sama.   
-  */
   const [statusKelas, setStatusKelas] = React.useState(null);
 
-  /*
-    isi:
-    {
-      <id kelas>: <id guru wali kelas>, -> undefined jika kelas ini tidak memiliki wali kelas
-      ...
-    } key -> id semua kelas yang ada di db
-
-    menyimpan kondisi awal semua kelas.
-    akan digunakan untuk membandingkan kondisi awal sebelum wali kelas diubah dan kondisi sesudah diubah.   
-  */
   const all_classes_wali = React.useRef({});
 
   React.useEffect(() => {
-    // const all_classes = Array.from(all_classes_map.values());
     if (
       Array.isArray(all_teachers) &&
       all_teachers.length !== 0 &&
@@ -179,7 +134,7 @@ function EditClassTeacher(props) {
   }
 
   function handleKelasWaliChange(event, teacherId) {
-    // statusWali sudah dipastikan ada
+    // Homeroom status of a teacher is being made sure exist.
     let oldClassId = statusWali[teacherId].classId;
     let newClassId = event.target.value;
 
@@ -212,7 +167,7 @@ function EditClassTeacher(props) {
       let teacherIdArray = entry[1];
 
       if (teacherIdArray.length > 1) {
-        // jika masih ada kelas yang memiliki lebih dari 1 wali kelas, batal submit
+        // If there is two class or more that is assigned with the same homeroom teacher, submission will be canceled.
         handleOpenSnackbar(
           "error",
           "Tidak boleh ada kelas yang memiliki lebih dari 1 wali kelas"
@@ -224,8 +179,8 @@ function EditClassTeacher(props) {
           teacherIdArray.length === 0 ? null : teacherIdArray[0];
         if (waliSebelum !== waliSesudah) {
           classToUpdate[classId] = waliSesudah;
-          // value bisa null
-          // jika null, field walikelas kelas ini akan dihapus
+          // The value can be null.
+          // If it is null, homeroom teacher field of this class will be deleted.
         }
       }
     }
@@ -285,41 +240,6 @@ function EditClassTeacher(props) {
 
   return (
     <div className={classes.root}>
-      <UploadDialog
-        openUploadDialog={openUploadDialog}
-        success={success}
-        messageUploading={`Pengaturan wali kelas sedang disimpan`}
-        messageSuccess={`Pengaturan wali kelas berhasil disimpan`}
-        redirectLink="/daftar-kelas"
-      />
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="pengaturan wali kelas"
-        deleteItem={null}
-        itemName={null}
-        isLink={true}
-        redirectLink="/daftar-kelas"
-        isWarning={false}
-      />
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={(event, reason) => {
-          handleCloseSnackbar(event, reason);
-        }}
-      >
-        <Alert
-          variant="filled"
-          severity={severity}
-          onClose={(event, reason) => {
-            handleCloseSnackbar(event, reason);
-          }}
-        >
-          {snackbarContent}
-        </Alert>
-      </Snackbar>
-
       <Paper>
         <div className={classes.content}>
           <Typography variant="h5" gutterBottom>
@@ -420,16 +340,49 @@ function EditClassTeacher(props) {
           </div>
         </div>
       </Paper>
+      <UploadDialog
+        openUploadDialog={openUploadDialog}
+        success={success}
+        messageUploading={`Pengaturan wali kelas sedang disimpan`}
+        messageSuccess={`Pengaturan wali kelas berhasil disimpan`}
+        redirectLink="/daftar-kelas"
+      />
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="pengaturan wali kelas"
+        deleteItem={null}
+        itemName={null}
+        isLink={true}
+        redirectLink="/daftar-kelas"
+        isWarning={false}
+      />
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={(event, reason) => {
+          handleCloseSnackbar(event, reason);
+        }}
+      >
+        <Alert
+          variant="filled"
+          severity={severity}
+          onClose={(event, reason) => {
+            handleCloseSnackbar(event, reason);
+          }}
+        >
+          {snackbarContent}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
 
-EditClassTeacher.propTypes = {
+HomeroomTeacher.propTypes = {
   auth: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
-
-  getTeachers: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
+  getTeachers: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -438,5 +391,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { getTeachers, getAllClass })(
-  EditClassTeacher
+  HomeroomTeacher
 );

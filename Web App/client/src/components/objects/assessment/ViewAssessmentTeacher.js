@@ -3,105 +3,99 @@ import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
-import CustomLinkify from "../../misc/linkify/Linkify";
-import {
-  getOneAssessment,
-  deleteAssessment,
-} from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getOneAssessment, deleteAssessment } from "../../../actions/AssessmentActions";
 import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
+import Latex from "../../misc/latex/Latex";
+import CustomLinkify from "../../misc/linkify/Linkify";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
+  Button,
+  Divider,
   Fab,
   Grid,
   GridListTile,
   GridListTileBar,
   GridList,
   Hidden,
-  Paper,
-  Typography,
   Input,
+  Paper,
   Snackbar,
-  Divider,
-  useMediaQuery,
+  Tooltip,
+  Typography
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LinkIcon from "@material-ui/icons/Link";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import Alert from "@material-ui/lab/Alert";
 import SwitchBase from "@material-ui/core/internal/SwitchBase";
-import Latex from "../../misc/latex/Latex";
+import Alert from "@material-ui/lab/Alert";
+import {
+  Assignment as AssignmentIcon,
+  CheckCircle as CheckCircleIcon,
+  Create as CreateIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  FiberManualRecord as FiberManualRecordIcon,
+  Link as LinkIcon,
+  PlaylistAddCheck as PlaylistAddCheckIcon
+} from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    padding: "10px",
   },
-  seeAllAssessmentButton: {
+  assessmentPaper: {
+    padding: "20px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "15px",
+    },
+  },
+  assessmentDivider: {
+    margin: "22.5px 0px",
+    backgroundColor: theme.palette.primary.light,
+  },
+  seeResultsButton: {
+    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.success.main,
-    },
-  },
-  editAssessmentButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  deleteAssessmentButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
-  copyToClipboardButton: {
-    backgroundColor: theme.palette.copylink.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.copylink.main,
-    },
-  },
-  dialogBox: {
-    maxWidth: "350px",
-    padding: "15px",
-  },
-  dialogDeleteButton: {
-    width: "150px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },
-  dialogCancelButton: {
-    width: "150px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
+  copyLinkButton: {
+    textTransform: "none",
+    color: theme.palette.copylink.main,
+    "&:hover": {
+      backgroundColor: theme.palette.copylink.fade,
+    },
+  },
+  editButton: {
+    width: "110px",
+    textTransform: "none",
+    color: theme.palette.primary.main,
+    "&:hover": {
+      backgroundColor: theme.palette.primary.fade,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
+  },
+  deleteButton: {
+    width: "110px",
+    textTransform: "none",
+    color: theme.palette.error.main,
+    "&:hover": {
+      backgroundColor: theme.palette.error.fade,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
     },
   },
   answerText: {
@@ -110,13 +104,6 @@ const useStyles = makeStyles((theme) => ({
   optionText: {
     color: "black",
     marginLeft: "8px",
-  },
-  paperBox: {
-    padding: "20px",
-    // marginBottom: "10px",
-  },
-  dividerColor: {
-    backgroundColor: theme.palette.primary.main,
   },
   checkIcon: {
     color: theme.palette.success.dark,
@@ -141,9 +128,6 @@ const useStyles = makeStyles((theme) => ({
 function ViewAssessmentTeacher(props) {
   const classes = useStyles();
   const history = useHistory();
-  document.title = "Schooly | Buat Kuis";
-  const assessment_id = props.match.params.id;
-  const isMobileView = useMediaQuery("(max-width:780px)");
   const {
     getOneAssessment,
     getAllClass,
@@ -151,17 +135,17 @@ function ViewAssessmentTeacher(props) {
     deleteAssessment,
     getFileAssessment,
   } = props;
+
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
+  const assessment_id = props.match.params.id;
   const { questions, type } = selectedAssessments;
-  const [copySnackbarOpen, setOpenCopySnackBar] = React.useState(null);
 
+  const [copySnackbarOpen, setOpenCopySnackBar] = React.useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedAssessmentId, setSelectedAssessmentId] = React.useState(null);
-  const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(
-    null
-  );
+  const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
   const [lampiranUrls, setLampiranUrls] = React.useState(new Map());
 
   React.useEffect(() => {
@@ -172,11 +156,8 @@ function ViewAssessmentTeacher(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(lampiranUrls);
-
   const onDeleteAssessment = (id) => {
     deleteAssessment(id, type, history).then((res) => {
-      console.log(res);
     });
   };
 
@@ -206,17 +187,15 @@ function ViewAssessmentTeacher(props) {
         </span>
       );
       iterator++;
-    }
+    };
 
     return (
       <Typography
         align="justify"
         style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
       >
-        <form>
         {/* <Latex content={splitResult}/> */}
-          <CustomLinkify text={splitResult} />
-        </form>
+        <CustomLinkify text={splitResult} />
       </Typography>
     );
   };
@@ -242,119 +221,44 @@ function ViewAssessmentTeacher(props) {
   };
 
   const checkSubmissionExist = () => {
-    return (selectedAssessments &&
-            selectedAssessments.submissions &&
-            Object.keys(selectedAssessments.submissions).length !== 0)
-  }
+    return (
+      selectedAssessments &&
+      selectedAssessments.submissions &&
+      Object.keys(selectedAssessments.submissions).length !== 0
+    );
+  };
 
   let linkToShare =
     selectedAssessments.type === "Kuis"
       ? `https://${window.location.host}/kuis-murid/${assessment_id}`
       : `https://${window.location.host}/ujian-murid/${assessment_id}`;
-      
+
+  document.title = "Schooly | Buat Kuis";
+
   return (
     <div className={classes.root}>
-      {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType={selectedAssessments.type}
-        // deleteItem=""
-        itemName={selectedAssessments.name}
-        deleteItem={() => {
-          onDeleteAssessment(selectedAssessmentId);
-        }}
-        isWarning={true}
-      />
-      <Grid container direction="column" spacing={3}>
-        <Grid item style={{ marginBottom: "20px" }}>
-          <Paper className={classes.paperBox}>
-            <Grid container spacing={2}>
-              <Hidden smDown>
-                <Grid item xs={12} style={{ paddingBottom: "0" }}>
-                  <Typography variant="h4">
-                    {selectedAssessments.name}
-                  </Typography>
-                </Grid>
-
-                <Grid
-                  item
-                  xs={12}
-                  md={7}
-                  spacing={8}
-                  style={{ paddingTop: "0" }}
-                >
-                  <Typography variant="caption" color="textSecondary">
-                    <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
-                  </Typography>
-                </Grid>
-
-                <Grid
-                  item
-                  xs={12}
-                  md={5}
-                  spacing={8}
-                  style={{ paddingTop: "0" }}
-                >
-                  {/* h6 ditambahkan agar teks ini rata atas dengan teks mata pelajaran*/}
-                  <h6 style={{ marginBottom: "0" }}>
-                    <Typography
-                      align="right"
-                      variant="body2"
-                      color="textSecondary"
-                    >
-                      Mulai:{" "}
-                      {moment(selectedAssessments.start_date)
-                        .locale("id")
-                        .format("DD MMM YYYY, HH:mm")}
-                    </Typography>
-                  </h6>
-                  <Typography
-                    align="right"
-                    variant="body2"
-                    color="textSecondary"
-                  >
-                    Selesai:{" "}
-                    {moment(selectedAssessments.end_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                  </Typography>
-                </Grid>
-              </Hidden>
-
-              <Hidden mdUp>
-                <Grid item xs={12}>
-                  <Typography variant="h4">
-                    {selectedAssessments.name}
-                  </Typography>
-                  <Typography variant="caption" color="textSecondary">
-                    <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={12} md={7} spacing={8}>
-                  <Typography variant="body2" color="textSecondary">
-                    Mulai:{" "}
-                    {moment(selectedAssessments.start_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    Selesai:{" "}
-                    {moment(selectedAssessments.end_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                  </Typography>
-                </Grid>
-              </Hidden>
-
-              <Grid item xs={12}>
-                <Divider className={classes.dividerColor} />
-              </Grid>
-
+      <Grid container direction="column" spacing={2}>
+        <Grid item >
+          <Paper className={classes.assessmentPaper}>
+            <Typography variant="h4" style={{ marginBottom: "5px" }}>
+              {selectedAssessments.name}
+            </Typography>
+            <Typography color="primary" paragraph>
+              {type} {all_subjects_map.get(selectedAssessments.subject)}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Oleh:
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Waktu Dibuat: {moment(selectedAssessments.createdAt)
+                .locale("id")
+                .format("DD MMM YYYY, HH.mm")}
+            </Typography>
+            <Divider className={classes.assessmentDivider} />
+            <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Typography color="textSecondary" gutterBottom>
-                  Kelas yang Diberikan:
+                  Diberikan kepada:
                 </Typography>
                 <Typography>
                   {!selectedAssessments.class_assigned || !all_classes_map.size
@@ -372,13 +276,26 @@ function ViewAssessmentTeacher(props) {
                       })}
                 </Typography>
               </Grid>
-
-              <Grid item xs={12} style={{ marginTop: "15px" }}>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" gutterBottom>
+                  Waktu Pengerjaan:
+                </Typography>
+                <Typography>
+                  Mulai - {moment(selectedAssessments.start_date)
+                    .locale("id")
+                    .format("DD MMM YYYY, HH:mm")}
+                </Typography>
+                <Typography>
+                  Selesai - {moment(selectedAssessments.end_date)
+                    .locale("id")
+                    .format("DD MMM YYYY, HH:mm")}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi {type}:
                 </Typography>
                 <Typography
-                  variant="body1"
                   align="justify"
                   style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
                 >
@@ -388,18 +305,115 @@ function ViewAssessmentTeacher(props) {
             </Grid>
           </Paper>
         </Grid>
-
+        <Grid item container justify="space-between" alignItems="center" spacing={1}>
+          <Grid item>
+            <Link
+              to={selectedAssessments.type === "Kuis"
+                ? `/daftar-kuis-terkumpul/${assessment_id}`
+                : `/daftar-ujian-terkumpul/${assessment_id}`
+              }
+              style={{ pointerEvents: !checkSubmissionExist() ? "none" : null }}
+            >
+              <Hidden smDown>
+                <Fab
+                  size="large"
+                  variant="extended"
+                  className={classes.seeResultsButton}
+                  disabled={!checkSubmissionExist()}
+                >
+                  <PlaylistAddCheckIcon style={{ marginRight: "8px" }} />
+                  Periksa
+                </Fab>
+              </Hidden>
+              <Hidden mdUp>
+                <Tooltip title="Periksa">
+                  <Fab
+                    size="medium"
+                    className={classes.seeResultsButton}
+                    disabled={!checkSubmissionExist()}
+                  >
+                    <PlaylistAddCheckIcon />
+                  </Fab>
+                </Tooltip>
+              </Hidden>
+            </Link>
+          </Grid>
+          <Grid item xs container justify="flex-end" alignItems="center" spacing={1}>
+            <Grid item>
+              <Tooltip title="Salin Tautan">
+                <Button
+                  variant="outlined"
+                  className={classes.copyLinkButton}
+                  onClick={(e) => copyToClipboardButton(e, linkToShare, type)}
+                >
+                  <LinkIcon />
+                </Button>
+              </Tooltip>
+            </Grid>
+            {!checkSubmissionExist() ?
+              <Grid item>
+                <Link to={type === "Kuis" ? `/sunting-kuis/${assessment_id}` : `/sunting-ujian/${assessment_id}`}>
+                  <Hidden xsDown>
+                    <Button
+                      variant="outlined"
+                      className={classes.editButton}
+                      startIcon={<EditIcon style={{ color: "grey" }} />}
+                    >
+                      <Typography>
+                        Sunting
+                      </Typography>
+                    </Button>
+                  </Hidden>
+                  <Hidden smUp>
+                    <Tooltip title="Sunting">
+                      <Button
+                        variant="outlined"
+                        className={classes.editButton}
+                      >
+                        <EditIcon />
+                      </Button>
+                    </Tooltip>
+                  </Hidden>
+                </Link>
+              </Grid>
+            : null}
+            <Grid item>
+              <Hidden xsDown>
+                <Button
+                  variant="outlined"
+                  className={classes.deleteButton}
+                  startIcon={<DeleteIcon style={{ color: "grey" }} />}
+                  onClick={(e) => {
+                    handleOpenDeleteDialog(e, assessment_id);
+                  }}
+                >
+                  <Typography>
+                    Hapus
+                  </Typography>
+                </Button>
+              </Hidden>
+              <Hidden smUp>
+                <Tooltip title="Hapus">
+                  <Button
+                    variant="outlined"
+                    className={classes.deleteButton}
+                    onClick={(e) => {
+                      handleOpenDeleteDialog(e, assessment_id);
+                    }}
+                  >
+                    <DeleteIcon />
+                  </Button>
+                </Tooltip>
+              </Hidden>
+            </Grid>
+          </Grid>
+        </Grid>
         {!Array.isArray(questions)
           ? null
           : questions.map((question, i) => (
               <Grid item>
-                <Paper className={classes.paperBox}>
-                  <Grid
-                    container
-                    direction="column"
-                    spacing={2}
-                    className={classes.content}
-                  >
+                <Paper className={classes.assessmentPaper}>
+                  <Grid container direction="column" spacing={2}>
                     <Grid item>
                       <Typography variant="h6" color="primary" gutterBottom>
                         Soal {i + 1}
@@ -429,7 +443,6 @@ function ViewAssessmentTeacher(props) {
                           return null;
                         })}
                       </GridList>
-                      {/* <Typography variant="h6"> */}
                       {question.type === "shorttext" ? (
                         generateSoalShortTextTeacher(question, i)
                       ) : question.type === "longtext" ? (
@@ -470,7 +483,7 @@ function ViewAssessmentTeacher(props) {
                         >
                           <Latex content={question.name}/>
                           {/* <CustomLinkify text={question.name} /> */}
-                        </Typography> 
+                        </Typography>
                       )}
                       {/* </Typography> */}
                     </Grid>
@@ -523,77 +536,17 @@ function ViewAssessmentTeacher(props) {
                 </Paper>
               </Grid>
             ))}
-        <Grid
-          item
-          container
-          justify="flex-end"
-          alignItems="center"
-          style={{ paddingTop: "4px" }}
-        >
-          <Grid item style={{ paddingRight: "10px" }}>
-            {checkSubmissionExist() ? (
-              <Link
-                to={
-                  selectedAssessments.type === "Kuis"
-                    ? `/daftar-kuis-terkumpul/${assessment_id}`
-                    : `/daftar-ujian-terkumpul/${assessment_id}`
-                }
-              >
-                <Fab
-                  variant="extended"
-                  className={classes.seeAllAssessmentButton}
-                >
-                  <AssignmentIcon style={{ marginRight: "7.5px" }} />
-                  Lihat Hasil
-                </Fab>
-              </Link>
-            ) : (
-              <>
-                <Fab
-                  variant="extended"
-                  className={classes.seeAllAssessmentButton}
-                  disabled
-                >
-                  <AssignmentIcon style={{ marginRight: "7.5px" }} />
-                  Lihat Hasil
-                </Fab>
-              </>
-            )}
-          </Grid>
-          <Grid item style={{ paddingRight: "10px" }}>
-            <LightTooltip title="Salin Tautan">
-              <Fab
-                className={classes.copyToClipboardButton}
-                onClick={(e) => copyToClipboardButton(e, linkToShare, type)}
-              >
-                <LinkIcon />
-              </Fab>
-            </LightTooltip>
-          </Grid>
-          {checkSubmissionExist() ? null :
-          <Grid item style={{ paddingRight: "10px" }}>
-            <Link to={ type === "Kuis" ? `/sunting-kuis/${assessment_id}` : `/sunting-ujian/${assessment_id}`}>
-              <LightTooltip title="Sunting" placement="bottom">
-                <Fab className={classes.editAssessmentButton}>
-                  <EditIcon />
-                </Fab>
-              </LightTooltip>
-            </Link>
-          </Grid> }
-          <Grid item>
-            <LightTooltip title="Hapus" placement="bottom">
-              <Fab
-                className={classes.deleteAssessmentButton}
-                onClick={(e) => {
-                  handleOpenDeleteDialog(e, assessment_id);
-                }}
-              >
-                <DeleteIcon />
-              </Fab>
-            </LightTooltip>
-          </Grid>
-        </Grid>
       </Grid>
+      <DeleteDialog
+        isWarning={true}
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType={selectedAssessments.type}
+        itemName={selectedAssessments.name}
+        deleteItem={() => {
+          onDeleteAssessment(selectedAssessmentId);
+        }}
+      />
       <Snackbar
         open={copySnackbarOpen}
         autoHideDuration={3000}
@@ -609,25 +562,25 @@ function ViewAssessmentTeacher(props) {
 
 ViewAssessmentTeacher.propTypes = {
   auth: PropTypes.object.isRequired,
-  assessmentsCollection: PropTypes.object.isRequired,
-  subjectsCollection: PropTypes.object.isRequired,
-  getOneAssessment: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
+  assessmentsCollection: PropTypes.object.isRequired,
+  getOneAssessment: PropTypes.func.isRequired,
   deleteAssessment: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  assessmentsCollection: state.assessmentsCollection,
-  subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
+  assessmentsCollection: state.assessmentsCollection,
 });
 
 export default connect(mapStateToProps, {
-  getOneAssessment,
-  deleteAssessment,
   getAllClass,
   getAllSubjects,
+  getOneAssessment,
+  deleteAssessment,
   getFileAssessment,
 })(ViewAssessmentTeacher);

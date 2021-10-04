@@ -1087,7 +1087,7 @@ function ViewClass(props) {
               </Typography>
             </div>
           </Paper>
-          <Grid container direction="column" spacing={10} style={{ padding: "15px" }}>
+          <Grid container direction="column" spacing={10} style={{ padding: "15px", paddingTop: "25px" }}>
             <Grid item>
               <Typography variant="h4" gutterBottom>
                 Wali Kelas
