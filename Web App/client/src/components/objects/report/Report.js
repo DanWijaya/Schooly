@@ -1175,15 +1175,15 @@ function Report(props) {
   React.useEffect(() => {
     if (role === "Teacher") {
       getAllClass(user.unit);
-      getAllTask();
+      getAllTask(user.unit);
       getAllAssessments();
     } else if (role === "Student") {
       setKelasWali(new Map()); // agar setRows(handleIndividualReport()) dijalankan, tapi tidak perlu panggil getAllClass(user.unit)
-      getAllTask();
+      getAllTask(user.unit);
       getAllAssessments();
     } else {
       getAllClass(user.unit);
-      getAllClass(user.unit ,"map");
+      getAllClass(user.unit, "map");
     }
     getAllSubjects(user.unit);
     getAllSubjects(user.unit, "map");

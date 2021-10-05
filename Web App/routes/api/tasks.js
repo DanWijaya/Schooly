@@ -28,11 +28,9 @@ router.post("/create", (req, res) => {
   Task.findOne({ name: req.body.name, subject: req.body.subject })
     .then((task) => {
       if (task) {
-        return res
-          .status(400)
-          .json({
-            name: "Tugas dengan nama dan mata pelajaran yang sama sudah ada",
-          });
+        return res.status(400).json({
+          name: "Tugas dengan nama dan mata pelajaran yang sama sudah ada",
+        });
       } else {
         const newTask = new Task(req.body);
         // const newTask = new Task({
@@ -57,9 +55,10 @@ router.post("/create", (req, res) => {
 });
 
 //Define View classes route
-router.get("/viewall", (req, res) => {
+router.get("/viewall/:unitId", (req, res) => {
   // pokoknya kalau ada request, requestnya harus diiringi dengan response.
-  Task.find({}).then((tasks, err) => {
+  const { unitId } = req.params;
+  Task.find({ unit: unitId }).then((tasks, err) => {
     if (!tasks) return res.status(400).json("Tasks are not found");
     else return res.json(tasks);
   });

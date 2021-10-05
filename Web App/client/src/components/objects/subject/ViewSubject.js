@@ -508,7 +508,7 @@ function ViewSubject(props) {
       getMaterial(user.kelas, "by_class");
     }
     setCurrentClass(user.kelas);
-    getAllTask();
+    getAllTask(user.unit);
     getAllTaskFilesByUser(user._id);
     getAllSubjects(user.unit, "map");
     getAllAssessments();

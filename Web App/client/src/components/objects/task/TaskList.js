@@ -560,8 +560,8 @@ function TaskList(props) {
   };
 
   React.useEffect(() => {
-    getAllTask();
-    getAllClass(user.unit ,"map");
+    getAllTask(user.unit);
+    getAllClass(user.unit, "map");
     getAllSubjects(user.unit, "map");
 
     if (user.role === "Student") {
@@ -655,7 +655,7 @@ function TaskList(props) {
     deleteTask(id).then((res) => {
       handleOpenDeleteSnackbar();
       handleCloseDeleteDialog();
-      getAllTask();
+      getAllTask(user.unit);
     });
   };
 

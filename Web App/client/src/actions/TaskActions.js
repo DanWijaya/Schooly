@@ -49,9 +49,9 @@ export const createTask = (formData, taskData, history) => (dispatch) => {
 };
 
 // View All Task
-export const getAllTask = () => (dispatch) => {
+export const getAllTask = (unitId) => (dispatch) => {
   axios
-    .get("/api/tasks/viewall")
+    .get(`/api/tasks/viewall/${unitId}`)
     .then((res) => {
       dispatch({
         type: GET_ALL_TASKS,

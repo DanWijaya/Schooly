@@ -2760,7 +2760,7 @@ function Calendar(props) {
     getSelectedClasses(user.class_teached);
     getAllClass(user.unit);
     getAllEvents();
-    getAllTask();
+    getAllTask(user.unit);
     getAllAssessments();
     getStudents(user.unit);
     getTeachers(user.unit);

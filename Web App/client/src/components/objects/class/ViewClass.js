@@ -1066,7 +1066,7 @@ function ViewClass(props) {
         // id kelas yang dimasukan sebagai parameter adalah id milik kelas yang ditempati murid ini,
         getMaterial(user.kelas, "by_class");
         getTaskByClass(user.kelas);
-        //getAllTask(); // get the tasksCollection
+        //getAllTask(user.unit); // get the tasksCollection
       } else {
         // jika murid ini belum ditempatkan di kelas manapun atau mencoba membuka halaman untuk kelas lain,
         // tidak load data apa-apa dan langsung redirect ke halaman yang sesuai (di bawah)
@@ -1097,17 +1097,17 @@ function ViewClass(props) {
     //  -> Dapatin id walikelas
     // -> pindahkan getTeachers(user.unit, "map") di sini karena mau execute setWalikelas hanya setelah itu selesai.
     setCurrentClass(classId).then((kelas) => {
-        let listId = [];
-        if(kelas.walikelas){
-          listId.push(kelas.walikelas);
-        }
-        students_by_class.forEach((s) => listId.push(s._id));
-        getMultipleFileAvatar(listId).then((results) => {
-          setAvatar(results);
-        });
-        getTeachers(kelas.unit,"map").then((results) =>
-          setWalikelas(results.get(kelas.walikelas))
-        );
+      let listId = [];
+      if (kelas.walikelas) {
+        listId.push(kelas.walikelas);
+      }
+      students_by_class.forEach((s) => listId.push(s._id));
+      getMultipleFileAvatar(listId).then((results) => {
+        setAvatar(results);
+      });
+      getTeachers(kelas.unit, "map").then((results) =>
+        setWalikelas(results.get(kelas.walikelas))
+      );
       // setWalikelas(all_teachers_map.get(kelas.walikelas));
     });
   }, [students_by_class.length, kelas.walikelas]);
@@ -1191,10 +1191,12 @@ function ViewClass(props) {
       );
     }
   }
-  console.log(all_roles)
+  console.log(all_roles);
   return (
     <div className={classes.root}>
-      {user.role === all_roles.ADMIN || user.role === all_roles.TEACHER || user.role === all_roles.SUPERADMIN ? (
+      {user.role === all_roles.ADMIN ||
+      user.role === all_roles.TEACHER ||
+      user.role === all_roles.SUPERADMIN ? (
         <div>
           <Paper className={classes.classPaper}>
             <Typography variant="h3">{kelas.name}</Typography>
@@ -1610,7 +1612,11 @@ function ViewClass(props) {
                         {[
                           <Grid item>
                             <PersonListItem
-                              person_avatar={isObjEmpty(walikelas) ? null : avatar[walikelas._id]}
+                              person_avatar={
+                                isObjEmpty(walikelas)
+                                  ? null
+                                  : avatar[walikelas._id]
+                              }
                               person_name={student.name}
                               person_role={student_role(student._id)}
                             />

@@ -719,12 +719,12 @@ class Dashboard extends Component {
     } = this.props;
     // const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { user, all_roles } = this.props.auth;
-    if(user.role != all_roles.SUPERADMIN){
-      getAllTask(); // actions yang membuat GET request ke Database.
+    if (user.role != all_roles.SUPERADMIN) {
+      getAllTask(user.unit); // actions yang membuat GET request ke Database.
       getAllSubjects(user.unit);
       getTeachers(user.unit);
-      getAllSubjects(user.unit, "map"); 
-      if(user.role === all_roles.STUDENT){
+      getAllSubjects(user.unit, "map");
+      if (user.role === all_roles.STUDENT) {
         setCurrentClass(user.kelas);
       }
       if (user.role === "Student") {
@@ -737,8 +737,6 @@ class Dashboard extends Component {
 
     // const { all_subjects_map } = this.props.subjectsCollection
     // let subjectArray = Object.keys(all_subjects_map)
-
-   
   }
 
   componentWillUnmount() {
