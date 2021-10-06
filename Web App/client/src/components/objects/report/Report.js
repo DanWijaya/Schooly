@@ -240,7 +240,6 @@ function ScoreGraph(props) {
 
 function Report(props) {
   const classes = useStyles();
-
   const {
     getAllAssessments,
     getAllClass,
@@ -253,14 +252,14 @@ function Report(props) {
     refreshTeacher
   } = props;
 
+  const { user, students_by_class, selectedUser } = props.auth;
+  const { all_classes, all_classes_map } = props.classesCollection;
+  const { all_subjects_map, all_subjects } = props.subjectsCollection;
+  const allTaskArray = props.tasksCollection;
+  const { all_assessments } = props.assessmentsCollection;
+
   const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
   const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
-
-  const { all_classes, all_classes_map } = props.classesCollection;
-  const { user, students_by_class, selectedUser } = props.auth;
-  const { all_subjects_map, all_subjects } = props.subjectsCollection;
-  const allTaskArray = props.tasksCollection; // mengambil data dari DB
-  const { all_assessments } = props.assessmentsCollection;
 
   const { name, _id } = selectedUser;
   const id = _id;
@@ -343,7 +342,6 @@ function Report(props) {
       Object.keys(kelas).length !== 0
     ) {
       let allowedIndexes = [];
-      console.log(kelas)
       for(let i=0;i<all_subjects.length;i++) {
         if(kelas.subject_assigned.includes(all_subjects[i]._id)) {
           allowedIndexes.push(i);
@@ -776,14 +774,10 @@ function Report(props) {
   function generateRowCellFormat2(row) {
     let trueSubject = false;
     let nonWaliView = false;
-    console.log(kelas)
     if(kelasWali.get("id") === selectedUser.kelas) {
-      console.log("hitung")
       if(kelas.subject_assigned) {
-        console.log("hitung2")
         for(let i=0;i<all_subjects.length;i++) {
           if(kelas.subject_assigned.includes(all_subjects[i]._id) && row.subject === all_subjects[i].name) {
-            console.log(kelas)
             trueSubject = true;
             break;
           }
@@ -806,7 +800,6 @@ function Report(props) {
       if(kelas.subject_assigned) {
         for(let i=0;i<all_subjects.length;i++) {
           if(kelas.subject_assigned.includes(all_subjects[i]._id) && row.subject === all_subjects[i].name) {
-            console.log(kelas)
             trueSubject = true;
             break;
           }
@@ -1097,22 +1090,18 @@ function Report(props) {
         ) {
           if (assessment.type === "Kuis") {
             if (!scores[assessment.subject].totalKuisScore) {
-              console.log(assessment.grades[id].total_grade);
               scores[assessment.subject].totalKuisScore =
                 assessment.grades[id].total_grade;
             } else {
-              console.log(assessment.grades[id].total_grade);
               scores[assessment.subject].totalKuisScore +=
                 assessment.grades[id].total_grade;
             }
             scores[assessment.subject].countKuis++;
           } else {
             if (!scores[assessment.subject].totalUjianScore) {
-              console.log(assessment.grades[id].total_grade);
               scores[assessment.subject].totalUjianScore =
                 assessment.grades[id].total_grade;
             } else {
-              console.log(assessment.grades[id].total_grade);
               scores[assessment.subject].totalUjianScore +=
                 assessment.grades[id].total_grade;
             }
@@ -1446,151 +1435,6 @@ function Report(props) {
             <Paper style={{ padding: "20px", width: "100%"}}>
               {createGraph()}
             </Paper>
-
-            {/* ----------------- ini dipakai kalau ingin menampilkan 3 graph bersampingan ----------------- */}
-            {/* <Grid item container direction="column" spacing={1} xs={12} sm={4} alignItems="center">
-              <Grid item>
-                <Typography variant="h6" align="center">
-                  Nilai Tugas Anda
-                </Typography>
-              </Grid>
-              <Grid item style={{ height: "400px" }}>
-                {graphTask(taskGraphCurrentSubject) === null ? (
-                  <div className={classes.greyBackground}>
-                    <Typography
-                      align="center"
-                      color="textSecondary"
-                      variant="subtitle2"
-                    >
-                      Belum ada Tugas yang telah dinilai untuk mata pelajaran
-                      terkait
-                    </Typography>
-                  </div>
-                ) : (
-                  <div>{graphTask(taskGraphCurrentSubject)}</div>
-                )}
-              </Grid>
-              <Grid item>
-                <div className={classes.graphButtons}>
-                  <IconButton
-                    onClick={() =>
-                      changeGraphSubject("Tugas", "Left", all_subjects.length)
-                    }
-                  >
-                    <ArrowBackIosIcon />
-                  </IconButton>
-                  {showSubject(taskGraphCurrentSubject)}
-                  <IconButton
-                    onClick={() =>
-                      changeGraphSubject("Tugas", "Right", all_subjects.length)
-                    }
-                  >
-                    <ArrowForwardIosIcon />
-                  </IconButton>
-                </div>
-              </Grid>
-            </Grid>
-            <Grid
-              item
-              container
-              direction="column"
-              spacing={1}
-              xs={12}
-              sm={4}
-              alignItems="center"
-            >
-              <Grid item>
-                <Typography variant="h6" align="center">
-                  Nilai Kuis Anda
-                </Typography>
-              </Grid>
-              <Grid item style={{ height: "400px" }}>
-                {graphAssessment(quizGraphCurrentSubject, "Kuis") === null ? (
-                  <div className={classes.greyBackground}>
-                    <Typography
-                      align="center"
-                      color="textSecondary"
-                      variant="subtitle2"
-                    >
-                      Belum ada Kuis yang telah dinilai untuk mata pelajaran
-                      terkait
-                    </Typography>
-                  </div>
-                ) : (
-                  <div>{graphAssessment(quizGraphCurrentSubject, "Kuis")}</div>
-                )}
-              </Grid>
-              <Grid item>
-                <div className={classes.graphButtons}>
-                  <IconButton
-                    onClick={() =>
-                      changeGraphSubject("Kuis", "Left", all_subjects.length)
-                    }
-                  >
-                    <ArrowBackIosIcon />
-                  </IconButton>
-                  {showSubject(quizGraphCurrentSubject)}
-                  <IconButton
-                    onClick={() =>
-                      changeGraphSubject("Kuis", "Right", all_subjects.length)
-                    }
-                  >
-                    <ArrowForwardIosIcon />
-                  </IconButton>
-                </div>
-              </Grid>
-            </Grid>
-            <Grid
-              item
-              container
-              direction="column"
-              spacing={1}
-              xs={12}
-              sm={4}
-              alignItems="center"
-            >
-              <Grid item>
-                <Typography variant="h6" align="center">
-                  Nilai Ujian Anda
-                </Typography>
-              </Grid>
-              <Grid item style={{ height: "400px" }}>
-                {graphAssessment(examGraphCurrentSubject, "Ujian") === null ? (
-                  <div className={classes.greyBackground}>
-                    <Typography
-                      align="center"
-                      color="textSecondary"
-                      variant="subtitle2"
-                    >
-                      Belum ada Ujian yang telah dinilai untuk mata pelajaran
-                      terkait
-                    </Typography>
-                  </div>
-                ) : (
-                  <div>{graphAssessment(examGraphCurrentSubject, "Ujian")}</div>
-                )}
-              </Grid>
-              <Grid item>
-                <div className={classes.graphButtons}>
-                  <IconButton
-                    onClick={() =>
-                      changeGraphSubject("Ujian", "Left", all_subjects.length)
-                    }
-                  >
-                    <ArrowBackIosIcon />
-                  </IconButton>
-                  {showSubject(examGraphCurrentSubject)}
-                  <IconButton
-                    onClick={() =>
-                      changeGraphSubject("Ujian", "Right", all_subjects.length)
-                    }
-                  >
-                    <ArrowForwardIosIcon />
-                  </IconButton>
-                </div>
-              </Grid>
-            </Grid> */}
-            {/* --------------------------------------------------- */}
           </Grid>
           <Grid item container direction="column" style={{ margin: "auto" }}>
             <Grid item>
@@ -1787,9 +1631,9 @@ function Report(props) {
 
 Report.propTypes = {
   auth: PropTypes.object.isRequired,
-  getOneUser: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
+  getOneUser: PropTypes.func.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.array.isRequired,
   assessmentsCollection: PropTypes.object.isRequired,
@@ -1805,12 +1649,12 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  getStudentsByClass,
-  getAllAssessments,
   getAllClass,
+  getStudentsByClass,
+  setCurrentClass,
+  getOneUser,
   getAllSubjects,
   getAllTask,
-  getOneUser,
-  setCurrentClass,
+  getAllAssessments,
   refreshTeacher
 })(Report);

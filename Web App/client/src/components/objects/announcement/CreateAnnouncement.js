@@ -3,9 +3,10 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { createAnnouncement } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { refreshTeacher } from "../../../actions/UserActions";
+import { createAnnouncement } from "../../../actions/AnnouncementActions";
+import { getSetting } from "../../../actions/SettingActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -28,7 +29,7 @@ import {
   Select,
   Snackbar,
   TextField,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
@@ -43,18 +44,16 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import {getSetting} from "../../../actions/SettingActions";
-
-const path = require("path");
 
 const styles = (theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
   content: {
     padding: "20px",
@@ -132,6 +131,8 @@ const styles = (theme) => ({
     display: "flex" // untuk men-disable "collapsing margin"
   }
 });
+
+const path = require("path");
 
 function LampiranFile(props) {
   const { classes, name, filetype, i, handleLampiranDelete } = props;
@@ -215,8 +216,8 @@ class CreateAnnouncement extends Component {
       target_role: [],
       fileLimitSnackbar: false,
       over_limit: [],
-      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
-      allClassObject: null // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      classOptions: null, // Will be listed in menu.
+      allClassObject: null // Will be used to get name of a class from its id without to traverse array that contains all class.
     };
   }
 
@@ -227,7 +228,8 @@ class CreateAnnouncement extends Component {
       this.handleOpenUploadDialog();
     }
 
-    // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas
+    // Comparing teacher's information (auth.user) is done to renew teacher's information by administrator,
+    // that will indirectly renew class options.
     if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
       if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
 
@@ -235,28 +237,26 @@ class CreateAnnouncement extends Component {
         let all_classes_obj = {};
 
         if (this.props.auth.user.role === "Teacher") {
-          // perlu dicek karena hanya guru yang memiliki atribut yang berisi kelas-kelas yang diajar
-          
+          // Must be checked because only teacher that has attribute class teached.
           this.props.classesCollection.all_classes.forEach((classInfo) => {
-            all_classes_obj[classInfo._id] = classInfo.name; 
+            all_classes_obj[classInfo._id] = classInfo.name;
           });
 
           if (this.props.auth.user.class_teached) {
-            // dengan ini, jika guru tidak mengajar kelas yang diwalikannya, 
-            // guru tidak dapat membuat pengumuman untuk kelas walinya tersebut
+            // With this, if a teacher doesn't teach class of his/her homeroom class,
+            // That teacher will not be able to create his/her homeroom class.
             newClassOptions = this.props.auth.user.class_teached.map((classId) => {
               return { _id: classId, name: all_classes_obj[classId] };
             });
           }
         } else {
           this.props.classesCollection.all_classes.forEach((classInfo) => {
-            all_classes_obj[classInfo._id] = classInfo.name; 
+            all_classes_obj[classInfo._id] = classInfo.name;
             newClassOptions.push({ _id: classInfo._id, name: classInfo.name });
           });
         }
-
         this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
-      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
+      }
     }
   }
 
@@ -361,7 +361,7 @@ class CreateAnnouncement extends Component {
           ? [null]
           : this.state.class_assigned,
       author_id: user._id,
-      
+
       to: user.role === "Admin" ? this.state.target_role : ["Student"],
     };
 
@@ -388,8 +388,6 @@ class CreateAnnouncement extends Component {
   };
 
   render() {
-    document.title = "Schooly | Buat Pengumuman";
-
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {
@@ -402,10 +400,10 @@ class CreateAnnouncement extends Component {
     };
 
     const { classes } = this.props;
-    const { all_classes, kelas } = this.props.classesCollection;
-    const { class_assigned, fileLampiran, target_role, errors, success } = this.state;
     // const { errors } = this.props;
     const { user } = this.props.auth;
+    const { all_classes, kelas } = this.props.classesCollection;
+    const { class_assigned, fileLampiran, target_role, errors, success } = this.state;
 
     const fileType = (filename) => {
       let ext_file = path.extname(filename);
@@ -441,7 +439,6 @@ class CreateAnnouncement extends Component {
       let temp = [];
       if (fileLampiran.length > 0) {
         for (var i = 0; i < fileLampiran.length; i++) {
-          console.log(i);
           temp.push(
             <LampiranFile
               classes={classes}
@@ -456,37 +453,19 @@ class CreateAnnouncement extends Component {
       return temp;
     };
 
-    console.log(Object.keys(errors).length);
-    // Ini kedepannya juga perlu diubah kalau misalnya kerua_kelasnya cuma taruh id aja.
+    // I the future, this need to be changed if the class president only put id only.
     if (
       user.role === "Student" &&
       Boolean(kelas.ketua_kelas) &&
       kelas.ketua_kelas !== user._id
     ) {
-      console.log(kelas.ketua_kelas, user._id);
       return <Redirect to="/tidak-ditemukan" />;
     }
 
+    document.title = "Schooly | Buat Pengumuman";
+
     return (
       <div className={classes.root}>
-        <UploadDialog
-          openUploadDialog={this.state.openUploadDialog}
-          success={success}
-          messageUploading="Pengumuman sedang dibuat"
-          messageSuccess="Pengumuman telah dibuat"
-          redirectLink={`/pengumuman/${success}`}
-        />
-        <DeleteDialog
-          openDeleteDialog={this.state.openDeleteDialog}
-          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-          itemType={"Pengumuman"}
-          itemName={this.state.title}
-          // itemName={this.state.name}
-          // isLink={true}
-          // redirectLink="/daftar-kuis"
-          redirectLink={`/daftar-pengumuman`}
-          isWarning={false}
-        />
         <Paper>
           <div className={classes.content}>
             <Typography variant="h5" gutterBottom>
@@ -729,6 +708,24 @@ class CreateAnnouncement extends Component {
             </div>
           </form>
         </Paper>
+        <UploadDialog
+          openUploadDialog={this.state.openUploadDialog}
+          success={success}
+          messageUploading="Pengumuman sedang dibuat"
+          messageSuccess="Pengumuman telah dibuat"
+          redirectLink={`/pengumuman/${success}`}
+        />
+        <DeleteDialog
+          openDeleteDialog={this.state.openDeleteDialog}
+          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+          itemType={"Pengumuman"}
+          itemName={this.state.title}
+          // itemName={this.state.name}
+          // isLink={true}
+          // redirectLink="/daftar-kuis"
+          redirectLink={`/daftar-pengumuman`}
+          isWarning={false}
+        />
         <Snackbar
           open={this.state.fileLimitSnackbar}
           autoHideDuration={4000}
@@ -745,26 +742,26 @@ class CreateAnnouncement extends Component {
 }
 
 CreateAnnouncement.propTypes = {
-  errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
+  settingsCollection: state.settingsCollection,
   errors: state.errors,
   success: state.success,
-  subjectsCollection: state.subjectsCollection,
-  classesCollection: state.classesCollection,
-  settingsCollection: state.settingsCollection
 });
 
 export default connect(mapStateToProps, {
-  createAnnouncement,
   getAllClass,
   setCurrentClass,
+  createAnnouncement,
+  getSetting,
   clearErrors,
   clearSuccess,
   refreshTeacher,
-  getSetting
 })(withStyles(styles)(CreateAnnouncement));

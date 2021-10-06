@@ -62,7 +62,6 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import CancelIcon from '@material-ui/icons/Cancel';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import CloseIcon from '@material-ui/icons/Close';
@@ -108,14 +107,14 @@ import {getSetting} from "../../../actions/SettingActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    display: "flex",
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
-      maxWidth: "100%"
+      maxWidth: "100%",
     },
-    padding: "10px",
-    display: "flex",
-    flexDirection: "row"
   },
   newEventButton: {
     marginRight: "10px",
@@ -548,9 +547,6 @@ function AgendaToolbar(props) {
             </Fab>
           : null
         }
-        <IconButton disabled>
-          <SearchIcon/>
-        </IconButton>
         <FormControl variant="outlined">
           <Select
             defaultValue="Day"
@@ -561,9 +557,9 @@ function AgendaToolbar(props) {
             <MenuItem value="Day">
               Hari
             </MenuItem>
-            <MenuItem value="Week" disabled>Minggu (Coming soon)</MenuItem>
+            {/*<MenuItem value="Week" disabled>Minggu (Coming soon)</MenuItem>*/}
             <MenuItem value="Month">Bulan</MenuItem>
-            <MenuItem value="Year" disabled>Tahun (Coming soon)</MenuItem>
+            {/*<MenuItem value="Year" disabled>Tahun (Coming soon)</MenuItem>*/}
           </Select>
         </FormControl>
       </div>
@@ -4326,7 +4322,7 @@ function Calendar(props) {
         }
         {mode === "Day" ? generateDayModeCalendar() : generateMonthModeCalendar()}
       </div>
-      <Hidden xsDown>
+      <Hidden smDown>
         <div className={classes.calendarContainer}>
           <Grid container alignItems="center" justify="space-between">
             <Grid item style={{ paddingLeft: "0.6em" }}>

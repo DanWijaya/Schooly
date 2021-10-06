@@ -3,68 +3,70 @@ import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
-import CustomLinkify from "../../misc/linkify/Linkify";
+import { getAllClass } from "../../../actions/ClassActions";
+import { getStudents } from "../../../actions/UserActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import {
   getOneAssessment,
   updateAssessmentGrades,
   getQuestionAnalytics
 } from "../../../actions/AssessmentActions";
-import { getAllClass } from "../../../actions/ClassActions";
-import { getStudents } from "../../../actions/UserActions";
-import { getAllSubjects } from "../../../actions/SubjectActions";
+import Latex from "../../misc/latex/Latex";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
-  Grid,
-  Hidden,
-  Paper,
-  Typography,
-  Input,
-  Snackbar,
-  Divider,
-  IconButton,
-  Tabs,
-  Tab,
-  Menu,
-  MenuItem,
-  Badge,
-  Select,
-  TextField,
-  Button,
   Avatar,
-  RadioGroup,
-  Radio,
+  Badge,
+  Button,
   Checkbox,
-  FormGroup,
-  FormControlLabel,
-  TableSortLabel,
   Dialog,
   DialogContent,
   DialogTitle,
+  Divider,
+  FormGroup,
+  FormControlLabel,
+  Grid,
+  Hidden,
+  IconButton,
+  Input,
+  Menu,
+  MenuItem,
+  Paper,
+  Radio,
+  RadioGroup,
+  Snackbar,
+  Select,
+  Tab,
+  Tabs,
+  TableSortLabel,
+  TextField,
+  Typography
 } from "@material-ui/core";
-
+import { Alert, ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import {
+  Ballot as BallotIcon,
+  CheckCircle as CheckCircleIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  Error as ErrorIcon,
+  Explore as ExploreIcon,
+  HelpOutline as HelpOutlineIcon,
+  NavigateBefore as NavigateBeforeIcon,
+  NavigateNext as NavigateNextIcon,
+  Sort as SortIcon,
+  SupervisorAccount as SupervisorAccountIcon,
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-import SortIcon from "@material-ui/icons/Sort";
-import BallotIcon from "@material-ui/icons/Ballot";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import ErrorIcon from "@material-ui/icons/Error";
-import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import ExploreIcon from "@material-ui/icons/Explore";
-import Alert from "@material-ui/lab/Alert";
-import ToggleButton from "@material-ui/lab/ToggleButton";
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import Latex from "../../misc/latex/Latex";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
   content: {
     padding: "20px",
@@ -210,91 +212,86 @@ const useStyles = makeStyles((theme) => ({
 function ViewAssessmentTeacher(props) {
   const classes = useStyles();
   const location = useLocation();
-
-  document.title = "Schooly | Buat Kuis";
-  const assessment_id = props.match.params.id;
-
   const { getOneAssessment, getAllClass, getAllSubjects, getStudents } = props;
+  const { type } = selectedAssessments;
+
+  const { all_students } = props.auth;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
-  const { type } = selectedAssessments;
-  const { all_students } = props.auth;
+  const assessment_id = props.match.params.id;
 
-  // cek note di model assessment (Assessment.js) untuk melihat aturan-aturan tambahan yang digunakan
-
+  const [all_student_object, setAllStudentObj] = React.useState(null);
   /*
-  jika belum ada murid yang mengerjakan assessment, state ini akan berisi object kosong {}.
+  If there is still no submitted assessment, this state will be filled with an empty object {}.
   isi:
   {
-    <id murid 1>: {
-      ...document untuk model murid
+    <1st Student id>: {
+      ...document for student's model
     },
-    <id murid 2>: {
+    <2nd Student id>: {
       ...document
     },
     ...
-  } key -> id semua murid yang sudah mengumpulkan jawaban assessment ini
+  } key = id every student who has submitted/completed this asssessment.
   */
-  const [all_student_object, setAllStudentObj] = React.useState(null);
 
   const [qnsIndex, setQnsIndex] = React.useState(0);
 
   /*
-  jika belum ada satupun murid yang jawaban uraiannya sudah dinilai, state ini akan diisi object kosong {}.
-  jika assessment ini tidak punya soal uraian, state ini akan diset menjadi null.
-  akan diinisialisasi dengan isi:
+  If there is still no scored assessment, this state will be filled with an empty object {}.
+  If this assessment doesn't have any long text question type, this state will be set to null.
+  example:
   {
-    <id murid 1>: {
-      <index soal uraian 1>: <0 s/d nilai maksimum untuk soal ini>
-      <index soal uraian 2>: <0 s/d nilai maksimum untuk soal ini>
+    <1st Student id>: {
+      <1st long text question index>: <0 till maximum score for this question>
+      <2nd long text question index>: <0 till maximum score for this question>
       ...
-    }, key -> index semua soal uraian yang sudah dinilai (soal uraian yang belum dinilai tidak disimpan di object ini)
+    }, key = index of every long text question that has been scored (long text question that has not been scored will not be saved in this object)
 
-    <id murid 2>: {
-      <index soal uraian 1>: <0 s/d nilai maksimum untuk soal ini>
-      <index soal uraian 2>: <0 s/d nilai maksimum untuk soal ini>
+    <2nd Student id>: {
+      <1st long text question index>: <0 till maximum score for this question>
+      <2nd long text question index>: <0 till maximum score for this question>
       ...
     },
 
-    <id murid 3>: {}, -> diisi object kosong jika semua jawaban uraian murid ini belum dinilai
+    <3rd Student id>: {},will be filled with empty object if every long text question answer has not been scored yet.
 
     ...
-  } key -> id semua murid yang sudah mengumpulkan jawaban assessment ini
+  } key = id of every student who has submitted this assessment.
 
-  saat textfield nilai diisi, nilai soal tersebut (bagian <0 s/d nilai maksimum untuk soal ini>) akan diisi dengan nilai dalam bentuk string.
-  nilai ini akan dikonversi menjadi angka saat klik tombol simpan diklik.
+  If this textfield is filled with something, the question score (<0 till maximum score for this question>) will be filled with score in string.
+  This score will be turned into an integer, if submit button is clicked.
   */
   const [longtextGrades, setLongtextGrades] = React.useState(undefined);
 
   /*
-  bentuk isi:
+  Example:
     {
       studentOptions: {
-        combined: [<id murid>, <id murid>, ...] -> semua murid dari semua kelas yang menerima assessment ini
-        <id kelas 1>: [<id murid>, <id murid>, ...] -> semua murid yang berada pada kelas ini
-        <id kelas 2>: [<id murid>, <id murid>, ...]
+        combined: [<student id 1>, <student id 2>, ...] = Every student from the same class who gets this assessment.
+        <1st Class id>: [<student id 1>, <student id 2>, ...] -> Every student from this class.
+        <2nd Class id>: [<student id 1>, <student id 2>, ...]
         ...
-      } key -> id semua kelas yang menerima assessment ini
+      } key = id of every class who get this assessment.
       ,
       classOptions: [
-        {id: <id kelas 1>, name: <nama kelas 1>},
-        {id: <id kelas 2>, name: <nama kelas 2>},
+        {id: <1st Class id>, name: <1st Class name>},
+        {id: <2nd Class id>, name: <2nd Class name>},
         ...
-      ] -> semua kelas yang menerima assessment ini
+      ] = Every class that gets this assessment.
     }
   */
   const [menuOption, setMenuOption] = React.useState(null);
 
-  // berisi id kelas yang sedang dipilih pada menu kelas
+  // Filled with class' id that is selected from class menu.
   const [selectedClass, setSelectedClass] = React.useState(null);
 
-  // berisi id murid yang sedang dipilih pada menu murid
+  // Fileld with student's id that is selected from student menu.
   const [selectedStudent, setSelectedStudent] = React.useState(null);
 
-  // jika belum diload, bernilai null. jika sudah diproses, nilainya pasti false atau true.
+  // If it has not been uploaded yet, contain null. If it has been processed, the value will be either true or false.
   const hasLongtextQst = React.useRef(null);
-
   const questionCount = React.useRef(null);
 
   // Tabs
@@ -302,8 +299,6 @@ function ViewAssessmentTeacher(props) {
 
   React.useEffect( async () => {
     const result = await getQuestionAnalytics(assessment_id);
-    console.log("INI RESULTNYA")
-    console.log(result);
   }, [])
   React.useEffect(() => {
     getOneAssessment(assessment_id);
@@ -314,8 +309,6 @@ function ViewAssessmentTeacher(props) {
     if (location.state) {
       setSelectedStudent(location.state.studentId);
       setSelectedClass(location.state.classId);
-
-      //set ke tab "per murid"
       setValue(1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -681,7 +674,6 @@ function ViewAssessmentTeacher(props) {
       let mark = 0;
       if (question.type === "longtext") {
         questionWeight = weights[question.type][qnsIndex];
-
         // let longtextGrade = longtextGrades[studentId][qnsIndex]; // object
         if (longtextGrades[studentId] && longtextGrades[studentId][qnsIndex]) {
           // jika sudah pernah dinilai
@@ -695,7 +687,6 @@ function ViewAssessmentTeacher(props) {
 
         if (studentAnswer.length !== 0) {
           // jika murid menjawab soal ini
-
           let questionAnswer = question.answer;
 
           if (question.type === "radio") {
@@ -944,6 +935,8 @@ function ViewAssessmentTeacher(props) {
       </ToggleButton>
     );
   }
+
+  document.title = "Schooly | Buat Kuis";
 
   return (
     <div className={classes.root}>
@@ -1344,7 +1337,7 @@ function ViewAssessmentTeacher(props) {
               </div>
               {isAssessmentLoaded() &&
               selectedAssessments.submissions_timestamp &&
-              selectedStudent 
+              selectedStudent
                 ? <div className={classes.selectDiv} style={{ marginTop: "10px" }}>
                     <Grid container>
                       <Grid item xs={1} sm={3}></Grid>
@@ -1897,24 +1890,24 @@ function QuestionAnswerPerStudent(props) {
 
 ViewAssessmentTeacher.propTypes = {
   auth: PropTypes.object.isRequired,
-  assessmentsCollection: PropTypes.object.isRequired,
+  getAllClass: PropTypes.func.isRequired,
+  getStudents: PropTypes.func.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   getOneAssessment: PropTypes.func.isRequired,
-  getAllClass: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
-  getStudents: PropTypes.func.isRequired,
+  assessmentsCollection: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  assessmentsCollection: state.assessmentsCollection,
-  subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
+  assessmentsCollection: state.assessmentsCollection,
 });
 
 export default connect(mapStateToProps, {
-  getOneAssessment,
   getAllClass,
-  getAllSubjects,
   getStudents,
+  getAllSubjects,
+  getOneAssessment,
 })(ViewAssessmentTeacher);

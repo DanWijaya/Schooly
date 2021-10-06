@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Markdown from './Markdown';
+import React from "react";
+import PropTypes from "prop-types";
+import Markdown from "./Markdown";
 
 const _renderContent = (content) => {
   return (<Markdown source={content} />)
@@ -10,7 +10,7 @@ function Latex(props){
   const { content } = props;
 
   return (
-    <div className="question" style={{ fontSize: "1.3rem" }}>
+    <div>
       {_renderContent(content)}
     </div>
   )

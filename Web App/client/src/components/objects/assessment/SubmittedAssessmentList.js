@@ -1,15 +1,15 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import { getAllClass } from "../../../actions/ClassActions";
+import { getStudents } from "../../../actions/UserActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import {
   getOneAssessment,
   updateAssessmentSuspects,
 } from "../../../actions/AssessmentActions";
-import { getStudents } from "../../../actions/UserActions";
-import { getAllClass } from "../../../actions/ClassActions";
-import { getAllSubjects } from "../../../actions/SubjectActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -33,27 +33,28 @@ import {
   IconButton,
   Fab,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {
-  RadioButtonChecked,
-  CheckBox,
-  TextFormat,
-  Subject,
+  CheckBox as CheckBoxIcon,
+  Edit as EditIcon,
+  ExpandMore as ExpandMoreIcon,
+  GetApp as GetAppIcon,
+  RadioButtonChecked as RadioButtonCheckedIcon,
+  Sort as SortIcon,
+  Subject as SubjectIcon,
+  TextFormat as TextFormatIcon,
 } from "@material-ui/icons";
-import SortIcon from "@material-ui/icons/Sort";
-import EditIcon from "@material-ui/icons/Edit";
-import { BsFlagFill, BsFlag } from "react-icons/bs";
-import GetAppIcon from "@material-ui/icons/GetApp";
+import { makeStyles } from "@material-ui/core/styles";
+import { BsFlag, BsFlagFill } from "react-icons/bs";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
   personListContainer: {
     display: "flex",
@@ -520,25 +521,25 @@ function SubmittedAssessmentList(props) {
           root: classes.RadioQst,
           text1: <b>Pilihan Ganda</b>,
           // text2: (<b>Pilihan Ganda</b>),
-          icon: <RadioButtonChecked />,
+          icon: <RadioButtonCheckedIcon />,
         },
         checkbox: {
           root: classes.CheckboxQst,
           text1: <b>Kotak Centang</b>,
           // text2: (<b>Kotak Centang</b>),
-          icon: <CheckBox />,
+          icon: <CheckBoxIcon />,
         },
         shorttext: {
           root: classes.ShorttextQst,
           text1: <b>Isian Pendek</b>,
           // text2: (<b>Isian Pendek</b>),
-          icon: <TextFormat />,
+          icon: <TextFormatIcon />,
         },
         longtext: {
           root: classes.LongtextQst,
           text1: <b>Uraian</b>,
           // text2: (<b>Uraian</b>),
-          icon: <Subject />,
+          icon: <SubjectIcon />,
         },
       };
 
@@ -825,9 +826,9 @@ function SubmittedAssessmentList(props) {
                       selectedAssessments.grades &&
                       selectedAssessments.grades[student._id] &&
                       selectedAssessments.grades[student._id].total_grade
-                        ? 
+                        ?
                           <>
-                            Telah Dinilai<br />  
+                            Telah Dinilai<br />
                             Waktu Pengumpulan:&nbsp;
                             <Hidden smUp>
                               <br />
@@ -836,10 +837,10 @@ function SubmittedAssessmentList(props) {
                             .locale("id")
                             .format("DD MMM YYYY, HH:mm")}
                           </>
-                        : 
+                        :
                           <>
                             Belum Dinilai
-                            {scores ? 
+                            {scores ?
                               <>
                                 <br />Waktu Pengumpulan:&nbsp;
                                 <Hidden smUp>
@@ -1209,24 +1210,24 @@ function SubmittedAssessmentList(props) {
 
 SubmittedAssessmentList.propTypes = {
   auth: PropTypes.object.isRequired,
-  assessmentsCollection: PropTypes.object.isRequired,
-  subjectsCollection: PropTypes.object.isRequired,
-  getOneAssessment: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
+  assessmentsCollection: PropTypes.object.isRequired,
+  getOneAssessment: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  assessmentsCollection: state.assessmentsCollection,
-  subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
+  assessmentsCollection: state.assessmentsCollection,
 });
 
 export default connect(mapStateToProps, {
-  getOneAssessment,
   getAllClass,
   getStudents,
   getAllSubjects,
+  getOneAssessment,
 })(SubmittedAssessmentList);

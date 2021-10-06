@@ -98,9 +98,6 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
   },
-  answerText: {
-    color: theme.palette.success.dark,
-  },
   optionText: {
     color: "black",
     marginLeft: "8px",
@@ -121,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
     width: "1rem",
   },
   shortAnswerText: {
-    color: theme.palette.text.secondary,
+    color: theme.palette.primary.main,
   },
 }));
 
@@ -190,13 +187,8 @@ function ViewAssessmentTeacher(props) {
     };
 
     return (
-      <Typography
-        align="justify"
-        style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-      >
-        {/* <Latex content={splitResult}/> */}
-        <CustomLinkify text={splitResult} />
-      </Typography>
+      /* <Latex content={splitResult}/> */
+      <CustomLinkify text={splitResult} />
     );
   };
 
@@ -421,7 +413,6 @@ function ViewAssessmentTeacher(props) {
                       <GridList
                         cols={3}
                         cellHeight={300}
-                        style={{ margin: "10px 0px 10px 0px" }}
                       >
                         {question.lampiran.map((img, i) => {
                           let image = img;
@@ -443,53 +434,42 @@ function ViewAssessmentTeacher(props) {
                           return null;
                         })}
                       </GridList>
-                      {question.type === "shorttext" ? (
-                        generateSoalShortTextTeacher(question, i)
-                      ) : question.type === "longtext" ? (
-                        <Grid container direction="column" spacing={2}>
-                          <Grid item>
-                            <Typography
-                              align="justify"
-                              style={{
-                                wordBreak: "break-word",
-                                whiteSpace: "pre-wrap",
-                              }}
-                            >
-                              <Latex content={question.name}/>
-                              {/* <CustomLinkify text={question.name} /> */}
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography
-                              color="textSecondary"
-                              align="justify"
-                              style={{
-                                wordBreak: "break-word",
-                                whiteSpace: "pre-wrap",
-                              }}
-                            >
-                              {/* <Latex content={question.answer}/> */}
-                              <CustomLinkify text={question.answer} />
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      ) : (
+                      {question.type === "radio" ? (
                         <Typography
                           align="justify"
-                          style={{
-                            wordBreak: "break-word",
-                            whiteSpace: "pre-wrap",
-                          }}
+                          style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
                         >
-                          <Latex content={question.name}/>
+                          <Latex content={question.name} />
                           {/* <CustomLinkify text={question.name} /> */}
                         </Typography>
-                      )}
-                      {/* </Typography> */}
+                      ) : question.type === "checkbox" ? (
+                        <Typography
+                          align="justify"
+                          style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                        >
+                          <Latex content={question.name} />
+                          {/* <CustomLinkify text={question.name} /> */}
+                        </Typography>
+                      ) : question.type === "shorttext" ? (
+                        <Typography
+                          align="justify"
+                          style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                        >
+                          {generateSoalShortTextTeacher(question, i)}
+                        </Typography>
+                      ) : question.type === "longtext" ? (
+                        <Typography
+                          align="justify"
+                          style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                        >
+                          <Latex content={question.name} />
+                          {/* <CustomLinkify text={question.name} /> */}
+                        </Typography>
+                      ) : null}
                     </Grid>
                     <Grid item>
-                      {question.type === "radio"
-                        ? question.options.map((option, i) => (
+                      {question.type === "radio" ?
+                        question.options.map((option, i) => (
                             <Grid container alignItems="center">
                               <Grid item className={classes.bullets}>
                                 {question.answer[0] ===
@@ -508,8 +488,8 @@ function ViewAssessmentTeacher(props) {
                               </Typography>
                             </Grid>
                           ))
-                        : question.type === "checkbox"
-                        ? question.options.map((option, i) => (
+                      : question.type === "checkbox" ?
+                        question.options.map((option, i) => (
                             <Grid container alignItems="center">
                               <Grid item className={classes.bullets}>
                                 {question.answer.includes(
@@ -529,8 +509,21 @@ function ViewAssessmentTeacher(props) {
                               </Typography>
                             </Grid>
                           ))
-                        : // question.type === "shorttext" || question.type === "shorttext"
-                          null}
+                      : question.type === "shorttext" ?
+                        null
+                      : question.type === "longtext" ?
+                        <Typography
+                          color="textSecondary"
+                          align="justify"
+                          style={{
+                            wordBreak: "break-word",
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          {/* <Latex content={question.answer}/> */}
+                          <CustomLinkify text={question.answer} />
+                        </Typography>
+                      : null}
                     </Grid>
                   </Grid>
                 </Paper>

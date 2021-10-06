@@ -2,19 +2,25 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import moment from "moment";
+import "moment/locale/id";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
 import {
   getOneAssessment,
   submitAssessment,
   getStatus
 } from "../../../actions/AssessmentActions";
+import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
+import SubmitDialog from "../../misc/dialog/SubmitDialog";
+import CustomLinkify from "../../misc/linkify/Linkify";
+import Latex from "../../misc/latex/Latex";
 import {
   Avatar,
   Badge,
   Button,
   Box,
+  Checkbox,
   CircularProgress,
   Divider,
   Dialog,
@@ -25,31 +31,24 @@ import {
   GridListTile,
   GridListTileBar,
   GridList,
+  Input,
+  MobileStepper,
   Paper,
   Radio,
-  Checkbox,
   RadioGroup,
   TextField,
-  Typography,
-  Input,
+  Typography
 } from "@material-ui/core";
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import {
+  CheckCircle as CheckCircleIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  Error as ErrorIcon,
+  KeyboardArrowLeft as KeyboardArrowLeft,
+  KeyboardArrowRight as KeyboardArrowRight
+} from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ErrorIcon from "@material-ui/icons/Error";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-import moment from "moment";
-import CustomLinkify from "../../misc/linkify/Linkify";
-import Latex from "../../misc/latex/Latex";
-import "moment/locale/id";
-import SubmitDialog from "../../misc/dialog/SubmitDialog";
-import ToggleButton from "@material-ui/lab/ToggleButton";
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import MobileStepper from '@material-ui/core/MobileStepper';
 
 const imgMaxHeight = 400;
 const imgMaxWidth = 650;
@@ -57,11 +56,12 @@ const imgMaxWidth = 650;
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
   content: {
     padding: "20px",
@@ -250,7 +250,6 @@ function TextMobileStepper(props) {
   }, [qnsIndex])
 
 
-
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -262,7 +261,6 @@ function TextMobileStepper(props) {
   function onImgLoad({ target: img }) {
     setAvatarDimensions({ height: img.offsetHeight, width: img.offsetWidth });
   }
-  
 
   let imgClass;
   if(avatarDimensions.width < avatarDimensions.height){
@@ -279,7 +277,6 @@ function TextMobileStepper(props) {
       imgClass = classes.avatarImg22
     }
   }
-  console.log(imgClass);
 
   return (
     <div className={classes.imgMobileStepper}>
@@ -313,7 +310,6 @@ function TextMobileStepper(props) {
         }
       />
       </div>
-     
     </div>
   );
 }
@@ -339,7 +335,7 @@ function TimeoutDialog(props) {
         </Grid>
         <Grid item>
           <Button
-            startIcon={<CheckCircleOutlineIcon />}
+            startIcon={<CheckCircleIcon />}
             onClick={handleCloseTimeoutDialog}
             className={classes.timeoutDialogButton}
           >
@@ -490,7 +486,6 @@ function questionPage(
       }}
       selected={qnsIndex === question_number - 1}
     >
-      {/* <Grid item> */}
       <Badge
         style={{
           width: "35px",
@@ -540,9 +535,6 @@ function questionPage(
 
 function ViewAssessmentStudent(props) {
   const classes = useStyles();
-  const { selectedAssessments } = props.assessmentsCollection;
-  const { submissions } = selectedAssessments;
-  const { all_subjects_map } = props.subjectsCollection;
   const {
     getOneAssessment,
     getAllSubjects,
@@ -552,11 +544,14 @@ function ViewAssessmentStudent(props) {
     handleSideDrawerExist
   } = props;
   const { user } = props.auth;
+  const { all_subjects_map } = props.subjectsCollection;
+  const { selectedAssessments } = props.assessmentsCollection;
+  const { submissions } = selectedAssessments;
 
   let id = props.match.params.id;
 
   const [qnsIndex, setQnsIndex] = React.useState(0);
-  const [answer, setAnswer] = React.useState([]); // contoh isi answer: [["A"], ["sedang", "menulis"], [null, "harian"]]
+  const [answer, setAnswer] = React.useState([]); // Answer content example: [["A"], ["sedang", "menulis"], [null, "harian"]]
   const [posted, setPosted] = React.useState(null);
   const [start, setStart] = React.useState(
     !localStorage.getItem(`remainingTime_${id}`) ? null : true
@@ -569,7 +564,7 @@ function ViewAssessmentStudent(props) {
   const [showStartButton, setShowStartButton] = React.useState(false);
   const [showClosedMessage, setShowClosedMessage] = React.useState(false);
 
-  // nanti pas onSubmit, akan ngeclear localStorage.removeItem("remainingTime");
+  // When onSubmit is triggered, will clear localStorage.removeItem("remainingTime");
   React.useEffect(() => {
     getStatus(id).then((res) => {
       if (res.data.status === -1) {
@@ -691,10 +686,8 @@ function ViewAssessmentStudent(props) {
         align="justify"
         style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
       >
-        <form>
-          {/* <Latex content={splitResult}/> */}
-          <CustomLinkify text={splitResult} />
-        </form>
+        {/* <Latex content={splitResult}/> */}
+        <CustomLinkify text={splitResult} />
       </Typography>
     );
   };
@@ -702,14 +695,12 @@ function ViewAssessmentStudent(props) {
   const handleStart = () => {
     /*if(localStorage.getItem(`status`) === "tidak_ujian"){
       localStorage.setItem(`status`, "ujian")
-      console.log(localStorage.getItem(`status`))
       window.location.reload(false);
     }
     if(localStorage.getItem(`status`) === "ujian"){
       startTest()
     }*/
     getStatus(id).then((res) => {
-      console.log(res);
       if (res.data.status === -1) {
         setCurrentTime(res.data.now);
       } else if ((res.data.status === 0)) {
@@ -739,7 +730,6 @@ function ViewAssessmentStudent(props) {
     window.location.reload(false);
     setFinish(true);
     setStart(false);
-    // console.log(localStorage.getItem(`status`))
     let data = {
       answers: answer,
       classId: user.kelas,
@@ -748,13 +738,11 @@ function ViewAssessmentStudent(props) {
     submitAssessment(id, data)
       .then(() => {
         handleCloseSubmitDialog();
-        props.handleSideDrawerExist(false); 
+        props.handleSideDrawerExist(false);
       })
-      .catch((err) => console.log(err));
   };
 
   const showSubmitButton = () => {
-    console.log(localStorage.getItem(`remainingTime_${id}`));
     if (submissions) {
       if (submissions[user._id]) {
         return null;
@@ -781,9 +769,18 @@ function ViewAssessmentStudent(props) {
       if (submissions && submissions[user._id]) {
         return (
           <Paper className={classes.submittedPaper}>
-            <CheckCircleOutlineIcon />
+            <CheckCircleIcon />
             <Typography variant="button" style={{ marginLeft: "5px" }}>
-              TELAH DIKUMPULKAN
+              Telah dikumpulkan
+            </Typography>
+          </Paper>
+        );
+      } else if (showClosedMessage) {
+        return (
+          <Paper className={classes.latePaper}>
+            <ErrorIcon />
+            <Typography variant="button" style={{ marginLeft: "5px" }}>
+              Telah Selesai
             </Typography>
           </Paper>
         );
@@ -798,15 +795,6 @@ function ViewAssessmentStudent(props) {
               Mulai
             </Button>
           </Grid>
-        );
-      } else if (showClosedMessage) {
-        return (
-          <Paper className={classes.latePaper}>
-            <ErrorOutlineIcon />
-            <Typography variant="button" style={{ marginLeft: "5px" }}>
-              TELAH SELESAI
-            </Typography>
-          </Paper>
         );
       } else if (currentTime !== null) {
         return (
@@ -887,19 +875,14 @@ function ViewAssessmentStudent(props) {
                     <Typography variant="h6" color="primary" gutterBottom>
                       Soal {qnsIndex + 1}
                     </Typography>
-                    {
-                      !questions || questions[qnsIndex].lampiran.length === 0 ? null :
-                       
-                    
-                        <TextMobileStepper 
-                        label={`Gambar ${qnsIndex + 1}`}
-                        qnsIndex={qnsIndex}
-                        maxSteps={questions[qnsIndex].lampiran.length}
-                        lampiranUrls={lampiranUrls}
-                        image={!questions[qnsIndex].lampiran ? [] : questions[qnsIndex].lampiran}/>
-                      
+                    {!questions || questions[qnsIndex].lampiran.length === 0 ? null :
+                      <TextMobileStepper
+                      label={`Gambar ${qnsIndex + 1}`}
+                      qnsIndex={qnsIndex}
+                      maxSteps={questions[qnsIndex].lampiran.length}
+                      lampiranUrls={lampiranUrls}
+                      image={!questions[qnsIndex].lampiran ? [] : questions[qnsIndex].lampiran}/>
                     }
-                   
                     {!questions ? null : questions[qnsIndex].type ===
                       "shorttext" ? (
                       generateSoalShortTextStudent()
@@ -1033,7 +1016,7 @@ function ViewAssessmentStudent(props) {
     if (posted !== null) {
       return <Redirect to="/tidak-ditemukan" />;
     }
-    return <div>{/* None */} </div>;
+    return null;
   }
 
   if (selectedAssessments) {
@@ -1041,21 +1024,11 @@ function ViewAssessmentStudent(props) {
       return <Redirect to="/tidak-ditemukan" />;
     }
   }
- console.log(window.innerHeight)
+
+  document.title = "Schooly | Buat Kuis";
+
   return (
     <div className={classes.root}>
-      <SubmitDialog
-        openSubmitDialog={openSubmitDialog}
-        handleCloseSubmitDialog={handleCloseSubmitDialog}
-        itemType="Ujian"
-        itemName={selectedAssessments.name}
-        onSubmit={onSubmit}
-        messageLoading="Jawaban Anda sedang disimpan"
-      />
-      <TimeoutDialog
-        openTimeoutDialog={openTimeoutDialog}
-        handleCloseTimeoutDialog={() => setOpenTimeoutDialog(false)}
-      />
       <form>
         <Grid container direction="column" spacing={3}>
           <Grid item>
@@ -1117,30 +1090,42 @@ function ViewAssessmentStudent(props) {
           {showQuestions()}
         </Grid>
       </form>
+      <SubmitDialog
+        openSubmitDialog={openSubmitDialog}
+        handleCloseSubmitDialog={handleCloseSubmitDialog}
+        itemType="Ujian"
+        itemName={selectedAssessments.name}
+        onSubmit={onSubmit}
+        messageLoading="Jawaban Anda sedang disimpan"
+      />
+      <TimeoutDialog
+        openTimeoutDialog={openTimeoutDialog}
+        handleCloseTimeoutDialog={() => setOpenTimeoutDialog(false)}
+      />
     </div>
   );
 }
 
 ViewAssessmentStudent.propTypes = {
-  assessmentsCollection: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  getOneAssessment: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
+  assessmentsCollection: PropTypes.object.isRequired,
+  getOneAssessment: PropTypes.func.isRequired,
   submitAssessment: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  assessmentsCollection: state.assessmentsCollection,
+  auth: state.auth,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
-  auth: state.auth,
+  assessmentsCollection: state.assessmentsCollection,
 });
 
 export default connect(mapStateToProps, {
-  submitAssessment,
-  getOneAssessment,
   getAllClass,
   getAllSubjects,
+  getOneAssessment,
   getFileAssessment,
+  submitAssessment,
 })(ViewAssessmentStudent);
