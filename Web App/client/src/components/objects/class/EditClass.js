@@ -221,7 +221,10 @@ class EditClass extends Component {
       getAllSubjects,
       setCurrentClass,
     } = this.props;
-    setCurrentClass(id);
+    if (id) {
+      //Case when the student opens view class and not assigned to any class yet.
+      setCurrentClass(id);
+    }
     getTeachers(user.unit);
     getStudentsByClass(this.props.match.params.id);
     getAllClass(user.unit);

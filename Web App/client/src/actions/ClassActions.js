@@ -134,7 +134,7 @@ export const setCurrentClass = (classId) => (dispatch) => {
   // console.log("set current class is runned")
   // sebelumnya tidak ada return
   return axios
-    .get("/api/classes/setCurrentClass/" + classId)
+    .get(`/api/classes/setCurrentClass/${classId}`)
     .then((res) => {
       dispatch({
         type: SET_CURRENT_CLASS,
@@ -150,6 +150,7 @@ export const setCurrentClass = (classId) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
 };
 

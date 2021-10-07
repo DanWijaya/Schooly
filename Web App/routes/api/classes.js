@@ -94,13 +94,21 @@ router.delete("/delete/:id", (req, res) => {
 });
 
 router.get("/setCurrentClass/:id", (req, res) => {
-  let id = req.params.id;
-  // console.log("set Current class is runned", id);
-  Class.findById(id, (err, classData) => {
-    if (!classData) return res.status(404).json("Class is not found");
-
-    return res.json(classData);
-  });
+  const { id } = req.params; // console.log("set Current class is runned", id);
+  if (!id) {
+    return res.json({});
+  }
+  Class.findById(id)
+    .then((classData) => {
+      if (!classData) {
+        console.error("Class is not found");
+      }
+      console.log("WOI", classData);
+      return res.json(classData);
+    })
+    .catch((err) => {
+      throw err;
+    });
 });
 
 router.get("/viewSelectedClasses/", (req, res) => {

@@ -1096,20 +1096,22 @@ function ViewClass(props) {
     //Untuk mendapatkan kelas current, digunakan untuk:
     //  -> Dapatin id walikelas
     // -> pindahkan getTeachers(user.unit, "map") di sini karena mau execute setWalikelas hanya setelah itu selesai.
-    setCurrentClass(classId).then((kelas) => {
-      let listId = [];
-      if (kelas.walikelas) {
-        listId.push(kelas.walikelas);
-      }
-      students_by_class.forEach((s) => listId.push(s._id));
-      getMultipleFileAvatar(listId).then((results) => {
-        setAvatar(results);
+    if (classId) {
+      setCurrentClass(classId).then((kelas) => {
+        let listId = [];
+        if (kelas.walikelas) {
+          listId.push(kelas.walikelas);
+        }
+        students_by_class.forEach((s) => listId.push(s._id));
+        getMultipleFileAvatar(listId).then((results) => {
+          setAvatar(results);
+        });
+        getTeachers(kelas.unit, "map").then((results) =>
+          setWalikelas(results.get(kelas.walikelas))
+        );
+        // setWalikelas(all_teachers_map.get(kelas.walikelas));
       });
-      getTeachers(kelas.unit, "map").then((results) =>
-        setWalikelas(results.get(kelas.walikelas))
-      );
-      // setWalikelas(all_teachers_map.get(kelas.walikelas));
-    });
+    }
   }, [students_by_class.length, kelas.walikelas]);
 
   React.useEffect(() => {
@@ -1167,7 +1169,7 @@ function ViewClass(props) {
 
   if (user.role === all_roles.STUDENT) {
     if (user.kelas) {
-      if (classId !== user.kelas) {
+      if (classId !== user.kelas || !classId) {
         // jika murid ini membuka halaman kelas lain,
         return <Redirect to="/tidak-ditemukan" />;
       }
