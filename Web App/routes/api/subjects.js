@@ -80,7 +80,10 @@ router.get("/view/:id", (req, res) => {
 });
 
 router.get("/viewall/:unitId", (req, res) => {
-  let { unitId } = req.params;
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
   Subject.find({ unit: unitId }).then((subjects, err) => {
     if (!subjects) return res.status(400).json(err);
     else {

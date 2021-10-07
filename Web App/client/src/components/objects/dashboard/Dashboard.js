@@ -730,7 +730,7 @@ class Dashboard extends Component {
       if (user.role === "Student") {
         getStudentsByClass(user.kelas);
       }
-      getAllAssessments();
+      getAllAssessments(user.unit);
       getAllTaskFilesByUser(user._id); // yang dapatin takfiles cuma berlaku untuk student soalnya
       getStudents(user.unit);
     }

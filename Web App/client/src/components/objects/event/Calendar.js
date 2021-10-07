@@ -1216,13 +1216,14 @@ function EventDialog(props) {
       to,
       description,
       author_id: user._id,
+      unit: user.unit,
     };
     if (Object.values(errors).every((error) => !error)) {
       setOpenUploadDialog(true);
       createEvent(formData, eventData)
         .then(() => {
           setUploadSuccess(true);
-          getAllEvents();
+          getAllEvents(user.unit);
         })
         .catch((err) => {
           setOpenUploadDialog(false);
@@ -1266,7 +1267,7 @@ function EventDialog(props) {
       )
         .then(() => {
           setUploadSuccess(true);
-          getAllEvents();
+          getAllEvents(user.unit);
         })
         .catch((err) => {
           setOpenUploadDialog(false);
@@ -1707,7 +1708,7 @@ function EventDialog(props) {
 
   const handleDelete = (eventId) => {
     deleteEvent(eventId).then(() => {
-      getAllEvents();
+      getAllEvents(user.unit);
       handleCloseEventDialog();
       showSnackbar("success", "Kegiatan berhasil dihapus");
     });
@@ -2759,9 +2760,9 @@ function Calendar(props) {
   React.useEffect(() => {
     getSelectedClasses(user.class_teached);
     getAllClass(user.unit);
-    getAllEvents();
+    getAllEvents(user.unit);
     getAllTask(user.unit);
-    getAllAssessments();
+    getAllAssessments(user.unit);
     getStudents(user.unit);
     getTeachers(user.unit);
     getAllTaskFilesByUser(user._id);

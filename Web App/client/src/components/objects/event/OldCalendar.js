@@ -872,7 +872,7 @@ function Calendar(props) {
   React.useEffect(() => {
     getAllEvents();
     getAllTask(user.unit);
-    getAllAssessments();
+    getAllAssessments(user.unit);
     getStudents(user.unit);
     getTeachers(user.unit);
     getAllTaskFilesByUser(user._id);

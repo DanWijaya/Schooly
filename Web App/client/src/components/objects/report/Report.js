@@ -1176,11 +1176,11 @@ function Report(props) {
     if (role === "Teacher") {
       getAllClass(user.unit);
       getAllTask(user.unit);
-      getAllAssessments();
+      getAllAssessments(user.unit);
     } else if (role === "Student") {
       setKelasWali(new Map()); // agar setRows(handleIndividualReport()) dijalankan, tapi tidak perlu panggil getAllClass(user.unit)
       getAllTask(user.unit);
-      getAllAssessments();
+      getAllAssessments(user.unit);
     } else {
       getAllClass(user.unit);
       getAllClass(user.unit, "map");

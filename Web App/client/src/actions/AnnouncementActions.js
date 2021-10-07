@@ -84,6 +84,7 @@ export const getAnnouncement = (Id, category) => (dispatch) => {
 };
 
 export const getAdminAnnouncements = (unitId) => (dispatch) => {
+  console.log("Run admin announcement", unitId);
   return axios
     .get(`/api/announcements/viewAdmin/${unitId}`)
     .then((res) => {

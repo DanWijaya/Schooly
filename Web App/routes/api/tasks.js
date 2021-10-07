@@ -58,6 +58,9 @@ router.post("/create", (req, res) => {
 router.get("/viewall/:unitId", (req, res) => {
   // pokoknya kalau ada request, requestnya harus diiringi dengan response.
   const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
   Task.find({ unit: unitId }).then((tasks, err) => {
     if (!tasks) return res.status(400).json("Tasks are not found");
     else return res.json(tasks);

@@ -589,6 +589,7 @@ class App extends Component {
                         exact
                         path="/kalender"
                         component={Calendar}
+                        access={[Role.ADMIN, Role.STUDENT, Role.TEACHER]}
                       />
                       <Route
                         exact

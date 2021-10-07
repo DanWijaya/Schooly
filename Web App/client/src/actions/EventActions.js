@@ -15,9 +15,9 @@ export const createEvent = (formData, eventData) => {
     });
 };
 
-export const getAllEvents = () => (dispatch) => {
+export const getAllEvents = (unitId) => (dispatch) => {
   axios
-    .get("/api/events/viewAll")
+    .get(`/api/events/viewAll/${unitId}`)
     .then((res) => {
       dispatch({
         type: GET_ALL_EVENTS,

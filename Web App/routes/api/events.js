@@ -8,16 +8,7 @@ router.post("/create", (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
-
-  const newEvent = new Event({
-    name: req.body.name,
-    location: req.body.location,
-    start_date: req.body.start_date,
-    end_date: req.body.end_date,
-    to: req.body.to,
-    description: req.body.description,
-    author_id: req.body.author_id,
-  });
+  const newEvent = new Event(req.body);
 
   newEvent
     .save()
@@ -25,10 +16,14 @@ router.post("/create", (req, res) => {
     .catch(() => res.status(400).json("Unable to create event"));
 });
 
-router.get("/viewAll", (req, res) => {
-  Event.find({}).then((events) => {
-    res.json(events);
-  });
+router.get("/viewAll/:unitId", (req, res) => {
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
+  Event.find({ unit: unitId })
+    .then((events) => res.json(events))
+    .catch((err) => res.status(400).json(err));
 });
 
 router.get("/viewOne/:id", (req, res) => {

@@ -160,13 +160,14 @@ router.delete("/:id", (req, res) => {
 });
 
 router.get("/by_event/:id", (req, res) => {
-  FileEvent.find({ event_id: req.params.id }).then((results, err) => {
-    if (!results) return res.status(400).json(err);
-    else {
+  FileEvent.find({ event_id: req.params.id })
+    .then((results, err) => {
       results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
       return res.status(200).json(results);
-    }
-  });
+    })
+    .catch((err) => {
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/:id", (req, res) => {

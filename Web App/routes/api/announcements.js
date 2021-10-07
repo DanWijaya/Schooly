@@ -6,6 +6,7 @@ const keys = require("../../config/keys");
 const validateAnnouncementInput = require("../../validation/AnnouncementData");
 const Announcement = require("../../models/Announcement");
 const User = require("../../models/user_model/User");
+const { ObjectId } = require("mongodb");
 
 router.post("/create", (req, res) => {
   // Form Validation
@@ -90,6 +91,9 @@ router.get("/viewOne/:id", (req, res) => {
 //Define View classes route
 router.get("/viewall/:unitId", (req, res) => {
   const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
   Announcement.find({ unit: unitId }).then((announcements, err) => {
     if (!announcements)
       return res.status(400).json("Announcements are not found");
@@ -99,17 +103,14 @@ router.get("/viewall/:unitId", (req, res) => {
 
 router.get("/viewAdmin/:unitId", (req, res) => {
   const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
   Announcement.aggregate([
+    { $match: { unit: ObjectId(unitId) } },
     {
       $lookup: {
         from: User.collection.name,
-        pipeline: [
-          {
-            $match: {
-              unit: unitId,
-            },
-          },
-        ],
         localField: "author_id",
         foreignField: "_id",
         as: "author_info",
@@ -117,7 +118,6 @@ router.get("/viewAdmin/:unitId", (req, res) => {
     },
   ])
     .then((result) => {
-      console.log("MUNCUL WOIII : ", result);
       res.json(
         result.filter((ann) => {
           return ann.author_info[0].role === "Admin";

@@ -1080,7 +1080,7 @@ function ViewClass(props) {
     getStudents(user.unit);
 
     getAllTaskFilesByUser(user._id); // get the all_user_files
-    getAllAssessments();
+    getAllAssessments(user.unit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

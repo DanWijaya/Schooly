@@ -396,7 +396,9 @@ router.put("/submit/:id", (req, res) => {
 
 router.get("/viewall/:unitId", (req, res) => {
   let { unitId } = req.params;
-
+  if (!unitId) {
+    return res.json([]);
+  }
   Assessment.find({ unit: unitId })
     .lean()
     .then((assessments) => {

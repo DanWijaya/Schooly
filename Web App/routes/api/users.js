@@ -321,7 +321,10 @@ router.put(
 );
 
 router.get("/getTeachers/:unitId", (req, res) => {
-  let { unitId } = req.params;
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
   Teacher.find({ active: true, unit: unitId })
     .sort({ name: 1 })
     .then((users, err) => {
@@ -331,7 +334,10 @@ router.get("/getTeachers/:unitId", (req, res) => {
 });
 
 router.get("/getStudents/:unitId", (req, res) => {
-  let { unitId } = req.params;
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
   Student.find({ active: true, unit: unitId })
     .sort({ name: 1 })
     .then((users, err) => {
@@ -341,7 +347,10 @@ router.get("/getStudents/:unitId", (req, res) => {
 });
 
 router.get("/getAdmins/:unitId", (req, res) => {
-  let { unitId } = req.params;
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
   Admin.find({ active: true, unit: unitId })
     .sort({ name: 1 })
     .then((users, err) => {
@@ -398,8 +407,10 @@ router.get("/getstudentsbyclass/:id", (req, res) => {
 });
 
 router.get("/getAllUsers/:unitId", (req, res) => {
-  let { unitId } = req.params;
-
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
   User.find({ active: true, unit: req.params.unitId })
     .sort({ name: 1 })
     .lean()
@@ -411,7 +422,11 @@ router.get("/getAllUsers/:unitId", (req, res) => {
 
 // for admin only
 router.get("/getpendingstudents/:unitId", (req, res) => {
-  Student.find({ active: false, unit: req.params.unitId })
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
+  Student.find({ active: false, unit: unitId })
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) return res.json([]);
@@ -420,7 +435,11 @@ router.get("/getpendingstudents/:unitId", (req, res) => {
 });
 
 router.get("/getpendingteachers/:unitId", (req, res) => {
-  Teacher.find({ active: false, unit: req.params.unitId })
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
+  Teacher.find({ active: false, unit: unitId })
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) return res.json([]);
@@ -429,7 +448,11 @@ router.get("/getpendingteachers/:unitId", (req, res) => {
 });
 
 router.get("/getpendingadmins/:unitId", (req, res) => {
-  Admin.find({ active: false, unit: req.params.unitId })
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
+  Admin.find({ active: false, unit: unitId })
     .sort({ name: 1 })
     .then((users, err) => {
       if (!users) return res.json([]);

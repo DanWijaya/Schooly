@@ -55,7 +55,11 @@ router.get("/view/:id", (req, res) => {
 });
 
 router.get("/viewall/:unitId", (req, res) => {
-  Class.find({ unit: req.params.unitId }).then((classes, err) => {
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
+  Class.find({ unit: unitId }).then((classes, err) => {
     if (!classes) res.status(400).json(err);
     else {
       classes.sort((a, b) => (a.name > b.name ? 1 : -1));
