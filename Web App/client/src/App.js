@@ -1,10 +1,17 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 import { Provider } from "react-redux";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import store from "./Store";
-import { setCurrentUser, logoutUser,
+import {
+  setCurrentUser,
+  logoutUser,
   // setDropboxToken,
 } from "./actions/UserActions";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -197,55 +204,32 @@ class App extends Component {
                       <Route
                         exact
                         path="/tester"
-                        render={(props) => (
-                          <Tester
-                            {...props}
-                            />
-                        )}/>
+                        render={(props) => <Tester {...props} />}
+                      />
                       <Route
                         exact
                         path="/"
-                        render={(props) => (
-                          <Landing
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <Landing {...props} />}
                       />
                       <Route
                         exact
                         path="/bantuan"
-                        render={(props) => (
-                          <Help
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <Help {...props} />}
                       />
                       <Route
                         exact
                         path="/tentang-schooly"
-                        render={(props) => (
-                          <About
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <About {...props} />}
                       />
                       <Route
                         exact
                         path="/legal/ketentuan-penggunaan"
-                        render={(props) => (
-                          <TermsOfService
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <TermsOfService {...props} />}
                       />
                       <Route
                         exact
                         path="/legal/kebijakan-privasi"
-                        render={(props) => (
-                          <PrivacyPolicy
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <PrivacyPolicy {...props} />}
                       />
                       {/* <Route exact path="/dropbox-auth" component={DropboxAuth} />
                     <Route
@@ -299,11 +283,7 @@ class App extends Component {
                         path="/beranda"
                         component={Dashboard}
                       />
-                      <PrivateRoute
-                        exact
-                        path="/profil"
-                        component={Profile}
-                      />
+                      <PrivateRoute exact path="/profil" component={Profile} />
                       <PrivateRoute
                         exact
                         path="/lihat-profil/:id"
@@ -575,11 +555,6 @@ class App extends Component {
                         component={Setting}
                       />
                       {/*  Route Prototypes */}
-                      <Route
-                        exact
-                        path="/tester"
-                        component={Tester}
-                      />
                       <PrivateRoute
                         exact
                         access={["Admin"]}
@@ -590,11 +565,7 @@ class App extends Component {
                       <Route
                         exact
                         path="/tidak-ditemukan"
-                        render={(props) => (
-                          <NotFound
-                            {...props}
-                          />
-                        )}
+                        render={(props) => <NotFound {...props} />}
                       />
                       <Redirect to="/tidak-ditemukan" />
                     </Switch>

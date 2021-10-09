@@ -6,7 +6,7 @@ import classnames from "classnames";
 import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import { clearErrors } from "../../../actions/ErrorActions";
-import { registerUser } from "../../../actions/UserActions";
+import { registerUser, validateRegister } from "../../../actions/UserActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import registerStepperArt from "./RegisterStepperArt.png";
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -124,7 +124,7 @@ class Register extends Component {
       tanggal_lahir: null,
       activeStep: 0,
       snackbarOpen: false,
-      submitButtonClicked: false,
+      submitButtonActive: false,
       openUploadDialog: false,
     };
 
@@ -187,11 +187,7 @@ class Register extends Component {
       tanggal_lahir: this.state.tanggal_lahir,
     };
 
-    if (this.state.activeStep === 2) {
-      this.setState({ submitButtonClicked: true });
-    }
-
-    if (this.state.submitButtonClicked) {
+    if (this.state.submitButtonActive) {
       this.props
         .registerUser(newUser)
         .then((res) => {
@@ -476,10 +472,42 @@ class Register extends Component {
 
     const handleNext = () => {
       if (this.state.activeStep !== 2 || this.state.errors === null)
-        this.setState((prevState) => ({
-          activeStep: prevState.activeStep + 1,
-          submitButtonClicked: false,
-        }));
+        var userData;
+        if (this.state.activeStep == 0){
+          userData = {
+            name: this.state.name,
+            email: this.state.email.toLowerCase(),
+            password: this.state.password,
+            password2: this.state.password2,
+          };
+        }
+        else if (this.state.activeStep == 1){
+          userData = {
+            role: this.state.role,
+            phone: this.state.phone,
+            emergency_phone: this.state.emergency_phone,
+            address: this.state.address,
+            tanggal_lahir: this.state.tanggal_lahir,
+          };
+        }
+
+        // get errors on current page
+        validateRegister(userData, this.state.activeStep+1).catch((err) => { this.setState({errors: err}) });
+        // if no error exists, proceed to next page
+        validateRegister(userData, this.state.activeStep+1).then(() => {
+          this.setState({ errors: {} });
+          if (Object.keys(this.state.errors).length === 0){
+            this.setState((prevState) => ({
+              activeStep: prevState.activeStep + 1,
+              submitButtonActive: false,
+            }));
+          }
+
+          if (this.state.activeStep === 2) {
+            this.setState({ submitButtonActive: true });
+          }
+        });
+        
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     };
