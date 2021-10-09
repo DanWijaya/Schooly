@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function HomeroomTeacher(props) {
+function EditHomeroomTeacher(props) {
   const classes = useStyles();
   const { getTeachers, getAllClass } = props;
   const { all_teachers } = props.auth;
@@ -378,7 +378,7 @@ function HomeroomTeacher(props) {
   );
 }
 
-HomeroomTeacher.propTypes = {
+EditHomeroomTeacher.propTypes = {
   auth: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   getAllClass: PropTypes.func.isRequired,
@@ -391,5 +391,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { getTeachers, getAllClass })(
-  HomeroomTeacher
+  EditHomeroomTeacher
 );
