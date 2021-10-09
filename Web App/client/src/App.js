@@ -18,7 +18,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Footer from "./Footer";
 import Navigation from "./components/navigation/Navigation";
-import PrivateRoute from "./components/private-route/PrivateRoute";
+import PrivateRoute from "./components/misc/private-route/PrivateRoute";
 import { Styles } from "./Styles";
 //Auth
 import Register from "./components/auth/register/Register";
@@ -43,7 +43,7 @@ import Dashboard from "./components/objects/dashboard/Dashboard";
 //Class
 import CreateClass from "./components/objects/class/CreateClass";
 import EditClass from "./components/objects/class/EditClass";
-import EditClassTeacher from "./components/objects/class/EditClassTeacher";
+import EditHomeroomTeacher from "./components/objects/class/EditHomeroomTeacher";
 import ViewClass from "./components/objects/class/ViewClass";
 import ClassList from "./components/objects/class/ClassList";
 //Material
@@ -516,7 +516,7 @@ class App extends Component {
                         exact
                         access={[Role.ADMIN]}
                         path="/atur-walikelas"
-                        component={EditClassTeacher}
+                        component={EditHomeroomTeacher}
                       />
                       {/* Route SuperAdmin-Only */}
                       <PrivateRoute

@@ -13,9 +13,9 @@ import { setCurrentClass } from "../../../actions/ClassActions";
 import informationContacts from "./InformationContacts.png";
 import informationJob from "./InformationJob.png";
 import informationPrivate from "./InformationPrivate.png";
-import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
-import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
-import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
+import EditProfileData from "./edit-profile-data/EditProfileData";
+import EditProfilePicture from "./edit-profile-picture/EditProfilePicture";
+import EditPassword from "./edit-password/EditPassword";
 import {
   Avatar,
   Badge,
@@ -196,7 +196,7 @@ function Profile(props) {
       .catch((err) => console.log(err));
   }, [user.avatar]);
 
-  // Alert control for ProfilePictureEditorDialog
+  // Alert control for EditProfilePicture
   const [openAlert, setOpenAlert] = React.useState(false);
   const handleOpenAlert = () => {
     setOpenAlert(true);
@@ -207,7 +207,7 @@ function Profile(props) {
     }
     setOpenAlert(false);
   };
-  // Alert control for ProfileDataEditorDialog
+  // Alert control for EditProfileData
   const [openDataEditorAlert, setOpenDataEditorAlert] = React.useState(false);
   const handleOpenDataEditorAlert = () => {
     setOpenDataEditorAlert(true);
@@ -219,7 +219,7 @@ function Profile(props) {
     setOpenDataEditorAlert(false);
   };
 
-  // Alert control for ProfilePasswordEditorDialog
+  // Alert control for EditPassword
   const [openPasswordEditorAlert, setOpenPasswordEditorAlert] = React.useState(
     false
   );
@@ -250,7 +250,7 @@ function Profile(props) {
   document.title = "Schooly | Profil Saya";
   return (
     <div className={classes.root}>
-      {/* ProfilePictureEditorDialog Snackbar */}
+      {/* EditProfilePicture Snackbar */}
       <Snackbar
         open={openAlert}
         autoHideDuration={4000}
@@ -266,7 +266,7 @@ function Profile(props) {
           Foto profil berhasil diganti!
         </MuiAlert>
       </Snackbar>
-      {/* ProfileDataEditorDialog Snackbar */}
+      {/* EditProfileData Snackbar */}
       <Snackbar
         open={openDataEditorAlert}
         autoHideDuration={4000}
@@ -282,7 +282,7 @@ function Profile(props) {
           Data profil berhasil diganti!
         </MuiAlert>
       </Snackbar>
-      {/* ProfilePasswordEditorDialog Snackbar */}
+      {/* EditPassword Snackbar */}
       <Snackbar
         open={openPasswordEditorAlert}
         autoHideDuration={4000}
@@ -314,7 +314,7 @@ function Profile(props) {
           {user.avatar ? (
             <StyledBadge
               badgeContent={
-                <ProfilePictureEditorDialog
+                <EditProfilePicture
                   user={user}
                   avatar={avatar}
                   // updateAvatar={uploadFileAvatar}
@@ -329,7 +329,7 @@ function Profile(props) {
           ) : (
             <StyledBadge
               badgeContent={
-                <ProfilePictureEditorDialog
+                <EditProfilePicture
                   user={user}
                   // updateAvatar={uploadFileAvatar}
                   setFileLimitSnackbar={setFileLimitSnackbar}
@@ -386,13 +386,13 @@ function Profile(props) {
               ) : null}
             </Grid>
             <Grid item>
-              <ProfileDataEditorDialog
+              <EditProfileData
                 handleOpenAlert={handleOpenDataEditorAlert}
                 userData={user}
               />
             </Grid>
             {/* <Grid item>
-              <ProfilePasswordEditorDialog
+              <EditPassword
                 handleOpenAlert={handleOpenPasswordEditorAlert}
               />
             </Grid> */}
@@ -421,14 +421,14 @@ function Profile(props) {
               ) : null}
             </Grid>
             <Grid item>
-              <ProfileDataEditorDialog
+              <EditProfileData
                 handleOpenAlert={handleOpenDataEditorAlert}
                 userData={user}
               />
             </Grid>
             {/* Di hide untuk simulation */}
             {/* <Grid item>
-              <ProfilePasswordEditorDialog
+              <EditPassword
                 handleOpenAlert={handleOpenPasswordEditorAlert}
               />
             </Grid> */}

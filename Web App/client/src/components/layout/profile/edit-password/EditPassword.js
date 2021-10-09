@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import LightTooltip from "../../../misc/light-tooltip/LightTooltip";
 import {
   Button,
   Dialog,
@@ -13,9 +13,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import LockIcon from "@material-ui/icons/Lock";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { changePassword } from "../../../actions/AuthActions";
-import { logoutUser } from "../../../actions/UserActions";
-import { clearErrors } from "../../../actions/ErrorActions";
+import { changePassword } from "../../../../actions/AuthActions";
+import { logoutUser } from "../../../../actions/UserActions";
+import { clearErrors } from "../../../../actions/ErrorActions";
 
 const useStyles = makeStyles((theme) => ({
   editPasswordButton: {
@@ -69,7 +69,7 @@ function EditPasswordField(props) {
   );
 }
 
-function ProfilePasswordEditorDialog(props) {
+function EditPassword(props) {
   const [old_password, setOldPassword] = React.useState("");
   const [new_password, setNewPassword] = React.useState("");
   const [new_password2, setNewPassword2] = React.useState("");
@@ -214,7 +214,7 @@ function ProfilePasswordEditorDialog(props) {
   );
 }
 
-ProfilePasswordEditorDialog.propTypes = {
+EditPassword.propTypes = {
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
@@ -233,4 +233,4 @@ export default connect(mapStateToProps, {
   changePassword,
   logoutUser,
   clearErrors,
-})(ProfilePasswordEditorDialog);
+})(EditPassword);

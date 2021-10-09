@@ -1,5 +1,5 @@
 import React from "react";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import LightTooltip from "../../../misc/light-tooltip/LightTooltip";
 import defaultAvatar from "./DefaultAvatar.svg";
 import {
   Avatar,
@@ -18,7 +18,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import {
   uploadFileAvatar,
   getFileAvatar,
-} from "../../../actions/files/FileAvatarActions";
+} from "../../../../actions/files/FileAvatarActions";
 import { connect } from "react-redux";
 import MuiAlert from "@material-ui/lab/Alert";
 const useStyles = makeStyles((theme) => ({
@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ProfilePictureEditorDialog(props) {
+function EditProfilePicture(props) {
   const classes = useStyles();
 
   // Function Hooks and Ref Declaration
@@ -299,5 +299,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { uploadFileAvatar, getFileAvatar })(
-  ProfilePictureEditorDialog
+  EditProfilePicture
 );

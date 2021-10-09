@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function EditClassTeacher(props) {
+function EditHomeroomTeacher(props) {
   const classes = useStyles();
 
   // const [selectedClass, setSelectedClass] = React.useState(null);
@@ -422,7 +422,7 @@ function EditClassTeacher(props) {
   );
 }
 
-EditClassTeacher.propTypes = {
+EditHomeroomTeacher.propTypes = {
   auth: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
 
@@ -436,5 +436,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { getTeachers, getAllClass })(
-  EditClassTeacher
+  EditHomeroomTeacher
 );

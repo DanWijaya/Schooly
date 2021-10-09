@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import DateFnsUtils from "@date-io/date-fns";
 import "date-fns";
 import lokal from "date-fns/locale/id";
-import { updateUserData } from "../../../actions/UserActions";
-import { clearErrors } from "../../../actions/ErrorActions";
+import { updateUserData } from "../../../../actions/UserActions";
+import { clearErrors } from "../../../../actions/ErrorActions";
 import {
   Avatar,
   Button,
@@ -145,7 +145,7 @@ function ProfileDataItemEdit(props) {
   );
 }
 
-function ProfileDataEditorDialog(props) {
+function EditProfileData(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
@@ -474,7 +474,7 @@ function ProfileDataEditorDialog(props) {
   );
 }
 
-ProfileDataEditorDialog.propTypes = {
+EditProfileData.propTypes = {
   auth: PropTypes.object.isRequired,
   updateUserData: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
@@ -487,5 +487,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { updateUserData, clearErrors })(
-  ProfileDataEditorDialog
+  EditProfileData
 );
