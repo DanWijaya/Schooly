@@ -148,7 +148,7 @@ function EditProfilePicture(props) {
         return (
           <Avatar className={classes.avatar}>
             <img
-              alt="Profile Picture"
+              alt="Profile"
               onLoad={onImgLoad}
               src={avatar}
               // src={`/api/upload/avatar/${user.avatar}`}
@@ -161,7 +161,7 @@ function EditProfilePicture(props) {
         return (
           <Avatar className={classes.avatar}>
             <img
-              alt="Profile Picture"
+              alt="Profile"
               onLoad={onImgLoad}
               src={defaultAvatar}
               ref={uploadedImage}
@@ -174,7 +174,7 @@ function EditProfilePicture(props) {
       return (
         <Avatar className={classes.avatar}>
           <img
-            alt="Current Profile Picture"
+            alt="Current Profile"
             onLoad={onImgLoad}
             ref={uploadedImage}
             className={avatarImgClass}

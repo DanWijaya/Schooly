@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import { Bar, Pie } from "react-chartjs-2";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
@@ -32,64 +33,62 @@ import {
   Avatar,
   Badge,
 } from "@material-ui/core";
+import {
+  Add as AddIcon,
+  Announcement as AnnouncementIcon,
+  ArrowBackIos as ArrowBackIosIcon,
+  ArrowForwardIos as ArrowForwardIosIcon,
+  AssignmentOutlined as AssignmentIcon,
+  Pageview as PageviewIcon,
+  Error as ErrorIcon,
+  MenuBook as MenuBookIcon,
+  Warning as WarningIcon
+} from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/Add";
-import AnnouncementIcon from "@material-ui/icons/Announcement";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
 import { AiOutlineUserSwitch } from "react-icons/ai";
+import { BsClipboardData } from "react-icons/bs";
 import { FaChalkboard } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
-import { BsClipboardData } from "react-icons/bs";
-import ErrorIcon from "@material-ui/icons/Error";
-import WarningIcon from "@material-ui/icons/Warning";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import { FaTasks } from "react-icons/fa";
-import { Bar } from "react-chartjs-2";
 
 const styles = (theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
-  timePaperStudent: {
+  welcomePaperStudent: {
     height: "250px",
     padding: "20px",
     color: "white",
     backgroundColor: theme.palette.primary.light,
     backgroundImage: `url(${dashboardStudentBackground})`,
-    backgroundPosition: "bottom",
+    backgroundPosition: "right bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
-  timePaperTeacher: {
+  welcomePaperTeacher: {
     height: "250px",
     padding: "20px",
     color: "white",
     backgroundColor: theme.palette.primary.light,
     backgroundImage: `url(${dashboardTeacherBackground})`,
-    backgroundPosition: "bottom",
+    backgroundPosition: "right bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
-  timePaperAdmin: {
+  welcomePaperAdmin: {
     height: "250px",
     padding: "20px",
     color: "white",
     backgroundColor: theme.palette.primary.light,
     backgroundImage: `url(${dashboardAdminBackground})`,
-    backgroundPosition: "bottom",
+    backgroundPosition: "right bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
-  },
-  warningText: {
-    color: theme.palette.warning.main,
   },
   createButton: {
     backgroundColor: theme.palette.success.main,
@@ -100,21 +99,20 @@ const styles = (theme) => ({
     },
   },
   menuItem: {
+    color: "black",
     "&:hover": {
       backgroundColor: theme.palette.success.main,
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: "white",
       },
-      color: "black"
     },
   },
   menuItemText: {
+    color: "black",
     "&:hover": {
-        color: "white",
-      },
-      color: "black"
+      color: "white",
+    },
   },
-
   manageTaskButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -297,97 +295,6 @@ function AssessmentListItemTeacher(props) {
       </Link>
     </Grid>
   );
-}
-
-function DashboardGraph(props) {
-  const { scores, workType, names } = props;
-
-  let label = [];
-  for (let i = 0; i < scores.length; i++) {
-    label.push(i + 1);
-  }
-  const state = {
-    labels: label,
-    datasets: [
-      {
-        label: [1, 2],
-        backgroundColor: "#1976D2",
-        borderColor: "rgba(0,0,0,0)",
-        borderWidth: 2,
-        data: scores,
-        maxBarThickness: 60,
-      },
-    ],
-  };
-
-  return (
-    // A react-chart hyper-responsively and continuously fills the available
-    // space of its parent element automatically
-    <div>
-      <Bar
-        data={state}
-        options={{
-          // title: {
-          //   display: true,
-          //   text: `Nilai ${workType} Anda`,
-          //   fontSize: 16,
-          //   fontStyle: "normal"
-          // },
-          legend: {
-            display: false,
-            position: "right",
-          },
-          scales: {
-            yAxes: [
-              {
-                id: "first-y-axis",
-                type: "linear",
-                ticks: {
-                  min: 0,
-                  max: 100,
-                },
-              },
-            ],
-          },
-          tooltips: {
-            callbacks: {
-              label: function (tooltipItem, data) {
-                var label = names[tooltipItem.index] || "";
-
-                if (label) {
-                  label += ": ";
-                }
-                label += Math.round(tooltipItem.yLabel * 100) / 100;
-                return label;
-              },
-            },
-          },
-        }}
-        width="250px"
-        height="270px"
-      />
-    </div>
-  );
-}
-
-function sortAscByCreatedAt(rows) {
-  const stabilizedThis = rows.map((el, index) => [el, index]);
-  const descendingComparator = (a, b, orderBy) => {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  };
-  const comparator = (a, b) => descendingComparator(a, b, "createdAt");
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
 }
 
 function ListAssessments(props) {
@@ -651,40 +558,94 @@ function ListAssessments(props) {
   }
 }
 
-function WelcomePanel(props) {
-  const { user, classes } = props;
+function sortAscByCreatedAt(rows) {
+  const stabilizedThis = rows.map((el, index) => [el, index]);
+  const descendingComparator = (a, b, orderBy) => {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  };
+  const comparator = (a, b) => descendingComparator(a, b, "createdAt");
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
+function DashboardGraph(props) {
+  const { scores, workType, names } = props;
+
+  let label = [];
+  for (let i = 0; i < scores.length; i++) {
+    label.push(i + 1);
+  }
+  const state = {
+    labels: label,
+    datasets: [
+      {
+        label: [1, 2],
+        backgroundColor: "#1976D2",
+        borderColor: "rgba(0,0,0,0)",
+        borderWidth: 2,
+        data: scores,
+        maxBarThickness: 60,
+      },
+    ],
+  };
 
   return (
-    <Grid item>
-      {user.role === "Student" ? (
-        <Paper elevation={0} className={classes.timePaperStudent}>
-          <Typography variant="h4" gutterBottom>
-            <b>Selamat Datang, {user.name}</b>
-          </Typography>
-          <Typography variant="h6">
-            Apa yang ingin Anda kerjakan hari ini?
-          </Typography>
-        </Paper>
-      ) : user.role === "Teacher" ? (
-        <Paper elevation={0} className={classes.timePaperTeacher}>
-          <Typography variant="h4" gutterBottom>
-            <b>Selamat Datang, {user.name}</b>
-          </Typography>
-          <Typography variant="h6">
-            Apa yang ingin Anda kerjakan hari ini?
-          </Typography>
-        </Paper>
-      ) : (
-        <Paper elevation={0} className={classes.timePaperAdmin}>
-          <Typography variant="h4" gutterBottom>
-            <b>Selamat Datang, {user.name}</b>
-          </Typography>
-          <Typography variant="h6">
-            Apa yang ingin Anda kerjakan hari ini?
-          </Typography>
-        </Paper>
-      )}
-    </Grid>
+    // A react-chart hyper-responsively and continuously fills the available
+    // space of its parent element automatically
+    <div>
+      <Bar
+        data={state}
+        options={{
+          // title: {
+          //   display: true,
+          //   text: `Nilai ${workType} Anda`,
+          //   fontSize: 16,
+          //   fontStyle: "normal"
+          // },
+          legend: {
+            display: false,
+            position: "right",
+          },
+          scales: {
+            yAxes: [
+              {
+                id: "first-y-axis",
+                type: "linear",
+                ticks: {
+                  min: 0,
+                  max: 100,
+                },
+              },
+            ],
+          },
+          tooltips: {
+            callbacks: {
+              label: function (tooltipItem, data) {
+                var label = names[tooltipItem.index] || "";
+
+                if (label) {
+                  label += ": ";
+                }
+                label += Math.round(tooltipItem.yLabel * 100) / 100;
+                return label;
+              },
+            },
+          },
+        }}
+        width="250px"
+        height="270px"
+      />
+    </div>
   );
 }
 
@@ -748,7 +709,7 @@ class Dashboard extends Component {
       let currentIndex = this.state.allowedSubjectIndex.indexOf(this.state.taskGraphCurrentSubject);
       if (direction === "Left") {
         let newIndex;
-        if(currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
+        if (currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
           newIndex = 0;
         }
         else {
@@ -759,7 +720,7 @@ class Dashboard extends Component {
         });
       } else if (direction === "Right") {
         let newIndex;
-        if(currentIndex - 1 < 0) {
+        if (currentIndex - 1 < 0) {
           newIndex = this.state.allowedSubjectIndex.length - 1;
         }
         else {
@@ -773,7 +734,7 @@ class Dashboard extends Component {
       let currentIndex = this.state.allowedSubjectIndex.indexOf(this.state.quizGraphCurrentSubject);
       if (direction === "Left") {
         let newIndex;
-        if(currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
+        if (currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
           newIndex = 0;
         }
         else {
@@ -784,7 +745,7 @@ class Dashboard extends Component {
         });
       } else if (direction === "Right") {
         let newIndex;
-        if(currentIndex - 1 < 0) {
+        if (currentIndex - 1 < 0) {
           newIndex = this.state.allowedSubjectIndex.length - 1;
         }
         else {
@@ -798,7 +759,7 @@ class Dashboard extends Component {
       let currentIndex = this.state.allowedSubjectIndex.indexOf(this.state.examGraphCurrentSubject);
       if (direction === "Left") {
         let newIndex;
-        if(currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
+        if (currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
           newIndex = 0;
         }
         else {
@@ -809,7 +770,7 @@ class Dashboard extends Component {
         });
       } else if (direction === "Right") {
         let newIndex;
-        if(currentIndex - 1 < 0) {
+        if (currentIndex - 1 < 0) {
           newIndex = this.state.allowedSubjectIndex.length - 1;
         }
         else {
@@ -824,16 +785,13 @@ class Dashboard extends Component {
 
   render() {
     const { classes, tasksCollection } = this.props;
-
     const { user, all_students, all_teachers } = this.props.auth;
-    const { all_user_files } = this.props.filesCollection;
+    const { kelas } = this.props.classesCollection
     const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { all_assessments } = this.props.assessmentsCollection;
-    const { kelas } = this.props.classesCollection
+    const { all_user_files } = this.props.filesCollection;
 
     const classId = user.kelas;
-    console.log(this.props.classesCollection)
-    console.log(all_teachers)
 
     if (
       this.state.allowedSubjectIndex === null &&
@@ -841,8 +799,7 @@ class Dashboard extends Component {
       Object.keys(kelas).length !== 0
     ) {
       let allowedIndexes = [];
-      console.log(kelas)
-      for(let i=0;i<all_subjects.length;i++) {
+      for(let i = 0; i < all_subjects.length; i++) {
         if(kelas.subject_assigned.includes(all_subjects[i]._id)) {
           allowedIndexes.push(i);
         }
@@ -914,14 +871,6 @@ class Dashboard extends Component {
                 </Typography>
               </div>
             </Grid>
-
-            // <Typography
-            //   align="center"
-            //   color="textSecondary"
-            //   variant="subtitle-1"
-            // >
-            //   Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
-            // </Typography>
           );
         }
       } else {
@@ -937,9 +886,6 @@ class Dashboard extends Component {
               </Typography>
             </div>
           </Grid>
-          // <Typography align="center" color="textSecondary" variant="subtitle-1">
-          //   Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
-          // </Typography>
         );
       }
     }
@@ -1008,14 +954,6 @@ class Dashboard extends Component {
                 </Typography>
               </div>
             </Grid>
-
-            // <Typography
-            //   align="center"
-            //   color="textSecondary"
-            //   variant="subtitle-1"
-            // >
-            //   Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
-            // </Typography>
           );
         }
       } else {
@@ -1031,17 +969,12 @@ class Dashboard extends Component {
               </Typography>
             </div>
           </Grid>
-
-          // <Typography align="center" color="textSecondary" variant="subtitle-1">
-          //   Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
-          // </Typography>
         );
       }
     }
 
     function listTasks() {
       let result = [];
-      // tasksByClass.map((task) => {
       tasksByClass.forEach((task) => {
         let flag = true;
         let teacher_name;
@@ -1093,7 +1026,6 @@ class Dashboard extends Component {
 
     function listTasksTeacher() {
       let result = [];
-      console.log(user);
       for (let i = 0; i < tasksCollection.length; i++) {
         if (tasksCollection[i].person_in_charge_id === user._id) {
           let number_students_assigned = 0;
@@ -1235,7 +1167,6 @@ class Dashboard extends Component {
           return tasksByClass;
         });
       } else if (user.role === "Teacher") {
-        // For Teacher
         console.log("Ini untuk guru");
       }
     }
@@ -1244,7 +1175,21 @@ class Dashboard extends Component {
 
     return (
       <div className={classes.root}>
-        <WelcomePanel user={user} classes={classes} />
+        <Paper
+          elevation={0}
+          className={
+            user.role === "Student" ? classes.welcomePaperStudent
+            : user.role === "Teacher" ? classes.welcomePaperTeacher
+            : classes.welcomePaperAdmin
+          }
+        >
+          <Typography variant="h4" gutterBottom>
+            Selamat Datang, {user.name}
+          </Typography>
+          <Typography variant="h6">
+            Apa yang ingin Anda kerjakan hari ini?
+          </Typography>
+        </Paper>
         <div style={{ marginTop: "20px" }}>
           {user.role === "Student" ? (
             <Grid item container spacing={3}>
@@ -1276,7 +1221,7 @@ class Dashboard extends Component {
                           <Link to="/daftar-tugas">
                             <LightTooltip title="Lihat Semua" placement="top">
                               <IconButton>
-                                <ChevronRightIcon />
+                                <PageviewIcon />
                               </IconButton>
                             </LightTooltip>
                           </Link>
@@ -1313,7 +1258,7 @@ class Dashboard extends Component {
                           <Link to="/daftar-kuis">
                             <LightTooltip title="Lihat Semua" placement="top">
                               <IconButton>
-                                <ChevronRightIcon />
+                                <PageviewIcon />
                               </IconButton>
                             </LightTooltip>
                           </Link>
@@ -1360,7 +1305,7 @@ class Dashboard extends Component {
                           <Link to="/daftar-ujian">
                             <LightTooltip title="Lihat Semua" placement="top">
                               <IconButton>
-                                <ChevronRightIcon />
+                                <PageviewIcon />
                               </IconButton>
                             </LightTooltip>
                           </Link>
@@ -1615,7 +1560,7 @@ class Dashboard extends Component {
                       className={classes.menuItem}
                     >
                       <ListItemIcon>
-                        <FaTasks />
+                        <FaClipboardList />
                       </ListItemIcon>
                       <ListItemText primary={<Typography className={classes.menuItemText}>Buat Kuis</Typography>} />
                     </MenuItem>
@@ -1625,21 +1570,11 @@ class Dashboard extends Component {
                       className={classes.menuItem}
                     >
                       <ListItemIcon>
-                        <FaTasks />
+                        <BsClipboardData />
                       </ListItemIcon>
                       <ListItemText primary={<Typography className={classes.menuItemText}>Buat Ujian</Typography>} />
                     </MenuItem>
                     </Link>
-                    {/* <Link to="/buat-kuis-ujian">
-                    <MenuItem
-                      className={classes.menuItem}
-                    >
-                      <ListItemIcon>
-                        <FaTasks />
-                      </ListItemIcon>
-                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Kuis/Ujian</Typography>} />
-                    </MenuItem>
-                    </Link> */}
                   </Menu>
                 </Grid>
               </Grid>
@@ -1668,7 +1603,7 @@ class Dashboard extends Component {
                           <Link to="/daftar-tugas">
                             <LightTooltip title="Lihat Semua" placement="top">
                               <IconButton>
-                                <ChevronRightIcon />
+                                <PageviewIcon />
                               </IconButton>
                             </LightTooltip>
                           </Link>
@@ -1705,7 +1640,7 @@ class Dashboard extends Component {
                           <Link to="/daftar-kuis">
                             <LightTooltip title="Lihat Semua" placement="top">
                               <IconButton>
-                                <ChevronRightIcon />
+                                <PageviewIcon />
                               </IconButton>
                             </LightTooltip>
                           </Link>
@@ -1743,7 +1678,7 @@ class Dashboard extends Component {
                           <Link to="/daftar-ujian">
                             <LightTooltip title="Lihat Semua" placement="top">
                               <IconButton>
-                                <ChevronRightIcon />
+                                <PageviewIcon />
                               </IconButton>
                             </LightTooltip>
                           </Link>
@@ -1846,9 +1781,9 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
   auth: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
-  classesCollection: PropTypes.object.isRequired,
   assessmentsCollection: PropTypes.object.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getAllTask: PropTypes.func.isRequired,
@@ -1862,22 +1797,22 @@ Dashboard.propTypes = {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  tasksCollection: state.tasksCollection,
-  subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
-  filesCollection: state.filesCollection,
+  subjectsCollection: state.subjectsCollection,
+  tasksCollection: state.tasksCollection,
   assessmentsCollection: state.assessmentsCollection,
+  filesCollection: state.filesCollection,
 });
 
 export default withRouter(
   connect(mapStateToProps, {
-    getAllTask,
-    getAllTaskFilesByUser,
-    getAllSubjects,
-    getAllAssessments,
-    getStudentsByClass,
-    getStudents,
     setCurrentClass,
-    getTeachers
+    getAllSubjects,
+    getTeachers,
+    getStudents,
+    getStudentsByClass,
+    getAllTask,
+    getAllAssessments,
+    getAllTaskFilesByUser
   })(withStyles(styles)(Dashboard))
 );

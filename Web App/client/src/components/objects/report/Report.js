@@ -1,52 +1,50 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
+import { Bar } from "react-chartjs-2";
 import PropTypes from "prop-types";
 import "moment/locale/id";
-import {
-  Divider,
-  Grid,
-  Paper,
-  Typography,
-  IconButton,
-  Hidden,
-} from "@material-ui/core";
-import { fade } from "@material-ui/core/styles/colorManipulator";
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import FormControl from "@material-ui/core/FormControl";
-import { Bar } from "react-chartjs-2";
+import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getStudentsByClass, getOneUser, refreshTeacher } from "../../../actions/UserActions";
 import { getTasksBySubjectClass, getAllTask } from "../../../actions/TaskActions";
-import { setCurrentClass } from "../../../actions/ClassActions";
+import { getAssessments, getAllAssessments } from "../../../actions/AssessmentActions";
 import {
-  getAssessments,
-  getAllAssessments,
-} from "../../../actions/AssessmentActions";
-import { getAllClass } from "../../../actions/ClassActions";
-import { getAllSubjects } from "../../../actions/SubjectActions";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+  Divider,
+  FormControl,
+  Grid,
+  Hidden,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Table,
+  TableBody,
+  TableContainer,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography
+} from "@material-ui/core";
+import {
+  ArrowBackIos as ArrowBackIosIcon,
+  ArrowForwardIos as ArrowForwardIosIcon,
+  Assignment as AssignmentIcon
+} from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
 import { FaClipboardList } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
   avatar: {
     margin: "auto",
@@ -59,16 +57,16 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "15px",
   },
   informationPaper: {
-    backgroundColor: fade(theme.palette.primary.main, 0.2),
+    backgroundColor: theme.palette.primary.fade,
     padding: "25px",
   },
   name: {
-    backgroundColor: fade(theme.palette.primary.main, 0.2),
+    backgroundColor: theme.palette.primary.fade,
     padding: "5px",
     margin: "5px",
   },
   kelas: {
-    backgroundColor: fade(theme.palette.primary.main, 0.2),
+    backgroundColor: theme.palette.primary.fade,
   },
   informationPictureContainer: {
     display: "flex",
@@ -251,7 +249,6 @@ function Report(props) {
     setCurrentClass,
     refreshTeacher
   } = props;
-
   const { user, students_by_class, selectedUser } = props.auth;
   const { all_classes, all_classes_map } = props.classesCollection;
   const { all_subjects_map, all_subjects } = props.subjectsCollection;
