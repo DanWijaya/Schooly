@@ -1,7 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getAllClass, setHomeroomTeachers } from "../../../actions/ClassActions";
+import {
+  getAllClass,
+  setHomeroomTeachers,
+} from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -18,7 +21,7 @@ import {
   Paper,
   Snackbar,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
@@ -70,14 +73,13 @@ const useStyles = makeStyles((theme) => ({
 
 function EditHomeroomTeacher(props) {
   const classes = useStyles();
-  const { getTeachers, getAllClass } = props;
-  const { all_teachers } = props.auth;
+  const { all_teachers, user } = props.auth;
   const { all_classes } = props.classesCollection;
-  // const { all_classes_map } = props.classesCollection;
+  const { getTeachers, getAllClass } = props;
 
   React.useEffect(() => {
-    getTeachers();
-    getAllClass();
+    getTeachers(user.unit);
+    getAllClass(user.unit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

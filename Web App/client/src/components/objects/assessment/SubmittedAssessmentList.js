@@ -268,7 +268,7 @@ function SubmittedAssessmentList(props) {
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
   const { all_classes } = props.classesCollection;
-  const { all_students } = props.auth;
+  const { all_students, user } = props.auth;
   const assessment_id = props.match.params.id;
 
   const [value, setValue] = React.useState(0);
@@ -278,9 +278,9 @@ function SubmittedAssessmentList(props) {
 
   React.useEffect(() => {
     getOneAssessment(assessment_id);
-    getStudents();
-    getAllClass();
-    getAllSubjects("map");
+    getStudents(user.unit);
+    getAllClass(user.unit);
+    getAllSubjects(user.unit, "map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -825,33 +825,43 @@ function SubmittedAssessmentList(props) {
                     secondary={
                       selectedAssessments.grades &&
                       selectedAssessments.grades[student._id] &&
-                      selectedAssessments.grades[student._id].total_grade
-                        ?
-                          <>
-                            Telah Dinilai<br />
-                            Waktu Pengumpulan:&nbsp;
-                            <Hidden smUp>
-                              <br />
-                            </Hidden>
-                            {moment(selectedAssessments.submissions_timestamp[student._id])
+                      selectedAssessments.grades[student._id].total_grade ? (
+                        <>
+                          Telah Dinilai
+                          <br />
+                          Waktu Pengumpulan:&nbsp;
+                          <Hidden smUp>
+                            <br />
+                          </Hidden>
+                          {moment(
+                            selectedAssessments.submissions_timestamp[
+                              student._id
+                            ]
+                          )
                             .locale("id")
                             .format("DD MMM YYYY, HH:mm")}
-                          </>
-                        :
-                          <>
-                            Belum Dinilai
-                            {scores ?
-                              <>
-                                <br />Waktu Pengumpulan:&nbsp;
-                                <Hidden smUp>
-                                  <br />
-                                </Hidden>
-                                {moment(selectedAssessments.submissions_timestamp[student._id])
+                        </>
+                      ) : (
+                        <>
+                          Belum Dinilai
+                          {scores ? (
+                            <>
+                              <br />
+                              Waktu Pengumpulan:&nbsp;
+                              <Hidden smUp>
+                                <br />
+                              </Hidden>
+                              {moment(
+                                selectedAssessments.submissions_timestamp[
+                                  student._id
+                                ]
+                              )
                                 .locale("id")
                                 .format("DD MMM YYYY, HH:mm")}
-                              </>
-                            : null}
-                          </>
+                            </>
+                          ) : null}
+                        </>
+                      )
                     }
                   />
                   {selectedAssessments.grades &&

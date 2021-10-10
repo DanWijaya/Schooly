@@ -6,7 +6,7 @@ import {
   ListItemIcon,
   ListItemText,
   Tooltip,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import {
   Announcement as AnnouncementIcon,
@@ -16,11 +16,17 @@ import {
   EventNote as EventNoteIcon,
   LibraryBooks as LibraryBooksIcon,
   MenuBook as MenuBookIcon,
-  Settings as SettingsIcon
+  Settings as SettingsIcon,
+  Web as UnitIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
-import { FaChalkboard, FaClipboardList, FaUserFriends, FaUserLock } from "react-icons/fa";
+import {
+  FaChalkboard,
+  FaClipboardList,
+  FaUserFriends,
+  FaUserLock,
+} from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
   drawerListItem: {
@@ -62,7 +68,30 @@ function DrawerContent(props) {
   }
 
   let ListItemContents;
-  if (user.role === "Admin")
+  if (user.role === "SuperAdmin") {
+    ListItemContents = [
+      [
+        "/beranda",
+        <DashboardIcon className={classes.drawerListItemIcon} />,
+        "Beranda",
+      ],
+      [
+        "/daftar-unit",
+        <UnitIcon className={classes.drawerListItemIcon} />,
+        "Unit Sekolah",
+      ],
+      [
+        "/pengelola-tertunda",
+        <FaUserLock className={classes.drawerListItemIcon} />,
+        "Pengelola Tertunda",
+      ],
+      [
+        "/pengelola-aktif",
+        <FaUserFriends className={classes.drawerListItemIcon} />,
+        "Pengelola Aktif",
+      ],
+    ];
+  } else if (user.role === "Admin")
     ListItemContents = [
       [
         "/beranda",

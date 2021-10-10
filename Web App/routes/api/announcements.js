@@ -6,6 +6,7 @@ const keys = require("../../config/keys");
 const validateAnnouncementInput = require("../../validation/AnnouncementData");
 const Announcement = require("../../models/Announcement");
 const User = require("../../models/user_model/User");
+const { ObjectId } = require("mongodb");
 
 router.post("/create", (req, res) => {
   // Form Validation
@@ -32,6 +33,7 @@ router.post("/create", (req, res) => {
     class_assigned: class_assigned_ids,
     author_id: req.body.author_id,
     to: req.body.to,
+    unit: req.body.unit,
     // date_announced: new Date()
   });
   newAnnouncement
@@ -87,16 +89,25 @@ router.get("/viewOne/:id", (req, res) => {
 });
 
 //Define View classes route
-router.get("/viewall", (req, res) => {
-  Announcement.find({}).then((announcements, err) => {
+router.get("/viewall/:unitId", (req, res) => {
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
+  Announcement.find({ unit: unitId }).then((announcements, err) => {
     if (!announcements)
       return res.status(400).json("Announcements are not found");
     else return res.json(announcements);
   });
 });
 
-router.get("/viewAdmin", (req, res) => {
+router.get("/viewAdmin/:unitId", (req, res) => {
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
   Announcement.aggregate([
+    { $match: { unit: ObjectId(unitId) } },
     {
       $lookup: {
         from: User.collection.name,

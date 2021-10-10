@@ -2,54 +2,61 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { setUserDisabled, getStudents, getTeachers, deleteUser } from "../../../actions/UserActions";
+import moment from "moment";
+import "moment/locale/id";
+import {
+  setUserDeactivated,
+  getStudents,
+  getTeachers,
+  deleteUser,
+} from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getStudentsByClass } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import Empty from "../../misc/empty/Empty";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import UserMenu from "./UserMenu";
 import {
   Avatar,
   Button,
-  Checkbox,
+  IconButton,
   Dialog,
   Divider,
   Grid,
   Hidden,
-  IconButton,
   InputAdornment,
-  List,
-  ListItem,
-  ListItemIcon,
   ListItemAvatar,
-  ListItemSecondaryAction,
-  ListItemText,
   Menu,
   MenuItem,
-  Tab,
-  Tabs,
   TableSortLabel,
   TextField,
-  Typography
-} from "@material-ui/core";
-import {
-  Block as BlockIcon,
-  Cancel as CancelIcon,
-  CheckBox as CheckBoxIcon,
-  CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
-  CheckCircle as CheckCircleIcon,
-  Clear as ClearIcon,
-  IndeterminateCheckBox as IndeterminateCheckBoxIcon,
-  Search as SearchIcon,
-  Sort as SortIcon
-} from "@material-ui/icons";
+  Toolbar,
+  Typography,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
+import CancelIcon from "@material-ui/icons/Cancel";
+import CloseIcon from "@material-ui/icons/Close";
+import DeleteIcon from "@material-ui/icons/Delete";
+import SortIcon from "@material-ui/icons/Sort";
+import BlockIcon from "@material-ui/icons/Block";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
+import PageviewIcon from "@material-ui/icons/Pageview";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
 import { BiSitemap } from "react-icons/bi";
-import { FaUserFriends } from "react-icons/fa";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { GoSearch } from "react-icons/go";
+import ClearIcon from "@material-ui/icons/Clear";
 
+// Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(
   _id,
   avatar,
@@ -101,12 +108,8 @@ function stableSort(array, comparator) {
 }
 
 function ManageUsersToolbar(props) {
+  const { classes, order, orderBy, onRequestSort, role, heading } = props;
   const {
-    classes,
-    order,
-    orderBy,
-    onRequestSort,
-    role,
     currentCheckboxMode,
     rowCount,
     user,
@@ -117,33 +120,22 @@ function ManageUsersToolbar(props) {
     activateCheckboxMode,
     deactivateCheckboxMode,
     OpenDialogCheckboxDelete,
-    OpenDialogCheckboxDisable,
     CheckboxDialog,
     setSearchBarFocus,
     searchBarFocus,
     searchFilter,
     searchFilterHint,
     updateSearchFilter,
-    tabValueCheck
   } = props;
+  // OpenDialogCheckboxApprove
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property, role);
   };
 
   const headCells = [
-    {
-      id: "name",
-      numeric: false,
-      disablePadding: true,
-      label: "Nama"
-    },
-    {
-      id: "email",
-      numeric: false,
-      disablePadding: false,
-      label: "Email"
-    },
+    { id: "name", numeric: false, disablePadding: true, label: "Nama" },
+    { id: "email", numeric: false, disablePadding: false, label: "Email" },
     {
       id: "phone",
       numeric: true,
@@ -156,12 +148,7 @@ function ManageUsersToolbar(props) {
       disablePadding: false,
       label: "Tanggal Lahir",
     },
-    {
-      id: "address",
-      numeric: false,
-      disablePadding: false,
-      label: "Alamat"
-    },
+    { id: "address", numeric: false, disablePadding: false, label: "Alamat" },
     {
       id: "emergency_phone",
       numeric: false,
@@ -187,253 +174,411 @@ function ManageUsersToolbar(props) {
     updateSearchFilter("");
   };
 
-  React.useEffect(() => {
-    console.log(lengthListCheckbox);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
-
-  // if(searchBarFocus){
-  //   document.getElementById("root").addEventListener("click", function(event) {
-  //     setSearchBarFocus(false);
-  //   });
-
-  // }
-
-  // let searchRef = useRef();
-
-  // useEffect(() => {
-  //   let handler = (event) => {
-  //     if (!searchRef.current.contains(event.target)) {
-  //       setSearchBarFocus(false);
-  //     }
-  //   }
-  //   document.addEventListener("mousedown", handler)
-  //   return () => {
-  //     document.removeEventListener("mousedown", handler);
-  //   }
-  // },[]);
-
   return (
-    <div className={classes.toolbar}>
-      <Grid container>
-        <Grid item xs container alignItems="center" spacing={1}>
-          <Grid item>
-          {/*
-          Perlu diubah jadi komponen checkbox biar posisinya nda aneh
-          <Checkbox color="primary" />
-          */}
-          {
-            listCheckbox.length === 0 ? (
-              <IconButton onClick={() => selectAllData(role)}>
-                <CheckBoxOutlineBlankIcon style={{ color: "grey" }} />
+    <Toolbar className={classes.toolbar}>
+      <div
+        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+      >
+        <Hidden mdUp implementation="css">
+          {searchBarFocus ? null : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h4">{heading}</Typography>
+            </div>
+          )}
+        </Hidden>
+        <Hidden smDown implementation="css">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h4">{heading}</Typography>
+          </div>
+        </Hidden>
+        <Hidden mdUp implementation="css">
+          {searchBarFocus ? (
+            <div style={{ display: "flex" }}>
+              <IconButton
+                onClick={() => {
+                  setSearchBarFocus(false);
+                  updateSearchFilter("");
+                }}
+              >
+                <ArrowBackIcon />
               </IconButton>
-            ) : listCheckbox.length === rowCount ? (
-              <IconButton onClick={() => deSelectAllData(role)}>
-                <CheckBoxIcon className={classes.checkboxIcon} />
-              </IconButton>
-            ) : (
-              <IconButton onClick={() => deSelectAllData(role)}>
-                <IndeterminateCheckBoxIcon className={classes.checkboxIcon} />
-              </IconButton>
-            )
-          }
-          </Grid>
-          <Grid item>
-            <UserMenu
-              options={["Nonaktifkan", "Hapus"]}
-              role={role}
-              row={null}
-              CheckboxDialog={CheckboxDialog}
-              handleOpenDeleteDialog={OpenDialogCheckboxDelete}
-              handleOpenDisableApproveDialog={OpenDialogCheckboxDisable}
-              rowCount={listCheckbox.length === 0}
-            />
-            {CheckboxDialog("Disable", role)}
-            {CheckboxDialog("Delete", role)}
-          </Grid>
-        </Grid>
-        <Grid item xs container justify="flex-end" alignItems="center" spacing={1}>
-          <Grid item>
-            <Hidden smDown>
               <TextField
+                fullWidth
                 variant="outlined"
-                id="searchFilterDesktop"
+                id="searchFilterMobile"
                 value={searchFilter}
                 onChange={onChange}
-                autoFocus={searchFilter.length > 0}
+                autoFocus
+                onClick={(e) => setSearchBarFocus(true)}
                 placeholder={searchFilterHint}
+                style={{
+                  maxWidth: "200px",
+                  marginLeft: "10px",
+                }}
                 InputProps={{
-                  style: { borderRadius: "22.5px" },
-                  startAdornment: (
+                  startAdornment: searchBarFocus ? null : (
                     <InputAdornment
                       position="start"
-                      style={{ marginRight: "-5px", color: "grey" }}
+                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
                     >
-                      <SearchIcon />
+                      <IconButton size="small">
+                        <GoSearch />
+                      </IconButton>
                     </InputAdornment>
                   ),
                   endAdornment: (
                     <InputAdornment
                       position="end"
-                      style={{ marginLeft: "-10px" }}
+                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
                     >
                       <IconButton
                         size="small"
+                        id="searchFilterMobile"
                         onClick={(e) => {
                           e.stopPropagation();
                           onClear(e);
                         }}
-                        style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                        style={{
+                          opacity: 0.5,
+                          visibility: !searchFilter ? "hidden" : "visible",
+                        }}
                       >
                         <ClearIcon />
                       </IconButton>
                     </InputAdornment>
                   ),
+                  style: {
+                    borderRadius: "22.5px",
+                  },
                 }}
               />
-            </Hidden>
-            <Hidden mdUp>
-              {searchBarFocus ? (
-                <TextField
-                  variant="outlined"
-                  id="searchFilterMobile"
-                  value={searchFilter}
-                  placeholder={searchFilterHint}
-                  onChange={onChange}
-                  autoFocus
-                  onClick={(e) => {
-                    setSearchBarFocus(true)
-                  }}
-                  InputProps={{
-                    style: { borderRadius: "22.5px" },
-                    endAdornment: (
-                      <InputAdornment
-                        position="end"
-                        style={{ marginLeft: "-10px" }}
-                      >
-                        <IconButton
-                          size="small"
-                          id="searchFilterMobile"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onClear(e);
-                          }}
-                          style={{ visibility: !searchFilter ? "hidden" : "visible" }}
-                        >
-                          <ClearIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              ) : (
-                <LightTooltip title="Cari Akun">
-                  <IconButton onClick={() => setSearchBarFocus(true)}>
-                    <SearchIcon />
-                  </IconButton>
-                </LightTooltip>
-              )}
-            </Hidden>
-          </Grid>
-          {role === "Teacher" ? (
-            <Grid item style={{ display: searchBarFocus ? "none" : "block" }}>
-              <Link to="/data-ajar-guru">
-                <LightTooltip title="Sunting Data Ajar Guru">
-                  <IconButton>
-                    <BiSitemap />
-                  </IconButton>
-                </LightTooltip>
-              </Link>
-            </Grid>
+            </div>
           ) : (
-            null
-          )}
-          <Grid item style={{ display: searchBarFocus ? "none" : "block"}}>
-            <LightTooltip title="Urutkan Akun">
-              <IconButton onClick={handleOpenSortMenu}>
-                <SortIcon />
+            <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
+              <IconButton
+                className={classes.goSearchButton}
+                onClick={() => setSearchBarFocus(true)}
+              >
+                <GoSearch className={classes.goSearchIconMobile} />
               </IconButton>
             </LightTooltip>
-            <Menu
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleCloseSortMenu}
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              {headCells.map((headCell, i) => (
-                <MenuItem
-                  key={headCell.id}
-                  sortDirection={orderBy === headCell.id ? order : false}
-                  onClick={createSortHandler(headCell.id)}
+          )}
+        </Hidden>
+        {currentCheckboxMode && rowCount !== 0 ? (
+          listCheckbox.length === 0 ? (
+            <IconButton size="small" onClick={() => selectAllData(role)}>
+              <CheckBoxOutlineBlankIcon
+                className={classes.checkboxIconPrimary}
+              />
+            </IconButton>
+          ) : listCheckbox.length === rowCount ? (
+            <IconButton size="small" onClick={() => deSelectAllData(role)}>
+              <CheckBoxIcon className={classes.checkboxIconPrimary} />
+            </IconButton>
+          ) : (
+            <IconButton size="small" onClick={() => deSelectAllData(role)}>
+              <IndeterminateCheckBoxIcon
+                className={classes.checkboxIconPrimary}
+              />
+            </IconButton>
+          )
+        ) : null}
+      </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Hidden smDown implementation="css">
+          <TextField
+            variant="outlined"
+            id="searchFilterDesktop"
+            value={searchFilter}
+            onChange={onChange}
+            onClick={() => setSearchBarFocus(true)}
+            onBlur={() => setSearchBarFocus(false)}
+            placeholder={searchFilterHint}
+            style={{
+              maxWidth: "250px",
+              marginRight: "10px",
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment
+                  position="start"
+                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
                 >
-                  <TableSortLabel
-                    active={orderBy === headCell.id}
-                    direction={orderBy === headCell.id ? order : "asc"}
+                  <IconButton size="small">
+                    <GoSearch />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment
+                  position="end"
+                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                >
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClear(e);
+                    }}
+                    style={{
+                      opacity: 0.5,
+                      visibility: !searchFilter ? "hidden" : "visible",
+                    }}
                   >
-                    {headCell.label}
-                    {orderBy === headCell.id ? (
-                      <span className={classes.visuallyHidden}>
-                        {order === "desc"
-                          ? "sorted descending"
-                          : "sorted ascending"}
-                      </span>
-                    ) : null}
-                  </TableSortLabel>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Grid>
-        </Grid>
-      </Grid>
-    </div>
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "22.5px",
+              },
+            }}
+          />
+        </Hidden>
+        {role === "Student" ? (
+          <>
+            {lengthListCheckbox === 0 ? (
+              <>
+                <LightTooltip
+                  title={
+                    !currentCheckboxMode
+                      ? "Mode Kotak Centang"
+                      : "Mode Individu"
+                  }
+                >
+                  <IconButton
+                    className={classes.checkboxModeButton}
+                    onClick={
+                      !currentCheckboxMode
+                        ? () => activateCheckboxMode("Student")
+                        : () => deactivateCheckboxMode("Student")
+                    }
+                  >
+                    {!currentCheckboxMode ? (
+                      <CheckBoxIcon />
+                    ) : (
+                      <RecentActorsIcon />
+                    )}
+                  </IconButton>
+                </LightTooltip>
+                <LightTooltip title="Urutkan Akun">
+                  <IconButton
+                    onClick={handleOpenSortMenu}
+                    className={classes.sortButton}
+                  >
+                    <SortIcon />
+                  </IconButton>
+                </LightTooltip>
+                <Menu
+                  keepMounted
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseSortMenu}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                >
+                  {headCells.map((headCell, i) => (
+                    <MenuItem
+                      key={headCell.id}
+                      sortDirection={orderBy === headCell.id ? order : false}
+                      onClick={createSortHandler(headCell.id)}
+                    >
+                      <TableSortLabel
+                        active={orderBy === headCell.id}
+                        direction={orderBy === headCell.id ? order : "asc"}
+                      >
+                        {headCell.label}
+                        {orderBy === headCell.id ? (
+                          <span className={classes.visuallyHidden}>
+                            {order === "desc"
+                              ? "sorted descending"
+                              : "sorted ascending"}
+                          </span>
+                        ) : null}
+                      </TableSortLabel>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            ) : (
+              <>
+                {CheckboxDialog("Delete", "Student")}
+                <LightTooltip title="Hapus Pengguna Tercentang">
+                  <IconButton
+                    className={classes.profileDeleteButton}
+                    onClick={(e) => OpenDialogCheckboxDelete(e, "Student")}
+                  >
+                    <DeleteIcon fontSize="default" />
+                  </IconButton>
+                </LightTooltip>
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            {lengthListCheckbox === 0 ? (
+              <>
+                <LightTooltip title="Sunting Data Ajar Guru">
+                  <Link to="/sunting-guru">
+                    <IconButton
+                      className={classes.checkboxModeButton}
+                    >
+                      < BiSitemap />
+                    </IconButton>
+                  </Link>
+                </LightTooltip>
+                <LightTooltip
+                  title={
+                    !currentCheckboxMode
+                      ? "Mode Kotak Centang"
+                      : "Mode Individu"
+                  }
+                >
+                  <IconButton
+                    className={classes.checkboxModeButton}
+                    onClick={
+                      !currentCheckboxMode
+                        ? () => activateCheckboxMode("Teacher")
+                        : () => deactivateCheckboxMode("Teacher")
+                    }
+                  >
+                    {!currentCheckboxMode ? (
+                      <CheckBoxIcon />
+                    ) : (
+                      <RecentActorsIcon />
+                    )}
+                  </IconButton>
+                </LightTooltip>
+                <LightTooltip title="Urutkan Akun">
+                  <IconButton
+                    onClick={handleOpenSortMenu}
+                    className={classes.sortButton}
+                  >
+                    <SortIcon />
+                  </IconButton>
+                </LightTooltip>
+                <Menu
+                  keepMounted
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseSortMenu}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                >
+                  {headCells.map((headCell, i) => (
+                    <MenuItem
+                      key={headCell.id}
+                      sortDirection={orderBy === headCell.id ? order : false}
+                      onClick={createSortHandler(headCell.id)}
+                    >
+                      <TableSortLabel
+                        active={orderBy === headCell.id}
+                        direction={orderBy === headCell.id ? order : "asc"}
+                      >
+                        {headCell.label}
+                        {orderBy === headCell.id ? (
+                          <span className={classes.visuallyHidden}>
+                            {order === "desc"
+                              ? "sorted descending"
+                              : "sorted ascending"}
+                          </span>
+                        ) : null}
+                      </TableSortLabel>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            ) : (
+              <>
+                {CheckboxDialog("Delete", "Teacher")}
+                <LightTooltip title="Hapus Pengguna Tercentang">
+                  <IconButton
+                    className={classes.profileDeleteButton}
+                    onClick={(e) => OpenDialogCheckboxDelete(e, "Teacher")}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </LightTooltip>
+              </>
+            )}
+          </>
+        )}
+      </div>
+    </Toolbar>
   );
 }
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    padding: "20px",
-    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
+    padding: "10px",
   },
-  header: {
-    marginBottom: "25px",
+  subTitleDivider: {
+    marginTop: "15px",
+    marginBottom: "15px",
   },
-  headerIcon: {
-    display: "flex",
+  titleDivider: {
     backgroundColor: theme.palette.primary.main,
-    color: "white",
-    fontSize: "25px",
-    padding: "7.5px",
-    borderRadius: "5px",
-  },
-  userTabs: {
-    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-  },
-  userTabTitle: {
-    alignSelf: "flex-start",
-  },
-  userList: {
-    padding: "0px",
+    marginTop: "15px",
+    marginBottom: "32px",
   },
   toolbar: {
-    padding: "16px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "0px",
+    minHeight: "unset",
   },
-  accountItem: {
-    color: "black",
+  viewMaterialButton: {
+    backgroundColor: theme.palette.warning.main,
+    color: "white",
     "&:focus, &:hover": {
-      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
+      backgroundColor: "white",
+      color: theme.palette.warning.main,
+    },
+  },
+  profileDeleteButton: {
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
+  },
+  profileDisableButton: {
+    backgroundColor: theme.palette.warning.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.warning.dark,
     },
   },
   dialogBox: {
@@ -487,6 +632,14 @@ const useStyles = makeStyles((theme) => ({
       border: `1px solid ${theme.palette.error.dark}`,
     },
   },
+  sortButton: {
+    backgroundColor: theme.palette.action.selected,
+    color: "black",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.divider,
+      color: "black",
+    },
+  },
   visuallyHidden: {
     border: 0,
     clip: "rect(0 0 0 0)",
@@ -498,28 +651,53 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  checkboxIcon: {
+  profilePanelDivider: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  profilePanelSummary: {
+    "&:hover:not(.Mui-disabled)": {
+      cursor: "default",
+    },
+  },
+  checkboxModeButton: {
+    backgroundColor: theme.palette.action.selected,
+    color: "black",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.divider,
+      color: "black",
+    },
+    marginRight: "3px",
+  },
+  checkboxIconPrimary: {
     color: theme.palette.primary.main,
   },
 }));
 
 function ManageUsers(props) {
+  document.title = "Schooly | Daftar Pengguna";
+
   const classes = useStyles();
-  const { setUserDisabled, deleteUser, getTeachers, getStudents } = props;
-  const { all_students, all_teachers, pending_users, user } = props.auth;
 
   const [order_student, setOrderStudent] = React.useState("asc");
   const [order_teacher, setOrderTeacher] = React.useState("asc");
+
   const [orderBy_student, setOrderByStudent] = React.useState("name");
   const [orderBy_teacher, setOrderByTeacher] = React.useState("name");
+
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [openDisableDialog, setOpenDisableDialog] = React.useState(null);
   const [selectedUserId, setSelectedUserId] = React.useState(null);
   const [selectedUserName, setSelectedUserName] = React.useState(null);
   const [searchFilterS, updateSearchFilterS] = React.useState("");
   const [searchBarFocusS, setSearchBarFocusS] = React.useState(false);
+
   const [searchFilterT, updateSearchFilterT] = React.useState("");
   const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
+
+  const { setUserDeactivated, deleteUser, getTeachers, getStudents } = props;
+  const { all_students, all_teachers, pending_users, user } = props.auth;
+
+  console.log(all_students);
 
   let student_rows = [];
   let teacher_rows = [];
@@ -534,15 +712,6 @@ function ManageUsers(props) {
   const [
     openDeleteCheckboxDialogTeacher,
     setOpenDeleteCheckboxDialogTeacher,
-  ] = React.useState(null);
-
-  const [
-    openDisableCheckboxDialogStudent,
-    setOpenDisableCheckboxDialogStudent,
-  ] = React.useState(null);
-  const [
-    openDisableCheckboxDialogTeacher,
-    setOpenDisableCheckboxDialogTeacher,
   ] = React.useState(null);
 
   // Checkbox Approve or Delete
@@ -567,7 +736,7 @@ function ManageUsers(props) {
 
   React.useEffect(() => {
     console.log(listCheckboxStudent.length);
-    console.log(listCheckboxTeacher.length)
+    console.log(listCheckboxTeacher.length);
     autoReloader();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listCheckboxTeacher, listCheckboxStudent]);
@@ -575,9 +744,9 @@ function ManageUsers(props) {
   const handleActivateCheckboxMode = (type) => {
     if (type === "Student") {
       setCheckboxModeStudent(true);
-      // if (currentListBooleanStudent.length === student_rows.length) {
-      //   setBooleanCheckboxStudent(currentListBooleanStudent);
-      // }
+      if (currentListBooleanStudent.length === student_rows.length) {
+        setBooleanCheckboxStudent(currentListBooleanStudent);
+      }
     } else if (type === "Teacher") {
       setCheckboxModeTeacher(true);
       if (currentListBooleanTeacher.length === teacher_rows.length) {
@@ -597,13 +766,14 @@ function ManageUsers(props) {
   const handleChangeListStudent = (e, index, row) => {
     let currentBooleanList = booleanCheckboxStudent;
     currentBooleanList[index] = !currentBooleanList[index];
-
+    setBooleanCheckboxStudent(currentBooleanList);
     let status = true;
     let result = [];
     let temp = { checkboxEvent: e, index: index, row: row };
     for (let i = 0; i < listCheckboxStudent.length; i++) {
       if (listCheckboxStudent[i].row._id === row._id) {
         result = listCheckboxStudent;
+        // result.splice(i, i + 1)
         result.splice(i, 1);
         status = false;
         break;
@@ -626,6 +796,7 @@ function ManageUsers(props) {
     for (let i = 0; i < listCheckboxTeacher.length; i++) {
       if (listCheckboxTeacher[i].row._id === row._id) {
         result = listCheckboxTeacher;
+        // result.splice(i, i + 1)
         result.splice(i, 1);
         status = false;
         break;
@@ -652,23 +823,7 @@ function ManageUsers(props) {
     setListCheckboxTeacher([]);
   };
 
-  const handleDisableListStudent = () => {
-    for (let i = 0; i < listCheckboxStudent.length; i++) {
-      onDisableUser(listCheckboxStudent[i].row._id);
-    }
-    setListCheckboxStudent([]);
-  };
-
-  const handleDisableListTeacher = () => {
-    for (let i = 0; i < listCheckboxTeacher.length; i++) {
-      onDisableUser(listCheckboxTeacher[i].row._id);
-    }
-    setListCheckboxTeacher([]);
-    // handleCloseCheckboxDisableDialog("Teacher");
-  };
-
   const selectAllData = (type) => {
-    console.log("Select all data is runned", type);
     if (type === "Student") {
       let allDataStudent = [];
       let booleanAllDataStudent = [];
@@ -677,8 +832,6 @@ function ManageUsers(props) {
         allDataStudent.push(temp);
         booleanAllDataStudent.push(true);
       }
-      console.log(booleanAllDataStudent);
-      console.log(allDataStudent);
       setListCheckboxStudent(allDataStudent);
       setBooleanCheckboxStudent(booleanAllDataStudent);
     } else {
@@ -722,24 +875,6 @@ function ManageUsers(props) {
     }
   };
 
-  const handleOpenCheckboxDisableDialog = (e, user) => {
-    e.stopPropagation();
-    if (user === "Student") {
-      setOpenDisableCheckboxDialogStudent(true);
-    } else {
-      setOpenDisableCheckboxDialogTeacher(true);
-    }
-  }
-
-  // const handleOpenCheckboxApproveDialog = (e, user) => {
-  //   e.stopPropagation();
-  //   if (user === "Student") {
-  //     setOpenApproveCheckboxDialogStudent(true)
-  //   }
-  //   else {
-  //     setOpenApproveCheckboxDialogTeacher(true)
-  //   }
-  // };
 
   const handleCloseCheckboxDeleteDialog = (user) => {
     if (user === "Student") {
@@ -748,27 +883,9 @@ function ManageUsers(props) {
       setOpenDeleteCheckboxDialogTeacher(false);
     }
   };
-
-  const handleCloseCheckboxDisableDialog = (user) => {
-    if (user === "Student") {
-      setOpenDisableCheckboxDialogStudent(false);
-    } else {
-      setOpenDisableCheckboxDialogTeacher(false);
-    }
-  }
-
-  // const handleCloseCheckboxApproveDialog = (user) => {
-  //   if (user === "Student") {
-  //     setOpenApproveCheckboxDialogStudent(false)
-  //   }
-  //   else {
-  //     setOpenApproveCheckboxDialogTeacher(false)
-  //   }
-  // };
-
+  
   const autoReloader = () => {
     setTest(!test);
-    // console.log("Disable auto reloader")
   };
 
   const userRowItem = (data) => {
@@ -790,8 +907,10 @@ function ManageUsers(props) {
   };
 
   React.useEffect(() => {
-    getStudents();
-    getTeachers();
+    if(user){
+      getStudents(user.unit);
+      getTeachers(user.unit);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -847,10 +966,9 @@ function ManageUsers(props) {
     deleteUser(id);
   };
   const onDisableUser = (id) => {
-    setUserDisabled(id);
+    setUserDeactivated(id);
   };
-
-  // Delete Dialog
+  // Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
     e.preventDefault();
     e.stopPropagation();
@@ -858,17 +976,18 @@ function ManageUsers(props) {
     setSelectedUserId(id);
     setSelectedUserName(name);
   };
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
-  };
 
-  // Disable Dialog
   const handleOpenDisableDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenDisableDialog(true);
     setSelectedUserId(id);
     setSelectedUserName(name);
   };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+
   const handleCloseDisableDialog = () => {
     setOpenDisableDialog(false);
   };
@@ -939,463 +1058,200 @@ function ManageUsers(props) {
   function CheckboxDialog(type, user) {
     return (
       <>
-        {user === "Student" ?
-          type === "Delete" ? (
-            <Dialog
-              open={openDeleteCheckboxDialogStudent}
-              onClose={() => handleCloseCheckboxDeleteDialog("Student")}
+        {user === "Student" ? (
+          <Dialog
+            open={openDeleteCheckboxDialogStudent}
+            onClose={() => handleCloseCheckboxDeleteDialog("Student")}
+          >
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              className={classes.dialogBox}
             >
               <Grid
+                item
                 container
-                direction="column"
-                alignItems="center"
-                className={classes.dialogBox}
+                justify="center"
+                style={{ marginBottom: "20px" }}
               >
-                <Grid
-                  item
-                  container
-                  justify="center"
-                  style={{ marginBottom: "20px" }}
-                >
-                  <Typography variant="h6" gutterBottom align="center">
-                    Hapus semua pengguna berikut?
-                  </Typography>
-                </Grid>
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                  spacing={2}
-                  style={{ marginTop: "10px" }}
-                >
-                  <Grid item>
-                    <Button
-                      onClick={() => {
-                        handleDeleteListStudent();
-                      }}
-                      startIcon={<CheckCircleIcon />}
-                      className={classes.dialogDeleteButton}
-                    >
-                      iya
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={() => handleCloseCheckboxDeleteDialog("Student")}
-                      startIcon={<CancelIcon />}
-                      className={classes.dialogCancelButton}
-                    >
-                      Tidak
-                    </Button>
-                  </Grid>
-                </Grid>
+                <Typography variant="h6" gutterBottom align="center">
+                  Hapus semua pengguna berikut?
+                </Typography>
               </Grid>
-            </Dialog>
-          ) : (
-            <Dialog
-              open={openDisableCheckboxDialogStudent}
-              onClose={() => handleCloseCheckboxDisableDialog("Student")}
-            >
               <Grid
                 container
-                direction="column"
+                direction="row"
+                justify="center"
                 alignItems="center"
-                className={classes.dialogBox}
+                spacing={2}
+                style={{ marginTop: "10px" }}
               >
-                <Grid
-                  item
-                  container
-                  justify="center"
-                  style={{ marginBottom: "20px" }}
-                >
-                  <Typography variant="h6" gutterBottom align="center">
-                    Nonaktifkan semua pengguna berikut?
-                  </Typography>
+                <Grid item>
+                  <Button
+                    onClick={() => {
+                      handleDeleteListStudent();
+                    }}
+                    startIcon={<CheckCircleIcon />}
+                    className={classes.dialogDeleteButton}
+                  >
+                    iya
+                  </Button>
                 </Grid>
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                  spacing={2}
-                  style={{ marginTop: "10px" }}
-                >
-                  <Grid item>
-                    <Button
-                      onClick={() => {
-                        handleDisableListStudent();
-                      }}
-                      startIcon={<CheckCircleIcon />}
-                      className={classes.dialogDeleteButton}
-                    >
-                      iya
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={() => handleCloseCheckboxDisableDialog("Student")}
-                      startIcon={<CancelIcon />}
-                      className={classes.dialogCancelButton}
-                    >
-                      Tidak
-                    </Button>
-                  </Grid>
+                <Grid item>
+                  <Button
+                    onClick={() => handleCloseCheckboxDeleteDialog("Student")}
+                    startIcon={<CancelIcon />}
+                    className={classes.dialogCancelButton}
+                  >
+                    Tidak
+                  </Button>
                 </Grid>
               </Grid>
-            </Dialog>
-          )
-          : type === "Delete" ? (
-            <Dialog
-              open={openDeleteCheckboxDialogTeacher}
-              onClose={() => handleCloseCheckboxDeleteDialog("Teacher")}
+            </Grid>
+          </Dialog>
+        ) : (
+          <Dialog
+            open={openDeleteCheckboxDialogTeacher}
+            onClose={() => handleCloseCheckboxDeleteDialog("Teacher")}
+          >
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              className={classes.dialogBox}
             >
               <Grid
+                item
                 container
-                direction="column"
-                alignItems="center"
-                className={classes.dialogBox}
+                justify="center"
+                style={{ marginBottom: "20px" }}
               >
-                <Grid
-                  item
-                  container
-                  justify="center"
-                  style={{ marginBottom: "20px" }}
-                >
-                  <Typography variant="h6" gutterBottom align="center">
-                    Hapus semua pengguna berikut?
-                  </Typography>
-                </Grid>
-                {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
-                  <Typography variant="h6" align="center" gutterBottom>
-                    <b>{selectedUserName}</b>
-                  </Typography>
-                </Grid> */}
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Grid item>
-                    <Button
-                      onClick={() => {
-                        handleDeleteListTeacher();
-                      }}
-                      startIcon={<CheckCircleIcon />}
-                      className={classes.dialogDeleteButton}
-                    >
-                      Iya
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={() => handleCloseCheckboxDeleteDialog("Teacher")}
-                      startIcon={<CancelIcon />}
-                      className={classes.dialogCancelButton}
-                    >
-                      Tidak
-                    </Button>
-                  </Grid>
-                </Grid>
+                <Typography variant="h6" gutterBottom align="center">
+                  Hapus semua pengguna berikut?
+                </Typography>
               </Grid>
-            </Dialog>
-          ) : (
-            <Dialog
-              open={openDisableCheckboxDialogTeacher}
-              onClose={() => handleCloseCheckboxDisableDialog("Teacher")}
-            >
               <Grid
                 container
-                direction="column"
+                direction="row"
+                justify="center"
                 alignItems="center"
-                className={classes.dialogBox}
               >
-                <Grid
-                  item
-                  container
-                  justify="center"
-                  style={{ marginBottom: "20px" }}
-                >
-                  <Typography variant="h6" gutterBottom align="center">
-                    Nonaktifkan semua pengguna berikut?
-                  </Typography>
+                <Grid item>
+                  <Button
+                    onClick={() => {
+                      handleDeleteListTeacher();
+                    }}
+                    startIcon={<CheckCircleIcon />}
+                    className={classes.dialogDeleteButton}
+                  >
+                    Iya
+                  </Button>
                 </Grid>
-                {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
-                  <Typography variant="h6" align="center" gutterBottom>
-                    <b>{selectedUserName}</b>
-                  </Typography>
-                </Grid> */}
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Grid item>
-                    <Button
-                      onClick={() => {
-                        handleDisableListTeacher();
-                      }}
-                      startIcon={<CheckCircleIcon />}
-                      className={classes.dialogDeleteButton}
-                    >
-                      Iya
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={() => handleCloseCheckboxDisableDialog("Teacher")}
-                      startIcon={<CancelIcon />}
-                      className={classes.dialogCancelButton}
-                    >
-                      Tidak
-                    </Button>
-                  </Grid>
+                <Grid item>
+                  <Button
+                    onClick={() => handleCloseCheckboxDeleteDialog("Teacher")}
+                    startIcon={<CancelIcon />}
+                    className={classes.dialogCancelButton}
+                  >
+                    Tidak
+                  </Button>
                 </Grid>
               </Grid>
-            </Dialog>
-          )
-        }
+            </Grid>
+          </Dialog>
+        )}
       </>
     );
   }
 
-  // Tabs
-  const [value, setValue] = React.useState(0)
-  const handleTabs = (e, val) => {
-    setValue(val)
-  }
-  function TabPanel(props) {
-    const { children, value, index } = props;
-    return (<div>
-      {value === index && (
-        <div>{children}</div>
-      )}
-    </div>)
-  }
-
-  document.title = "Schooly | Pengguna Aktif";
+  console.log(all_teachers[0]);
+  console.log(pending_users);
 
   return (
     <div className={classes.root}>
-      <Grid container alignItems="center" spacing={2} className={classes.header}>
-        <Grid item>
-          <div className={classes.headerIcon}>
-            <FaUserFriends />
-          </div>
-        </Grid>
-        <Grid item>
-          <Typography variant="h5" align="left">
-            Pengguna Aktif
-          </Typography>
-        </Grid>
-      </Grid>
-      <Tabs
-        indicatorColor="primary"
-        textColor="primary"
-        value={value}
-        onChange={handleTabs}
-        className={classes.userTabs}
+      {DisableDialog()}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Pengguna"
+        itemName={selectedUserName}
+        deleteItem={() => {
+          onDeleteUser(selectedUserId);
+        }}
+      />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "46.5px",
+        }}
       >
-        <Tab label={<Typography className={classes.userTabTitle}>Murid</Typography>} />
-        <Tab label={<Typography className={classes.userTabTitle}>Guru</Typography>} />
-      </Tabs>
-      <TabPanel value={value} index={0}>
-        <ManageUsersToolbar
-          searchFilterHint="Cari Murid"
-          role="Student"
-          deleteUser={deleteUser}
-          classes={classes}
-          order={order_student}
-          orderBy={orderBy_student}
-          onRequestSort={handleRequestSort}
-          rowCount={student_rows ? student_rows.length : 0}
-          activateCheckboxMode={handleActivateCheckboxMode}
-          deactivateCheckboxMode={handleDeactivateCheckboxMode}
-          currentCheckboxMode={checkboxModeStudent}
-          OpenDialogCheckboxDelete={handleOpenCheckboxDeleteDialog}
-          CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
-          OpenDialogCheckboxDisable={handleOpenCheckboxDisableDialog}
-          CloseDialogCheckboxDisable={handleCloseCheckboxDisableDialog}
-          CheckboxDialog={CheckboxDialog}
-          lengthListCheckbox={listCheckboxStudent.length}
-          listCheckbox={listCheckboxStudent}
-          selectAllData={selectAllData}
-          deSelectAllData={deSelectAllData}
-          user={user}
-          setSearchBarFocus={setSearchBarFocusS}
-          searchBarFocus={searchBarFocusS}
-          searchFilter={searchFilterS}
-          updateSearchFilter={updateSearchFilterS}
-          tabValueCheck={value === 0}
-        />
-        <Divider />
+        <Typography variant="h4" align="left">
+          Daftar Pengguna Aktif
+        </Typography>
+      </div>
+      <Divider className={classes.titleDivider} />
+      <ManageUsersToolbar
+        heading="Daftar Murid"
+        searchFilterHint="Cari Murid"
+        role="Student"
+        deleteUser={deleteUser}
+        classes={classes}
+        order={order_student}
+        orderBy={orderBy_student}
+        onRequestSort={handleRequestSort}
+        rowCount={student_rows ? student_rows.length : 0}
+        activateCheckboxMode={handleActivateCheckboxMode}
+        deactivateCheckboxMode={handleDeactivateCheckboxMode}
+        currentCheckboxMode={checkboxModeStudent}
+        OpenDialogCheckboxDelete={handleOpenCheckboxDeleteDialog}
+        // OpenDialogCheckboxApprove={handleOpenCheckboxApproveDialog}
+        CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
+        // CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
+        CheckboxDialog={CheckboxDialog}
+        lengthListCheckbox={listCheckboxStudent.length}
+        listCheckbox={listCheckboxStudent}
+        reloader={() => autoReloader}
+        listBooleanCheckbox={currentListBooleanStudent}
+        listBooleanCheckboxState={booleanCheckboxStudent}
+        setListBooleanCheckboxState={setBooleanCheckboxStudent}
+        selectAllData={selectAllData}
+        deSelectAllData={deSelectAllData}
+        user={user}
+        setSearchBarFocus={setSearchBarFocusS}
+        searchBarFocus={searchBarFocusS}
+        //Two props added for search filter.
+        searchFilter={searchFilterS}
+        updateSearchFilter={updateSearchFilterS}
+      />
+      <Divider variant="inset" className={classes.subTitleDivider} />
+      <Grid
+        container
+        direction="column"
+        spacing={2}
+        style={{ marginBottom: "100px" }}
+      >
         {student_rows.length === 0 ? (
           <Empty />
         ) : (
-          <List className={classes.userList}>
-            {stableSort(
-              student_rows,
-              getComparator(order_student, orderBy_student)
-            ).map((row, index) => {
-              const labelId = index;
-              return (
-                <div>
-                  <Link to={`/lihat-profil/${row._id}`}>
-                    <ListItem className={classes.accountItem}>
-                      <ListItemIcon>
-                        <Checkbox
-                          color="primary"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          onChange={(e) => {
-                            handleChangeListStudent(e, index, row);
-                            autoReloader();
-                          }}
-                          checked={Boolean(booleanCheckboxStudent[index])}
-                        />
-                        {/*Ini yang propagationnya berhasil ke handle
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              color="primary"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                              }}
-                              onChange={(e) => {
-                                handleChangeListStudent(e, index, row);
-                                autoReloader();
-                              }}
-                              checked={Boolean(booleanCheckboxStudent[index])}
-                            />
-                          }
-                        />*/}
-                      </ListItemIcon>
-                      <Hidden xsDown>
-                        <ListItemAvatar>
-                          {!row.avatar ? (
-                            <Avatar />
-                          ) : (
-                            <Avatar src={`/api/upload/avatar/${row.avatar}`} />
-                          )}
-                        </ListItemAvatar>
-                      </Hidden>
-                      <ListItemText
-                        primary={
-                          <Typography id={labelId} noWrap>
-                            {row.name}
-                          </Typography>
-                        }
-                        secondary={
-                          <Typography variant="body2" color="textSecondary" noWrap>
-                            {row.email}
-                          </Typography>
-                        }
-                      />
-                      <ListItemSecondaryAction
-                        onClick={(e) => {
-                          e.stopPropagation()
-                        }}
-                      >
-                        <UserMenu
-                          options={["Nonaktifkan", "Hapus"]}
-                          role={null}
-                          row={row}
-                          handleOpenDeleteDialog={handleOpenDeleteDialog}
-                          handleOpenDisableApproveDialog={handleOpenDisableDialog}
-                        />
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  </Link>
-                  <Divider />
-                </div>
-              );
-            })}
-          </List>
-        )}
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <ManageUsersToolbar
-          searchFilterHint="Cari Guru"
-          role="Teacher"
-          deleteUser={deleteUser}
-          classes={classes}
-          order={order_teacher}
-          orderBy={orderBy_teacher}
-          onRequestSort={handleRequestSort}
-          // rowCount={student_rows ? student_rows.length : 0}
-          rowCount={teacher_rows ? teacher_rows.length : 0}
-          activateCheckboxMode={handleActivateCheckboxMode}
-          deactivateCheckboxMode={handleDeactivateCheckboxMode}
-          currentCheckboxMode={checkboxModeTeacher}
-          OpenDialogCheckboxDelete={handleOpenCheckboxDeleteDialog}
-          // OpenDialogCheckboxApprove={handleOpenCheckboxApproveDialog}
-          CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
-          // CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
-          OpenDialogCheckboxDisable={handleOpenCheckboxDisableDialog}
-          CloseDialogCheckboxDisable={handleCloseCheckboxDisableDialog}
-          CheckboxDialog={CheckboxDialog}
-          lengthListCheckbox={listCheckboxTeacher.length}
-          listCheckbox={listCheckboxTeacher}
-          reloader={() => autoReloader}
-          listBooleanCheckbox={currentListBooleanTeacher}
-          listBooleanCheckboxState={booleanCheckboxTeacher}
-          setListBooleanCheckboxState={setBooleanCheckboxTeacher}
-          selectAllData={selectAllData}
-          deSelectAllData={deSelectAllData}
-          setSearchBarFocus={setSearchBarFocusT}
-          searchBarFocus={searchBarFocusT}
-          //Two props added for search filter.
-          searchFilter={searchFilterT}
-          updateSearchFilter={updateSearchFilterT}
-          tabValueCheck={value === 1}
-        />
-        <Divider />
-        {teacher_rows.length === 0 ? (
-          <Empty />
-        ) : (
-          <List className={classes.userList}>
-            {stableSort(
-              teacher_rows,
-              getComparator(order_teacher, orderBy_teacher)
-            ).map((row, index) => {
-            const labelId = index;
-            return (
-              <div>
-                <Link to={`/lihat-profil/${row._id}`}>
-                  <ListItem className={classes.accountItem}>
-                    <ListItemIcon>
-                      <Checkbox
-                        color="primary"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                        onChange={(e) => {
-                          handleChangeListTeacher(e, index, row);
-                          autoReloader();
-                        }}
-                        checked={Boolean(booleanCheckboxTeacher[index])}
-                      />
-                      {/*Ini yang propagationnya berhasil ke handle
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            color="primary"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                            }}
-                            onChange={(e) => {
-                              handleChangeListTeacher(e, index, row);
-                              autoReloader();
-                            }}
-                            checked={Boolean(booleanCheckboxTeacher[index])}
-                          />
-                        }
-                      />*/}
-                    </ListItemIcon>
-                    <Hidden xsDown>
+          stableSort(
+            student_rows,
+            getComparator(order_student, orderBy_student)
+          ).map((row, index) => {
+            const labelId = `enhanced-table-checkbox-${index}`;
+
+            let content = (
+              <ExpansionPanel button variant="outlined" expanded={false}>
+                <ExpansionPanelSummary className={classes.profilePanelSummary}>
+                  <Grid
+                    container
+                    spacing={1}
+                    justify="space-between"
+                    alignItems="center"
+                  >
+                    <Grid item>
                       {!row.avatar ? (
                         <ListItemAvatar>
                           <Avatar />
@@ -1405,45 +1261,259 @@ function ManageUsers(props) {
                           <Avatar src={`/api/upload/avatar/${row.avatar}`} />
                         </ListItemAvatar>
                       )}
-                    </Hidden>
-                    <ListItemText
-                      primary={
-                        <Typography id={labelId} noWrap>
+                    </Grid>
+                    <Grid item>
+                      <Hidden smUp implementation="css">
+                        <Typography variant="subtitle1" id={labelId}>
                           {row.name}
                         </Typography>
-                      }
-                      secondary={
-                        <Typography variant="body2" color="textSecondary" noWrap>
+                        <Typography variant="caption" color="textSecondary">
                           {row.email}
                         </Typography>
-                      }
-                    />
-                    <ListItemSecondaryAction>
-                      <UserMenu
-                        options={["Nonaktifkan", "Hapus"]}
-                        role={null}
-                        row={row}
-                        handleOpenDeleteDialog={handleOpenDeleteDialog}
-                        handleOpenDisableApproveDialog={handleOpenDisableDialog}
-                      />
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                </Link>
-                <Divider />
-              </div>
+                      </Hidden>
+                      <Hidden xsDown implementation="css">
+                        <Typography variant="h6" id={labelId}>
+                          {row.name}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          {row.email}
+                        </Typography>
+                      </Hidden>
+                    </Grid>
+                    {!checkboxModeStudent ? (
+                      <Grid item xs container spacing={1} justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Nonaktifkan">
+                            <IconButton
+                              size="small"
+                              style={{ display: "none" }}
+                              className={classes.profileDisableButton}
+                              onClick={(e) => {
+                                handleOpenDisableDialog(e, row._id, row.name);
+                              }}
+                            >
+                              <BlockIcon fontSize="small" />
+                            </IconButton>
+                          </LightTooltip>
+                        </Grid>
+                        <Grid item>
+                          <LightTooltip title="Lihat Lebih Lanjut">
+                            <Link
+                              to={{
+                                pathname: `/lihat-profil/${row._id}`,
+                              }}
+                            >
+                              <IconButton
+                                size="small"
+                                className={classes.viewMaterialButton}
+                              >
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
+                        </Grid>
+                        <Grid item>
+                          <LightTooltip title="Hapus">
+                            <IconButton
+                              size="small"
+                              className={classes.profileDeleteButton}
+                              onClick={(e) => {
+                                handleOpenDeleteDialog(e, row._id, row.name);
+                              }}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </LightTooltip>
+                        </Grid>
+                      </Grid>
+                    ) : (
+                      <Grid item xs container spacing={1} justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Aktifkan">
+                            <FormGroup>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    onChange={(e) => {
+                                      handleChangeListStudent(e, index, row);
+                                      autoReloader();
+                                    }}
+                                    color="primary"
+                                    checked={booleanCheckboxStudent[index]}
+                                  />
+                                }
+                              />
+                            </FormGroup>
+                          </LightTooltip>
+                        </Grid>
+                      </Grid>
+                    )}
+                  </Grid>
+                </ExpansionPanelSummary>
+              </ExpansionPanel>
             );
-          })}
-          </List>
+
+            return <Grid item>{content}</Grid>;
+          })
         )}
-      </TabPanel>
-      {DisableDialog()}
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Pengguna"
-        itemName={selectedUserName}
-        deleteItem={() => {onDeleteUser(selectedUserId)}}
+      </Grid>
+      <ManageUsersToolbar
+        heading="Daftar Guru"
+        searchFilterHint="Cari Guru"
+        role="Teacher"
+        deleteUser={deleteUser}
+        classes={classes}
+        order={order_teacher}
+        orderBy={orderBy_teacher}
+        onRequestSort={handleRequestSort}
+        // rowCount={student_rows ? student_rows.length : 0}
+        rowCount={teacher_rows ? teacher_rows.length : 0}
+        activateCheckboxMode={handleActivateCheckboxMode}
+        deactivateCheckboxMode={handleDeactivateCheckboxMode}
+        currentCheckboxMode={checkboxModeTeacher}
+        OpenDialogCheckboxDelete={handleOpenCheckboxDeleteDialog}
+        // OpenDialogCheckboxApprove={handleOpenCheckboxApproveDialog}
+        CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
+        // CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
+        CheckboxDialog={CheckboxDialog}
+        lengthListCheckbox={listCheckboxTeacher.length}
+        listCheckbox={listCheckboxTeacher}
+        reloader={() => autoReloader}
+        listBooleanCheckbox={currentListBooleanTeacher}
+        listBooleanCheckboxState={booleanCheckboxTeacher}
+        setListBooleanCheckboxState={setBooleanCheckboxTeacher}
+        selectAllData={selectAllData}
+        deSelectAllData={deSelectAllData}
+        setSearchBarFocus={setSearchBarFocusT}
+        searchBarFocus={searchBarFocusT}
+        //Two props added for search filter.
+        searchFilter={searchFilterT}
+        updateSearchFilter={updateSearchFilterT}
       />
+      <Divider variant="inset" className={classes.subTitleDivider} />
+      <Grid container direction="column" spacing={2}>
+        {teacher_rows.length === 0 ? (
+          <Empty />
+        ) : (
+          stableSort(
+            teacher_rows,
+            getComparator(order_teacher, orderBy_teacher)
+          ).map((row, index) => {
+            const labelId = `enhanced-table-checkbox-${index}`;
+
+            let content = (
+              <ExpansionPanel button variant="outlined" expanded={false}>
+                <ExpansionPanelSummary className={classes.profilePanelSummary}>
+                  <Grid
+                    container
+                    spacing={1}
+                    justify="space-between"
+                    alignItems="center"
+                  >
+                    <Grid item>
+                      {!row.avatar ? (
+                        <ListItemAvatar>
+                          <Avatar />
+                        </ListItemAvatar>
+                      ) : (
+                        <ListItemAvatar>
+                          <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                        </ListItemAvatar>
+                      )}
+                    </Grid>
+                    <Grid item>
+                      <Hidden smUp implementation="css">
+                        <Typography variant="subtitle1" id={labelId}>
+                          {row.name}
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary">
+                          {row.email}
+                        </Typography>
+                      </Hidden>
+                      <Hidden xsDown implementation="css">
+                        <Typography variant="h6" id={labelId}>
+                          {row.name}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          {row.email}
+                        </Typography>
+                      </Hidden>
+                    </Grid>
+                    {!checkboxModeTeacher ? (
+                      <Grid item xs container spacing={1} justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Lihat Lebih Lanjut">
+                            <Link
+                              to={{
+                                pathname: `/lihat-profil/${row._id}`,
+                              }}
+                            >
+                              <IconButton
+                                size="small"
+                                className={classes.viewMaterialButton}
+                              >
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
+                          <LightTooltip title="Nonaktifkan">
+                            <IconButton
+                              size="small"
+                              style={{ display: "none" }}
+                              className={classes.profileDisableButton}
+                              onClick={(e) => {
+                                handleOpenDisableDialog(e, row._id, row.name);
+                              }}
+                            >
+                              <BlockIcon fontSize="small" />
+                            </IconButton>
+                          </LightTooltip>
+                        </Grid>
+                        <Grid item>
+                          <LightTooltip title="Hapus">
+                            <IconButton
+                              size="small"
+                              className={classes.profileDeleteButton}
+                              onClick={(e) => {
+                                handleOpenDeleteDialog(e, row._id, row.name);
+                              }}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </LightTooltip>
+                        </Grid>
+                      </Grid>
+                    ) : (
+                      <Grid item xs container spacing={1} justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Aktifkan">
+                            <FormGroup>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    onChange={(e) => {
+                                      handleChangeListTeacher(e, index, row);
+                                      autoReloader();
+                                    }}
+                                    color="primary"
+                                    checked={booleanCheckboxTeacher[index]}
+                                  />
+                                }
+                              />
+                            </FormGroup>
+                          </LightTooltip>
+                        </Grid>
+                      </Grid>
+                    )}
+                  </Grid>
+                </ExpansionPanelSummary>
+              </ExpansionPanel>
+            );
+
+            return <Grid item>{content}</Grid>;
+          })
+        )}
+      </Grid>
     </div>
   );
 }
@@ -1452,7 +1522,7 @@ ManageUsers.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   getStudents: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
-  setUserDisabled: PropTypes.func.isRequired,
+  setUserDeactivated: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   deleteUser: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
@@ -1469,7 +1539,7 @@ export default connect(mapStateToProps, {
   getStudentsByClass,
   getAllSubjects,
   getAllTask,
-  setUserDisabled,
+  setUserDeactivated,
   getStudents,
   getTeachers,
   deleteUser,

@@ -50,101 +50,96 @@ const useStyles = makeStyles((theme) => ({
 
 function Footer(props) {
   const classes = useStyles();
-  return (
-    props.assessmentState !== "ujian" ? (
-      <div className={classes.root}>
-        <Divider style={{ marginBottom: "10px" }} />
-        <Grid container justify="space-between" alignItems="center" style={{ marginBottom: "10px" }}>
+  return props.assessmentState !== "ujian" ? (
+    <div className={classes.root}>
+      <Divider style={{ marginBottom: "10px" }} />
+      <Grid
+        container
+        justify="space-between"
+        alignItems="center"
+        style={{ marginBottom: "10px" }}
+      >
+        <Grid item>
+          <Grid container alignItems="center" spacing={1}>
+            <Grid item>
+              <img
+                src={schoolySymbolLogo}
+                alt="Schooly Symbol Logo"
+                className={classes.schoolySymbolLogo}
+              />
+            </Grid>
+            <Grid item>
+              <Typography color="textSecondary" className={classes.schoolyText}>
+                © Schooly System
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container spacing={2}>
+            <Grid item>
+              <a href="https://page.line.me/626hckre" target="blank_">
+                <FaLine className={classes.socialMediaIcons} />
+              </a>
+            </Grid>
+            <Grid item>
+              <a href="https://instagram.com/schoolysystem" target="blank_">
+                <FaInstagram className={classes.socialMediaIcons} />
+              </a>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Hidden smUp>
+        <div style={{ paddingLeft: "15px" }}>
+          <Typography variant="body2" gutterBottom>
+            <Link to="/tentang-schooly">Tentang Schooly</Link>
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            <Link to="/bantuan">Bantuan</Link>
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            <a href="mailto:schoolysystem@gmail.com">Hubungi Kami</a>
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            <Link to="/legal/ketentuan-penggunaan">Ketentuan Pengunaan</Link>
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            <Link to="/legal/kebijakan-privasi">Kebijakan Privasi</Link>
+          </Typography>
+        </div>
+      </Hidden>
+      <Hidden xsDown>
+        <Grid container justify="space-between">
           <Grid item>
-            <Grid container alignItems="center" spacing={1}>
+            <Grid container spacing={2} justify="flex-start">
               <Grid item>
-                <img
-                  src={schoolySymbolLogo}
-                  alt="Schooly Symbol Logo"
-                  className={classes.schoolySymbolLogo}
-                />
+                <Link to="/legal/ketentuan-penggunaan">
+                  Ketentuan Pengunaan
+                </Link>
               </Grid>
               <Grid item>
-                <Typography color="textSecondary" className={classes.schoolyText}>
-                  © Schooly System
-                </Typography>
+                <Link to="/legal/kebijakan-privasi">Kebijakan Privasi</Link>
               </Grid>
             </Grid>
           </Grid>
           <Grid item>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} justify="flex-end">
               <Grid item>
-                <a href="https://page.line.me/626hckre" target="blank_">
-                  <FaLine className={classes.socialMediaIcons} />
-                </a>
+                <Link to="/tentang-schooly">Tentang Schooly</Link>
               </Grid>
               <Grid item>
-                <a href="https://instagram.com/schoolysystem" target="blank_">
-                  <FaInstagram className={classes.socialMediaIcons} />
-                </a>
+                <Link to="/bantuan">Bantuan</Link>
+              </Grid>
+              <Grid item>
+                <a href="mailto:schoolysystem@gmail.com">Hubungi Kami</a>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-        <Hidden smUp>
-          <div style={{ paddingLeft: "15px" }}>
-            <Typography variant="body2" gutterBottom>
-            <Link to="/tentang-schooly">
-              Tentang Schooly
-              </Link>
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Link to="/bantuan">
-                Bantuan
-              </Link>
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <a href="mailto:schoolysystem@gmail.com">
-                Hubungi Kami
-              </a>
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Link to="/legal/ketentuan-penggunaan">
-                Ketentuan Pengunaan
-              </Link>
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Link to="/legal/kebijakan-privasi">
-                Kebijakan Privasi
-              </Link>
-            </Typography>
-          </div>
-        </Hidden>
-        <Hidden xsDown>
-          <Grid container justify="space-between">
-            <Grid item>
-              <Grid container spacing={2} justify="flex-start">
-                <Grid item>
-                  <Link to="/legal/ketentuan-penggunaan">Ketentuan Pengunaan</Link>
-                </Grid>
-                <Grid item>
-                  <Link to="/legal/kebijakan-privasi">Kebijakan Privasi</Link>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Grid container spacing={2} justify="flex-end">
-                <Grid item>
-                  <Link to="/tentang-schooly">Tentang Schooly</Link>
-                </Grid>
-                <Grid item>
-                  <Link to="/bantuan">Bantuan</Link>
-                </Grid>
-                <Grid item>
-                  <a href="mailto:schoolysystem@gmail.com">Hubungi Kami</a>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Hidden>
-      </div>
-    ) : null
-  );
+      </Hidden>
+    </div>
+  ) : null;
 }
 
 export default React.memo(Footer);

@@ -1,6 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { uploadFileAvatar, getFileAvatar } from "../../../../actions/files/FileAvatarActions";
+import {
+  uploadFileAvatar,
+  getFileAvatar,
+} from "../../../../actions/files/FileAvatarActions";
 import defaultAvatar from "./DefaultAvatar.svg";
 import {
   Avatar,
@@ -13,7 +16,7 @@ import {
   Grid,
   IconButton,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from "@material-ui/core";
 import {
   AddAPhoto as AddAPhotoIcon,
@@ -186,10 +189,17 @@ function EditProfilePicture(props) {
 
   return (
     <div>
-      <Fab onClick={handleOpenDialog} className={classes.editProfilePictureButton}>
+      <Fab
+        onClick={handleOpenDialog}
+        className={classes.editProfilePictureButton}
+      >
         <CameraAltIcon fontSize="large" />
       </Fab>
-      <Dialog open={openDialog} onClose={handleCloseDialog} fullScreen={fullScreen}>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        fullScreen={fullScreen}
+      >
         <div className={classes.root}>
           <DialogActions>
             <IconButton size="small" onClick={handleCloseDialog}>
@@ -213,10 +223,13 @@ function EditProfilePicture(props) {
                   display: "none",
                 }}
               />
-              <Grid container direction="column" alignItems="center" spacing={2}>
-                <Grid item>
-                  {imageUploadPreview()}
-                </Grid>
+              <Grid
+                container
+                direction="column"
+                alignItems="center"
+                spacing={2}
+              >
+                <Grid item>{imageUploadPreview()}</Grid>
                 <Grid item>
                   <Button
                     variant="contained"

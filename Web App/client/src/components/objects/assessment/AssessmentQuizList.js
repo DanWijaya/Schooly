@@ -4,7 +4,10 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { getAllAssessments, deleteAssessment } from "../../../actions/AssessmentActions";
+import {
+  getAllAssessments,
+  deleteAssessment,
+} from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers } from "../../../actions/UserActions";
@@ -33,7 +36,7 @@ import {
   Snackbar,
   TableSortLabel,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
@@ -46,7 +49,7 @@ import {
   Pageview as PageviewIcon,
   Search as SearchIcon,
   Sort as SortIcon,
-  Warning as WarningIcon
+  Warning as WarningIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaClipboardList } from "react-icons/fa";
@@ -75,7 +78,7 @@ function createData(
     createdAt,
     submissions,
     teacher_name,
-    grades
+    grades,
   };
 }
 
@@ -139,12 +142,14 @@ function AssessmentListToolbar(props) {
       id: "start_date",
       numeric: false,
       disablePadding: false,
-      label: "Mulai" },
+      label: "Mulai",
+    },
     {
       id: "end_date",
       numeric: false,
       disablePadding: false,
-      label: "Selesai" },
+      label: "Selesai",
+    },
     {
       id: "createdAt",
       numeric: false,
@@ -183,7 +188,9 @@ function AssessmentListToolbar(props) {
                   variant="extended"
                   className={classes.createQuizButton}
                 >
-                  <FaClipboardList className={classes.newAssessmentIconDesktop}/>
+                  <FaClipboardList
+                    className={classes.newAssessmentIconDesktop}
+                  />
                   Buat Kuis
                 </Fab>
               </Link>
@@ -192,7 +199,7 @@ function AssessmentListToolbar(props) {
               <LightTooltip title="Buat Kuis">
                 <Link to="/buat-kuis">
                   <Fab size="medium" className={classes.createQuizButton}>
-                    <FaClipboardList className={classes.createQuizIconMobile}/>
+                    <FaClipboardList className={classes.createQuizIconMobile} />
                   </Fab>
                 </Link>
               </LightTooltip>
@@ -215,7 +222,7 @@ function AssessmentListToolbar(props) {
                     style: {
                       borderRadius: "22.5px",
                       maxWidth: "450px",
-                      width: "100%"
+                      width: "100%",
                     },
                     startAdornment: (
                       <InputAdornment
@@ -236,7 +243,9 @@ function AssessmentListToolbar(props) {
                             e.stopPropagation();
                             onClear(e, "searchFilterDesktop");
                           }}
-                          style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                          style={{
+                            visibility: !searchFilter ? "hidden" : "visible",
+                          }}
                         >
                           <ClearIcon />
                         </IconButton>
@@ -268,12 +277,15 @@ function AssessmentListToolbar(props) {
                         style: {
                           borderRadius: "22.5px",
                           maxWidth: "450px",
-                          width: "100%"
+                          width: "100%",
                         },
                         endAdornment: (
                           <InputAdornment
                             position="end"
-                            style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                            style={{
+                              marginLeft: "-10px",
+                              marginRight: "-10px",
+                            }}
                           >
                             <IconButton
                               size="small"
@@ -282,7 +294,11 @@ function AssessmentListToolbar(props) {
                                 e.stopPropagation();
                                 onClear(e, "searchFilterMobile");
                               }}
-                              style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                              style={{
+                                visibility: !searchFilter
+                                  ? "hidden"
+                                  : "visible",
+                              }}
                             >
                               <ClearIcon />
                             </IconButton>
@@ -376,7 +392,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   createQuizButton: {
-    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    boxShadow:
+      "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -460,8 +477,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
   },
   listItem: {
-    padding: "6px 16px"
-  }
+    padding: "6px 16px",
+  },
 }));
 
 function AssessmentList(props) {
@@ -471,7 +488,7 @@ function AssessmentList(props) {
     deleteAssessment,
     getAllClass,
     getAllSubjects,
-    getTeachers
+    getTeachers,
   } = props;
   const { user, all_teachers_map } = props.auth;
   const { all_classes_map } = props.classesCollection;
@@ -482,7 +499,9 @@ function AssessmentList(props) {
   const [orderBy, setOrderBy] = React.useState("subject");
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedAssessmentId, setSelectedAssessmentId] = React.useState(null);
-  const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
+  const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(
+    null
+  );
   const [copySnackbarOpen, setOpenCopySnackBar] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
@@ -492,18 +511,32 @@ function AssessmentList(props) {
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
   const handleOpenDialog = (data) => {
-    let { assessmenttitle, subject, teacher_name, start_date, end_date, grades } = data;
+    let {
+      assessmenttitle,
+      subject,
+      teacher_name,
+      start_date,
+      end_date,
+      grades,
+    } = data;
+
     subject = all_subjects_map.get(subject);
     start_date = moment(start_date).locale("id").format("DD MMM YYYY, HH.mm");
     end_date = moment(end_date).locale("id").format("DD MMM YYYY, HH.mm");
-
-    if(grades){
+    if (grades) {
       grades = grades[user._id].total_grade;
     }
 
     let title = assessmenttitle;
 
-    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date, grades});
+    setCurrentDialogInfo({
+      title,
+      subject,
+      teacher_name,
+      start_date,
+      end_date,
+      grades,
+    });
     setOpenDialog(true);
   };
 
@@ -513,7 +546,11 @@ function AssessmentList(props) {
 
   var rows = [];
   const assessmentRowItem = (data) => {
-    if (data.type === "Kuis" && all_teachers_map instanceof Map &&  all_teachers_map.get(data.author_id)) {
+    if (
+      data.type === "Kuis" &&
+      all_teachers_map instanceof Map &&
+      all_teachers_map.get(data.author_id)
+    ) {
       rows.push(
         createData(
           data._id,
@@ -534,10 +571,10 @@ function AssessmentList(props) {
 
   React.useEffect(
     () => {
-      getAllAssessments();
-      getAllClass("map");
-      getAllSubjects("map");
-      getTeachers("map");
+      getAllAssessments(user.unit);
+      getAllClass(user.unit, "map");
+      getAllSubjects(user.unit, "map");
+      getTeachers(user.unit, "map");
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -545,12 +582,11 @@ function AssessmentList(props) {
 
   React.useEffect(() => {
     // To show delete snackbar when a quiz is deleted.
-    if(props.location.openDeleteSnackbar){
-      handleOpenDeleteSnackbar()
+    if (props.location.openDeleteSnackbar) {
+      handleOpenDeleteSnackbar();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
+  }, []);
 
   const retrieveAssessments = () => {
     // If all_assessments is not undefined or an empty array.
@@ -603,7 +639,7 @@ function AssessmentList(props) {
   const onDeleteAssessment = (id, type) => {
     deleteAssessment(id, type).then((res) => {
       console.log(res);
-      getAllAssessments();
+      getAllAssessments(user.unit);
       handleOpenDeleteSnackbar();
       handleCloseDeleteDialog();
     });
@@ -646,7 +682,7 @@ function AssessmentList(props) {
 
   const handleOpenDeleteSnackbar = () => {
     setOpenDeleteSnackbar(true);
-  }
+  };
 
   const handleCloseDeleteSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -667,7 +703,12 @@ function AssessmentList(props) {
   return (
     <>
       <div className={classes.root}>
-        <Grid container alignItems="center" spacing={2} className={classes.header}>
+        <Grid
+          container
+          alignItems="center"
+          spacing={2}
+          className={classes.header}
+        >
           <Grid item>
             <div className={classes.headerIcon}>
               <FaClipboardList />
@@ -698,38 +739,226 @@ function AssessmentList(props) {
         ) : (
           <Grid container direction="column" spacing={2}>
             {stableSort(rows, getComparator(order, orderBy)).map(
-            (row, index) => {
-              console.log(row.teacher_name)
-              const labelId = `enhanced-table-checkbox-${index}`;
-              let viewpage =
-                user.role === "Student"
-                  ? `/kuis-murid/${row._id}`
-                  : `/kuis-guru/${row._id}`;
-              let linkToShare = `https://${window.location.host}/kuis-murid/${row._id}`;
-              return (
-                <Grid item>
-                  {user.role === "Teacher" ? (
-                    <ExpansionPanel button variant="outlined">
-                      <ExpansionPanelSummary
-                        className={classes.assessmentPanelSummary}
-                      >
-                        <Grid
-                          container
-                          spacing={1}
-                          justify="space-between"
-                          alignItems="center"
+              (row, index) => {
+                console.log(row.teacher_name);
+                const labelId = `enhanced-table-checkbox-${index}`;
+                let viewpage =
+                  user.role === "Student"
+                    ? `/kuis-murid/${row._id}`
+                    : `/kuis-guru/${row._id}`;
+                let linkToShare = `https://${window.location.host}/kuis-murid/${row._id}`;
+                return (
+                  <Grid item>
+                    {user.role === "Teacher" ? (
+                      <ExpansionPanel button variant="outlined">
+                        <ExpansionPanelSummary
+                          className={classes.assessmentPanelSummary}
                         >
-                          <Grid item>
+                          <Grid
+                            container
+                            spacing={1}
+                            justify="space-between"
+                            alignItems="center"
+                          >
+                            <Grid item>
+                              <Hidden smUp implementation="css">
+                                <Typography variant="h6" id={labelId}>
+                                  {row.assessmenttitle}
+                                </Typography>
+                                <Typography
+                                  variant="caption"
+                                  color="textSecondary"
+                                >
+                                  {all_subjects_map.get(row.subject)}
+                                </Typography>
+                              </Hidden>
+                              <Hidden xsDown implementation="css">
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <ListItemAvatar>
+                                    <Avatar
+                                      className={classes.assignmentLateTeacher}
+                                    >
+                                      <FaClipboardList />
+                                    </Avatar>
+                                  </ListItemAvatar>
+                                  <div>
+                                    <Typography variant="h6" id={labelId}>
+                                      {row.assessmenttitle}
+                                    </Typography>
+                                    <Typography
+                                      variant="body2"
+                                      color="textSecondary"
+                                    >
+                                      {all_subjects_map.get(row.subject)}
+                                    </Typography>
+                                  </div>
+                                </div>
+                              </Hidden>
+                            </Grid>
+                            <Grid
+                              item
+                              xs
+                              container
+                              spacing={1}
+                              justify="flex-end"
+                            >
+                              <Grid item>
+                                <LightTooltip title="Lihat Lebih Lanjut">
+                                  <Link to={viewpage}>
+                                    <IconButton
+                                      size="small"
+                                      className={classes.viewAssessmentButton}
+                                    >
+                                      <PageviewIcon fontSize="small" />
+                                    </IconButton>
+                                  </Link>
+                                </LightTooltip>
+                              </Grid>
+                              <Grid item>
+                                <LightTooltip title="Salin Tautan">
+                                  <IconButton
+                                    size="small"
+                                    className={classes.copyToClipboardButton}
+                                    onClick={(e) => {
+                                      copyToClipboardButton(
+                                        e,
+                                        linkToShare,
+                                        row.type
+                                      );
+                                    }}
+                                  >
+                                    <LinkIcon fontSize="small" />
+                                  </IconButton>
+                                </LightTooltip>
+                              </Grid>
+                              {row.submissions &&
+                              Object.keys(row.submissions).length !==
+                                0 ? null : (
+                                <Grid item>
+                                  <LightTooltip title="Sunting">
+                                    <Link to={`/sunting-kuis/${row._id}`}>
+                                      <IconButton
+                                        size="small"
+                                        className={classes.editAssessmentButton}
+                                      >
+                                        <EditIcon fontSize="small" />
+                                      </IconButton>
+                                    </Link>
+                                  </LightTooltip>
+                                </Grid>
+                              )}
+                              <Grid item>
+                                <LightTooltip title="Hapus">
+                                  <IconButton
+                                    size="small"
+                                    className={classes.deleteAssessmentButton}
+                                    onClick={(e) => {
+                                      handleOpenDeleteDialog(
+                                        e,
+                                        row._id,
+                                        row.assessmenttitle
+                                      );
+                                    }}
+                                  >
+                                    <DeleteIcon fontSize="small" />
+                                  </IconButton>
+                                </LightTooltip>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </ExpansionPanelSummary>
+                        <Divider />
+                        <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
+                          <Grid conntainer direction="column">
+                            <Grid item>
+                              <Typography variant="body1">
+                                Kelas yang Ditugaskan:{" "}
+                                {!all_classes_map.size
+                                  ? null
+                                  : row.class_assigned.map((id, i) => {
+                                      if (all_classes_map.get(id)) {
+                                        if (i === row.class_assigned.length - 1)
+                                          return `${
+                                            all_classes_map.get(id).name
+                                          }`;
+                                        return `${
+                                          all_classes_map.get(id).name
+                                        }, `;
+                                      }
+                                      return null;
+                                    })}
+                              </Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography variant="body1" color="textSecondary">
+                                Waktu Dibuat:{" "}
+                                {moment(row.createdAt)
+                                  .locale("id")
+                                  .format("DD MMM YYYY, HH.mm")}
+                              </Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography variant="body2" color="textSecondary">
+                                Mulai:{" "}
+                                {moment(row.start_date)
+                                  .locale("id")
+                                  .format("DD MMM YYYY, HH.mm")}
+                              </Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography variant="body2" color="textSecondary">
+                                Selesai:{" "}
+                                {moment(row.end_date)
+                                  .locale("id")
+                                  .format("DD MMM YYYY, HH.mm")}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    ) : (
+                      <Paper
+                        button
+                        component="a"
+                        variant="outlined"
+                        className={classes.assessmentPaper}
+                        onClick={() => handleOpenDialog(row)}
+                      >
+                        <Badge
+                          style={{ display: "flex", flexDirection: "row" }}
+                          badgeContent={
+                            workStatus(row) === "Belum Ditempuh" ? (
+                              <WarningIcon className={classes.warningIcon} />
+                            ) : (
+                              <CheckCircleIcon className={classes.checkIcon} />
+                            )
+                          }
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right",
+                          }}
+                        >
+                          <ListItem
+                            // button
+                            // component="a"
+                            className={classes.listItem}
+                          >
                             <Hidden smUp implementation="css">
-                              <Typography variant="h6" id={labelId}>
-                                {row.assessmenttitle}
-                              </Typography>
-                              <Typography
-                                variant="caption"
-                                color="textSecondary"
-                              >
-                                {all_subjects_map.get(row.subject)}
-                              </Typography>
+                              <ListItemText
+                                primary={
+                                  <Typography variant="h6">
+                                    {row.assessmenttitle}
+                                  </Typography>
+                                }
+                                secondary={all_subjects_map.get(row.subject)}
+                              />
                             </Hidden>
                             <Hidden xsDown implementation="css">
                               <div
@@ -741,210 +970,21 @@ function AssessmentList(props) {
                                 }}
                               >
                                 <ListItemAvatar>
-                                  <Avatar
-                                    className={classes.assignmentLateTeacher}
-                                  >
+                                  <Avatar className={classes.assignmentLate}>
                                     <FaClipboardList />
                                   </Avatar>
                                 </ListItemAvatar>
-                                <div>
-                                  <Typography variant="h6" id={labelId}>
-                                    {row.assessmenttitle}
-                                  </Typography>
-                                  <Typography
-                                    variant="body2"
-                                    color="textSecondary"
-                                  >
-                                    {all_subjects_map.get(row.subject)}
-                                  </Typography>
-                                </div>
+                                <ListItemText
+                                  primary={
+                                    <Typography variant="h6">
+                                      {row.assessmenttitle}
+                                    </Typography>
+                                  }
+                                  secondary={all_subjects_map.get(row.subject)}
+                                />
                               </div>
                             </Hidden>
-                          </Grid>
-                          <Grid
-                            item
-                            xs
-                            container
-                            spacing={1}
-                            justify="flex-end"
-                          >
-                            <Grid item>
-                              <LightTooltip title="Lihat Lebih Lanjut">
-                                <Link to={viewpage}>
-                                  <IconButton
-                                    size="small"
-                                    className={classes.viewAssessmentButton}
-                                  >
-                                    <PageviewIcon fontSize="small" />
-                                  </IconButton>
-                                </Link>
-                              </LightTooltip>
-                            </Grid>
-                            <Grid item>
-                              <LightTooltip title="Salin Tautan">
-                                <IconButton
-                                  size="small"
-                                  className={classes.copyToClipboardButton}
-                                  onClick={(e) => {
-                                    copyToClipboardButton(
-                                      e,
-                                      linkToShare,
-                                      row.type
-                                    );
-                                  }}
-                                >
-                                  <LinkIcon fontSize="small" />
-                                </IconButton>
-                              </LightTooltip>
-                            </Grid>
-                            {row.submissions && Object.keys(row.submissions).length !== 0 ?
-                              null :
-                            <Grid item>
-                              <LightTooltip title="Sunting">
-                                <Link to={`/sunting-kuis/${row._id}`}>
-                                  <IconButton
-                                    size="small"
-                                    className={classes.editAssessmentButton}
-                                  >
-                                    <EditIcon fontSize="small" />
-                                  </IconButton>
-                                </Link>
-                              </LightTooltip>
-                            </Grid>
-                            }
-                            <Grid item>
-                              <LightTooltip title="Hapus">
-                                <IconButton
-                                  size="small"
-                                  className={classes.deleteAssessmentButton}
-                                  onClick={(e) => {
-                                    handleOpenDeleteDialog(
-                                      e,
-                                      row._id,
-                                      row.assessmenttitle
-                                    );
-                                  }}
-                                >
-                                  <DeleteIcon fontSize="small" />
-                                </IconButton>
-                              </LightTooltip>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </ExpansionPanelSummary>
-                      <Divider />
-                      <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
-                        <Grid conntainer direction="column">
-                          <Grid item>
-                            <Typography variant="body1">
-                              Kelas yang Ditugaskan:{" "}
-                              {!all_classes_map.size
-                                ? null
-                                : row.class_assigned.map((id, i) => {
-                                    if (all_classes_map.get(id)) {
-                                      if (i === row.class_assigned.length - 1)
-                                        return `${
-                                          all_classes_map.get(id).name
-                                        }`;
-                                      return `${
-                                        all_classes_map.get(id).name
-                                      }, `;
-                                    }
-                                    return null;
-                                  })}
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography variant="body1" color="textSecondary">
-                              Waktu Dibuat:{" "}
-                              {moment(row.createdAt)
-                                .locale("id")
-                                .format("DD MMM YYYY, HH.mm")}
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography variant="body2" color="textSecondary">
-                              Mulai:{" "}
-                              {moment(row.start_date)
-                                .locale("id")
-                                .format("DD MMM YYYY, HH.mm")}
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography variant="body2" color="textSecondary">
-                              Selesai:{" "}
-                              {moment(row.end_date)
-                                .locale("id")
-                                .format("DD MMM YYYY, HH.mm")}
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                  ) : (
-                    <Paper
-                      button
-                      component="a"
-                      variant="outlined"
-                      className={classes.assessmentPaper}
-                      onClick={() =>
-                        handleOpenDialog(row)
-                      }
-                    >
-                      <Badge
-                        style={{ display: "flex", flexDirection: "row" }}
-                        badgeContent={
-                          workStatus(row) === "Belum Ditempuh" ? (
-                            <WarningIcon className={classes.warningIcon} />
-                          ) : (
-                            <CheckCircleIcon className={classes.checkIcon} />
-                          )
-                        }
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "right",
-                        }}
-                      >
-                        <ListItem
-                          // button
-                          // component="a"
-                          className={classes.listItem}
-                        >
-                          <Hidden smUp implementation="css">
-                            <ListItemText
-                              primary={
-                                <Typography variant="h6">
-                                  {row.assessmenttitle}
-                                </Typography>
-                              }
-                              secondary={all_subjects_map.get(row.subject)}
-                            />
-                          </Hidden>
-                          <Hidden xsDown implementation="css">
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              <ListItemAvatar>
-                                <Avatar className={classes.assignmentLate}>
-                                  <FaClipboardList />
-                                </Avatar>
-                              </ListItemAvatar>
-                              <ListItemText
-                                primary={
-                                  <Typography variant="h6">
-                                    {row.assessmenttitle}
-                                  </Typography>
-                                }
-                                secondary={all_subjects_map.get(row.subject)}
-                              />
-                            </div>
-                          </Hidden>
-                          {/* <ListItemText
+                            {/* <ListItemText
                             align="right"
                             primary={
                               <Typography variant="subtitle" color="textSecondary">
@@ -953,30 +993,30 @@ function AssessmentList(props) {
                             }
                             secondary={row.time}
                           /> */}
-                          <ListItemText
-                            align="right"
-                            primary={
-                              <Typography
-                                variant="body2"
-                                color="textSecondary"
-                              >
-                                {moment(row.createdAt)
-                                  .locale("id")
-                                  .format("DD MMM YYYY")}
-                              </Typography>
-                            }
-                            secondary={moment(row.createdAt)
-                              .locale("id")
-                              .format("HH.mm")}
-                          />
-                        </ListItem>
-                      </Badge>
-                    </Paper>
-                  )}
-                </Grid>
-              );
-            }
-          )}
+                            <ListItemText
+                              align="right"
+                              primary={
+                                <Typography
+                                  variant="body2"
+                                  color="textSecondary"
+                                >
+                                  {moment(row.createdAt)
+                                    .locale("id")
+                                    .format("DD MMM YYYY")}
+                                </Typography>
+                              }
+                              secondary={moment(row.createdAt)
+                                .locale("id")
+                                .format("HH.mm")}
+                            />
+                          </ListItem>
+                        </Badge>
+                      </Paper>
+                    )}
+                  </Grid>
+                );
+              }
+            )}
           </Grid>
         )}
         <Dialog
@@ -1000,10 +1040,7 @@ function AssessmentList(props) {
             >
               Guru: {currentDialogInfo.teacher_name}
             </Typography>
-            <Typography
-              variant="subtitle1"
-              align="center"
-            >
+            <Typography variant="subtitle1" align="center">
               Mulai: {currentDialogInfo.start_date}
             </Typography>
             <Typography variant="subtitle1" align="center">
@@ -1074,7 +1111,7 @@ AssessmentList.propTypes = {
   assessmentsCollection: PropTypes.object.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
   deleteAssessment: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -1082,7 +1119,7 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
   assessmentsCollection: state.assessmentsCollection,
-  errors: state.errors
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, {
@@ -1090,5 +1127,5 @@ export default connect(mapStateToProps, {
   getAllSubjects,
   getTeachers,
   getAllAssessments,
-  deleteAssessment
+  deleteAssessment,
 })(AssessmentList);

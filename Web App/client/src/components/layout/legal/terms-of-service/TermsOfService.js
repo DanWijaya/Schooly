@@ -8,7 +8,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { KeyboardArrowRight as KeyboardArrowRightIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
@@ -64,12 +64,15 @@ function TermsOfService(props) {
           src={termsOfServiceArt}
           className={classes.termsOfServiceArt}
         />
-        <Typography variant="overline" align="center" gutterBottom className={classes.termsOfServiceTitleText}>
+        <Typography
+          variant="overline"
+          align="center"
+          gutterBottom
+          className={classes.termsOfServiceTitleText}
+        >
           Ketentuan Penggunaan Schooly System
         </Typography>
-        <Typography>
-          Berlaku efektif: 1 Januari 2020
-        </Typography>
+        <Typography>Berlaku efektif: 1 Januari 2020</Typography>
       </div>
       <div className={classes.content}>
         <Typography variant="h6" gutterBottom>
@@ -98,77 +101,132 @@ function TermsOfService(props) {
             <b>Daftar Isi</b>
           </Typography>
           <List>
-            <ListItem alignItems="flex-start" button component="a" href="#ketentuan-umum-dan-akun">
+            <ListItem
+              alignItems="flex-start"
+              button
+              component="a"
+              href="#ketentuan-umum-dan-akun"
+            >
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Ketentuan Umum dan Akun" />
             </ListItem>
             <Divider variant="inset" />
-            <ListItem alignItems="flex-start" button component="a" href="#privasi-dan-penggunaan-informasi-pribadi">
+            <ListItem
+              alignItems="flex-start"
+              button
+              component="a"
+              href="#privasi-dan-penggunaan-informasi-pribadi"
+            >
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Privasi dan Penggunaan Informasi Pribadi" />
             </ListItem>
             <Divider variant="inset" />
-            <ListItem alignItems="flex-start" button component="a" href="#konten-dan-hak-anda">
+            <ListItem
+              alignItems="flex-start"
+              button
+              component="a"
+              href="#konten-dan-hak-anda"
+            >
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Konten dan Hak Anda" />
             </ListItem>
             <Divider variant="inset" />
-            <ListItem alignItems="flex-start" button component="a" href="#lisensi-anda-untuk-menggunakan-produk">
+            <ListItem
+              alignItems="flex-start"
+              button
+              component="a"
+              href="#lisensi-anda-untuk-menggunakan-produk"
+            >
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Lisensi Anda untuk menggunakan Produk" />
             </ListItem>
             <Divider variant="inset" />
-            <ListItem alignItems="flex-start" button component="a" href="#hak-schooly">
+            <ListItem
+              alignItems="flex-start"
+              button
+              component="a"
+              href="#hak-schooly"
+            >
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Hak Schooly" />
             </ListItem>
             <Divider variant="inset" />
-            <ListItem alignItems="flex-start" button component="a" href="#tanggung-jawab-pendaftaran-dan-kata-sandi">
+            <ListItem
+              alignItems="flex-start"
+              button
+              component="a"
+              href="#tanggung-jawab-pendaftaran-dan-kata-sandi"
+            >
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Tanggung Jawab Pendaftaran dan Kata Sandi" />
             </ListItem>
             <Divider variant="inset" />
-            <ListItem alignItems="flex-start" button component="a" href="#penghentian-penggunaan">
+            <ListItem
+              alignItems="flex-start"
+              button
+              component="a"
+              href="#penghentian-penggunaan"
+            >
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Penghentian Penggunaan" />
             </ListItem>
             <Divider variant="inset" />
-            <ListItem alignItems="flex-start" button component="a" href="#tautan-dan-sumber-daya pihak-ketiga">
+            <ListItem
+              alignItems="flex-start"
+              button
+              component="a"
+              href="#tautan-dan-sumber-daya pihak-ketiga"
+            >
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Tautan dan Sumber Daya Pihak Ketiga" />
             </ListItem>
             <Divider variant="inset" />
-            <ListItem alignItems="flex-start" button component="a" href="#batasan-pertanggung-jawaban">
+            <ListItem
+              alignItems="flex-start"
+              button
+              component="a"
+              href="#batasan-pertanggung-jawaban"
+            >
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Batasan Pertanggung Jawaban" />
             </ListItem>
             <Divider variant="inset" />
-            <ListItem alignItems="flex-start" button component="a" href="#tentang-ketentuan-ini">
+            <ListItem
+              alignItems="flex-start"
+              button
+              component="a"
+              href="#tentang-ketentuan-ini"
+            >
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Tentang Ketentuan Ini" />
             </ListItem>
             <Divider variant="inset" />
-            <ListItem alignItems="flex-start" button component="a" href="#informasi-lebih-lanjut">
+            <ListItem
+              alignItems="flex-start"
+              button
+              component="a"
+              href="#informasi-lebih-lanjut"
+            >
               <ListItemIcon>
                 <KeyboardArrowRightIcon color="primary" />
               </ListItemIcon>
@@ -218,7 +276,10 @@ function TermsOfService(props) {
             untuk tindakan atau kelalaian Pengguna apa pun.
           </Typography>
         </div>
-        <div id="privasi-dan-penggunaan-informasi-pribadi" className={classes.contentSection}>
+        <div
+          id="privasi-dan-penggunaan-informasi-pribadi"
+          className={classes.contentSection}
+        >
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
             <b>Privasi dan Penggunaan Informasi Pribadi</b>
@@ -229,36 +290,41 @@ function TermsOfService(props) {
             informasi pribadi yang Anda berikan, dapat berikan, atau dapat
             dikumpulkan oleh kami sehubungan dengan penggunaan Anda terhadap
             Produk (“Informasi Anda "), akan dikumpulkan, dijaga, dan digunakan
-            untuk menyediakan Produk kepada Anda atau lembaga Anda. Ada pun persyaratan
-            tambahan yang berlaku untuk Produk individual, dan
-            perjanjian apa pun yang dibuat oleh institusi Anda terkait dengan Produk.
-            Anda memahami bahwa, melalui penggunaan Produk oleh Anda, Anda
-            menyetujui pengumpulan dan penggunaan informasi Anda (sebagaimana diatur dalam
-            Ketentuan ini, <Link to="/legal/kebijakan-privasi">Kebijakan Privasi</Link>,
-            dan perjanjian apa pun yang dibuat oleh institusi Anda terkait dengan Produk).
+            untuk menyediakan Produk kepada Anda atau lembaga Anda. Ada pun
+            persyaratan tambahan yang berlaku untuk Produk individual, dan
+            perjanjian apa pun yang dibuat oleh institusi Anda terkait dengan
+            Produk. Anda memahami bahwa, melalui penggunaan Produk oleh Anda,
+            Anda menyetujui pengumpulan dan penggunaan informasi Anda
+            (sebagaimana diatur dalam Ketentuan ini,{" "}
+            <Link to="/legal/kebijakan-privasi">Kebijakan Privasi</Link>, dan
+            perjanjian apa pun yang dibuat oleh institusi Anda terkait dengan
+            Produk).
           </Typography>
           <Typography align="justify" paragraph>
             Untuk menghindari keraguan, informasi pribadi yang mencakup Data
             Pelajar (didefinisikan di bawah) yang diberikan kepada Schooly
-            melalui penggunaan Produk-produk ini diatur oleh
-            perjanjian antara Schooly dan lembaga pendidikan yang relevan dengan
-            penggunaan Anda atas Produk. Di antara Schooly dan Anda, Anda
-            dan/atau lembaga pendidikan memiliki semua hak, kepemilikan, dan
-            minat terhadap semua Data murid yang Anda berikan atau sediakan bagi
-            kami, dan kami tidak memiliki, mengendalikan, atau melisensikan Data
-            murid tersebut, kecuali jika untuk menyediakan Produk kepada Anda
-            dan ke lembaga pendidikan yang menyediakan produk dan mengendalikan
-            Data murid dari catatan pendidikan, jika berlaku, dan sebagaimana
-            dijelaskan di sini. “Data murid” adalah segala informasi (dalam
-            format apa pun) yang secara langsung terkait dengan murid saat ini
-            atau mantan murid yang dikelola oleh sekolah, distrik sekolah, atau
-            entitas atau organisasi terkait, atau oleh kami, sebagai bagian dari
-            ketentuan Produk.
+            melalui penggunaan Produk-produk ini diatur oleh perjanjian antara
+            Schooly dan lembaga pendidikan yang relevan dengan penggunaan Anda
+            atas Produk. Di antara Schooly dan Anda, Anda dan/atau lembaga
+            pendidikan memiliki semua hak, kepemilikan, dan minat terhadap semua
+            Data murid yang Anda berikan atau sediakan bagi kami, dan kami tidak
+            memiliki, mengendalikan, atau melisensikan Data murid tersebut,
+            kecuali jika untuk menyediakan Produk kepada Anda dan ke lembaga
+            pendidikan yang menyediakan produk dan mengendalikan Data murid dari
+            catatan pendidikan, jika berlaku, dan sebagaimana dijelaskan di
+            sini. “Data murid” adalah segala informasi (dalam format apa pun)
+            yang secara langsung terkait dengan murid saat ini atau mantan murid
+            yang dikelola oleh sekolah, distrik sekolah, atau entitas atau
+            organisasi terkait, atau oleh kami, sebagai bagian dari ketentuan
+            Produk.
           </Typography>
           <Typography align="justify" paragraph>
             Jika Anda memiliki pertanyaan tentang privasi dan penggunaan
-            Informasi Anda, silakan hubungi kami di <Link href="mailto:schoolysystem@gmail.com">
-            schoolysystem@gmail.com </Link>, atau lembaga pendidikan Anda.
+            Informasi Anda, silakan hubungi kami di{" "}
+            <Link href="mailto:schoolysystem@gmail.com">
+              schoolysystem@gmail.com{" "}
+            </Link>
+            , atau lembaga pendidikan Anda.
           </Typography>
         </div>
         <div id="konten-dan-hak-anda" className={classes.contentSection}>
@@ -349,7 +415,10 @@ function TermsOfService(props) {
             tanggung jawab kepada Anda.
           </Typography>
         </div>
-        <div id="lisensi-anda-untuk-menggunakan-produk" className={classes.contentSection}>
+        <div
+          id="lisensi-anda-untuk-menggunakan-produk"
+          className={classes.contentSection}
+        >
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
             <b>Lisensi Anda untuk menggunakan Produk</b>
@@ -461,7 +530,10 @@ function TermsOfService(props) {
             tanpa kewajiban apa pun kepada Anda.
           </Typography>
         </div>
-        <div id="tanggung-jawab-pendaftaran-dan-kata-sandi" className={classes.contentSection}>
+        <div
+          id="tanggung-jawab-pendaftaran-dan-kata-sandi"
+          className={classes.contentSection}
+        >
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
             <b>Tanggung Jawab Pendaftaran dan Kata Sandi</b>
@@ -506,7 +578,10 @@ function TermsOfService(props) {
             dalam Ketentuan ini.
           </Typography>
         </div>
-        <div id="tautan-dan-sumber-daya pihak-ketiga" className={classes.contentSection}>
+        <div
+          id="tautan-dan-sumber-daya pihak-ketiga"
+          className={classes.contentSection}
+        >
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
             <b>Tautan dan Sumber Daya Pihak Ketiga</b>
@@ -530,7 +605,10 @@ function TermsOfService(props) {
             berlaku untuk Anda menggunakan situs-situs tersebut.
           </Typography>
         </div>
-        <div id="batasan-pertanggung-jawaban" className={classes.contentSection}>
+        <div
+          id="batasan-pertanggung-jawaban"
+          className={classes.contentSection}
+        >
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
             <b>Batasan Pertanggung Jawaban</b>
@@ -577,9 +655,11 @@ function TermsOfService(props) {
           </Typography>
           <Typography align="justify" paragraph>
             Kami dapat merevisi Ketentuan ini dari waktu ke waktu, versi terbaru
-            akan selalu tersedia di <Link href="https://www.schoolysystem.com">
-            https://www.schoolysystem.com</Link>.
-            Jika revisi, atas kebijakan kami sendiri, adalah materi, kami akan
+            akan selalu tersedia di{" "}
+            <Link href="https://www.schoolysystem.com">
+              https://www.schoolysystem.com
+            </Link>
+            . Jika revisi, atas kebijakan kami sendiri, adalah materi, kami akan
             memberi tahu Anda melalui Produk atau melalui email yang terkait
             dengan profil Anda. Dengan terus mengakses atau menggunakan Produk
             setelah revisi tersebut berlaku, Anda setuju untuk terikat oleh
@@ -593,8 +673,11 @@ function TermsOfService(props) {
           </Typography>
           <Typography align="justify" paragraph>
             Jika terdapat informasi yang masih kurang jelas atau ada pertanyaan
-            mengenai kebijakan penggunaan di atas, silahkan menghubungi kami di <Link href="mailto:schoolysystem@gmail.com">
-            schoolysystem@gmail.com</Link>.
+            mengenai kebijakan penggunaan di atas, silahkan menghubungi kami di{" "}
+            <Link href="mailto:schoolysystem@gmail.com">
+              schoolysystem@gmail.com
+            </Link>
+            .
           </Typography>
         </div>
       </div>

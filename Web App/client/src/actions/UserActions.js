@@ -9,36 +9,43 @@ import {
   GET_USERS,
   GET_ALL_STUDENTS,
   GET_ALL_TEACHERS,
+  GET_ALL_ADMINS,
   GET_ALL_TEACHERS_MAP,
   GET_ONE_USER,
   GET_STUDENTS_BY_CLASS,
   GET_PENDING_STUDENTS,
   GET_PENDING_TEACHERS,
+  GET_PENDING_ADMINS,
   // SET_DROPBOX_TOKEN,
   GET_SUCCESS_RESPONSE,
-  GET_REGISTER_ERRORS
+  GET_REGISTER_ERRORS,
+  GET_ALL_USERS,
 } from "./Types";
+
+// Guide for UserActions.
+/*
+  If the get actions name contains "all" keywords like getAllObject, then get the object in the entire database. 
+  Otherwise, get the objects by unit.
+*/
 
 // Register User
 export const registerUser = (userData, history) => (dispatch) => {
-  return (
-    axios
-      .post("/api/users/register", userData)
-      .then(() => {
-        dispatch({
-          type: GET_ERRORS,
-          payload: false,
-        });
-        return true; // Success
-      })
-      .catch((err) => {
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data,
-        });
-        throw err.response.data; // Fail
-      })
-  );
+  return axios
+    .post("/api/users/register", userData)
+    .then(() => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: false,
+      });
+      return true; // Success
+    })
+    .catch((err) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+      throw err.response.data; // Fail
+    });
 };
 
 export const updateUserData = (userData, userId, history) => (dispatch) => {
@@ -57,8 +64,8 @@ export const updateUserData = (userData, userId, history) => (dispatch) => {
       const decoded = jwt_decode(token);
       // Set current user
       dispatch(setCurrentUser(decoded));
-      console.log("Successfully update user data")
-      return true
+      console.log("Successfully update user data");
+      return true;
     })
     .catch((err) => {
       console.log(err);
@@ -163,9 +170,9 @@ export const setUserLoading = () => {
   };
 };
 
-export const getStudents = () => (dispatch) => {
+export const getStudents = (unitId) => (dispatch) => {
   axios
-    .get("/api/users/getstudents")
+    .get(`/api/users/getStudents/${unitId}`)
     .then((res) => {
       console.log(res.data);
       dispatch({
@@ -179,10 +186,10 @@ export const getStudents = () => (dispatch) => {
     });
 };
 
-export const getTeachers = (data = "array") => (dispatch) => {
+export const getTeachers = (unitId, data = "array") => (dispatch) => {
   // console.log('getTeacher start')
   return axios
-    .get("/api/users/getteachers")
+    .get(`/api/users/getTeachers/${unitId}`)
     .then((res) => {
       // console.log(res.data)
       if (data === "map") {
@@ -209,7 +216,23 @@ export const getTeachers = (data = "array") => (dispatch) => {
     });
 };
 
+export const getAllUsers = (unitId) => (dispatch) => {
+  return axios
+    .get(`/api/users/getAllUsers/${unitId}`)
+    .then((res) => {
+      dispatch({
+        type: GET_ALL_USERS,
+        payload: res.data,
+      });
+      return res.data;
+    })
+    .catch((err) => {
+      console.log("Error in getting one user");
+      throw err;
+    });
+};
 export const getOneUser = (userId) => (dispatch) => {
+  console.log(userId);
   return axios
     .get("/api/users/getOneUser/" + userId)
     .then((res) => {
@@ -222,6 +245,7 @@ export const getOneUser = (userId) => (dispatch) => {
     })
     .catch((err) => {
       console.log("Error in getting one user");
+      throw err;
     });
 };
 
@@ -239,7 +263,7 @@ export const getUsers = (userIds) => (dispatch) => {
 };
 
 export const getStudentsByClass = (classId) => (dispatch) => {
-  axios
+  return axios
     .get("/api/users/getstudentsbyclass/" + classId)
     .then((res) => {
       // console.log(res.data)
@@ -247,7 +271,7 @@ export const getStudentsByClass = (classId) => (dispatch) => {
         type: GET_STUDENTS_BY_CLASS,
         payload: res.data,
       });
-      console.log("getStudentsByClass completed");
+      return res.data;
     })
     .catch((err) => {
       console.log("Error in getting Students by class");
@@ -255,9 +279,9 @@ export const getStudentsByClass = (classId) => (dispatch) => {
 };
 
 // actions for admin only
-export const getPendingStudents = () => (dispatch) => {
+export const getPendingStudents = (unitId) => (dispatch) => {
   axios
-    .get("/api/users/getpendingstudents/")
+    .get(`/api/users/getpendingstudents/${unitId}`)
     .then((res) => {
       console.log(res.data);
       dispatch({
@@ -270,9 +294,9 @@ export const getPendingStudents = () => (dispatch) => {
     });
 };
 
-export const getPendingTeachers = () => (dispatch) => {
+export const getPendingTeachers = (unitId) => (dispatch) => {
   axios
-    .get("/api/users/getpendingteachers/")
+    .get(`/api/users/getpendingteachers/${unitId}`)
     .then((res) => {
       console.log(res.data);
       dispatch({
@@ -285,45 +309,114 @@ export const getPendingTeachers = () => (dispatch) => {
     });
 };
 
-export const setUserActive = (userId) => (dispatch) => {
+export const getAllAdmins = () => (dispatch) => {
   axios
+    .get(`/api/users/getAllAdmins/`)
+    .then((res) => {
+      dispatch({
+        type: GET_ALL_ADMINS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log("Error in getting Students by class");
+    });
+};
+
+export const getAdmins = (unitId) => (dispatch) => {
+  axios
+    .get(`/api/users/getAdmins/${unitId}`)
+    .then((res) => {
+      dispatch({
+        type: GET_ALL_ADMINS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log("Error in getting Students by class");
+    });
+};
+
+export const getAllPendingAdmins = () => (dispatch) => {
+  console.log("Get pending users are runned");
+  return axios
+    .get("/api/users/getAllPendingAdmins")
+    .then((res) => {
+      console.log(res.data);
+      dispatch({
+        type: GET_PENDING_ADMINS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log("Error in getting Students by class");
+    });
+};
+
+export const setUserActive = (userId) => (dispatch) => {
+  return axios
     .put(`/api/users/setuseractive/${userId}`)
     .then((res) => {
-      console.log(res.data);
-      window.location.reload();
+      return res.data;
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
+      throw err;
     });
 };
 
-export const setUserDisabled = (userId) => (dispatch) => {
-  axios
-    .put(`/api/users/setuserdisabled/${userId}`)
+export const bulkSetUserActive = (id_list) => (dispatch) => {
+  let data = { id_list: id_list };
+  return axios
+    .put(`/api/users/bulksetuseractive/`, data)
     .then((res) => {
-      console.log(res.data);
-      window.location.reload();
+      return res.data;
     })
     .catch((err) => {
-      console.log(err);
+      throw err;
+      console.error(err);
     });
 };
 
+export const setUserDeactivated = (userId) => (dispatch) => {
+  return axios
+    .put(`/api/users/setuserdeactivated/${userId}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      throw err;
+      console.error(err);
+    });
+};
+
+export const bulkSetUserDeactivated = (id_list) => (dispatch) => {
+  let data = { id_list: id_list };
+  return axios
+    .put(`/api/users/bulksetuseractive/`, data)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      throw err;
+      console.error(err);
+    });
+};
 export const deleteUser = (userId) => (dispatch) => {
-  axios
+  return axios
     .delete(`/api/users/delete/${userId}`)
     .then((res) => {
-      console.log(res.data);
-      window.location.reload();
+      return res.data;
     })
     .catch((err) => {
-      console.log("Error in deleting students");
+      console.error("Error in deleting user");
+      throw err;
     });
 };
 
 export const moveStudents = (data, dummyClassId) => {
   return axios
-    .put(`/api/users/class-assignment/${dummyClassId}`, data)
+    .put(`/api/users/classAssignment/${dummyClassId}`, data)
     .then(() => {
       console.log("moveStudents completed");
     })
@@ -338,7 +431,7 @@ export const updateTeacher = (data, teacherId) => (dispatch) => {
     .then(() => {
       dispatch({
         type: GET_SUCCESS_RESPONSE,
-        payload: teacherId
+        payload: teacherId,
       });
     })
     .catch((err) => {
@@ -349,34 +442,41 @@ export const updateTeacher = (data, teacherId) => (dispatch) => {
     });
 };
 
+export const updateUnitAdmins = (data, adminId) => (dispatch) => {
+  return axios
+    .put(`/api/users/updateUnitAdmins`, data)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      throw err;
+    });
+};
+
 export const refreshTeacher = (teacherId) => (dispatch) => {
   axios
-  .get("/api/users/getOneUser/" + teacherId)
-  .then((res) => {
-    dispatch(setCurrentUser(res.data));
-  })
-  .catch((err) => {
-    console.log(err);
-  });    
+    .get("/api/users/getOneUser/" + teacherId)
+    .then((res) => {
+      dispatch(setCurrentUser(res.data));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 export const bulkRegisterUsers = (data) => {
-  return (
-    axios
-      .post("/api/users/register_students_bulk", data)
-      .then((res) => {
-        return res;
-      })
-  )
-}
+  return axios.post("/api/users/registerStudentsBulk", data).then((res) => {
+    return res;
+  });
+};
 
 export const validateRegister = (userData, pageNum) => {
   return axios
     .post(`api/users/validateregister/${pageNum}`, userData)
-    .then ((res) => {
+    .then((res) => {
       return res.data;
     })
     .catch((err) => {
       throw err.response.data;
     });
-}
+};

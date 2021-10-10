@@ -13,7 +13,7 @@ import {
   ListItemAvatar,
   ListItemText,
   Paper,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import {
   Assignment as AssignmentIcon,
@@ -26,7 +26,7 @@ import {
   Looks3 as Looks3Icon,
   Mail as MailIcon,
   MenuBook as MenuBookIcon,
-  QuestionAnswer as QuestionAnswerIcon
+  QuestionAnswer as QuestionAnswerIcon,
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
 import { AiFillNotification } from "react-icons/ai";
@@ -213,9 +213,9 @@ class Landing extends Component {
                   Schooly membuat pekerjaan sekolahmu lebih mudah.
                 </Typography>
                 <Typography variant="h6">
-                  Tidak pernah lupa lagi dengan tugas sekolah yang ada.
-                  Berikan materi dan pekerjaan sekolah dengan mudah.
-                  Periksa hasil kuis dan ujian secara otomatis.
+                  Tidak pernah lupa lagi dengan tugas sekolah yang ada. Berikan
+                  materi dan pekerjaan sekolah dengan mudah. Periksa hasil kuis
+                  dan ujian secara otomatis.
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6} container justify="flex-end">
@@ -238,7 +238,12 @@ class Landing extends Component {
               />
             </Grid>
             <Grid item>
-              <Typography variant="h4" color="primary" align="center" gutterBottom>
+              <Typography
+                variant="h4"
+                color="primary"
+                align="center"
+                gutterBottom
+              >
                 Akses dengan mudah di mana saja.
               </Typography>
               <Typography align="center">
@@ -252,15 +257,22 @@ class Landing extends Component {
           <div className={classes.schoolyFeatures}>
             <Grid container justify="center" alignItems="stretch" spacing={2}>
               <Grid item xs={12}>
-                <Typography variant="h4" color="textSecondary" align="center" paragraph>
+                <Typography
+                  variant="h4"
+                  color="textSecondary"
+                  align="center"
+                  paragraph
+                >
                   Schooly selalu berkembang
                 </Typography>
                 <Typography color="textSecondary" align="center">
-                  Schooly memudahkan pekerjaan hampir semua pihak dalam kegiatan belajar mengajar,
-                  baik dari pihak <b>sekolah</b>, <b>guru</b>, maupun <b>murid</b>.
+                  Schooly memudahkan pekerjaan hampir semua pihak dalam kegiatan
+                  belajar mengajar, baik dari pihak <b>sekolah</b>, <b>guru</b>,
+                  maupun <b>murid</b>.
                 </Typography>
                 <Typography color="textSecondary" align="center" paragraph>
-                  Fitur yang kami sediakan pun selalu <u>bertambah</u> dan <u>berkembang</u> dari waktu ke waktu.
+                  Fitur yang kami sediakan pun selalu <u>bertambah</u> dan{" "}
+                  <u>berkembang</u> dari waktu ke waktu.
                 </Typography>
               </Grid>
               <Hidden mdUp>
@@ -274,12 +286,11 @@ class Landing extends Component {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={
-                            <Typography>Akun Pengelola</Typography>
-                          }
+                          primary={<Typography>Akun Pengelola</Typography>}
                           secondary={
                             <Typography variant="body2">
-                              Atur dan kelola pengguna yang ada dengan mudah dan terstruktur.
+                              Atur dan kelola pengguna yang ada dengan mudah dan
+                              terstruktur.
                             </Typography>
                           }
                         />
@@ -295,12 +306,12 @@ class Landing extends Component {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={
-                            <Typography>Pendataan Pengguna</Typography>
-                          }
+                          primary={<Typography>Pendataan Pengguna</Typography>}
                           secondary={
                             <Typography variant="body2">
-                              Temukan kontak orang sepersekolahanmu. Perbarui pendataan data pribadi kepada sekolah dengan mudah.
+                              Temukan kontak orang sepersekolahanmu. Perbarui
+                              pendataan data pribadi kepada sekolah dengan
+                              mudah.
                             </Typography>
                           }
                         />
@@ -316,12 +327,11 @@ class Landing extends Component {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={
-                            <Typography>Unit</Typography>
-                          }
+                          primary={<Typography>Unit</Typography>}
                           secondary={
                             <Typography variant="body2">
-                              Atur pengguna yang ada sesuai dengan unit-unit sekolahmu.
+                              Atur pengguna yang ada sesuai dengan unit-unit
+                              sekolahmu.
                             </Typography>
                           }
                         />
@@ -337,12 +347,11 @@ class Landing extends Component {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={
-                            <Typography>Kelas</Typography>
-                          }
+                          primary={<Typography>Kelas</Typography>}
                           secondary={
                             <Typography variant="body2">
-                              Kelompokkan murid-murid yang ada sesuai dengan kelas dan mata pelajaran masing-masing.
+                              Kelompokkan murid-murid yang ada sesuai dengan
+                              kelas dan mata pelajaran masing-masing.
                             </Typography>
                           }
                         />
@@ -358,12 +367,11 @@ class Landing extends Component {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={
-                            <Typography>Kalender</Typography>
-                          }
+                          primary={<Typography>Kalender</Typography>}
                           secondary={
                             <Typography variant="body2">
-                              Jadwal persekolahanmu terangkum secara otomatis, mulai dari tugas, ujian, hingga kegiatan lainnya.
+                              Jadwal persekolahanmu terangkum secara otomatis,
+                              mulai dari tugas, ujian, hingga kegiatan lainnya.
                             </Typography>
                           }
                         />
@@ -379,12 +387,11 @@ class Landing extends Component {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={
-                            <Typography>Kegiatan</Typography>
-                          }
+                          primary={<Typography>Kegiatan</Typography>}
                           secondary={
                             <Typography variant="body2">
-                              Umumkan kegiatan akademik dan non-akademik baik ke pihak Guru, Murid, ataupun keduanya.
+                              Umumkan kegiatan akademik dan non-akademik baik ke
+                              pihak Guru, Murid, ataupun keduanya.
                             </Typography>
                           }
                         />
@@ -400,12 +407,11 @@ class Landing extends Component {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={
-                            <Typography>Pengumuman</Typography>
-                          }
+                          primary={<Typography>Pengumuman</Typography>}
                           secondary={
                             <Typography variant="body2">
-                              Sebarkan informasi persekolahan dengan mudah dan cepat.
+                              Sebarkan informasi persekolahan dengan mudah dan
+                              cepat.
                             </Typography>
                           }
                         />
@@ -421,12 +427,11 @@ class Landing extends Component {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={
-                            <Typography>Komentar</Typography>
-                          }
+                          primary={<Typography>Komentar</Typography>}
                           secondary={
                             <Typography variant="body2">
-                              Diskusikan tugasmu baik bersama teman-teman sekelas ataupun sang guru pemberi tugas.
+                              Diskusikan tugasmu baik bersama teman-teman
+                              sekelas ataupun sang guru pemberi tugas.
                             </Typography>
                           }
                         />
@@ -442,12 +447,12 @@ class Landing extends Component {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={
-                            <Typography>Materi</Typography>
-                          }
+                          primary={<Typography>Materi</Typography>}
                           secondary={
                             <Typography variant="body2">
-                              Kertas tidak ada, tas pun jadi ringan. Berikan materi kepada murid dengan beberapa ketuk saja, tanpa harus dicetak.
+                              Kertas tidak ada, tas pun jadi ringan. Berikan
+                              materi kepada murid dengan beberapa ketuk saja,
+                              tanpa harus dicetak.
                             </Typography>
                           }
                         />
@@ -463,12 +468,11 @@ class Landing extends Component {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={
-                            <Typography>Tugas</Typography>
-                          }
+                          primary={<Typography>Tugas</Typography>}
                           secondary={
                             <Typography variant="body2">
-                              Tidak perlu lupa akan tugas-tugas yang ada dan kumpulkan dengan mudah.
+                              Tidak perlu lupa akan tugas-tugas yang ada dan
+                              kumpulkan dengan mudah.
                             </Typography>
                           }
                         />
@@ -484,12 +488,12 @@ class Landing extends Component {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={
-                            <Typography>Kuis & Ujian</Typography>
-                          }
+                          primary={<Typography>Kuis & Ujian</Typography>}
                           secondary={
                             <Typography variant="body2">
-                              Buat kuis atau ujian dengan berbagai jenis tipe soal, hasilnya pun dapat diperiksa secara otomatis.
+                              Buat kuis atau ujian dengan berbagai jenis tipe
+                              soal, hasilnya pun dapat diperiksa secara
+                              otomatis.
                             </Typography>
                           }
                         />
@@ -505,12 +509,11 @@ class Landing extends Component {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={
-                            <Typography>Rapor</Typography>
-                          }
+                          primary={<Typography>Rapor</Typography>}
                           secondary={
                             <Typography variant="body2">
-                              Pantau perubahan nilai-nilai yang ada secara cepat dan dinamis dalam bentuk tabel ataupun grafik.
+                              Pantau perubahan nilai-nilai yang ada secara cepat
+                              dan dinamis dalam bentuk tabel ataupun grafik.
                             </Typography>
                           }
                         />
@@ -521,134 +524,213 @@ class Landing extends Component {
               </Hidden>
               <Hidden smDown>
                 <Grid item xs={4} lg={3}>
-                  <Paper variant="outlined" className={classes.featuresPaperDesktop}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
                     <Avatar className={classes.featuresAvatarDesktop}>
                       <FaUserCog className={classes.featuresIconDesktop} />
                     </Avatar>
-                    <Typography align="center" paragraph>Akun Pengelola</Typography>
+                    <Typography align="center" paragraph>
+                      Akun Pengelola
+                    </Typography>
                     <Typography variant="body2" align="center">
-                      Atur dan kelola pengguna yang ada dengan mudah dan terstruktur.
+                      Atur dan kelola pengguna yang ada dengan mudah dan
+                      terstruktur.
                     </Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={4} lg={3}>
-                  <Paper variant="outlined" className={classes.featuresPaperDesktop}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
                     <Avatar className={classes.featuresAvatarDesktop}>
                       <FaceIcon className={classes.featuresIconDesktop} />
                     </Avatar>
-                    <Typography align="center" paragraph>Pendataan Pengguna</Typography>
+                    <Typography align="center" paragraph>
+                      Pendataan Pengguna
+                    </Typography>
                     <Typography variant="body2" align="center">
-                      Temukan kontak orang sepersekolahanmu. Perbarui pendataan data pribadi kepada sekolah dengan mudah.
+                      Temukan kontak orang sepersekolahanmu. Perbarui pendataan
+                      data pribadi kepada sekolah dengan mudah.
                     </Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={4} lg={3}>
-                  <Paper variant="outlined" className={classes.featuresPaperDesktop}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
                     <Avatar className={classes.featuresAvatarDesktop}>
                       <FaSchool className={classes.featuresIconDesktop} />
                     </Avatar>
-                    <Typography align="center" paragraph>Unit</Typography>
+                    <Typography align="center" paragraph>
+                      Unit
+                    </Typography>
                     <Typography variant="body2" align="center">
                       Atur pengguna yang ada sesuai dengan unit-unit sekolahmu.
                     </Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={4} lg={3}>
-                  <Paper variant="outlined" className={classes.featuresPaperDesktop}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
                     <Avatar className={classes.featuresAvatarDesktop}>
                       <FaChalkboard className={classes.featuresIconDesktop} />
                     </Avatar>
-                    <Typography align="center" paragraph>Kelas</Typography>
+                    <Typography align="center" paragraph>
+                      Kelas
+                    </Typography>
                     <Typography variant="body2" align="center">
-                      Kelompokkan murid-murid yang ada sesuai dengan kelas dan mata pelajaran masing-masing.
+                      Kelompokkan murid-murid yang ada sesuai dengan kelas dan
+                      mata pelajaran masing-masing.
                     </Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={4} lg={3}>
-                  <Paper variant="outlined" className={classes.featuresPaperDesktop}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
                     <Avatar className={classes.featuresAvatarDesktop}>
                       <EventNoteIcon className={classes.featuresIconDesktop} />
                     </Avatar>
-                    <Typography align="center" paragraph>Kalender</Typography>
+                    <Typography align="center" paragraph>
+                      Kalender
+                    </Typography>
                     <Typography variant="body2" align="center">
-                      Jadwal persekolahanmu terangkum secara otomatis, mulai dari tugas, ujian, hingga kegiatan lainnya.
+                      Jadwal persekolahanmu terangkum secara otomatis, mulai
+                      dari tugas, ujian, hingga kegiatan lainnya.
                     </Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={4} lg={3}>
-                  <Paper variant="outlined" className={classes.featuresPaperDesktop}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
                     <Avatar className={classes.featuresAvatarDesktop}>
-                      <AiFillNotification className={classes.featuresIconDesktop} />
+                      <AiFillNotification
+                        className={classes.featuresIconDesktop}
+                      />
                     </Avatar>
-                    <Typography align="center" paragraph>Kegiatan</Typography>
+                    <Typography align="center" paragraph>
+                      Kegiatan
+                    </Typography>
                     <Typography variant="body2" align="center">
-                      Umumkan kegiatan akademik dan non-akademik baik ke pihak Guru, Murid, ataupun keduanya.
+                      Umumkan kegiatan akademik dan non-akademik baik ke pihak
+                      Guru, Murid, ataupun keduanya.
                     </Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={4} lg={3}>
-                  <Paper variant="outlined" className={classes.featuresPaperDesktop}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
                     <Avatar className={classes.featuresAvatarDesktop}>
-                      <AnnouncementIcon className={classes.featuresIconDesktop} />
+                      <AnnouncementIcon
+                        className={classes.featuresIconDesktop}
+                      />
                     </Avatar>
-                    <Typography align="center" paragraph>Pengumuman</Typography>
+                    <Typography align="center" paragraph>
+                      Pengumuman
+                    </Typography>
                     <Typography variant="body2" align="center">
                       Sebarkan informasi persekolahan dengan mudah dan cepat.
                     </Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={4} lg={3}>
-                  <Paper variant="outlined" className={classes.featuresPaperDesktop}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
                     <Avatar className={classes.featuresAvatarDesktop}>
-                      <QuestionAnswerIcon className={classes.featuresIconDesktop} />
+                      <QuestionAnswerIcon
+                        className={classes.featuresIconDesktop}
+                      />
                     </Avatar>
-                    <Typography align="center" paragraph>Komentar</Typography>
+                    <Typography align="center" paragraph>
+                      Komentar
+                    </Typography>
                     <Typography variant="body2" align="center">
-                      Diskusikan tugasmu baik bersama teman-teman sekelas ataupun sang guru pemberi tugas.
+                      Diskusikan tugasmu baik bersama teman-teman sekelas
+                      ataupun sang guru pemberi tugas.
                     </Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={4} lg={3}>
-                  <Paper variant="outlined" className={classes.featuresPaperDesktop}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
                     <Avatar className={classes.featuresAvatarDesktop}>
                       <MenuBookIcon className={classes.featuresIconDesktop} />
                     </Avatar>
-                    <Typography align="center" paragraph>Materi</Typography>
+                    <Typography align="center" paragraph>
+                      Materi
+                    </Typography>
                     <Typography variant="body2" align="center">
-                      Kertas tidak ada, tas pun jadi ringan. Berikan materi kepada murid dengan beberapa ketuk saja, tanpa harus dicetak.
+                      Kertas tidak ada, tas pun jadi ringan. Berikan materi
+                      kepada murid dengan beberapa ketuk saja, tanpa harus
+                      dicetak.
                     </Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={4} lg={3}>
-                  <Paper variant="outlined" className={classes.featuresPaperDesktop}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
                     <Avatar className={classes.featuresAvatarDesktop}>
                       <AssignmentIcon className={classes.featuresIconDesktop} />
                     </Avatar>
-                    <Typography align="center" paragraph>Tugas</Typography>
+                    <Typography align="center" paragraph>
+                      Tugas
+                    </Typography>
                     <Typography variant="body2" align="center">
-                      Tidak perlu lupa akan tugas-tugas yang ada dan kumpulkan dengan mudah.
+                      Tidak perlu lupa akan tugas-tugas yang ada dan kumpulkan
+                      dengan mudah.
                     </Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={4} lg={3}>
-                  <Paper variant="outlined" className={classes.featuresPaperDesktop}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
                     <Avatar className={classes.featuresAvatarDesktop}>
-                      <BsClipboardData className={classes.featuresIconDesktop} />
+                      <BsClipboardData
+                        className={classes.featuresIconDesktop}
+                      />
                     </Avatar>
-                    <Typography align="center" paragraph>Kuis & Ujian</Typography>
+                    <Typography align="center" paragraph>
+                      Kuis & Ujian
+                    </Typography>
                     <Typography variant="body2" align="center">
-                      Buat kuis atau ujian dengan berbagai jenis tipe soal, hasilnya pun dapat diperiksa secara otomatis.
+                      Buat kuis atau ujian dengan berbagai jenis tipe soal,
+                      hasilnya pun dapat diperiksa secara otomatis.
                     </Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={4} lg={3}>
-                  <Paper variant="outlined" className={classes.featuresPaperDesktop}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
                     <Avatar className={classes.featuresAvatarDesktop}>
                       <AssessmentIcon className={classes.featuresIconDesktop} />
                     </Avatar>
-                    <Typography align="center" paragraph>Rapor</Typography>
+                    <Typography align="center" paragraph>
+                      Rapor
+                    </Typography>
                     <Typography variant="body2" align="center">
-                      Pantau perubahan nilai-nilai yang ada secara cepat dan dinamis dalam bentuk tabel ataupun grafik.
+                      Pantau perubahan nilai-nilai yang ada secara cepat dan
+                      dinamis dalam bentuk tabel ataupun grafik.
                     </Typography>
                   </Paper>
                 </Grid>
@@ -672,8 +754,12 @@ class Landing extends Component {
                 Pengenalan
               </Typography>
               <Typography variant="body2" align="center">
-                Kunjungi halaman <Link to="/tentang-schooly" style={{ color: "white" }}><u>Tentang Schooly</u></Link> dan
-                hubungi kami untuk mendapatkan penjelasan lebih lanjut tentang Schooly.
+                Kunjungi halaman{" "}
+                <Link to="/tentang-schooly" style={{ color: "white" }}>
+                  <u>Tentang Schooly</u>
+                </Link>{" "}
+                dan hubungi kami untuk mendapatkan penjelasan lebih lanjut
+                tentang Schooly.
               </Typography>
             </Grid>
             <Grid item xs={12} md={4} className={classes.trySchoolyItemMiddle}>
@@ -692,8 +778,8 @@ class Landing extends Component {
                 Pemakaian
               </Typography>
               <Typography variant="body2" align="center">
-                Setelah semua dokumen administrasi sudah dilengkapi,
-                maka Schooly siap dipakai di sekolah Anda.
+                Setelah semua dokumen administrasi sudah dilengkapi, maka
+                Schooly siap dipakai di sekolah Anda.
               </Typography>
             </Grid>
           </Grid>
@@ -706,7 +792,11 @@ class Landing extends Component {
             Tekan tombol "Kirim Pesan" untuk menghubungi kami atau tombol "Salin
             Tautan" untuk mengirim tautan ini ke sekolah Anda.
           </Typography>
-          <Grid container spacing={2} className={classes.contactSchoolyButtonsContainer}>
+          <Grid
+            container
+            spacing={2}
+            className={classes.contactSchoolyButtonsContainer}
+          >
             <Grid item>
               <Button
                 variant="contained"

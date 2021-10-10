@@ -15,22 +15,22 @@ router.post("/create", (req, res) => {
     return res.status(404).json(errors);
   }
 
-  Subject.findOne({ name: req.body.name }).then((subject) => {
-    if (subject) {
-      return res
-        .status(404)
-        .json({ name: "Nama mata pelajaran sudah dipakai" });
-    } else {
-      const newSubject = new Subject({
-        name: req.body.name,
-      });
-      
-      newSubject
-        .save()
-        .then((subject) => res.json(subject))
-        .catch((err) => res.json(err));
+  Subject.findOne({ name: req.body.name, unit: req.body.unit }).then(
+    (subject) => {
+      if (subject) {
+        return res
+          .status(404)
+          .json({ name: "Nama mata pelajaran sudah dipakai" });
+      } else {
+        const newSubject = new Subject(req.body);
+
+        newSubject
+          .save()
+          .then((subject) => res.json(subject))
+          .catch((err) => res.json(err));
+      }
     }
-  });
+  );
 });
 
 router.put("/edit/:id", (req, res) => {
@@ -41,28 +41,31 @@ router.put("/edit/:id", (req, res) => {
     return res.status(404).json(errors);
   }
 
-  Subject.findOne({ name: req.body.name }, (err, subject) => {
-    if (subject) {
-      return res
-        .status(404)
-        .json({ name: "Nama mata pelajaran sudah dipakai" });
-    } else {
-      Subject.findById(id, (err, subject) => {
-        if (!subject) {
-          return res
-            .status(404)
-            .json({ name: "Mata pelajaran tidak ditemukan" });
-        } else {
-          subject.name = req.body.name;
+  Subject.findOne(
+    { name: req.body.name, unit: req.body.unit },
+    (err, subject) => {
+      if (subject) {
+        return res
+          .status(404)
+          .json({ name: "Nama mata pelajaran sudah dipakai" });
+      } else {
+        Subject.findById(id, (err, subject) => {
+          if (!subject) {
+            return res
+              .status(404)
+              .json({ name: "Mata pelajaran tidak ditemukan" });
+          } else {
+            subject.name = req.body.name;
 
-          subject
-            .save()
-            .then(res.status(200).json("Done with updating subject"))
-            .catch(console.log("Erorr in updating the subject"));
-        }
-      });
+            subject
+              .save()
+              .then(res.status(200).json("Done with updating subject"))
+              .catch(console.log("Erorr in updating the subject"));
+          }
+        });
+      }
     }
-  });
+  );
 });
 
 router.get("/view/:id", (req, res) => {
@@ -76,12 +79,16 @@ router.get("/view/:id", (req, res) => {
   });
 });
 
-router.get("/viewall", (req, res) => {
-  Subject.find({}).then((subjects, err) => {
-    if (!subjects) res.status(400).json(err);
+router.get("/viewall/:unitId", (req, res) => {
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
+  Subject.find({ unit: unitId }).then((subjects, err) => {
+    if (!subjects) return res.status(400).json(err);
     else {
       subjects.sort((a, b) => (a.name > b.name ? 1 : -1));
-      res.json(subjects);
+      return res.json(subjects);
     }
   });
 });

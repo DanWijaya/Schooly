@@ -3,7 +3,10 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { uploadFileAvatar, getFileAvatar } from "../../../actions/files/FileAvatarActions";
+import {
+  uploadFileAvatar,
+  getFileAvatar,
+} from "../../../actions/files/FileAvatarActions";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import informationContacts from "./InformationContacts.png";
@@ -22,7 +25,7 @@ import {
   ListItem,
   Paper,
   Snackbar,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
@@ -36,7 +39,7 @@ import {
   Phone as PhoneIcon,
   SportsEsports as SportsEsportsIcon,
   Wc as WcIcon,
-  Work as WorkIcon
+  Work as WorkIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -94,8 +97,7 @@ function Profile(props) {
   const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
 
   React.useEffect(() => {
-    getFileAvatar(user._id)
-      .then((result) => setAvatar(result))
+    getFileAvatar(user._id).then((result) => setAvatar(result));
   }, [user._id]);
 
   // Initially classesCollection.kelas.name === undefined
@@ -114,7 +116,6 @@ function Profile(props) {
     }
     setOpenAlert(false);
   };
-
   // Alert control for EditProfileData
   const [openDataEditorAlert, setOpenDataEditorAlert] = React.useState(false);
   const handleOpenDataEditorAlert = () => {
@@ -202,9 +203,12 @@ function Profile(props) {
             {user.name}
           </Typography>
           <Typography variant="h6" color="textSecondary" align="center">
-            {user.role === "Student" ? "Murid"
-              : user.role === "Teacher" ? "Guru"
-              : user.role === "Admin" ? "Pengelola"
+            {user.role === "Student"
+              ? "Murid"
+              : user.role === "Teacher"
+              ? "Guru"
+              : user.role === "Admin"
+              ? "Pengelola"
               : null}
             {!classesCollection.kelas.name
               ? null
@@ -212,7 +216,12 @@ function Profile(props) {
           </Typography>
         </Grid>
       </Grid>
-      <Grid container justify="flex-end" spacing={1} className={classes.profileButtonContainer}>
+      <Grid
+        container
+        justify="flex-end"
+        spacing={1}
+        className={classes.profileButtonContainer}
+      >
         <Grid item>
           <EditProfileData
             handleOpenAlert={handleOpenDataEditorAlert}
@@ -220,9 +229,7 @@ function Profile(props) {
           />
         </Grid>
         <Grid item>
-          <EditPassword
-            handleOpenAlert={handleOpenPasswordEditorAlert}
-          />
+          <EditPassword handleOpenAlert={handleOpenPasswordEditorAlert} />
         </Grid>
       </Grid>
       <Grid container direction="column" spacing={4}>
@@ -263,11 +270,9 @@ function Profile(props) {
                   icon={<CakeIcon />}
                   iconStyle={classes.dataIcon}
                   type="Tanggal Lahir"
-                  value={
-                    moment(user.tanggal_lahir)
-                      .locale("id")
-                      .format("DD MMM YYYY")
-                  }
+                  value={moment(user.tanggal_lahir)
+                    .locale("id")
+                    .format("DD MMM YYYY")}
                 />
               </ListItem>
               <Divider variant="inset" />
@@ -361,7 +366,8 @@ function Profile(props) {
                     Karir
                   </Typography>
                   <Typography variant="subtitle1" color="textSecondary">
-                    Bantu kami dan sekolah Anda untuk merekomendasikan jalur karir terbaik untuk Anda.
+                    Bantu kami dan sekolah Anda untuk merekomendasikan jalur
+                    karir terbaik untuk Anda.
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={6}>

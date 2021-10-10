@@ -33,6 +33,7 @@ const announcements = require("./routes/api/announcements");
 const materials = require("./routes/api/materials");
 const assessments = require("./routes/api/assessments");
 const events = require("./routes/api/events");
+const units = require("./routes/api/units");
 
 // untuk setting
 const settings = require("./routes/api/settings");
@@ -58,7 +59,11 @@ const db = require("./config/keys").mongoURI;
 mongoose.set("useUnifiedTopology", true);
 mongoose.set("useNewUrlParser", true);
 mongoose
-  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(
+    db,
+    { useNewUrlParser: true },
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  )
   .then(() => {
     console.log("MongoDB successfully connected");
   })
@@ -74,7 +79,6 @@ app.use(passport.initialize());
 require("./passport")(passport);
 console.log("Check routes");
 // Routes
-
 app.use("/api/users", users);
 app.use("/api/tasks", tasks);
 app.use("/api/classes", classes);
@@ -107,6 +111,7 @@ app.use("/api/events", events);
 //Handle setting routing
 app.use("/api/settings", settings);
 
+app.use("/api/units", units);
 // Always put this in the end
 const port = process.env.PORT || 5000;
 

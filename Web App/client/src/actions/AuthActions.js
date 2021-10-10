@@ -32,15 +32,14 @@ export const createHash = (email) => {
       })
       .then((json) => {
         console.log(json);
-        if (json.success){
+        if (json.success) {
           // If email is in database
           dispatch({
             type: PWD_RESET_HASH_CREATED,
             payload: json,
           });
           return json;
-        }
-        else {
+        } else {
           console.log("errornya di sini");
           dispatch({
             type: GET_ERRORS,

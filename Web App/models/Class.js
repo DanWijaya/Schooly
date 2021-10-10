@@ -4,29 +4,29 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const ClassSchema = new Schema({
+  unit: {
+    type: ObjectId,
+    default: null,
+  },
   name: {
     type: String,
     required: true,
   },
-
   // 1 guru hanya boleh menjadi wali untuk 1 atau 0 kelas.
   // ini dipastikan saat pembuatan kelas (opsi wali kelas hanya akan berisi guru nonwali).
   walikelas: {
     type: ObjectId,
     // required: true
   },
-
   // ini semestinya bakal dihapus
   ukuran: {
     type: Number,
     required: true,
   },
-
   nihil: {
     type: Boolean,
     default: true,
   },
-
   /* 
   - ketua_kelas, bendahara, dan sekretaris bisa 1 orang yang sama
   - field ketua_kelas, bendahara, dan sekretaris akan dihapus ketika admin memindahkan murid yang bersangkutan ke kelas lain
@@ -44,9 +44,12 @@ const ClassSchema = new Schema({
     type: ObjectId,
     ref: "users",
   },
-
   subject_assigned: {
     type: [ObjectId],
+  },
+  unit: {
+    type: ObjectId,
+    ref: "units"
   }
 });
 

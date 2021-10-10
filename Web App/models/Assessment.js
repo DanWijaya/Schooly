@@ -5,6 +5,10 @@ const { ObjectId } = require("mongodb");
 // Create AssessmentSchema
 const AssessmentSchema = new Schema(
   {
+    unit: {
+      type: ObjectId,
+      default: null,
+    },
     name: {
       type: String,
       required: true,
@@ -44,17 +48,17 @@ const AssessmentSchema = new Schema(
         type: { type: String, required: true },
       },
     ],
-    posted: { 
-      type: Boolean, 
+    posted: {
+      type: Boolean,
       // required: true,
-      // default: false 
+      // default: false
     },
 
     // jika atribut "posted" bernilai null, atribut ini berisi tanggal posting.
     // jika atribut "posted" berisi true atau false, atribut ini bernilai null.
     post_date: {
       type: Date,
-      // required: true 
+      // required: true
     },
     grades: {
       type: Map,
@@ -99,13 +103,13 @@ const AssessmentSchema = new Schema(
     */
 
     submissions_timestamp: {
-      type: Map
+      type: Map,
     },
     /* 
     - ketika assessment pertama kali dibuat, atribut ini tidak ada
     - isi atribut ini adalah pasangan <id murid> - <timestamp ketika submission diterima oleh server>
-    */ 
-    
+    */
+
     submissions: {
       type: Map,
     },
@@ -167,7 +171,6 @@ const AssessmentSchema = new Schema(
     } 
     - bobot semua soal yang ada pada suatu assessment dipastikan diisi dan tidak bernilai <= 0
     */
-
   },
   { timestamps: true }
 );

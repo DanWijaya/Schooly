@@ -6,13 +6,7 @@ import onlineLearning from "./OnlineLearning-CompareFibre.jpg";
 import aboutArt1 from "./AboutArt1.png";
 import aboutArt2 from "./AboutArt2.png";
 import aboutArt3 from "./AboutArt3.png";
-import {
-  Button,
-  Divider,
-  Grid,
-  Hidden,
-  Typography
-} from "@material-ui/core";
+import { Button, Divider, Grid, Hidden, Typography } from "@material-ui/core";
 import { Email as EmailIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -136,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
   solutionContainer: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   solutionTitle: {
     fontSize: "14px",
@@ -188,16 +182,30 @@ function About(props) {
   return (
     <div className={classes.root}>
       <div className={classes.whatIsSchooly}>
-        <Typography variant="h2" align="center" paragraph className={classes.schoolyMotto}>
+        <Typography
+          variant="h2"
+          align="center"
+          paragraph
+          className={classes.schoolyMotto}
+        >
           Schooly makes your school work easy!
         </Typography>
-        <Typography variant="h6" align="center" className={classes.schoolyDefinition}>
+        <Typography
+          variant="h6"
+          align="center"
+          className={classes.schoolyDefinition}
+        >
           Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang
           dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang
           ada di sekolah.
         </Typography>
         <Divider className={classes.whatIsSchoolyDivider} />
-        <Typography variant="h6" color="textSecondary" align="center" className={classes.schoolyQuotes}>
+        <Typography
+          variant="h6"
+          color="textSecondary"
+          align="center"
+          className={classes.schoolyQuotes}
+        >
           ❝Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk
           kegiatan persekolahan akan menjadi lebih efektif dan efisien.❞
         </Typography>
@@ -220,33 +228,41 @@ function About(props) {
           <Grid item xs={12} md={6} container direction="column">
             <div className={classes.worldChanges} />
             <Grid item>
-              <Typography variant="h6" style={{ marginTop: "10px", marginBottom: "10px" }}>
+              <Typography
+                variant="h6"
+                style={{ marginTop: "10px", marginBottom: "10px" }}
+              >
                 Dunia berubah, begitu juga seharusnya pendidikan
               </Typography>
               <Divider className={classes.subtopicDividerLong} />
               <Divider className={classes.subtopicDividerShort} />
               <Typography>
-                Di kegiatan sehari-hari sekarang, tidak terlepas dengan namanya teknologi.
-                Hampir segala sesuatu yang kita butuhkan dan inginkan dapat terpenuhi melalui
-                perangkat komputer dan ponsel yang selalu kita bawa kemana-mana.
+                Di kegiatan sehari-hari sekarang, tidak terlepas dengan namanya
+                teknologi. Hampir segala sesuatu yang kita butuhkan dan inginkan
+                dapat terpenuhi melalui perangkat komputer dan ponsel yang
+                selalu kita bawa kemana-mana.
               </Typography>
             </Grid>
           </Grid>
           <Grid item xs={12} md={6} container direction="column">
             <div className={classes.techWorld} />
             <Grid item>
-              <Typography variant="h6" style={{ marginTop: "10px", marginBottom: "10px" }}>
+              <Typography
+                variant="h6"
+                style={{ marginTop: "10px", marginBottom: "10px" }}
+              >
                 Apa kata perkuliahan dan pekerjaan zaman sekarang?
               </Typography>
               <Divider className={classes.subtopicDividerLong} />
               <Divider className={classes.subtopicDividerShort} />
               <Typography>
-                Pengaruh teknologi ini juga dapat dilihat baik di perkuliahan dan pekerjaan
-                zaman sekarang. Sekarang, hampir semua tugas dan ujian di perkuliahan
-                membutuhkan komputer dan dikumpul dalam bentuk digital. Begitu juga di
-                dunia kerja. Kegiatan pemasaran, perhitungan keuangan, dan pekerjaan lainnya
-                sekarang membutuhkan bantuan komputer ataupun ponsel. Lantas, mengapa
-                sekolah-sekolah pada umumnya malah melarang penggunaan perangkat digital ini?
+                Pengaruh teknologi ini juga dapat dilihat baik di perkuliahan
+                dan pekerjaan zaman sekarang. Sekarang, hampir semua tugas dan
+                ujian di perkuliahan membutuhkan komputer dan dikumpul dalam
+                bentuk digital. Begitu juga di dunia kerja. Kegiatan pemasaran,
+                perhitungan keuangan, dan pekerjaan lainnya sekarang membutuhkan
+                bantuan komputer ataupun ponsel. Lantas, mengapa sekolah-sekolah
+                pada umumnya malah melarang penggunaan perangkat digital ini?
               </Typography>
             </Grid>
           </Grid>
@@ -255,15 +271,21 @@ function About(props) {
       <div>
         <div className={classes.solution} />
         <div className={classes.solutionContainer}>
-          <Typography variant="overline" align="center" className={classes.solutionTitle}>
+          <Typography
+            variant="overline"
+            align="center"
+            className={classes.solutionTitle}
+          >
             Schooly adalah solusinya!
           </Typography>
           <Typography align="center" className={classes.solutionText}>
-            Kami mengerti akan masalah-masalah yang dihadapi sekolah-sekolah yang ada
-            untuk beradaptasi di era digital ini. Terutama dalam mengatur murid-murid yang ada,
-            agar tidak terdistraksi atau menyalahgunakan teknologi yang ada bukan untuk belajar.
-            Schooly memiliki visi dimana membawa perangkat ke sekolah bukanlah sebuah tantangan,
-            melainkan hal yang dapat membantu kegiatan belajar-mengajar.
+            Kami mengerti akan masalah-masalah yang dihadapi sekolah-sekolah
+            yang ada untuk beradaptasi di era digital ini. Terutama dalam
+            mengatur murid-murid yang ada, agar tidak terdistraksi atau
+            menyalahgunakan teknologi yang ada bukan untuk belajar. Schooly
+            memiliki visi dimana membawa perangkat ke sekolah bukanlah sebuah
+            tantangan, melainkan hal yang dapat membantu kegiatan
+            belajar-mengajar.
           </Typography>
         </div>
       </div>
@@ -271,12 +293,21 @@ function About(props) {
         <Typography variant="h3" align="center" gutterBottom>
           Mengapa Schooly?
         </Typography>
-        <Typography variant="h6" align="center" style={{ marginBottom: "50px" }}>
+        <Typography
+          variant="h6"
+          align="center"
+          style={{ marginBottom: "50px" }}
+        >
           Berikut adalah keuntungan dari penggunaan Schooly.
         </Typography>
         <Grid container direction="column" spacing={5}>
           <Grid item container justify="center" alignItems="center" spacing={5}>
-            <Grid item xs={12} md={6} className={classes.whySchoolyThumbnailContainer}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              className={classes.whySchoolyThumbnailContainer}
+            >
               <img
                 alt="Schooly Feature 1"
                 src={aboutArt1}
@@ -313,7 +344,12 @@ function About(props) {
                   bisa diakses perangkat apa saja dengan mudah.
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6} className={classes.whySchoolyThumbnailContainer}>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                className={classes.whySchoolyThumbnailContainer}
+              >
                 <img
                   alt="Schooly Feature 2"
                   src={aboutArt2}
@@ -330,7 +366,12 @@ function About(props) {
               alignItems="center"
               spacing={5}
             >
-              <Grid item xs={12} md={6} className={classes.whySchoolyThumbnailContainer}>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                className={classes.whySchoolyThumbnailContainer}
+              >
                 <img
                   alt="Schooly Feature 2"
                   src={aboutArt2}
@@ -350,7 +391,12 @@ function About(props) {
             </Grid>
           </Hidden>
           <Grid item container justify="center" alignItems="center" spacing={5}>
-            <Grid item xs={12} md={6} className={classes.whySchoolyThumbnailContainer}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              className={classes.whySchoolyThumbnailContainer}
+            >
               <img
                 alt="Schooly Feature 3"
                 src={aboutArt3}
@@ -371,7 +417,12 @@ function About(props) {
         </Grid>
       </div>
       <div className={classes.supportSchooly}>
-        <Typography variant="h4" align="center" color="textSecondary" gutterBottom>
+        <Typography
+          variant="h4"
+          align="center"
+          color="textSecondary"
+          gutterBottom
+        >
           Ada masukan atau saran?
         </Typography>
         <Typography align="center" paragraph>

@@ -6,14 +6,14 @@ import classnames from "classnames";
 import { savePassword } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
-import resetPasswordArt from "./ResetPasswordArt.png";
+import resetPasswordArt from "./PasswordArt.png";
 import {
   Button,
   Grid,
   Hidden,
   Paper,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -67,7 +67,10 @@ class ResetPassword extends Component {
     };
   }
   onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value , errors: { ...this.state.errors, [e.target.id]: null } });
+    this.setState({
+      [e.target.id]: e.target.value,
+      errors: { ...this.state.errors, [e.target.id]: null },
+    });
   };
 
   componentDidMount() {
@@ -118,7 +121,8 @@ class ResetPassword extends Component {
                     <b>Ubah Kata Sandi</b>
                   </Typography>
                   <Typography variant="body1" color="textSecondary">
-                    Masukkan kata sandi baru Anda. Kata sandi harus terdiri dari minimal 8 karakter dengan kombinasi huruf kapital dan angka.
+                    Masukkan kata sandi baru Anda. Kata sandi harus terdiri dari
+                    minimal 8 karakter dengan kombinasi huruf kapital dan angka.
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -172,11 +176,11 @@ class ResetPassword extends Component {
             </Grid>
             <Hidden smDown>
               <Grid item xs={5}>
-                  <img
-                    alt="Reset Password Art"
-                    src={resetPasswordArt}
-                    className={classes.artThumbnail}
-                  />
+                <img
+                  alt="Reset Password Art"
+                  src={resetPasswordArt}
+                  className={classes.artThumbnail}
+                />
               </Grid>
             </Hidden>
           </Grid>

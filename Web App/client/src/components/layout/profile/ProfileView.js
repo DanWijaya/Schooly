@@ -16,7 +16,7 @@ import {
   List,
   ListItem,
   Paper,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import {
   AccountBalance as AccountBalanceIcon,
@@ -30,7 +30,7 @@ import {
   Phone as PhoneIcon,
   SportsEsports as SportsEsportsIcon,
   Wc as WcIcon,
-  Work as WorkIcon
+  Work as WorkIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -88,14 +88,14 @@ function ProfileView(props) {
       if (selectedUser.role === "Student") {
         setCurrentClass(selectedUser.kelas);
       }
-      getFileAvatar(selectedUser._id)
-        .then((result) => setAvatar(result))
+      getFileAvatar(selectedUser._id).then((result) => setAvatar(result));
     });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
-    setCurrentClass(selectedUser.kelas)
+    setCurrentClass(selectedUser.kelas);
   }, [selectedUser]);
 
   React.useEffect(() => {
@@ -126,6 +126,12 @@ function ProfileView(props) {
     ? `Schooly | ${selectedUser.name}`
     : "Schooly | Lihat Profil";
 
+  const roleMap = new Map();
+  roleMap.set("Student", "Murid");
+  roleMap.set("Teacher", "Guru");
+  roleMap.set("Admin", "Pengelola Unit");
+  roleMap.set("SuperAdmin", "Pengelola Sekolah");
+
   return (
     <div className={classes.root}>
       <Grid container direction="column" alignItems="center" spacing={2}>
@@ -141,46 +147,34 @@ function ProfileView(props) {
             {name}
           </Typography>
           <Typography variant="h6" color="textSecondary" align="center">
-            {role === "Student"  ? "Murid"
-              : role === "Teacher" ? "Guru"
-              : role === "Admin" ? "Pengelola"
-              : null}
-            {!namakelas || !role !== "Student"? null : ` ${namakelas}`}
+            {roleMap.get(role)}
+
+            {!namakelas || !role !== "Student" ? null : ` ${namakelas}`}
           </Typography>
         </Grid>
       </Grid>
-      <Grid container justify="flex-end" className={classes.profileButtonContainer}>
+      <Grid
+        container
+        justify="flex-end"
+        className={classes.profileButtonContainer}
+      >
         {role === "Student" && user.role === "Teacher" ? (
-          (classesCollection.kelas.walikelas) ?
-            (classesCollection.kelas.walikelas === user._id) ? (
-                <Grid item>
-                  <Link to={{pathname: `/rapor/${_id}`}}>
-                    <Button
-                      variant="contained"
-                      className={classes.reportButton}
-                      startIcon={<AssessmentOutlinedIcon />}
-                    >
-                      Lihat Rapor
-                    </Button>
-                  </Link>
-                </Grid>
-            ) : (user.class_teached).includes(classesCollection.kelas._id) ? (
-                  <Grid item>
-                    <Link to={{pathname: `/rapor/${_id}`}}>
-                      <Button
-                        variant="contained"
-                        startIcon={<AssessmentOutlinedIcon />}
-                        className={classes.reportButton}
-                      >
-                        Lihat Rapor
-                      </Button>
-                    </Link>
-                  </Grid>
-                )
-              : null
-          : (user.class_teached).includes(classesCollection.kelas._id) ? (
+          classesCollection.kelas.walikelas ? (
+            classesCollection.kelas.walikelas === user._id ? (
               <Grid item>
-                <Link to={{pathname: `/rapor/${_id}`}}>
+                <Link to={{ pathname: `/rapor/${_id}` }}>
+                  <Button
+                    variant="contained"
+                    className={classes.reportButton}
+                    startIcon={<AssessmentOutlinedIcon />}
+                  >
+                    Lihat Rapor
+                  </Button>
+                </Link>
+              </Grid>
+            ) : user.class_teached.includes(classesCollection.kelas._id) ? (
+              <Grid item>
+                <Link to={{ pathname: `/rapor/${_id}` }}>
                   <Button
                     variant="contained"
                     startIcon={<AssessmentOutlinedIcon />}
@@ -190,8 +184,20 @@ function ProfileView(props) {
                   </Button>
                 </Link>
               </Grid>
-            )
-            : null
+            ) : null
+          ) : user.class_teached.includes(classesCollection.kelas._id) ? (
+            <Grid item>
+              <Link to={{ pathname: `/rapor/${_id}` }}>
+                <Button
+                  variant="contained"
+                  startIcon={<AssessmentOutlinedIcon />}
+                  className={classes.reportButton}
+                >
+                  Lihat Rapor
+                </Button>
+              </Link>
+            </Grid>
+          ) : null
         ) : null}
       </Grid>
       <Grid container direction="column" spacing={4}>
@@ -208,22 +214,16 @@ function ProfileView(props) {
             <div className={classes.dataCategoryContent}>
               <List>
                 <ListItem>
-                  <DataItem
-                    icon={<PersonIcon />}
-                    type="Nama"
-                    value={name}
-                  />
+                  <DataItem icon={<PersonIcon />} type="Nama" value={name} />
                 </ListItem>
                 <Divider variant="inset" />
                 <ListItem>
                   <DataItem
                     icon={<CakeIcon />}
                     type="Tanggal Lahir"
-                    value={
-                      moment(user.tanggal_lahir)
+                    value={moment(user.tanggal_lahir)
                       .locale("id")
-                      .format("DD MMM YYYY")
-                    }
+                      .format("DD MMM YYYY")}
                   />
                 </ListItem>
                 <Divider variant="inset" />
@@ -236,11 +236,7 @@ function ProfileView(props) {
                 </ListItem>
                 <Divider variant="inset" />
                 <ListItem>
-                  <DataItem
-                    icon={<EmailIcon />}
-                    type="Email"
-                    value={email}
-                  />
+                  <DataItem icon={<EmailIcon />} type="Email" value={email} />
                 </ListItem>
                 <Divider variant="inset" />
                 <ListItem>
@@ -275,54 +271,54 @@ function ProfileView(props) {
           </Paper>
         </Grid>
         {!(role === "Student") ? null : (
-            <Grid item>
-              <Paper elevation={2}>
-                <div className={classes.dataCategoryHeader}>
-                  <Typography variant="h5" gutterBottom>
-                    Karir
-                  </Typography>
-                  <Typography gutterBottom>
-                    Berikut adalah pilihan karir dan minat dari murid terkait.
-                  </Typography>
-                </div>
-                <div className={classes.dataCategoryContent}>
-                  <List>
-                    <ListItem>
-                      <DataItem
-                        icon={<SportsEsportsIcon />}
-                        type="Hobi dan Minat"
-                        value={hobi_minat}
-                      />
-                    </ListItem>
-                    <Divider variant="inset" />
-                    <ListItem>
-                      <DataItem
-                        icon={<ColorLensIcon />}
-                        type="Keterampilan Non-Akademik"
-                        value={ket_non_teknis}
-                      />
-                    </ListItem>
-                    <Divider variant="inset" />
-                    <ListItem>
-                      <DataItem
-                        icon={<WorkIcon />}
-                        type="Cita-Cita"
-                        value={cita_cita}
-                      />
-                    </ListItem>
-                    <Divider variant="inset" />
-                    <ListItem>
-                      <DataItem
-                        icon={<AccountBalanceIcon />}
-                        type="Perguruan Tinggi Impian"
-                        value={uni_impian}
-                      />
-                    </ListItem>
-                  </List>
-                </div>
-              </Paper>
-            </Grid>
-          )}
+          <Grid item>
+            <Paper elevation={2}>
+              <div className={classes.dataCategoryHeader}>
+                <Typography variant="h5" gutterBottom>
+                  Karir
+                </Typography>
+                <Typography gutterBottom>
+                  Berikut adalah pilihan karir dan minat dari murid terkait.
+                </Typography>
+              </div>
+              <div className={classes.dataCategoryContent}>
+                <List>
+                  <ListItem>
+                    <DataItem
+                      icon={<SportsEsportsIcon />}
+                      type="Hobi dan Minat"
+                      value={hobi_minat}
+                    />
+                  </ListItem>
+                  <Divider variant="inset" />
+                  <ListItem>
+                    <DataItem
+                      icon={<ColorLensIcon />}
+                      type="Keterampilan Non-Akademik"
+                      value={ket_non_teknis}
+                    />
+                  </ListItem>
+                  <Divider variant="inset" />
+                  <ListItem>
+                    <DataItem
+                      icon={<WorkIcon />}
+                      type="Cita-Cita"
+                      value={cita_cita}
+                    />
+                  </ListItem>
+                  <Divider variant="inset" />
+                  <ListItem>
+                    <DataItem
+                      icon={<AccountBalanceIcon />}
+                      type="Perguruan Tinggi Impian"
+                      value={uni_impian}
+                    />
+                  </ListItem>
+                </List>
+              </div>
+            </Paper>
+          </Grid>
+        )}
       </Grid>
     </div>
   );

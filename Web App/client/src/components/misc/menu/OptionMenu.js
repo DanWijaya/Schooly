@@ -21,10 +21,7 @@ function OptionMenu(props) {
 
   return (
     <div>
-      <IconButton
-        onClick={handleClick}
-        disabled={rowCount}
-      >
+      <IconButton onClick={handleClick} disabled={rowCount}>
         <MoreVertIcon />
       </IconButton>
       <Menu
@@ -46,7 +43,7 @@ function OptionMenu(props) {
               key={option}
               selected={option === "Detail"}
               onClick={(e) => {
-                handleActionOnClick[idx](e, row._id, row.name)
+                handleActionOnClick[idx](e, row._id, row.name);
                 handleClose();
               }}
             >

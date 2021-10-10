@@ -11,20 +11,17 @@ import {
   viewFileMaterial,
 } from "../../../actions/files/FileMaterialActions";
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
-import {
-  getTeachers,
-  getStudents
-} from "../../../actions/UserActions";
+import { getTeachers, getStudents } from "../../../actions/UserActions";
 import {
   getOneMaterial,
   deleteMaterial,
   createMaterialComment,
   editMaterialComment,
-  deleteMaterialComment
+  deleteMaterialComment,
 } from "../../../actions/MaterialActions";
 import {
   getFileAvatar,
-  getMultipleFileAvatar
+  getMultipleFileAvatar,
 } from "../../../actions/files/FileAvatarActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
@@ -46,7 +43,7 @@ import {
   Snackbar,
   TextField,
   Tooltip,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
@@ -56,7 +53,7 @@ import {
   Delete as DeleteIcon,
   Edit as EditIcon,
   MoreVert as MoreVertIcon,
-  Send as SendIcon
+  Send as SendIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -158,7 +155,7 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.5,
     "&:focus, &:hover": {
       opacity: 1,
-      cursor: "pointer"
+      cursor: "pointer",
     },
   },
   cancelButton: {
@@ -170,7 +167,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.dark
+      backgroundColor: theme.palette.success.dark,
     },
   },
 }));
@@ -260,7 +257,7 @@ function ViewMaterial(props) {
     clearErrors,
     clearSuccess,
     getFileAvatar,
-    getMultipleFileAvatar
+    getMultipleFileAvatar,
   } = props;
   const { user, all_students, all_teachers } = props.auth;
   const { all_classes_map } = props.classesCollection;
@@ -278,7 +275,9 @@ function ViewMaterial(props) {
   const [commentList, setCommentList] = React.useState([]);
   const [commentAvatar, setCommentAvatar] = React.useState({});
   const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
-  const [openDeleteCommentDialog, setOpenDeleteCommentDialog] = React.useState(null);
+  const [openDeleteCommentDialog, setOpenDeleteCommentDialog] = React.useState(
+    null
+  );
   const [deleteCommentIdx, setDeleteCommentIdx] = React.useState(null);
   const deleteDialogHandler = React.useRef(null);
 
@@ -288,14 +287,17 @@ function ViewMaterial(props) {
   const [openCommentSnackbar, setOpenCommentSnackbar] = React.useState(false);
 
   React.useEffect(() => {
-    getAllSubjects("map"); // This will get the selectedMaterials.
+    getAllSubjects(user.unit, "map"); // this will get the selectedMaterials.
     getOneMaterial(materi_id);
-    getAllClass("map");
+    getAllClass(user.unit, "map");
+    // COba S3
     getFileMaterials(materi_id).then((result) => {
       setFileLampiran(result);
     });
-    getStudents();
-    getTeachers();
+    // bakal ngedapat collection of S3 files di
+
+    getStudents(user.unit);
+    getTeachers(user.unit);
     clearErrors();
     clearSuccess();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -319,9 +321,18 @@ function ViewMaterial(props) {
       }
       materialAuthorName.current = usernames[selectedMaterials.author_id];
 
-      setCommentList(selectedMaterials.comments.map((comment) => ({ ...comment, name: usernames[comment.author_id] })));
-      if (selectedCommentIdx !== null && deleteCommentIdx !== null && deleteCommentIdx < selectedCommentIdx) {
-        // Move edit textfield.
+      setCommentList(
+        selectedMaterials.comments.map((comment) => ({
+          ...comment,
+          name: usernames[comment.author_id],
+        }))
+      );
+      if (
+        selectedCommentIdx !== null &&
+        deleteCommentIdx !== null &&
+        deleteCommentIdx < selectedCommentIdx
+      ) {
+        // memindahkan textfield edit
         setSelectedCommentIdx(selectedCommentIdx - 1);
       }
       setDeleteCommentIdx(null);
@@ -330,11 +341,11 @@ function ViewMaterial(props) {
   }, [selectedMaterials, all_teachers, all_students]);
 
   React.useEffect(() => {
-    let listId = []
+    let listId = [];
     commentList.map((comment) => {
-      listId.push(comment.author_id)
-    })
-    listId.push(user._id)
+      listId.push(comment.author_id);
+    });
+    listId.push(user._id);
     getMultipleFileAvatar(listId).then((results) => {
       setCommentAvatar(results);
     });
@@ -362,7 +373,7 @@ function ViewMaterial(props) {
   };
   const handleClickEdit = (idx) => {
     setCommentEditorValue(commentList[idx].content);
-    setSelectedCommentIdx(idx)
+    setSelectedCommentIdx(idx);
   };
 
   const handleCreateComment = () => {
@@ -371,14 +382,16 @@ function ViewMaterial(props) {
     } else {
       createMaterialComment(materi_id, {
         author_id: user._id,
-        content: commentValue
-      }).then(() => {
-        handleOpenCommentSnackbar("success", "Komentar berhasil dibuat");
-        setCommentValue("");
-        getOneMaterial(materi_id);
-      }).catch(() => {
-        handleOpenCommentSnackbar("error", "Komentar gagal dibuat");
-      });
+        content: commentValue,
+      })
+        .then(() => {
+          handleOpenCommentSnackbar("success", "Komentar berhasil dibuat");
+          setCommentValue("");
+          getOneMaterial(materi_id);
+        })
+        .catch(() => {
+          handleOpenCommentSnackbar("error", "Komentar gagal dibuat");
+        });
     }
   };
 
@@ -386,23 +399,31 @@ function ViewMaterial(props) {
     if (commentEditorValue.length === 0) {
       handleOpenDeleteCommentDialog(selectedCommentIdx);
     } else {
-      editMaterialComment(materi_id, commentEditorValue, commentList[selectedCommentIdx]._id).then(() => {
-        handleOpenCommentSnackbar("success", "Komentar berhasil disunting");
-        getOneMaterial(materi_id);
-      }).catch(() => {
-        handleOpenCommentSnackbar("error", "Komentar gagal disunting");
-      });
+      editMaterialComment(
+        materi_id,
+        commentEditorValue,
+        commentList[selectedCommentIdx]._id
+      )
+        .then(() => {
+          handleOpenCommentSnackbar("success", "Komentar berhasil disunting");
+          getOneMaterial(materi_id);
+        })
+        .catch(() => {
+          handleOpenCommentSnackbar("error", "Komentar gagal disunting");
+        });
       closeEditMode();
     }
   };
 
   const handleDeleteComment = (idx) => {
-    deleteMaterialComment(materi_id, commentList[idx]._id).then(() => {
-      handleOpenCommentSnackbar("success", "Komentar berhasil dihapus");
-      getOneMaterial(materi_id);
-    }).catch(() => {
-      handleOpenCommentSnackbar("error", "Komentar gagal dihapus");
-    });
+    deleteMaterialComment(materi_id, commentList[idx]._id)
+      .then(() => {
+        handleOpenCommentSnackbar("success", "Komentar berhasil dihapus");
+        getOneMaterial(materi_id);
+      })
+      .catch(() => {
+        handleOpenCommentSnackbar("error", "Komentar gagal dihapus");
+      });
     setDeleteCommentIdx(idx);
     handleCloseDeleteCommentDialog();
   };
@@ -451,8 +472,7 @@ function ViewMaterial(props) {
   };
 
   const onDeleteMaterial = (id) => {
-    deleteMaterial(id, history).then((res) => {
-    });
+    deleteMaterial(id, history).then((res) => {});
   };
 
   // Delete Dialog
@@ -466,21 +486,31 @@ function ViewMaterial(props) {
   // Comment Dialog
   const handleOpenDeleteCommentDialog = (idx) => {
     setOpenDeleteCommentDialog(true);
-    deleteDialogHandler.current =  (idx === selectedCommentIdx)
-    ? () => {
-      handleDeleteComment(idx);
-      closeEditMode();
-    }
-    : () => {
-      handleDeleteComment(idx);
-    }  };
+    deleteDialogHandler.current =
+      idx === selectedCommentIdx
+        ? () => {
+            handleDeleteComment(idx);
+            closeEditMode();
+          }
+        : () => {
+            handleDeleteComment(idx);
+          };
+  };
   const handleCloseDeleteCommentDialog = () => {
     // setDeleteCommentIdx(null) will be run after material is reloaded.
     setOpenDeleteCommentDialog(false);
   };
 
   // Comment
-  const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
+  const generateComments = (
+    author_id,
+    authorName,
+    date,
+    comment,
+    isSelfMade,
+    idx,
+    edited
+  ) => {
     return (
       <Grid container wrap="nowrap" spacing={2}>
         <Grid item>
@@ -490,15 +520,18 @@ function ViewMaterial(props) {
           <Grid item xs={12} container alignItems="center" spacing={1}>
             <Grid item xs zeroMinWidth>
               <Typography variant="body2" noWrap gutterBottom>
-                {authorName} <span style={{ color: "grey" }}>
-                {edited === true ? "(Disunting)" : null} • {moment(date)
-                .locale("id").format("DD MMM YYYY, HH.mm")}</span>
+                {authorName}{" "}
+                <span style={{ color: "grey" }}>
+                  {edited === true ? "(Disunting)" : null} •{" "}
+                  {moment(date).locale("id").format("DD MMM YYYY, HH.mm")}
+                </span>
               </Typography>
             </Grid>
-            {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
+            {isSelfMade &&
+            !(selectedCommentIdx !== null && selectedCommentIdx === idx) ? (
               <Grid item>
                 <IconButton className={classes.commentActionButton}>
-                  <MoreVertIcon className={classes.commentActionIcon}/>
+                  <MoreVertIcon className={classes.commentActionIcon} />
                 </IconButton>
                 {/*<LightTooltip title="Sunting">
                   <CreateIcon
@@ -516,51 +549,54 @@ function ViewMaterial(props) {
                   />
                 </LightTooltip>*/}
               </Grid>
-            : null}
+            ) : null}
           </Grid>
           <Grid item xs={12}>
-          {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
-            <Grid container direction="column" spacing={1}>
-              <Grid item>
-                <TextField
-                  fullWidth
-                  multiline
-                  variant="outlined"
-                  onChange={handleCommentEditorChange}
-                  value={commentEditorValue}
-                />
-              </Grid>
-              <Grid item container spacing={1}>
+            {selectedCommentIdx !== null && selectedCommentIdx === idx ? (
+              <Grid container direction="column" spacing={1}>
                 <Grid item>
-                  <Button
-                    className={classes.cancelButton}
-                    startIcon={<CancelIcon />}
-                    onClick={closeEditMode}
-                  >
-                    Batal
-                  </Button>
+                  <TextField
+                    fullWidth
+                    multiline
+                    variant="outlined"
+                    onChange={handleCommentEditorChange}
+                    value={commentEditorValue}
+                  />
                 </Grid>
-                <Grid item>
-                  <Button
-                    className={classes.saveButton}
-                    startIcon={<CheckCircleIcon />}
-                    onClick={handleEditComment}
-                  >
-                    Simpan
-                  </Button>
+                <Grid item container spacing={1}>
+                  <Grid item>
+                    <Button
+                      className={classes.cancelButton}
+                      startIcon={<CancelIcon />}
+                      onClick={closeEditMode}
+                    >
+                      Batal
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      className={classes.saveButton}
+                      startIcon={<CheckCircleIcon />}
+                      onClick={handleEditComment}
+                    >
+                      Simpan
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          :
-            <Typography align="justify" style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}>
-              {comment}
-            </Typography>
-          }
+            ) : (
+              <Typography
+                align="justify"
+                style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+              >
+                {comment}
+              </Typography>
+            )}
           </Grid>
         </Grid>
       </Grid>
-    )
-  }
+    );
+  };
 
   document.title = !selectedMaterials.name
     ? "Schooly | Lihat Materi"
@@ -581,7 +617,8 @@ function ViewMaterial(props) {
               Oleh: {materialAuthorName.current}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Waktu Dibuat: {moment(selectedMaterials.createdAt)
+              Waktu Dibuat:{" "}
+              {moment(selectedMaterials.createdAt)
                 .locale("id")
                 .format("DD MMM YYYY, HH.mm")}
             </Typography>
@@ -642,7 +679,13 @@ function ViewMaterial(props) {
           </Paper>
         </Grid>
         {user.role === "Teacher" ? (
-          <Grid item container justify="flex-end" alignItems="center" spacing={1}>
+          <Grid
+            item
+            container
+            justify="flex-end"
+            alignItems="center"
+            spacing={1}
+          >
             <Grid item>
               <Link to={`/sunting-materi/${materi_id}`}>
                 <Hidden xsDown>
@@ -651,17 +694,12 @@ function ViewMaterial(props) {
                     className={classes.editButton}
                     startIcon={<EditIcon style={{ color: "grey" }} />}
                   >
-                    <Typography>
-                      Sunting
-                    </Typography>
+                    <Typography>Sunting</Typography>
                   </Button>
                 </Hidden>
                 <Hidden smUp>
                   <Tooltip title="Sunting">
-                    <Button
-                      variant="outlined"
-                      className={classes.editButton}
-                    >
+                    <Button variant="outlined" className={classes.editButton}>
                       <EditIcon />
                     </Button>
                   </Tooltip>
@@ -676,9 +714,7 @@ function ViewMaterial(props) {
                   startIcon={<DeleteIcon style={{ color: "grey" }} />}
                   onClick={(e) => handleOpenDeleteDialog(e, materi_id)}
                 >
-                  <Typography>
-                    Hapus
-                  </Typography>
+                  <Typography>Hapus</Typography>
                 </Button>
               </Hidden>
               <Hidden smUp>
@@ -701,23 +737,29 @@ function ViewMaterial(props) {
               Komentar
             </Typography>
             <Divider />
-            {(commentList.length !== 0) ?
-                <div style={{ padding: "16px 0px" }}>
-                  <Grid container wrap="nowrap" direction="column" spacing={2}>
-                    {commentList.map((comment, idx) => (
-                        <Grid item>
-                          {generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)}
-                        </Grid>
-                      ))
-                    }
-                  </Grid>
-                  <Divider style={{ marginTop: "16px" }} />
-                </div>
-              : null
-            }
+            {commentList.length !== 0 ? (
+              <div style={{ padding: "16px 0px" }}>
+                <Grid container wrap="nowrap" direction="column" spacing={2}>
+                  {commentList.map((comment, idx) => (
+                    <Grid item>
+                      {generateComments(
+                        comment.author_id,
+                        comment.name,
+                        comment.createdAt,
+                        comment.content,
+                        comment.author_id === user._id,
+                        idx,
+                        comment.edited
+                      )}
+                    </Grid>
+                  ))}
+                </Grid>
+                <Divider style={{ marginTop: "16px" }} />
+              </div>
+            ) : null}
             <Grid container spacing={2}>
               <Grid item>
-                <Avatar src={commentAvatar[user._id]}/>
+                <Avatar src={commentAvatar[user._id]} />
               </Grid>
               <Grid item xs>
                 <TextField
@@ -730,15 +772,18 @@ function ViewMaterial(props) {
                   InputProps={{
                     style: {
                       borderRadius: "20px",
-                      padding: "12.5px 0px"
-                     },
+                      padding: "12.5px 0px",
+                    },
                     endAdornment: (
                       <InputAdornment
                         position="end"
                         style={{ marginRight: "5px" }}
                       >
                         <LightTooltip title="Kirim">
-                          <IconButton size="small" onClick={handleCreateComment}>
+                          <IconButton
+                            size="small"
+                            onClick={handleCreateComment}
+                          >
                             <SendIcon />
                           </IconButton>
                         </LightTooltip>
@@ -830,5 +875,5 @@ export default connect(mapStateToProps, {
   clearErrors,
   clearSuccess,
   getFileAvatar,
-  getMultipleFileAvatar
+  getMultipleFileAvatar,
 })(ViewMaterial);

@@ -53,7 +53,7 @@ import {
   Tab,
   Tabs,
   Tooltip,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import {
   AssignmentOutlined as AssignmentIcon,
@@ -65,11 +65,20 @@ import {
   MenuBook as MenuBookIcon,
   Pageview as PageviewIcon,
   SupervisorAccount as SupervisorAccountIcon,
-  Warning as WarningIcon
+  Warning as WarningIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
 import { FaClipboardList } from "react-icons/fa";
+const TASK_STATUS = {
+  SUBMITTED: "Sudah Dikumpulkan",
+  NOT_SUBMITTED: "Belum Dikumpulkan",
+};
+
+const ASSESSMENT_STATUS = {
+  SUBMITTED: "Sudah Ditempuh",
+  NOT_SUBMITTED: "Belum Ditempuh",
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -142,17 +151,15 @@ const useStyles = makeStyles((theme) => ({
   checkIcon: {
     color: theme.palette.success.main,
   },
+  viewUserButton: {
+    backgroundColor: theme.palette.warning.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.warning.main,
+    },
+  },
 }));
-
-const TASK_STATUS = {
-  SUBMITTED : "Sudah Dikumpulkan",
-  NOT_SUBMITTED : "Belum Dikumpulkan"
-}
-
-const ASSESSMENT_STATUS = {
-  SUBMITTED : "Sudah Ditempuh",
-  NOT_SUBMITTED: "Belum Ditempuh"
-}
 
 function sortAscByCreatedAt(rows) {
   const stabilizedThis = rows.map((el, index) => [el, index]);
@@ -283,8 +290,20 @@ function AssessmentListItem(props) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-  const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
-    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
+  const handleOpenDialog = (
+    title,
+    subject,
+    teacher_name,
+    start_date,
+    end_date
+  ) => {
+    setCurrentDialogInfo({
+      title,
+      subject,
+      teacher_name,
+      start_date,
+      end_date,
+    });
     setOpenDialog(true);
   };
 
@@ -304,7 +323,7 @@ function AssessmentListItem(props) {
               props.work_subject,
               props.work_teacher_name,
               props.work_starttime,
-              props.work_endtime,
+              props.work_endtime
             )
           }
         >
@@ -365,7 +384,7 @@ function AssessmentListItem(props) {
               props.work_subject,
               props.work_teacher_name,
               props.work_starttime,
-              props.work_endtime,
+              props.work_endtime
             )
           }
         >
@@ -436,10 +455,7 @@ function AssessmentListItem(props) {
           >
             Guru: {currentDialogInfo.teacher_name}
           </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-          >
+          <Typography variant="subtitle1" align="center">
             Mulai: {currentDialogInfo.start_date}
           </Typography>
           <Typography variant="subtitle1" align="center">
@@ -563,9 +579,9 @@ function ViewClass(props) {
     assessmentsCollection,
     getFileAvatar,
     getMultipleFileAvatar,
-    getTaskByClass
+    getTaskByClass,
   } = props;
-  const { students_by_class, all_teachers_map, user } = props.auth;
+  const { students_by_class, all_teachers_map, user, all_roles } = props.auth;
   const { kelas } = props.classesCollection;
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
@@ -723,7 +739,7 @@ function ViewClass(props) {
         );
 
         let workStatus;
-        if(submittedTaskIds.has(task._id)){
+        if (submittedTaskIds.has(task._id)) {
           workStatus = TASK_STATUS.SUBMITTED;
         } else {
           workStatus = TASK_STATUS.NOT_SUBMITTED;
@@ -733,7 +749,8 @@ function ViewClass(props) {
           if (
             (!category ||
               (category === "subject" && task.subject === subject._id)) &&
-            (workStatus && workStatus === TASK_STATUS.NOT_SUBMITTED)
+            workStatus &&
+            workStatus === TASK_STATUS.NOT_SUBMITTED
           ) {
             result.push({
               _id: task._id,
@@ -818,7 +835,11 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
-                teacher_name: (all_teachers_map instanceof Map && all_teachers_map.get(assessment.author_id)) ? all_teachers_map.get(assessment.author_id).name : null,
+                teacher_name:
+                  all_teachers_map instanceof Map &&
+                  all_teachers_map.get(assessment.author_id)
+                    ? all_teachers_map.get(assessment.author_id).name
+                    : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -841,7 +862,11 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
-                teacher_name: (all_teachers_map instanceof Map && all_teachers_map.get(assessment.author_id)) ? all_teachers_map.get(assessment.author_id).name : null,
+                teacher_name:
+                  all_teachers_map instanceof Map &&
+                  all_teachers_map.get(assessment.author_id)
+                    ? all_teachers_map.get(assessment.author_id).name
+                    : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -869,7 +894,11 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
-                teacher_name: (all_teachers_map instanceof Map && all_teachers_map.get(assessment.author_id)) ? all_teachers_map.get(assessment.author_id).name : null,
+                teacher_name:
+                  all_teachers_map instanceof Map &&
+                  all_teachers_map.get(assessment.author_id)
+                    ? all_teachers_map.get(assessment.author_id).name
+                    : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -891,7 +920,11 @@ function ViewClass(props) {
                 workCategoryAvatar: workCategoryAvatar,
                 subject: assessment.subject,
                 workStatus: workStatus,
-                teacher_name: (all_teachers_map instanceof Map && all_teachers_map.get(assessment.author_id)) ? all_teachers_map.get(assessment.author_id).name : null,
+                teacher_name:
+                  all_teachers_map instanceof Map &&
+                  all_teachers_map.get(assessment.author_id)
+                    ? all_teachers_map.get(assessment.author_id).name
+                    : null,
                 start_date: assessment.start_date,
                 end_date: assessment.end_date,
                 createdAt: assessment.createdAt,
@@ -948,27 +981,30 @@ function ViewClass(props) {
   }
 
   React.useEffect(() => {
-    if (user.role === "Student") {
+    if (user.role === all_roles.STUDENT) {
       if (user.kelas && user.kelas === classId) {
         // If this student has been assigned to a class.
         // Clas id that is inserted as a parameter is the class id that is assigned to the student.
         getMaterial(user.kelas, "by_class");
-        getTaskByClass(user.kelas)
-        //getAllTask(); // get the tasksCollection
+        getTaskByClass(user.kelas);
+        //getAllTask(user.unit); // get the tasksCollection
       } else {
         // If this student has not been assigned to any class or tried to open other class page,
         // then nothing will be loaded and will be redirected to the corresponding page (below).
         return;
       }
     }
-    getAllSubjects("map"); // get the all_subjects_map in map
-    getAllSubjects(); // get the all_subjects
     getStudentsByClass(props.match.params.id); // get the students_by_class
-    // getTeachers("map"); // Moved
-    getStudents();
+    if (user.role !== all_roles.SUPERADMIN) {
+      // This request is for users that has non SUPERADMIN role.
+      getAllSubjects(user.unit, "map"); // get the all_subjects_map in map
+      getAllSubjects(user.unit); // get the all_subjects
+      // getTeachers(user.unit, "map"); // dipindahkan
+      getStudents(user.unit);
 
-    getAllTaskFilesByUser(user._id); // get the all_user_files
-    getAllAssessments();
+      getAllTaskFilesByUser(user._id); // get the all_user_files
+      getAllAssessments(user.unit);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -980,38 +1016,42 @@ function ViewClass(props) {
   }, [user._id]);
 
   React.useEffect(() => {
-    // To get the current class, then
-    // get the homeroom teacher id
-    // move getTeachers("map") here because wants to execute setWalikelas, only after that finish.
-    var id_list;
-    setCurrentClass(classId).then((kelas) => {
-      if (kelas) {
-        id_list = [kelas.walikelas];
-        students_by_class.forEach((s) => id_list.push(s._id));
-        getMultipleFileAvatar(id_list).then((results) => {
+    //Untuk mendapatkan kelas current, digunakan untuk:
+    //  -> Dapatin id walikelas
+    // -> pindahkan getTeachers(user.unit, "map") di sini karena mau execute setWalikelas hanya setelah itu selesai.
+    if (classId) {
+      setCurrentClass(classId).then((kelas) => {
+        let listId = [];
+        if (kelas.walikelas) {
+          listId.push(kelas.walikelas);
+        }
+        students_by_class.forEach((s) => listId.push(s._id));
+        getMultipleFileAvatar(listId).then((results) => {
           setAvatar(results);
         });
-        getTeachers("map").then((results) =>
+        getTeachers(kelas.unit, "map").then((results) =>
           setWalikelas(results.get(kelas.walikelas))
         );
-      }
-      // setWalikelas(all_teachers_map.get(kelas.walikelas));
-    });
+        // setWalikelas(all_teachers_map.get(kelas.walikelas));
+      });
+    }
   }, [students_by_class.length, kelas.walikelas]);
 
   React.useEffect(() => {
-    if(user.role === "Student"){
+    if (user.role === all_roles.STUDENT) {
       let submittedTaskIdSet = new Set();
-      getFileSubmitTasksByAuthor(user._id).then((response) => {
-        for (let file of response.data) {
-          submittedTaskIdSet.add(file.task_id);
-        }
-      }).finally(() => {
-        // If there is error 404 (files.length === 0), submittedTaskIds will be filled with empty set.
-        setSubmittedTaskIds(submittedTaskIdSet);
-      });
+      getFileSubmitTasksByAuthor(user._id)
+        .then((response) => {
+          for (let file of response.data) {
+            submittedTaskIdSet.add(file.task_id);
+          }
+        })
+        .finally(() => {
+          // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
+          setSubmittedTaskIds(submittedTaskIdSet);
+        });
     }
-  }, [])
+  }, []);
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -1043,10 +1083,10 @@ function ViewClass(props) {
     }
   }
 
-  if (user.role === "Student") {
+  if (user.role === all_roles.STUDENT) {
     if (user.kelas) {
-      if (classId !== user.kelas) {
-        // If this student open other class page,
+      if (classId !== user.kelas || !classId) {
+        // jika murid ini membuka halaman kelas lain,
         return <Redirect to="/tidak-ditemukan" />;
       }
       // If this student opens his/her own class, then load the page.
@@ -1075,19 +1115,24 @@ function ViewClass(props) {
 
   return (
     <div className={classes.root}>
-      {user.role === "Admin" || user.role === "Teacher" ? (
+      {user.role === all_roles.ADMIN ||
+      user.role === all_roles.TEACHER ||
+      user.role === all_roles.SUPERADMIN ? (
         <div>
           <Paper square>
             <div className={classes.classWallpaper}>
-              <Typography variant="h3">
-                {kelas.name}
-              </Typography>
+              <Typography variant="h3">{kelas.name}</Typography>
               <Typography variant="h6">
                 {isObjEmpty(walikelas) ? null : walikelas.name}
               </Typography>
             </div>
           </Paper>
-          <Grid container direction="column" spacing={10} style={{ padding: "15px", paddingTop: "25px" }}>
+          <Grid
+            container
+            direction="column"
+            spacing={10}
+            style={{ padding: "15px", paddingTop: "25px" }}
+          >
             <Grid item>
               <Typography variant="h4" gutterBottom>
                 Wali Kelas
@@ -1119,7 +1164,7 @@ function ViewClass(props) {
                             >
                               <IconButton
                                 size="small"
-                                className={classes.viewMaterialButton}
+                                className={classes.viewUserButton}
                               >
                                 <PageviewIcon fontSize="small" />
                               </IconButton>
@@ -1131,7 +1176,11 @@ function ViewClass(props) {
                   </Grid>
                 </div>
               ) : (
-                <Typography color="textSecondary" align="center" style={{ padding: "15px" }}>
+                <Typography
+                  color="textSecondary"
+                  align="center"
+                  style={{ padding: "15px" }}
+                >
                   Kosong
                 </Typography>
               )}
@@ -1142,7 +1191,11 @@ function ViewClass(props) {
               </Typography>
               <Divider className={classes.classMembersDivider} />
               {students_by_class.length === 0 ? (
-                <Typography color="textSecondary" align="center" style={{ padding: "15px" }}>
+                <Typography
+                  color="textSecondary"
+                  align="center"
+                  style={{ padding: "15px" }}
+                >
                   Kosong
                 </Typography>
               ) : (
@@ -1169,7 +1222,7 @@ function ViewClass(props) {
                             >
                               <IconButton
                                 size="small"
-                                className={classes.viewMaterialButton}
+                                className={classes.viewUserButton}
                               >
                                 <PageviewIcon fontSize="small" />
                               </IconButton>
@@ -1188,9 +1241,7 @@ function ViewClass(props) {
         <div>
           <Paper square>
             <div className={classes.classWallpaper}>
-              <Typography variant="h3">
-                {kelas.name}
-              </Typography>
+              <Typography variant="h3">{kelas.name}</Typography>
               <Typography variant="h6">
                 {isObjEmpty(walikelas) ? null : walikelas.name}
               </Typography>
@@ -1202,18 +1253,9 @@ function ViewClass(props) {
               value={value}
               onChange={handleChange}
             >
-              <Tab
-                icon={<DesktopWindowsIcon />}
-                label="Pekerjaan Kelas"
-              />
-              <Tab
-                icon={<BallotIcon />}
-                label="Mata Pelajaran"
-              />
-              <Tab
-                icon={<SupervisorAccountIcon />}
-                label="Peserta"
-              />
+              <Tab icon={<DesktopWindowsIcon />} label="Pekerjaan Kelas" />
+              <Tab icon={<BallotIcon />} label="Mata Pelajaran" />
+              <Tab icon={<SupervisorAccountIcon />} label="Peserta" />
             </Tabs>
           </Paper>
           <TabPanel value={value} index={0} style={{ paddingTop: "15px" }}>
@@ -1223,9 +1265,7 @@ function ViewClass(props) {
                   <Grid item xs>
                     <div className={classes.objectPanel}>
                       <MenuBookIcon className={classes.objectIcon} />
-                      <Typography variant="h6">
-                        Materi
-                      </Typography>
+                      <Typography variant="h6">Materi</Typography>
                     </div>
                   </Grid>
                   <Grid item>
@@ -1252,13 +1292,11 @@ function ViewClass(props) {
                   <Grid item xs container alignItems="center">
                     <div className={classes.objectPanel}>
                       <AssignmentIcon className={classes.objectIcon} />
-                      <Typography variant="h6">
-                        Tugas
-                      </Typography>
+                      <Typography variant="h6">Tugas</Typography>
                     </div>
                   </Grid>
                   <Grid item>
-                    <Tooltip title="Lihat Semua" >
+                    <Tooltip title="Lihat Semua">
                       <Link to="/daftar-tugas">
                         <IconButton>
                           <PageviewIcon fontSize="small" />
@@ -1270,9 +1308,7 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
               <Divider />
               <ExpansionPanelDetails className={classes.objectDetails}>
-                <div style={{ width: "100%" }}>
-                  {showTasks(listTasks())}
-                </div>
+                <div style={{ width: "100%" }}>{showTasks(listTasks())}</div>
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel defaultExpanded>
@@ -1281,9 +1317,7 @@ function ViewClass(props) {
                   <Grid item xs container alignItems="center">
                     <div className={classes.objectPanel}>
                       <FaClipboardList className={classes.objectIcon} />
-                      <Typography variant="h6">
-                        Kuis
-                      </Typography>
+                      <Typography variant="h6">Kuis</Typography>
                     </div>
                   </Grid>
                   <Grid item>
@@ -1310,9 +1344,7 @@ function ViewClass(props) {
                   <Grid item xs container alignItems="center">
                     <div className={classes.objectPanel}>
                       <BsClipboardData className={classes.objectIcon} />
-                      <Typography variant="h6">
-                        Ujian
-                      </Typography>
+                      <Typography variant="h6">Ujian</Typography>
                     </div>
                   </Grid>
                   <Grid item>
@@ -1338,11 +1370,19 @@ function ViewClass(props) {
             {all_subjects.length === 0
               ? null
               : all_subjects.map((subject) => {
-                  if (kelas.subject_assigned && kelas.subject_assigned.includes(subject._id)) {
+                  // let isEmpty = true
+                  if (
+                    kelas.subject_assigned &&
+                    kelas.subject_assigned.includes(subject._id)
+                  ) {
                     return (
                       <ExpansionPanel>
                         <ExpansionPanelSummary>
-                          <Grid container justify="space-between" alignItems="center">
+                          <Grid
+                            container
+                            justify="space-between"
+                            alignItems="center"
+                          >
                             <Grid item>
                               <Typography variant="h6">
                                 {subject.name}
@@ -1360,13 +1400,39 @@ function ViewClass(props) {
                           </Grid>
                         </ExpansionPanelSummary>
                         <Divider />
-                        <ExpansionPanelDetails className={classes.objectDetails}>
+                        <ExpansionPanelDetails
+                          className={classes.objectDetails}
+                        >
                           <div style={{ width: "100%" }}>
                             {showAllbySubject(
-                              listMaterials("subject", subject, "mata_pelajaran").concat(
-                              listTasks("subject", subject, "mata_pelajaran")).concat(
-                              listAssessments("subject", subject, "Kuis", "mata_pelajaran")).concat(
-                              listAssessments("subject", subject, "Ujian", "mata_pelajaran"))
+                              listMaterials(
+                                "subject",
+                                subject,
+                                "mata_pelajaran"
+                              )
+                                .concat(
+                                  listTasks(
+                                    "subject",
+                                    subject,
+                                    "mata_pelajaran"
+                                  )
+                                )
+                                .concat(
+                                  listAssessments(
+                                    "subject",
+                                    subject,
+                                    "Kuis",
+                                    "mata_pelajaran"
+                                  )
+                                )
+                                .concat(
+                                  listAssessments(
+                                    "subject",
+                                    subject,
+                                    "Ujian",
+                                    "mata_pelajaran"
+                                  )
+                                )
                             )}
                           </div>
                         </ExpansionPanelDetails>
@@ -1376,14 +1442,23 @@ function ViewClass(props) {
                 })}
           </TabPanel>
           <TabPanel value={value} index={2} style={{ paddingTop: "15px" }}>
-            <Grid container direction="column" spacing={10} style={{ padding: "15px" }}>
+            <Grid
+              container
+              direction="column"
+              spacing={10}
+              style={{ padding: "15px" }}
+            >
               <Grid item>
                 <Typography variant="h4" gutterBottom>
                   Wali Kelas
                 </Typography>
                 <Divider className={classes.classMembersDivider} />
                 {isObjEmpty(walikelas) ? (
-                  <Typography color="textSecondary" align="center" style={{ padding: "15px" }}>
+                  <Typography
+                    color="textSecondary"
+                    align="center"
+                    style={{ padding: "15px" }}
+                  >
                     Kosong
                   </Typography>
                 ) : (
@@ -1410,7 +1485,7 @@ function ViewClass(props) {
                             >
                               <IconButton
                                 size="small"
-                                className={classes.viewMaterialButton}
+                                className={classes.viewUserButton}
                               >
                                 <PageviewIcon fontSize="small" />
                               </IconButton>
@@ -1427,51 +1502,59 @@ function ViewClass(props) {
                   Murid
                 </Typography>
                 <Divider className={classes.classMembersDivider} />
-                  {students_by_class.length === 0 ? (
-                    <Typography color="textSecondary" align="center" style={{ padding: "15px" }}>
-                      Kosong
-                    </Typography>
-                  ) : (
-                    <List>
-                      {students_by_class.map((student) => (
-                        <Grid
-                          container
-                          justify="space-between"
-                          alignItems="center"
-                        >
-                          {[
-                            <Grid item>
-                              <PersonListItem
-                                person_avatar={avatar[walikelas._id]}
-                                person_name={student.name}
-                                person_role={student_role(student._id)}
-                              />
-                            </Grid>,
-                            user.email === student.email ? null : (
-                              <Grid item xs container justify="flex-end">
-                                <Grid item>
-                                  <LightTooltip title="Lihat Profil">
-                                    <Link
-                                      to={{
-                                        pathname: `/lihat-profil/${student._id}`,
-                                      }}
+                {students_by_class.length === 0 ? (
+                  <Typography
+                    color="textSecondary"
+                    align="center"
+                    style={{ padding: "15px" }}
+                  >
+                    Kosong
+                  </Typography>
+                ) : (
+                  <List>
+                    {students_by_class.map((student) => (
+                      <Grid
+                        container
+                        justify="space-between"
+                        alignItems="center"
+                      >
+                        {[
+                          <Grid item>
+                            <PersonListItem
+                              person_avatar={
+                                isObjEmpty(walikelas)
+                                  ? null
+                                  : avatar[walikelas._id]
+                              }
+                              person_name={student.name}
+                              person_role={student_role(student._id)}
+                            />
+                          </Grid>,
+                          user.email === student.email ? null : (
+                            <Grid item xs container justify="flex-end">
+                              <Grid item>
+                                <LightTooltip title="Lihat Profil">
+                                  <Link
+                                    to={{
+                                      pathname: `/lihat-profil/${student._id}`,
+                                    }}
+                                  >
+                                    <IconButton
+                                      size="small"
+                                      className={classes.viewUserButton}
                                     >
-                                      <IconButton
-                                        size="small"
-                                        className={classes.viewMaterialButton}
-                                      >
-                                        <PageviewIcon fontSize="small" />
-                                      </IconButton>
-                                    </Link>
-                                  </LightTooltip>
-                                </Grid>
+                                      <PageviewIcon fontSize="small" />
+                                    </IconButton>
+                                  </Link>
+                                </LightTooltip>
                               </Grid>
-                            ),
-                          ]}
-                        </Grid>
-                      ))}
-                    </List>
-                  )}
+                            </Grid>
+                          ),
+                        ]}
+                      </Grid>
+                    ))}
+                  </List>
+                )}
               </Grid>
             </Grid>
           </TabPanel>
@@ -1523,5 +1606,5 @@ export default connect(mapStateToProps, {
   getTaskAtmpt,
   getFileAvatar,
   getMultipleFileAvatar,
-  getTaskByClass
+  getTaskByClass,
 })(ViewClass);

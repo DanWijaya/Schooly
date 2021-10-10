@@ -17,7 +17,7 @@ module.exports = function validateEventInput(data) {
   if (Validator.isEmpty(data.start_date)) {
     errors.start_date_custom = "Waktu mulai belum diisi";
   }
-  
+
   if (Validator.isEmpty(data.end_date)) {
     errors.end_date_custom = "Waktu selesai belum diisi";
   }
@@ -36,5 +36,4 @@ module.exports = function validateEventInput(data) {
     errors,
     isValid: isEmpty(errors),
   };
-
-}
+};

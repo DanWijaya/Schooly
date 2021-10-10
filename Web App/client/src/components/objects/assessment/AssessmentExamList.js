@@ -4,7 +4,10 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { getAllAssessments, deleteAssessment } from "../../../actions/AssessmentActions";
+import {
+  getAllAssessments,
+  deleteAssessment,
+} from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers } from "../../../actions/UserActions";
@@ -33,7 +36,7 @@ import {
   Snackbar,
   TableSortLabel,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
@@ -46,7 +49,7 @@ import {
   Pageview as PageviewIcon,
   Search as SearchIcon,
   Sort as SortIcon,
-  Warning as WarningIcon
+  Warning as WarningIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
@@ -75,7 +78,7 @@ function createData(
     createdAt,
     submissions,
     teacher_name,
-    grades
+    grades,
   };
 }
 
@@ -139,13 +142,13 @@ function AssessmentListToolbar(props) {
       id: "start_date",
       numeric: false,
       disablePadding: false,
-      label: "Mulai"
+      label: "Mulai",
     },
     {
       id: "end_date",
       numeric: false,
       disablePadding: false,
-      label: "Selesai"
+      label: "Selesai",
     },
     {
       id: "createdAt",
@@ -185,7 +188,7 @@ function AssessmentListToolbar(props) {
                   variant="extended"
                   className={classes.createExamButton}
                 >
-                  <BsClipboardData className={classes.createExamIconDesktop}/>
+                  <BsClipboardData className={classes.createExamIconDesktop} />
                   Buat Ujian
                 </Fab>
               </Link>
@@ -194,7 +197,7 @@ function AssessmentListToolbar(props) {
               <LightTooltip title="Buat Ujian">
                 <Link to="/buat-ujian">
                   <Fab size="medium" className={classes.createExamButton}>
-                    <BsClipboardData className={classes.createExamIconMobile}/>
+                    <BsClipboardData className={classes.createExamIconMobile} />
                   </Fab>
                 </Link>
               </LightTooltip>
@@ -217,7 +220,7 @@ function AssessmentListToolbar(props) {
                     style: {
                       borderRadius: "22.5px",
                       maxWidth: "450px",
-                      width: "100%"
+                      width: "100%",
                     },
                     startAdornment: (
                       <InputAdornment
@@ -238,7 +241,9 @@ function AssessmentListToolbar(props) {
                             e.stopPropagation();
                             onClear(e, "searchFilterDesktop");
                           }}
-                          style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                          style={{
+                            visibility: !searchFilter ? "hidden" : "visible",
+                          }}
                         >
                           <ClearIcon />
                         </IconButton>
@@ -270,7 +275,7 @@ function AssessmentListToolbar(props) {
                         style: {
                           borderRadius: "22.5px",
                           maxWidth: "450px",
-                          width: "100%"
+                          width: "100%",
                         },
                         endAdornment: (
                           <InputAdornment
@@ -284,7 +289,11 @@ function AssessmentListToolbar(props) {
                                 e.stopPropagation();
                                 onClear(e, "searchFilterMobile");
                               }}
-                              style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                              style={{
+                                visibility: !searchFilter
+                                  ? "hidden"
+                                  : "visible",
+                              }}
                             >
                               <ClearIcon />
                             </IconButton>
@@ -293,13 +302,13 @@ function AssessmentListToolbar(props) {
                       }}
                     />
                   </div>
-                  ) : (
-                    <LightTooltip title="Cari Ujian">
-                      <IconButton onClick={() => setSearchBarFocus(true)}>
-                        <SearchIcon />
-                      </IconButton>
-                    </LightTooltip>
-                  )}
+                ) : (
+                  <LightTooltip title="Cari Ujian">
+                    <IconButton onClick={() => setSearchBarFocus(true)}>
+                      <SearchIcon />
+                    </IconButton>
+                  </LightTooltip>
+                )}
               </Hidden>
             </Grid>
             <Grid item>
@@ -378,7 +387,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   createExamButton: {
-    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    boxShadow:
+      "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -448,8 +458,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "stretch",
     "&:hover": {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
   warningIcon: {
     color: theme.palette.warning.main,
@@ -465,8 +475,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
   },
   listItem: {
-    padding: "6px 16px"
-  }
+    padding: "6px 16px",
+  },
 }));
 
 function AssessmentList(props) {
@@ -476,7 +486,7 @@ function AssessmentList(props) {
     deleteAssessment,
     getAllClass,
     getAllSubjects,
-    getTeachers
+    getTeachers,
   } = props;
   const { user, all_teachers_map } = props.auth;
   const { all_classes_map } = props.classesCollection;
@@ -487,7 +497,9 @@ function AssessmentList(props) {
   const [orderBy, setOrderBy] = React.useState("subject");
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedAssessmentId, setSelectedAssessmentId] = React.useState(null);
-  const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
+  const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(
+    null
+  );
   const [copySnackbarOpen, setOpenCopySnackBar] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
@@ -498,12 +510,19 @@ function AssessmentList(props) {
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
   const handleOpenDialog = (data) => {
-    let { assessmenttitle, subject, teacher_name, start_date, end_date, grades } = data;
+    let {
+      assessmenttitle,
+      subject,
+      teacher_name,
+      start_date,
+      end_date,
+      grades,
+    } = data;
 
     subject = all_subjects_map.get(subject);
     start_date = moment(start_date).locale("id").format("DD MMM YYYY, HH.mm");
     end_date = moment(end_date).locale("id").format("DD MMM YYYY, HH.mm");
-    if(grades){
+    if (grades) {
       // No need to check if it is student cause only student use dialog.
       grades = grades[user._id].total_grade;
     }
@@ -511,7 +530,14 @@ function AssessmentList(props) {
     let title = assessmenttitle;
     console.log(data);
 
-    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date, grades});
+    setCurrentDialogInfo({
+      title,
+      subject,
+      teacher_name,
+      start_date,
+      end_date,
+      grades,
+    });
     setOpenDialog(true);
     console.log(title);
   };
@@ -522,7 +548,11 @@ function AssessmentList(props) {
 
   var rows = [];
   const assessmentRowItem = (data) => {
-    if (data.type === "Ujian" && all_teachers_map instanceof Map && all_teachers_map.get(data.author_id)) {
+    if (
+      data.type === "Ujian" &&
+      all_teachers_map instanceof Map &&
+      all_teachers_map.get(data.author_id)
+    ) {
       rows.push(
         createData(
           data._id,
@@ -543,10 +573,10 @@ function AssessmentList(props) {
 
   React.useEffect(
     () => {
-      getAllAssessments();
-      getAllClass("map");
-      getAllSubjects("map");
-      getTeachers("map");
+      getAllAssessments(user.unit);
+      getAllClass(user.unit, "map");
+      getAllSubjects(user.unit, "map");
+      getTeachers(user.unit, "map");
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -554,11 +584,11 @@ function AssessmentList(props) {
 
   React.useEffect(() => {
     // To show delete snackbar when an exam is deleted.
-    if(props.location.openDeleteSnackbar){
-      handleOpenDeleteSnackbar()
+    if (props.location.openDeleteSnackbar) {
+      handleOpenDeleteSnackbar();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const retrieveAssessments = () => {
     // If all_assessments is not undefined or an empty array.
@@ -612,7 +642,7 @@ function AssessmentList(props) {
   const onDeleteAssessment = (id, type) => {
     deleteAssessment(id, type).then((res) => {
       console.log(res);
-      getAllAssessments();
+      getAllAssessments(user.unit);
       handleOpenDeleteSnackbar();
       handleCloseDeleteDialog();
     });
@@ -629,7 +659,6 @@ function AssessmentList(props) {
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
-
 
   const handleOpenCopySnackBar = (type) => {
     setOpenCopySnackBar(true);
@@ -654,7 +683,7 @@ function AssessmentList(props) {
 
   const handleOpenDeleteSnackbar = () => {
     setOpenDeleteSnackbar(true);
-  }
+  };
 
   const handleCloseDeleteSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -674,7 +703,12 @@ function AssessmentList(props) {
   document.title = "Schooly | Daftar Ujian";
   return (
     <div className={classes.root}>
-      <Grid container alignItems="center" spacing={2} className={classes.header}>
+      <Grid
+        container
+        alignItems="center"
+        spacing={2}
+        className={classes.header}
+      >
         <Grid item>
           <div className={classes.headerIcon}>
             <BsClipboardData />
@@ -794,21 +828,21 @@ function AssessmentList(props) {
                               </IconButton>
                             </LightTooltip>
                           </Grid>
-                          {row.submissions && Object.keys(row.submissions).length !== 0 ?
-                          null :
-                          <Grid item>
-                            <LightTooltip title="Sunting">
-                              <Link to={`/sunting-ujian/${row._id}`}>
-                                <IconButton
-                                  size="small"
-                                  className={classes.editAssessmentButton}
-                                >
-                                  <EditIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
-                          }
+                          {row.submissions &&
+                          Object.keys(row.submissions).length !== 0 ? null : (
+                            <Grid item>
+                              <LightTooltip title="Sunting">
+                                <Link to={`/sunting-ujian/${row._id}`}>
+                                  <IconButton
+                                    size="small"
+                                    className={classes.editAssessmentButton}
+                                  >
+                                    <EditIcon fontSize="small" />
+                                  </IconButton>
+                                </Link>
+                              </LightTooltip>
+                            </Grid>
+                          )}
                           <Grid item>
                             <LightTooltip title="Hapus">
                               <IconButton
@@ -880,9 +914,7 @@ function AssessmentList(props) {
                     component="a"
                     variant="outlined"
                     className={classes.assessmentPaper}
-                    onClick={() =>
-                      handleOpenDialog(row)
-                    }
+                    onClick={() => handleOpenDialog(row)}
                   >
                     <Badge
                       style={{ display: "flex", flexDirection: "row" }}
@@ -985,40 +1017,37 @@ function AssessmentList(props) {
           >
             Guru: {currentDialogInfo.teacher_name}
           </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-          >
+          <Typography variant="subtitle1" align="center">
             Mulai: {currentDialogInfo.start_date}
           </Typography>
           <Typography variant="subtitle1" align="center">
             Selesai: {currentDialogInfo.end_date}
           </Typography>
-          {currentDialogInfo.grades ?
-          <Typography variant="subtitle1" align="center">
-            Nilai: {currentDialogInfo.grades}/100
-          </Typography>
-          :
-          null}
-          {currentDialogInfo.grades ?
-          <Typography
-          variant="subtitle2"
-          align="center"
-          color="textSecondary"
-          style={{ marginTop: "10px", textAlign: "center" }}
-        >
-          Anda telah menempuh ujian ini
-        </Typography> :
-          <Typography
-            variant="subtitle2"
-            align="center"
-            color="textSecondary"
-            style={{ marginTop: "10px", textAlign: "center" }}
-          >
-            Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
-            pelajaran terkait.
-          </Typography>
-        }
+          {currentDialogInfo.grades ? (
+            <Typography variant="subtitle1" align="center">
+              Nilai: {currentDialogInfo.grades}/100
+            </Typography>
+          ) : null}
+          {currentDialogInfo.grades ? (
+            <Typography
+              variant="subtitle2"
+              align="center"
+              color="textSecondary"
+              style={{ marginTop: "10px", textAlign: "center" }}
+            >
+              Anda telah menempuh ujian ini
+            </Typography>
+          ) : (
+            <Typography
+              variant="subtitle2"
+              align="center"
+              color="textSecondary"
+              style={{ marginTop: "10px", textAlign: "center" }}
+            >
+              Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
+              pelajaran terkait.
+            </Typography>
+          )}
         </div>
       </Dialog>
       <DeleteDialog
@@ -1074,7 +1103,7 @@ AssessmentList.propTypes = {
   assessmentsCollection: PropTypes.object.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
   deleteAssessment: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -1082,7 +1111,7 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
   assessmentsCollection: state.assessmentsCollection,
-  errors: state.errors
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, {
@@ -1090,5 +1119,5 @@ export default connect(mapStateToProps, {
   getAllSubjects,
   getTeachers,
   getAllAssessments,
-  deleteAssessment
+  deleteAssessment,
 })(AssessmentList);

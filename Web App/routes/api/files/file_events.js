@@ -10,8 +10,8 @@ const { ObjectId } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
 
 // Multer ships with storage engines DiskStorage and MemoryStorage
-// And Multer adds a body object and a file or files object to the request object. 
-// The body object contains the values of the text fields of the form, 
+// And Multer adds a body object and a file or files object to the request object.
+// The body object contains the values of the text fields of the form,
 // the file or files object contains the files uploaded via the form.
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
@@ -160,13 +160,14 @@ router.delete("/:id", (req, res) => {
 });
 
 router.get("/by_event/:id", (req, res) => {
-  FileEvent.find({ event_id: req.params.id }).then((results, err) => {
-    if (!results) return res.status(400).json(err);
-    else {
+  FileEvent.find({ event_id: req.params.id })
+    .then((results, err) => {
       results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
       return res.status(200).json(results);
-    }
-  });
+    })
+    .catch((err) => {
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/:id", (req, res) => {

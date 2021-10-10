@@ -6,9 +6,19 @@ import moment from "moment";
 import "moment/locale/id";
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { getUsers } from "../../../actions/UserActions";
-import { getFileAnnouncements, downloadFileAnnouncements, viewFileAnnouncement } from "../../../actions/files/FileAnnouncementActions";
-import { getOneAnnouncement, deleteAnnouncement } from "../../../actions/AnnouncementActions";
-import { downloadLampiranAnnouncement, previewLampiranAnnouncement } from "../../../actions/UploadActions";
+import {
+  getFileAnnouncements,
+  downloadFileAnnouncements,
+  viewFileAnnouncement,
+} from "../../../actions/files/FileAnnouncementActions";
+import {
+  getOneAnnouncement,
+  deleteAnnouncement,
+} from "../../../actions/AnnouncementActions";
+import {
+  downloadLampiranAnnouncement,
+  previewLampiranAnnouncement,
+} from "../../../actions/UploadActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -23,12 +33,9 @@ import {
   ListItemText,
   Paper,
   Tooltip,
-  Typography
+  Typography,
 } from "@material-ui/core";
-import {
-  Delete as DeleteIcon,
-  Edit as EditIcon
-} from "@material-ui/icons";
+import { Delete as DeleteIcon, Edit as EditIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   FaFile,
@@ -165,7 +172,9 @@ function LampiranFile(props) {
         <ListItemText
           primary={
             <LightTooltip title={filename} placement="top">
-              <Typography variant="subtitle2" noWrap>{displayedName}</Typography>
+              <Typography variant="subtitle2" noWrap>
+                {displayedName}
+              </Typography>
             </LightTooltip>
           }
           secondary={filetype}
@@ -201,10 +210,10 @@ function ViewAnnouncement(props) {
 
   React.useEffect(() => {
     getOneAnnouncement(announcement_id);
-    getAllClass("map");
-    getSelectedClasses(selectedAnnouncements.class_assigned);
+    getAllClass(user.unit, "map");
     if (selectedAnnouncements._id) {
       getUsers([selectedAnnouncements.author_id]);
+      getSelectedClasses(selectedAnnouncements.class_assigned);
     }
     getFileAnnouncements(announcement_id).then((result) => {
       setFileLampiran(result);
@@ -250,8 +259,7 @@ function ViewAnnouncement(props) {
   };
 
   const onDeleteAnnouncement = (announcement_id) => {
-    deleteAnnouncement(announcement_id, history).then((res) => {
-    });
+    deleteAnnouncement(announcement_id, history).then((res) => {});
   };
 
   // Delete Dialog
@@ -279,40 +287,53 @@ function ViewAnnouncement(props) {
             </Typography>
             {/*Ini mau bikin logicnya ngapit typographynya kalau ada <typography> Oleh: user.name</typo> : null */}
             <Typography variant="body2" color="textSecondary">
-              Oleh: {!retrieved_users.size || !selectedAnnouncements.author_id || !retrieved_users.get(selectedAnnouncements.author_id)
+              Oleh:{" "}
+              {!retrieved_users.size ||
+              !selectedAnnouncements.author_id ||
+              !retrieved_users.get(selectedAnnouncements.author_id)
                 ? ""
                 : retrieved_users.get(selectedAnnouncements.author_id).name}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Waktu Dibuat: {moment(selectedAnnouncements.createdAt)
+              Waktu Dibuat:{" "}
+              {moment(selectedAnnouncements.createdAt)
                 .locale("id")
                 .format("DD MMM YYYY, HH:mm")}
             </Typography>
             <Divider className={classes.announcementDivider} />
             <Grid container spacing={4}>
-              {retrieved_users.get(selectedAnnouncements.author_id) ? user.role === "Teacher" &&
+              {retrieved_users.get(selectedAnnouncements.author_id) ? (
+                user.role === "Teacher" &&
                 retrieved_users.size &&
                 selectedAnnouncements.author_id &&
-                retrieved_users.get(selectedAnnouncements.author_id).role === "Teacher" ? (
-                <Grid item xs={12}>
-                  <Typography color="textSecondary" gutterBottom>
-                    Diberikan kepada:
-                  </Typography>
-                  <Typography>
-                    {!selectedAnnouncements.class_assigned ||
-                    !all_classes_map.size
-                      ? null
-                      : selectedAnnouncements.class_assigned.map((kelas, i) => {
-                          if (all_classes_map.get(kelas)) {
-                            if (i === selectedAnnouncements.class_assigned.length - 1)
-                              return `${all_classes_map.get(kelas).name}`;
-                            return `${all_classes_map.get(kelas).name}, `;
-                          }
-                          return null;
-                        })}
-                  </Typography>
-                </Grid>
-              ) : null : null}
+                retrieved_users.get(selectedAnnouncements.author_id).role ===
+                  "Teacher" ? (
+                  <Grid item xs={12}>
+                    <Typography color="textSecondary" gutterBottom>
+                      Diberikan kepada:
+                    </Typography>
+                    <Typography>
+                      {!selectedAnnouncements.class_assigned ||
+                      !all_classes_map.size
+                        ? null
+                        : selectedAnnouncements.class_assigned.map(
+                            (kelas, i) => {
+                              if (all_classes_map.get(kelas)) {
+                                if (
+                                  i ===
+                                  selectedAnnouncements.class_assigned.length -
+                                    1
+                                )
+                                  return `${all_classes_map.get(kelas).name}`;
+                                return `${all_classes_map.get(kelas).name}, `;
+                              }
+                              return null;
+                            }
+                          )}
+                    </Typography>
+                  </Grid>
+                ) : null
+              ) : null}
               <Grid item>
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Pengumuman:
@@ -347,8 +368,15 @@ function ViewAnnouncement(props) {
             </Grid>
           </Paper>
         </Grid>
-        {user.role === "Admin" || user._id === selectedAnnouncements.author_id ? (
-          <Grid item container justify="flex-end" alignItems="center" spacing={1}>
+        {user.role === "Admin" ||
+        user._id === selectedAnnouncements.author_id ? (
+          <Grid
+            item
+            container
+            justify="flex-end"
+            alignItems="center"
+            spacing={1}
+          >
             <Grid item>
               <Link to={`/sunting-pengumuman/${announcement_id}`}>
                 <Hidden xsDown>
@@ -357,17 +385,12 @@ function ViewAnnouncement(props) {
                     className={classes.editButton}
                     startIcon={<EditIcon style={{ color: "grey" }} />}
                   >
-                    <Typography>
-                      Sunting
-                    </Typography>
+                    <Typography>Sunting</Typography>
                   </Button>
                 </Hidden>
                 <Hidden smUp>
                   <Tooltip title="Sunting">
-                    <Button
-                      variant="outlined"
-                      className={classes.editButton}
-                    >
+                    <Button variant="outlined" className={classes.editButton}>
                       <EditIcon />
                     </Button>
                   </Tooltip>
@@ -382,9 +405,7 @@ function ViewAnnouncement(props) {
                   startIcon={<DeleteIcon style={{ color: "grey" }} />}
                   onClick={(e) => handleOpenDeleteDialog(e, announcement_id)}
                 >
-                  <Typography>
-                    Hapus
-                  </Typography>
+                  <Typography>Hapus</Typography>
                 </Button>
               </Hidden>
               <Hidden smUp>

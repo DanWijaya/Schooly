@@ -74,7 +74,7 @@ router.post(
               return res.json({
                 _id: req.params.id,
                 success: "Successfully uploaded the lampiran file",
-                numsFileUploaded: numsFileUploaded
+                numsFileUploaded: numsFileUploaded,
               });
             }
           }
@@ -166,15 +166,14 @@ router.delete("/:id", (req, res) => {
 });
 
 router.get("/by_announcement/:id", (req, res) => {
-  FileAnnouncement.find({ announcement_id: req.params.id }).then(
-    (results, err) => {
-      if (!results) return res.status(400).json(err);
-      else {
-        results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
-        return res.status(200).json(results);
-      }
-    }
-  );
+  FileAnnouncement.find({ announcement_id: req.params.id })
+    .then((results, err) => {
+      results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
+      return res.status(200).json(results);
+    })
+    .catch((err) => {
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/:id", (req, res) => {

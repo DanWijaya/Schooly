@@ -20,7 +20,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete } from "@material-ui/lab";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -59,7 +59,7 @@ class CreateClass extends Component {
       openUploadDialog: null,
       teacherOptions: null,
       errors: {},
-      mata_pelajaran: []
+      mata_pelajaran: [],
     };
   }
 
@@ -71,9 +71,14 @@ class CreateClass extends Component {
     if (prevState.teacherOptions === null) {
       let all_classes = this.props.classesCollection.all_classes;
       let all_teachers = this.props.auth.all_teachers;
-      if (all_classes && Array.isArray(all_classes) && all_classes.length !== 0 &&
-        all_teachers && Array.isArray(all_teachers) && all_teachers.length !== 0) {
-
+      if (
+        all_classes &&
+        Array.isArray(all_classes) &&
+        all_classes.length !== 0 &&
+        all_teachers &&
+        Array.isArray(all_teachers) &&
+        all_teachers.length !== 0
+      ) {
         let all_walikelas = new Set(all_classes.map((cls) => cls.walikelas));
         let teacherOptions = all_teachers.filter(
           (teacher) => !all_walikelas.has(teacher._id)
@@ -82,7 +87,7 @@ class CreateClass extends Component {
         this.setState({ teacherOptions });
       }
     }
-  };
+  }
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
@@ -102,17 +107,16 @@ class CreateClass extends Component {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
 
-
     if (field === "mata_pelajaran") {
       this.setState({ [field]: e });
-    }
-    else {
+    } else {
       this.setState({ [field]: e.target.value });
     }
   };
 
   onSubmit = (e) => {
     e.preventDefault();
+    const { user } = this.props.auth;
     const classObject = {
       name: this.state.name,
       nihil: this.state.nihil,
@@ -121,9 +125,10 @@ class CreateClass extends Component {
       ketua_kelas: this.state.ketua_kelas,
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
-
-      mata_pelajaran: this.state.mata_pelajaran.map((matpel) => (matpel._id))
+      unit: user.unit,
+      mata_pelajaran: this.state.mata_pelajaran.map((matpel) => matpel._id),
     };
+    console.log(user);
 
     this.props
       .createClass(classObject, this.props.history)
@@ -143,9 +148,10 @@ class CreateClass extends Component {
   };
 
   componentDidMount() {
-    this.props.getTeachers();
-    this.props.getAllSubjects();
-    this.props.getAllClass();
+    const { user } = this.props.auth;
+    this.props.getTeachers(user.unit);
+    this.props.getAllSubjects(user.unit);
+    this.props.getAllClass(user.unit);
   }
 
   componentWillUnmount() {
@@ -161,132 +167,133 @@ class CreateClass extends Component {
     document.title = "Schooly | Buat Kelas";
 
     return (
-        <div className={classes.root}>
-          <Paper>
-            <div className={classes.content}>
-              <Typography variant="h5" gutterBottom>
-                <b>Buat Kelas</b>
-              </Typography>
-              <Typography color="textSecondary">
-                Setelah semua murid masuk, jangan lupa untuk menyunting kelas
-                dan menentukan ketua kelas, sekretaris, dan bendahara kelas.
-              </Typography>
-            </div>
-            <Divider />
-            <form noValidate onSubmit={this.onSubmit}>
-              <Grid
-                container
-                direction="column"
-                spacing={4}
-                className={classes.content}
-              >
-                <Grid item>
-                  <Typography for="name" color="primary">
-                    Nama Kelas
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    id="name"
-                    onChange={this.onChange}
-                    value={this.state.name}
-                    error={errors.name}
-                    type="text"
-                    helperText={errors.name}
-                    className={classnames("", {
-                      invalid: errors.name,
-                    })}
-                  />
-                </Grid>
-                <Grid item>
-                  <Typography for="walikelas" color="primary">
-                    Wali Kelas
-                  </Typography>
-                  <FormControl
-                    id="walikelas"
-                    variant="outlined"
-                    color="primary"
-                    fullWidth
-                    error={Boolean(errors.walikelas)}
+      <div className={classes.root}>
+        <Paper>
+          <div className={classes.content}>
+            <Typography variant="h5" gutterBottom>
+              <b>Buat Kelas</b>
+            </Typography>
+            <Typography color="textSecondary">
+              Setelah semua murid masuk, jangan lupa untuk menyunting kelas dan
+              menentukan ketua kelas, sekretaris, dan bendahara kelas.
+            </Typography>
+          </div>
+          <Divider />
+          <form noValidate onSubmit={this.onSubmit}>
+            <Grid
+              container
+              direction="column"
+              spacing={4}
+              className={classes.content}
+            >
+              <Grid item>
+                <Typography for="name" color="primary">
+                  Nama Kelas
+                </Typography>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="name"
+                  onChange={this.onChange}
+                  value={this.state.name}
+                  error={errors.name}
+                  type="text"
+                  helperText={errors.name}
+                  className={classnames("", {
+                    invalid: errors.name,
+                  })}
+                />
+              </Grid>
+              <Grid item>
+                <Typography for="walikelas" color="primary">
+                  Wali Kelas
+                </Typography>
+                <FormControl
+                  id="walikelas"
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  error={Boolean(errors.walikelas)}
+                >
+                  <Select
+                    value={this.state.walikelas}
+                    onChange={(event) => {
+                      this.onChange(event, "walikelas");
+                    }}
                   >
-                    <Select
-                      value={this.state.walikelas}
-                      onChange={(event) => {
-                        this.onChange(event, "walikelas");
-                      }}
-                    >
-                      {(this.state.teacherOptions !== null) ? (
-                        this.state.teacherOptions.map((teacherInfo) => (
-                          <MenuItem key={teacherInfo._id} value={teacherInfo._id}>
+                    {this.state.teacherOptions !== null
+                      ? this.state.teacherOptions.map((teacherInfo) => (
+                          <MenuItem
+                            key={teacherInfo._id}
+                            value={teacherInfo._id}
+                          >
                             {teacherInfo.name}
                           </MenuItem>
                         ))
-                      ) : (
-                        null
-                      )}
-                    </Select>
-                    <FormHelperText error>
-                      {Boolean(errors.walikelas) ? errors.walikelas : null}
-                    </FormHelperText>
-                  </FormControl>
-                </Grid>
-                <Grid item>
-                  <Typography for="matapelajaran" color="primary">
-                    Mata Pelajaran
-                  </Typography>
-                  <FormControl
-                    fullWidth
-                    id="matapelajaran"
-                    color="primary"
-                  >
-                    <Autocomplete
-                      multiple
-                      id="tags-outlined"
-                      options={this.props.subjectsCollection ? this.props.subjectsCollection.all_subjects : null}
-                      getOptionLabel={(option) => option.name}
-                      filterSelectedOptions
-                      size="small"
-                      onChange={(event, value) => {
-                        this.onChange(value, "mata_pelajaran");
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          variant="outlined"
-                          error={errors.mata_pelajaran}
-                          helperText={errors.mata_pelajaran}
-                          {...params}
-                        />
-                      )}
-                    />
-                  </FormControl>
-                </Grid>
+                      : null}
+                  </Select>
+                  <FormHelperText error>
+                    {Boolean(errors.walikelas) ? errors.walikelas : null}
+                  </FormHelperText>
+                </FormControl>
               </Grid>
-              <Divider />
-              <div
-                style={{ display: "flex", justifyContent: "flex-end" }}
-                className={classes.content}
-              >
-                <div>
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    className={classes.createClassButton}
-                  >
-                    Buat Kelas
-                  </Button>
-                </div>
+              <Grid item>
+                <Typography for="matapelajaran" color="primary">
+                  Mata Pelajaran
+                </Typography>
+                <FormControl fullWidth id="matapelajaran" color="primary">
+                  <Autocomplete
+                    multiple
+                    id="tags-outlined"
+                    options={
+                      this.props.subjectsCollection
+                        ? this.props.subjectsCollection.all_subjects
+                        : null
+                    }
+                    getOptionLabel={(option) => option.name}
+                    filterSelectedOptions
+                    size="small"
+                    onChange={(event, value) => {
+                      this.onChange(value, "mata_pelajaran");
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        variant="outlined"
+                        error={errors.mata_pelajaran}
+                        helperText={errors.mata_pelajaran}
+                        {...params}
+                      />
+                    )}
+                  />
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Divider />
+            <div
+              style={{ display: "flex", justifyContent: "flex-end" }}
+              className={classes.content}
+            >
+              <div>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  className={classes.createClassButton}
+                >
+                  Buat Kelas
+                </Button>
               </div>
-            </form>
-          </Paper>
-          <UploadDialog
-            openUploadDialog={this.state.openUploadDialog}
-            success={success}
-            messageUploading="Kelas sedang dibuat"
-            messageSuccess="Kelas telah dibuat"
-            redirectLink={`/kelas/${success}`}
-          />
-        </div>
-      );
+            </div>
+          </form>
+        </Paper>
+        <UploadDialog
+          openUploadDialog={this.state.openUploadDialog}
+          success={success}
+          messageUploading="Kelas sedang dibuat"
+          messageSuccess="Kelas telah dibuat"
+          redirectLink={`/kelas/${success}`}
+        />
+      </div>
+    );
   }
 }
 
@@ -304,7 +311,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   success: state.success,
   subjectsCollection: state.subjectsCollection,
-  classesCollection: state.classesCollection
+  classesCollection: state.classesCollection,
 });
 
 export default connect(mapStateToProps, {
@@ -313,5 +320,5 @@ export default connect(mapStateToProps, {
   getTeachers,
   getAllSubjects,
   clearErrors,
-  clearSuccess
+  clearSuccess,
 })(withStyles(styles)(CreateClass));

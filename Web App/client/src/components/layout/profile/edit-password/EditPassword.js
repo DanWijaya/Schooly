@@ -14,12 +14,9 @@ import {
   IconButton,
   TextField,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from "@material-ui/core";
-import {
-  Close as CloseIcon,
-  Lock as LockIcon
-} from "@material-ui/icons";
+import { Close as CloseIcon, Lock as LockIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -147,11 +144,20 @@ function EditPassword(props) {
             <form onSubmit={onSubmit}>
               <Grid container direction="column" spacing={3}>
                 <Grid item>
-                  <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                  <Typography
+                    variant="subtitle2"
+                    color="textSecondary"
+                    gutterBottom
+                  >
                     Pilih kata sandi yang kuat dan unik.
                   </Typography>
-                  <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                    Kata sandi Anda adalah rahasia dan tidak boleh diketahui oleh orang lain.
+                  <Typography
+                    variant="subtitle2"
+                    color="textSecondary"
+                    gutterBottom
+                  >
+                    Kata sandi Anda adalah rahasia dan tidak boleh diketahui
+                    oleh orang lain.
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -177,7 +183,11 @@ function EditPassword(props) {
                     value={new_password}
                     error={errors.new_password}
                     type="password"
-                    helperText={errors.new_password ? errors.new_password : "Gunakan 8 karakter atau lebih dengan kombinasi huruf kapital dan angka."}
+                    helperText={
+                      errors.new_password
+                        ? errors.new_password
+                        : "Gunakan 8 karakter atau lebih dengan kombinasi huruf kapital dan angka."
+                    }
                   />
                 </Grid>
                 <Grid item>
@@ -195,10 +205,7 @@ function EditPassword(props) {
                 </Grid>
               </Grid>
               <div className={classes.saveButtonContainer}>
-                <Button
-                  type="submit"
-                  className={classes.saveButton}
-                 >
+                <Button type="submit" className={classes.saveButton}>
                   Simpan
                 </Button>
               </div>

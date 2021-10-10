@@ -9,7 +9,7 @@ export const TabPanel = (props) => {
       {value === index && children}
     </div>
   );
-}
+};
 
 TabPanel.propTypes = {
   children: PropTypes.node,
@@ -21,4 +21,4 @@ export const TabIndex = (index) => {
   return {
     id: `tab-${index}`,
   };
-}
+};

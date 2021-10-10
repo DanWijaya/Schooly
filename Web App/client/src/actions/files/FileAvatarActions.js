@@ -7,10 +7,10 @@ export const uploadFileAvatar = (id, formData) => (dispatch) => {
     .post(`/api/files/avatar/upload/${id}`, formData)
     .then((res) => {
       dispatch(setCurrentUser(res.data.user));
-      return true
+      return true;
     })
     .catch((err) => {
-      throw new Error(err)
+      throw new Error(err);
     });
 };
 
@@ -24,14 +24,16 @@ export const getFileAvatar = (id) => (dispatch) => {
 };
 
 export const getMultipleFileAvatar = (id_list) => (dispatch) => {
-  return axios
-    .get(`/api/files/avatar/multi_user`, { params: { id_list: id_list } })
+  console.log(id_list);
+    return axios
+    .get(`/api/files/avatar/multiuser`, { params: { id_list: id_list } })
     .then((res) => {
       console.log(res);
       console.log("Multiple avatars:", res.data);
       return res.data;
     })
     .catch((err) => new Error(err));
+  
 };
 
 export const downloadFileAvatar = (id) => (dispatch) => {

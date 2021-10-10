@@ -27,13 +27,14 @@ router.post("/create", (req, res) => {
         name: req.body.name,
         nihil: req.body.nihil,
         ukuran: req.body.ukuran,
-        subject_assigned: req.body.mata_pelajaran.map((id) => (new ObjectId(id)))
-      }
+        subject_assigned: req.body.mata_pelajaran.map((id) => new ObjectId(id)),
+        unit: ObjectId(req.body.unit),
+      };
 
       if (req.body.walikelas) {
         dataKelas.walikelas = req.body.walikelas;
       }
-      const newKelas = new Class(dataKelas)
+      const newKelas = new Class(dataKelas);
 
       newKelas
         .save()
@@ -53,8 +54,12 @@ router.get("/view/:id", (req, res) => {
   });
 });
 
-router.get("/viewall", (req, res) => {
-  Class.find({}).then((classes, err) => {
+router.get("/viewall/:unitId", (req, res) => {
+  const { unitId } = req.params;
+  if (!unitId) {
+    return res.json([]);
+  }
+  Class.find({ unit: unitId }).then((classes, err) => {
     if (!classes) res.status(400).json(err);
     else {
       classes.sort((a, b) => (a.name > b.name ? 1 : -1));
@@ -89,21 +94,29 @@ router.delete("/delete/:id", (req, res) => {
 });
 
 router.get("/setCurrentClass/:id", (req, res) => {
-  let id = req.params.id;
-  // console.log("set Current class is runned", id);
-  Class.findById(id, (err, classData) => {
-    if (!classData) return res.status(404).json("Class is not found");
-
-    return res.json(classData);
-  });
+  const { id } = req.params; // console.log("set Current class is runned", id);
+  if (!id) {
+    return res.json({});
+  }
+  Class.findById(id)
+    .then((classData) => {
+      if (!classData) {
+        console.error("Class is not found");
+      }
+      console.log("WOI", classData);
+      return res.json(classData);
+    })
+    .catch((err) => {
+      throw err;
+    });
 });
 
 router.get("/viewSelectedClasses/", (req, res) => {
   const { classes_ids } = req.query;
   // console.log(classes_ids)
-  let ids_to_find;
+  let ids_to_find = [];
 
-  if (classes_ids !== undefined) {
+  if (Array.isArray(classes_ids)) {
     ids_to_find = classes_ids.map((id) => new ObjectId(id));
   }
   Class.find({ _id: { $in: ids_to_find } }, (err, classes) => {
@@ -134,7 +147,9 @@ router.put("/update/:id", (req, res) => {
     classData.sekretaris = req.body.sekretaris ? req.body.sekretaris : null;
     classData.bendahara = req.body.bendahara ? req.body.bendahara : null;
     classData.ukuran = req.body.ukuran;
-    classData.subject_assigned = req.body.mata_pelajaran.map((id) => (new ObjectId(id)));
+    classData.subject_assigned = req.body.mata_pelajaran.map(
+      (id) => new ObjectId(id)
+    );
 
     //Karena field walikelas ini optional.
 

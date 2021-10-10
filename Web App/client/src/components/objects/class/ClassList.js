@@ -2,8 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getTeachers, getStudents, moveStudents } from "../../../actions/UserActions";
-import { getAllClass, deleteClass, unassignClassOfficers } from "../../../actions/ClassActions";
+import {
+  getTeachers,
+  getStudents,
+  moveStudents,
+} from "../../../actions/UserActions";
+import {
+  getAllClass,
+  deleteClass,
+  unassignClassOfficers,
+} from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -38,11 +46,11 @@ import {
   Edit as EditIcon,
   Search as SearchIcon,
   Sort as SortIcon,
-  SupervisorAccount as SupervisorAccountIcon
+  SupervisorAccount as SupervisorAccountIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaChalkboard, FaChalkboardTeacher } from "react-icons/fa";
-
+import ClassItem from "../item/ClassItem";
 function createData(_id, name, homeroomTeacher, size, absent) {
   return { _id, name, homeroomTeacher, size, absent };
 }
@@ -75,7 +83,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-
 function ClassListToolbar(props) {
   const {
     classes,
@@ -92,7 +99,6 @@ function ClassListToolbar(props) {
   const { getStudents, handleOpenSnackbar } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
 
-
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -102,7 +108,7 @@ function ClassListToolbar(props) {
       id: "name",
       numeric: false,
       disablePadding: true,
-      label: "Kelas"
+      label: "Kelas",
     },
     {
       id: "homeroomTeacher",
@@ -114,13 +120,13 @@ function ClassListToolbar(props) {
       id: "size",
       numeric: true,
       disablePadding: false,
-      label: "Jumlah Murid"
+      label: "Jumlah Murid",
     },
     {
       id: "absent",
       numeric: false,
       disablePadding: false,
-      label: "Absen"
+      label: "Absen",
     },
   ];
 
@@ -290,7 +296,9 @@ function ClassListToolbar(props) {
         let classNames = dataMatrix[0];
         if (classNames.includes("")) {
           throw new Error(
-            "Masih ada nama kelas yang kosong pada kolom" + (classNames.findIndex((name) => name === "") + 1) + "mohon periksa kembali"
+            "Masih ada nama kelas yang kosong pada kolom" +
+              (classNames.findIndex((name) => name === "") + 1) +
+              "mohon periksa kembali"
           );
         }
         let classId = [];
@@ -421,8 +429,8 @@ function ClassListToolbar(props) {
         if (Object.keys(newClassParticipant).length !== 0) {
           moveStudents(newClassParticipant, dummyClassId)
             .then(() => {
-              // So that number of students text in this page renewed (recalled using getStudents).
-              getStudents();
+              // agar text jumlah murid di halaman ini diperbarui, panggil ulang getStudents
+              getStudents(user.unit);
               if (invalidEmails.current.length !== 0) {
                 handleOpenEmailDialog();
               }
@@ -482,8 +490,15 @@ function ClassListToolbar(props) {
               </Link>
             </Hidden>
           </Grid>
-        ): null }
-        <Grid item xs container justify="flex-end" alignItems="center" spacing={1}>
+        ) : null}
+        <Grid
+          item
+          xs
+          container
+          justify="flex-end"
+          alignItems="center"
+          spacing={1}
+        >
           <Grid item>
             <Hidden mdUp>
               {searchBarFocus ? (
@@ -509,7 +524,7 @@ function ClassListToolbar(props) {
                       style: {
                         borderRadius: "22.5px",
                         maxWidth: "450px",
-                        width: "100%"
+                        width: "100%",
                       },
                       endAdornment: (
                         <InputAdornment
@@ -523,7 +538,9 @@ function ClassListToolbar(props) {
                               e.stopPropagation();
                               onClear(e);
                             }}
-                            style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                            style={{
+                              visibility: !searchFilter ? "hidden" : "visible",
+                            }}
                           >
                             <ClearIcon />
                           </IconButton>
@@ -553,7 +570,7 @@ function ClassListToolbar(props) {
                   style: {
                     borderRadius: "22.5px",
                     maxWidth: "450px",
-                    width: "100%"
+                    width: "100%",
                   },
                   startAdornment: (
                     <InputAdornment
@@ -574,7 +591,9 @@ function ClassListToolbar(props) {
                           e.stopPropagation();
                           onClear(e);
                         }}
-                        style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                        style={{
+                          visibility: !searchFilter ? "hidden" : "visible",
+                        }}
                       >
                         <ClearIcon />
                       </IconButton>
@@ -586,12 +605,19 @@ function ClassListToolbar(props) {
           </Grid>
           {user.role === "Admin" ? (
             <Grid item>
-              <form onChange={(event) => {handleImportCSV(event)}}>
-                <input type="file" accept=".csv" ref={fileInput} style={{ display: "none" }} />
+              <form
+                onChange={(event) => {
+                  handleImportCSV(event);
+                }}
+              >
+                <input
+                  type="file"
+                  accept=".csv"
+                  ref={fileInput}
+                  style={{ display: "none" }}
+                />
                 <LightTooltip title="Atur Kelas Murid">
-                  <IconButton
-                    onClick={handleOpenCSVMenu}
-                  >
+                  <IconButton onClick={handleOpenCSVMenu}>
                     <FaChalkboardTeacher />
                   </IconButton>
                 </LightTooltip>
@@ -609,8 +635,12 @@ function ClassListToolbar(props) {
                     horizontal: "left",
                   }}
                 >
-                  <MenuItem onClick={handleClickExport}>Unduh Data Kelas</MenuItem>
-                  <MenuItem onClick={handleClickImport}>Unggah Data Kelas</MenuItem>
+                  <MenuItem onClick={handleClickExport}>
+                    Unduh Data Kelas
+                  </MenuItem>
+                  <MenuItem onClick={handleClickImport}>
+                    Unggah Data Kelas
+                  </MenuItem>
                 </Menu>
               </form>
             </Grid>
@@ -671,11 +701,7 @@ function ClassListToolbar(props) {
           </Grid>
         </Grid>
       </Grid>
-      <Dialog
-        fullWidth
-        maxWidth="xs"
-        open={openDialog}
-      >
+      <Dialog fullWidth maxWidth="xs" open={openDialog}>
         <DialogTitle>Email berikut tidak ditemukan di basis data</DialogTitle>
         <DialogContent dividers>
           {invalidEmails.current.map((email, idx) => (
@@ -726,7 +752,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   createClassButton: {
-    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    boxShadow:
+      "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -756,7 +783,8 @@ const useStyles = makeStyles((theme) => ({
   },
   classPaper: {
     "&:focus, &:hover": {
-      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 10px 2px rgba(60,64,67,0.15)",
+      boxShadow:
+        "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 10px 2px rgba(60,64,67,0.15)",
     },
   },
   classBackground: {
@@ -802,11 +830,10 @@ function ClassList(props) {
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
   const { classesCollection, tasksCollection } = props;
 
-  const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"];
-  const colorMap = new Map();
+  // const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"];
+  // const colorMap = new Map();
 
   const classItem = (data, i) => {
-    colorMap.set(data._id, colorList[i % colorList.length]);
     let temp_ukuran = 0;
     for (let i = 0; i < all_students.length; i++) {
       if (all_students[i].kelas === data._id) {
@@ -827,10 +854,10 @@ function ClassList(props) {
     );
   };
   React.useEffect(() => {
-    getAllClass();
-    getAllClass("map");
-    getTeachers("map");
-    getStudents();
+    getAllClass(user.unit);
+    getAllClass(user.unit, "map");
+    getTeachers(user.unit, "map");
+    getStudents(user.unit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -866,9 +893,9 @@ function ClassList(props) {
     deleteClass(id).then((res) => {
       console.log(res);
 
-      getAllClass();
-      getAllClass("map");
-      getTeachers("map");
+      getAllClass(user.unit);
+      getAllClass(user.unit, "map");
+      getTeachers(user.unit, "map");
       handleOpenDeleteSnackbar();
       handleCloseDeleteDialog();
     });
@@ -889,7 +916,7 @@ function ClassList(props) {
 
   const handleOpenDeleteSnackbar = () => {
     setOpenDeleteSnackbar(true);
-  }
+  };
 
   const handleCloseDeleteSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -920,7 +947,12 @@ function ClassList(props) {
 
   return (
     <div className={classes.root}>
-      <Grid container alignItems="center" spacing={2} className={classes.header}>
+      <Grid
+        container
+        alignItems="center"
+        spacing={2}
+        className={classes.header}
+      >
         <Grid item>
           <div className={classes.headerIcon}>
             <FaChalkboard />
@@ -955,120 +987,12 @@ function ClassList(props) {
         updateSearchFilter={updateSearchFilter}
       />
       <Grid container spacing={2}>
-        {rows.length === 0
-          ? null
-          : stableSort(rows, getComparator(order, orderBy)).map(
-              (row, index) => {
-                const labelId = index;
-                let viewpage = `/kelas/${row._id}`;
-
-                return (
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
-                      <Paper button className={classes.classPaper}>
-                        <Avatar
-                          variant="square"
-                          className={classes.classBackground}
-                          style={{ backgroundColor: colorMap.get(row._id) }}
-                        >
-                          <FaChalkboard className={classes.classIcon} />
-                        </Avatar>
-                        <Divider />
-                        <div className={classes.classContent}>
-                          <Typography id={labelId} variant="h5" align="center" noWrap gutterBottom>
-                            {row.name}
-                          </Typography>
-                          <Typography color="textSecondary" align="center" noWrap>
-                            Wali Kelas: {row.homeroomTeacher ? (
-                              row.homeroomTeacher
-                            ) : (
-                              "-"
-                            )}
-                          </Typography>
-                        </div>
-                        <Divider />
-                        <div className={classes.classContent}>
-                          {user.role === "Admin" ? (
-                            <Grid
-                              container
-                              spacing={1}
-                              justify="flex-end"
-                              alignItems="center"
-                            >
-                              <Grid item>
-                                <LightTooltip title="Jumlah Murid">
-                                  <Badge
-                                    showZero
-                                    color={row.size === 0 ? "error" : "primary"}
-                                    badgeContent={row.size}
-                                    anchorOrigin={{
-                                      vertical: "bottom",
-                                      horizontal: "left",
-                                    }}
-                                  >
-                                    <SupervisorAccountIcon className={classes.classPersonIcon} />
-                                  </Badge>
-                                </LightTooltip>
-                              </Grid>
-                              <Grid item>
-                                <LightTooltip title="Sunting">
-                                  <Link
-                                    to={`/sunting-kelas/${row._id}`}
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <IconButton size="small" className={classes.classButtons}>
-                                      <EditIcon fontSize="small" />
-                                    </IconButton>
-                                  </Link>
-                                </LightTooltip>
-                              </Grid>
-                              <Grid item>
-                                <LightTooltip title="Hapus">
-                                  <IconButton
-                                    size="small"
-                                    className={classes.classButtons}
-                                    onClick={(e) =>
-                                      handleOpenDeleteDialog(
-                                        e,
-                                        row._id,
-                                        row.name
-                                      )
-                                    }
-                                  >
-                                    <DeleteIcon fontSize="small" />
-                                  </IconButton>
-                                </LightTooltip>
-                              </Grid>
-                            </Grid>
-                          ) : (
-                            <Grid
-                              container
-                              justify="flex-end"
-                            >
-                              <Grid item>
-                                <LightTooltip title="Jumlah Murid">
-                                  <Badge
-                                    showZero
-                                    color={row.size === 0 ? "error" : "primary"}
-                                    badgeContent={row.size}
-                                    anchorOrigin={{
-                                      vertical: "bottom",
-                                      horizontal: "left",
-                                    }}
-                                  >
-                                    <SupervisorAccountIcon className={classes.classPersonIcon} />
-                                  </Badge>
-                                </LightTooltip>
-                              </Grid>
-                            </Grid>
-                          )}
-                        </div>
-                      </Paper>
-                    </Link>
-                  </Grid>
-                );
-              }
-            )}
+        {rows.length === 0 ? null : (
+          <ClassItem
+            data={stableSort(rows, getComparator(order, orderBy))}
+            user={user}
+          />
+        )}
       </Grid>
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
@@ -1134,13 +1058,10 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(
-  mapStateToProps,
-  {
-    clearErrors,
-    getTeachers,
-    getStudents,
-    getAllClass,
-    deleteClass,
-  }
-)(ClassList);
+export default connect(mapStateToProps, {
+  clearErrors,
+  getTeachers,
+  getStudents,
+  getAllClass,
+  deleteClass,
+})(ClassList);

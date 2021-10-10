@@ -40,14 +40,6 @@ export const downloadFileAssessment = (id) => (dispatch) => {
     .then((res) => {
       window.open(res.data);
       return res.data;
-      // let { file, filename} = res.data
-      // let arraybuffer = Uint8Array.from(file.Body.data);
-      // let blob=new Blob([arraybuffer], {type: file.ContentType});
-      // let link=document.createElement('a');
-      // link.href=window.URL.createObjectURL(blob);
-      // link.download=filename;
-      // link.click();
-      // return link
     })
     .catch((err) => new Error("Error in getting S3 files"));
 };

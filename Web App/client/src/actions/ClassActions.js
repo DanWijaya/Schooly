@@ -36,9 +36,10 @@ export const createClass = (classData, history) => (dispatch) => {
 };
 
 // View All Class
-export const getAllClass = (data = "array") => (dispatch) => {
-  axios
-    .get("/api/classes/viewall")
+export const getAllClass = (unitId, data = "array") => (dispatch) => {
+  // id nya berupa unitId
+  return axios
+    .get(`/api/classes/viewall/${unitId}`)
     .then((res) => {
       // console.log("Data should be here")
       if (data === "map") {
@@ -46,7 +47,6 @@ export const getAllClass = (data = "array") => (dispatch) => {
           type: GET_ALL_CLASSES_MAP,
           payload: res.data,
         });
-        console.log("getAllClass(map) completed");
       } else {
         dispatch({
           type: GET_ALL_CLASSES,
@@ -54,14 +54,12 @@ export const getAllClass = (data = "array") => (dispatch) => {
         });
         console.log("getAllClass(array) completed");
       }
+      return res.data;
     })
 
     .catch((err) => {
       console.log(err, " Data should be here");
-      // dispatch({
-      //     type: GET_ERRORS,
-      //     payload: err.response.data
-      // })
+      throw err.response.data;
     });
 };
 
@@ -78,7 +76,6 @@ export const getSelectedClasses = (classes_ids) => (dispatch) => {
         type: GET_CLASSES,
         payload: res.data,
       });
-      // res.send(classData);
       console.log("getSelectedClasses completed");
     })
     .catch((err) => {
@@ -121,7 +118,7 @@ export const deleteClass = (classId, history) => (dispatch) => {
   return axios
     .delete("/api/classes/delete/" + classId)
     .then((res) => {
-      return "Class is successfully deleted"
+      return "Class is successfully deleted";
     })
     .catch((err) => {
       console.log(err.response.data);
@@ -137,10 +134,8 @@ export const setCurrentClass = (classId) => (dispatch) => {
   // console.log("set current class is runned")
   // sebelumnya tidak ada return
   return axios
-    .get("/api/classes/setCurrentClass/" + classId)
+    .get(`/api/classes/setCurrentClass/${classId}`)
     .then((res) => {
-      // console.log("Class to be edited");
-      // dispatch(setCurrentClass(res.data))
       dispatch({
         type: SET_CURRENT_CLASS,
         payload: res.data,
@@ -155,11 +150,8 @@ export const setCurrentClass = (classId) => (dispatch) => {
         type: GET_ERRORS,
         payload: err.response.data,
       });
+      throw err.response.data;
     });
-  // return {
-  //     type: SET_CURRENT_CLASS,
-  //     payload: decoded,
-  // }
 };
 
 export const unassignClassOfficers = (classesData) => {

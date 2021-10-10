@@ -6,14 +6,14 @@ import classnames from "classnames";
 import { createHash } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
-import resetPasswordArt from "./ResetPasswordArt.png";
+import resetPasswordArt from "./PasswordArt.png";
 import {
   Button,
   Grid,
   Hidden,
   Paper,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -82,7 +82,7 @@ class ForgotPassword extends Component {
   }
 
   onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value , errors: {} });
+    this.setState({ [e.target.id]: e.target.value, errors: {} });
   };
 
   // Dispatch is used as a callback which gets invoked once some async action is complete.
@@ -90,7 +90,7 @@ class ForgotPassword extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     this.props.createHash(this.state.email.toLowerCase()).catch((err) => {
-      this.setState({ errors: err});
+      this.setState({ errors: err });
     });
   };
 
@@ -106,7 +106,7 @@ class ForgotPassword extends Component {
   render() {
     const { classes } = this.props;
     const { isPasswordReset } = this.props.passwordMatters;
-    const { email ,errors } = this.state;
+    const { email, errors } = this.state;
 
     document.title = "Schooly | Lupa Kata Sandi";
 
@@ -128,11 +128,9 @@ class ForgotPassword extends Component {
                     <Typography variant="h6" gutterBottom>
                       <b>Lupa Kata Sandi?</b>
                     </Typography>
-                    <Typography
-                      variant="body1"
-                      color="textSecondary"
-                    >
-                      Tautan untuk mengganti kata sandi Anda akan dikirimkan kepada email untuk akun yang bersangkutan.
+                    <Typography variant="body1" color="textSecondary">
+                      Tautan untuk mengganti kata sandi Anda akan dikirimkan
+                      kepada email untuk akun yang bersangkutan.
                     </Typography>
                   </Grid>
                 ) : (
@@ -140,10 +138,7 @@ class ForgotPassword extends Component {
                     <Typography variant="h6" gutterBottom>
                       <b>Email telah dikirim</b>
                     </Typography>
-                    <Typography
-                      variant="body1"
-                      color="textSecondary"
-                    >
+                    <Typography variant="body1" color="textSecondary">
                       Silahkan buka email tersebut untuk melanjutkan.
                     </Typography>
                   </Grid>
@@ -168,7 +163,12 @@ class ForgotPassword extends Component {
                             })}
                           />
                         </Grid>
-                        <Grid item container justify="space-between" className={classes.buttonsContainer}>
+                        <Grid
+                          item
+                          container
+                          justify="space-between"
+                          className={classes.buttonsContainer}
+                        >
                           <Grid item>
                             <Link to="/masuk">
                               <Button className={classes.backButton}>
@@ -202,11 +202,11 @@ class ForgotPassword extends Component {
             </Grid>
             <Hidden smDown>
               <Grid item xs={5}>
-                  <img
-                    alt="Reset Password Art"
-                    src={resetPasswordArt}
-                    className={classes.artThumbnail}
-                  />
+                <img
+                  alt="Reset Password Art"
+                  src={resetPasswordArt}
+                  className={classes.artThumbnail}
+                />
               </Grid>
             </Hidden>
           </Grid>

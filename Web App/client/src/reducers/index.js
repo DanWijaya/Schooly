@@ -12,6 +12,7 @@ import SuccessReducer from "./SuccessReducer";
 import AssessmentReducer from "./AssessmentReducer";
 import EventReducer from "./EventReducer";
 import SettingReducer from "./SettingReducer";
+import UnitReducer from "./UnitReducer";
 
 export default combineReducers({
   auth: UserReducer,
@@ -27,4 +28,5 @@ export default combineReducers({
   tasksCollection: TasksReducer,
   eventsCollection: EventReducer,
   settingsCollection: SettingReducer,
+  unitsCollection: UnitReducer,
 });

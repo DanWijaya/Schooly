@@ -5,10 +5,12 @@ import {
   GET_ALL_TEACHERS,
   GET_ALL_TEACHERS_MAP,
   GET_ALL_STUDENTS,
+  GET_ALL_ADMINS,
   GET_ONE_USER,
   GET_STUDENTS_BY_CLASS,
   GET_PENDING_STUDENTS,
   GET_PENDING_TEACHERS,
+  GET_PENDING_ADMINS,
   SET_DROPBOX_TOKEN,
 } from "../actions/Types";
 
@@ -20,13 +22,22 @@ const initialState = {
   all_teachers: [],
   all_teachers_map: new Map(),
   all_students: [],
+  all_admins: [],
+  all_users: [],
   students_by_class: [],
   loading: false,
   pending_students: [],
   pending_teachers: [],
+  pending_admins: [],
   selectedUser: {},
   retrieved_users: new Map(),
-  dropbox_token: null,
+  all_roles : {
+    SUPERADMIN: "SuperAdmin",
+    ADMIN: "Admin",
+    STUDENT: "Student",
+    TEACHER: "Teacher",
+  }
+  // dropbox_token: null,
 };
 
 export default function (state = initialState, action) {
@@ -37,11 +48,11 @@ export default function (state = initialState, action) {
         isAuthenticated: !isEmpty(action.payload),
         user: action.payload,
       };
-    case SET_DROPBOX_TOKEN:
-      return {
-        ...state,
-        dropbox_token: action.payload,
-      };
+    // case SET_DROPBOX_TOKEN:
+    //   return {
+    //     ...state,
+    //     dropbox_token: action.payload,
+    //   };
     case USER_LOADING:
       return {
         ...state,
@@ -61,6 +72,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         all_students: action.payload,
+      };
+    case GET_ALL_ADMINS:
+      return {
+        ...state,
+        all_admins: action.payload,
       };
     case GET_STUDENTS_BY_CLASS:
       return {
@@ -88,6 +104,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         pending_teachers: action.payload,
+      };
+    case GET_PENDING_ADMINS:
+      return {
+        ...state,
+        pending_admins: action.payload,
       };
     default:
       return state;

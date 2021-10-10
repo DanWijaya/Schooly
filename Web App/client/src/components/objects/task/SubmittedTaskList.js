@@ -6,8 +6,15 @@ import moment from "moment";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getStudents } from "../../../actions/UserActions";
-import { getTaskFilesByUser, downloadTugas, previewTugas } from "../../../actions/UploadActions";
-import { getFileSubmitTasks_T, viewFileSubmitTasks } from "../../../actions/files/FileSubmitTaskActions";
+import {
+  getTaskFilesByUser,
+  downloadTugas,
+  previewTugas,
+} from "../../../actions/UploadActions";
+import {
+  getFileSubmitTasks_T,
+  viewFileSubmitTasks,
+} from "../../../actions/files/FileSubmitTaskActions";
 import { getOneTask, gradeTask } from "../../../actions/TaskActions";
 import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
 import Empty from "../../misc/empty/Empty";
@@ -36,7 +43,7 @@ import {
   Tabs,
   TextField,
   Tooltip,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
@@ -78,7 +85,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.light,
   },
   discussionButton: {
-    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    boxShadow:
+      "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -152,14 +160,16 @@ function WorkFile(props) {
     file_type,
     onDownloadFile,
     onPreviewFile,
-    isLate
+    isLate,
   } = props;
 
   let name_to_show;
-  if(isLate){
-    name_to_show = <Typography color="error"> {`${file_name} (Telat)`}</Typography>
+  if (isLate) {
+    name_to_show = (
+      <Typography color="error"> {`${file_name} (Telat)`}</Typography>
+    );
   } else {
-    name_to_show = <Typography color="textPrimary">{file_name}</Typography>
+    name_to_show = <Typography color="textPrimary">{file_name}</Typography>;
   }
 
   return (
@@ -253,17 +263,16 @@ function SubmittedTaskList(props) {
   React.useEffect(() => {
     // getOneTask(task_id).then((res1) => {
     // })
-    getFileSubmitTasks_T(task_id)
-      .then((res) => {
-        setSubmittedFiles(res);
-      })
+    getFileSubmitTasks_T(task_id).then((res) => {
+      setSubmittedFiles(res);
+    });
   }, []);
 
   React.useEffect(() => {
     getOneTask(task_id);
-    getStudents();
-    getAllClass();
-    // If success will return 3 items in the list.
+    getStudents(user.unit);
+    getAllClass(user.unit);
+    // ini successnya bakal return 3 barang di list.
     if (success instanceof Array) {
       if (success.length === 3) handleOpenAlert();
     }
@@ -479,20 +488,20 @@ function SubmittedTaskList(props) {
             isClassSubmissionEmpty = false;
             let isLate = false;
             task_list_on_panel = students_files.map((file) => {
-              if(file.createdAt > tasksCollection.deadline){
-                isLate=true;
+              if (file.createdAt > tasksCollection.deadline) {
+                isLate = true;
               }
               return (
-              <WorkFile
-                isLate={isLate}
-                file_id={file._id}
-                file_name={file.filename}
-                file_type={fileType(file.filename)}
-                onPreviewFile={viewFileSubmitTasks}
-                // onDownloadFile={onDownloadFile}
-              />
-            );
-          })
+                <WorkFile
+                  isLate={isLate}
+                  file_id={file._id}
+                  file_name={file.filename}
+                  file_type={fileType(file.filename)}
+                  onPreviewFile={viewFileSubmitTasks}
+                  // onDownloadFile={onDownloadFile}
+                />
+              );
+            });
           } else {
             task_list_on_panel = [
               <Typography align="center" color="textSecondary">
@@ -515,9 +524,7 @@ function SubmittedTaskList(props) {
                     </Grid>
                   </Hidden>
                   <Grid item>
-                    <Typography noWrap>
-                      {student.name}
-                    </Typography>
+                    <Typography noWrap>{student.name}</Typography>
                     <Typography variant="body2" color="textSecondary" noWrap>
                       {!tasksCollection.grades
                         ? "Not graded"
@@ -533,12 +540,16 @@ function SubmittedTaskList(props) {
               <ExpansionPanelDetails className={classes.studentResultDetails}>
                 <Grid container direction="column" spacing={2}>
                   <Grid item>
-                    <List>
-                      {task_list_on_panel}
-                    </List>
+                    <List>{task_list_on_panel}</List>
                   </Grid>
                   {students_files.length > 0 ? (
-                    <Grid item container justify="flex-end" alignItems="center" spacing={3}>
+                    <Grid
+                      item
+                      container
+                      justify="flex-end"
+                      alignItems="center"
+                      spacing={3}
+                    >
                       <Grid item>
                         <TextField
                           defaultValue={
@@ -589,11 +600,7 @@ function SubmittedTaskList(props) {
         });
       TabPanelList.push(
         <TabPanel value={value} index={value}>
-          {isClassSubmissionEmpty ? (
-            <Empty />
-          ) : (
-            students_in_class
-          )}
+          {isClassSubmissionEmpty ? <Empty /> : students_in_class}
         </TabPanel>
       );
       return TabPanelList;
@@ -638,7 +645,13 @@ function SubmittedTaskList(props) {
             )}
           </Paper>
         </Grid>
-        <Grid item container justify="space-between" alignItems="center" spacing={1}>
+        <Grid
+          item
+          container
+          justify="space-between"
+          alignItems="center"
+          spacing={1}
+        >
           <Grid item>
             <Link to={`/tugas-guru/${task_id}`}>
               <Hidden smDown>
@@ -653,17 +666,21 @@ function SubmittedTaskList(props) {
               </Hidden>
               <Hidden mdUp>
                 <Tooltip title="Diskusi">
-                  <Fab
-                    size="medium"
-                    className={classes.discussionButton}
-                  >
+                  <Fab size="medium" className={classes.discussionButton}>
                     <QuestionAnswerIcon />
                   </Fab>
                 </Tooltip>
               </Hidden>
             </Link>
           </Grid>
-          <Grid item xs container justify="flex-end" alignItems="center" spacing={1}>
+          <Grid
+            item
+            xs
+            container
+            justify="flex-end"
+            alignItems="center"
+            spacing={1}
+          >
             <Grid item>
               <Tooltip title="Unduh Semua Hasil">
                 <Button
@@ -696,7 +713,8 @@ function SubmittedTaskList(props) {
             <Divider />
             <div style={{ padding: "16px 0px 25px 0px" }}>
               <Typography gutterBottom>
-                Tenggat: {moment(tasksCollection.deadline)
+                Tenggat:{" "}
+                {moment(tasksCollection.deadline)
                   .locale("id")
                   .format("DD MMM YYYY, HH.mm")}
               </Typography>
@@ -704,9 +722,7 @@ function SubmittedTaskList(props) {
             {listClassTab()}
           </Paper>
         </Grid>
-        <Grid item>
-          {listClassTabPanel()}
-        </Grid>
+        <Grid item>{listClassTabPanel()}</Grid>
       </Grid>
       <Snackbar
         open={openAlert}
@@ -714,7 +730,12 @@ function SubmittedTaskList(props) {
         onClose={handleCloseAlert}
         anchorOrigin={{ vertical: "center", horizontal: "center" }}
       >
-        <Alert elevation={6} variant="filled" onClose={handleCloseAlert} severity="success">
+        <Alert
+          elevation={6}
+          variant="filled"
+          onClose={handleCloseAlert}
+          severity="success"
+        >
           Nilai {!success ? null : success[2]} berhasil diganti menjadi{" "}
           {!success ? null : success[1]}
         </Alert>

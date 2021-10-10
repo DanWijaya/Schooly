@@ -3,11 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import DrawerContent from "./DrawerContent";
-import {
-  Drawer,
-  Toolbar,
-  useMediaQuery
-} from "@material-ui/core";
+import { Drawer, Toolbar, useMediaQuery } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -17,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   drawerDesktop: {
     width: "250px",
     flexShrink: 0,
-    whiteSpace: "nowrap"
+    whiteSpace: "nowrap",
   },
   drawerDesktopOpen: {
     width: "250px",
@@ -48,7 +44,7 @@ function SideDrawer(props) {
   if (user._id !== undefined) {
     return (
       <div>
-        {isMobileView ?
+        {isMobileView ? (
           <Drawer
             variant="temporary"
             anchor={theme.direction === "rtl" ? "right" : "left"}
@@ -66,7 +62,7 @@ function SideDrawer(props) {
               handleDrawerMobile={handleDrawerMobile}
             />
           </Drawer>
-          :
+        ) : (
           <Drawer
             variant="permanent"
             className={clsx(classes.drawerDesktop, {
@@ -83,7 +79,7 @@ function SideDrawer(props) {
             <Toolbar />
             <DrawerContent user={user} />
           </Drawer>
-        }
+        )}
       </div>
     );
   } else {

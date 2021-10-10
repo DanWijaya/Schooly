@@ -104,7 +104,9 @@ router.post("/savepassword", async (req, res) => {
       );
     } else if (!Validator.equals(req.body.password, req.body.password2)) {
       result = res.send(
-        JSON.stringify({ password_match: "Kata sandi dan konfirmasinya harus sama" })
+        JSON.stringify({
+          password_match: "Kata sandi dan konfirmasinya harus sama",
+        })
       );
     } else if (minute_difference > 5) {
       console.log("Link has expired (exceed 5 mins)");

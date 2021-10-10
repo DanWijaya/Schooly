@@ -39,9 +39,10 @@ import {
   MoreVert as MoreVertIcon,
   LibraryBooks as LibraryBooksIcon,
   Search as SearchIcon,
-  SortByAlpha as SortByAlphaIcon
+  SortByAlpha as SortByAlphaIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import SubjectItem from "../../objects/item/SubjectItem";
 
 function createData(_id, name, all_class) {
   return { _id, name, all_class };
@@ -161,7 +162,7 @@ function SubjectListToolbar(props) {
                   style: {
                     borderRadius: "22.5px",
                     maxWidth: "450px",
-                    width: "100%"
+                    width: "100%",
                   },
                   startAdornment: (
                     <InputAdornment
@@ -182,7 +183,9 @@ function SubjectListToolbar(props) {
                           e.stopPropagation();
                           onClear(e, "searchFilterDesktop");
                         }}
-                        style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                        style={{
+                          visibility: !searchFilter ? "hidden" : "visible",
+                        }}
                       >
                         <ClearIcon />
                       </IconButton>
@@ -267,7 +270,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   createSubjectButton: {
-    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    boxShadow:
+      "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -297,10 +301,12 @@ const useStyles = makeStyles((theme) => ({
   },
   subjectItem: {
     borderRadius: "4px",
-    boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.12), 0px 2px 8px 2px rgba(60,64,67,0.10)",
+    boxShadow:
+      "0px 2px 3px 0px rgba(60,64,67,0.12), 0px 2px 8px 2px rgba(60,64,67,0.10)",
     "&:focus, &:hover": {
-      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
-    }
+      boxShadow:
+        "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
+    },
   },
   subjectIcon: {
     display: "flex",
@@ -404,13 +410,14 @@ function SubjectList(props) {
   } = props;
   const { all_subjects } = props.subjectsCollection;
   const { user, retrieved_users } = props.auth;
+  const { unit } = user;
 
   const subjectRowItem = (data) => {
     rows.push(createData(data._id, data.name, data.all_class));
   };
 
   React.useEffect(() => {
-    getAllSubjects();
+    getAllSubjects(unit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -436,9 +443,9 @@ function SubjectList(props) {
 
   const onDeleteSubject = (id) => {
     deleteSubject(id).then((res) => {
-      getAllSubjects();
-      handleOpenSnackbar("Delete")
-      handleCloseDeleteDialog()
+      getAllSubjects(unit);
+      handleOpenSnackbar("Delete");
+      handleCloseDeleteDialog();
     });
   };
 
@@ -455,21 +462,21 @@ function SubjectList(props) {
   };
 
   const handleOpenSnackbar = (action) => {
-    let content = "Mata Pelajaran berhasil "
-    if(action === "Create"){
-      content += "dibuat"
+    let content = "Mata Pelajaran berhasil ";
+    if (action === "Create") {
+      content += "dibuat";
       setSnackbarContent(content);
-    } else if(action === "Edit"){
-      content += "disunting"
+    } else if (action === "Edit") {
+      content += "disunting";
       setSnackbarContent(content);
-    } else if(action === "Delete"){
-      content += "dihapus"
-      setSnackbarContent(content)
-    } else{
+    } else if (action === "Delete") {
+      content += "dihapus";
+      setSnackbarContent(content);
+    } else {
       return;
     }
     setOpenSnackbar(true);
-  }
+  };
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -509,19 +516,25 @@ function SubjectList(props) {
 
   const onSubmit = (e) => {
     e.preventDefault();
+
+    let subjectData = {
+      ...subject,
+      unit: unit,
+    };
+
     if (action === "Edit") {
-      editSubject(subject)
+      editSubject(subjectData)
         .then(() => {
           handleOpenSnackbar(action);
-          getAllSubjects();
+          getAllSubjects(unit);
           handleCloseFormDialog();
         })
         .catch((err) => setErrors(err));
     } else if (action === "Create") {
-      createSubject(subject)
+      createSubject(subjectData)
         .then(() => {
           handleOpenSnackbar(action);
-          getAllSubjects();
+          getAllSubjects(unit);
           handleCloseFormDialog();
         })
         .catch((err) => setErrors(err));
@@ -602,7 +615,12 @@ function SubjectList(props) {
 
   return (
     <div className={classes.root}>
-      <Grid container alignItems="center" spacing={2} className={classes.header}>
+      <Grid
+        container
+        alignItems="center"
+        spacing={2}
+        className={classes.header}
+      >
         <Grid item>
           <div className={classes.headerIcon}>
             <LibraryBooksIcon />
@@ -629,146 +647,21 @@ function SubjectList(props) {
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
       />
-      {rows.length === 0 ? (
-        <Empty />
-      ) : (
-        <Grid container direction="column" spacing={2}>
-          {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-          const labelId = index;
-          return (
-            <Grid item>
-              <Grid container alignItems="stretch" className={classes.subjectItem}>
-                <Grid item className={classes.subjectIcon}>
-                  <LibraryBooksIcon />
-                </Grid>
-                <Grid item xs container justify="space-between" alignItems="center" className={classes.subjectItemContent}>
-                  <Grid item>
-                    <Typography noWrap>
-                      {row.name}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <IconButton>
-                      <MoreVertIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Grid>
-              {/*<ListItem
-                className={classes.listItem}
-              >
-                <Hidden smUp implementation="css">
-                  <ListItemText
-                    style={{ margin: "6px 0" }}
-                    primary={
-                      <Grid container alignItems="center">
-                        <Typography variant="subtitle1" color="textPrimary">
-                          {row.name}
-                        </Typography>
-
-                        <Grid item style={{ visibility: "hidden" }}>
-                          <Typography variant="subtitle1">
-                            {"\u200B"}
-                          </Typography>
-                          <Typography variant="caption">
-                            {"\u200B"}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    }
-                  />
-                </Hidden>
-                <Hidden xsDown implementation="css">
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <ListItemAvatar>
-                      <Avatar className={classes.listAvatar}>
-                        <LibraryBooksIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      style={{ margin: "6px 0" }}
-                      primary={
-                        <Grid container alignItems="center">
-                          <Typography variant="h6" color="textPrimary">
-                            {row.name}
-                          </Typography>
-
-                          <Grid item style={{ visibility: "hidden" }}>
-                            <Grid container direction="column">
-                              <Typography variant="h6">
-                                {"\u200B"}
-                              </Typography>
-                              <Typography variant="body2">
-                                {"\u200B"}
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      }
-                    />
-                  </div>
-                </Hidden>
-                <ListItemText
-                  align="right"
-                  primary={
-                    <Grid container spacing={1} justify="flex-end">
-                      <Grid item>
-                        <LightTooltip title="Sunting">
-                          <IconButton
-                            size="small"
-                            className={classes.editSubjectButton}
-                            onClick={(e) =>
-                              handleOpenFormDialog(
-                                e,
-                                row._id,
-                                row.name,
-                                true
-                              )
-                            }
-                          >
-                            <EditIcon fontSize="small" />
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip title="Hapus">
-                          <IconButton
-                            size="small"
-                            className={classes.deleteSubjectlButton}
-                            onClick={(e) => {
-                              handleOpenDeleteDialog(e, row._id, row.name);
-                            }}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
-                    </Grid>
-                  }
-                />
-              </ListItem>*/}
-            </Grid>
-          );
-        })}
-        </Grid>
-      )}
-      {FormDialog()}
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Mata Pelajaran"
-        itemName={selectedSubjectName}
-        deleteItem={() => {
-          onDeleteSubject(selectedSubjectId);
-        }}
-      />
+      <Divider variant="inset" className={classes.titleDivider} />
+      <Grid container direction="column" spacing={2}>
+        {rows.length === 0 ? (
+          <Typography variant="subtitle1" align="center" color="textSecondary">
+            Kosong
+          </Typography>
+        ) : (
+          <SubjectItem
+            data={stableSort(rows, getComparator(order, orderBy))}
+            isEditable={true}
+            handleOpenFormDialog={handleOpenFormDialog}
+            handleOpenDeleteDialog={handleOpenDeleteDialog}
+          />
+        )}
+      </Grid>
       <Snackbar
         open={openSnackbar}
         autoHideDuration={4000}

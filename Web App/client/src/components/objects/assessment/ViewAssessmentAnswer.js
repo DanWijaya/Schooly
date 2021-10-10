@@ -9,7 +9,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import {
   getOneAssessment,
   updateAssessmentGrades,
-  getQuestionAnalytics
+  getQuestionAnalytics,
 } from "../../../actions/AssessmentActions";
 import Latex from "../../misc/latex/Latex";
 import CustomLinkify from "../../misc/linkify/Linkify";
@@ -40,7 +40,7 @@ import {
   Tabs,
   TableSortLabel,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { Alert, ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import {
@@ -215,7 +215,7 @@ function ViewAssessmentTeacher(props) {
   const { getOneAssessment, getAllClass, getAllSubjects, getStudents } = props;
   const { type } = selectedAssessments;
 
-  const { all_students } = props.auth;
+  const { all_students, user } = props.auth;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
@@ -297,14 +297,14 @@ function ViewAssessmentTeacher(props) {
   // Tabs
   const [value, setValue] = React.useState(0);
 
-  React.useEffect( async () => {
+  React.useEffect(async () => {
     const result = await getQuestionAnalytics(assessment_id);
-  }, [])
+  }, []);
   React.useEffect(() => {
     getOneAssessment(assessment_id);
-    getAllClass("map");
-    getAllSubjects("map");
-    getStudents();
+    getAllClass(user.unit, "map");
+    getAllSubjects(user.unit, "map");
+    getStudents(user.unit);
 
     if (location.state) {
       setSelectedStudent(location.state.studentId);
@@ -508,7 +508,7 @@ function ViewAssessmentTeacher(props) {
         <Grid container direction="column" spacing={2}>
           <Grid item>
             <Typography align="justify">
-              <Latex content={questionName}/>
+              <Latex content={questionName} />
             </Typography>
           </Grid>
           <Grid item>
@@ -543,7 +543,7 @@ function ViewAssessmentTeacher(props) {
         <Grid container direction="column" spacing={2}>
           <Grid item>
             <Typography align="justify">
-              <Latex content={questionName}/>
+              <Latex content={questionName} />
             </Typography>
           </Grid>
           <Grid item>
@@ -1337,31 +1337,36 @@ function ViewAssessmentTeacher(props) {
               </div>
               {isAssessmentLoaded() &&
               selectedAssessments.submissions_timestamp &&
-              selectedStudent
-                ? <div className={classes.selectDiv} style={{ marginTop: "10px" }}>
-                    <Grid container>
-                      <Grid item xs={1} sm={3}></Grid>
-                      <Grid
-                        item
-                        xs={5}
-                        sm={2}
-                        className={classes.selectDescription}
-                      >
-                        <Typography>Waktu Pengumpulan:</Typography>
-                      </Grid>
-                      <Grid item xs={5} sm={2}>
-                        <Typography
-                          style={{ marginLeft: "10px" }}
-                        >
-                        {moment(selectedAssessments.submissions_timestamp[selectedStudent])
+              selectedStudent ? (
+                <div
+                  className={classes.selectDiv}
+                  style={{ marginTop: "10px" }}
+                >
+                  <Grid container>
+                    <Grid item xs={1} sm={3}></Grid>
+                    <Grid
+                      item
+                      xs={5}
+                      sm={2}
+                      className={classes.selectDescription}
+                    >
+                      <Typography>Waktu Pengumpulan:</Typography>
+                    </Grid>
+                    <Grid item xs={5} sm={2}>
+                      <Typography style={{ marginLeft: "10px" }}>
+                        {moment(
+                          selectedAssessments.submissions_timestamp[
+                            selectedStudent
+                          ]
+                        )
                           .locale("id")
                           .format("DD MMM YYYY, HH:mm")}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={1} sm={5}></Grid>
+                      </Typography>
                     </Grid>
-                  </div>
-                : null}
+                    <Grid item xs={1} sm={5}></Grid>
+                  </Grid>
+                </div>
+              ) : null}
             </Paper>
 
             {isAssessmentLoaded() && selectedAssessments.submissions
@@ -1766,7 +1771,7 @@ function QuestionAnswerPerStudent(props) {
         <Grid container direction="column" spacing={2}>
           <Grid item>
             <Typography align="justify">
-              <Latex content={questionName}/>
+              <Latex content={questionName} />
             </Typography>
           </Grid>
           <Grid item>

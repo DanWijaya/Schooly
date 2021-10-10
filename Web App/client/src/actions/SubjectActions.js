@@ -26,9 +26,9 @@ export const getSubject = (subjectId) => (dispatch) => {
     });
 };
 
-export const getAllSubjects = (data = "array") => (dispatch) => {
+export const getAllSubjects = (unitId, data = "array") => (dispatch) => {
   axios
-    .get("/api/subjects/viewall")
+    .get(`/api/subjects/viewall/${unitId}`)
     .then((res) => {
       // console.log("Run get all subjects")
       if (data !== "map") {
@@ -74,7 +74,7 @@ export const deleteSubject = (subjectId) => (dispatch) => {
   return axios
     .delete(`/api/subjects/delete/${subjectId}`)
     .then((res) => {
-      return "Subject is successfully deleted"
+      return "Subject is successfully deleted";
       // window.location.reload();
     })
     .catch((err) => {

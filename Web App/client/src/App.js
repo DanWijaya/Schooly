@@ -87,9 +87,17 @@ import ManagePendingUsers from "./components/objects/user/ManagePendingUsers";
 import TeacherList from "./components/objects/user/TeacherList";
 // Settings
 import Setting from "./components/objects/setting/Setting";
-//Prototypes
+// Prototypes
 import Tester from "./prototypes/Tester1";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
+// Super Admin Only
+import UnitList from "./components/objects/superadmin-only/UnitList";
+import ManageAdmins from "./components/objects/superadmin-only/ManageAdmins";
+import ManagePendingAdmins from "./components/objects/superadmin-only/ManagePendingAdmins";
+import CreateUnit from "./components/objects/superadmin-only/CreateUnit";
+import EditUnit from "./components/objects/superadmin-only/EditUnit";
+import ViewUnit from "./components/objects/superadmin-only/ViewUnit";
+import AdminList from "./components/objects/user/AdminList";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -115,12 +123,6 @@ if (localStorage.jwtToken) {
     // Invalid token format
   }
 }
-
-// if (localStorage.dropbox_token) {
-//   const dropbox_token = localStorage.dropbox_token;
-//   console.log(dropbox_token);
-//   store.dispatch(setDropboxToken(dropbox_token));
-// }
 
 class App extends Component {
   constructor(props) {
@@ -176,7 +178,14 @@ class App extends Component {
   };
 
   render() {
-    console.log(localStorage.getItem(`status`));
+    const Role = {
+      SUPERADMIN: "SuperAdmin",
+      ADMIN: "Admin",
+      STUDENT: "Student",
+      TEACHER: "Teacher",
+    };
+
+    // console.log(localStorage.getItem(`status`));
 
     return (
       <div>
@@ -231,12 +240,6 @@ class App extends Component {
                         path="/legal/kebijakan-privasi"
                         render={(props) => <PrivacyPolicy {...props} />}
                       />
-                      {/* <Route exact path="/dropbox-auth" component={DropboxAuth} />
-                    <Route
-                      exact
-                      path="/dropbox-connect"
-                      component={DropboxConnect}
-                    /> */}
                       <Route
                         exact
                         path="/daftar"
@@ -292,44 +295,43 @@ class App extends Component {
                       {/* Route Class */}
                       <PrivateRoute
                         exact
-                        access={["Admin"]}
+                        access={[Role.ADMIN]}
                         path="/buat-kelas"
                         component={CreateClass}
                       />
                       <PrivateRoute
                         exact
-                        access={["Admin"]}
+                        access={[Role.ADMIN]}
                         path="/sunting-kelas/:id"
                         component={EditClass}
                       />
                       <PrivateRoute
                         exact
-                        access={["Admin"]}
+                        access={[Role.ADMIN]}
                         path="/atur-walikelas"
                         component={EditHomeroomTeacher}
                       />
                       <PrivateRoute
                         exact
-                        access={["Student", "Teacher", "Admin"]}
                         path="/kelas/:id"
                         component={ViewClass}
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher", "Admin"]}
+                        access={[Role.TEACHER, Role.ADMIN]}
                         path="/daftar-kelas"
                         component={ClassList}
                       />
                       {/* Route Subject */}
                       <PrivateRoute
                         exact
-                        access={["Student"]}
+                        access={[Role.STUDENT]}
                         path="/mata-pelajaran/:id"
                         component={ViewSubject}
                       />
                       <PrivateRoute
                         exact
-                        access={["Admin"]}
+                        access={[Role.ADMIN]}
                         path="/daftar-mata-pelajaran"
                         component={SubjectList}
                       />
@@ -342,122 +344,122 @@ class App extends Component {
                       {/* Route Announcement */}
                       <PrivateRoute
                         exact
-                        access={["Student", "Teacher", "Admin"]}
+                        access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
                         path="/buat-pengumuman"
                         component={CreateAnnouncement}
                       />
                       <PrivateRoute
                         exact
-                        access={["Student", "Teacher", "Admin"]}
+                        access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
                         path="/sunting-pengumuman/:id"
                         component={EditAnnouncement}
                       />
                       <PrivateRoute
                         exact
-                        access={["Student", "Teacher", "Admin"]}
+                        access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
                         path="/pengumuman/:id"
                         component={ViewAnnouncement}
                       />
                       <PrivateRoute
                         exact
-                        access={["Student", "Teacher", "Admin"]}
+                        access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
                         path="/daftar-pengumuman"
                         component={AnnouncementList}
                       />
                       {/* Route Material */}
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.TEACHER]}
                         path="/buat-materi"
                         component={CreateMaterial}
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.TEACHER]}
                         path="/sunting-materi/:id"
                         component={EditMaterial}
                       />
                       <PrivateRoute
                         exact
-                        access={["Student", "Teacher"]}
+                        access={[Role.STUDENT, Role.TEACHER]}
                         path="/materi/:id"
                         component={ViewMaterial}
                       />
                       <PrivateRoute
                         exact
-                        access={["Student", "Teacher"]}
+                        access={[Role.STUDENT, Role.TEACHER]}
                         path="/daftar-materi"
                         component={MaterialList}
                       />
                       {/* Route Task */}
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.TEACHER]}
                         path="/buat-tugas"
                         component={CreateTask}
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.TEACHER]}
                         path="/sunting-tugas/:id"
                         component={EditTask}
                       />
                       <PrivateRoute
                         exact
-                        access={["Student"]}
+                        access={[Role.STUDENT]}
                         path="/tugas-murid/:id"
                         component={ViewTaskStudent}
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.TEACHER]}
                         path="/tugas-guru/:id"
                         component={ViewTaskTeacher}
                       />
                       <PrivateRoute
                         exact
-                        access={["Student", "Teacher"]}
+                        access={[Role.STUDENT, Role.TEACHER]}
                         path="/daftar-tugas"
                         component={TaskList}
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.TEACHER]}
                         path="/daftar-tugas-terkumpul/:id"
                         component={SubmittedTaskList}
                       />
                       {/* Route Assessment */}
                       <PrivateRoute
                         exact
-                        access={["Student", "Teacher"]}
-                        path="/buat-kuis"
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        component={CreateAssessment}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={["Student", "Teacher"]}
+                        access={[Role.STUDENT, Role.TEACHER]}
                         path="/buat-ujian"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={CreateAssessment}
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.STUDENT, Role.TEACHER]}
+                        path="/buat-kuis"
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        component={CreateAssessment}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={[Role.TEACHER]}
                         path="/sunting-kuis/:id"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={EditAssessment}
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.TEACHER]}
                         path="/sunting-ujian/:id"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={EditAssessment}
                       />
                       <PrivateRoute
                         exact
-                        access={["Student"]}
+                        access={[Role.STUDENT]}
                         path="/kuis-murid/:id"
                         component={ViewAssessmentStudent}
                         loginRedirect={true}
@@ -465,7 +467,7 @@ class App extends Component {
                       />
                       <PrivateRoute
                         exact
-                        access={["Student"]}
+                        access={[Role.STUDENT]}
                         path="/ujian-murid/:id"
                         component={ViewAssessmentStudent}
                         loginRedirect={true}
@@ -473,49 +475,49 @@ class App extends Component {
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.TEACHER]}
                         path="/kuis-guru/:id"
                         component={ViewAssessmentTeacher}
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.TEACHER]}
                         path="/ujian-guru/:id"
                         component={ViewAssessmentTeacher}
                       />
                       <PrivateRoute
                         exact
-                        access={["Student", "Teacher"]}
+                        access={[Role.STUDENT, Role.TEACHER]}
                         path="/daftar-kuis"
                         component={AssessmentList}
                       />
                       <PrivateRoute
                         exact
-                        access={["Student", "Teacher"]}
+                        access={[Role.STUDENT, Role.TEACHER]}
                         path="/daftar-ujian"
                         component={AssessmentTestList}
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.TEACHER]}
                         path="/daftar-kuis-terkumpul/:id"
                         component={SubmittedAssessmentList}
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.TEACHER]}
                         path="/daftar-ujian-terkumpul/:id"
                         component={SubmittedAssessmentList}
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.TEACHER]}
                         path="/lihat-jawaban-kuis/:id"
                         component={ViewAssessmentAnswer}
                       />
                       <PrivateRoute
                         exact
-                        access={["Teacher"]}
+                        access={[Role.TEACHER]}
                         path="/lihat-jawaban-ujian/:id"
                         component={ViewAssessmentAnswer}
                       />
@@ -528,39 +530,87 @@ class App extends Component {
                       {/* Route User */}
                       <PrivateRoute
                         exact
-                        access={["Admin"]}
+                        access={[Role.ADMIN]}
                         path="/pengguna-aktif"
                         component={ManageUsers}
                       />
                       <PrivateRoute
                         exact
-                        access={["Admin"]}
+                        access={[Role.ADMIN]}
                         path="/pengguna-tidakaktif"
                         component={ManagePendingUsers}
                       />
                       <PrivateRoute
                         exact
-                        access={["Admin"]}
+                        access={[Role.ADMIN]}
                         path="/data-ajar-guru"
                         component={TeacherList}
                       />
                       {/*  Route Settings */}
                       <PrivateRoute
                         exact
-                        access={["Admin"]}
+                        access={[Role.ADMIN]}
                         path="/pengaturan"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         handleFooter={this.handleFooter}
                         handleNavbar={(data) => this.handleNavbar(data)}
                         component={Setting}
                       />
+                      {/* Route SuperAdmin-Only */}
+                      <PrivateRoute
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/sunting-pengelola"
+                        component={AdminList}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/pengelola-aktif"
+                        component={ManageAdmins}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/pengelola-tertunda"
+                        component={ManagePendingAdmins}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/daftar-unit"
+                        component={UnitList}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/buat-unit"
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        component={CreateUnit}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/sunting-unit/:id"
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        component={EditUnit}
+                      />
+                      <PrivateRoute
+                        exact
+                        access={[Role.SUPERADMIN]}
+                        path="/unit/:id"
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        component={ViewUnit}
+                      />
+
                       {/*  Route Prototypes */}
                       <PrivateRoute
                         exact
-                        access={["Admin"]}
+                        access={[Role.ADMIN]}
                         path="/bulk-register"
                         component={BulkRegister}
                       />
+
                       {/*  Route Not Found */}
                       <Route
                         exact

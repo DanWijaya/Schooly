@@ -23,9 +23,12 @@ import {
   Tab,
   Tabs,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 import {
   AccountBalance as AccountBalanceIcon,
   Cake as CakeIcon,
@@ -42,7 +45,7 @@ import {
   Phone as PhoneIcon,
   SportsEsports as SportsEsportsIcon,
   Wc as WcIcon,
-  Work as WorkIcon
+  Work as WorkIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -61,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   profileDataTabs: {
-    borderBottom: "1px solid rgba(0, 0, 0, 0.12)"
+    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
   },
   dataIcon: {
     backgroundColor: theme.palette.primary.main,
@@ -112,7 +115,7 @@ function TabIndex(index) {
 function EditProfileData(props) {
   const classes = useStyles();
   const { user } = props.auth;
-  const { updateUserData, clearErrors, errors, handleOpenAlert} = props;
+  const { updateUserData, clearErrors, errors, handleOpenAlert } = props;
 
   const fullScreen = useMediaQuery("(max-width:500px)");
 
@@ -158,12 +161,13 @@ function EditProfileData(props) {
   const onSubmit = (e) => {
     e.preventDefault();
     let userId = user._id;
-    handleOpenAlert()
+    handleOpenAlert();
     // if (isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
     //   handleOpenAlert();
 
-    updateUserData(dataProfil, userId, props.history)
-        .then((res) => props.handleOpenAlert());
+    updateUserData(dataProfil, userId, props.history).then((res) =>
+      props.handleOpenAlert()
+    );
   };
 
   const handleChangeDataProfil = (e, otherfield) => {
@@ -198,7 +202,12 @@ function EditProfileData(props) {
       >
         Sunting Profil
       </Button>
-      <Dialog fullWidth open={open} onClose={handleClose} fullScreen={fullScreen}>
+      <Dialog
+        fullWidth
+        open={open}
+        onClose={handleClose}
+        fullScreen={fullScreen}
+      >
         <div className={classes.root}>
           <DialogActions>
             <IconButton size="small" onClick={handleClose}>
@@ -223,29 +232,19 @@ function EditProfileData(props) {
                 <Tab
                   icon={<ContactsIcon />}
                   label={
-                    <Typography variant="caption">
-                      Informasi Pribadi
-                    </Typography>
+                    <Typography variant="caption">Informasi Pribadi</Typography>
                   }
                   {...TabIndex(0)}
                 />
                 <Tab
                   icon={<ContactMailIcon />}
-                  label={
-                    <Typography variant="caption">
-                      Kontak
-                    </Typography>
-                  }
+                  label={<Typography variant="caption">Kontak</Typography>}
                   {...TabIndex(1)}
                 />
                 {user.role === "Student" ? (
                   <Tab
                     icon={<EmojiPeopleIcon />}
-                    label={
-                      <Typography variant="caption">
-                        Karir
-                      </Typography>
-                    }
+                    label={<Typography variant="caption">Karir</Typography>}
                     {...TabIndex(2)}
                   />
                 ) : null}
@@ -304,7 +303,9 @@ function EditProfileData(props) {
                         color="primary"
                         fullWidth
                       >
-                        <InputLabel id="subject-label">Jenis Kelamin</InputLabel>
+                        <InputLabel id="subject-label">
+                          Jenis Kelamin
+                        </InputLabel>
                         <Select
                           labelId="subject-label"
                           label="Mata Pelajaran"
@@ -414,11 +415,7 @@ function EditProfileData(props) {
                 </TabPanel>
               ) : null}
               <div className={classes.saveButtonContainer}>
-                <Button
-                  id="save"
-                  type="submit"
-                  className={classes.saveButton}
-                >
+                <Button id="save" type="submit" className={classes.saveButton}>
                   Simpan
                 </Button>
               </div>

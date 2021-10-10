@@ -6,7 +6,7 @@ const { ObjectId } = require("mongodb");
 const Teacher = User.discriminator(
   "Teacher",
   new mongoose.Schema({
-    subject_teached: { 
+    subject_teached: {
       type: [ObjectId],
       // required: true
     },
@@ -14,8 +14,9 @@ const Teacher = User.discriminator(
       type: [ObjectId],
     },
     class_to_subject: {
-      type: Object
-    }
+      type: Object,
+    },
+    unit: { type: ObjectId, ref: "units", default: null },
     // subject_teached: { type: [ObjectId], required: false },
     // class_teached: [{ type: Object, ref: "classes"}],
   })

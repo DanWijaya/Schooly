@@ -133,8 +133,8 @@ const styles = (theme) => ({
   },
   zeroHeightHelperText: {
     height: "0",
-    display: "flex" // untuk men-disable "collapsing margin"
-  }
+    display: "flex", // untuk men-disable "collapsing margin"
+  },
 });
 
 function LampiranFile(props) {
@@ -224,7 +224,7 @@ class EditAnnouncement extends Component {
       success: null,
       target_role: [],
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
-      allClassObject: null // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
     };
   }
 
@@ -239,12 +239,12 @@ class EditAnnouncement extends Component {
       getAllClass,
       getFileAnnouncements,
       refreshTeacher,
-      getSetting
+      getSetting,
     } = this.props;
     const { id } = this.props.match.params;
 
     getOneAnnouncement(id);
-    getAllClass();
+    getAllClass(user.unit);
     getFileAnnouncements(id).then((result) => {
       this.setState({ fileLampiran: result, originalFileLampiran: result });
     });
@@ -282,12 +282,21 @@ class EditAnnouncement extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas
-    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
-      const selectedAnnouncementProps = this.props.announcements.selectedAnnouncements;
+    if (
+      prevState.classOptions === null ||
+      JSON.stringify(prevProps.auth.user) !==
+        JSON.stringify(this.props.auth.user)
+    ) {
+      const selectedAnnouncementProps = this.props.announcements
+        .selectedAnnouncements;
 
-      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0) && 
-      selectedAnnouncementProps && selectedAnnouncementProps.constructor === Object && (Object.keys(selectedAnnouncementProps).length !== 0)) {
-        
+      if (
+        this.props.classesCollection.all_classes &&
+        this.props.classesCollection.all_classes.length !== 0 &&
+        selectedAnnouncementProps &&
+        selectedAnnouncementProps.constructor === Object &&
+        Object.keys(selectedAnnouncementProps).length !== 0
+      ) {
         let newClassOptions = [];
         let all_classes_obj = {};
 
@@ -299,9 +308,11 @@ class EditAnnouncement extends Component {
           });
 
           if (this.props.auth.user.class_teached) {
-            newClassOptions = this.props.auth.user.class_teached.map((classId) => {
-              return { _id: classId, name: all_classes_obj[classId] };
-            });
+            newClassOptions = this.props.auth.user.class_teached.map(
+              (classId) => {
+                return { _id: classId, name: all_classes_obj[classId] };
+              }
+            );
           }
         } else {
           this.props.classesCollection.all_classes.forEach((classInfo) => {
@@ -310,7 +321,10 @@ class EditAnnouncement extends Component {
           });
         }
 
-        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+        this.setState({
+          classOptions: newClassOptions,
+          allClassObject: all_classes_obj,
+        });
       }
     }
   }
@@ -319,7 +333,9 @@ class EditAnnouncement extends Component {
     const files = Array.from(e.target.files);
     const uploadLimit = this.props.settingsCollection.upload_limit;
     if (this.state.fileLampiran.length === 0) {
-      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > uploadLimit);
+      let over_limit = files.filter(
+        (file) => file.size / Math.pow(10, 6) > uploadLimit
+      );
       let allowed_file = files.filter(
         (file) => file.size / Math.pow(10, 6) <= uploadLimit
       );
@@ -394,13 +410,12 @@ class EditAnnouncement extends Component {
   };
 
   handleCloseUploadDialog = () => {
-    this.setState({ openUploadDialog: false});
-  }
+    this.setState({ openUploadDialog: false });
+  };
 
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
   };
-
 
   handleCloseDeleteDialog = () => {
     this.setState({ openDeleteDialog: false });
@@ -442,7 +457,7 @@ class EditAnnouncement extends Component {
           : user.role === "Admin"
           ? [null]
           : this.state.class_assigned,
-      
+
       to: user.role === "Admin" ? this.state.target_role : ["Student"],
     };
 
@@ -450,7 +465,7 @@ class EditAnnouncement extends Component {
     for (var i = 0; i < fileLampiranToAdd.length; i++) {
       formData.append("lampiran_announcement", fileLampiranToAdd[i]);
     }
-    
+
     this.handleOpenUploadDialog();
 
     this.props
@@ -463,11 +478,11 @@ class EditAnnouncement extends Component {
         this.props.history
       )
       .then((res) => {
-        this.setState({success: res});
+        this.setState({ success: res });
         // this.handleOpenUploadDialog();
       })
       .catch((err) => {
-        this.handleCloseUploadDialog()
+        this.handleCloseUploadDialog();
         this.setState({
           errors: err,
           fileLampiran: [
@@ -475,9 +490,8 @@ class EditAnnouncement extends Component {
             ...this.state.fileLampiranToAdd,
           ],
           fileLampiranToDelete: [],
-        })
-      }
-      );
+        });
+      });
     // this.setState({ fileLampiranToDelete: [] });
   };
 
@@ -613,12 +627,13 @@ class EditAnnouncement extends Component {
                         invalid: errors.title,
                       })}
                     />
-                    {errors.title
-                      ?
+                    {errors.title ? (
                       <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText variant="outlined" error>{errors.title}</FormHelperText>
+                        <FormHelperText variant="outlined" error>
+                          {errors.title}
+                        </FormHelperText>
                       </div>
-                      : null}
+                    ) : null}
                   </Grid>
                   <Grid item>
                     <Typography
@@ -644,12 +659,13 @@ class EditAnnouncement extends Component {
                         invalid: errors.description,
                       })}
                     />
-                    {errors.description
-                      ?
+                    {errors.description ? (
                       <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                        <FormHelperText variant="outlined" error>
+                          {errors.description}
+                        </FormHelperText>
                       </div>
-                      : null}
+                    ) : null}
                   </Grid>
                 </Grid>
               </Grid>
@@ -689,7 +705,13 @@ class EditAnnouncement extends Component {
                                   return (
                                     <Chip
                                       key={role}
-                                      label={(role === "Student") ? "Murid" : (role === "Teacher") ? "Guru" : null}
+                                      label={
+                                        role === "Student"
+                                          ? "Murid"
+                                          : role === "Teacher"
+                                          ? "Guru"
+                                          : null
+                                      }
                                       className={classes.chip}
                                     />
                                   );
@@ -700,7 +722,7 @@ class EditAnnouncement extends Component {
                         >
                           {[
                             ["Student", "Murid"],
-                            ["Teacher", "Guru"]
+                            ["Teacher", "Guru"],
                           ].map((peran) => {
                             return (
                               <MenuItem key={peran[0]} value={peran[0]}>
@@ -709,12 +731,13 @@ class EditAnnouncement extends Component {
                             );
                           })}
                         </Select>
-                        {Boolean(errors.to)
-                          ?
+                        {Boolean(errors.to) ? (
                           <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>{errors.to}</FormHelperText>
+                            <FormHelperText variant="outlined" error>
+                              {errors.to}
+                            </FormHelperText>
                           </div>
-                          : null}
+                        ) : null}
                       </FormControl>
                     </Grid>
                   ) : (
@@ -746,7 +769,11 @@ class EditAnnouncement extends Component {
                                   return (
                                     <Chip
                                       key={classId}
-                                      label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
+                                      label={
+                                        this.state.allClassObject
+                                          ? this.state.allClassObject[classId]
+                                          : null
+                                      }
                                       className={classes.chip}
                                     />
                                   );
@@ -755,22 +782,25 @@ class EditAnnouncement extends Component {
                             );
                           }}
                         >
-                          {(this.state.classOptions !== null) ? (
-                            this.state.classOptions.map((classInfo) => (
-                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
-                                {classInfo.name}
-                              </MenuItem>
-                            ))
-                          ) : (
-                            null
-                          )}
+                          {this.state.classOptions !== null
+                            ? this.state.classOptions.map((classInfo) => (
+                                <MenuItem
+                                  selected={true}
+                                  key={classInfo._id}
+                                  value={classInfo._id}
+                                >
+                                  {classInfo.name}
+                                </MenuItem>
+                              ))
+                            : null}
                         </Select>
-                        {Boolean(errors.class_assigned)
-                          ?
+                        {Boolean(errors.class_assigned) ? (
                           <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                            <FormHelperText variant="outlined" error>
+                              {errors.class_assigned}
+                            </FormHelperText>
                           </div>
-                          : null}
+                        ) : null}
                       </FormControl>
                     </Grid>
                   )}
@@ -842,7 +872,8 @@ class EditAnnouncement extends Component {
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
           <Alert elevation={6} variant="filled" severity="error">
-            {this.state.over_limit.length} file melebihi batas {this.props.settingsCollection.upload_limit}MB!
+            {this.state.over_limit.length} file melebihi batas{" "}
+            {this.props.settingsCollection.upload_limit}MB!
           </Alert>
         </Snackbar>
       </div>
@@ -863,7 +894,7 @@ const mapStateToProps = (state) => ({
   success: state.success,
   announcements: state.announcementsCollection,
   classesCollection: state.classesCollection,
-  settingsCollection: state.settingsCollection
+  settingsCollection: state.settingsCollection,
 });
 
 export default connect(mapStateToProps, {
@@ -875,5 +906,5 @@ export default connect(mapStateToProps, {
   clearSuccess,
   getFileAnnouncements,
   refreshTeacher,
-  getSetting
+  getSetting,
 })(withStyles(styles)(EditAnnouncement));

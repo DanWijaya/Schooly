@@ -5,6 +5,10 @@ const { ObjectId } = require("mongodb");
 // Create Task Schema
 const TaskSchema = new Schema(
   {
+    unit: {
+      type: ObjectId,
+      default: null,
+    },
     name: {
       type: String,
       required: true,
@@ -50,25 +54,26 @@ const TaskSchema = new Schema(
     // }
     comments: [
       {
-        author_id: { 
-          type: ObjectId, 
-          required: true 
+        author_id: {
+          type: ObjectId,
+          required: true,
         },
-        content: { 
+        content: {
           type: String,
-          required: true
+          required: true,
         },
         edited: {
           type: Boolean,
-          default: false
+          default: false,
         },
         createdAt: {
           type: Date,
-          required: true
-        }
+          required: true,
+        },
       },
-    ]  
+    ],
   },
+
   { timestamps: true }
 );
 

@@ -5,6 +5,7 @@ import {
 } from "../actions/Types";
 
 const initialState = {
+  school_subjects: [],
   all_subjects: [],
   selectedSubjects: {},
   all_subjects_map: new Map(),

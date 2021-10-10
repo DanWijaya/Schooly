@@ -29,7 +29,7 @@ import {
   Select,
   Snackbar,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
@@ -128,8 +128,8 @@ const styles = (theme) => ({
   },
   zeroHeightHelperText: {
     height: "0",
-    display: "flex" // untuk men-disable "collapsing margin"
-  }
+    display: "flex", // untuk men-disable "collapsing margin"
+  },
 });
 
 const path = require("path");
@@ -217,7 +217,7 @@ class CreateAnnouncement extends Component {
       fileLimitSnackbar: false,
       over_limit: [],
       classOptions: null, // Will be listed in menu.
-      allClassObject: null // Will be used to get name of a class from its id without to traverse array that contains all class.
+      allClassObject: null, // Will be used to get name of a class from its id without to traverse array that contains all class.
     };
   }
 
@@ -230,9 +230,15 @@ class CreateAnnouncement extends Component {
 
     // Comparing teacher's information (auth.user) is done to renew teacher's information by administrator,
     // that will indirectly renew class options.
-    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
-      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
-
+    if (
+      prevState.classOptions === null ||
+      JSON.stringify(prevProps.auth.user) !==
+        JSON.stringify(this.props.auth.user)
+    ) {
+      if (
+        this.props.classesCollection.all_classes &&
+        this.props.classesCollection.all_classes.length !== 0
+      ) {
         let newClassOptions = [];
         let all_classes_obj = {};
 
@@ -245,9 +251,11 @@ class CreateAnnouncement extends Component {
           if (this.props.auth.user.class_teached) {
             // With this, if a teacher doesn't teach class of his/her homeroom class,
             // That teacher will not be able to create his/her homeroom class.
-            newClassOptions = this.props.auth.user.class_teached.map((classId) => {
-              return { _id: classId, name: all_classes_obj[classId] };
-            });
+            newClassOptions = this.props.auth.user.class_teached.map(
+              (classId) => {
+                return { _id: classId, name: all_classes_obj[classId] };
+              }
+            );
           }
         } else {
           this.props.classesCollection.all_classes.forEach((classInfo) => {
@@ -255,15 +263,23 @@ class CreateAnnouncement extends Component {
             newClassOptions.push({ _id: classInfo._id, name: classInfo.name });
           });
         }
-        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
+        this.setState({
+          classOptions: newClassOptions,
+          allClassObject: all_classes_obj,
+        });
       }
     }
   }
 
   componentDidMount() {
     const { user } = this.props.auth;
-    const { getAllClass, setCurrentClass, refreshTeacher, getSetting } = this.props;
-    getAllClass();
+    const {
+      getAllClass,
+      setCurrentClass,
+      refreshTeacher,
+      getSetting,
+    } = this.props;
+    getAllClass(user.unit);
     getSetting();
 
     if (user.role === "Student") {
@@ -333,7 +349,9 @@ class CreateAnnouncement extends Component {
     const files = e.target.files;
     const uploadLimit = this.props.settingsCollection.upload_limit;
     let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-    let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > uploadLimit);
+    let over_limit = temp.filter(
+      (file) => file.size / Math.pow(10, 6) > uploadLimit
+    );
     let file_to_upload = temp.filter(
       (file) => file.size / Math.pow(10, 6) <= uploadLimit
     );
@@ -361,8 +379,8 @@ class CreateAnnouncement extends Component {
           ? [null]
           : this.state.class_assigned,
       author_id: user._id,
-
       to: user.role === "Admin" ? this.state.target_role : ["Student"],
+      unit: user.unit,
     };
 
     if (this.state.fileLampiran)
@@ -378,7 +396,7 @@ class CreateAnnouncement extends Component {
     this.props
       .createAnnouncement(formData, announcementData, this.props.history)
       .then((res) => {
-        this.setState({ success: res});
+        this.setState({ success: res });
         // this.handleOpenUploadDialog();
       })
       .catch((err) => {
@@ -403,7 +421,13 @@ class CreateAnnouncement extends Component {
     // const { errors } = this.props;
     const { user } = this.props.auth;
     const { all_classes, kelas } = this.props.classesCollection;
-    const { class_assigned, fileLampiran, target_role, errors, success } = this.state;
+    const {
+      class_assigned,
+      fileLampiran,
+      target_role,
+      errors,
+      success,
+    } = this.state;
 
     const fileType = (filename) => {
       let ext_file = path.extname(filename);
@@ -497,12 +521,13 @@ class CreateAnnouncement extends Component {
                         invalid: errors.title,
                       })}
                     />
-                    {errors.title
-                      ?
+                    {errors.title ? (
                       <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText variant="outlined" error>{errors.title}</FormHelperText>
+                        <FormHelperText variant="outlined" error>
+                          {errors.title}
+                        </FormHelperText>
                       </div>
-                      : null}
+                    ) : null}
                   </Grid>
                   <Grid item>
                     <Typography
@@ -528,12 +553,13 @@ class CreateAnnouncement extends Component {
                         invalid: errors.description,
                       })}
                     />
-                    {errors.description
-                      ?
+                    {errors.description ? (
                       <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                        <FormHelperText variant="outlined" error>
+                          {errors.description}
+                        </FormHelperText>
                       </div>
-                      : null}
+                    ) : null}
                   </Grid>
                 </Grid>
               </Grid>
@@ -573,7 +599,13 @@ class CreateAnnouncement extends Component {
                                   return (
                                     <Chip
                                       key={role}
-                                      label={(role === "Student") ? "Murid" : (role === "Teacher") ? "Guru" : null}
+                                      label={
+                                        role === "Student"
+                                          ? "Murid"
+                                          : role === "Teacher"
+                                          ? "Guru"
+                                          : null
+                                      }
                                       className={classes.chip}
                                     />
                                   );
@@ -581,11 +613,10 @@ class CreateAnnouncement extends Component {
                               </div>
                             );
                           }}
-
                         >
                           {[
                             ["Student", "Murid"],
-                            ["Teacher", "Guru"]
+                            ["Teacher", "Guru"],
                           ].map((peran) => {
                             return (
                               <MenuItem key={peran[0]} value={peran[0]}>
@@ -594,12 +625,13 @@ class CreateAnnouncement extends Component {
                             );
                           })}
                         </Select>
-                        {Boolean(errors.to)
-                          ?
+                        {Boolean(errors.to) ? (
                           <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>{errors.to}</FormHelperText>
+                            <FormHelperText variant="outlined" error>
+                              {errors.to}
+                            </FormHelperText>
                           </div>
-                          : null}
+                        ) : null}
                       </FormControl>
                     </Grid>
                   ) : (
@@ -630,7 +662,11 @@ class CreateAnnouncement extends Component {
                                 return (
                                   <Chip
                                     key={classId}
-                                    label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
+                                    label={
+                                      this.state.allClassObject
+                                        ? this.state.allClassObject[classId]
+                                        : null
+                                    }
                                     className={classes.chip}
                                   />
                                 );
@@ -638,22 +674,25 @@ class CreateAnnouncement extends Component {
                             </div>
                           )}
                         >
-                          {(this.state.classOptions !== null) ? (
-                            this.state.classOptions.map((classInfo) => (
-                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
-                                {classInfo.name}
-                              </MenuItem>
-                            ))
-                          ) : (
-                            null
-                          )}
+                          {this.state.classOptions !== null
+                            ? this.state.classOptions.map((classInfo) => (
+                                <MenuItem
+                                  selected={true}
+                                  key={classInfo._id}
+                                  value={classInfo._id}
+                                >
+                                  {classInfo.name}
+                                </MenuItem>
+                              ))
+                            : null}
                         </Select>
-                        {Boolean(errors.class_assigned)
-                          ?
+                        {Boolean(errors.class_assigned) ? (
                           <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                            <FormHelperText variant="outlined" error>
+                              {errors.class_assigned}
+                            </FormHelperText>
                           </div>
-                          : null}
+                        ) : null}
                       </FormControl>
                     </Grid>
                   )}
@@ -733,7 +772,8 @@ class CreateAnnouncement extends Component {
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
           <Alert elevation={6} variant="filled" severity="error">
-            {this.state.over_limit.length} file melebihi batas {this.props.settingsCollection.upload_limit}MB!
+            {this.state.over_limit.length} file melebihi batas{" "}
+            {this.props.settingsCollection.upload_limit}MB!
           </Alert>
         </Snackbar>
       </div>

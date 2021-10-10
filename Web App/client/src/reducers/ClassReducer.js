@@ -3,10 +3,12 @@ import {
   GET_ALL_CLASSES,
   SET_CURRENT_CLASS,
   GET_ALL_CLASSES_MAP,
+  GET_SCHOOL_CLASSES
 } from "../actions/Types";
 
 const initialState = {
-  all_classes: [],
+  school_classes: [], // Ini bakal jadi semua kelas yang ada di Database. 
+  all_classes: [], // Ini bakal jadi per unit
   all_classes_map: new Map(),
   selectedClasses: [],
   kelas: {}, // for student
@@ -14,6 +16,12 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    case GET_SCHOOL_CLASSES : {
+      return {
+        ...state,
+        school_classes: action.payload
+      }
+    }
     case GET_CLASSES: {
       console.log("Payload : ", action.payload);
       let retrieved = new Map();
@@ -44,7 +52,8 @@ export default function (state = initialState, action) {
         ...state,
         kelas: action.payload,
       };
-
+    
+    
     default:
       return state;
   }

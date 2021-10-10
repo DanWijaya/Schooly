@@ -50,7 +50,7 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import {getSetting} from "../../../actions/SettingActions";
+import { getSetting } from "../../../actions/SettingActions";
 
 const path = require("path");
 
@@ -137,12 +137,12 @@ const styles = (theme) => ({
   customSpacing: {
     [theme.breakpoints.down("sm")]: {
       marginTop: theme.spacing(2),
-    }
+    },
   },
   zeroHeightHelperText: {
     height: "0",
-    display: "flex" // untuk men-disable "collapsing margin"
-  }
+    display: "flex", // untuk men-disable "collapsing margin"
+  },
 });
 
 // name = fileLampiran[i].name
@@ -233,8 +233,8 @@ class CreateTask extends Component {
       fileLimitSnackbar: false,
       classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
       subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
-      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas 
-      allSubjectObject: null // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
+      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
+      allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
     };
   }
 
@@ -257,7 +257,7 @@ class CreateTask extends Component {
 
   handleCloseUploadDialog = () => {
     this.setState({ openUploadDialog: false });
-  }
+  };
 
   handleOpenDeleteDialog = () => {
     this.setState({ openDeleteDialog: true });
@@ -268,7 +268,7 @@ class CreateTask extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-    // dipindahkan (kode yg dari merge_fitur_4_cdn ada di bawah dan dikomen) 
+    // dipindahkan (kode yg dari merge_fitur_4_cdn ada di bawah dan dikomen)
     let field = otherfield ? otherfield : e.target.id;
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
@@ -277,54 +277,82 @@ class CreateTask extends Component {
 
     // if (Object.keys(this.props.errors).length !== 0)
     if (otherfield) {
-      if (otherfield === "subject") { // jika guru memilih mata pelajaran
+      if (otherfield === "subject") {
+        // jika guru memilih mata pelajaran
         // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
         let newClassOptions = [];
         if (this.props.auth.user.class_to_subject) {
-          for (let [classId, subjectIdArray] of Object.entries(this.props.auth.user.class_to_subject)) {
+          for (let [classId, subjectIdArray] of Object.entries(
+            this.props.auth.user.class_to_subject
+          )) {
             if (subjectIdArray.includes(e.target.value)) {
-              newClassOptions.push({ _id: classId, name: this.state.allClassObject[classId] });
+              newClassOptions.push({
+                _id: classId,
+                name: this.state.allClassObject[classId],
+              });
             }
           }
         }
 
-        this.setState({ subject: e.target.value, classOptions: newClassOptions });
-
-      } else if (otherfield === "class_assigned") { // jika guru memilih kelas
+        this.setState({
+          subject: e.target.value,
+          classOptions: newClassOptions,
+        });
+      } else if (otherfield === "class_assigned") {
+        // jika guru memilih kelas
         let selectedClasses = e.target.value;
 
-        if (selectedClasses.length === 0) { // jika guru membatalkan semua pilihan kelas
+        if (selectedClasses.length === 0) {
+          // jika guru membatalkan semua pilihan kelas
           this.setState((prevState, props) => {
             return {
               class_assigned: selectedClasses,
               // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
-              subjectOptions: props.auth.user.subject_teached.map((subjectId) => ({ _id: subjectId, name: prevState.allSubjectObject[subjectId] }))
-            }
+              subjectOptions: props.auth.user.subject_teached.map(
+                (subjectId) => ({
+                  _id: subjectId,
+                  name: prevState.allSubjectObject[subjectId],
+                })
+              ),
+            };
           });
-        } else { // jika guru menambahkan atau mengurangi pilihan kelas
+        } else {
+          // jika guru menambahkan atau mengurangi pilihan kelas
           // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
           let subjectMatrix = [];
           if (this.props.auth.user.class_to_subject) {
             for (let classId of selectedClasses) {
               if (this.props.auth.user.class_to_subject[classId]) {
-                subjectMatrix.push(this.props.auth.user.class_to_subject[classId]);
+                subjectMatrix.push(
+                  this.props.auth.user.class_to_subject[classId]
+                );
               }
             }
           }
           let subjects = [];
           if (subjectMatrix.length !== 0) {
-            subjects = subjectMatrix.reduce((prevIntersectionResult, currentArray) => {
-              return currentArray.filter((subjectId) => (prevIntersectionResult.includes(subjectId)));
-            });
+            subjects = subjectMatrix.reduce(
+              (prevIntersectionResult, currentArray) => {
+                return currentArray.filter((subjectId) =>
+                  prevIntersectionResult.includes(subjectId)
+                );
+              }
+            );
           }
 
           // menambahkan matpel tersebut ke opsi matpel
           let newSubjectOptions = [];
           subjects.forEach((subjectId) => {
-            newSubjectOptions.push({ _id: subjectId, name: this.state.allSubjectObject[subjectId] });
-          })
+            newSubjectOptions.push({
+              _id: subjectId,
+              name: this.state.allSubjectObject[subjectId],
+            });
+          });
 
-          this.setState({ subjectOptions: newSubjectOptions, class_assigned: selectedClasses });
+          this.setState({
+            subjectOptions: newSubjectOptions,
+            class_assigned: selectedClasses,
+          });
         }
       } else {
         // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
@@ -343,7 +371,10 @@ class CreateTask extends Component {
   };
 
   onDateChange = (date) => {
-    this.setState({ deadline: date , errors: {...this.state.errors, deadline: ""}});
+    this.setState({
+      deadline: date,
+      errors: { ...this.state.errors, deadline: "" },
+    });
   };
 
   onSubmit = (e, id) => {
@@ -356,7 +387,7 @@ class CreateTask extends Component {
       class_assigned: this.state.class_assigned,
       person_in_charge_id: id,
       description: this.state.description,
-      
+      unit: this.props.auth.user.unit,
     };
 
     //Check if there is any lampiran_tugas uploaded or not.
@@ -368,19 +399,25 @@ class CreateTask extends Component {
     this.handleOpenUploadDialog();
     this.props
       .createTask(formData, taskData, this.props.history)
-      .then((res) => this.setState({success: res}))
+      .then((res) => this.setState({ success: res }))
       .catch((err) => {
         console.log(err);
         this.handleCloseUploadDialog();
-        this.setState({ errors: err })
+        this.setState({ errors: err });
       });
   };
 
   componentDidMount() {
-    const { getAllClass, getAllSubjects, refreshTeacher, getSetting } = this.props;
-    getAllClass();
-    getAllSubjects();
-    refreshTeacher(this.props.auth.user._id);
+    const { user } = this.props.auth;
+    const {
+      getAllClass,
+      getAllSubjects,
+      refreshTeacher,
+      getSetting,
+    } = this.props;
+    getAllClass(user.unit);
+    getAllSubjects(user.unit);
+    refreshTeacher(user._id);
     getSetting();
   }
 
@@ -401,41 +438,63 @@ class CreateTask extends Component {
     }
 
     // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas dan mata pelajaran
-    if (prevState.classOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
-      if (this.props.classesCollection.all_classes && (this.props.classesCollection.all_classes.length !== 0)) {
-        
+    if (
+      prevState.classOptions === null ||
+      JSON.stringify(prevProps.auth.user) !==
+        JSON.stringify(this.props.auth.user)
+    ) {
+      if (
+        this.props.classesCollection.all_classes &&
+        this.props.classesCollection.all_classes.length !== 0
+      ) {
         let all_classes_obj = {};
         this.props.classesCollection.all_classes.forEach((classInfo) => {
-          all_classes_obj[classInfo._id] = classInfo.name; 
+          all_classes_obj[classInfo._id] = classInfo.name;
         });
-    
+
         let newClassOptions = [];
         if (this.props.auth.user.class_teached) {
-          newClassOptions = this.props.auth.user.class_teached.map((classId) => {
-            return { _id: classId, name: all_classes_obj[classId] };
-          });
+          newClassOptions = this.props.auth.user.class_teached.map(
+            (classId) => {
+              return { _id: classId, name: all_classes_obj[classId] };
+            }
+          );
         }
 
-        this.setState({ classOptions: newClassOptions, allClassObject: all_classes_obj });
-      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null  
+        this.setState({
+          classOptions: newClassOptions,
+          allClassObject: all_classes_obj,
+        });
+      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null
     }
 
-    if (prevState.subjectOptions === null || JSON.stringify(prevProps.auth.user) !== JSON.stringify(this.props.auth.user)) {
-      if (this.props.subjectsCollection.all_subjects && (this.props.subjectsCollection.all_subjects.length !== 0)) {
-        
+    if (
+      prevState.subjectOptions === null ||
+      JSON.stringify(prevProps.auth.user) !==
+        JSON.stringify(this.props.auth.user)
+    ) {
+      if (
+        this.props.subjectsCollection.all_subjects &&
+        this.props.subjectsCollection.all_subjects.length !== 0
+      ) {
         let all_subjects_obj = {};
         this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
-          all_subjects_obj[subjectInfo._id] = subjectInfo.name; 
+          all_subjects_obj[subjectInfo._id] = subjectInfo.name;
         });
-  
+
         let newSubjectOptions = [];
         if (this.props.auth.user.subject_teached) {
-          newSubjectOptions = this.props.auth.user.subject_teached.map((subjectId) => {
-            return { _id: subjectId, name: all_subjects_obj[subjectId] };
-          });
+          newSubjectOptions = this.props.auth.user.subject_teached.map(
+            (subjectId) => {
+              return { _id: subjectId, name: all_subjects_obj[subjectId] };
+            }
+          );
         }
-  
-        this.setState({ subjectOptions: newSubjectOptions, allSubjectObject: all_subjects_obj });
+
+        this.setState({
+          subjectOptions: newSubjectOptions,
+          allSubjectObject: all_subjects_obj,
+        });
       } // jika memang belum ada matpel yang tercatat di sistem, opsi matpel akan tetap null
     }
   }
@@ -451,7 +510,9 @@ class CreateTask extends Component {
     const files = e.target.files;
     const uploadLimit = this.props.settingsCollection.upload_limit;
     let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-    let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > uploadLimit);
+    let over_limit = temp.filter(
+      (file) => file.size / Math.pow(10, 6) > uploadLimit
+    );
     let file_to_upload = temp.filter(
       (file) => file.size / Math.pow(10, 6) <= uploadLimit
     );
@@ -596,12 +657,13 @@ class CreateTask extends Component {
                           invalid: errors.name,
                         })}
                       />
-                      {errors.name
-                        ?
+                      {errors.name ? (
                         <div className={classes.zeroHeightHelperText}>
-                          <FormHelperText variant="outlined" error>{errors.name}</FormHelperText>
+                          <FormHelperText variant="outlined" error>
+                            {errors.name}
+                          </FormHelperText>
                         </div>
-                        : null}
+                      ) : null}
                     </Grid>
                     <Grid item>
                       <Typography
@@ -627,12 +689,13 @@ class CreateTask extends Component {
                           invalid: errors.description,
                         })}
                       />
-                      {errors.description
-                        ?
+                      {errors.description ? (
                         <div className={classes.zeroHeightHelperText}>
-                          <FormHelperText variant="outlined" error>{errors.description}</FormHelperText>
+                          <FormHelperText variant="outlined" error>
+                            {errors.description}
+                          </FormHelperText>
                         </div>
-                        : null}
+                      ) : null}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -665,25 +728,32 @@ class CreateTask extends Component {
                               this.onChange(event, "subject");
                             }}
                           >
-                            {(this.state.subjectOptions !== null) ? (
-                              this.state.subjectOptions.map((subject) => (
-                                <MenuItem key={subject._id} value={subject._id}>
-                                  {subject.name}
-                                </MenuItem>
-                              ))
-                            ) : (
-                              null
-                            )}
+                            {this.state.subjectOptions !== null
+                              ? this.state.subjectOptions.map((subject) => (
+                                  <MenuItem
+                                    key={subject._id}
+                                    value={subject._id}
+                                  >
+                                    {subject.name}
+                                  </MenuItem>
+                                ))
+                              : null}
                           </Select>
-                          {Boolean(errors.subject)
-                            ?
+                          {Boolean(errors.subject) ? (
                             <div className={classes.zeroHeightHelperText}>
-                              <FormHelperText variant="outlined" error>{errors.subject}</FormHelperText>
+                              <FormHelperText variant="outlined" error>
+                                {errors.subject}
+                              </FormHelperText>
                             </div>
-                            : null}
+                          ) : null}
                         </FormControl>
                       </Grid>
-                      <Grid item xs={12} md={6} className={classes.customSpacing}>
+                      <Grid
+                        item
+                        xs={12}
+                        md={6}
+                        className={classes.customSpacing}
+                      >
                         <Typography
                           component="label"
                           for="deadline"
@@ -716,11 +786,12 @@ class CreateTask extends Component {
                             // }}
                             error={Boolean(errors.deadline)}
                           />
-                          
-                            <div className={classes.zeroHeightHelperText}>
-                              <FormHelperText variant="outlined" error>{errors.deadline}</FormHelperText>
-                              
-                            </div>
+
+                          <div className={classes.zeroHeightHelperText}>
+                            <FormHelperText variant="outlined" error>
+                              {errors.deadline}
+                            </FormHelperText>
+                          </div>
                         </MuiPickersUtilsProvider>
                       </Grid>
                     </Grid>
@@ -751,7 +822,11 @@ class CreateTask extends Component {
                                 return (
                                   <Chip
                                     key={classId}
-                                    label={this.state.allClassObject ? this.state.allClassObject[classId] : null}
+                                    label={
+                                      this.state.allClassObject
+                                        ? this.state.allClassObject[classId]
+                                        : null
+                                    }
                                     className={classes.chip}
                                   />
                                 );
@@ -759,22 +834,25 @@ class CreateTask extends Component {
                             </div>
                           )}
                         >
-                          {(this.state.classOptions !== null) ? (
-                            this.state.classOptions.map((classInfo) => (
-                              <MenuItem selected={true} key={classInfo._id} value={classInfo._id}>
-                                {classInfo.name}
-                              </MenuItem>
-                            ))
-                          ) : (
-                            null
-                          )}
+                          {this.state.classOptions !== null
+                            ? this.state.classOptions.map((classInfo) => (
+                                <MenuItem
+                                  selected={true}
+                                  key={classInfo._id}
+                                  value={classInfo._id}
+                                >
+                                  {classInfo.name}
+                                </MenuItem>
+                              ))
+                            : null}
                         </Select>
-                        {Boolean(errors.class_assigned)
-                          ?
+                        {Boolean(errors.class_assigned) ? (
                           <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>{errors.class_assigned}</FormHelperText>
+                            <FormHelperText variant="outlined" error>
+                              {errors.class_assigned}
+                            </FormHelperText>
                           </div>
-                          : null}
+                        ) : null}
                       </FormControl>
                     </Grid>
                     <Grid item>
@@ -841,7 +919,8 @@ class CreateTask extends Component {
               onClose={this.handleCloseSnackbar}
               severity="error"
             >
-              {this.state.over_limit.length} file melebihi batas {this.props.settingsCollection.upload_limit}MB!
+              {this.state.over_limit.length} file melebihi batas{" "}
+              {this.props.settingsCollection.upload_limit}MB!
             </Alert>
           </Snackbar>
         </div>
@@ -870,7 +949,7 @@ const mapStateToProps = (state) => ({
   success: state.success,
   subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
-  settingsCollection: state.settingsCollection
+  settingsCollection: state.settingsCollection,
 });
 
 export default connect(mapStateToProps, {
@@ -881,5 +960,5 @@ export default connect(mapStateToProps, {
   clearErrors,
   clearSuccess,
   refreshTeacher,
-  getSetting
+  getSetting,
 })(withStyles(styles)(CreateTask));

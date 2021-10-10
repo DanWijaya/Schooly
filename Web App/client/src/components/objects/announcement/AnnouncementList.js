@@ -5,7 +5,12 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import { getAllAnnouncements, getAnnouncement, getAdminAnnouncements, deleteAnnouncement } from "../../../actions/AnnouncementActions";
+import {
+  getAllAnnouncements,
+  getAnnouncement,
+  getAdminAnnouncements,
+  deleteAnnouncement,
+} from "../../../actions/AnnouncementActions";
 import { getUsers } from "../../../actions/UserActions";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -31,7 +36,7 @@ import {
   Tabs,
   TableSortLabel,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
@@ -43,7 +48,7 @@ import {
   Delete as DeleteIcon,
   Pageview as PageviewIcon,
   Search as SearchIcon,
-  Sort as SortIcon
+  Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -160,7 +165,9 @@ function AnnouncementListToolbar(props) {
                   size="large"
                   className={classes.createAnnouncementButton}
                 >
-                  <AnnouncementIcon className={classes.createAnnouncementIconDesktop} />
+                  <AnnouncementIcon
+                    className={classes.createAnnouncementIconDesktop}
+                  />
                   Buat Pengumuman
                 </Fab>
               </Link>
@@ -168,8 +175,13 @@ function AnnouncementListToolbar(props) {
             <Hidden mdUp>
               <LightTooltip title="Buat Pengumuman">
                 <Link to="/buat-pengumuman">
-                  <Fab size="medium" className={classes.createAnnouncementButton}>
-                    <AnnouncementIcon className={classes.createAnnouncementIconMobile} />
+                  <Fab
+                    size="medium"
+                    className={classes.createAnnouncementButton}
+                  >
+                    <AnnouncementIcon
+                      className={classes.createAnnouncementIconMobile}
+                    />
                   </Fab>
                 </Link>
               </LightTooltip>
@@ -192,7 +204,7 @@ function AnnouncementListToolbar(props) {
                     style: {
                       borderRadius: "22.5px",
                       maxWidth: "450px",
-                      width: "100%"
+                      width: "100%",
                     },
                     startAdornment: (
                       <InputAdornment
@@ -213,7 +225,9 @@ function AnnouncementListToolbar(props) {
                             e.stopPropagation();
                             onClear(e, "searchFilterDesktop");
                           }}
-                          style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                          style={{
+                            visibility: !searchFilter ? "hidden" : "visible",
+                          }}
                         >
                           <ClearIcon />
                         </IconButton>
@@ -245,7 +259,7 @@ function AnnouncementListToolbar(props) {
                         style: {
                           borderRadius: "22.5px",
                           maxWidth: "450px",
-                          width: "100%"
+                          width: "100%",
                         },
                         endAdornment: (
                           <InputAdornment
@@ -258,7 +272,11 @@ function AnnouncementListToolbar(props) {
                                 e.stopPropagation();
                                 onClear(e, "searchFilterMobile");
                               }}
-                              style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                              style={{
+                                visibility: !searchFilter
+                                  ? "hidden"
+                                  : "visible",
+                              }}
                             >
                               <ClearIcon />
                             </IconButton>
@@ -317,7 +335,7 @@ function AnnouncementListToolbar(props) {
                     </TableSortLabel>
                   </MenuItem>
                 ))}
-            </Menu>
+              </Menu>
             </Grid>
           </Grid>
         </Grid>
@@ -573,7 +591,10 @@ function AnnouncementListSubToolbar(props) {
             <Hidden mdUp implementation="css">
               <LightTooltip title="Buat Pengumuman">
                 <Link to="/buat-pengumuman">
-                  <Fab size="small" className={classes.createAnnouncementButton}>
+                  <Fab
+                    size="small"
+                    className={classes.createAnnouncementButton}
+                  >
                     <AnnouncementIcon
                       className={classes.createAnnouncementIconMobile}
                     />
@@ -648,21 +669,10 @@ function AnnouncementListSubToolbar(props) {
 }
 
 function AnnouncementListItems(props) {
-  const {
-    rows,
-    classes,
-    order,
-    orderBy,
-    mine,
-    handleOpenDeleteDialog,
-  } = props;
+  const { rows, classes, order, orderBy, mine, handleOpenDeleteDialog } = props;
 
   return (
-    <Grid
-      container
-      direction="column"
-      spacing={2}
-    >
+    <Grid container direction="column" spacing={2}>
       {rows.length === 0 ? (
         <Empty />
       ) : (
@@ -731,9 +741,7 @@ function AnnouncementListItems(props) {
                       </Grid>
                       <Grid item>
                         <LightTooltip title="Sunting">
-                          <Link
-                            to={`/sunting-pengumuman/${row._id}`}
-                          >
+                          <Link to={`/sunting-pengumuman/${row._id}`}>
                             <IconButton
                               size="small"
                               className={classes.editMaterialButton}
@@ -782,9 +790,7 @@ function AnnouncementListItems(props) {
                 {mine ? (
                   content
                 ) : (
-                  <Link to={`/pengumuman/${row._id}`}>
-                    {content}
-                  </Link>
+                  <Link to={`/pengumuman/${row._id}`}>{content}</Link>
                 )}
               </Paper>
             </Grid>
@@ -840,7 +846,11 @@ function AnnouncementSubList(props) {
 
   React.useEffect(() => {
     // If all_assessments is not undefined or an empty array
-    if (Array.isArray(selectedAnnouncements) && retrieved_users && adminAnnouncements) {
+    if (
+      Array.isArray(selectedAnnouncements) &&
+      retrieved_users &&
+      adminAnnouncements
+    ) {
       let newRows = [];
       if (mine) {
         if (author_role === "Student") {
@@ -917,7 +927,7 @@ function AnnouncementSubList(props) {
     adminAnnouncements,
     retrieved_users,
     selectedAnnouncements,
-    searchFilter
+    searchFilter,
   ]);
 
   return (
@@ -990,7 +1000,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   createAnnouncementButton: {
-    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    boxShadow:
+      "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -1019,7 +1030,7 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   listItem: {
-    padding: "6px 16px"
+    padding: "6px 16px",
   },
   assignmentLate: {
     backgroundColor: theme.palette.primary.main,
@@ -1089,7 +1100,6 @@ function AnnouncementList(props) {
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -1110,7 +1120,7 @@ function AnnouncementList(props) {
 
   const handleOpenDeleteSnackbar = () => {
     setOpenDeleteSnackbar(true);
-  }
+  };
 
   const handleCloseDeleteSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -1123,13 +1133,13 @@ function AnnouncementList(props) {
     deleteAnnouncement(id).then((res) => {
       if (user.role === "Teacher") {
         getAnnouncement(user._id, "by_author");
-        getAdminAnnouncements();
+        getAdminAnnouncements(user.unit);
       } else if (user.role === "Student") {
         getAnnouncement(user.kelas, "by_class");
-        getAdminAnnouncements();
+        getAdminAnnouncements(user.unit);
         setCurrentClass(user.kelas);
       } else if (user.role === "Admin") {
-        console.log("RUN II")
+        console.log("RUN II");
         getAnnouncement(user._id, "by_author");
       }
       handleCloseDeleteDialog();
@@ -1165,7 +1175,11 @@ function AnnouncementList(props) {
     // ini diperlukan untuk user role admin karena pada user role admin,
     // AnnouncementListItems akan langsung ditampilkan tanpa AnnouncementSubList,
     // sedangkan AnnouncementListItems tidak memfilter announcement dengan searchFilter.
-    if (user.role === "Admin" && Array.isArray(selectedAnnouncements) && retrieved_users) {
+    if (
+      user.role === "Admin" &&
+      Array.isArray(selectedAnnouncements) &&
+      retrieved_users
+    ) {
       let newRows = [];
       selectedAnnouncements
         .filter((item) =>
@@ -1183,11 +1197,11 @@ function AnnouncementList(props) {
   React.useEffect(() => {
     if (user.role === "Teacher") {
       getAnnouncement(user._id, "by_author");
-      getAdminAnnouncements();
+      getAdminAnnouncements(user.unit);
       // setAnnIsRetrieved(true);
     } else if (user.role === "Student") {
       getAnnouncement(user.kelas, "by_class");
-      getAdminAnnouncements();
+      getAdminAnnouncements(user.unit);
       setCurrentClass(user.kelas);
       // setAnnIsRetrieved(true);
     } else if (user.role === "Admin") {
@@ -1235,7 +1249,12 @@ function AnnouncementList(props) {
 
   return (
     <div className={classes.root}>
-      <Grid container alignItems="center" spacing={2} className={classes.header}>
+      <Grid
+        container
+        alignItems="center"
+        spacing={2}
+        className={classes.header}
+      >
         <Grid item>
           <div className={classes.headerIcon}>
             <AnnouncementIcon />
@@ -1254,8 +1273,20 @@ function AnnouncementList(props) {
         onChange={handleChangeTab}
         className={classes.announcementTabs}
       >
-        <Tab label={<Typography className={classes.announcementTabTitle}>Masuk</Typography>} />
-        <Tab label={<Typography className={classes.announcementTabTitle}>Dari Saya</Typography>} />
+        <Tab
+          label={
+            <Typography className={classes.announcementTabTitle}>
+              Masuk
+            </Typography>
+          }
+        />
+        <Tab
+          label={
+            <Typography className={classes.announcementTabTitle}>
+              Dari Saya
+            </Typography>
+          }
+        />
       </Tabs>
       <TabPanel value={tabValue} index={0}>
         <AnnouncementListToolbar
@@ -1279,25 +1310,23 @@ function AnnouncementList(props) {
           - Kalau murid biasa (full penerima doang) mau bikin ga pake tab
            */
           <Grid container direction="column" spacing={2}>
-            {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-              return (
-                <AnnouncementItem
-                  link={`/materi/${row._id}`}
-                  primaryText={row.announcementtitle}
-                  subPrimaryText={row.author_name}
-                  secondaryText={
-                    moment(row.createdAt)
+            {stableSort(rows, getComparator(order, orderBy)).map(
+              (row, index) => {
+                return (
+                  <AnnouncementItem
+                    link={`/materi/${row._id}`}
+                    primaryText={row.announcementtitle}
+                    subPrimaryText={row.author_name}
+                    secondaryText={moment(row.createdAt)
                       .locale("id")
-                      .format("DD MMM YYYY")
-                  }
-                  subSecondaryText={
-                    moment(row.createdAt)
+                      .format("DD MMM YYYY")}
+                    subSecondaryText={moment(row.createdAt)
                       .locale("id")
-                      .format("HH.mm")
-                  }
-                />
-              );
-            })}
+                      .format("HH.mm")}
+                  />
+                );
+              }
+            )}
           </Grid>
         )}
       </TabPanel>
@@ -1319,25 +1348,23 @@ function AnnouncementList(props) {
         ) : (
           /* Masih belum oke, belum disesuain itemnya untuk guru bisa edit dll */
           <Grid container direction="column" spacing={2}>
-            {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-              return (
-                <AnnouncementItem
-                  link={`/materi/${row._id}`}
-                  primaryText={row.announcementtitle}
-                  subPrimaryText={row.author_name}
-                  secondaryText={
-                    moment(row.createdAt)
+            {stableSort(rows, getComparator(order, orderBy)).map(
+              (row, index) => {
+                return (
+                  <AnnouncementItem
+                    link={`/materi/${row._id}`}
+                    primaryText={row.announcementtitle}
+                    subPrimaryText={row.author_name}
+                    secondaryText={moment(row.createdAt)
                       .locale("id")
-                      .format("DD MMM YYYY")
-                  }
-                  subSecondaryText={
-                    moment(row.createdAt)
+                      .format("DD MMM YYYY")}
+                    subSecondaryText={moment(row.createdAt)
                       .locale("id")
-                      .format("HH.mm")
-                  }
-                />
-              );
-            })}
+                      .format("HH.mm")}
+                  />
+                );
+              }
+            )}
           </Grid>
         )}
       </TabPanel>

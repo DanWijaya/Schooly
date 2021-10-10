@@ -25,31 +25,29 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete } from "@material-ui/lab";
 import { withStyles } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
   overrides: {
     MuiOutlinedInput: {
-      input: {
-
-      }
+      input: {},
     },
     MuiInputBase: {
       input: {
-        borderBottom: "none"
-      }
+        borderBottom: "none",
+      },
     },
     MuiAutocomplete: {
       input: {
-        borderBottom: "none"
-      }
+        borderBottom: "none",
+      },
     },
     MuiTextField: {
       root: {
-        borderBottom: "none"
-      }
-    }
+        borderBottom: "none",
+      },
+    },
   },
 });
 
@@ -82,7 +80,7 @@ const styles = (theme) => ({
     },
   },
   underline: {
-    padding: 0
+    padding: 0,
   },
 });
 
@@ -102,16 +100,14 @@ class EditClass extends Component {
       teacher_options: [],
       openUploadDialog: null,
       mata_pelajaran: null,
-      allSubjectObject: null
+      allSubjectObject: null,
     };
-    const { id } = this.props.match.params;
     // console.log(id);
     // console.log("Aduh");
-    this.props.setCurrentClass(id);
   }
 
   onChange = (e, otherfield = null) => {
-    // otherfield ini adalah yang untuk field controllers Select atau variannya. 
+    // otherfield ini adalah yang untuk field controllers Select atau variannya.
     // Karena Select ini tidak memiliki nilai e.target.id, maka awalnya kita lakukan check dulu jika
     let field = otherfield ? otherfield : e.target.id;
     if (this.state.errors[field]) {
@@ -131,25 +127,30 @@ class EditClass extends Component {
       this.handleOpenUploadDialog();
     }
 
-    if ((prevState.mata_pelajaran === null) && (Object.keys(this.props.classesCollection.kelas).length !== 0) &&
-      this.props.subjectsCollection.all_subjects && (this.props.subjectsCollection.all_subjects.length !== 0)
+    if (
+      prevState.mata_pelajaran === null &&
+      Object.keys(this.props.classesCollection.kelas).length !== 0 &&
+      this.props.subjectsCollection.all_subjects &&
+      this.props.subjectsCollection.all_subjects.length !== 0
     ) {
       let all_subjects_obj = {};
       for (let subject of this.props.subjectsCollection.all_subjects) {
         all_subjects_obj[subject._id] = subject.name;
       }
       this.setState({
-        mata_pelajaran: this.props.classesCollection.kelas.subject_assigned.map((subjectId) => {
-          return { _id: subjectId, name: all_subjects_obj[subjectId] }
-        }),
-        allSubjectObject: this.props.subjectsCollection.all_subjects.map((subject) => {
-          return { _id: subject._id, name: subject.name }
-        }),
-      })
+        mata_pelajaran: this.props.classesCollection.kelas.subject_assigned.map(
+          (subjectId) => {
+            return { _id: subjectId, name: all_subjects_obj[subjectId] };
+          }
+        ),
+        allSubjectObject: this.props.subjectsCollection.all_subjects.map(
+          (subject) => {
+            return { _id: subject._id, name: subject.name };
+          }
+        ),
+      });
     }
-    console.log("state");
-    console.log(this.state);
-  };
+  }
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
@@ -163,16 +164,17 @@ class EditClass extends Component {
     if (
       Boolean(kelas) &&
       Array.isArray(all_classes) &&
-      all_classes.length !== 0 &&
-      Array.isArray(all_teachers) &&
-      all_teachers.length !== 0
+      Array.isArray(all_teachers)
+      // all_classes.length !== 0 &&
+      // all_teachers.length !== 0
     ) {
+      console.log("Ini kelasnya : ", kelas);
       let all_walikelas = new Set(all_classes.map((cls) => cls.walikelas));
       all_walikelas.delete(kelas.walikelas);
-      let teacher_options = [{ _id: null, name: 'Kosong' }];
-      teacher_options = teacher_options.concat(all_teachers.filter(
-        (teacher) => !all_walikelas.has(teacher._id)
-      ));
+      let teacher_options = [{ _id: null, name: "Kosong" }];
+      teacher_options = teacher_options.concat(
+        all_teachers.filter((teacher) => !all_walikelas.has(teacher._id))
+      );
 
       this.setState({
         name: kelas.name,
@@ -198,8 +200,8 @@ class EditClass extends Component {
       ketua_kelas: this.state.ketua_kelas,
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
-      
-      mata_pelajaran: this.state.mata_pelajaran.map((matpel) => (matpel._id))
+
+      mata_pelajaran: this.state.mata_pelajaran.map((matpel) => matpel._id),
     };
     this.props
       .updateClass(classObject, id, this.props.history)
@@ -210,11 +212,23 @@ class EditClass extends Component {
   };
 
   componentDidMount() {
-    const { getTeachers, getStudentsByClass, getAllClass, getAllSubjects } = this.props;
-    getTeachers();
+    const { user } = this.props.auth;
+    const { id } = this.props.match.params;
+    const {
+      getTeachers,
+      getStudentsByClass,
+      getAllClass,
+      getAllSubjects,
+      setCurrentClass,
+    } = this.props;
+    if (id) {
+      //Case when the student opens view class and not assigned to any class yet.
+      setCurrentClass(id);
+    }
+    getTeachers(user.unit);
     getStudentsByClass(this.props.match.params.id);
-    getAllClass();
-    getAllSubjects();
+    getAllClass(user.unit);
+    getAllSubjects(this.props.auth.user.unit);
   }
 
   componentWillUnmount() {
@@ -333,22 +347,23 @@ class EditClass extends Component {
                             this.onChange(event, "walikelas");
                           }}
                         >
-                          {(this.state.teacher_options !== null) ? (
-                            this.state.teacher_options.map((teacherInfo) => (<MenuItem key={teacherInfo._id} value={teacherInfo._id}>
-                              {(teacherInfo._id !== null)
-                                ? teacherInfo.name
-                                : <em>{teacherInfo.name}</em>
-                              }
-                            </MenuItem>
-                            ))
-                          ) : (
-                            null
-                          )}
+                          {this.state.teacher_options !== null
+                            ? this.state.teacher_options.map((teacherInfo) => (
+                                <MenuItem
+                                  key={teacherInfo._id}
+                                  value={teacherInfo._id}
+                                >
+                                  {teacherInfo._id !== null ? (
+                                    teacherInfo.name
+                                  ) : (
+                                    <em>{teacherInfo.name}</em>
+                                  )}
+                                </MenuItem>
+                              ))
+                            : null}
                           {/* {showValue(teacher_options, "teacher")} */}
                         </Select>
-                        <FormHelperText>
-
-                        </FormHelperText>
+                        <FormHelperText></FormHelperText>
                       </FormControl>
                     </Grid>
                     <Grid item>
@@ -368,11 +383,22 @@ class EditClass extends Component {
                         <Autocomplete
                           multiple
                           id="tags-outlined"
-                          options={this.state.allSubjectObject ? this.state.allSubjectObject : []}
+                          options={
+                            this.state.allSubjectObject
+                              ? this.state.allSubjectObject
+                              : []
+                          }
                           getOptionLabel={(option) => option.name}
                           filterSelectedOptions
-                          classes={{ input: classes.underline, inputRoot: classes.underline }}
-                          value={this.state.mata_pelajaran ? this.state.mata_pelajaran : []}
+                          classes={{
+                            input: classes.underline,
+                            inputRoot: classes.underline,
+                          }}
+                          value={
+                            this.state.mata_pelajaran
+                              ? this.state.mata_pelajaran
+                              : []
+                          }
                           onChange={(event, value) => {
                             this.onChange(value, "mata_pelajaran");
                           }}

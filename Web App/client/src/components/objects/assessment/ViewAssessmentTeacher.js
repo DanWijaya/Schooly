@@ -5,7 +5,10 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getOneAssessment, deleteAssessment } from "../../../actions/AssessmentActions";
+import {
+  getOneAssessment,
+  deleteAssessment,
+} from "../../../actions/AssessmentActions";
 import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
 import Latex from "../../misc/latex/Latex";
 import CustomLinkify from "../../misc/linkify/Linkify";
@@ -24,7 +27,7 @@ import {
   Paper,
   Snackbar,
   Tooltip,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import SwitchBase from "@material-ui/core/internal/SwitchBase";
 import Alert from "@material-ui/lab/Alert";
@@ -36,7 +39,7 @@ import {
   Edit as EditIcon,
   FiberManualRecord as FiberManualRecordIcon,
   Link as LinkIcon,
-  PlaylistAddCheck as PlaylistAddCheckIcon
+  PlaylistAddCheck as PlaylistAddCheckIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -61,7 +64,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.light,
   },
   seeResultsButton: {
-    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    boxShadow:
+      "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -142,20 +146,22 @@ function ViewAssessmentTeacher(props) {
   const [copySnackbarOpen, setOpenCopySnackBar] = React.useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedAssessmentId, setSelectedAssessmentId] = React.useState(null);
-  const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
+  const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(
+    null
+  );
   const [lampiranUrls, setLampiranUrls] = React.useState(new Map());
+  const { user } = props.auth;
 
   React.useEffect(() => {
     getOneAssessment(assessment_id);
-    getAllClass("map");
-    getAllSubjects("map");
+    getAllClass(user.unit, "map");
+    getAllSubjects(user.unit, "map");
     getFileAssessment(assessment_id).then((result) => setLampiranUrls(result));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onDeleteAssessment = (id) => {
-    deleteAssessment(id, type, history).then((res) => {
-    });
+    deleteAssessment(id, type, history).then((res) => {});
   };
 
   // Delete Dialog
@@ -184,7 +190,7 @@ function ViewAssessmentTeacher(props) {
         </span>
       );
       iterator++;
-    };
+    }
 
     return (
       /* <Latex content={splitResult}/> */
@@ -230,7 +236,7 @@ function ViewAssessmentTeacher(props) {
   return (
     <div className={classes.root}>
       <Grid container direction="column" spacing={2}>
-        <Grid item >
+        <Grid item>
           <Paper className={classes.assessmentPaper}>
             <Typography variant="h4" style={{ marginBottom: "5px" }}>
               {selectedAssessments.name}
@@ -242,7 +248,8 @@ function ViewAssessmentTeacher(props) {
               Oleh:
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Waktu Dibuat: {moment(selectedAssessments.createdAt)
+              Waktu Dibuat:{" "}
+              {moment(selectedAssessments.createdAt)
                 .locale("id")
                 .format("DD MMM YYYY, HH.mm")}
             </Typography>
@@ -273,12 +280,14 @@ function ViewAssessmentTeacher(props) {
                   Waktu Pengerjaan:
                 </Typography>
                 <Typography>
-                  Mulai - {moment(selectedAssessments.start_date)
+                  Mulai -{" "}
+                  {moment(selectedAssessments.start_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
                 </Typography>
                 <Typography>
-                  Selesai - {moment(selectedAssessments.end_date)
+                  Selesai -{" "}
+                  {moment(selectedAssessments.end_date)
                     .locale("id")
                     .format("DD MMM YYYY, HH:mm")}
                 </Typography>
@@ -297,12 +306,19 @@ function ViewAssessmentTeacher(props) {
             </Grid>
           </Paper>
         </Grid>
-        <Grid item container justify="space-between" alignItems="center" spacing={1}>
+        <Grid
+          item
+          container
+          justify="space-between"
+          alignItems="center"
+          spacing={1}
+        >
           <Grid item>
             <Link
-              to={selectedAssessments.type === "Kuis"
-                ? `/daftar-kuis-terkumpul/${assessment_id}`
-                : `/daftar-ujian-terkumpul/${assessment_id}`
+              to={
+                selectedAssessments.type === "Kuis"
+                  ? `/daftar-kuis-terkumpul/${assessment_id}`
+                  : `/daftar-ujian-terkumpul/${assessment_id}`
               }
               style={{ pointerEvents: !checkSubmissionExist() ? "none" : null }}
             >
@@ -330,7 +346,14 @@ function ViewAssessmentTeacher(props) {
               </Hidden>
             </Link>
           </Grid>
-          <Grid item xs container justify="flex-end" alignItems="center" spacing={1}>
+          <Grid
+            item
+            xs
+            container
+            justify="flex-end"
+            alignItems="center"
+            spacing={1}
+          >
             <Grid item>
               <Tooltip title="Salin Tautan">
                 <Button
@@ -342,33 +365,34 @@ function ViewAssessmentTeacher(props) {
                 </Button>
               </Tooltip>
             </Grid>
-            {!checkSubmissionExist() ?
+            {!checkSubmissionExist() ? (
               <Grid item>
-                <Link to={type === "Kuis" ? `/sunting-kuis/${assessment_id}` : `/sunting-ujian/${assessment_id}`}>
+                <Link
+                  to={
+                    type === "Kuis"
+                      ? `/sunting-kuis/${assessment_id}`
+                      : `/sunting-ujian/${assessment_id}`
+                  }
+                >
                   <Hidden xsDown>
                     <Button
                       variant="outlined"
                       className={classes.editButton}
                       startIcon={<EditIcon style={{ color: "grey" }} />}
                     >
-                      <Typography>
-                        Sunting
-                      </Typography>
+                      <Typography>Sunting</Typography>
                     </Button>
                   </Hidden>
                   <Hidden smUp>
                     <Tooltip title="Sunting">
-                      <Button
-                        variant="outlined"
-                        className={classes.editButton}
-                      >
+                      <Button variant="outlined" className={classes.editButton}>
                         <EditIcon />
                       </Button>
                     </Tooltip>
                   </Hidden>
                 </Link>
               </Grid>
-            : null}
+            ) : null}
             <Grid item>
               <Hidden xsDown>
                 <Button
@@ -379,9 +403,7 @@ function ViewAssessmentTeacher(props) {
                     handleOpenDeleteDialog(e, assessment_id);
                   }}
                 >
-                  <Typography>
-                    Hapus
-                  </Typography>
+                  <Typography>Hapus</Typography>
                 </Button>
               </Hidden>
               <Hidden smUp>
@@ -410,10 +432,7 @@ function ViewAssessmentTeacher(props) {
                       <Typography variant="h6" color="primary" gutterBottom>
                         Soal {i + 1}
                       </Typography>
-                      <GridList
-                        cols={3}
-                        cellHeight={300}
-                      >
+                      <GridList cols={3} cellHeight={300}>
                         {question.lampiran.map((img, i) => {
                           let image = img;
                           if (lampiranUrls.has(image.toString())) {
@@ -437,7 +456,10 @@ function ViewAssessmentTeacher(props) {
                       {question.type === "radio" ? (
                         <Typography
                           align="justify"
-                          style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                          style={{
+                            wordBreak: "break-word",
+                            whiteSpace: "pre-wrap",
+                          }}
                         >
                           <Latex content={question.name} />
                           {/* <CustomLinkify text={question.name} /> */}
@@ -445,7 +467,10 @@ function ViewAssessmentTeacher(props) {
                       ) : question.type === "checkbox" ? (
                         <Typography
                           align="justify"
-                          style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                          style={{
+                            wordBreak: "break-word",
+                            whiteSpace: "pre-wrap",
+                          }}
                         >
                           <Latex content={question.name} />
                           {/* <CustomLinkify text={question.name} /> */}
@@ -453,14 +478,20 @@ function ViewAssessmentTeacher(props) {
                       ) : question.type === "shorttext" ? (
                         <Typography
                           align="justify"
-                          style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                          style={{
+                            wordBreak: "break-word",
+                            whiteSpace: "pre-wrap",
+                          }}
                         >
                           {generateSoalShortTextTeacher(question, i)}
                         </Typography>
                       ) : question.type === "longtext" ? (
                         <Typography
                           align="justify"
-                          style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                          style={{
+                            wordBreak: "break-word",
+                            whiteSpace: "pre-wrap",
+                          }}
                         >
                           <Latex content={question.name} />
                           {/* <CustomLinkify text={question.name} /> */}
@@ -468,50 +499,49 @@ function ViewAssessmentTeacher(props) {
                       ) : null}
                     </Grid>
                     <Grid item>
-                      {question.type === "radio" ?
+                      {question.type === "radio" ? (
                         question.options.map((option, i) => (
-                            <Grid container alignItems="center">
-                              <Grid item className={classes.bullets}>
-                                {question.answer[0] ===
-                                String.fromCharCode(97 + i).toUpperCase() ? (
-                                  <CheckCircleIcon
-                                    className={classes.checkIcon}
-                                  />
-                                ) : (
-                                  <FiberManualRecordIcon
-                                    className={classes.fiberIcon}
-                                  />
-                                )}
-                              </Grid>
-                              <Typography className={classes.optionText}>
-                                {option}
-                              </Typography>
+                          <Grid container alignItems="center">
+                            <Grid item className={classes.bullets}>
+                              {question.answer[0] ===
+                              String.fromCharCode(97 + i).toUpperCase() ? (
+                                <CheckCircleIcon
+                                  className={classes.checkIcon}
+                                />
+                              ) : (
+                                <FiberManualRecordIcon
+                                  className={classes.fiberIcon}
+                                />
+                              )}
                             </Grid>
-                          ))
-                      : question.type === "checkbox" ?
+                            <Typography className={classes.optionText}>
+                              {option}
+                            </Typography>
+                          </Grid>
+                        ))
+                      ) : question.type === "checkbox" ? (
                         question.options.map((option, i) => (
-                            <Grid container alignItems="center">
-                              <Grid item className={classes.bullets}>
-                                {question.answer.includes(
-                                  String.fromCharCode(97 + i).toUpperCase()
-                                ) ? (
-                                  <CheckCircleIcon
-                                    className={classes.checkIcon}
-                                  />
-                                ) : (
-                                  <FiberManualRecordIcon
-                                    className={classes.fiberIcon}
-                                  />
-                                )}
-                              </Grid>
-                              <Typography className={classes.optionText}>
-                                {option}
-                              </Typography>
+                          <Grid container alignItems="center">
+                            <Grid item className={classes.bullets}>
+                              {question.answer.includes(
+                                String.fromCharCode(97 + i).toUpperCase()
+                              ) ? (
+                                <CheckCircleIcon
+                                  className={classes.checkIcon}
+                                />
+                              ) : (
+                                <FiberManualRecordIcon
+                                  className={classes.fiberIcon}
+                                />
+                              )}
                             </Grid>
-                          ))
-                      : question.type === "shorttext" ?
-                        null
-                      : question.type === "longtext" ?
+                            <Typography className={classes.optionText}>
+                              {option}
+                            </Typography>
+                          </Grid>
+                        ))
+                      ) : question.type ===
+                        "shorttext" ? null : question.type === "longtext" ? (
                         <Typography
                           color="textSecondary"
                           align="justify"
@@ -523,7 +553,7 @@ function ViewAssessmentTeacher(props) {
                           {/* <Latex content={question.answer}/> */}
                           <CustomLinkify text={question.answer} />
                         </Typography>
-                      : null}
+                      ) : null}
                     </Grid>
                   </Grid>
                 </Paper>

@@ -278,7 +278,8 @@ class EditAssessment extends Component {
   imageUploader = React.createRef(null); // untuk ngerefer html object yang lain
   // linkToShare = "TEST";
 
-  componentDidMount() {
+  componentDidMount(){ 
+    const { user } = this.props.auth;
     const {
       getOneAssessment,
       getAllClass,
@@ -286,9 +287,9 @@ class EditAssessment extends Component {
       handleSideDrawerExist,
     } = this.props;
     handleSideDrawerExist(false);
-    getAllClass();
+    getAllClass(user.unit);
     getOneAssessment(this.props.match.params.id);
-    getAllSubjects();
+    getAllSubjects(user.unit);
   }
 
   componentWillUnmount() {

@@ -10,7 +10,11 @@ import { getAllTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
-import { getStudents, getStudentsByClass, getTeachers } from "../../../actions/UserActions";
+import {
+  getStudents,
+  getStudentsByClass,
+  getTeachers,
+} from "../../../actions/UserActions";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
@@ -42,13 +46,15 @@ import {
   Pageview as PageviewIcon,
   Error as ErrorIcon,
   MenuBook as MenuBookIcon,
-  Warning as WarningIcon
+  Warning as WarningIcon,
+  Web as UnitIcon,
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
 import { AiOutlineUserSwitch } from "react-icons/ai";
 import { BsClipboardData } from "react-icons/bs";
 import { FaChalkboard } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {
@@ -307,7 +313,7 @@ function ListAssessments(props) {
     classId,
     classes,
     all_subjects_map,
-    all_teachers
+    all_teachers,
   } = props;
 
   function AssessmentListItem(props) {
@@ -315,8 +321,20 @@ function ListAssessments(props) {
     const [openDialog, setOpenDialog] = React.useState(false);
     const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-    const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
-      setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
+    const handleOpenDialog = (
+      title,
+      subject,
+      teacher_name,
+      start_date,
+      end_date
+    ) => {
+      setCurrentDialogInfo({
+        title,
+        subject,
+        teacher_name,
+        start_date,
+        end_date,
+      });
       setOpenDialog(true);
     };
 
@@ -396,10 +414,7 @@ function ListAssessments(props) {
             >
               Guru: {currentDialogInfo.teacher_name}
             </Typography>
-            <Typography
-              variant="subtitle1"
-              align="center"
-            >
+            <Typography variant="subtitle1" align="center">
               Mulai: {currentDialogInfo.start_date}
             </Typography>
             <Typography variant="subtitle1" align="center">
@@ -421,7 +436,7 @@ function ListAssessments(props) {
   }
 
   let AssessmentsList = [];
-  let TeacherList = []
+  let TeacherList = [];
   let result = [];
   if (Boolean(all_assessments.length)) {
     var i;
@@ -657,7 +672,7 @@ class Dashboard extends Component {
       taskGraphCurrentSubject: null,
       quizGraphCurrentSubject: null,
       examGraphCurrentSubject: null,
-      allowedSubjectIndex: null
+      allowedSubjectIndex: null,
     };
   }
 
@@ -670,26 +685,28 @@ class Dashboard extends Component {
       getStudentsByClass,
       getStudents,
       setCurrentClass,
-      getTeachers
+      getTeachers,
     } = this.props;
     // const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
-    const { user } = this.props.auth;
-
-    getAllTask(); // actions yang membuat GET request ke Database.
-    getAllSubjects();
-    getTeachers();
-    getAllSubjects("map"); // untuk dapatin subject"nya gitu
-    setCurrentClass(user.kelas);
+    const { user, all_roles } = this.props.auth;
+    if (user.role != all_roles.SUPERADMIN) {
+      getAllTask(user.unit); // actions yang membuat GET request ke Database.
+      getAllSubjects(user.unit);
+      getTeachers(user.unit);
+      getAllSubjects(user.unit, "map");
+      if (user.role === all_roles.STUDENT) {
+        setCurrentClass(user.kelas);
+      }
+      if (user.role === "Student") {
+        getStudentsByClass(user.kelas);
+      }
+      getAllAssessments(user.unit);
+      getAllTaskFilesByUser(user._id); // yang dapatin takfiles cuma berlaku untuk student soalnya
+      getStudents(user.unit);
+    }
 
     // const { all_subjects_map } = this.props.subjectsCollection
     // let subjectArray = Object.keys(all_subjects_map)
-
-    if (user.role === "Student") {
-      getStudentsByClass(user.kelas);
-    }
-    getAllAssessments();
-    getAllTaskFilesByUser(user._id); // yang dapatin takfiles cuma berlaku untuk student soalnya
-    getStudents();
   }
 
   componentWillUnmount() {
@@ -706,78 +723,78 @@ class Dashboard extends Component {
 
   changeGraphSubject = (workType, direction, subjectsLength) => {
     if (workType === "Tugas") {
-      let currentIndex = this.state.allowedSubjectIndex.indexOf(this.state.taskGraphCurrentSubject);
+      let currentIndex = this.state.allowedSubjectIndex.indexOf(
+        this.state.taskGraphCurrentSubject
+      );
       if (direction === "Left") {
         let newIndex;
         if (currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
           newIndex = 0;
-        }
-        else {
+        } else {
           newIndex = currentIndex + 1;
         }
         this.setState({
-          taskGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
+          taskGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex],
         });
       } else if (direction === "Right") {
         let newIndex;
         if (currentIndex - 1 < 0) {
           newIndex = this.state.allowedSubjectIndex.length - 1;
-        }
-        else {
+        } else {
           newIndex = currentIndex - 1;
         }
         this.setState({
-          taskGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
+          taskGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex],
         });
       }
     } else if (workType === "Kuis") {
-      let currentIndex = this.state.allowedSubjectIndex.indexOf(this.state.quizGraphCurrentSubject);
+      let currentIndex = this.state.allowedSubjectIndex.indexOf(
+        this.state.quizGraphCurrentSubject
+      );
       if (direction === "Left") {
         let newIndex;
         if (currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
           newIndex = 0;
-        }
-        else {
+        } else {
           newIndex = currentIndex + 1;
         }
         this.setState({
-          taskGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
+          taskGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex],
         });
       } else if (direction === "Right") {
         let newIndex;
         if (currentIndex - 1 < 0) {
           newIndex = this.state.allowedSubjectIndex.length - 1;
-        }
-        else {
+        } else {
           newIndex = currentIndex - 1;
         }
         this.setState({
-          quizGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
+          quizGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex],
         });
       }
     } else if (workType === "Ujian") {
-      let currentIndex = this.state.allowedSubjectIndex.indexOf(this.state.examGraphCurrentSubject);
+      let currentIndex = this.state.allowedSubjectIndex.indexOf(
+        this.state.examGraphCurrentSubject
+      );
       if (direction === "Left") {
         let newIndex;
         if (currentIndex + 1 >= this.state.allowedSubjectIndex.length) {
           newIndex = 0;
-        }
-        else {
+        } else {
           newIndex = currentIndex + 1;
         }
         this.setState({
-          examGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
+          examGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex],
         });
       } else if (direction === "Right") {
         let newIndex;
         if (currentIndex - 1 < 0) {
           newIndex = this.state.allowedSubjectIndex.length - 1;
-        }
-        else {
+        } else {
           newIndex = currentIndex - 1;
         }
         this.setState({
-          examGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex]
+          examGraphCurrentSubject: this.state.allowedSubjectIndex[newIndex],
         });
       }
     }
@@ -786,7 +803,7 @@ class Dashboard extends Component {
   render() {
     const { classes, tasksCollection } = this.props;
     const { user, all_students, all_teachers } = this.props.auth;
-    const { kelas } = this.props.classesCollection
+    const { kelas } = this.props.classesCollection;
     const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { all_assessments } = this.props.assessmentsCollection;
     const { all_user_files } = this.props.filesCollection;
@@ -799,8 +816,8 @@ class Dashboard extends Component {
       Object.keys(kelas).length !== 0
     ) {
       let allowedIndexes = [];
-      for(let i = 0; i < all_subjects.length; i++) {
-        if(kelas.subject_assigned.includes(all_subjects[i]._id)) {
+      for (let i = 0; i < all_subjects.length; i++) {
+        if (kelas.subject_assigned.includes(all_subjects[i]._id)) {
           allowedIndexes.push(i);
         }
       }
@@ -809,21 +826,24 @@ class Dashboard extends Component {
         this.state.taskGraphCurrentSubject === null &&
         all_subjects.length !== 0
       ) {
-        let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+        let randomNumber =
+          allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
         this.setState({ taskGraphCurrentSubject: randomNumber });
       }
       if (
         this.state.quizGraphCurrentSubject === null &&
         all_subjects.length !== 0
       ) {
-        let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+        let randomNumber =
+          allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
         this.setState({ quizGraphCurrentSubject: randomNumber });
       }
       if (
         this.state.examGraphCurrentSubject === null &&
         all_subjects.length !== 0
       ) {
-        let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
+        let randomNumber =
+          allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
         this.setState({ examGraphCurrentSubject: randomNumber });
       }
     }
@@ -1178,9 +1198,11 @@ class Dashboard extends Component {
         <Paper
           elevation={0}
           className={
-            user.role === "Student" ? classes.welcomePaperStudent
-            : user.role === "Teacher" ? classes.welcomePaperTeacher
-            : classes.welcomePaperAdmin
+            user.role === "Student"
+              ? classes.welcomePaperStudent
+              : user.role === "Teacher"
+              ? classes.welcomePaperTeacher
+              : classes.welcomePaperAdmin
           }
         >
           <Typography variant="h4" gutterBottom>
@@ -1526,54 +1548,74 @@ class Dashboard extends Component {
                     }}
                   >
                     <Link to="/buat-pengumuman">
-                      <MenuItem
-                        className={classes.menuItem}
-                      >
-                      <ListItemIcon>
-                        <AnnouncementIcon />
-                      </ListItemIcon>
-                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Pengumuman</Typography>}/>
-                    </MenuItem>
+                      <MenuItem className={classes.menuItem}>
+                        <ListItemIcon>
+                          <AnnouncementIcon />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <Typography className={classes.menuItemText}>
+                              Buat Pengumuman
+                            </Typography>
+                          }
+                        />
+                      </MenuItem>
                     </Link>
                     <Link to="/buat-materi">
-                    <MenuItem
-                      className={classes.menuItem}
-                    >
-                      <ListItemIcon>
-                        <MenuBookIcon />
-                      </ListItemIcon>
-                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Materi</Typography>} />
-                    </MenuItem>
+                      <MenuItem className={classes.menuItem}>
+                        <ListItemIcon>
+                          <MenuBookIcon />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <Typography className={classes.menuItemText}>
+                              Buat Materi
+                            </Typography>
+                          }
+                        />
+                      </MenuItem>
                     </Link>
                     <Link to="/buat-tugas">
-                    <MenuItem
-                      className={classes.menuItem}
-                    >
-                      <ListItemIcon>
-                        <AssignmentIcon />
-                      </ListItemIcon>
-                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Tugas</Typography>} />
-                    </MenuItem>
+                      <MenuItem className={classes.menuItem}>
+                        <ListItemIcon>
+                          <AssignmentIcon />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <Typography className={classes.menuItemText}>
+                              Buat Tugas
+                            </Typography>
+                          }
+                        />
+                      </MenuItem>
                     </Link>
                     <Link to="/buat-kuis">
-                    <MenuItem
-                      className={classes.menuItem}
-                    >
-                      <ListItemIcon>
-                        <FaClipboardList />
-                      </ListItemIcon>
-                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Kuis</Typography>} />
-                    </MenuItem>
+                      <MenuItem className={classes.menuItem}>
+                        <ListItemIcon>
+                          <FaClipboardList />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <Typography className={classes.menuItemText}>
+                              Buat Kuis
+                            </Typography>
+                          }
+                        />
+                      </MenuItem>
                     </Link>
                     <Link to="/buat-ujian">
-                    <MenuItem
-                      className={classes.menuItem}
-                    >
-                      <ListItemIcon>
-                        <BsClipboardData />
-                      </ListItemIcon>
-                      <ListItemText primary={<Typography className={classes.menuItemText}>Buat Ujian</Typography>} />
-                    </MenuItem>
+                      <MenuItem className={classes.menuItem}>
+                        <ListItemIcon>
+                          <BsClipboardData />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <Typography className={classes.menuItemText}>
+                              Buat Ujian
+                            </Typography>
+                          }
+                        />
+                      </MenuItem>
                     </Link>
                   </Menu>
                 </Grid>
@@ -1692,7 +1734,7 @@ class Dashboard extends Component {
                 </Grid>
               </Grid>
             </>
-          ) : (
+          ) : user.role === "Admin" ? (
             <Grid
               item
               container
@@ -1752,7 +1794,85 @@ class Dashboard extends Component {
                     className={classes.menuItem}
                   >
                     <ListItemIcon>
-                      <FaChalkboard
+                      <FaChalkboard className={classes.manageClassIcon} />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Kelas" />
+                  </MenuItem>
+                  <MenuItem
+                    button
+                    component="a"
+                    href="/buat-pengumuman"
+                    className={classes.menuItem}
+                  >
+                    <ListItemIcon>
+                      <AnnouncementIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Pengumuman" />
+                  </MenuItem>
+                </Menu>
+              </Grid>
+            </Grid>
+          ) : user.role === "SuperAdmin" ? (
+            <Grid
+              item
+              container
+              direction="row"
+              justify="flex-end"
+              alignItems="center"
+              spacing={1}
+            >
+              <Grid item>
+                <Link to="/pengelola-aktif">
+                  <Fab
+                    variant="extended"
+                    className={classes.manageHomeroomTeacherButton}
+                  >
+                    <AiOutlineUserSwitch
+                      className={classes.manageHomeroomTeacherIcon}
+                    />
+                    Atur Pengelola
+                  </Fab>
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link to="/daftar-unit">
+                  <Fab variant="extended" className={classes.manageClassButton}>
+                    <UnitIcon className={classes.manageClassIcon} />
+                    Atur Unit sekolah
+                  </Fab>
+                </Link>
+              </Grid>
+              <Grid item>
+                <Fab
+                  className={classes.createButton}
+                  onClick={(event) => this.handleMenuOpen(event)}
+                >
+                  <AddIcon />
+                </Fab>
+                <Menu
+                  keepMounted
+                  anchorEl={this.state.anchorEl}
+                  open={Boolean(this.state.anchorEl)}
+                  onClose={this.handleMenuClose}
+                  getContentAnchorEl={null}
+                  style={{ marginTop: "10px" }}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  <MenuItem
+                    button
+                    component="a"
+                    href="/buat-kelas"
+                    className={classes.menuItem}
+                  >
+                    <ListItemIcon>
+                      <FaChalkboardTeacher
                         className={classes.manageClassIcon}
                       />
                     </ListItemIcon>
@@ -1772,7 +1892,7 @@ class Dashboard extends Component {
                 </Menu>
               </Grid>
             </Grid>
-          )}
+          ) : null}
         </div>
       </div>
     );
@@ -1792,7 +1912,7 @@ Dashboard.propTypes = {
   getStudentsByClass: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
-  setCurrentClass: PropTypes.func.isRequired
+  setCurrentClass: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -1813,6 +1933,6 @@ export default withRouter(
     getStudentsByClass,
     getAllTask,
     getAllAssessments,
-    getAllTaskFilesByUser
+    getAllTaskFilesByUser,
   })(withStyles(styles)(Dashboard))
 );
