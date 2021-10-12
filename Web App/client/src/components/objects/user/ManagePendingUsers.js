@@ -38,7 +38,7 @@ import {
   Tabs,
   TableSortLabel,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
@@ -49,10 +49,11 @@ import {
   Clear as ClearIcon,
   IndeterminateCheckBox as IndeterminateCheckBoxIcon,
   Search as SearchIcon,
-  Sort as SortIcon
+  Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaUserLock } from "react-icons/fa";
+import OptionMenu from "../../misc/menu/OptionMenu";
 
 function createData(
   _id,
@@ -143,13 +144,13 @@ const ManageUsersToolbar = (props) => {
       id: "name",
       numeric: false,
       disablePadding: true,
-      label: "Nama"
+      label: "Nama",
     },
     {
       id: "email",
       numeric: false,
       disablePadding: false,
-      label: "Email"
+      label: "Email",
     },
     {
       id: "phone",
@@ -167,7 +168,7 @@ const ManageUsersToolbar = (props) => {
       id: "address",
       numeric: false,
       disablePadding: false,
-      label: "Alamat"
+      label: "Alamat",
     },
     {
       id: "emergency_phone",
@@ -195,19 +196,17 @@ const ManageUsersToolbar = (props) => {
     updateSearchFilter("");
   };
 
-  let searchRef = useRef();
-
-  useEffect(() => {
-    let handler = (event) => {
-      if (!searchRef.current.contains(event.target)) {
-        setSearchBarFocus(false);
-      }
-    }
-    document.addEventListener("mousedown", handler)
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    }
-  });
+  // useEffect(() => {
+  //   let handler = (event) => {
+  //     if (!searchRef.current.contains(event.target)) {
+  //       setSearchBarFocus(false);
+  //     }
+  //   }
+  //   document.addEventListener("mousedown", handler)
+  //   return () => {
+  //     document.removeEventListener("mousedown", handler);
+  //   }
+  // });
 
   return (
     <div className={classes.toolbar}>
@@ -219,31 +218,27 @@ const ManageUsersToolbar = (props) => {
             <Checkbox color="primary" />
             */}
             {listCheckbox.length === 0 ? (
-                  <IconButton onClick={() => selectAllData(role)}>
-                    <CheckBoxOutlineBlankIcon style={{ color: "grey" }} />
-                  </IconButton>
-              ) : listCheckbox.length === rowCount ? (
-                  <IconButton onClick={() => deSelectAllData(role)}>
-                    <CheckBoxIcon className={classes.checkboxIcon} />
-                  </IconButton>
-              ) : (
-                  <IconButton onClick={() => deSelectAllData(role)}>
-                    <IndeterminateCheckBoxIcon className={classes.checkboxIcon} />
-                  </IconButton>
-              )}
+              <IconButton onClick={() => selectAllData(role)}>
+                <CheckBoxOutlineBlankIcon style={{ color: "grey" }} />
+              </IconButton>
+            ) : listCheckbox.length === rowCount ? (
+              <IconButton onClick={() => deSelectAllData(role)}>
+                <CheckBoxIcon className={classes.checkboxIcon} />
+              </IconButton>
+            ) : (
+              <IconButton onClick={() => deSelectAllData(role)}>
+                <IndeterminateCheckBoxIcon className={classes.checkboxIcon} />
+              </IconButton>
+            )}
           </Grid>
           <Grid item>
-            <UserMenu
-              options={["Aktifkan", "Hapus"]}
-              role={role}
-              row={null}
-              handleOpenDeleteDialog={OpenDialogCheckboxDelete}
-              handleOpenDisableApproveDialog={OpenDialogCheckboxApprove}
+            <OptionMenu
+              actions={["Hapus"]}
               rowCount={listCheckbox.length === 0}
+              handleActionOnClick={[OpenDialogCheckboxDelete]}
             />
             {CheckboxDialog("Delete", role)}
-            {/* {CheckboxDialog("Approve", role)}
-            {CheckboxDialog("Approve", "Teacher")}
+            {/* {CheckboxDialog("Approve", "Teacher")}
             <LightTooltip title="Aktifkan Pengguna Tercentang">
               <IconButton
                 className={classes.profileApproveButton}
@@ -265,7 +260,14 @@ const ManageUsersToolbar = (props) => {
             */}
           </Grid>
         </Grid>
-        <Grid item xs container justify="flex-end" alignItems="center" spacing={1}>
+        <Grid
+          item
+          xs
+          container
+          justify="flex-end"
+          alignItems="center"
+          spacing={1}
+        >
           <Grid item>
             <Hidden smDown>
               <TextField
@@ -297,7 +299,9 @@ const ManageUsersToolbar = (props) => {
                           e.stopPropagation();
                           onClear(e);
                         }}
-                        style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                        style={{
+                          visibility: !searchFilter ? "hidden" : "visible",
+                        }}
                       >
                         <ClearIcon />
                       </IconButton>
@@ -308,14 +312,6 @@ const ManageUsersToolbar = (props) => {
             </Hidden>
             <Hidden mdUp>
               {searchBarFocus ? (
-                  /* <IconButton
-                  onClick={() => {
-                    setSearchBarFocus(false);
-                    updateSearchFilter("");
-                  }}
-                >
-                  <ArrowBackIcon />
-                </IconButton> */
                 <TextField
                   variant="outlined"
                   id="searchFilterMobile"
@@ -324,7 +320,6 @@ const ManageUsersToolbar = (props) => {
                   autoFocus
                   onClick={(e) => setSearchBarFocus(true)}
                   placeholder={searchFilterHint}
-                  ref={searchRef}
                   InputProps={{
                     style: { borderRadius: "22.5px" },
                     endAdornment: (
@@ -339,7 +334,9 @@ const ManageUsersToolbar = (props) => {
                             e.stopPropagation();
                             onClear(e);
                           }}
-                          style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                          style={{
+                            visibility: !searchFilter ? "hidden" : "visible",
+                          }}
                         >
                           <ClearIcon />
                         </IconButton>
@@ -441,8 +438,9 @@ const useStyles = makeStyles((theme) => ({
   accountItem: {
     color: "black",
     "&:focus, &:hover": {
-      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
-    }
+      boxShadow:
+        "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
+    },
   },
   profileApproveButton: {
     backgroundColor: theme.palette.success.main,
@@ -612,9 +610,14 @@ function ManageUsers(props) {
   };
 
   const handleChangeListStudent = (e, index, row) => {
+    //Handle the check of Checkboxes.
+    e.stopPropagation();
+    e.preventDefault();
     let currentBooleanList = booleanCheckboxStudent;
     currentBooleanList[index] = !currentBooleanList[index];
-    setBooleanCheckboxStudent(currentBooleanList);
+    setBooleanCheckboxStudent([...currentBooleanList]);
+
+    //Handle the list of chosen .
     let status = true;
     let result = [];
     let temp = { checkboxEvent: e, index: index, row: row };
@@ -631,16 +634,19 @@ function ManageUsers(props) {
       result = listCheckboxStudent;
       result.push(temp);
     }
-    setListCheckboxStudent(result);
+    setListCheckboxStudent([...result]);
   };
 
   const handleChangeListTeacher = (e, index, row) => {
+    //Handle the check of Checkboxes.
     let currentBooleanList = booleanCheckboxTeacher;
     currentBooleanList[index] = !currentBooleanList[index];
-    setBooleanCheckboxTeacher(currentBooleanList);
+    setBooleanCheckboxTeacher([...currentBooleanList]);
     let status = true;
     let result = [];
     let temp = { checkboxEvent: e, index: index, row: row };
+
+    //Handle the list of chosen .
     for (let i = 0; i < listCheckboxTeacher.length; i++) {
       if (listCheckboxTeacher[i].row._id === row._id) {
         result = listCheckboxTeacher;
@@ -654,7 +660,7 @@ function ManageUsers(props) {
       result = listCheckboxTeacher;
       result.push(temp);
     }
-    setListCheckboxTeacher(result);
+    setListCheckboxTeacher([...result]);
   };
 
   const handleApproveListStudent = () => {
@@ -817,8 +823,12 @@ function ManageUsers(props) {
   };
 
   React.useEffect(() => {
-    getPendingStudents(user.unit);
-    getPendingTeachers(user.unit);
+    getPendingStudents(user.unit).then((result) => {
+      setBooleanCheckboxStudent(result.map(() => false));
+    });
+    getPendingTeachers(user.unit).then((result) => {
+      setBooleanCheckboxTeacher(result.map(() => false));
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -1120,16 +1130,21 @@ function ManageUsers(props) {
     setOpenSnackbar(false);
   };
 
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = React.useState(0);
   const handleTabs = (e, val) => {
-    setValue(val)
-  }
+    setValue(val);
+  };
 
   document.title = "Schooly | Pengguna Tidak Aktif";
 
   return (
     <div className={classes.root}>
-      <Grid container alignItems="center" spacing={2} className={classes.header}>
+      <Grid
+        container
+        alignItems="center"
+        spacing={2}
+        className={classes.header}
+      >
         <Grid item>
           <div className={classes.headerIcon}>
             <FaUserLock />
@@ -1148,8 +1163,14 @@ function ManageUsers(props) {
         onChange={handleTabs}
         className={classes.userTabs}
       >
-        <Tab label={<Typography className={classes.userTabTitle}>Murid</Typography>} />
-        <Tab label={<Typography className={classes.userTabTitle}>Guru</Typography>} />
+        <Tab
+          label={
+            <Typography className={classes.userTabTitle}>Murid</Typography>
+          }
+        />
+        <Tab
+          label={<Typography className={classes.userTabTitle}>Guru</Typography>}
+        />
       </Tabs>
       <TabPanel value={value} index={0}>
         <ManageUsersToolbar
@@ -1166,15 +1187,9 @@ function ManageUsers(props) {
           currentCheckboxMode={checkboxModeStudent}
           OpenDialogCheckboxDelete={handleOpenCheckboxDeleteDialog}
           OpenDialogCheckboxApprove={handleOpenCheckboxApproveDialog}
-          // CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
-          // CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
           CheckboxDialog={CheckboxDialog}
           lengthListCheckbox={listCheckboxStudent.length}
           listCheckbox={listCheckboxStudent}
-          // reloader={() => autoReloader}
-          // listBooleanCheckbox={currentListBooleanStudent}
-          // listBooleanCheckboxState={booleanCheckboxStudent}
-          // setListBooleanCheckboxState={setBooleanCheckboxStudent}
           selectAllData={selectAllData}
           deSelectAllData={deSelectAllData}
           setSearchBarFocus={setSearchBarFocusS}
@@ -1197,31 +1212,13 @@ function ManageUsers(props) {
                   <Link to={`/lihat-profil/${row._id}`}>
                     <ListItem className={classes.accountItem}>
                       <ListItemIcon>
-                        {booleanCheckboxStudent[index] ?
-                          <Checkbox
-                            color="primary"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                            }}
-                            onChange={(e) => {
-                              handleChangeListStudent(e, index, row);
-                              autoReloader();
-                            }}
-                            checked={booleanCheckboxStudent[index]}
-                          />
-                        :
-                          <Checkbox
-                            color="primary"
-                            checked={false}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                            }}
-                            onChange={(e) => {
-                              handleChangeListStudent(e, index, row);
-                              autoReloader();
-                            }}
-                          />
-                        }
+                        <Checkbox
+                          color="primary"
+                          checked={Boolean(booleanCheckboxStudent[index])}
+                          onClick={(e) => {
+                            handleChangeListStudent(e, index, row);
+                          }}
+                        />
                       </ListItemIcon>
                       <Hidden xsDown>
                         <ListItemAvatar>
@@ -1239,18 +1236,23 @@ function ManageUsers(props) {
                           </Typography>
                         }
                         secondary={
-                          <Typography variant="body2" color="textSecondary" noWrap>
+                          <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            noWrap
+                          >
                             {row.email}
                           </Typography>
                         }
                       />
                       <ListItemSecondaryAction>
-                        <UserMenu
-                          options={["Aktifkan", "Hapus"]}
-                          role={null}
+                        <OptionMenu
+                          actions={["Aktifkan", "Hapus"]}
                           row={row}
-                          handleOpenDeleteDialog={handleOpenDeleteDialog}
-                          handleOpenDisableApproveDialog={handleOpenApproveDialog}
+                          handleActionOnClick={[
+                            handleOpenApproveDialog,
+                            handleOpenDeleteDialog,
+                          ]}
                         />
                       </ListItemSecondaryAction>
                     </ListItem>
@@ -1277,15 +1279,9 @@ function ManageUsers(props) {
           currentCheckboxMode={checkboxModeTeacher}
           OpenDialogCheckboxDelete={handleOpenCheckboxDeleteDialog}
           OpenDialogCheckboxApprove={handleOpenCheckboxApproveDialog}
-          // CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
-          // CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
           CheckboxDialog={CheckboxDialog}
           lengthListCheckbox={listCheckboxTeacher.length}
           listCheckbox={listCheckboxTeacher}
-          // reloader={() => autoReloader}
-          // listBooleanCheckbox={currentListBooleanTeacher}
-          // listBooleanCheckboxState={booleanCheckboxTeacher}
-          // setListBooleanCheckboxState={setBooleanCheckboxTeacher}
           selectAllData={selectAllData}
           deSelectAllData={deSelectAllData}
           setSearchBarFocus={setSearchBarFocusT}
@@ -1294,46 +1290,34 @@ function ManageUsers(props) {
           updateSearchFilter={updateSearchFilterT}
         />
         <Divider />
-          {teacher_rows.length === 0 ? (
-            <Empty />
-          ) : (
-            <List className={classes.userList}>
-              {stableSort(
-                teacher_rows,
-                getComparator(order_teacher, orderBy_teacher)
-              ).map((row, index) => {
+        {teacher_rows.length === 0 ? (
+          <Empty />
+        ) : (
+          <List className={classes.userList}>
+            {stableSort(
+              teacher_rows,
+              getComparator(order_teacher, orderBy_teacher)
+            ).map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;
               return (
                 <div>
                   <ListItem className={classes.accountItem}>
                     <ListItemIcon>
-                      {booleanCheckboxTeacher[index] ?
-                        <Checkbox
-                          onChange={(e) => {
-                            handleChangeListTeacher(e, index, row);
-                            autoReloader();
-                          }}
-                          color="primary"
-                          checked={booleanCheckboxTeacher[index]}
-                        />
-                      :
-                        <Checkbox
-                          onChange={(e) => {
-                            handleChangeListTeacher(e, index, row);
-                            autoReloader();
-                          }}
-                          color="primary"
-                          checked={false}
-                        />
-                      }
+                      <Checkbox
+                        color="primary"
+                        checked={Boolean(booleanCheckboxStudent[index])}
+                        onClick={(e) => {
+                          handleChangeListTeacher(e, index, row);
+                        }}
+                      />
                     </ListItemIcon>
                     <Hidden xsDown>
                       <ListItemAvatar>
-                      {!row.avatar ? (
-                        <Avatar />
-                      ) : (
-                        <Avatar src={`/api/upload/avatar/${row.avatar}`} />
-                      )}
+                        {!row.avatar ? (
+                          <Avatar />
+                        ) : (
+                          <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                        )}
                       </ListItemAvatar>
                     </Hidden>
                     <ListItemText
@@ -1343,27 +1327,32 @@ function ManageUsers(props) {
                         </Typography>
                       }
                       secondary={
-                        <Typography variant="body2" color="textSecondary" noWrap>
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          noWrap
+                        >
                           {row.email}
                         </Typography>
                       }
                     />
                     <ListItemSecondaryAction>
-                      <UserMenu
-                        options={["Aktifkan", "Hapus"]}
-                        role={null}
+                      <OptionMenu
+                        actions={["Aktifkan", "Hapus"]}
                         row={row}
-                        handleOpenDeleteDialog={handleOpenDeleteDialog}
-                        handleOpenDisableApproveDialog={handleOpenApproveDialog}
+                        handleActionOnClick={[
+                          handleOpenApproveDialog,
+                          handleOpenDeleteDialog,
+                        ]}
                       />
                     </ListItemSecondaryAction>
                   </ListItem>
                   <Divider />
                 </div>
-              )
+              );
             })}
-            </List>
-          )}
+          </List>
+        )}
       </TabPanel>
       {ApproveDialog()}
       <DeleteDialog

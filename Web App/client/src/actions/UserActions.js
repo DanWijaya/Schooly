@@ -171,7 +171,7 @@ export const setUserLoading = () => {
 };
 
 export const getStudents = (unitId) => (dispatch) => {
-  axios
+  return axios
     .get(`/api/users/getStudents/${unitId}`)
     .then((res) => {
       console.log(res.data);
@@ -180,6 +180,7 @@ export const getStudents = (unitId) => (dispatch) => {
         payload: res.data,
       });
       console.log("getStudents completed");
+      return res.data;
     })
     .catch((err) => {
       console.log("Error in getting all Students");
@@ -280,7 +281,7 @@ export const getStudentsByClass = (classId) => (dispatch) => {
 
 // actions for admin only
 export const getPendingStudents = (unitId) => (dispatch) => {
-  axios
+  return axios
     .get(`/api/users/getpendingstudents/${unitId}`)
     .then((res) => {
       console.log(res.data);
@@ -288,6 +289,7 @@ export const getPendingStudents = (unitId) => (dispatch) => {
         type: GET_PENDING_STUDENTS,
         payload: res.data,
       });
+      return res.data;
     })
     .catch((err) => {
       console.log("Error in getting Students by class");
@@ -295,7 +297,7 @@ export const getPendingStudents = (unitId) => (dispatch) => {
 };
 
 export const getPendingTeachers = (unitId) => (dispatch) => {
-  axios
+  return axios
     .get(`/api/users/getpendingteachers/${unitId}`)
     .then((res) => {
       console.log(res.data);
@@ -303,6 +305,7 @@ export const getPendingTeachers = (unitId) => (dispatch) => {
         type: GET_PENDING_TEACHERS,
         payload: res.data,
       });
+      return res.data;
     })
     .catch((err) => {
       console.log("Error in getting Students by class");

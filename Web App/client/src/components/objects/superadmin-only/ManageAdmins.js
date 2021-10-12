@@ -4,7 +4,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { getAllAdmins, setUserDeactivated, deleteUser } from "../../../actions/UserActions";
+import {
+  getAllAdmins,
+  setUserDeactivated,
+  deleteUser,
+} from "../../../actions/UserActions";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import DeactivateDialog from "../../misc/dialog/DeactivateDialog";
@@ -32,7 +36,7 @@ import {
   TableSortLabel,
   TextField,
   Toolbar,
-  Typography
+  Typography,
 } from "@material-ui/core/";
 import Alert from "@material-ui/lab/Alert";
 import {
@@ -45,7 +49,7 @@ import {
   Clear as ClearIcon,
   IndeterminateCheckBox as IndeterminateCheckBoxIcon,
   Search as SearchIcon,
-  Sort as SortIcon
+  Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { BiSitemap } from "react-icons/bi";
@@ -137,13 +141,13 @@ function ManageUsersToolbar(props) {
       id: "name",
       numeric: false,
       disablePadding: true,
-      label: "Nama"
+      label: "Nama",
     },
     {
       id: "email",
       numeric: false,
       disablePadding: false,
-      label: "Email"
+      label: "Email",
     },
     {
       id: "phone",
@@ -161,7 +165,7 @@ function ManageUsersToolbar(props) {
       id: "address",
       numeric: false,
       disablePadding: false,
-      label: "Alamat"
+      label: "Alamat",
     },
     {
       id: "emergency_phone",
@@ -198,18 +202,18 @@ function ManageUsersToolbar(props) {
             <Checkbox color="primary" />
             */}
             {listCheckbox.length === 0 ? (
-                <IconButton onClick={() => selectAllData(role)}>
-                  <CheckBoxOutlineBlankIcon style={{ color: "grey" }} />
-                </IconButton>
-              ) : listCheckbox.length === rowCount ? (
-                <IconButton onClick={() => deSelectAllData(role)}>
-                  <CheckBoxIcon className={classes.checkboxIcon} />
-                </IconButton>
-              ) : (
-                <IconButton onClick={() => deSelectAllData(role)}>
-                  <IndeterminateCheckBoxIcon className={classes.checkboxIcon} />
-                </IconButton>
-              )}
+              <IconButton onClick={() => selectAllData(role)}>
+                <CheckBoxOutlineBlankIcon style={{ color: "grey" }} />
+              </IconButton>
+            ) : listCheckbox.length === rowCount ? (
+              <IconButton onClick={() => deSelectAllData(role)}>
+                <CheckBoxIcon className={classes.checkboxIcon} />
+              </IconButton>
+            ) : (
+              <IconButton onClick={() => deSelectAllData(role)}>
+                <IndeterminateCheckBoxIcon className={classes.checkboxIcon} />
+              </IconButton>
+            )}
           </Grid>
           <Grid item>
             <OptionMenu
@@ -221,7 +225,14 @@ function ManageUsersToolbar(props) {
             {CheckboxDialog("Delete", "Student")}
           </Grid>
         </Grid>
-        <Grid item xs container justify="flex-end" alignItems="center" spacing={1}>
+        <Grid
+          item
+          xs
+          container
+          justify="flex-end"
+          alignItems="center"
+          spacing={1}
+        >
           <Grid item>
             <Hidden smDown>
               <TextField
@@ -252,7 +263,9 @@ function ManageUsersToolbar(props) {
                           e.stopPropagation();
                           onClear(e);
                         }}
-                        style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                        style={{
+                          visibility: !searchFilter ? "hidden" : "visible",
+                        }}
                       >
                         <ClearIcon />
                       </IconButton>
@@ -296,7 +309,9 @@ function ManageUsersToolbar(props) {
                               e.stopPropagation();
                               onClear(e);
                             }}
-                            style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                            style={{
+                              visibility: !searchFilter ? "hidden" : "visible",
+                            }}
                           >
                             <ClearIcon />
                           </IconButton>
@@ -324,10 +339,8 @@ function ManageUsersToolbar(props) {
                 </LightTooltip>
               </Link>
             </Grid>
-          ) : (
-            null
-          )}
-          <Grid item style={{ display: searchBarFocus ? "none" : "block"}}>
+          ) : null}
+          <Grid item style={{ display: searchBarFocus ? "none" : "block" }}>
             <LightTooltip title="Urutkan Akun">
               <IconButton onClick={handleOpenSortMenu}>
                 <SortIcon />
@@ -406,7 +419,8 @@ const useStyles = makeStyles((theme) => ({
   accountItem: {
     color: "black",
     "&:focus, &:hover": {
-      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
+      boxShadow:
+        "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
     },
   },
   dialogBox: {
@@ -559,9 +573,14 @@ function ManageAdmins(props) {
   };
 
   const handleChangeListStudent = (e, index, row) => {
+    //Handle the check of Checkboxes.
+    e.stopPropagation();
+    e.preventDefault();
     let currentBooleanList = booleanCheckboxStudent;
     currentBooleanList[index] = !currentBooleanList[index];
+    setBooleanCheckboxStudent([...currentBooleanList]);
 
+    //Handle the list of chosen .
     let status = true;
     let result = [];
     let temp = { checkboxEvent: e, index: index, row: row };
@@ -577,7 +596,7 @@ function ManageAdmins(props) {
       result = listCheckboxStudent;
       result.push(temp);
     }
-    setListCheckboxStudent(result);
+    setListCheckboxStudent([...result]);
   };
 
   const handleChangeListTeacher = (e, index, row) => {
@@ -873,7 +892,12 @@ function ManageAdmins(props) {
 
   return (
     <div className={classes.root}>
-      <Grid container alignItems="center" spacing={2} className={classes.header}>
+      <Grid
+        container
+        alignItems="center"
+        spacing={2}
+        className={classes.header}
+      >
         <Grid item>
           <div className={classes.headerIcon}>
             <FaUsersCog />
@@ -927,11 +951,7 @@ function ManageAdmins(props) {
                         <Checkbox
                           color="primary"
                           onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          onChange={(e) => {
                             handleChangeListStudent(e, index, row);
-                            autoReloader();
                           }}
                           checked={Boolean(booleanCheckboxStudent[index])}
                         />
@@ -968,7 +988,11 @@ function ManageAdmins(props) {
                           </Typography>
                         }
                         secondary={
-                          <Typography variant="body2" color="textSecondary" noWrap>
+                          <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            noWrap
+                          >
                             {row.email}
                           </Typography>
                         }
