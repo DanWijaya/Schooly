@@ -10,468 +10,80 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
+import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import subjectBackground from "./subject-background/SubjectBackground";
+import AssessmentItem from "../item/AssessmentItem";
+import TaskItem from "../item/TaskItem";
+import MaterialItem from "../item/MaterialItem";
 import Empty from "../../misc/empty/Empty";
 import {
-  Avatar,
   Divider,
   ExpansionPanel,
+  ExpansionPanelDetails,
   ExpansionPanelSummary,
   Grid,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Paper,
-  Typography,
-  Hidden,
-  Dialog,
-  Badge,
+  Typography
 } from "@material-ui/core";
+import {
+  AssignmentOutlined as AssignmentIcon,
+  ExpandMore as ExpandMoreIcon,
+  MenuBook as MenuBookIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
-import ErrorIcon from "@material-ui/icons/Error";
-import WarningIcon from "@material-ui/icons/Warning";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "20px",
   },
-  workIconButton: {
-    cursor: "default",
-  },
-  workIcon: {
-    width: theme.spacing(2.5),
-    height: theme.spacing(2.5),
-    color: theme.palette.primary.main,
-  },
-  subjectCardPaper: {
+  subjectPaper: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    padding: "40px 0px 40px 30px",
+    padding: "35px",
     backgroundColor: (props) => props.backgroundColor,
     backgroundImage: (props) => `url(${props.backgroundImage})`,
     backgroundPosition: "right bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
-  expansionPanelList: {
-    margin: "20px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "stretch",
-  },
-  listItemPaper: {
-    marginBottom: "20px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "stretch",
-  },
-  listItem: {
-    minHeight: "70px",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
-  },
-  assignmentLate: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  assignmentTurnedIn: {
-    backgroundColor: theme.palette.success.main,
-  },
-  warningText: {
-    color: theme.palette.warning.main,
-  },
-  material: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  // listItem: {
-  //   minHeight: "70px",
-  // },
-  subtitleColor: {
-    color: "rgba(255, 255, 255, 0.7)",
-  },
-  errorIcon: {
-    color: theme.palette.error.main,
-  },
-  warningIcon: {
-    color: theme.palette.warning.main,
-  },
-  checkIcon: {
-    color: theme.palette.success.main,
-  },
-  itemIcon: {
-    marginRight: "10px",
-    fontSize: "22px",
+  objectIcon: {
     color: "grey",
+    fontSize: "22.5px",
+    marginRight: "12.5px",
+  },
+  objectPanel: {
+    display: "flex",
+    alignItems: "center",
+  },
+  objectDetails: {
+    padding: "30px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "15px",
+    },
   },
 }));
 
-// function SubjectListitem(props) {
-//   const classes = useStyles();
+const TASK_STATUS = {
+  SUBMITTED: "Sudah Dikumpulkan",
+  NOT_SUBMITTED: "Belum Dikumpulkan",
+};
 
-//   return (
-//     <Link to={props.work_link}>
-//       <ListItem button className={classes.listItem}>
-//         <ListItemAvatar>{props.work_category_avatar}</ListItemAvatar>
-//         <ListItemText
-//           primary={<Typography variant="h6">{props.work_title}</Typography>}
-//           secondary={!props.work_subject ? " " : props.work_subject}
-//         />
-//       </ListItem>
-//     </Link>
-//   );
-// }
-
-function MaterialListitem(props) {
-  const classes = useStyles();
-
-  return (
-    <div>
-      <Hidden smUp implementation="css">
-        <Link to={props.work_link}>
-          <Paper
-            variant="outlined"
-            className={classes.listItemPaper}
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            <ListItem button className={classes.listItem}>
-              <ListItemText
-                primary={
-                  <Typography variant="body1">{props.work_title}</Typography>
-                }
-                secondary={!props.work_subject ? " " : props.work_subject}
-              />
-            </ListItem>
-          </Paper>
-        </Link>
-      </Hidden>
-      <Hidden xsDown implementation="css">
-        <Link to={props.work_link}>
-          <Paper
-            variant="outlined"
-            className={classes.listItemPaper}
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            <ListItem button className={classes.listItem}>
-              <ListItemAvatar>{props.work_category_avatar}</ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography variant="body1">{props.work_title}</Typography>
-                }
-                secondary={!props.work_subject ? " " : props.work_subject}
-              />
-              <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="subtitle" color="textSecondary">
-                    {moment(props.work_dateposted)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
-                  </Typography>
-                }
-                secondary={moment(props.work_dateposted)
-                  .locale("id")
-                  .format("HH.mm")}
-              />
-            </ListItem>
-          </Paper>
-        </Link>
-      </Hidden>
-    </div>
-  );
-}
-
-function AssignmentListItem(props) {
-  const classes = useStyles();
-
-  return (
-    <div>
-      <Hidden smUp implementation="css">
-        <Link to={props.work_link}>
-          <Paper variant="outlined" className={classes.listItemPaper}>
-            <Badge
-              style={{ display: "flex", flexDirection: "row" }}
-              badgeContent={
-                props.work_status === "Belum Dikumpulkan" ? (
-                  <ErrorIcon className={classes.errorIcon} />
-                ) : (
-                  <CheckCircleIcon className={classes.checkIcon} />
-                )
-              }
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-            >
-              <ListItem button className={classes.listItem}>
-                <Grid container alignItems="center">
-                  <Grid item xs={7}>
-                    <ListItemText
-                      primary={
-                        <Typography variant="body1">
-                          {props.work_title}
-                        </Typography>
-                      }
-                      secondary={props.work_subject}
-                    />
-                  </Grid>
-                  <Grid item xs={5}>
-                    <ListItemText
-                      align="right"
-                      primary={
-                        <Typography variant="subtitle" color="textSecondary">
-                          {moment(props.work_dateposted)
-                            .locale("id")
-                            .format("DD MMM YYYY")}
-                        </Typography>
-                      }
-                      secondary={moment(props.work_dateposted)
-                        .locale("id")
-                        .format("HH.mm")}
-                    />
-                  </Grid>
-                </Grid>
-              </ListItem>
-            </Badge>
-          </Paper>
-        </Link>
-      </Hidden>
-      <Hidden xsDown implementation="css">
-        <Link to={props.work_link}>
-          <Paper variant="outlined" className={classes.listItemPaper}>
-            <Badge
-              style={{ display: "flex", flexDirection: "row" }}
-              badgeContent={
-                props.work_status === "Belum Dikumpulkan" ? (
-                  <ErrorIcon className={classes.errorIcon} />
-                ) : (
-                  <CheckCircleIcon className={classes.checkIcon} />
-                )
-              }
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-            >
-              <ListItem button className={classes.listItem}>
-                <ListItemAvatar>{props.work_category_avatar}</ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <Typography variant="body1">{props.work_title}</Typography>
-                  }
-                  secondary={props.work_subject}
-                />
-                <ListItemText
-                  align="right"
-                  primary={
-                    <Typography variant="subtitle" color="textSecondary">
-                      {moment(props.work_dateposted)
-                        .locale("id")
-                        .format("DD MMM YYYY")}
-                    </Typography>
-                  }
-                  secondary={moment(props.work_dateposted)
-                    .locale("id")
-                    .format("HH.mm")}
-                />
-              </ListItem>
-            </Badge>
-          </Paper>
-        </Link>
-      </Hidden>
-    </div>
-  );
-}
-function AssessmentListItem(props) {
-  const classes = useStyles();
-
-  // Dialog Kuis dan Ujian
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
-
-  const handleOpenDialog = (
-    title,
-    subject,
-    teacher_name,
-    start_date,
-    end_date
-  ) => {
-    setCurrentDialogInfo({
-      title,
-      subject,
-      teacher_name,
-      start_date,
-      end_date,
-    });
-    setOpenDialog(true);
-    console.log(title);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
-  return (
-    <div>
-      <Hidden smUp implementation="css">
-        <Paper
-          variant="outlined"
-          className={classes.listItemPaper}
-          onClick={() =>
-            handleOpenDialog(
-              props.work_title,
-              props.work_subject,
-              props.work_teacher_name,
-              props.work_starttime,
-              props.work_endtime
-            )
-          }
-        >
-          <Badge
-            style={{ display: "flex", flexDirection: "row" }}
-            badgeContent={
-              props.work_status === "Belum Ditempuh" ? (
-                <WarningIcon className={classes.warningIcon} />
-              ) : null
-            }
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-          >
-            <ListItem button className={classes.listItem}>
-              <ListItemText
-                primary={
-                  <Typography variant="body1">{props.work_title}</Typography>
-                }
-                secondary={props.work_subject}
-              />
-              <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="subtitle" color="textSecondary">
-                    {moment(props.work_dateposted)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
-                  </Typography>
-                }
-                secondary={moment(props.work_dateposted)
-                  .locale("id")
-                  .format("HH.mm")}
-              />
-            </ListItem>
-          </Badge>
-        </Paper>
-      </Hidden>
-      <Hidden xsDown implementation="css">
-        <Paper
-          variant="outlined"
-          className={classes.listItemPaper}
-          onClick={() =>
-            handleOpenDialog(
-              props.work_title,
-              props.work_subject,
-              props.work_teacher_name,
-              props.work_starttime,
-              props.work_endtime
-            )
-          }
-        >
-          <Badge
-            style={{ display: "flex", flexDirection: "row" }}
-            badgeContent={
-              props.work_status === "Belum Ditempuh" ? (
-                <WarningIcon className={classes.warningIcon} />
-              ) : null
-            }
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-          >
-            <ListItem button className={classes.listItem}>
-              <ListItemAvatar>{props.work_category_avatar}</ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography variant="body1">{props.work_title}</Typography>
-                }
-                secondary={props.work_subject}
-              />
-              <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="subtitle" color="textSecondary">
-                    {moment(props.work_dateposted)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
-                  </Typography>
-                }
-                secondary={moment(props.work_dateposted)
-                  .locale("id")
-                  .format("HH.mm")}
-              />
-            </ListItem>
-          </Badge>
-        </Paper>
-      </Hidden>
-      <Dialog
-        fullScreen={false}
-        open={openDialog}
-        onClose={handleCloseDialog}
-        fullWidth={true}
-        maxWidth="sm"
-      >
-        <div style={{ padding: "20px" }}>
-          <Typography variant="h4" align="center">
-            {currentDialogInfo.title}
-          </Typography>
-          <Typography variant="h5" align="center" color="primary">
-            {currentDialogInfo.subject}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-            style={{ marginTop: "25px" }}
-          >
-            Guru: {currentDialogInfo.teacher_name}
-          </Typography>
-          <Typography variant="subtitle1" align="center">
-            Mulai: {currentDialogInfo.start_date}
-          </Typography>
-          <Typography variant="subtitle1" align="center">
-            Selesai: {currentDialogInfo.end_date}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            align="center"
-            color="textSecondary"
-            style={{ marginTop: "10px", textAlign: "center" }}
-          >
-            Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
-            pelajaran terkait.
-          </Typography>
-        </div>
-      </Dialog>
-    </div>
-  );
-}
+const ASSESSMENT_STATUS = {
+  SUBMITTED: "Sudah Ditempuh",
+  NOT_SUBMITTED: "Belum Ditempuh",
+};
 
 function ViewSubject(props) {
-  const { user, all_teachers } = props.auth;
-  const id = props.match.params.id;
   const {
     setCurrentClass,
     getAllTask,
@@ -483,12 +95,16 @@ function ViewSubject(props) {
     assessmentsCollection,
     getTeachers,
   } = props;
-  const all_assessments = assessmentsCollection.all_assessments;
+  const { user, all_teachers } = props.auth;
+  const id = props.match.params.id;
+  const classId = user.kelas;
   const { kelas } = props.classesCollection;
-  // const {all_user_files} = props.filesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
-  const classId = user.kelas;
+  const all_assessments = assessmentsCollection.all_assessments;
+  // const {all_user_files} = props.filesCollection;
+
+  const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
 
   let subjects_list = Array.from(all_subjects_map.keys());
   let background_idx = subjects_list.indexOf(id) % subjectBackground.length;
@@ -516,10 +132,24 @@ function ViewSubject(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(all_subjects_map);
+  React.useEffect(() => {
+    if (user.role === "Student") {
+      let submittedTaskIdSet = new Set();
+      getFileSubmitTasksByAuthor(user._id)
+        .then((response) => {
+          for (let file of response.data) {
+            submittedTaskIdSet.add(file.task_id);
+          }
+        })
+        .finally(() => {
+          // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
+          setSubmittedTaskIds(submittedTaskIdSet);
+        });
+    }
+  }, []);
+
   let tasksByClass = []; // Tasks on specific class.
 
-  console.log(selectedMaterials);
   // All actions to retrive datas from Database...
   if (tasksCollection.length !== undefined) {
     tasksCollection.map((task) => {
@@ -587,11 +217,6 @@ function ViewSubject(props) {
     let materialList = [];
 
     if (Boolean(selectedMaterials.length)) {
-      let workCategoryAvatar = (
-        <Avatar className={classes.material}>
-          <MenuBookIcon />
-        </Avatar>
-      );
       for (var i = selectedMaterials.length - 1; i >= 0; i--) {
         let material = selectedMaterials[i];
         if (
@@ -599,25 +224,30 @@ function ViewSubject(props) {
           (category === "subject" && material.subject === subject)
         ) {
           materialList.push(
-            <MaterialListitem
-              work_title={material.name}
-              work_category_avatar={workCategoryAvatar}
-              work_subject={
-                category === "subject"
-                  ? null
-                  : all_subjects_map.get(material.subject)
-              }
-              work_link={`/materi/${material._id}`}
-              work_dateposted={material.createdAt}
-            />
+            <Grid item>
+              <MaterialItem
+                link={`/materi/${material._id}`}
+                primaryText={material.name}
+                secondaryText={
+                  moment(material.createdAt)
+                    .locale("id")
+                    .format("DD MMM YYYY")
+                }
+                subSecondaryText={
+                  moment(material.createdAt)
+                    .locale("id")
+                    .format("HH.mm")
+                }
+              />
+            </Grid>
           );
         }
         if (tab === "pekerjaan_kelas") {
           if (!category && materialList.length === 5)
-            // item ke index tsb, brarti harus harus pas index ke selectedMaterials.length - 5.
+            // Number of item to the index, so that it has to be index = selectedMaterials.length - 5.
             break;
           if (category === "subject" && materialList.length === 3)
-            // item ke index tsb, brarti harus harus pas index ke selectedMaterials.length - 5.
+            // Number of item to the index, so that it has to be index = selectedMaterials.length - 5.
             break;
         }
       }
@@ -643,18 +273,12 @@ function ViewSubject(props) {
 
       for (i = 0; i < tasksList.length; i++) {
         let task = tasksList[i];
-        let workCategoryAvatar = (
-          <Avatar className={classes.assignmentLate}>
-            <AssignmentIcon />
-          </Avatar>
-        );
 
-        let workStatus = "Belum Dikumpulkan";
-        for (let i = 0; i < user.tugas.length; i++) {
-          if (user.tugas[i].for_task_object === task._id) {
-            workStatus = "Sudah Dikumpulkan";
-            break;
-          }
+        let assignmentStatus;
+        if (submittedTaskIds.has(task._id)) {
+          assignmentStatus = TASK_STATUS.SUBMITTED;
+        } else {
+          assignmentStatus = TASK_STATUS.NOT_SUBMITTED;
         }
 
         // console.log(all_user_files)
@@ -673,25 +297,29 @@ function ViewSubject(props) {
           if (
             (!category ||
               (category === "subject" && task.subject === subject)) &&
-            workStatus === "Belum Dikumpulkan"
+            assignmentStatus === TASK_STATUS.SUBMITTED
           ) {
             result.push(
-              <AssignmentListItem
-                work_title={task.name}
-                work_category_avatar={workCategoryAvatar}
-                work_subject={
-                  category === "subject"
-                    ? null
-                    : all_subjects_map.get(task.subject)
-                }
-                work_status={workStatus}
-                // work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                work_dateposted={task.createdAt}
-                work_link={`/tugas-murid/${task._id}`}
-              />
+              <Grid item>
+                <TaskItem
+                  link={`/tugas-murid/${task._id}`}
+                  primaryText={task.name}
+                  status={assignmentStatus}
+                  missing={TASK_STATUS.NOT_SUBMITTED}
+                  secondaryText={
+                    moment(task.createdAt)
+                      .locale("id")
+                      .format("DD MMM YYYY")
+                  }
+                  subSecondaryText={
+                    moment(task.createdAt)
+                      .locale("id")
+                      .format("HH.mm")
+                  }
+                />
+              </Grid>
             );
             if (!category && result.length === 5) break;
-
             if (category === "subject" && result.length === 3) break;
           }
         } else if (tab === "mata_pelajaran") {
@@ -700,19 +328,24 @@ function ViewSubject(props) {
             (category === "subject" && task.subject === subject)
           ) {
             result.push(
-              <AssignmentListItem
-                work_title={task.name}
-                work_category_avatar={workCategoryAvatar}
-                work_subject={
-                  category === "subject"
-                    ? null
-                    : all_subjects_map.get(task.subject)
-                }
-                work_status={workStatus}
-                // work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                work_dateposted={task.createdAt}
-                work_link={`/tugas-murid/${task._id}`}
-              />
+              <Grid item>
+                <TaskItem
+                  link={`/tugas-murid/${task._id}`}
+                  primaryText={task.name}
+                  status={assignmentStatus}
+                  missing={TASK_STATUS.NOT_SUBMITTED}
+                  secondaryText={
+                    moment(task.createdAt)
+                      .locale("id")
+                      .format("DD MMM YYYY")
+                  }
+                  subSecondaryText={
+                    moment(task.createdAt)
+                      .locale("id")
+                      .format("HH.mm")
+                  }
+                />
+              </Grid>
             );
           }
         }
@@ -735,7 +368,6 @@ function ViewSubject(props) {
         let assessment = all_assessments[i];
         let class_assigned = assessment.class_assigned;
         if (class_assigned.indexOf(classId) !== -1) {
-          console.log("test");
           AssessmentsList.push(assessment);
         }
         // if(i === all_assessments.length - 5){ // item terakhir harus pas index ke 4.
@@ -745,17 +377,6 @@ function ViewSubject(props) {
 
       for (i = 0; i < AssessmentsList.length; i++) {
         let assessment = AssessmentsList[i];
-        let workCategoryAvatar =
-          type === "Kuis" ? (
-            <Avatar className={classes.assignmentLate}>
-              <FaClipboardList />
-            </Avatar>
-          ) : (
-            <Avatar className={classes.assignmentLate}>
-              <BsClipboardData />
-            </Avatar>
-          );
-
         // console.log(all_user_files)
         // for (var j = 0; j < all_user_files.length; j++){
         //     if(all_user_files[j].for_task_object === task._id){
@@ -769,8 +390,9 @@ function ViewSubject(props) {
         //   }
         // }
         // console.log(Object.values(assessment.submissions)[0])
+
         if (tab === "pekerjaan_kelas") {
-          let workStatus = "Belum Ditempuh";
+          let assessmentStatus = ASSESSMENT_STATUS.NOT_SUBMITTED;
           if (type === "Kuis") {
             if (
               (!category ||
@@ -780,26 +402,37 @@ function ViewSubject(props) {
               assessment.posted
             ) {
               result.push(
-                <AssessmentListItem
-                  work_title={assessment.name}
-                  work_category_avatar={workCategoryAvatar}
-                  work_subject={
-                    category === "subject"
-                      ? null
-                      : all_subjects_map.get(assessment.subject)
-                  }
-                  work_status={workStatus}
-                  work_teacher_name={
-                    all_teachers.get(assessment.author_id).name
-                  }
-                  work_starttime={moment(assessment.start_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_endtime={moment(assessment.end_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_dateposted={assessment.createdAt}
-                />
+                <Grid item>
+                  <AssessmentItem
+                    type="Kuis"
+                    primaryText={assessment.name}
+                    status={assessmentStatus}
+                    missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
+                    secondaryText={
+                      moment(assessment.createdAt)
+                        .locale("id")
+                        .format("DD MMM YYYY")
+                    }
+                    subSecondaryText={
+                      moment(assessment.createdAt)
+                        .locale("id")
+                        .format("HH.mm")
+                    }
+                    title={assessment.name}
+                    subject={
+                      category === "subject"
+                        ? null
+                        : all_subjects_map.get(assessment.subject)
+                    }
+                    teacher={all_teachers.get(assessment.author_id).name}
+                    startTime={moment(assessment.start_date)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH:mm")}
+                    endTime={moment(assessment.end_date)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH:mm")}
+                  />
+                </Grid>
               );
             }
           }
@@ -812,37 +445,47 @@ function ViewSubject(props) {
               assessment.posted
             ) {
               result.push(
-                <AssessmentListItem
-                  work_title={assessment.name}
-                  work_category_avatar={workCategoryAvatar}
-                  work_subject={
-                    category === "subject"
-                      ? null
-                      : all_subjects_map.get(assessment.subject)
-                  }
-                  work_status={workStatus}
-                  work_teacher_name={
-                    all_teachers.get(assessment.author_id).name
-                  }
-                  work_starttime={moment(assessment.start_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_endtime={moment(assessment.end_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_dateposted={assessment.createdAt}
-                />
+                <Grid item>
+                  <AssessmentItem
+                    type="Ujian"
+                    primaryText={assessment.name}
+                    status={assessmentStatus}
+                    missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
+                    secondaryText={
+                      moment(assessment.createdAt)
+                        .locale("id")
+                        .format("DD MMM YYYY")
+                    }
+                    subSecondaryText={
+                      moment(assessment.createdAt)
+                        .locale("id")
+                        .format("HH.mm")
+                    }
+                    title={assessment.name}
+                    subject={
+                      category === "subject"
+                        ? null
+                        : all_subjects_map.get(assessment.subject)
+                    }
+                    teacher={all_teachers.get(assessment.author_id).name}
+                    startTime={moment(assessment.start_date)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH:mm")}
+                    endTime={moment(assessment.end_date)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH:mm")}
+                  />
+                </Grid>
               );
             }
           }
           if (!category && result.length === 5) break;
           if (category === "subject" && result.length === 3) break;
         } else if (tab === "mata_pelajaran") {
-          let workStatus = !assessment.submissions
-            ? "Belum Ditempuh"
-            : "Sudah Ditempuh";
-          console.log(assessment.subject);
-          console.log(subject);
+          let assessmentStatus = !assessment.submissions
+            ? ASSESSMENT_STATUS.NOT_SUBMITTED
+            : ASSESSMENT_STATUS.SUBMITTED;
+
           if (type === "Kuis") {
             if (
               (!category ||
@@ -851,26 +494,37 @@ function ViewSubject(props) {
               assessment.posted
             ) {
               result.push(
-                <AssessmentListItem
-                  work_title={assessment.name}
-                  work_category_avatar={workCategoryAvatar}
-                  work_subject={
-                    category === "subject"
-                      ? null
-                      : all_subjects_map.get(assessment.subject)
-                  }
-                  work_status={workStatus}
-                  work_teacher_name={
-                    all_teachers.get(assessment.author_id).name
-                  }
-                  work_starttime={moment(assessment.start_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_endtime={moment(assessment.end_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_dateposted={assessment.createdAt}
-                />
+                <Grid item>
+                  <AssessmentItem
+                    type="Kuis"
+                    primaryText={assessment.name}
+                    status={assessmentStatus}
+                    missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
+                    secondaryText={
+                      moment(assessment.createdAt)
+                        .locale("id")
+                        .format("DD MMM YYYY")
+                    }
+                    subSecondaryText={
+                      moment(assessment.createdAt)
+                        .locale("id")
+                        .format("HH.mm")
+                    }
+                    title={assessment.name}
+                    subject={
+                      category === "subject"
+                        ? null
+                        : all_subjects_map.get(assessment.subject)
+                    }
+                    teacher={all_teachers.get(assessment.author_id).name}
+                    startTime={moment(assessment.start_date)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH:mm")}
+                    endTime={moment(assessment.end_date)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH:mm")}
+                  />
+                </Grid>
               );
             }
           }
@@ -882,26 +536,37 @@ function ViewSubject(props) {
               assessment.posted
             ) {
               result.push(
-                <AssessmentListItem
-                  work_title={assessment.name}
-                  work_category_avatar={workCategoryAvatar}
-                  work_subject={
-                    category === "subject"
-                      ? null
-                      : all_subjects_map.get(assessment.subject)
-                  }
-                  work_status={workStatus}
-                  work_teacher_name={
-                    all_teachers.get(assessment.author_id).name
-                  }
-                  work_starttime={moment(assessment.start_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_endtime={moment(assessment.end_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_dateposted={assessment.createdAt}
-                />
+                <Grid item>
+                  <AssessmentItem
+                    type="Ujian"
+                    primaryText={assessment.name}
+                    status={assessmentStatus}
+                    missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
+                    secondaryText={
+                      moment(assessment.createdAt)
+                        .locale("id")
+                        .format("DD MMM YYYY")
+                    }
+                    subSecondaryText={
+                      moment(assessment.createdAt)
+                        .locale("id")
+                        .format("HH.mm")
+                    }
+                    title={assessment.name}
+                    subject={
+                      category === "subject"
+                        ? null
+                        : all_subjects_map.get(assessment.subject)
+                    }
+                    teacher={all_teachers.get(assessment.author_id).name}
+                    startTime={moment(assessment.start_date)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH:mm")}
+                    endTime={moment(assessment.end_date)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH:mm")}
+                  />
+                </Grid>
               );
             }
           }
@@ -917,108 +582,102 @@ function ViewSubject(props) {
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.subjectCardPaper}>
-        <Typography variant="h4" gutterBottom style={{ color: "white" }}>
+      <Paper className={classes.subjectPaper}>
+        <Typography variant="h4" gutterBottom noWrap style={{ color: "white" }}>
           <b>{all_subjects_map.get(id)}</b>
         </Typography>
-        <Typography variant="h5" className={classes.subtitleColor}>
-          Kelas: {kelas.name}
+        <Typography variant="h5" noWrap style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+          {kelas.name}
         </Typography>
       </Paper>
-      <div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: "30px" }}>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Grid
-              item
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <MenuBookIcon className={classes.itemIcon} />
-              <Typography variant="h6">Materi</Typography>
-            </Grid>
+            <div className={classes.objectPanel}>
+              <MenuBookIcon className={classes.objectIcon} />
+              <Typography variant="h6">
+                Materi
+              </Typography>
+            </div>
           </ExpansionPanelSummary>
           <Divider />
-          <List className={classes.expansionPanelList}>
+          <ExpansionPanelDetails className={classes.objectDetails}>
             {listMaterials("subject", id, "mata_pelajaran").length === 0 ? (
               <Empty />
             ) : (
-              <>{listMaterials("subject", id, "mata_pelajaran")}</>
+              <div style={{ width: "100%" }}>
+                <Grid container direction="column" spacing={2}>
+                  {listMaterials("subject", id, "mata_pelajaran")}
+                </Grid>
+              </div>
             )}
-          </List>
+          </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Grid
-              item
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <AssignmentIcon className={classes.itemIcon} />
-              <Typography variant="h6">Tugas</Typography>
-            </Grid>
+            <div className={classes.objectPanel}>
+              <AssignmentIcon className={classes.objectIcon} />
+              <Typography variant="h6">
+                Tugas
+              </Typography>
+            </div>
           </ExpansionPanelSummary>
           <Divider />
-          <List className={classes.expansionPanelList}>
+          <ExpansionPanelDetails className={classes.objectDetails}>
             {listTasks("subject", id, "mata_pelajaran").length === 0 ? (
               <Empty />
             ) : (
-              <>{listTasks("subject", id, "mata_pelajaran")}</>
+              <div style={{ width: "100%" }}>
+                <Grid container direction="column" spacing={2}>
+                  {listTasks("subject", id, "mata_pelajaran")}
+                </Grid>
+              </div>
             )}
-          </List>
+          </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Grid
-              item
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <FaClipboardList className={classes.itemIcon} />
-              <Typography variant="h6">Kuis</Typography>
-            </Grid>
+            <div className={classes.objectPanel}>
+              <FaClipboardList className={classes.objectIcon} />
+              <Typography variant="h6">
+                Kuis
+              </Typography>
+            </div>
           </ExpansionPanelSummary>
           <Divider />
-          <List className={classes.expansionPanelList}>
-            {listAssessments("subject", id, "Kuis", "mata_pelajaran").length ===
-            0 ? (
+          <ExpansionPanelDetails className={classes.objectDetails}>
+            {listAssessments("subject", id, "Kuis", "mata_pelajaran").length === 0 ? (
               <Empty />
             ) : (
-              <>{listAssessments("subject", id, "Kuis", "mata_pelajaran")}</>
+              <div style={{ width: "100%" }}>
+                <Grid container direction="column" spacing={2}>
+                  {listAssessments("subject", id, "Kuis", "mata_pelajaran")}
+                </Grid>
+              </div>
             )}
-          </List>
+          </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Grid
-              item
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <BsClipboardData className={classes.itemIcon} />
-              <Typography variant="h6">Ujian</Typography>
-            </Grid>
+            <div className={classes.objectPanel}>
+              <BsClipboardData className={classes.objectIcon} />
+              <Typography variant="h6">
+                Ujian
+              </Typography>
+            </div>
           </ExpansionPanelSummary>
           <Divider />
-          <List className={classes.expansionPanelList}>
-            {listAssessments("subject", id, "Ujian", "mata_pelajaran")
-              .length === 0 ? (
+          <ExpansionPanelDetails className={classes.objectDetails}>
+            {listAssessments("subject", id, "Ujian", "mata_pelajaran").length === 0 ? (
               <Empty />
             ) : (
-              <>{listAssessments("subject", id, "Ujian", "mata_pelajaran")}</>
+              <div style={{ width: "100%" }}>
+                <Grid container direction="column" spacing={2}>
+                  {listAssessments("subject", id, "Ujian", "mata_pelajaran")}
+                </Grid>
+              </div>
             )}
-          </List>
+          </ExpansionPanelDetails>
         </ExpansionPanel>
       </div>
     </div>

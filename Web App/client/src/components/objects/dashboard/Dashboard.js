@@ -52,9 +52,7 @@ import {
 import { withStyles } from "@material-ui/core/styles";
 import { AiOutlineUserSwitch } from "react-icons/ai";
 import { BsClipboardData } from "react-icons/bs";
-import { FaChalkboard } from "react-icons/fa";
-import { FaClipboardList } from "react-icons/fa";
-import { FaChalkboardTeacher } from "react-icons/fa";
+import { FaClipboardList, FaChalkboard, FaChalkboardTeacher } from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {

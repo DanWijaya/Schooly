@@ -177,14 +177,6 @@ const useStyles = makeStyles((theme) => ({
     },
     marginRight: "20px",
   },
-  textField: {
-    // [theme.breakpoints.down("md")]: {
-    //   minWidth: "110%"
-    // },
-    // [theme.breakpoints.down("sm")]: {
-    //   maxWidth: "90%"
-    // },
-  },
   checkButton: {
     backgroundColor: theme.palette.success.main,
     color: "white",

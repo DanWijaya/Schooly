@@ -937,7 +937,7 @@ ViewTaskTeacher.propTypes = {
   deleteTask: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   updateUserData: PropTypes.func.isRequired,
-  getOneUser: PropTypes.func.isRequired, // For the person in charge task
+  getOneUser: PropTypes.func.isRequired, // For the person in charge task.
   getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
   getOneTask: PropTypes.func.isRequired,
 };

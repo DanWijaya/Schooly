@@ -45,7 +45,7 @@ import {
   MenuBook as MenuBookIcon,
   Pageview as PageviewIcon,
   Search as SearchIcon,
-  Sort as SortIcon,
+  Sort as SortIcon
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 

@@ -652,9 +652,9 @@ function AgendaToolbar(props) {
             <AddIcon fontSize="small" />
           </Fab>
         ) : null}
-        <IconButton disabled>
+        {/*<IconButton disabled>
           <SearchIcon />
-        </IconButton>
+        </IconButton>*/}
         <FormControl variant="outlined">
           <Select
             defaultValue="Day"
@@ -663,9 +663,6 @@ function AgendaToolbar(props) {
             classes={{ root: classes.selectRoot }}
           >
             <MenuItem value="Day">Hari</MenuItem>
-            <MenuItem value="Week" disabled>
-              Minggu (Coming soon)
-            </MenuItem>
             {/*<MenuItem value="Week" disabled>Minggu (Coming soon)</MenuItem>*/}
             <MenuItem value="Month">Bulan</MenuItem>
             {/*<MenuItem value="Year" disabled>Tahun (Coming soon)</MenuItem>*/}

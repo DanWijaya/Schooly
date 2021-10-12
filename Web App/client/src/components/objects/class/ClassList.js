@@ -13,6 +13,7 @@ import {
   unassignClassOfficers,
 } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import ClassItem from "../item/ClassItem";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -50,7 +51,7 @@ import {
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaChalkboard, FaChalkboardTeacher } from "react-icons/fa";
-import ClassItem from "../item/ClassItem";
+
 function createData(_id, name, homeroomTeacher, size, absent) {
   return { _id, name, homeroomTeacher, size, absent };
 }

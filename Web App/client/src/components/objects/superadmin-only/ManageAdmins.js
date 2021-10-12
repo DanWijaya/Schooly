@@ -1,49 +1,44 @@
 import React from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import {
-  setUserDeactivated,
-  deleteUser,
-  getAllAdmins,
-} from "../../../actions/UserActions";
+import { getAllAdmins, setUserDeactivated, deleteUser } from "../../../actions/UserActions";
 import Empty from "../../misc/empty/Empty";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OptionMenu from "../../misc/menu/OptionMenu";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Button,
-  IconButton,
+  Checkbox,
   Dialog,
   Divider,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  FormGroup,
+  FormControlLabel,
   Grid,
   Hidden,
+  IconButton,
   InputAdornment,
+  List,
+  ListItem,
   ListItemAvatar,
+  ListItemIcon,
+  ListItemSecondaryAction,
   Menu,
   MenuItem,
   Snackbar,
+  Tab,
+  Tabs,
   TableSortLabel,
   TextField,
   Toolbar,
-  Typography,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  Tab,
-  Tabs,
-  AppBar,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
+  Typography
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
-import MuiAlert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -62,7 +57,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from "@material-ui/icons/Clear";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { FaUserCheck } from "react-icons/fa";
+import { FaUsersCog } from "react-icons/fa";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(
@@ -197,7 +192,7 @@ function ManageUsersToolbar(props) {
           gap: "10px",
         }}
       >
-        <FaUserCheck fontSize="30px" />
+        <FaUsersCog fontSize="30px" />
         <Typography variant="h4">Pengelola Aktif</Typography>
       </div>
       <div className={classes.toolbar}>
@@ -1330,7 +1325,7 @@ function ManageAdmins(props) {
           handleCloseSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity="success"
           onClose={(event, reason) => {
@@ -1338,7 +1333,7 @@ function ManageAdmins(props) {
           }}
         >
           {snackbarMessage}
-        </MuiAlert>
+        </Alert>
       </Snackbar>
     </div>
   );

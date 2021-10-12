@@ -12,8 +12,9 @@ import {
 } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import SubjectItem from "../../objects/item/SubjectItem";
 import Empty from "../../misc/empty/Empty";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Button,
@@ -42,7 +43,6 @@ import {
   SortByAlpha as SortByAlphaIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import SubjectItem from "../../objects/item/SubjectItem";
 
 function createData(_id, name, all_class) {
   return { _id, name, all_class };

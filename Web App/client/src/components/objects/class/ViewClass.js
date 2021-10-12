@@ -70,15 +70,6 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
 import { FaClipboardList } from "react-icons/fa";
-const TASK_STATUS = {
-  SUBMITTED: "Sudah Dikumpulkan",
-  NOT_SUBMITTED: "Belum Dikumpulkan",
-};
-
-const ASSESSMENT_STATUS = {
-  SUBMITTED: "Sudah Ditempuh",
-  NOT_SUBMITTED: "Belum Ditempuh",
-};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -160,6 +151,16 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
+const TASK_STATUS = {
+  SUBMITTED: "Sudah Dikumpulkan",
+  NOT_SUBMITTED: "Belum Dikumpulkan",
+};
+
+const ASSESSMENT_STATUS = {
+  SUBMITTED: "Sudah Ditempuh",
+  NOT_SUBMITTED: "Belum Ditempuh",
+};
 
 function sortAscByCreatedAt(rows) {
   const stabilizedThis = rows.map((el, index) => [el, index]);

@@ -1,9 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import {
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography
+} from "@material-ui/core";
+import { MoreVert as MoreVertIcon } from "@material-ui/icons";
 
 function OptionMenu(props) {
   const { actions, row, rowCount, handleActionOnClick } = props;

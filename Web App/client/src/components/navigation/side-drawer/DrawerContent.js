@@ -26,6 +26,7 @@ import {
   FaClipboardList,
   FaUserFriends,
   FaUserLock,
+  FaUsersCog
 } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
@@ -81,14 +82,14 @@ function DrawerContent(props) {
         "Unit Sekolah",
       ],
       [
+        "/pengelola-aktif",
+        <FaUsersCog className={classes.drawerListItemIcon} />,
+        "Pengelola Aktif",
+      ],
+      [
         "/pengelola-tertunda",
         <FaUserLock className={classes.drawerListItemIcon} />,
         "Pengelola Tertunda",
-      ],
-      [
-        "/pengelola-aktif",
-        <FaUserFriends className={classes.drawerListItemIcon} />,
-        "Pengelola Aktif",
       ],
     ];
   } else if (user.role === "Admin")

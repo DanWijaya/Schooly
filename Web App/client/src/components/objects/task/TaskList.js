@@ -8,44 +8,46 @@ import { getAllTask, deleteTask } from "../../../actions/TaskActions";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import Empty from "../../misc/empty/Empty";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
+  Avatar,
+  Badge,
   IconButton,
   Divider,
   ExpansionPanel,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
-  Badge,
   Fab,
   Grid,
-  InputAdornment,
   Hidden,
-  Paper,
+  InputAdornment,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
   Menu,
   MenuItem,
+  Paper,
   Snackbar,
   TableSortLabel,
   TextField,
   Typography,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
-} from "@material-ui/core/";
+} from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import {
+  ArrowBack as ArrowBackIcon,
+  Assignment as AssignmentIcon,
+  CheckCircle as CheckCircleIcon,
+  Clear as ClearIcon,
+  Edit as EditIcon,
+  Error as ErrorIcon,
+  Delete as DeleteIcon,
+  Pageview as PageviewIcon,
+  Search as SearchIcon,
+  Sort as SortIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import MuiAlert from "@material-ui/lab/Alert";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import PageviewIcon from "@material-ui/icons/Pageview";
-import SortIcon from "@material-ui/icons/Sort";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { GoSearch } from "react-icons/go";
-import ClearIcon from "@material-ui/icons/Clear";
-import ErrorIcon from "@material-ui/icons/Error";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 function createData(
   _id,
@@ -154,7 +156,7 @@ function TaskListToolbar(props) {
     setAnchorEl(null);
   };
 
-  // FOR SEARCH FILTER.
+  // Search Filter
   const onChange = (e) => {
     updateSearchFilter(e.target.value);
   };
@@ -166,262 +168,210 @@ function TaskListToolbar(props) {
 
   return (
     <div className={classes.toolbar}>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden mdUp implementation="css">
-          {searchBarFocus ? null : (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <AssignmentIcon className={classes.titleIcon} fontSize="large" />
-              <Typography variant="h4">Daftar Tugas</Typography>
-            </div>
-          )}
-        </Hidden>
-        <Hidden smDown implementation="css">
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <AssignmentIcon className={classes.titleIcon} fontSize="large" />
-            <Typography variant="h4">Daftar Tugas</Typography>
-          </div>
-        </Hidden>
-        <Hidden mdUp implementation="css">
-          {searchBarFocus ? (
-            <div style={{ display: "flex" }}>
-              <IconButton
-                onClick={() => {
-                  setSearchBarFocus(false);
-                  updateSearchFilter("");
-                }}
-              >
-                <ArrowBackIcon />
-              </IconButton>
-              <TextField
-                fullWidth
-                variant="outlined"
-                id="searchFilterMobile"
-                value={searchFilter}
-                onChange={onChange}
-                autoFocus
-                onClick={(e) => setSearchBarFocus(true)}
-                placeholder="Cari Tugas"
-                style={{
-                  maxWidth: "200px",
-                  marginLeft: "10px",
-                }}
-                InputProps={{
-                  startAdornment: searchBarFocus ? null : (
-                    <InputAdornment
-                      position="start"
-                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
-                    >
-                      <IconButton size="small">
-                        <GoSearch />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment
-                      position="end"
-                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                    >
-                      <IconButton
-                        size="small"
-                        id="searchFilterMobile"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onClear(e);
-                        }}
-                        style={{
-                          opacity: 0.5,
-                          visibility: !searchFilter ? "hidden" : "visible",
-                        }}
-                      >
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  style: {
-                    borderRadius: "22.5px",
-                  },
-                }}
-              />
-            </div>
-          ) : (
-            <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
-              <IconButton
-                className={classes.goSearchButton}
-                onClick={() => setSearchBarFocus(true)}
-              >
-                <GoSearch className={classes.goSearchIconMobile} />
-              </IconButton>
-            </LightTooltip>
-          )}
-        </Hidden>
-      </div>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden smDown implementation="css">
-          <TextField
-            variant="outlined"
-            id="searchFilterDesktop"
-            value={searchFilter}
-            onChange={onChange}
-            onClick={() => setSearchBarFocus(true)}
-            onBlur={() => setSearchBarFocus(false)}
-            placeholder="Cari Tugas"
-            style={{
-              maxWidth: "250px",
-              marginRight: "10px",
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment
-                  position="start"
-                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
-                >
-                  <IconButton size="small">
-                    <GoSearch />
-                  </IconButton>
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment
-                  position="end"
-                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                >
-                  <IconButton
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onClear(e);
-                    }}
-                    style={{
-                      opacity: 0.5,
-                      visibility: !searchFilter ? "hidden" : "visible",
-                    }}
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-              style: {
-                borderRadius: "22.5px",
-              },
-            }}
-          />
-        </Hidden>
-        <Hidden mdUp implementation="css">
-          {role === "Student" ? null : (
-            <LightTooltip title="Buat Tugas">
+      <Grid container justify="space-between" alignItems="center">
+        {role === "Teacher" ? (
+          <Grid item>
+            <Hidden smDown>
               <Link to="/buat-tugas">
-                <Fab size="small" className={classes.newTaskButton}>
-                  <AssignmentIcon className={classes.newTaskIconMobile} />
+                <Fab
+                  size="large"
+                  variant="extended"
+                  className={classes.createTaskButton}
+                >
+                  <AssignmentIcon className={classes.createTaskIconDesktop} />
+                  Buat Tugas
                 </Fab>
               </Link>
-            </LightTooltip>
-          )}
-        </Hidden>
-        <Hidden smDown implementation="css">
-          {role === "Student" ? null : (
-            <Link to="/buat-tugas">
-              <Fab
-                size="medium"
-                variant="extended"
-                className={classes.newTaskButton}
+            </Hidden>
+            <Hidden mdUp>
+              <LightTooltip title="Buat Tugas">
+                <Link to="/buat-tugas">
+                  <Fab size="medium" className={classes.createTaskButton}>
+                    <AssignmentIcon className={classes.createTaskIconMobile} />
+                  </Fab>
+                </Link>
+              </LightTooltip>
+            </Hidden>
+          </Grid>
+        ) : null}
+        <Grid item xs>
+          <Grid container justify="flex-end" alignItems="center" spacing={1}>
+            <Grid item>
+              <Hidden smDown>
+                <TextField
+                  variant="outlined"
+                  id="searchFilterDesktop"
+                  value={searchFilter}
+                  onChange={onChange}
+                  onClick={() => setSearchBarFocus(true)}
+                  onBlur={() => setSearchBarFocus(false)}
+                  placeholder="Cari Tugas"
+                  InputProps={{
+                    style: {
+                      borderRadius: "22.5px",
+                      maxWidth: "450px",
+                      width: "100%"
+                    },
+                    startAdornment: (
+                      <InputAdornment
+                        position="start"
+                        style={{ marginRight: "-5px", color: "grey" }}
+                      >
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment
+                        position="end"
+                        style={{ marginLeft: "-10px" }}
+                      >
+                        <IconButton
+                          size="small"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onClear(e);
+                          }}
+                          style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                        >
+                          <ClearIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Hidden>
+              <Hidden mdUp>
+                {searchBarFocus ? (
+                  <div style={{ display: "flex" }}>
+                    <IconButton
+                      onClick={() => {
+                        setSearchBarFocus(false);
+                        updateSearchFilter("");
+                      }}
+                    >
+                      <ArrowBackIcon />
+                    </IconButton>
+                    <TextField
+                      variant="outlined"
+                      id="searchFilterMobile"
+                      value={searchFilter}
+                      onChange={onChange}
+                      autoFocus
+                      onClick={(e) => setSearchBarFocus(true)}
+                      placeholder="Cari Tugas"
+                      InputProps={{
+                        style: {
+                          borderRadius: "22.5px",
+                          maxWidth: "450px",
+                          width: "100%"
+                        },
+                        endAdornment: (
+                          <InputAdornment
+                            position="end"
+                            style={{ marginLeft: "-10px" }}
+                          >
+                            <IconButton
+                              size="small"
+                              id="searchFilterMobile"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onClear(e);
+                              }}
+                              style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                            >
+                              <ClearIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <LightTooltip title="Cari Tugas">
+                    <IconButton onClick={() => setSearchBarFocus(true)}>
+                      <SearchIcon />
+                    </IconButton>
+                  </LightTooltip>
+                )}
+              </Hidden>
+            </Grid>
+            <Grid item>
+              <LightTooltip title="Urutkan Tugas">
+                <IconButton onClick={handleOpenSortMenu}>
+                  <SortIcon />
+                </IconButton>
+              </LightTooltip>
+              <Menu
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleCloseSortMenu}
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
               >
-                <AssignmentIcon className={classes.newTaskIconDesktop} />
-                Buat Tugas
-              </Fab>
-            </Link>
-          )}
-        </Hidden>
-        <LightTooltip title="Urutkan Tugas">
-          <IconButton
-            onClick={handleOpenSortMenu}
-            className={classes.sortButton}
-          >
-            <SortIcon />
-          </IconButton>
-        </LightTooltip>
-        <Menu
-          keepMounted
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleCloseSortMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          {headCells.map((headCell, i) => (
-            <MenuItem
-              key={headCell.id}
-              sortDirection={orderBy === headCell.id ? order : false}
-              onClick={createSortHandler(headCell.id)}
-            >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-              >
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                  <span className={classes.visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </span>
-                ) : null}
-              </TableSortLabel>
-            </MenuItem>
-          ))}
-        </Menu>
-      </div>
+                {headCells.map((headCell, i) => (
+                  <MenuItem
+                    key={headCell.id}
+                    sortDirection={orderBy === headCell.id ? order : false}
+                    onClick={createSortHandler(headCell.id)}
+                  >
+                    <TableSortLabel
+                      active={orderBy === headCell.id}
+                      direction={orderBy === headCell.id ? order : "asc"}
+                    >
+                      {headCell.label}
+                      {orderBy === headCell.id ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </div>
   );
 }
 
-TaskListToolbar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
+  },
+  header: {
+    marginBottom: "25px",
+  },
+  headerIcon: {
+    display: "flex",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    fontSize: "25px",
+    padding: "7.5px",
+    borderRadius: "5px",
   },
   toolbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  titleDivider: {
-    backgroundColor: theme.palette.primary.main,
-    marginTop: "15px",
+    padding: "16px 0px",
     marginBottom: "15px",
   },
-  newTaskButton: {
-    marginRight: "10px",
+  createTaskButton: {
+    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -429,22 +379,14 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  newTaskIconDesktop: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-    marginRight: "7.5px",
+  createTaskIconDesktop: {
+    width: "25px",
+    height: "25px",
+    marginRight: "8px",
   },
-  newTaskIconMobile: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
-  sortButton: {
-    backgroundColor: theme.palette.action.selected,
-    color: "black",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.divider,
-      color: "black",
-    },
+  createTaskIconMobile: {
+    width: "25px",
+    height: "25px",
   },
   visuallyHidden: {
     border: 0,
@@ -456,9 +398,6 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: 20,
     width: 1,
-  },
-  deadlineWarningText: {
-    color: theme.palette.warning.main,
   },
   viewTaskButton: {
     backgroundColor: theme.palette.warning.main,
@@ -494,12 +433,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "stretch",
   },
-  titleIcon: {
-    fontSize: "28px",
-    backgroundColor: "white",
-    color: theme.palette.primary.main,
-    marginRight: "10px",
-  },
   errorIcon: {
     color: theme.palette.error.main,
   },
@@ -510,7 +443,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.success.main,
   },
   listItem: {
-    padding: "6px 16px",
+    padding: "6px 16px"
   },
   assignmentLate: {
     backgroundColor: theme.palette.primary.main,
@@ -523,6 +456,16 @@ const useStyles = makeStyles((theme) => ({
 
 function TaskList(props) {
   const classes = useStyles();
+  const {
+    tasksCollection,
+    getAllTask,
+    deleteTask,
+    getAllClass,
+    getAllSubjects,
+  } = props;
+  const { user } = props.auth;
+  const { all_classes_map } = props.classesCollection;
+  const { all_subjects_map } = props.subjectsCollection;
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
@@ -533,17 +476,6 @@ function TaskList(props) {
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [submittedTaskIds, setSubmittedTaskIds] = React.useState(null);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
-
-  const {
-    tasksCollection,
-    getAllTask,
-    deleteTask,
-    getAllClass,
-    getAllSubjects,
-  } = props;
-  const { all_classes_map } = props.classesCollection;
-  const { all_subjects_map } = props.subjectsCollection;
-  const { user } = props.auth;
 
   const taskRowItem = (data) => {
     rows.push(
@@ -573,7 +505,7 @@ function TaskList(props) {
           }
         })
         .finally(() => {
-          // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
+          // If there is error 404 (files.length === 0), submittedTaskIds will be filled with an empty set.
           setSubmittedTaskIds(submittedTaskIdSet);
         });
     }
@@ -582,7 +514,7 @@ function TaskList(props) {
   }, []);
 
   React.useEffect(() => {
-    // Untuk muculin delete snackbar pas didelete dari view page
+    // To show delete snackbar when a task is deleted.
     if (props.location.openDeleteSnackbar) {
       handleOpenDeleteSnackbar();
     }
@@ -620,7 +552,7 @@ function TaskList(props) {
             });
         }
       } else {
-        //Admin
+        // For administrator?
         tasksCollection
           .filter((item) =>
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
@@ -686,15 +618,19 @@ function TaskList(props) {
 
   return (
     <div className={classes.root}>
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Tugas"
-        itemName={selectedTaskName}
-        deleteItem={() => {
-          onDeleteTask(selectedTaskId);
-        }}
-      />
+      <Grid container alignItems="center" spacing={2} className={classes.header}>
+        <Grid item>
+          <div className={classes.headerIcon}>
+            <AssignmentIcon />
+          </div>
+        </Grid>
+        <Grid item>
+          <Typography variant="h5" align="left">
+            Tugas
+          </Typography>
+        </Grid>
+      </Grid>
+      <Divider />
       <TaskListToolbar
         role={user.role}
         deleteTask={deleteTask}
@@ -705,183 +641,204 @@ function TaskList(props) {
         rowCount={rows ? rows.length : 0}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
-        //Two props added for search filter.
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
       />
-      <Divider variant="inset" className={classes.titleDivider} />
-      <Grid container direction="column" spacing={2}>
-        {rows.length === 0 ? (
-          <Empty />
-        ) : (
-          stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-            let viewpage =
-              user.role === "Student"
-                ? `/tugas-murid/${row._id}`
-                : `/tugas-guru/${row._id}`;
-            return (
-              <Grid item>
-                {user.role === "Teacher" ? (
-                  <ExpansionPanel button variant="outlined">
-                    <ExpansionPanelSummary className={classes.taskPanelSummary}>
-                      <Grid
-                        container
-                        spacing={1}
-                        justify="space-between"
-                        alignItems="center"
-                      >
-                        <Grid item>
-                          <Hidden smUp implementation="css">
-                            <Typography variant="h6" id={labelId}>
-                              {row.tasktitle}
-                            </Typography>
-                            <Typography variant="caption" color="textSecondary">
-                              {all_subjects_map.get(row.subject)}
-                            </Typography>
-                          </Hidden>
-                          <Hidden xsDown implementation="css">
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              <ListItemAvatar>
-                                <Avatar
-                                  className={classes.assignmentLateTeacher}
-                                >
-                                  <AssignmentIcon />
-                                </Avatar>
-                              </ListItemAvatar>
-                              <div>
-                                <Typography variant="h6" id={labelId}>
-                                  {row.tasktitle}
-                                </Typography>
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  {all_subjects_map.get(row.subject)}
-                                </Typography>
-                              </div>
+      {rows.length === 0 ? (
+        <Empty />
+      ) : (
+        <Grid container direction="column" spacing={2}>
+          {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+          const labelId = `enhanced-table-checkbox-${index}`;
+          let viewpage =
+            user.role === "Student"
+              ? `/tugas-murid/${row._id}`
+              : `/tugas-guru/${row._id}`;
+          return (
+            <Grid item>
+              {user.role === "Teacher" ? (
+                <ExpansionPanel button variant="outlined">
+                  <ExpansionPanelSummary className={classes.taskPanelSummary}>
+                    <Grid
+                      container
+                      spacing={1}
+                      justify="space-between"
+                      alignItems="center"
+                    >
+                      <Grid item>
+                        <Hidden smUp implementation="css">
+                          <Typography variant="h6" id={labelId}>
+                            {row.tasktitle}
+                          </Typography>
+                          <Typography variant="caption" color="textSecondary">
+                            {all_subjects_map.get(row.subject)}
+                          </Typography>
+                        </Hidden>
+                        <Hidden xsDown implementation="css">
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <ListItemAvatar>
+                              <Avatar
+                                className={classes.assignmentLateTeacher}
+                              >
+                                <AssignmentIcon />
+                              </Avatar>
+                            </ListItemAvatar>
+                            <div>
+                              <Typography variant="h6" id={labelId}>
+                                {row.tasktitle}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="textSecondary"
+                              >
+                                {all_subjects_map.get(row.subject)}
+                              </Typography>
                             </div>
-                          </Hidden>
-                        </Grid>
-                        <Grid item xs container spacing={1} justify="flex-end">
-                          <Grid item>
-                            <LightTooltip title="Lihat Lebih Lanjut">
-                              <Link to={viewpage}>
-                                <IconButton
-                                  size="small"
-                                  className={classes.viewTaskButton}
-                                >
-                                  <PageviewIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
-                          <Grid item>
-                            <LightTooltip title="Sunting">
-                              <Link to={`/sunting-tugas/${row._id}`}>
-                                <IconButton
-                                  size="small"
-                                  className={classes.editTaskButton}
-                                >
-                                  <EditIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
-                          <Grid item>
-                            <LightTooltip title="Hapus">
+                          </div>
+                        </Hidden>
+                      </Grid>
+                      <Grid item xs container spacing={1} justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Lihat Lebih Lanjut">
+                            <Link to={viewpage}>
                               <IconButton
                                 size="small"
-                                className={classes.deleteTaskButton}
-                                onClick={(e) => {
-                                  handleOpenDeleteDialog(
-                                    e,
-                                    row._id,
-                                    row.tasktitle
-                                  );
-                                }}
+                                className={classes.viewTaskButton}
                               >
-                                <DeleteIcon fontSize="small" />
+                                <PageviewIcon fontSize="small" />
                               </IconButton>
-                            </LightTooltip>
-                          </Grid>
+                            </Link>
+                          </LightTooltip>
+                        </Grid>
+                        <Grid item>
+                          <LightTooltip title="Sunting">
+                            <Link to={`/sunting-tugas/${row._id}`}>
+                              <IconButton
+                                size="small"
+                                className={classes.editTaskButton}
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
+                        </Grid>
+                        <Grid item>
+                          <LightTooltip title="Hapus">
+                            <IconButton
+                              size="small"
+                              className={classes.deleteTaskButton}
+                              onClick={(e) => {
+                                handleOpenDeleteDialog(
+                                  e,
+                                  row._id,
+                                  row.tasktitle
+                                );
+                              }}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </LightTooltip>
                         </Grid>
                       </Grid>
-                    </ExpansionPanelSummary>
-                    <Divider />
-                    <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
-                      <Grid container>
-                        <Grid item xs={12}>
-                          <Typography variant="body1">
-                            Kelas yang Ditugaskan:{" "}
-                            {!all_classes_map.size
-                              ? null
-                              : row.class_assigned.map((id, i) => {
-                                  if (all_classes_map.get(id)) {
-                                    if (i === row.class_assigned.length - 1)
-                                      return `${all_classes_map.get(id).name}`;
-                                    return `${all_classes_map.get(id).name}, `;
-                                  } else {
-                                    return undefined;
-                                  }
-                                })}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography variant="body1" color="textSecondary">
-                            Waktu Dibuat:{" "}
-                            {moment(row.createdAt)
-                              .locale("id")
-                              .format("DD MMM YYYY, HH.mm")}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography variant="body1" color="textSecondary">
-                            Batas Waktu:{" "}
-                            {moment(row.deadline)
-                              .locale("id")
-                              .format("DD MMM YYYY, HH.mm")}
-                          </Typography>
-                        </Grid>
+                    </Grid>
+                  </ExpansionPanelSummary>
+                  <Divider />
+                  <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
+                    <Grid container>
+                      <Grid item xs={12}>
+                        <Typography variant="body1">
+                          Kelas yang Ditugaskan:{" "}
+                          {!all_classes_map.size
+                            ? null
+                            : row.class_assigned.map((id, i) => {
+                                if (all_classes_map.get(id)) {
+                                  if (i === row.class_assigned.length - 1)
+                                    return `${all_classes_map.get(id).name}`;
+                                  return `${all_classes_map.get(id).name}, `;
+                                } else {
+                                  return undefined;
+                                }
+                              })}
+                        </Typography>
                       </Grid>
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
-                ) : (
-                  <Link to={viewpage}>
-                    <Paper
-                      button
-                      component="a"
-                      variant="outlined"
-                      className={classes.taskPaper}
+                      <Grid item xs={12}>
+                        <Typography variant="body1" color="textSecondary">
+                          Waktu Dibuat:{" "}
+                          {moment(row.createdAt)
+                            .locale("id")
+                            .format("DD MMM YYYY, HH.mm")}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="body1" color="textSecondary">
+                          Batas Waktu:{" "}
+                          {moment(row.deadline)
+                            .locale("id")
+                            .format("DD MMM YYYY, HH.mm")}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              ) : (
+                <Link to={viewpage}>
+                  <Paper
+                    button
+                    component="a"
+                    variant="outlined"
+                    className={classes.taskPaper}
+                  >
+                    <Badge
+                      style={{ display: "flex", flexDirection: "row" }}
+                      badgeContent={
+                        row.submissionStatus === false ? (
+                        // workStatus(row) === "Belum Dikumpulkan" ? (
+                          <ErrorIcon className={classes.errorIcon} />
+                        ) : (
+                          <CheckCircleIcon className={classes.checkIcon} />
+                        )
+                      }
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
                     >
-                      <Badge
-                        style={{ display: "flex", flexDirection: "row" }}
-                        badgeContent={
-                          row.submissionStatus === false ? (
-                            // workStatus(row) === "Belum Dikumpulkan" ? (
-                            <ErrorIcon className={classes.errorIcon} />
-                          ) : (
-                            <CheckCircleIcon className={classes.checkIcon} />
-                          )
-                        }
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "right",
-                        }}
+                      <ListItem
+                        // button
+                        // component="a"
+                        className={classes.listItem}
                       >
-                        <ListItem
-                          // button
-                          // component="a"
-                          className={classes.listItem}
-                        >
-                          <Hidden smUp implementation="css">
+                        <Hidden smUp implementation="css">
+                          <ListItemText
+                            primary={
+                              <Typography variant="h6">
+                                {row.tasktitle}
+                              </Typography>
+                            }
+                            secondary={all_subjects_map.get(row.subject)}
+                          />
+                        </Hidden>
+                        <Hidden xsDown implementation="css">
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <ListItemAvatar>
+                              <Avatar className={classes.assignmentLate}>
+                                <AssignmentIcon />
+                              </Avatar>
+                            </ListItemAvatar>
                             <ListItemText
                               primary={
                                 <Typography variant="h6">
@@ -890,63 +847,49 @@ function TaskList(props) {
                               }
                               secondary={all_subjects_map.get(row.subject)}
                             />
-                          </Hidden>
-                          <Hidden xsDown implementation="css">
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              <ListItemAvatar>
-                                <Avatar className={classes.assignmentLate}>
-                                  <AssignmentIcon />
-                                </Avatar>
-                              </ListItemAvatar>
-                              <ListItemText
-                                primary={
-                                  <Typography variant="h6">
-                                    {row.tasktitle}
-                                  </Typography>
-                                }
-                                secondary={all_subjects_map.get(row.subject)}
-                              />
-                            </div>
-                          </Hidden>
-                          {/* <ListItemText
-                            align="right"
-                            primary={
-                              <Typography variant="subtitle" color="textSecondary">
-                                {row.date}
-                              </Typography>
-                            }
-                            secondary={row.time}
-                          /> */}
-                          <ListItemText
-                            align="right"
-                            primary={
-                              <Typography variant="body2" color="textSecondary">
-                                {moment(row.createdAt)
-                                  .locale("id")
-                                  .format("DD MMM YYYY")}
-                              </Typography>
-                            }
-                            secondary={moment(row.createdAt)
-                              .locale("id")
-                              .format("HH.mm")}
-                          />
-                        </ListItem>
-                      </Badge>
-                    </Paper>
-                  </Link>
-                )}
-              </Grid>
-            );
-          })
-        )}
-      </Grid>
+                          </div>
+                        </Hidden>
+                        {/* <ListItemText
+                          align="right"
+                          primary={
+                            <Typography variant="subtitle" color="textSecondary">
+                              {row.date}
+                            </Typography>
+                          }
+                          secondary={row.time}
+                        /> */}
+                        <ListItemText
+                          align="right"
+                          primary={
+                            <Typography variant="body2" color="textSecondary">
+                              {moment(row.createdAt)
+                                .locale("id")
+                                .format("DD MMM YYYY")}
+                            </Typography>
+                          }
+                          secondary={moment(row.createdAt)
+                            .locale("id")
+                            .format("HH.mm")}
+                        />
+                      </ListItem>
+                    </Badge>
+                  </Paper>
+                </Link>
+              )}
+            </Grid>
+          );
+        })}
+        </Grid>
+      )}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Tugas"
+        itemName={selectedTaskName}
+        deleteItem={() => {
+          onDeleteTask(selectedTaskId);
+        }}
+      />
       <Snackbar
         open={openDeleteSnackbar}
         autoHideDuration={4000}
@@ -954,7 +897,7 @@ function TaskList(props) {
           handleCloseDeleteSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity="success"
           onClose={(event, reason) => {
@@ -962,7 +905,7 @@ function TaskList(props) {
           }}
         >
           Tugas berhasil dihapus
-        </MuiAlert>
+        </Alert>
       </Snackbar>
     </div>
   );

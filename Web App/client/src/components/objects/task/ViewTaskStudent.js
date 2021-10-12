@@ -3,10 +3,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import CustomLinkify from "../../misc/linkify/Linkify";
-import { clearSuccess } from "../../../actions/SuccessActions";
-import { clearErrors } from "../../../actions/ErrorActions";
-import { uploadTugas, deleteTugas } from "../../../actions/UploadActions";
 import {
   deleteFileSubmitTasks,
   uploadFileSubmitTasks,
@@ -36,12 +32,19 @@ import {
   getTeachers,
   getStudents,
 } from "../../../actions/UserActions";
+import { uploadTugas, deleteTugas } from "../../../actions/UploadActions";
+import { getSetting } from "../../../actions/SettingActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
+  Badge,
   Button,
+  Box,
   Divider,
   Grid,
   Hidden,
@@ -49,20 +52,25 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  ListItemSecondaryAction,
   Link,
   Paper,
-  Typography,
-  TextField,
-  Badge,
   Snackbar,
-  Box,
+  TextField,
+  Tooltip,
+  Typography
 } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/Add";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import MuiAlert from "@material-ui/lab/Alert";
-import DeleteIcon from "@material-ui/icons/Delete";
-import PublishIcon from "@material-ui/icons/Publish";
+import Alert from "@material-ui/lab/Alert";
+import {
+  Add as AddIcon,
+  Cancel as CancelIcon,
+  CheckCircle as CheckCircleIcon,
+  Create as CreateIcon,
+  Delete as DeleteIcon,
+  Publish as PublishIcon,
+  Send as SendIcon
+} from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   FaFile,
   FaFileAlt,
@@ -72,27 +80,26 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import SendIcon from "@material-ui/icons/Send";
-import CreateIcon from "@material-ui/icons/Create";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import CancelIcon from "@material-ui/icons/Cancel";
-
-const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
-  paperBox: {
+  taskPaper: {
     padding: "20px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "15px",
+    },
   },
-  deadlineWarningText: {
-    color: theme.palette.warning.main,
+  taskDivider: {
+    margin: "22.5px 0px",
+    backgroundColor: theme.palette.primary.light,
   },
   workChosenFile: {
     width: "200px",
@@ -107,7 +114,7 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  submitWorkButton: {
+  submitTaskButton: {
     width: "200px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -116,26 +123,22 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  listItemPaper: {
-    marginTop: "5px",
-    marginBottom: "5px",
-  },
-  listItem: {
+  rootChosen: {
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  downloadIconButton: {
-    marginLeft: "5px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
+  rootUploaded: {
+    backgroundColor: "#F2F2F2",
   },
-  deleteIconButton: {
-    marginLeft: "7.5px",
+  submittedBadge: {
+    fontSize: "16px",
+    borderRadius: "8px",
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+  },
+  deleteTaskButton: {
+    marginLeft: "10px",
     backgroundColor: theme.palette.error.dark,
     color: "white",
     "&:focus, &:hover": {
@@ -164,84 +167,9 @@ const useStyles = makeStyles((theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
-  submittedButton: {
-    margin: "auto",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    padding: "5px",
-    paddingLeft: "10px",
-    paddingRight: "10px",
-    maxWidth: "100px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-  },
-  listItemPaperSubmitted: {
-    backgroundColor: "#f2f2f2",
-    marginTop: "5px",
-    marginBottom: "5px",
-  },
-  fileNameTrim: {
-    textOverflow: "ellipsis",
-    overflow: "hidden",
-    whiteSpace: "nowrap",
-    marginRight: "13px",
-  },
-  commentLittleIcon: {
-    color: theme.palette.text.disabled,
-    opacity: 0.5,
-    "&:focus, &:hover": {
-      opacity: 1,
-      cursor: "pointer",
-    },
-  },
-  sendIcon: {
-    color: theme.palette.text.disabled,
-    "&:focus, &:hover": {
-      cursor: "pointer",
-    },
-    [theme.breakpoints.down("xs")]: {
-      marginLeft: "15px",
-    },
-    marginLeft: "20px",
-  },
-  mobileName: {
-    marginRight: "7px",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    overflow: "hidden",
-    maxWidth: "50px",
-  },
-  smAvatar: {
-    [theme.breakpoints.down("xs")]: {
-      marginRight: "15px",
-    },
-    marginRight: "20px",
-  },
-  marginMobile: {
-    [theme.breakpoints.down("sm")]: {
-      marginRight: "14px",
-      marginLeft: "7.6px",
-    },
-  },
-  checkButton: {
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    marginTop: "6px",
-    marginRight: "3px",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.dark,
-    },
-  },
-  cancelButton: {
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    marginTop: "6px",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-    },
-  },
 }));
+
+const path = require("path");
 
 function LampiranFile(props) {
   const classes = useStyles();
@@ -586,8 +514,6 @@ function WorkFile(props) {
 
 function ViewTaskStudent(props) {
   const classes = useStyles();
-
-  const { user, selectedUser, all_students, all_teachers } = props.auth;
   const {
     uploadFileSubmitTasks,
     viewFileSubmitTasks,
@@ -610,12 +536,10 @@ function ViewTaskStudent(props) {
     getTeachers,
     getStudents,
     getMultipleFileAvatar,
+    getSetting
   } = props;
+  const { user, selectedUser, all_students, all_teachers } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
-  // console.log(tasksCollection)
-
-  // const theme = useTheme();
-  // ref itu untuk ngerefer html yang ada di render.
 
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
@@ -633,7 +557,7 @@ function ViewTaskStudent(props) {
   const [selectedFileId, setSelectedFileId] = React.useState(null);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
-  // USER COMMENT
+  // Comment
   const [commentValue, setCommentValue] = React.useState("");
   const [commentEditorValue, setCommentEditorValue] = React.useState("");
   const [commentList, setCommentList] = React.useState([]);
@@ -645,25 +569,26 @@ function ViewTaskStudent(props) {
   const [deleteCommentIdx, setDeleteCommentIdx] = React.useState(null);
   const deleteDialogHandler = React.useRef(null);
 
-  // SNACKBAR
+  // Snackbar
   const [snackbarContent, setSnackbarContent] = React.useState("");
   const [severity, setSeverity] = React.useState("info");
   const [openCommentSnackbar, setOpenCommentSnackbar] = React.useState(false);
 
   let tugasId = props.match.params.id;
-  // kalau misalnya parameter keduanya masukkin aja array kosong, dia acts like compomnentDidMount()
-  // useEffect(() => {getAllSubjects(user.unit, "map")}, [])
+  // If an empty array is inserted to the second parameter, it will acts like compomnentDidMount().
+  // useEffect(() => {getAllSubjects("map")}, [])
 
   useEffect(() => {
     getStudents(user.unit);
     getTeachers(user.unit);
+    getSetting();
     clearErrors();
     clearSuccess();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // This page is only for student later on, so for now put the user.role logic condition
-  // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
+  // This is like componentDidUpdate(). If the value inside the array changes, it will be rerun.
   useEffect(() => {
     // getTaskFilesByUser(user._id, tugasId)
     getFileSubmitTasks_AT(tugasId, user._id).then((results) =>
@@ -676,7 +601,6 @@ function ViewTaskStudent(props) {
     if (tasksCollection.person_in_charge_id) {
       getOneUser(tasksCollection.person_in_charge_id);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [success, tasksCollection.person_in_charge_id]);
 
@@ -708,7 +632,7 @@ function ViewTaskStudent(props) {
         deleteCommentIdx !== null &&
         deleteCommentIdx < selectedCommentIdx
       ) {
-        // memindahkan textfield edit
+        // To move edit textfield.
         setSelectedCommentIdx(selectedCommentIdx - 1);
       }
       setDeleteCommentIdx(null);
@@ -739,7 +663,6 @@ function ViewTaskStudent(props) {
   const handleCommentInputChange = (e) => {
     setCommentValue(e.target.value);
   };
-
   const handleCommentEditorChange = (e) => {
     setCommentEditorValue(e.target.value);
   };
@@ -748,7 +671,6 @@ function ViewTaskStudent(props) {
     setCommentEditorValue("");
     setSelectedCommentIdx(null);
   };
-
   const handleClickEdit = (idx) => {
     setCommentEditorValue(commentList[idx].content);
     setSelectedCommentIdx(idx);
@@ -850,7 +772,7 @@ function ViewTaskStudent(props) {
   };
 
   const listWorkFile = () => {
-    // Yang udah diupload
+    // Task that has already been uplaoded.
     return fileTugas.map((item) => (
       <WorkFile
         handleOpenDeleteDialog={handleOpenDeleteDialog}
@@ -865,7 +787,7 @@ function ViewTaskStudent(props) {
   };
 
   const listFileChosen = () => {
-    // Yang belum diupload
+    // Task that has not been uplaoded.
     if (fileTugas.length === 0 && fileToSubmit.length === 0) {
       return (
         <Paper className={classes.submittedButton}>
@@ -917,7 +839,7 @@ function ViewTaskStudent(props) {
   const onSubmitTugas = (e) => {
     e.preventDefault();
     let formData = new FormData();
-    // fileToSubmit ini bukan array biasa, itu FileList object.
+    // fileToSubmit is not a usual array, itu FileList object.
     for (var i = 0; i < fileToSubmit.length; i++) {
       formData.append("tugas", fileToSubmit[i]);
     }
@@ -990,8 +912,7 @@ function ViewTaskStudent(props) {
     clearSuccess();
   };
 
-  // Komentar
-  // Kalau avatar belum ada, pakai default
+  // Comment
   const generateComments = (
     author_id,
     authorName,
@@ -1151,88 +1072,6 @@ function ViewTaskStudent(props) {
     );
   };
 
-  // const generateComments = (author_id, authorName, date, comment, isSelfMade, idx, edited) => {
-  //   return (
-  //     <Grid container item xs={12} direction="row" spacing={2}>
-  //       <Hidden smUp>
-  //         <Grid item xs={1} sm={0} className={classes.smAvatar}>
-  //           <Avatar src={commentAvatar[author_id]}/>
-  //         </Grid>
-  //       </Hidden>
-  //       <Hidden xsDown>
-  //         <Grid item className={classes.smAvatar}>
-  //           <Avatar src={commentAvatar[author_id]}/>
-  //         </Grid>
-  //       </Hidden>
-  //       <Grid item xs={10} sm={10} md={11}>
-  //         <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-  //           <Typography style={{marginRight: "10px"}}><b>{authorName}</b></Typography>
-  //           {edited === true ?
-  //             <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>Edited</Typography>
-  //           : null}
-  //           <Typography color="textSecondary" variant="body2" style={{marginRight: "10px"}}>
-  //             {moment(date)
-  //                   .locale("id")
-  //                   .format("DD MMM YYYY, HH.mm")}
-  //           </Typography>
-  //           {(isSelfMade && !(selectedCommentIdx !== null && selectedCommentIdx === idx)) ?
-  //             <>
-  //               <LightTooltip title="Sunting">
-  //                 <CreateIcon
-  //                   style={{marginRight: "2px"}}
-  //                   className={classes.commentLittleIcon}
-  //                   fontSize="small"
-  //                   onClick={() => handleClickEdit(idx)}
-  //                 />
-  //               </LightTooltip>
-  //               <LightTooltip title="Hapus">
-  //                 <DeleteIcon
-  //                   className={classes.commentLittleIcon}
-  //                   fontSize="small"
-  //                   onClick={() => handleDeleteComment(idx)}
-  //                 />
-  //               </LightTooltip>
-  //             </>
-  //           : null}
-  //         </div>
-  //         {(selectedCommentIdx !== null && selectedCommentIdx === idx) ?
-  //             <div style={{display: "flex", flexDirection: "column"}}>
-  //               <TextField
-  //                 variant="outlined"
-  //                 onChange={handleCommentEditorChange}
-  //                 value={commentEditorValue}
-  //                 style={{marginTop: "5px"}}
-  //                 multiline
-  //               />
-  //               <div style={{display: "flex", alignItems: "center"}}>
-  //                 <Button
-  //                   variant="contained"
-  //                   color="default"
-  //                   className={classes.checkButton}
-  //                   startIcon={<CheckCircleIcon />}
-  //                   onClick={handleEditComment}
-  //                 >
-  //                   Simpan
-  //                 </Button>
-  //                 <Button
-  //                   variant="contained"
-  //                   color="default"
-  //                   className={classes.cancelButton}
-  //                   startIcon={<CancelIcon />}
-  //                   onClick={closeEditMode}
-  //                 >
-  //                   Batal
-  //                 </Button>
-  //               </div>
-  //             </div>
-  //           :
-  //             <Typography style={{marginTop: "5px"}}>{comment}</Typography>
-  //         }
-  //       </Grid>
-  //     </Grid>
-  //   )
-  // }
-
   const onDeleteFileSubmitTasks = (id) => {
     deleteFileSubmitTasks(id).then((res) => {
       getFileSubmitTasks_AT(tugasId, user._id).then((results) => {
@@ -1247,11 +1086,205 @@ function ViewTaskStudent(props) {
     ? "Schooly | Lihat Tugas"
     : `Schooly | ${tasksCollection.name}`;
 
-  // console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline));
-  // console.log(success, filesCollection.files);
-
   return (
     <div className={classes.root}>
+      <Grid container justify="space-between" alignItems="stretch" spacing={2}>
+        <Grid item xs={12} md={8}>
+          <Paper className={classes.taskPaper}>
+            <Typography variant="h4" style={{ marginBottom: "5px" }}>
+              {tasksCollection.name}
+            </Typography>
+            <Typography color="primary" paragraph>
+              Tugas {all_subjects_map.get(tasksCollection.subject)}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Oleh: {selectedUser._id !== tasksCollection.person_in_charge_id
+                ? null
+                : selectedUser.name}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Waktu Dibuat:{" "}
+              {moment(tasksCollection.createdAt)
+                .locale("id")
+                .format("DD MMM YYYY, HH.mm")}
+            </Typography>
+            <Divider className={classes.taskDivider} />
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" gutterBottom>
+                  Tenggat:
+                </Typography>
+                <Typography>
+                  {moment(tasksCollection.deadline)
+                    .locale("id")
+                    .format("DD MMM YYYY, HH.mm")}
+                </Typography>
+              </Grid>
+              {!tasksCollection.description ? null : (
+                <Grid item xs={12}>
+                  <Typography color="textSecondary" gutterBottom>
+                    Deskripsi Tugas:
+                  </Typography>
+                  <Typography
+                    align="justify"
+                    style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                  >
+                    <CustomLinkify text={tasksCollection.description} />
+                  </Typography>
+                </Grid>
+              )}
+              {fileLampiran.length === 0 ? null : (
+                <Grid item xs={12}>
+                  <Typography color="textSecondary" gutterBottom>
+                    Lampiran:
+                  </Typography>
+                  <Grid container spacing={1}>
+                    {fileLampiran.map((lampiran) => (
+                      <LampiranFile
+                        file_id={lampiran._id}
+                        onPreviewFile={viewFileTasks}
+                        onDownloadFile={downloadFileTasks}
+                        filename={lampiran.filename}
+                        filetype={fileType(lampiran.filename)}
+                      />
+                    ))}
+                  </Grid>
+                </Grid>
+              )}
+            </Grid>
+          </Paper>
+          <Paper className={classes.taskPaper} style={{marginTop: "20px"}}>
+            <Typography variant="h6" gutterBottom>Komentar Kelas</Typography>
+            <Divider style={{ marginBottom: "17.5px" }} />
+            <Grid container spacing={2}>
+              {
+                (commentList.length !== 0) ?
+                  <>
+                    {
+                      commentList.map((comment, idx) => (
+                        generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)
+                      ))
+                    }
+                    <Grid item xs={12}>
+                      <Divider />
+                    </Grid>
+                  </>
+                : null
+              }
+              {/* {
+                (commentList.length === 0) ?
+                  <Grid item xs={12}>
+                    <Typography color="textSecondary" align="center">Belum ada komentar</Typography>
+                  </Grid>
+                : null
+              } */}
+              <Grid container item direction="row" alignItems="center">
+                <div className={classes.smAvatar}>
+                  <Avatar src={commentAvatar[user._id]}/>
+                </div>
+                <Box flexGrow={1}>
+                  <TextField
+                    className={classes.textField}
+                    variant="outlined"
+                    multiline
+                    style={{display: "flex"}}
+                    InputProps={{style: {borderRadius: "15px"}}}
+                    placeholder="Tambahkan komentar..."
+                    onChange={handleCommentInputChange}
+                    value={commentValue}
+                  />
+                </Box>
+                <div>
+                  <LightTooltip title="Kirim">
+                    <SendIcon className={classes.sendIcon} onClick={handleCreateComment}/>
+                  </LightTooltip>
+                </div>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Paper className={classes.taskPaper}>
+            <Typography variant="h5" align="center" gutterBottom>
+              Hasil Pekerjaan
+            </Typography>
+            <Divider style={{ margin: "10px 0px" }} />
+            {fileTugas.length === 0 ? (
+              <Grid container wrap="nowrap" direction="column" spacing={1}>
+                {listFileChosen()}
+              </Grid>
+            ) : (
+              <Grid container wrap="nowrap" direction="column" spacing={1}>
+                {listWorkFile()}
+                {listFileChosen()}
+              </Grid>
+            )}
+            <Divider style={{ margin: "10px 0px" }} />
+            <form onSubmit={onSubmitTugas} style={{ padding: "10px 0px 35px 0px" }}>
+              <Grid container direction="column" alignItems="center" spacing={1}>
+                <Grid item>
+                  <input
+                    type="file"
+                    multiple={true}
+                    name="file"
+                    id="file"
+                    ref={uploadedTugas}
+                    style={{ display: "none" }}
+                  />
+                  <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    className={classes.selectFileButton}
+                    onClick={() => {
+                      tugasUploader.current.click();
+                    }}
+                  >
+                    Pilih Berkas
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <input
+                    id="file_control"
+                    type="file"
+                    multiple={true}
+                    name="tugas"
+                    onChange={handleTugasUpload}
+                    ref={tugasUploader}
+                    accept="file/*"
+                    style={{ display: "none" }}
+                  />
+                  <Button
+                    variant="contained"
+                    startIcon={<PublishIcon />}
+                    className={classes.submitTaskButton}
+                    type="submit"
+                    disabled={fileToSubmit.length === 0}
+                    // onClick={handleOpenUploadDialog}
+                  >
+                    Kumpul Tugas
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+            <Grid container direction="column" alignItems="center">
+              <Typography>
+                {!tasksCollection.grades
+                  ? "Belum Diperiksa"
+                  : !tasksCollection.grades[user._id]
+                  ? "Belum Diperiksa"
+                  : "Telah Diperiksa"}
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                Nilai: {!tasksCollection.grades
+                  ? "N/A"
+                  : !tasksCollection.grades[user._id]
+                  ? "N/A"
+                  : `${tasksCollection.grades[user._id]}/100`}
+              </Typography>
+            </Grid>
+          </Paper>
+        </Grid>
+      </Grid>
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
@@ -1276,472 +1309,15 @@ function ViewTaskStudent(props) {
         handleCloseUploadDialog={handleCloseUploadDialog}
         redirectLink={false}
       />
-      <Grid
-        container
-        spacing={2}
-        justify="space-between"
-        alignItems="stretch"
-        style={{ marginBottom: "30px" }}
-      >
-        <Grid item xs={12} md={8}>
-          <Paper className={classes.paperBox}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} style={{ paddingBottom: "0" }}>
-                <Typography variant="h4">{tasksCollection.name}</Typography>
-                <Typography
-                  variant="caption"
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  <h6>{all_subjects_map.get(tasksCollection.subject)}</h6>
-                </Typography>
-              </Grid>
-
-              <Grid item xs={12} md={7} style={{ paddingTop: "0" }}>
-                <Typography variant="body2" color="textSecondary">
-                  Oleh: &nbsp;
-                  <b>
-                    {selectedUser._id !== tasksCollection.person_in_charge_id
-                      ? null
-                      : selectedUser.name}
-                  </b>
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Waktu Dibuat:{" "}
-                  {moment(tasksCollection.createdAt)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH.mm")}
-                </Typography>
-                <Hidden mdUp>
-                  <Typography variant="body2" color="textSecondary">
-                    Tenggat:{" "}
-                    {moment(tasksCollection.deadline)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH.mm")}
-                  </Typography>
-                </Hidden>
-              </Grid>
-              <Hidden smDown style={{ display: "flex" }}>
-                <Grid
-                  item
-                  xs={12}
-                  md={5}
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    align="right"
-                    color="textSecondary"
-                  >
-                    Tenggat:{" "}
-                    {moment(tasksCollection.deadline)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH.mm")}
-                  </Typography>
-                </Grid>
-              </Hidden>
-
-              <Grid item xs={12}>
-                <Divider className={classes.dividerColor} />
-              </Grid>
-
-              {/* <Grid item xs={12} style={{ marginTop: "30px" }}>
-                <Typography color="primary" gutterBottom>
-                  Kelas yang Diberikan:
-                </Typography>
-                <Typography>
-                  {!tasksCollection.class_assigned || !all_classes_map.size
-                    ? null
-                    : tasksCollection.class_assigned.map((kelas, i) => {
-                      if (all_classes_map.get(kelas)) {
-                        if (i === tasksCollection.class_assigned.length - 1)
-                          return `${all_classes_map.get(kelas).name}`;
-                        return `${all_classes_map.get(kelas).name}, `;
-                      }
-                      return null;
-                    })}
-                </Typography>
-              </Grid> */}
-              {!tasksCollection.description ? null : (
-                <Grid item xs={12}>
-                  <Typography color="textSecondary" gutterBottom>
-                    Deskripsi Tugas:
-                  </Typography>
-                  <Typography
-                    align="justify"
-                    style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-                  >
-                    <CustomLinkify text={tasksCollection.description} />
-                  </Typography>
-                </Grid>
-              )}
-              {fileLampiran.length === 0 ? null : (
-                <Grid item xs={12} style={{ marginTop: "15px" }}>
-                  <Typography color="textSecondary" gutterBottom>
-                    Lampiran Berkas:
-                  </Typography>
-                  <Grid container spacing={1}>
-                    {fileLampiran.map((lampiran) => (
-                      <LampiranFile
-                        file_id={lampiran._id}
-                        onPreviewFile={viewFileTasks}
-                        onDownloadFile={downloadFileTasks}
-                        filename={lampiran.filename}
-                        filetype={fileType(lampiran.filename)}
-                      />
-                    ))}
-                  </Grid>
-                </Grid>
-              )}
-            </Grid>
-          </Paper>
-          <Hidden smUp>
-            <Grid item xs={12} md={4}>
-              <Paper
-                className={classes.paperBox}
-                style={{ paddingBottom: "10px", marginTop: "20px" }}
-              >
-                <Grid item>
-                  <Typography
-                    variant="h5"
-                    align="center"
-                    style={{ marginBottom: "20px" }}
-                  >
-                    Hasil Pekerjaan
-                  </Typography>
-                </Grid>
-                <Divider />
-                {/* <Grid
-                    item
-                    style={{
-                      padding: "10px",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                    }}
-                  >
-                      {listWorkFile()}
-                      {listFileChosen()}
-                  </Grid> */}
-
-                {fileTugas.length === 0 ? (
-                  <Grid
-                    item
-                    style={{
-                      padding: "10px",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {/* Kasus Kosong */}
-                    {listFileChosen()}
-                    {/* {listWorkFile()} */}
-                  </Grid>
-                ) : (
-                  <Grid
-                    item
-                    style={{
-                      padding: "10px",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {listWorkFile()}
-                    {listFileChosen()}
-                  </Grid>
-                )}
-                <Divider />
-                <Grid
-                  item
-                  container
-                  direction="column"
-                  alignItems="center"
-                  spacing={2}
-                  style={{ padding: "20px" }}
-                >
-                  <form onSubmit={onSubmitTugas}>
-                    <div style={{ marginBottom: "15px" }}>
-                      <input
-                        id="file_control"
-                        type="file"
-                        multiple={true}
-                        name="tugas"
-                        onChange={handleTugasUpload}
-                        ref={tugasUploader}
-                        accept="file/*"
-                        style={{ display: "none" }}
-                      />
-                      <input
-                        type="file"
-                        multiple={true}
-                        name="file"
-                        id="file"
-                        ref={uploadedTugas}
-                        style={{ display: "none" }}
-                      />
-                      <Button
-                        variant="contained"
-                        startIcon={<AddIcon />}
-                        className={classes.selectFileButton}
-                        onClick={() => {
-                          tugasUploader.current.click();
-                        }}
-                      >
-                        Pilih Berkas
-                      </Button>
-                    </div>
-                    <div>
-                      <Button
-                        variant="contained"
-                        startIcon={<PublishIcon />}
-                        className={classes.submitWorkButton}
-                        type="submit"
-                        disabled={fileToSubmit.length === 0}
-                        // onClick={handleOpenUploadDialog}
-                      >
-                        Kumpul Tugas
-                      </Button>
-                    </div>
-                  </form>
-                </Grid>
-              </Paper>
-              <Paper
-                className={classes.paperBox}
-                style={{ marginTop: "20px", paddingBottom: "10px" }}
-              >
-                <Grid container direction="column" alignItems="center">
-                  <Typography variant="subtitle1">
-                    Status:{" "}
-                    {!tasksCollection.grades
-                      ? "Belum Diperiksa"
-                      : !tasksCollection.grades[user._id]
-                      ? "Belum Diperiksa"
-                      : "Telah Diperiksa"}
-                  </Typography>
-                  <Typography variant="h6" gutterBottom>
-                    Nilai:{" "}
-                    {!tasksCollection.grades
-                      ? "N/A"
-                      : !tasksCollection.grades[user._id]
-                      ? "N/A"
-                      : `${tasksCollection.grades[user._id]}/100`}
-                  </Typography>
-                </Grid>
-              </Paper>
-            </Grid>
-          </Hidden>
-          <Paper className={classes.paperBox} style={{ marginTop: "20px" }}>
-            <Typography variant="h6" gutterBottom>
-              Komentar Kelas
-            </Typography>
-            <Divider style={{ marginBottom: "17.5px" }} />
-            <Grid container spacing={2}>
-              {commentList.length !== 0 ? (
-                <>
-                  {commentList.map((comment, idx) =>
-                    generateComments(
-                      comment.author_id,
-                      comment.name,
-                      comment.createdAt,
-                      comment.content,
-                      comment.author_id === user._id,
-                      idx,
-                      comment.edited
-                    )
-                  )}
-                  <Grid item xs={12}>
-                    <Divider />
-                  </Grid>
-                </>
-              ) : null}
-              {/* {
-                (commentList.length === 0) ?
-                  <Grid item xs={12}>
-                    <Typography color="textSecondary" align="center">Belum ada komentar</Typography>
-                  </Grid>
-                : null
-              } */}
-              <Grid container item direction="row" alignItems="center">
-                <div className={classes.smAvatar}>
-                  <Avatar src={commentAvatar[user._id]} />
-                </div>
-                <Box flexGrow={1}>
-                  <TextField
-                    className={classes.textField}
-                    variant="outlined"
-                    multiline
-                    style={{ display: "flex" }}
-                    InputProps={{ style: { borderRadius: "15px" } }}
-                    placeholder="Tambahkan komentar..."
-                    onChange={handleCommentInputChange}
-                    value={commentValue}
-                  />
-                </Box>
-                <div>
-                  <LightTooltip title="Kirim">
-                    <SendIcon
-                      className={classes.sendIcon}
-                      onClick={handleCreateComment}
-                    />
-                  </LightTooltip>
-                </div>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
-        <Hidden xsDown>
-          <Grid item xs={12} md={4}>
-            <Paper
-              className={classes.paperBox}
-              style={{ paddingBottom: "10px" }}
-            >
-              <Grid item>
-                <Typography
-                  variant="h5"
-                  align="center"
-                  style={{ marginBottom: "20px" }}
-                >
-                  Hasil Pekerjaan
-                </Typography>
-              </Grid>
-              <Divider />
-              {/* <Grid
-                  item
-                  style={{
-                    padding: "10px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                    {listWorkFile()}
-                    {listFileChosen()}
-                </Grid> */}
-
-              {fileTugas.length === 0 ? (
-                <Grid
-                  item
-                  style={{
-                    padding: "10px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                  {/* Kasus Kosong */}
-                  {listFileChosen()}
-                  {listWorkFile()}
-                </Grid>
-              ) : (
-                <Grid
-                  item
-                  style={{
-                    padding: "10px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                  {listWorkFile()}
-                  {listFileChosen()}
-                </Grid>
-              )}
-              <Divider />
-              <Grid
-                item
-                container
-                direction="column"
-                alignItems="center"
-                spacing={2}
-                style={{ padding: "20px" }}
-              >
-                <form onSubmit={onSubmitTugas}>
-                  <div style={{ marginBottom: "15px" }}>
-                    <input
-                      id="file_control"
-                      type="file"
-                      multiple={true}
-                      name="tugas"
-                      onChange={handleTugasUpload}
-                      ref={tugasUploader}
-                      accept="file/*"
-                      style={{ display: "none" }}
-                    />
-                    <input
-                      type="file"
-                      multiple={true}
-                      name="file"
-                      id="file"
-                      ref={uploadedTugas}
-                      style={{ display: "none" }}
-                    />
-                    <Button
-                      variant="contained"
-                      startIcon={<AddIcon />}
-                      className={classes.selectFileButton}
-                      onClick={() => {
-                        tugasUploader.current.click();
-                      }}
-                    >
-                      Pilih Berkas
-                    </Button>
-                  </div>
-                  <div>
-                    <Button
-                      variant="contained"
-                      startIcon={<PublishIcon />}
-                      className={classes.submitWorkButton}
-                      type="submit"
-                      disabled={fileToSubmit.length === 0}
-                      // onClick={handleOpenUploadDialog}
-                    >
-                      Kumpul Tugas
-                    </Button>
-                  </div>
-                </form>
-              </Grid>
-            </Paper>
-            <Paper
-              className={classes.paperBox}
-              style={{ marginTop: "20px", paddingBottom: "10px" }}
-            >
-              <Grid container direction="column" alignItems="center">
-                <Typography variant="subtitle1">
-                  Status:{" "}
-                  {!tasksCollection.grades
-                    ? "Belum Diperiksa"
-                    : !tasksCollection.grades[user._id]
-                    ? "Belum Diperiksa"
-                    : "Telah Diperiksa"}
-                </Typography>
-                <Typography variant="h6" gutterBottom>
-                  Nilai:{" "}
-                  {!tasksCollection.grades
-                    ? "N/A"
-                    : !tasksCollection.grades[user._id]
-                    ? "N/A"
-                    : `${tasksCollection.grades[user._id]}/100`}
-                </Typography>
-              </Grid>
-            </Paper>
-          </Grid>
-        </Hidden>
-      </Grid>
       <Snackbar
         open={fileLimitSnackbar}
         autoHideDuration={4000}
         onClose={handleCloseErrorSnackbar}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <MuiAlert elevation={6} variant="filled" severity="error">
+        <Alert elevation={6} variant="filled" severity="error">
           {over_limit.length} file melebihi batas 10MB!
-        </MuiAlert>
+        </Alert>
       </Snackbar>
       <Snackbar
         open={openCommentSnackbar}
@@ -1750,7 +1326,7 @@ function ViewTaskStudent(props) {
           handleCloseCommentSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity={severity}
           onClose={(event, reason) => {
@@ -1758,7 +1334,7 @@ function ViewTaskStudent(props) {
           }}
         >
           {snackbarContent}
-        </MuiAlert>
+        </Alert>
       </Snackbar>
       <Snackbar
         open={openDeleteSnackbar}
@@ -1767,7 +1343,7 @@ function ViewTaskStudent(props) {
           handleCloseDeleteSnackbar(event, reason);
         }}
       >
-        <MuiAlert
+        <Alert
           variant="filled"
           severity="success"
           onClose={(event, reason) => {
@@ -1775,7 +1351,7 @@ function ViewTaskStudent(props) {
           }}
         >
           Tugas File anda berhasil dihapus
-        </MuiAlert>
+        </Alert>
       </Snackbar>
     </div>
   );
@@ -1818,4 +1394,5 @@ export default connect(mapStateToProps, {
   getTeachers,
   getStudents,
   getMultipleFileAvatar,
+  getSetting
 })(ViewTaskStudent);
