@@ -58,7 +58,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { BiSitemap } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
 
-// Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(
   _id,
   avatar,
@@ -197,25 +196,25 @@ function ManageUsersToolbar(props) {
       <Grid container>
         <Grid item xs container alignItems="center" spacing={1}>
           <Grid item>
-          {/*
-          Perlu diubah jadi komponen checkbox biar posisinya nda aneh
-          <Checkbox color="primary" />
-          */}
-          {
-            listCheckbox.length === 0 ? (
-              <IconButton onClick={() => selectAllData(role)}>
-                <CheckBoxOutlineBlankIcon style={{ color: "grey" }} />
-              </IconButton>
-            ) : listCheckbox.length === rowCount ? (
-              <IconButton onClick={() => deSelectAllData(role)}>
-                <CheckBoxIcon className={classes.checkboxIcon} />
-              </IconButton>
-            ) : (
-              <IconButton onClick={() => deSelectAllData(role)}>
-                <IndeterminateCheckBoxIcon className={classes.checkboxIcon} />
-              </IconButton>
-            )
-          }
+            {/*
+            Perlu diubah jadi komponen checkbox biar posisinya nda aneh
+            <Checkbox color="primary" />
+            */}
+            {
+              listCheckbox.length === 0 ? (
+                <IconButton onClick={() => selectAllData(role)}>
+                  <CheckBoxOutlineBlankIcon style={{ color: "grey" }} />
+                </IconButton>
+              ) : listCheckbox.length === rowCount ? (
+                <IconButton onClick={() => deSelectAllData(role)}>
+                  <CheckBoxIcon className={classes.checkboxIcon} />
+                </IconButton>
+              ) : (
+                <IconButton onClick={() => deSelectAllData(role)}>
+                  <IndeterminateCheckBoxIcon className={classes.checkboxIcon} />
+                </IconButton>
+              )
+            }
           </Grid>
           <Grid item>
             <UserMenu
@@ -489,17 +488,14 @@ function ManageUsers(props) {
 
   const [order_student, setOrderStudent] = React.useState("asc");
   const [order_teacher, setOrderTeacher] = React.useState("asc");
-
   const [orderBy_student, setOrderByStudent] = React.useState("name");
   const [orderBy_teacher, setOrderByTeacher] = React.useState("name");
-
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [openDisableDialog, setOpenDisableDialog] = React.useState(null);
   const [selectedUserId, setSelectedUserId] = React.useState(null);
   const [selectedUserName, setSelectedUserName] = React.useState(null);
   const [searchFilterS, updateSearchFilterS] = React.useState("");
   const [searchBarFocusS, setSearchBarFocusS] = React.useState(false);
-
   const [searchFilterT, updateSearchFilterT] = React.useState("");
   const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
 

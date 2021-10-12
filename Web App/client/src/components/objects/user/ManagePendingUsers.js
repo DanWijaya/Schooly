@@ -218,8 +218,7 @@ const ManageUsersToolbar = (props) => {
             Perlu diubah jadi komponen checkbox biar posisinya nda aneh
             <Checkbox color="primary" />
             */}
-            {
-              listCheckbox.length === 0 ? (
+            {listCheckbox.length === 0 ? (
                   <IconButton onClick={() => selectAllData(role)}>
                     <CheckBoxOutlineBlankIcon style={{ color: "grey" }} />
                   </IconButton>
@@ -231,8 +230,7 @@ const ManageUsersToolbar = (props) => {
                   <IconButton onClick={() => deSelectAllData(role)}>
                     <IndeterminateCheckBoxIcon className={classes.checkboxIcon} />
                   </IconButton>
-              )
-            }
+              )}
           </Grid>
           <Grid item>
             <UserMenu
@@ -428,8 +426,23 @@ const useStyles = makeStyles((theme) => ({
     padding: "7.5px",
     borderRadius: "5px",
   },
+  userTabs: {
+    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+  },
+  userTabTitle: {
+    alignSelf: "flex-start",
+  },
+  userList: {
+    padding: "0px",
+  },
   toolbar: {
     padding: "16px",
+  },
+  accountItem: {
+    color: "black",
+    "&:focus, &:hover": {
+      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
+    }
   },
   profileApproveButton: {
     backgroundColor: theme.palette.success.main,
@@ -500,23 +513,8 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  accountItem: {
-    color: "black",
-    "&:focus, &:hover": {
-      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
-    }
-  },
   checkboxIcon: {
     color: theme.palette.primary.main,
-  },
-  userTabs: {
-    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-  },
-  userTabTitle: {
-    alignSelf: "flex-start",
-  },
-  userList: {
-    padding: "0px",
   },
 }));
 
@@ -583,7 +581,6 @@ function ManageUsers(props) {
   );
 
   const [test, setTest] = React.useState(false);
-
   let currentListBooleanStudent;
   let currentListBooleanTeacher;
 
@@ -1200,31 +1197,31 @@ function ManageUsers(props) {
                   <Link to={`/lihat-profil/${row._id}`}>
                     <ListItem className={classes.accountItem}>
                       <ListItemIcon>
-                      {booleanCheckboxStudent[index] ?
-                        <Checkbox
-                          color="primary"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          onChange={(e) => {
-                            handleChangeListStudent(e, index, row);
-                            autoReloader();
-                          }}
-                          checked={booleanCheckboxStudent[index]}
-                        />
-                      :
-                        <Checkbox
-                          color="primary"
-                          checked={false}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          onChange={(e) => {
-                            handleChangeListStudent(e, index, row);
-                            autoReloader();
-                          }}
-                        />
-                      }
+                        {booleanCheckboxStudent[index] ?
+                          <Checkbox
+                            color="primary"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                            onChange={(e) => {
+                              handleChangeListStudent(e, index, row);
+                              autoReloader();
+                            }}
+                            checked={booleanCheckboxStudent[index]}
+                          />
+                        :
+                          <Checkbox
+                            color="primary"
+                            checked={false}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                            onChange={(e) => {
+                              handleChangeListStudent(e, index, row);
+                              autoReloader();
+                            }}
+                          />
+                        }
                       </ListItemIcon>
                       <Hidden xsDown>
                         <ListItemAvatar>
