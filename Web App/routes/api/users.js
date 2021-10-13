@@ -1,4 +1,3 @@
-const avatar = require("./upload/uploads");
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
@@ -275,73 +274,6 @@ router.put("/update/data/:id", (req, res) => {
     }
   });
 });
-
-router.put(
-  "/update/avatar/:id",
-  avatar.uploadAvatar.single("avatar"),
-  (req, res) => {
-    let id = req.params.id;
-
-    User.findById(id, (err, user) => {
-      if (!user || !user.active) res.status(404).send("User data is not found");
-      else {
-        user.avatar = req.file.filename;
-        console.log("Avatarnya: ", req.file.filename);
-        console.log("User avatarnya: ", user.avatar);
-        user
-          .save()
-          .then()
-          .catch((err) => console.log(err));
-
-        var payload = {
-          _id: user._id,
-          role: user.role,
-          avatar: user.avatar,
-
-          // Informasi Pribadi
-          name: user.name,
-          tanggal_lahir: user.tanggal_lahir,
-          jenis_kelamin: user.jenis_kelamin,
-          sekolah: user.sekolah,
-
-          //Kontak
-          email: user.email,
-          phone: user.phone,
-          emergency_phone: user.emergency_phone,
-          address: user.address,
-
-          //Karir
-          hobi_minat: user.hobi_minat,
-          ket_non_teknis: user.ket_non_teknis,
-          cita_cita: user.cita_cita,
-          uni_impian: user.uni_impian,
-        };
-
-        if (user.role === "Student") {
-          payload.kelas = user.kelas;
-        } else if (user.role === "Teacher") {
-          payload.subject_teached = user.subject_teached;
-          payload.class_teached = user.class_teached;
-          payload.class_to_subject = user.class_to_subject;
-        }
-        // Sign token
-        jwt.sign(
-          payload,
-          keys.secretOrKey,
-          {
-            expiresIn: 31556926, // 1 year in seconds
-          },
-          (err, token) => {
-            res.json({
-              success: true,
-              token: "Bearer " + token,
-            });
-          }
-        );
-      }
-    });
-  }
-);
 
 router.get("/getTeachers/:unitId", (req, res) => {
   const { unitId } = req.params;

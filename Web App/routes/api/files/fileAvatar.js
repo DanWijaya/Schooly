@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const FileAvatar = require("../../../models/lampiran/File_Avatar");
+const FileAvatar = require("../../../models/lampiran/FileAvatar");
 const User = require("../../../models/user_model/User");
 
 const multer = require("multer");
@@ -234,7 +234,7 @@ router.get("/by_user/:id", (req, res) => {
       console.log("No avatar added");
       return res.json("No avatar is added");
     }
-  
+
     const url = `${keys.cdn}/${result.s3_key}`;
     return res.status(200).json(url);
   });
@@ -243,13 +243,13 @@ router.get("/by_user/:id", (req, res) => {
 router.get("/multiuser", (req, res) => {
   // req.body is in list.
   let { id_list } = req.query;
-  if(!Array.isArray(id_list)){
+  if (!Array.isArray(id_list)) {
     id_list = [];
   }
   id_list = id_list.map((id) => ObjectId(id));
   FileAvatar.find({ user_id: { $in: id_list } }, (err, avatars) => {
     if (!avatars) {
-      console.log("Users avatar is not found at all")
+      console.log("Users avatar is not found at all");
       return res.status(400).json({});
     }
     console.log(avatars);

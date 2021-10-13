@@ -15,10 +15,6 @@ import {
   getOneAnnouncement,
   deleteAnnouncement,
 } from "../../../actions/AnnouncementActions";
-import {
-  downloadLampiranAnnouncement,
-  previewLampiranAnnouncement,
-} from "../../../actions/UploadActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -191,8 +187,6 @@ function ViewAnnouncement(props) {
     getUsers,
     classesCollection,
     getOneAnnouncement,
-    downloadLampiranAnnouncement,
-    previewLampiranAnnouncement,
     deleteAnnouncement,
     getSelectedClasses,
     getAllClass,
@@ -445,8 +439,6 @@ ViewAnnouncement.propTypes = {
   getOneAnnouncement: PropTypes.func.isRequired,
   announcements: PropTypes.object.isRequired,
   deleteAnnouncement: PropTypes.func.isRequired,
-  downloadLampiranAnnouncement: PropTypes.func.isRequired,
-  previewLampiranAnnouncement: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -464,6 +456,4 @@ export default connect(mapStateToProps, {
   getFileAnnouncements,
   viewFileAnnouncement,
   downloadFileAnnouncements,
-  previewLampiranAnnouncement,
-  downloadLampiranAnnouncement,
 })(ViewAnnouncement);

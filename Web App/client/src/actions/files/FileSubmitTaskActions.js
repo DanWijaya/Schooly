@@ -95,7 +95,6 @@ export const viewFileSubmitTasks = (id) => (dispatch) => {
       return res.data;
     })
     .catch((err) => new Error(err));
-  // window.open(`http://${window.location.hostname}:5000/api/files/file_submit_tasks/${id}`)
 };
 
 export const deleteFileSubmitTasks = (id, delete_all = false) => (dispatch) => {

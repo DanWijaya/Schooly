@@ -1,14 +1,14 @@
 // 'use strict'
 const express = require("express");
 const router = express.Router();
-const FileAssessment = require("../../../models/lampiran/File_Assessment");
+const FileAssessment = require("../../../models/lampiran/FileAssessment");
 const multer = require("multer");
 var AWS = require("aws-sdk");
 var fs = require("fs");
 const { ObjectId } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
 const Assessment = require("../../../models/Assessment");
-const FileAnnouncement = require("../../../models/lampiran/File_Announcement");
+const FileAnnouncement = require("../../../models/lampiran/FileAnnouncement");
 const keys = require("../../../config/keys");
 // Multer ships with storage engines DiskStorage and MemoryStorage
 // And Multer adds a body object and a file or files object to the request object. The body object contains the values of the text fields of the form, the file or files object contains the files uploaded via the form.
@@ -190,7 +190,7 @@ router.delete("/:id", (req, res) => {
     );
   } else {
     FileAssessment.find({ _id: { $in: file_to_delete } }).then(
-      (file_assessments) => {
+      (fileAssessments) => {
         FileAssessment.deleteMany(
           {
             _id: {
@@ -204,7 +204,7 @@ router.delete("/:id", (req, res) => {
 
             let s3bucket = new AWS.S3();
             let fileUploaded = 0;
-            file_assessments.forEach((file) => {
+            fileAssessments.forEach((file) => {
               console.log(file);
               let params = {
                 Bucket: keys.awsKey.AWS_BUCKET_NAME,

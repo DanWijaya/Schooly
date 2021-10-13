@@ -1,7 +1,7 @@
 // 'use strict'
 const express = require("express");
 const router = express.Router();
-const FileSubmitTask = require("../../../models/lampiran/File_Submit_Task");
+const FileSubmitTask = require("../../../models/lampiran/FileSubmitTask");
 const multer = require("multer");
 var AWS = require("aws-sdk");
 var fs = require("fs");
@@ -126,7 +126,7 @@ router.get("/by_multiple_tasks", (req, res) => {
   FileSubmitTask.find({ _id: { $in: id_list } }).then((results) => {
     return res
       .status(200)
-      .json({ file_submit_tasks: results, tasks_id: id_list });
+      .json({ fileSubmitTasks: results, tasks_id: id_list });
   });
 });
 

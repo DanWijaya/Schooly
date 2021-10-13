@@ -3,19 +3,20 @@ const Schema = mongoose.Schema;
 const { ObjectId } = require("mongodb");
 
 // const AutoIncrement = require("mongoose-sequence")(mongoose);
-const FileAvatarSchema = new Schema(
+const FileEventSchema = new Schema(
   {
     filename: { type: String, required: true },
     s3_key: { type: String, required: true },
     s3_directory: { type: String },
-    user_id: { type: ObjectId },
+    event_id: { type: ObjectId },
   },
   {
+    // createdAt,updatedAt fields are automatically added into records
     timestamps: true,
   }
 );
 
 // DocumentSchema.plugin(AutoIncrement, { inc_field: "document_id" });
 
-const FileAvatar = mongoose.model("file_avatar", FileAvatarSchema);
-module.exports = FileAvatar;
+const FileEvent = mongoose.model("fileEvents", FileEventSchema);
+module.exports = FileEvent;

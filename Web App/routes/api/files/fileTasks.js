@@ -1,7 +1,7 @@
 // 'use strict'
 const express = require("express");
 const router = express.Router();
-const FileTask = require("../../../models/lampiran/File_Task");
+const FileTask = require("../../../models/lampiran/FileTask");
 const multer = require("multer");
 var AWS = require("aws-sdk");
 var fs = require("fs");

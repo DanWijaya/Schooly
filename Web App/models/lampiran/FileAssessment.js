@@ -17,5 +17,5 @@ const FileAssessmentSchema = new Schema(
 
 // DocumentSchema.plugin(AutoIncrement, { inc_field: "document_id" });
 
-const FileAssessment = mongoose.model("file_assessments", FileAssessmentSchema);
+const FileAssessment = mongoose.model("fileAssessments", FileAssessmentSchema);
 module.exports = FileAssessment;

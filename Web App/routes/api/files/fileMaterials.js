@@ -1,18 +1,15 @@
 // 'use strict'
 const express = require("express");
 const router = express.Router();
-const FileEvent = require("../../../models/lampiran/File_Event");
+const FileMaterial = require("../../../models/lampiran/FileMaterial");
 const multer = require("multer");
 var AWS = require("aws-sdk");
 var fs = require("fs");
-const keys = require("../../../config/keys");
 const { ObjectId } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
-
+const keys = require("../../../config/keys");
 // Multer ships with storage engines DiskStorage and MemoryStorage
-// And Multer adds a body object and a file or files object to the request object.
-// The body object contains the values of the text fields of the form,
-// the file or files object contains the files uploaded via the form.
+// And Multer adds a body object and a file or files object to the request object. The body object contains the values of the text fields of the form, the file or files object contains the files uploaded via the form.
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
@@ -24,7 +21,7 @@ AWS.config.update({
 
 // route to upload a pdf document file
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
-router.post("/upload/:id", upload.array("lampiran_event"), (req, res) => {
+router.post("/upload/:id", upload.array("lampiran_materi"), (req, res) => {
   const { files } = req;
   let s3bucket = new AWS.S3({
     accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
@@ -38,7 +35,7 @@ router.post("/upload/:id", upload.array("lampiran_event"), (req, res) => {
   files.map((file) => {
     var params = {
       Bucket: keys.awsKey.AWS_BUCKET_NAME,
-      Key: "event/" + uuidv4() + "_" + file.originalname,
+      Key: "materi/" + uuidv4() + "_" + file.originalname,
       Body: file.buffer,
       ContentType: file.mimetype,
       ContentDisposition: `inline;filename=${file.originalname}`,
@@ -51,10 +48,10 @@ router.post("/upload/:id", upload.array("lampiran_event"), (req, res) => {
           var newFileUploaded = {
             filename: file.originalname,
             s3_key: params.Key,
-            s3_directory: "event/",
-            event_id: req.params.id,
+            s3_directory: "materi/",
+            material_id: req.params.id,
           };
-          var document = new FileEvent(newFileUploaded);
+          var document = new FileMaterial(newFileUploaded);
           document.save(function (error, newFile) {
             if (error) {
               throw error;
@@ -80,7 +77,7 @@ router.post("/upload/:id", upload.array("lampiran_event"), (req, res) => {
 router.get("/download/:id", (req, res) => {
   let s3bucket = new AWS.S3();
 
-  FileEvent.findById(req.params.id).then((result, err) => {
+  FileMaterial.findById(req.params.id).then((result, err) => {
     if (!result) return res.status(400).json(err);
 
     let params = {
@@ -99,11 +96,11 @@ router.delete("/:id", (req, res) => {
   const { file_to_delete } = req.body;
   // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
   if (!file_to_delete) {
-    FileEvent.find({ event_id: req.params.id }).then((events) => {
-      let id_list = events.map((m) => ObjectId(m._id));
-      let file_to_delete = events;
+    FileMaterial.find({ material_id: req.params.id }).then((materials) => {
+      let id_list = materials.map((m) => ObjectId(m._id));
+      let file_to_delete = materials;
 
-      FileEvent.deleteMany(
+      FileMaterial.deleteMany(
         {
           _id: {
             $in: id_list,
@@ -131,7 +128,7 @@ router.delete("/:id", (req, res) => {
     });
   } else {
     let id_list = file_to_delete.map((m) => ObjectId(m._id));
-    FileEvent.deleteMany(
+    FileMaterial.deleteMany(
       {
         _id: {
           $in: id_list,
@@ -149,7 +146,7 @@ router.delete("/:id", (req, res) => {
             Key: file.s3_key,
           };
           s3bucket.deleteObject(params, (err, data) => {
-            console.log("Data event: ", data);
+            console.log("Data materi: ", data);
             if (err) return res.status(404).json(err);
           });
         });
@@ -159,21 +156,20 @@ router.delete("/:id", (req, res) => {
   }
 });
 
-router.get("/by_event/:id", (req, res) => {
-  FileEvent.find({ event_id: req.params.id })
-    .then((results, err) => {
+router.get("/by_material/:id", (req, res) => {
+  FileMaterial.find({ material_id: req.params.id }).then((results, err) => {
+    if (!results) return res.status(400).json(err);
+    else {
       results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
       return res.status(200).json(results);
-    })
-    .catch((err) => {
-      return res.status(400).json(err);
-    });
+    }
+  });
 });
 
 router.get("/:id", (req, res) => {
   let s3bucket = new AWS.S3();
 
-  FileEvent.findById(req.params.id).then((result, err) => {
+  FileMaterial.findById(req.params.id).then((result, err) => {
     if (!result) return res.status(400).json(err);
     let params = {
       Bucket: keys.awsKey.AWS_BUCKET_NAME,

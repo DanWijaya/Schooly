@@ -7,22 +7,14 @@ const path = require("path");
 //untuk users punya
 const users = require("./routes/api/users");
 
-// untuk uploads punya
-const att_announcement = require("./routes/api/upload/att_announcement");
-const att_assessment = require("./routes/api/upload/att_assessment");
-const att_material = require("./routes/api/upload/att_material");
-const att_task = require("./routes/api/upload/att_task");
-const file_tugas = require("./routes/api/upload/file_tugas");
-const avatar = require("./routes/api/upload/avatar");
-
 // untuk files punya
-const file_materials = require("./routes/api/files/file_materials");
-const file_announcements = require("./routes/api/files/file_announcements");
-const file_tasks = require("./routes/api/files/file_tasks");
-const file_submit_tasks = require("./routes/api/files/file_submit_tasks");
-const file_avatar = require("./routes/api/files/file_avatar");
-const file_assessments = require("./routes/api/files/file_assessments");
-const file_events = require("./routes/api/files/file_events");
+const fileMaterials = require("./routes/api/files/fileMaterials");
+const fileAnnouncements = require("./routes/api/files/fileAnnouncements");
+const fileTasks = require("./routes/api/files/fileTasks");
+const fileSubmitTasks = require("./routes/api/files/fileSubmitTasks");
+const fileAvatar = require("./routes/api/files/fileAvatar");
+const fileAssessments = require("./routes/api/files/fileAssessments");
+const fileEvents = require("./routes/api/files/fileEvents");
 
 // untuk objects punya
 const tasks = require("./routes/api/tasks");
@@ -83,22 +75,14 @@ app.use("/api/users", users);
 app.use("/api/tasks", tasks);
 app.use("/api/classes", classes);
 
-// Handle upload routing..
-app.use("/api/upload/att_announcement", att_announcement);
-app.use("/api/upload/att_assessment", att_assessment);
-app.use("/api/upload/att_material", att_material);
-app.use("/api/upload/att_task", att_task);
-app.use("/api/upload/file_tugas", file_tugas);
-app.use("/api/upload/avatar", avatar.router);
-
 //Handle files routing
-app.use("/api/files/materials", file_materials);
-app.use("/api/files/announcements", file_announcements);
-app.use("/api/files/tasks", file_tasks);
-app.use("/api/files/submit_tasks", file_submit_tasks);
-app.use("/api/files/avatar", file_avatar);
-app.use("/api/files/assessments", file_assessments);
-app.use("/api/files/events", file_events);
+app.use("/api/files/materials", fileMaterials);
+app.use("/api/files/announcements", fileAnnouncements);
+app.use("/api/files/tasks", fileTasks);
+app.use("/api/files/submit_tasks", fileSubmitTasks);
+app.use("/api/files/avatar", fileAvatar);
+app.use("/api/files/assessments", fileAssessments);
+app.use("/api/files/events", fileEvents);
 
 //Handle object routing
 app.use("/api/subjects", subjects);

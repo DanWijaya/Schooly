@@ -66,7 +66,7 @@ export const updateEvent = (
       // 	payload: false,
       // });
       if (lampiran_to_delete.length > 0) {
-        // panggil routes yang di api/files/file_events.js untuk DELETE lampiran.
+        // panggil routes yang di api/files/fileEvents.js untuk DELETE lampiran.
         return axios.delete(`/api/files/events/${eventId}`, {
           data: { file_to_delete: lampiran_to_delete },
         });
@@ -80,7 +80,7 @@ export const updateEvent = (
       );
       if (formData.has("lampiran_event")) {
         console.log("Lampiran event going to be uploaded");
-        // panggil routes yang di api/files/file_events.js untuk UPLOAD lampiran.
+        // panggil routes yang di api/files/fileEvents.js untuk UPLOAD lampiran.
         return axios.post(`/api/files/events/upload/${eventId}`, formData);
       }
     })
@@ -103,7 +103,7 @@ export const deleteEvent = (eventId) => {
     .delete(`/api/events/delete/${eventId}`)
     .then(() => {
       // let lampiran_to_delete = Array.from(res.data.lampiran)
-      //REVIEW panggil routes yang di api/files/file_events.js untuk DELETE semua lampiran.
+      //REVIEW panggil routes yang di api/files/fileEvents.js untuk DELETE semua lampiran.
       return axios.delete(`/api/files/events/${eventId}`);
     })
     .catch((err) => {

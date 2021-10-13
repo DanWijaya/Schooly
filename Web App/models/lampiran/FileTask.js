@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 const { ObjectId } = require("mongodb");
 
 // const AutoIncrement = require("mongoose-sequence")(mongoose);
-const FileEventSchema = new Schema(
+const FileTaskSchema = new Schema(
   {
     filename: { type: String, required: true },
     s3_key: { type: String, required: true },
     s3_directory: { type: String },
-    event_id: { type: ObjectId },
+    task_id: { type: ObjectId },
   },
   {
     // createdAt,updatedAt fields are automatically added into records
@@ -18,5 +18,5 @@ const FileEventSchema = new Schema(
 
 // DocumentSchema.plugin(AutoIncrement, { inc_field: "document_id" });
 
-const FileEvent = mongoose.model("file_events", FileEventSchema);
-module.exports = FileEvent;
+const FileTask = mongoose.model("fileTasks", FileTaskSchema);
+module.exports = FileTask;
