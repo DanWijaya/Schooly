@@ -4,12 +4,23 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import CustomLinkify from "../../misc/linkify/Linkify";
 import { getOneUnit } from "../../../actions/UnitActions";
 import { getAllClass, getSelectedClasses } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import {
+  getStudents,
+  getTeachers,
+  getAdmins,
+  getAllUsers,
+} from "../../../actions/UserActions";
+import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
+import ClassItem from "../../objects/item/ClassItem";
+import SubjectItem from "../../objects/item/SubjectItem";
+import UserItem from "../../objects/item/UserItem";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
 import {
   Avatar,
   Badge,
@@ -32,231 +43,46 @@ import {
   Snackbar,
   Box,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import BallotIcon from "@material-ui/icons/Ballot";
-import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import { FaChalkboardTeacher } from "react-icons/fa";
-import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
-import ClassItem from "../../objects/item/ClassItem";
-import SubjectItem from "../../objects/item/SubjectItem";
 import {
-  getStudents,
-  getTeachers,
-  getAdmins,
-  getAllUsers,
-} from "../../../actions/UserActions";
-import UserItem from "../../objects/item/UserItem";
-import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
-const path = require("path");
+  DesktopWindows as DesktopWindowsIcon,
+  LibraryBooks as LibraryBooksIcon,
+  SupervisorAccount as SupervisorAccountIcon
+} from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    padding: "10px",
   },
-  paperBox: {
-    padding: "20px",
-    // marginBottom: "10px",
-  },
-  deadlineWarningText: {
-    color: theme.palette.warning.main,
-  },
-  seeAllTaskButton: {
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.success.main,
-    },
-  },
-  editButton: {
-    marginRight: "10px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  deleteButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
-  listItemPaper: {
-    marginBottom: "10px",
-  },
-  listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
-  },
-  downloadIconButton: {
-    width: theme.spacing(3.5),
-    height: theme.spacing(3.5),
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  downloadIcon: {
-    width: theme.spacing(2),
-    height: theme.spacing(2),
-  },
-  wordFileTypeIcon: {
-    backgroundColor: "#16B0DD",
-  },
-  excelFileTypeIcon: {
-    backgroundColor: "#68C74F",
-  },
-  imageFileTypeIcon: {
-    backgroundColor: "#974994",
-  },
-  pdfFileTypeIcon: {
-    backgroundColor: "#E43B37",
-  },
-  textFileTypeIcon: {
-    backgroundColor: "#F7BC24",
-  },
-  presentationFileTypeIcon: {
-    backgroundColor: "#FD931D",
-  },
-  otherFileTypeIcon: {
-    backgroundColor: "#808080",
-  },
-  dividerColor: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  commentLittleIcon: {
-    color: theme.palette.text.disabled,
-    opacity: 0.5,
-    "&:focus, &:hover": {
-      opacity: 1,
-      cursor: "pointer",
-    },
-  },
-  sendIcon: {
-    color: theme.palette.text.disabled,
-    "&:focus, &:hover": {
-      cursor: "pointer",
-    },
-    [theme.breakpoints.down("xs")]: {
-      marginLeft: "15px",
-    },
-    marginLeft: "20px",
-  },
-  marginMobile: {
+  unitBackground: {
+    padding: "75px 50px 25px 50px",
+    background: `linear-gradient(${theme.palette.primary.main} 60%, transparent 30%)`,
+    backgroundRepeat: "no-repeat",
     [theme.breakpoints.down("sm")]: {
-      marginRight: "14px",
-      marginLeft: "7.6px",
+      padding: "75px 15px 25px 15px",
     },
   },
-  mobileName: {
-    marginRight: "7px",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    overflow: "hidden",
-    maxWidth: "50px",
+  unitTitle: {
+    padding: "30px 15px 0px 15px",
   },
-  smAvatar: {
-    [theme.breakpoints.down("xs")]: {
-      marginRight: "15px",
-    },
-    marginRight: "20px",
+  content: {
+    padding: "15px",
   },
-  checkButton: {
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    marginTop: "6px",
-    marginRight: "3px",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.dark,
-    },
-  },
-  cancelButton: {
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    marginTop: "6px",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-    },
-  },
-  classPaper: {
-    borderRadius: "3px",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
-    transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
-    "&:focus, &:hover": {
-      boxShadow: "0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.15)",
-      cursor: "pointer",
-    },
-  },
-  classActionContainer: {
-    padding: "20px 10px 20px 10px",
-  },
-  classPersonIcon: {
-    color: theme.palette.text.disabled,
-  },
-  editClassButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  deleteClassButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
-  emptyClass: {
-    display: "flex",
-    justifyContent: "center",
-    maxWidth: "150px",
-    padding: "2px",
-    paddingLeft: "6px",
-    paddingRight: "6px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    marginLeft: "5px",
-  },
-  dialogPaper: {
-    maxHeight: "70vh",
-  },
-  personListDivider: {
+  unitMembersDivider: {
+    marginTop: "5px",
     backgroundColor: theme.palette.primary.main,
   },
 }));
 
 function ViewUnit(props) {
   const classes = useStyles();
-
-  const { user, all_students, all_teachers, all_admins } = props.auth;
-  const { selectedUnits } = props.unitsCollection;
-  const { all_subjects } = props.subjectsCollection;
-  const { all_classes } = props.classesCollection;
-  const unitId = props.match.params.id;
-
-  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [tabValue, setTabValue] = React.useState(0);
-  const [avatar, setAvatar] = React.useState({});
-
   const {
     getOneUnit,
     getAllClass,
@@ -267,16 +93,20 @@ function ViewUnit(props) {
     getAllUsers,
     getMultipleFileAvatar,
   } = props;
+  const { user, all_students, all_teachers, all_admins } = props.auth;
+  const { selectedUnits } = props.unitsCollection;
+  const { all_classes } = props.classesCollection;
+  const { all_subjects } = props.subjectsCollection;
+  const unitId = props.match.params.id;
 
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [tabValue, setTabValue] = React.useState(0);
+  const [avatar, setAvatar] = React.useState({});
   const unitAuthorName = React.useRef(null);
 
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
   };
-
-  document.title = !selectedUnits.name
-    ? "Schooly | Lihat Materi"
-    : `Schooly | ${selectedUnits.name}`;
 
   const onDelete = (id) => {
     console.log(id);
@@ -312,76 +142,60 @@ function ViewUnit(props) {
     fetchAvatar();
   }, []);
 
+  document.title = !selectedUnits.name
+    ? "Schooly | Lihat Unit"
+    : `Schooly | ${selectedUnits.name}`;
+
   return (
     <div className={classes.root}>
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Materi"
-        itemName={selectedUnits.name}
-        deleteItem={() => {
-          onDelete(unitId);
-        }}
-      />
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          <Paper className={classes.paperBox}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography variant="h4">{selectedUnits.name}</Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Waktu Dibuat:{" "}
-                  {moment(selectedUnits.createdAt)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH.mm")}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={12}>
-                <Divider className={classes.dividerColor} />
-              </Grid>
-              {/* Munculin Kelas kelas yang ada di unit ini */}
-              {/* Munculin Matpel yang ada di unit ini  */}
-              <Grid item xs={12} style={{ marginTop: "15px" }}>
-                <Typography color="textSecondary" gutterBottom>
-                  Deskripsi Unit:
-                </Typography>
-                <Typography
-                  variant="body1"
-                  align="justify"
-                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-                >
-                  <CustomLinkify text={selectedUnits.description} />
-                </Typography>
-              </Grid>
-            </Grid>
-          </Paper>
+          <div className={classes.unitBackground}>
+            <Paper className={classes.unitTitle}>
+              <Typography variant="h4" align="center" gutterBottom>
+                {selectedUnits.name}
+              </Typography>
+              <Typography
+                color="textSecondary"
+                align="center"
+                style={{ marginBottom: "60px", wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+              >
+                <CustomLinkify text={selectedUnits.description} />
+              </Typography>
+              <Tabs
+                variant="fullWidth"
+                indicatorColor="primary"
+                textColor="primary"
+                value={tabValue}
+                onChange={handleChangeTab}
+              >
+                <Tab
+                  icon={<DesktopWindowsIcon />}
+                  label={
+                    <Typography variant="caption">Kelas</Typography>
+                  }
+                  {...TabIndex(0)}
+                />
+                <Tab
+                  icon={<LibraryBooksIcon />}
+                  label={
+                    <Typography variant="caption">Mata Pelajaran</Typography>
+                  }
+                  {...TabIndex(1)}
+                />
+                <Tab
+                  icon={<SupervisorAccountIcon />}
+                  label={
+                    <Typography variant="caption">Peserta</Typography>
+                  }
+                  {...TabIndex(2)}
+                />
+              </Tabs>
+            </Paper>
+          </div>
         </Grid>
         <Grid item>
-          <Paper className={classes.paperBox}>
-            <Tabs
-              variant="fullWidth"
-              indicatorColor="primary"
-              textColor="primary"
-              value={tabValue}
-              onChange={handleChangeTab}
-            >
-              <Tab
-                icon={<DesktopWindowsIcon />}
-                label="Kelas"
-                {...TabIndex(0)}
-              />
-              <Tab
-                icon={<BallotIcon />}
-                label="Mata Pelajaran"
-                {...TabIndex(1)}
-              />
-              <Tab
-                icon={<SupervisorAccountIcon />}
-                label="Peserta"
-                {...TabIndex(2)}
-              />
-            </Tabs>
+          <div className={classes.content}>
             <TabPanel value={tabValue} index={0}>
               <Grid container spacing={2}>
                 <ClassItem data={all_classes} user={user} />
@@ -393,45 +207,48 @@ function ViewUnit(props) {
               </Grid>
             </TabPanel>
             <TabPanel value={tabValue} index={2}>
-              <Grid container spacing={2} direction="column">
-                <>
-                  <Typography variant="h4" gutterButtom>
+              <Grid container spacing={10} direction="column">
+                <Grid item>
+                  <Typography variant="h4">
                     Pengelola
                   </Typography>
-                  <Divider className={classes.personListDivider} />
-                  <Grid item>
-                    <List>
-                      <UserItem data={all_admins} avatar_map={avatar} />
-                    </List>
-                  </Grid>
-                </>
-                <>
-                  <Typography variant="h4" gutterButtom>
+                  <List>
+                    <Divider className={classes.unitMembersDivider} />
+                    <UserItem data={all_admins} avatar_map={avatar} />
+                  </List>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h4">
                     Guru
                   </Typography>
-                  <Divider className={classes.personListDivider} />
-                  <Grid item>
-                    <List>
-                      <UserItem data={all_teachers} avatar_map={avatar} />
-                    </List>
-                  </Grid>
-                </>
-                <>
-                  <Typography variant="h4" gutterButtom>
+                  <List>
+                    <Divider className={classes.unitMembersDivider} />
+                    <UserItem data={all_teachers} avatar_map={avatar} />
+                  </List>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h4">
                     Murid
                   </Typography>
-                  <Divider className={classes.personListDivider} />
-                  <Grid item>
-                    <List>
-                      <UserItem data={all_students} avatar_map={avatar} />
-                    </List>
-                  </Grid>
-                </>
+                  <List>
+                    <Divider className={classes.unitMembersDivider} />
+                    <UserItem data={all_students} avatar_map={avatar} />
+                  </List>
+                </Grid>
               </Grid>
             </TabPanel>
-          </Paper>
+          </div>
         </Grid>
       </Grid>
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Materi"
+        itemName={selectedUnits.name}
+        deleteItem={() => {
+          onDelete(unitId);
+        }}
+      />
     </div>
   );
 }
@@ -441,15 +258,15 @@ ViewUnit.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   getOneUnit: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   unitsCollection: state.unitsCollection,
-  subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
 });
 
 export default connect(mapStateToProps, {

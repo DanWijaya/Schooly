@@ -98,7 +98,7 @@ function Help(props) {
           <Grid item>
             <ExpansionPanel variant="outlined" defaultExpanded>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h5" color="primary">
+                <Typography variant="h6" color="primary">
                   Akun, Pendaftaran, dan Masuk
                 </Typography>
               </ExpansionPanelSummary>
@@ -363,7 +363,7 @@ function Help(props) {
           <Grid item>
             <ExpansionPanel variant="outlined" defaultExpanded>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h5" color="primary">
+                <Typography variant="h6" color="primary">
                   Kegiatan dan Kalender
                 </Typography>
               </ExpansionPanelSummary>
@@ -438,7 +438,7 @@ function Help(props) {
           <Grid item>
             <ExpansionPanel variant="outlined" defaultExpanded>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h5" color="primary">
+                <Typography variant="h6" color="primary">
                   Mata Pelajaran
                 </Typography>
               </ExpansionPanelSummary>
@@ -495,7 +495,7 @@ function Help(props) {
           <Grid item>
             <ExpansionPanel variant="outlined" defaultExpanded>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h5" align="justify" color="primary">
+                <Typography variant="h6" color="primary">
                   Kelas
                 </Typography>
               </ExpansionPanelSummary>
@@ -668,7 +668,7 @@ function Help(props) {
           <Grid item>
             <ExpansionPanel variant="outlined" defaultExpanded>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h5" color="primary">
+                <Typography variant="h6" color="primary">
                   Pengumuman
                 </Typography>
               </ExpansionPanelSummary>
@@ -820,7 +820,7 @@ function Help(props) {
           <Grid item>
             <ExpansionPanel variant="outlined" defaultExpanded>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h5" color="primary">
+                <Typography variant="h6" color="primary">
                   Materi
                 </Typography>
               </ExpansionPanelSummary>
@@ -931,7 +931,7 @@ function Help(props) {
           <Grid item>
             <ExpansionPanel variant="outlined" defaultExpanded>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h5" color="primary">
+                <Typography variant="h6" color="primary">
                   Tugas
                 </Typography>
               </ExpansionPanelSummary>
@@ -1090,7 +1090,7 @@ function Help(props) {
           <Grid item>
             <ExpansionPanel variant="outlined" defaultExpanded>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h5" align="justify" color="primary">
+                <Typography variant="h6" color="primary">
                   Kuis dan Ujian
                 </Typography>
               </ExpansionPanelSummary>
@@ -1436,7 +1436,7 @@ function Help(props) {
           <Grid item>
             <ExpansionPanel variant="outlined" defaultExpanded>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h5" align="justify" color="primary">
+                <Typography variant="h6" color="primary">
                   Rapor
                 </Typography>
               </ExpansionPanelSummary>

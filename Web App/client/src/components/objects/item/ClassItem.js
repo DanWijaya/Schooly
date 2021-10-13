@@ -2,7 +2,6 @@ import React from "react";
 import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Badge,
@@ -10,13 +9,16 @@ import {
   Grid,
   IconButton,
   Paper,
-  Typography,
+  Tooltip,
+  Typography
 } from "@material-ui/core";
+import {
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  SupervisorAccount as SupervisorAccountIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import { SupervisorAccount as SupervisorAccountIcon } from "@material-ui/icons";
 import { FaChalkboard } from "react-icons/fa";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,21 +50,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ClassItem(props) {
+  const classes = useStyles();
   const { data, handleOpenDeleteDialog } = props;
   const { user } = props.auth;
-  const classes = useStyles();
+
   const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"];
-  // const [colorMap, setColorMap] = React.useState(new Map());
-
-  // React.useEffect(() => {
-  //     const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"];
-  //     let temp = new Map();
-
-  //     if(Array.isArray(data)){
-  //       data.forEach((d, i) => temp.set(d._id, colorList[i % colorList.length]));
-  //     }
-  //     setColorMap(temp);
-  // }, [])
 
   let colorMap = new Map();
   data.forEach((d, i) => colorMap.set(d._id, colorList[i % colorList.length]));
@@ -108,7 +100,7 @@ function ClassItem(props) {
                     alignItems="center"
                   >
                     <Grid item>
-                      <LightTooltip title="Jumlah Murid">
+                      <Tooltip title="Jumlah Murid">
                         <Badge
                           showZero
                           color={d.size === 0 ? "error" : "primary"}
@@ -122,10 +114,10 @@ function ClassItem(props) {
                             className={classes.classPersonIcon}
                           />
                         </Badge>
-                      </LightTooltip>
+                      </Tooltip>
                     </Grid>
                     <Grid item>
-                      <LightTooltip title="Sunting">
+                      <Tooltip title="Sunting">
                         <Link
                           to={`/sunting-kelas/${d._id}`}
                           onClick={(e) => e.stopPropagation()}
@@ -137,10 +129,10 @@ function ClassItem(props) {
                             <EditIcon fontSize="small" />
                           </IconButton>
                         </Link>
-                      </LightTooltip>
+                      </Tooltip>
                     </Grid>
                     <Grid item>
-                      <LightTooltip title="Hapus">
+                      <Tooltip title="Hapus">
                         <IconButton
                           size="small"
                           className={classes.deleteClassButton}
@@ -150,13 +142,13 @@ function ClassItem(props) {
                         >
                           <DeleteIcon fontSize="small" />
                         </IconButton>
-                      </LightTooltip>
+                      </Tooltip>
                     </Grid>
                   </Grid>
                 ) : (
                   <Grid container justify="flex-end">
                     <Grid item>
-                      <LightTooltip title="Jumlah Murid">
+                      <Tooltip title="Jumlah Murid">
                         <Badge
                           showZero
                           color={d.size === 0 ? "error" : "primary"}
@@ -170,7 +162,7 @@ function ClassItem(props) {
                             className={classes.classPersonIcon}
                           />
                         </Badge>
-                      </LightTooltip>
+                      </Tooltip>
                     </Grid>
                   </Grid>
                 )}

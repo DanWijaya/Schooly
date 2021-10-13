@@ -57,11 +57,11 @@ import {
 } from "@material-ui/core";
 import {
   AssignmentOutlined as AssignmentIcon,
-  Ballot as BallotIcon,
   CheckCircle as CheckCircleIcon,
   DesktopWindows as DesktopWindowsIcon,
   Error as ErrorIcon,
   ExpandMore as ExpandMoreIcon,
+  LibraryBooks as LibraryBooksIcon,
   MenuBook as MenuBookIcon,
   Pageview as PageviewIcon,
   SupervisorAccount as SupervisorAccountIcon,
@@ -1255,7 +1255,7 @@ function ViewClass(props) {
               onChange={handleChange}
             >
               <Tab icon={<DesktopWindowsIcon />} label="Pekerjaan Kelas" />
-              <Tab icon={<BallotIcon />} label="Mata Pelajaran" />
+              <Tab icon={<LibraryBooksIcon />} label="Mata Pelajaran" />
               <Tab icon={<SupervisorAccountIcon />} label="Peserta" />
             </Tabs>
           </Paper>

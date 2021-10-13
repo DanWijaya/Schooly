@@ -32,7 +32,7 @@ import {
   Snackbar,
   TableSortLabel,
   TextField,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {

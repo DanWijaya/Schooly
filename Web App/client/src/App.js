@@ -185,8 +185,6 @@ class App extends Component {
       TEACHER: "Teacher",
     };
 
-    // console.log(localStorage.getItem(`status`));
-
     return (
       <div>
         <Provider store={store}>
@@ -292,6 +290,7 @@ class App extends Component {
                         path="/lihat-profil/:id"
                         component={ProfileView}
                       />
+                      
                       {/* Route Class */}
                       <PrivateRoute
                         exact
@@ -322,6 +321,7 @@ class App extends Component {
                         path="/daftar-kelas"
                         component={ClassList}
                       />
+
                       {/* Route Subject */}
                       <PrivateRoute
                         exact
@@ -341,6 +341,7 @@ class App extends Component {
                         path="/kalender"
                         component={Calendar}
                       />
+
                       {/* Route Announcement */}
                       <PrivateRoute
                         exact
@@ -366,6 +367,7 @@ class App extends Component {
                         path="/daftar-pengumuman"
                         component={AnnouncementList}
                       />
+
                       {/* Route Material */}
                       <PrivateRoute
                         exact
@@ -391,6 +393,7 @@ class App extends Component {
                         path="/daftar-materi"
                         component={MaterialList}
                       />
+
                       {/* Route Task */}
                       <PrivateRoute
                         exact
@@ -428,6 +431,7 @@ class App extends Component {
                         path="/daftar-tugas-terkumpul/:id"
                         component={SubmittedTaskList}
                       />
+
                       {/* Route Assessment */}
                       <PrivateRoute
                         exact
@@ -521,12 +525,14 @@ class App extends Component {
                         path="/lihat-jawaban-ujian/:id"
                         component={ViewAssessmentAnswer}
                       />
+
                       {/* Route Report */}
                       <PrivateRoute
                         exact
                         path="/rapor/:id"
                         component={Report}
                       />
+
                       {/* Route User */}
                       <PrivateRoute
                         exact
@@ -546,6 +552,7 @@ class App extends Component {
                         path="/data-ajar-guru"
                         component={TeacherList}
                       />
+
                       {/*  Route Settings */}
                       <PrivateRoute
                         exact
@@ -556,6 +563,7 @@ class App extends Component {
                         handleNavbar={(data) => this.handleNavbar(data)}
                         component={Setting}
                       />
+
                       {/* Route SuperAdmin-Only */}
                       <PrivateRoute
                         exact

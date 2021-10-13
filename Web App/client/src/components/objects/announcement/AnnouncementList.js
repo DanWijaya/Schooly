@@ -423,14 +423,6 @@ function AnnouncementListSubToolbar(props) {
     document.getElementById(id).focus();
   };
 
-  // const canAnnounce = () => {
-  //   console.log(user.role);
-  //   if (Object.keys(kelas).length > 0) {
-  //     return user._id === kelas.ketua_kelas;
-  //   }
-  //   return user.role === "Teacher" || isAdmin;
-  // };
-
   return (
     <div className={classes.toolbar}>
       <div style={{ display: "flex", alignItems: "center" }}>

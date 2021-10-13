@@ -1,81 +1,43 @@
-import React from "react";
-import {
-  Avatar,
-  Grid,
-  Hidden,
-  IconButton,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Typography,
-} from "@material-ui/core";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import React from "react"
 import { Link } from "react-router-dom";
-import PageviewIcon from "@material-ui/icons/Pageview";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { Avatar, ListItem, ListItemAvatar, ListItemText, Typography } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
-  viewMaterialButton: {
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
+  root: {
+    color: "black",
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
+      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
     },
   },
 }));
 
 function UserItem(props) {
-  const { data, avatar_map } = props;
   const classes = useStyles();
+  const { data, avatar_map } = props;
 
   return data.map((user) => {
     let { name, role, email, _id } = user;
+
     return (
-      <Grid container justify="space-between" alignItems="center">
-        <Grid item>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar src={avatar_map[_id]} />
-            </ListItemAvatar>
-            <Hidden smUp implementation="css">
-              <ListItemText
-                primary={<Typography variant="subtitle1">{name}</Typography>}
-                secondary={
-                  <Typography variant="caption" color="textSecondary">
-                    {email}
-                  </Typography>
-                }
-              />
-            </Hidden>
-            <Hidden xsDown implementation="css">
-              <ListItemText
-                primary={<Typography variant="h6">{name}</Typography>}
-                secondary={
-                  <Typography variant="body2" color="textSecondary">
-                    {email}
-                  </Typography>
-                }
-              />
-            </Hidden>
-          </ListItem>
-        </Grid>
-        <Grid item xs container justify="flex-end">
-          <Grid item>
-            <LightTooltip title="Lihat Profil">
-              <Link
-                to={{
-                  pathname: `/lihat-profil/${user._id}`,
-                }}
-              >
-                <IconButton size="small" className={classes.viewMaterialButton}>
-                  <PageviewIcon fontSize="small" />
-                </IconButton>
-              </Link>
-            </LightTooltip>
-          </Grid>
-        </Grid>
-      </Grid>
+      <Link to={`/lihat-profil/${user._id}`}>
+        <ListItem className={classes.root}>
+          <ListItemAvatar>
+            <Avatar src={avatar_map[_id]} />
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <Typography noWrap>{name}</Typography>
+            }
+            secondary={
+              <Typography variant="body2" color="textSecondary" noWrap>
+                {email}
+              </Typography>
+            }
+          />
+        </ListItem>
+      </Link>
     );
   });
 }

@@ -915,7 +915,7 @@ function ViewAssessmentStudent(props) {
                           wordBreak: "break-word",
                           whiteSpace: "pre-wrap",
                         }}
-                        gutterButtom
+                        gutterBottom
                       >
                         <Latex content={questions[qnsIndex].name} />
                         {/* <CustomLinkify text={questions[qnsIndex].name} /> */}

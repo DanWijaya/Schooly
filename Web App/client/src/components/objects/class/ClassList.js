@@ -14,6 +14,7 @@ import {
 } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import ClassItem from "../item/ClassItem";
+import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -501,63 +502,6 @@ function ClassListToolbar(props) {
           spacing={1}
         >
           <Grid item>
-            <Hidden mdUp>
-              {searchBarFocus ? (
-                <div style={{ display: "flex" }}>
-                  <IconButton
-                    onClick={() => {
-                      setSearchBarFocus(false);
-                      updateSearchFilter("");
-                    }}
-                  >
-                    <ArrowBackIcon />
-                  </IconButton>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    id="searchFilterMobile"
-                    value={searchFilter}
-                    onChange={onChange}
-                    autoFocus
-                    onClick={(e) => setSearchBarFocus(true)}
-                    placeholder="Kelas"
-                    InputProps={{
-                      style: {
-                        borderRadius: "22.5px",
-                        maxWidth: "450px",
-                        width: "100%",
-                      },
-                      endAdornment: (
-                        <InputAdornment
-                          position="end"
-                          style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                        >
-                          <IconButton
-                            size="small"
-                            id="searchFilterMobile"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onClear(e);
-                            }}
-                            style={{
-                              visibility: !searchFilter ? "hidden" : "visible",
-                            }}
-                          >
-                            <ClearIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </div>
-              ) : (
-                <LightTooltip title="Search">
-                  <IconButton onClick={() => setSearchBarFocus(true)}>
-                    <SearchIcon />
-                  </IconButton>
-                </LightTooltip>
-              )}
-            </Hidden>
             <Hidden smDown>
               <TextField
                 variant="outlined"
@@ -602,6 +546,62 @@ function ClassListToolbar(props) {
                   ),
                 }}
               />
+            </Hidden>
+            <Hidden mdUp>
+              {searchBarFocus ? (
+                <div style={{ display: "flex" }}>
+                  <IconButton
+                    onClick={() => {
+                      setSearchBarFocus(false);
+                      updateSearchFilter("");
+                    }}
+                  >
+                    <ArrowBackIcon />
+                  </IconButton>
+                  <TextField
+                    variant="outlined"
+                    id="searchFilterMobile"
+                    value={searchFilter}
+                    onChange={onChange}
+                    autoFocus
+                    onClick={(e) => setSearchBarFocus(true)}
+                    placeholder="Cari Kelas"
+                    InputProps={{
+                      style: {
+                        borderRadius: "22.5px",
+                        maxWidth: "450px",
+                        width: "100%",
+                      },
+                      endAdornment: (
+                        <InputAdornment
+                          position="end"
+                          style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                        >
+                          <IconButton
+                            size="small"
+                            id="searchFilterMobile"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onClear(e);
+                            }}
+                            style={{
+                              visibility: !searchFilter ? "hidden" : "visible",
+                            }}
+                          >
+                            <ClearIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </div>
+              ) : (
+                <LightTooltip title="Cari Kelas">
+                  <IconButton onClick={() => setSearchBarFocus(true)}>
+                    <SearchIcon />
+                  </IconButton>
+                </LightTooltip>
+              )}
             </Hidden>
           </Grid>
           {user.role === "Admin" ? (
@@ -980,21 +980,21 @@ function ClassList(props) {
         getStudents={getStudents}
         handleOpenSnackbar={handleOpenSnackbar}
         tasksCollection={tasksCollection}
-        // all_assessments={all_assessments}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
-        //Two props added for search filter.
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
       />
-      <Grid container spacing={2}>
-        {rows.length === 0 ? null : (
+      {rows.length === 0 ? (
+        <Empty />
+      ) : (
+        <Grid container spacing={2}>
           <ClassItem
             data={stableSort(rows, getComparator(order, orderBy))}
             user={user}
           />
-        )}
-      </Grid>
+        </Grid>
+      )}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}

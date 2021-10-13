@@ -1,46 +1,48 @@
 import React from "react";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
+  Avatar,
   Button,
-  IconButton,
   Grid,
   Hidden,
-  Paper,
-  Typography,
+  IconButton,
   ListItem,
   ListItemText,
   ListItemAvatar,
-  Avatar,
-} from "@material-ui/core/";
-import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+  Menu,
+  MenuItem,
+  Paper,
+  Typography
+} from "@material-ui/core";
+import {
+  LibraryBooks as LibraryBooksIcon,
+  MoreVert as MoreVertIcon,
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles((theme) => ({
-  listItem: {
-    padding: "6px 16px",
+  root: {
+    borderRadius: "4px",
+    boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.12), 0px 2px 8px 2px rgba(60,64,67,0.10)",
+    "&:focus, &:hover": {
+      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
+    }
   },
-  listAvatar: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  editSubjectButton: {
+  subjectIcon: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "3px 0px 0px 3px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
+    width: "100px",
+    [theme.breakpoints.down("md")]: {
+      width: "60px",
     },
   },
-  deleteSubjectButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
-}));
+  subjectItemContent: {
+    padding: "10px 10px 10px 20px",
+  },}));
 function SubjectItem(props) {
   const classes = useStyles();
   const {
@@ -49,104 +51,62 @@ function SubjectItem(props) {
     handleOpenDeleteDialog,
     handleOpenFormDialog,
   } = props;
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return data.map((subject) => (
     <Grid item>
-      <Paper variant="outlined">
-        <ListItem className={classes.listItem}>
-          <Hidden smUp implementation="css">
-            <ListItemText
-              style={{ margin: "6px 0" }}
-              primary={
-                <Grid container alignItems="center">
-                  <Typography variant="subtitle1" color="textPrimary">
-                    {subject.name}
-                  </Typography>
-
-                  {/* bagian ini ditambahkan agar tinggi listitemnya sama seperti listitem yang ada props secondarynya */}
-                  <Grid item style={{ visibility: "hidden" }}>
-                    <Typography variant="subtitle1">{"\u200B"}</Typography>
-                    <Typography variant="caption">{"\u200B"}</Typography>
-                  </Grid>
-                </Grid>
-              }
-            />
-          </Hidden>
-          <Hidden xsDown implementation="css">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
+      <Grid container alignItems="stretch" className={classes.root}>
+        <Grid item className={classes.subjectIcon}>
+          <LibraryBooksIcon />
+        </Grid>
+        <Grid item xs container justify="space-between" alignItems="center" className={classes.subjectItemContent}>
+          <Grid item>
+            <Typography noWrap>
+              {subject.name}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <IconButton onClick={handleClick}>
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
               }}
             >
-              <ListItemAvatar>
-                <Avatar className={classes.listAvatar}>
-                  <LibraryBooksIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                style={{ margin: "6px 0" }}
-                primary={
-                  <Grid container alignItems="center">
-                    <Typography variant="h6" color="textPrimary">
-                      {subject.name}
-                    </Typography>
-
-                    {/* bagian ini ditambahkan agar tinggi listitemnya sama seperti listitem yang ada props secondarynya */}
-                    <Grid item style={{ visibility: "hidden" }}>
-                      <Grid container direction="column">
-                        <Typography variant="h6">{"\u200B"}</Typography>
-                        <Typography variant="body2">{"\u200B"}</Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                }
-              />
-            </div>
-          </Hidden>
-          {isEditable ? (
-            <ListItemText
-              align="right"
-              primary={
-                <Grid container spacing={1} justify="flex-end">
-                  <Grid item>
-                    <LightTooltip title="Sunting">
-                      <IconButton
-                        size="small"
-                        className={classes.editSubjectButton}
-                        onClick={(e) =>
-                          handleOpenFormDialog(
-                            e,
-                            subject._id,
-                            subject.name,
-                            true
-                          )
-                        }
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </LightTooltip>
-                  </Grid>
-                  <Grid item>
-                    <LightTooltip title="Hapus">
-                      <IconButton
-                        size="small"
-                        className={classes.deleteSubjectButton}
-                        onClick={(e) => {
-                          handleOpenDeleteDialog(e, subject._id, subject.name);
-                        }}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    </LightTooltip>
-                  </Grid>
-                </Grid>
-              }
-            />
-          ) : null}
-        </ListItem>
-      </Paper>
+              <MenuItem
+                onClick={(e) => handleOpenFormDialog(e, subject._id, subject.name, true)}
+              >
+                Sunting
+              </MenuItem>
+              <MenuItem
+                onClick={(e) => {
+                  handleOpenDeleteDialog(e, subject._id, subject.name);
+                }}
+              >
+                Hapus
+              </MenuItem>
+            </Menu>
+          </Grid>
+        </Grid>
+      </Grid>
     </Grid>
   ));
 }
