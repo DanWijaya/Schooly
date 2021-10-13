@@ -369,7 +369,7 @@ router.get("/getStudents/:unitId", (req, res) => {
     });
 });
 
-router.get("/getAdmins/", (req, res) => {
+router.get("/getAdmins/:unitId", (req, res) => {
   const { unitId } = req.params;
   if (!unitId) {
     return res.json([]);
