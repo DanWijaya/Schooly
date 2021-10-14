@@ -213,7 +213,7 @@ function ViewUnit(props) {
                     Pengelola
                   </Typography>
                   <List>
-                    <Divider className={classes.unitMembersDivider} />
+                    <Divider component="li" className={classes.unitMembersDivider} />
                     <UserItem data={all_admins} avatar_map={avatar} />
                   </List>
                 </Grid>
@@ -222,7 +222,7 @@ function ViewUnit(props) {
                     Guru
                   </Typography>
                   <List>
-                    <Divider className={classes.unitMembersDivider} />
+                    <Divider component="li" className={classes.unitMembersDivider} />
                     <UserItem data={all_teachers} avatar_map={avatar} />
                   </List>
                 </Grid>
@@ -231,7 +231,7 @@ function ViewUnit(props) {
                     Murid
                   </Typography>
                   <List>
-                    <Divider className={classes.unitMembersDivider} />
+                    <Divider component="li" className={classes.unitMembersDivider} />
                     <UserItem data={all_students} avatar_map={avatar} />
                   </List>
                 </Grid>

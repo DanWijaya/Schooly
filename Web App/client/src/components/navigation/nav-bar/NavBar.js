@@ -84,10 +84,10 @@ const useStyles = makeStyles((theme) => ({
 
 function NavBar(props) {
   const classes = useStyles();
-  const { handleDrawerDesktop, handleDrawerMobile, sideDrawerExist, logoutUser, getFileAvatar } = props;
+  const { handleDrawerDesktop, handleDrawerMobile, sideDrawerExist, mobileView, logoutUser, getFileAvatar } = props;
   const { user } = props.auth;
 
-  const isMobileView = useMediaQuery("(max-width:960px)");
+  const mobileMenu = useMediaQuery("(max-width:600px)");
 
   const [avatar, setAvatar] = React.useState(null);
   React.useEffect(() => {
@@ -214,7 +214,7 @@ function NavBar(props) {
                 className={classes.startButtonContainer}
                 style={{ display: !sideDrawerExist ? "none" : "block" }}
               >
-                {isMobileView ? (
+                {mobileView ? (
                   <IconButton edge="start" color="inherit" onClick={handleDrawerMobile}>
                     <MenuIcon />
                   </IconButton>
@@ -235,7 +235,7 @@ function NavBar(props) {
                   className={classes.schoolyLogo}
                 />
               </Link>
-              {isMobileView ? NavbarMobileMenu : NavbarDesktopMenu}
+              {mobileMenu ? NavbarMobileMenu : NavbarDesktopMenu}
             </Toolbar>
           ) : (
             <Toolbar>
