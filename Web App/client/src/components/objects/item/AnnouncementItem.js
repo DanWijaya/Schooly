@@ -41,7 +41,7 @@ function AnnouncementItem(props) {
                 {primaryText}
               </Typography>
             }
-            secondary = {
+            secondary={
               <Typography variant="body2" color="textSecondary" noWrap>
                 {subPrimaryText}
               </Typography>

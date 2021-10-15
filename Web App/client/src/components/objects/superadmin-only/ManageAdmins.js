@@ -329,17 +329,15 @@ function ManageUsersToolbar(props) {
               )}
             </Hidden>
           </Grid>
-          {role === "Teacher" ? (
-            <Grid item style={{ display: searchBarFocus ? "none" : "block" }}>
-              <Link to="/sunting-pengelola">
-                <LightTooltip title="Sunting Unit Pengelola">
-                  <IconButton>
-                    <BiSitemap />
-                  </IconButton>
-                </LightTooltip>
-              </Link>
-            </Grid>
-          ) : null}
+          <Grid item style={{ display: searchBarFocus ? "none" : "block" }}>
+            <Link to="/sunting-pengelola">
+              <LightTooltip title="Sunting Unit Pengelola">
+                <IconButton>
+                  <BiSitemap />
+                </IconButton>
+              </LightTooltip>
+            </Link>
+          </Grid>
           <Grid item style={{ display: searchBarFocus ? "none" : "block" }}>
             <LightTooltip title="Urutkan Akun">
               <IconButton onClick={handleOpenSortMenu}>

@@ -21,22 +21,29 @@ import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import Empty from "../../misc/empty/Empty";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
+  Avatar,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  Divider,
   Fab,
   Grid,
-  IconButton,
   Hidden,
+  IconButton,
+  LinearProgress,
+  List,
+  ListItem,
+  ListItemAvatar,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
   Paper,
-  Typography,
-  ListItem,
-  ListItemAvatar,
-  Dialog,
-  Avatar,
-  Badge,
+  Typography
 } from "@material-ui/core";
+import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import {
   Add as AddIcon,
   Announcement as AnnouncementIcon,
@@ -47,7 +54,7 @@ import {
   Error as ErrorIcon,
   MenuBook as MenuBookIcon,
   Warning as WarningIcon,
-  Web as UnitIcon,
+  Web as WebIcon
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
 import { AiOutlineUserSwitch } from "react-icons/ai";
@@ -688,7 +695,7 @@ class Dashboard extends Component {
     // const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { user, all_roles } = this.props.auth;
     if (user.role != all_roles.SUPERADMIN) {
-      getAllTask(user.unit); // actions yang membuat GET request ke Database.
+      getAllTask(user.unit); // actions that make GET request to database.
       getAllSubjects(user.unit);
       getTeachers(user.unit);
       getAllSubjects(user.unit, "map");
@@ -699,7 +706,7 @@ class Dashboard extends Component {
         getStudentsByClass(user.kelas);
       }
       getAllAssessments(user.unit);
-      getAllTaskFilesByUser(user._id); // yang dapatin takfiles cuma berlaku untuk student soalnya
+      getAllTaskFilesByUser(user._id); // The one that gets takfiles which is only for students.
       getStudents(user.unit);
     }
 
@@ -1733,161 +1740,234 @@ class Dashboard extends Component {
               </Grid>
             </>
           ) : user.role === "Admin" ? (
-            <Grid
-              item
-              container
-              direction="row"
-              justify="flex-end"
-              alignItems="center"
-              spacing={1}
-            >
-              <Grid item>
-                <Link to="/atur-walikelas">
-                  <Fab
-                    variant="extended"
-                    className={classes.manageHomeroomTeacherButton}
-                  >
-                    <AiOutlineUserSwitch
-                      className={classes.manageHomeroomTeacherIcon}
-                    />
-                    Atur Wali Kelas
-                  </Fab>
-                </Link>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6" paragraph>
+                      Akses dengan Cepat
+                    </Typography>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} md={6}>
+                        <Card variant="outlined">
+                          <CardContent>
+                            <Grid container direction="column" spacing={3}>
+                              <Grid item>
+                                <Typography>
+                                  Kelas dan Mata Pelajaran
+                                </Typography>
+                                <Grid container justify="space-between" alignItems="center" spacing={1}>
+                                  <Grid item>
+                                    <Typography color="textSecondary">
+                                      Terdapat {5} kelas di unit Anda.
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item>
+                                    <Button variant="contained" color="secondary">
+                                      <AddIcon />
+                                    </Button>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                              <Grid item>
+                                {/* Dua item dibawah di hide kalau emang tak ada apa2*/}
+                                <Typography color="textSecondary" gutterBottom>
+                                  Beberapa Murid berikut belum ditempatkan di kelas manapun.
+                                </Typography>
+                                <Grid container justify="space-between" alignItems="center" spacing={1}>
+                                  <Grid item>
+                                    <AvatarGroup max={3}>
+                                      <Avatar />
+                                      <Avatar />
+                                      <Avatar />
+                                      <Avatar />
+                                    </AvatarGroup>
+                                  </Grid>
+                                  <Grid item>
+                                    <Button variant="outlined" color="primary">
+                                      Atur
+                                    </Button>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                              <Grid item>
+                                <Typography color="textSecondary" gutterBottom>
+                                  Beberapa Guru berikut belum ditetapkan kelas atau mata pelajaran yang diajarnya.
+                                </Typography>
+                                <Grid container justify="space-between" alignItems="center" spacing={1}>
+                                  <Grid item>
+                                    <AvatarGroup max={3}>
+                                      <Avatar />
+                                      <Avatar />
+                                      <Avatar />
+                                      <Avatar />
+                                      <Avatar />
+                                    </AvatarGroup>
+                                  </Grid>
+                                  <Grid item>
+                                    <Button variant="outlined" color="primary">
+                                      Atur
+                                    </Button>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Card variant="outlined">
+                          <CardContent>
+                            <Grid container direction="column" spacing={3}>
+                              <Grid item>
+                                <Typography>
+                                  Pengumuman
+                                </Typography>
+                                <Grid container justify="space-between" alignItems="center" spacing={1}>
+                                  <Grid item>
+                                    <Typography color="textSecondary">
+                                      Terdapat {5} kelas di unit Anda.
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item>
+                                    <Button variant="contained" color="secondary">
+                                      <AddIcon />
+                                    </Button>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                              <Grid item>
+                                //List pengumuman maks 5 buah recently
+                              </Grid>
+                            </Grid>
+                          </CardContent>
+                          <Divider />
+                          <CardContent style={{ padding: "16px" }}>
+                            <div style={{ display: "flex", justifyContent: "center" }}>
+                              <Button color="primary">
+                                Lihat Semua
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
               </Grid>
-              <Grid item>
-                <Link to="/daftar-kelas">
-                  <Fab variant="extended" className={classes.manageClassButton}>
-                    <FaChalkboard className={classes.manageClassIcon} />
-                    Atur Kelas
-                  </Fab>
-                </Link>
+              <Grid item xs={12} md={7}>
+                <Paper>
+                  Doughnut Chart isi jumlah murid guru, dan pengguna tidak aktif
+                </Paper>
               </Grid>
-              <Grid item>
-                <Fab
-                  className={classes.createButton}
-                  onClick={(event) => this.handleMenuOpen(event)}
-                >
-                  <AddIcon />
-                </Fab>
-                <Menu
-                  keepMounted
-                  anchorEl={this.state.anchorEl}
-                  open={Boolean(this.state.anchorEl)}
-                  onClose={this.handleMenuClose}
-                  getContentAnchorEl={null}
-                  style={{ marginTop: "10px" }}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                  }}
-                >
-                  <MenuItem
-                    button
-                    component="a"
-                    href="/buat-kelas"
-                    className={classes.menuItem}
-                  >
-                    <ListItemIcon>
-                      <FaChalkboard className={classes.manageClassIcon} />
-                    </ListItemIcon>
-                    <ListItemText primary="Buat Kelas" />
-                  </MenuItem>
-                  <MenuItem
-                    button
-                    component="a"
-                    href="/buat-pengumuman"
-                    className={classes.menuItem}
-                  >
-                    <ListItemIcon>
-                      <AnnouncementIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Buat Pengumuman" />
-                  </MenuItem>
-                </Menu>
+              <Grid item xs={12} md={5}>
+                <Paper>
+                  Timeline kegiatan minggu ini pakai stepper vertikal.
+                  Biru centang udah lewat, biru incoming
+                </Paper>
               </Grid>
             </Grid>
           ) : user.role === "SuperAdmin" ? (
-            <Grid
-              item
-              container
-              direction="row"
-              justify="flex-end"
-              alignItems="center"
-              spacing={1}
-            >
-              <Grid item>
-                <Link to="/pengelola-aktif">
-                  <Fab
-                    variant="extended"
-                    className={classes.manageHomeroomTeacherButton}
-                  >
-                    <AiOutlineUserSwitch
-                      className={classes.manageHomeroomTeacherIcon}
-                    />
-                    Atur Pengelola
-                  </Fab>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link to="/daftar-unit">
-                  <Fab variant="extended" className={classes.manageClassButton}>
-                    <UnitIcon className={classes.manageClassIcon} />
-                    Atur Unit sekolah
-                  </Fab>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Fab
-                  className={classes.createButton}
-                  onClick={(event) => this.handleMenuOpen(event)}
-                >
-                  <AddIcon />
-                </Fab>
-                <Menu
-                  keepMounted
-                  anchorEl={this.state.anchorEl}
-                  open={Boolean(this.state.anchorEl)}
-                  onClose={this.handleMenuClose}
-                  getContentAnchorEl={null}
-                  style={{ marginTop: "10px" }}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                  }}
-                >
-                  <MenuItem
-                    button
-                    component="a"
-                    href="/buat-kelas"
-                    className={classes.menuItem}
-                  >
-                    <ListItemIcon>
-                      <FaChalkboardTeacher
-                        className={classes.manageClassIcon}
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={7}>
+                <Card>
+                  <CardContent>
+                    <Grid container justify="space-between" alignItems="center">
+                      <Grid item>
+                        <Typography>
+                          Jumlah Pengguna
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Button variant="outlined" color="primary">
+                          Lihat Semua
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                  <Divider />
+                  <List>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar variant="rounded">
+                          <WebIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Typography noWrap>
+                            Nama Unit
+                          </Typography>
+                        }
+                        secondary={
+                          <Grid container justify="flex-end" alignItems="center" spacing={1}>
+                            <Grid item xs>
+                              <LinearProgress
+                                //Ini bakal relatif valuenya dengan unit dengan jumlah terbanyak, yang terbanyak barnya full
+                                variant="determinate"
+                                value={70}
+                                classes={{
+                                  root: {
+                                    borderRadius: "2px",
+                                  },
+                                  colorPDrimary: {
+                                    backgroundColor: "transparent",
+                                  },
+                                  bar: {
+                                    borderRadius: "2px",
+                                  },
+                                }}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <Typography variant="body2">100 orang</Typography>
+                            </Grid>
+                          </Grid>
+                        }
                       />
-                    </ListItemIcon>
-                    <ListItemText primary="Buat Kelas" />
-                  </MenuItem>
-                  <MenuItem
-                    button
-                    component="a"
-                    href="/buat-pengumuman"
-                    className={classes.menuItem}
-                  >
-                    <ListItemIcon>
-                      <AnnouncementIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Buat Pengumuman" />
-                  </MenuItem>
-                </Menu>
+                    </ListItem>
+                  </List>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={5}>
+                <Card>
+                  <CardContent>
+                    <Typography>
+                      Pengelola Tidak Aktif
+                    </Typography>
+                  </CardContent>
+                  <Divider />
+                    <List>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <Typography noWrap>
+                              Nama
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography noWrap>
+                              Nama Unit
+                            </Typography>
+                          }
+                        />
+                        <Button variant="outlined" color="primary">
+                          Profil
+                        </Button>
+                      </ListItem>
+                    </List>
+                  <Divider />
+                  <CardContent style={{ padding: "16px" }}>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                      <Button color="primary">
+                        Lihat Semua Pengelola
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               </Grid>
             </Grid>
           ) : null}

@@ -647,21 +647,18 @@ function SubjectList(props) {
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
       />
-      <Divider variant="inset" className={classes.titleDivider} />
-      <Grid container direction="column" spacing={2}>
-        {rows.length === 0 ? (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
-        ) : (
+      {rows.length === 0 ? (
+        <Empty />
+      ) : (
+        <Grid container direction="column" spacing={2}>
           <SubjectItem
             data={stableSort(rows, getComparator(order, orderBy))}
             isEditable={true}
             handleOpenFormDialog={handleOpenFormDialog}
             handleOpenDeleteDialog={handleOpenDeleteDialog}
           />
-        )}
-      </Grid>
+        </Grid>
+      )}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={4000}
