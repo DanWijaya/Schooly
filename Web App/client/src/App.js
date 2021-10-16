@@ -91,12 +91,12 @@ import Setting from "./components/objects/setting/Setting";
 import Tester from "./prototypes/Tester1";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
 // Super Admin Only
-import UnitList from "./components/objects/superadmin-only/UnitList";
-import ManageAdmins from "./components/objects/superadmin-only/ManageAdmins";
-import ManagePendingAdmins from "./components/objects/superadmin-only/ManagePendingAdmins";
-import CreateUnit from "./components/objects/superadmin-only/CreateUnit";
-import EditUnit from "./components/objects/superadmin-only/EditUnit";
-import ViewUnit from "./components/objects/superadmin-only/ViewUnit";
+import UnitList from "./components/objects/unit/UnitList";
+import ManageAdmins from "./components/objects/user/ManageAdmins";
+import ManagePendingAdmins from "./components/objects/user/ManagePendingAdmins";
+import CreateUnit from "./components/objects/unit/CreateUnit";
+import EditUnit from "./components/objects/unit/EditUnit";
+import ViewUnit from "./components/objects/unit/ViewUnit";
 import AdminList from "./components/objects/user/AdminList";
 
 // Check for token to keep user logged in
@@ -290,7 +290,7 @@ class App extends Component {
                         path="/lihat-profil/:id"
                         component={ProfileView}
                       />
-                      
+
                       {/* Route Class */}
                       <PrivateRoute
                         exact
@@ -580,6 +580,7 @@ class App extends Component {
                       <PrivateRoute
                         exact
                         access={[Role.SUPERADMIN]}
+                        Hello
                         path="/pengelola-tertunda"
                         component={ManagePendingAdmins}
                       />

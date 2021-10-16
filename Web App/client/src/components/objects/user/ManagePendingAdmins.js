@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { GET_PENDING_ADMINS } from "../../../actions/Types";
 import {
   setUserActive,
   deleteUser,
