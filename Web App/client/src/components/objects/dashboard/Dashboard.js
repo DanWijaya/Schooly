@@ -42,7 +42,7 @@ import {
   MenuItem,
   Paper,
   Tooltip,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import {
@@ -55,12 +55,16 @@ import {
   Error as ErrorIcon,
   MenuBook as MenuBookIcon,
   Warning as WarningIcon,
-  Web as WebIcon
+  Web as WebIcon,
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
 import { AiOutlineUserSwitch } from "react-icons/ai";
 import { BsClipboardData } from "react-icons/bs";
-import { FaClipboardList, FaChalkboard, FaChalkboardTeacher } from "react-icons/fa";
+import {
+  FaClipboardList,
+  FaChalkboard,
+  FaChalkboardTeacher,
+} from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {
@@ -1222,98 +1226,90 @@ class Dashboard extends Component {
         <div style={{ marginTop: "20px" }}>
           {user.role === "Student" ? (
             <Grid container spacing={2}>
-              <Grid item xs={12} md={7} container direction="column" spacing={2}>
+              <Grid
+                item
+                xs={12}
+                md={7}
+                container
+                direction="column"
+                spacing={2}
+              >
                 <Grid item>
                   <Card style={{ borderTop: "8px solid red" }}>
                     <CardContent>
-                      <Typography variant="h6">
-                        Belum Dikerjakan
-                      </Typography>
+                      <Typography variant="h6">Belum Dikerjakan</Typography>
                     </CardContent>
                     <Divider />
                     <CardContent>
-                      <Typography gutterBottom>
-                        Tugas
-                      </Typography>
+                      <Typography gutterBottom>Tugas</Typography>
                       {listTasks()}
                     </CardContent>
                   </Card>
                 </Grid>
                 <Grid item>
-                <Card style={{ borderTop: "8px solid yellow" }}>
-                  <CardContent>
-                    <Typography variant="h6">
-                      Akan Datang
-                    </Typography>
-                  </CardContent>
-                  <Divider />
-                  <CardContent>
-                    <Typography gutterBottom>
-                      Kuis
-                    </Typography>
-                    <ListAssessments
-                      category={null}
-                      subject={{}}
-                      type="Kuis"
-                      tab="pekerjaan-kelas"
-                      all_assessments={all_assessments}
-                      classId={classId}
-                      classes={classes}
-                      all_subjects_map={all_subjects_map}
-                      all_teachers={all_teachers}
-                    />
-                  </CardContent>
-                  <CardContent>
-                    <Typography gutterBottom>
-                      Ujian
-                    </Typography>
-                    <ListAssessments
-                      category={null}
-                      subject={{}}
-                      type="Ujian"
-                      tab="pekerjaan-kelas"
-                      all_assessments={all_assessments}
-                      classId={classId}
-                      classes={classes}
-                      all_subjects_map={all_subjects_map}
-                      all_teachers={all_teachers}
-                    />
-                  </CardContent>
-                </Card>
+                  <Card style={{ borderTop: "8px solid yellow" }}>
+                    <CardContent>
+                      <Typography variant="h6">Akan Datang</Typography>
+                    </CardContent>
+                    <Divider />
+                    <CardContent>
+                      <Typography gutterBottom>Kuis</Typography>
+                      <ListAssessments
+                        category={null}
+                        subject={{}}
+                        type="Kuis"
+                        tab="pekerjaan-kelas"
+                        all_assessments={all_assessments}
+                        classId={classId}
+                        classes={classes}
+                        all_subjects_map={all_subjects_map}
+                        all_teachers={all_teachers}
+                      />
+                    </CardContent>
+                    <CardContent>
+                      <Typography gutterBottom>Ujian</Typography>
+                      <ListAssessments
+                        category={null}
+                        subject={{}}
+                        type="Ujian"
+                        tab="pekerjaan-kelas"
+                        all_assessments={all_assessments}
+                        classId={classId}
+                        classes={classes}
+                        all_subjects_map={all_subjects_map}
+                        all_teachers={all_teachers}
+                      />
+                    </CardContent>
+                  </Card>
                 </Grid>
                 <Grid item>
-                <Card style={{ borderTop: "8px solid green" }}>
-                  <CardContent>
-                    <Typography variant="h6">
-                      Baru Diperiksa
-                    </Typography>
-                  </CardContent>
-                  <Divider />
-                  <CardContent>
-                    Isi tugas, kuis, ujian yang baru diperiksa maks 5 paling recent dari atas ke bawah.
-                  </CardContent>
-                </Card>
+                  <Card style={{ borderTop: "8px solid green" }}>
+                    <CardContent>
+                      <Typography variant="h6">Baru Diperiksa</Typography>
+                    </CardContent>
+                    <Divider />
+                    <CardContent>
+                      Isi tugas, kuis, ujian yang baru diperiksa maks 5 paling
+                      recent dari atas ke bawah.
+                    </CardContent>
+                  </Card>
                 </Grid>
               </Grid>
               <Grid item xs={12} md={5}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6">
-                    Kegiatan Minggu Ini
-                  </Typography>
-                </CardContent>
-                <CardContent>
-                  Vertical stepper isi yang kayak punya admin.
-                </CardContent>
-                <Divider />
-                <CardContent>
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <Button color="primary">
-                      Lihat Semua
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6">Kegiatan Minggu Ini</Typography>
+                  </CardContent>
+                  <CardContent>
+                    Vertical stepper isi yang kayak punya admin.
+                  </CardContent>
+                  <Divider />
+                  <CardContent>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                      <Button color="primary">Lihat Semua</Button>
+                    </div>
+                  </CardContent>
+                </Card>
               </Grid>
             </Grid>
           ) : user.role === "Teacher" ? (
@@ -1321,40 +1317,84 @@ class Dashboard extends Component {
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h6">
-                      Akses dengan Cepat
-                    </Typography>
+                    <Typography variant="h6">Akses dengan Cepat</Typography>
                     <Typography color="textSecondary" paragraph>
-                      Berikut adalah jumlah pemberitahuan dan pekerjaan yang telah ada berikan.
+                      Berikut adalah jumlah pemberitahuan dan pekerjaan yang
+                      telah anda berikan.
                     </Typography>
                     <Grid container direction="column" spacing={2}>
                       <Grid item container spacing={4}>
-                        <Grid item style={{ display: "flex", alignItems: "center" }}>
-                          <AnnouncementIcon style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                        <Grid
+                          item
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <AnnouncementIcon
+                            style={{
+                              color: "grey",
+                              marginRight: "10px",
+                              fontSize: "25px",
+                            }}
+                          />
                           <Typography color="primary" display="inline">
                             1 <Hidden smUp>Pengumuman</Hidden>
                           </Typography>
                         </Grid>
-                        <Grid item style={{ display: "flex", alignItems: "center" }}>
-                          <MenuBookIcon style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                        <Grid
+                          item
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <MenuBookIcon
+                            style={{
+                              color: "grey",
+                              marginRight: "10px",
+                              fontSize: "25px",
+                            }}
+                          />
                           <Typography color="primary" display="inline">
                             1 <Hidden smUp>Materi</Hidden>
                           </Typography>
                         </Grid>
-                        <Grid item style={{ display: "flex", alignItems: "center" }}>
-                          <AssignmentIcon style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                        <Grid
+                          item
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <AssignmentIcon
+                            style={{
+                              color: "grey",
+                              marginRight: "10px",
+                              fontSize: "25px",
+                            }}
+                          />
                           <Typography color="primary" display="inline">
                             1 <Hidden smUp>Tugas</Hidden>
                           </Typography>
                         </Grid>
-                        <Grid item style={{ display: "flex", alignItems: "center" }}>
-                          <FaClipboardList style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                        <Grid
+                          item
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <FaClipboardList
+                            style={{
+                              color: "grey",
+                              marginRight: "10px",
+                              fontSize: "25px",
+                            }}
+                          />
                           <Typography color="primary" display="inline">
                             1 <Hidden smUp>Kuis</Hidden>
                           </Typography>
                         </Grid>
-                        <Grid item style={{ display: "flex", alignItems: "center" }}>
-                          <BsClipboardData style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                        <Grid
+                          item
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <BsClipboardData
+                            style={{
+                              color: "grey",
+                              marginRight: "10px",
+                              fontSize: "25px",
+                            }}
+                          />
                           <Typography color="primary" display="inline">
                             1 <Hidden smUp>Ujian</Hidden>
                           </Typography>
@@ -1463,27 +1503,19 @@ class Dashboard extends Component {
               <Grid item xs={12} md={7}>
                 <Card style={{ borderTop: "8px solid red" }}>
                   <CardContent>
-                    <Typography variant="h6">
-                      Belum Diperiksa
-                    </Typography>
+                    <Typography variant="h6">Belum Diperiksa</Typography>
                   </CardContent>
                   <Divider />
                   <CardContent>
-                    <Typography gutterBottom>
-                      Tugas
-                    </Typography>
+                    <Typography gutterBottom>Tugas</Typography>
                     {listTasksTeacher()}
                   </CardContent>
                   <CardContent>
-                    <Typography gutterBottom>
-                      Kuis
-                    </Typography>
+                    <Typography gutterBottom>Kuis</Typography>
                     {listAssessmentsTeacher("Kuis")}
                   </CardContent>
                   <CardContent>
-                    <Typography gutterBottom>
-                      Ujian
-                    </Typography>
+                    <Typography gutterBottom>Ujian</Typography>
                     {listAssessmentsTeacher("Ujian")}
                   </CardContent>
                 </Card>
@@ -1491,9 +1523,7 @@ class Dashboard extends Component {
               <Grid item xs={12} md={5}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h6">
-                      Kegiatan Minggu Ini
-                    </Typography>
+                    <Typography variant="h6">Kegiatan Minggu Ini</Typography>
                   </CardContent>
                   <CardContent>
                     Vertical stepper isi yang kayak punya admin.
@@ -1501,9 +1531,7 @@ class Dashboard extends Component {
                   <Divider />
                   <CardContent>
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                      <Button color="primary">
-                        Lihat Semua
-                      </Button>
+                      <Button color="primary">Lihat Semua</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -1526,14 +1554,22 @@ class Dashboard extends Component {
                                 <Typography>
                                   Kelas dan Mata Pelajaran
                                 </Typography>
-                                <Grid container justify="space-between" alignItems="center" spacing={1}>
+                                <Grid
+                                  container
+                                  justify="space-between"
+                                  alignItems="center"
+                                  spacing={1}
+                                >
                                   <Grid item>
                                     <Typography color="textSecondary">
                                       Terdapat {5} kelas di unit Anda.
                                     </Typography>
                                   </Grid>
                                   <Grid item>
-                                    <Button variant="contained" color="secondary">
+                                    <Button
+                                      variant="contained"
+                                      color="secondary"
+                                    >
                                       <AddIcon />
                                     </Button>
                                   </Grid>
@@ -1542,9 +1578,15 @@ class Dashboard extends Component {
                               <Grid item>
                                 {/* Dua item dibawah di hide kalau emang tak ada apa2*/}
                                 <Typography color="textSecondary" gutterBottom>
-                                  Beberapa Murid berikut belum ditempatkan di kelas manapun.
+                                  Beberapa Murid berikut belum ditempatkan di
+                                  kelas manapun.
                                 </Typography>
-                                <Grid container justify="space-between" alignItems="center" spacing={1}>
+                                <Grid
+                                  container
+                                  justify="space-between"
+                                  alignItems="center"
+                                  spacing={1}
+                                >
                                   <Grid item>
                                     <AvatarGroup max={3}>
                                       <Avatar />
@@ -1562,9 +1604,15 @@ class Dashboard extends Component {
                               </Grid>
                               <Grid item>
                                 <Typography color="textSecondary" gutterBottom>
-                                  Beberapa Guru berikut belum ditetapkan kelas atau mata pelajaran yang diajarnya.
+                                  Beberapa Guru berikut belum ditetapkan kelas
+                                  atau mata pelajaran yang diajarnya.
                                 </Typography>
-                                <Grid container justify="space-between" alignItems="center" spacing={1}>
+                                <Grid
+                                  container
+                                  justify="space-between"
+                                  alignItems="center"
+                                  spacing={1}
+                                >
                                   <Grid item>
                                     <AvatarGroup max={3}>
                                       <Avatar />
@@ -1590,17 +1638,23 @@ class Dashboard extends Component {
                           <CardContent>
                             <Grid container direction="column" spacing={3}>
                               <Grid item>
-                                <Typography>
-                                  Pengumuman
-                                </Typography>
-                                <Grid container justify="space-between" alignItems="center" spacing={1}>
+                                <Typography>Pengumuman</Typography>
+                                <Grid
+                                  container
+                                  justify="space-between"
+                                  alignItems="center"
+                                  spacing={1}
+                                >
                                   <Grid item>
                                     <Typography color="textSecondary">
                                       Terdapat {5} kelas di unit Anda.
                                     </Typography>
                                   </Grid>
                                   <Grid item>
-                                    <Button variant="contained" color="secondary">
+                                    <Button
+                                      variant="contained"
+                                      color="secondary"
+                                    >
                                       <AddIcon />
                                     </Button>
                                   </Grid>
@@ -1613,10 +1667,13 @@ class Dashboard extends Component {
                           </CardContent>
                           <Divider />
                           <CardContent style={{ padding: "16px" }}>
-                            <div style={{ display: "flex", justifyContent: "center" }}>
-                              <Button color="primary">
-                                Lihat Semua
-                              </Button>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Button color="primary">Lihat Semua</Button>
                             </div>
                           </CardContent>
                         </Card>
@@ -1633,20 +1690,16 @@ class Dashboard extends Component {
               <Grid item xs={12} md={5}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h6">
-                      Kegiatan Minggu Ini
-                    </Typography>
+                    <Typography variant="h6">Kegiatan Minggu Ini</Typography>
                   </CardContent>
                   <CardContent>
-                    Vertical stepper isi timeline kegiatan minggu ini.
-                    Hijau ceklis udah lewat, belum lewat warna biru.
+                    Vertical stepper isi timeline kegiatan minggu ini. Hijau
+                    ceklis udah lewat, belum lewat warna biru.
                   </CardContent>
                   <Divider />
                   <CardContent>
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                      <Button color="primary">
-                        Lihat Semua
-                      </Button>
+                      <Button color="primary">Lihat Semua</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -1659,9 +1712,7 @@ class Dashboard extends Component {
                   <CardContent>
                     <Grid container justify="space-between" alignItems="center">
                       <Grid item>
-                        <Typography>
-                          Jumlah Pengguna
-                        </Typography>
+                        <Typography>Jumlah Pengguna</Typography>
                       </Grid>
                       <Grid item>
                         <Button variant="outlined" color="primary">
@@ -1679,13 +1730,14 @@ class Dashboard extends Component {
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
-                        primary={
-                          <Typography noWrap>
-                            Nama Unit
-                          </Typography>
-                        }
+                        primary={<Typography noWrap>Nama Unit</Typography>}
                         secondary={
-                          <Grid container justify="flex-end" alignItems="center" spacing={1}>
+                          <Grid
+                            container
+                            justify="flex-end"
+                            alignItems="center"
+                            spacing={1}
+                          >
                             <Grid item xs>
                               <LinearProgress
                                 //Ini bakal relatif valuenya dengan unit dengan jumlah terbanyak, yang terbanyak barnya full
@@ -1706,39 +1758,27 @@ class Dashboard extends Component {
               <Grid item xs={12} md={5}>
                 <Card>
                   <CardContent>
-                    <Typography>
-                      Pengelola Tidak Aktif
-                    </Typography>
+                    <Typography>Pengelola Tidak Aktif</Typography>
                   </CardContent>
                   <Divider />
-                    <List>
-                      <ListItem>
-                        <ListItemAvatar>
-                          <Avatar />
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={
-                            <Typography noWrap>
-                              Nama
-                            </Typography>
-                          }
-                          secondary={
-                            <Typography noWrap>
-                              Nama Unit
-                            </Typography>
-                          }
-                        />
-                        <Button variant="outlined" color="primary">
-                          Profil
-                        </Button>
-                      </ListItem>
-                    </List>
+                  <List>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={<Typography noWrap>Nama</Typography>}
+                        secondary={<Typography noWrap>Nama Unit</Typography>}
+                      />
+                      <Button variant="outlined" color="primary">
+                        Profil
+                      </Button>
+                    </ListItem>
+                  </List>
                   <Divider />
                   <CardContent style={{ padding: "16px" }}>
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                      <Button color="primary">
-                        Lihat Semua Pengelola
-                      </Button>
+                      <Button color="primary">Lihat Semua Pengelola</Button>
                     </div>
                   </CardContent>
                 </Card>
