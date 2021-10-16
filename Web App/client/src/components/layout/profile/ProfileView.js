@@ -148,7 +148,6 @@ function ProfileView(props) {
           </Typography>
           <Typography variant="h6" color="textSecondary" align="center">
             {roleMap.get(role)}
-
             {!namakelas || !role !== "Student" ? null : ` ${namakelas}`}
           </Typography>
         </Grid>
