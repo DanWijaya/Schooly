@@ -35,12 +35,13 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import {
   ArrowBackIos as ArrowBackIosIcon,
   ArrowForwardIos as ArrowForwardIosIcon,
   Assignment as AssignmentIcon,
+  Assessment as AssessmentIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
@@ -55,6 +56,20 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
+  },
+  header: {
+    marginBottom: "25px",
+  },
+  headerIcon: {
+    display: "flex",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    fontSize: "25px",
+    padding: "7.5px",
+    borderRadius: "5px",
+  },
+  content: {
+    marginTop: "15px",
   },
   avatar: {
     margin: "auto",
@@ -1394,7 +1409,54 @@ function Report(props) {
 
   return (
     <div className={classes.root}>
-      {role === "Teacher" ? (
+      {role === "Student" ? (
+        // Student report view from sidedrawer.
+        <>
+          <Grid container alignItems="center" spacing={2} className={classes.header}>
+            <Grid item>
+              <div className={classes.headerIcon}>
+                <AssessmentIcon />
+              </div>
+            </Grid>
+            <Grid item>
+              <Typography variant="h5" align="left">
+                Rapor
+              </Typography>
+            </Grid>
+          </Grid>
+          <Divider />
+          <Grid container spacing={4} className={classes.content}>
+            <Grid item xs={12} md={7}>
+              {createGraph()}
+            </Grid>
+            <Grid item xs={12} md={5}>
+              Graph radar literally dari tabel bawah buat semua matpel juga dirata2in tapi tugas, kuis, ujiannya.
+            </Grid>
+            <Grid item xs={12}>
+              <TableContainer component={Paper}>
+                <Table
+                  size="medium"
+                  style={{ overflow: "hidden" }}
+                >
+                  <TableHead className={classes.tableHeader}>
+                    <TableRow>
+                      {headers.map((nama) => {
+                        return generateHeaderCellMatpel(nama);
+                      })}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rows.map((row) => {
+                      return generateRowCellFormat2(row);
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+          </Grid>
+        </>
+      ) : role === "Teacher" ? (
+        // Teacher view a student's report.
         <Grid container direction="column" spacing={3}>
           <Grid item>
             <Typography variant="h4" align="center" color="textPrimary">
@@ -1441,104 +1503,68 @@ function Report(props) {
             </Grid>
           </Grid>
         </Grid>
-      ) : role === "Student" ? (
-        <Grid container direction="column" spacing={4}>
-          <Grid item>
-            <Typography variant="h4" align="center" color="textPrimary">
-              Rapor Tahun {new Date().getFullYear()}
-            </Typography>
-            <Divider className={classes.profileDivider} />
-          </Grid>
-          <Grid
-            item
-            container
-            justify="center"
-            // spacing={4}
-            alignItems="center"
-          >
-            {/* {createGraph()} */}
-            <Paper style={{ padding: "20px", width: "100%" }}>
-              {createGraph()}
-            </Paper>
-          </Grid>
-          <Grid item container direction="column" style={{ margin: "auto" }}>
-            <Grid item>
-              <TableContainer component={Paper}>
-                <Table
-                  aria-label="simple table"
-                  size="medium"
-                  style={{ overflow: "hidden", paddingLeft: "5px" }}
-                >
-                  <TableHead className={classes.tableHeader}>
-                    <TableRow>
-                      {headers.map((nama) => {
-                        return generateHeaderCellMatpel(nama);
-                      })}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.map((row) => {
-                      return generateRowCellFormat2(row);
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-          </Grid>
-        </Grid>
       ) : (
-        <Grid container direction="column" spacing={3}>
-          <Grid item>
-            <Typography variant="h4" align="center" color="textPrimary">
-              Daftar Nilai Tahun {new Date().getFullYear()}
-            </Typography>
-            <Divider className={classes.profileDivider} />
-          </Grid>
-          <Grid item container justify="space-between" alignItems="center">
-            <Grid item md={7} className={classes.customMargin}>
-              <Typography>
-                Berikut adalah rapor seluruh murid sesuai kelas dan mata
-                pelajaran yang dipilih
+        // Teacher report view from sidedrawer.
+        <>
+          <Grid container alignItems="center" spacing={2} className={classes.header}>
+            <Grid item>
+              <div className={classes.headerIcon}>
+                <AssessmentIcon />
+              </div>
+            </Grid>
+            <Grid item>
+              <Typography variant="h5" align="left">
+                Rapor
               </Typography>
             </Grid>
-            <Grid item container md={5} spacing={3}>
-              <Grid item container md={6}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel id="kelas-label">Kelas</InputLabel>
-                  <Select
-                    labelId="kelas-label"
-                    id="kelas"
-                    value={valueKelas}
-                    onChange={(event) => {
-                      handleKelasChange(event);
-                    }}
-                    label="Kelas"
-                  >
-                    {kontenKelas.size !== 0 || kelasWali.size !== 0
-                      ? generateKelasMenuItem()
-                      : null}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item container md={6}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
-                  <Select
-                    labelId="matpel-label"
-                    id="matpel"
-                    value={valueMatpel}
-                    onChange={(event) => {
-                      handleMatPelChange(event);
-                    }}
-                    label="Mata Pelajaran"
-                  >
-                    {kontenMatpel.size !== 0 ? generateMatPelMenuItem() : null}
-                  </Select>
-                </FormControl>
+          </Grid>
+          <Divider />
+          <Grid container spacing={4} className={classes.content}>
+            <Grid item xs={12}>
+              <Typography gutterBottom>
+                Pilih kelas dan mata pelajaran untuk menampilkan nilai
+              </Typography>
+              <Typography color="textSecondary" style={{ marginBottom: "25px" }}>
+                Nilai yang dapat dilihat adalah hasil pekerjaan dari semua mata pelajaran dari
+                kelas wali dan hasil pekerjaan dari mata pelajaran serta kelas yang diajar.
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="kelas-label">Kelas</InputLabel>
+                    <Select
+                      labelId="kelas-label"
+                      id="kelas"
+                      value={valueKelas}
+                      onChange={(event) => {
+                        handleKelasChange(event);
+                      }}
+                      label="Kelas"
+                    >
+                      {kontenKelas.size !== 0 || kelasWali.size !== 0
+                        ? generateKelasMenuItem()
+                        : null}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
+                    <Select
+                      labelId="matpel-label"
+                      id="matpel"
+                      value={valueMatpel}
+                      onChange={(event) => {
+                        handleMatPelChange(event);
+                      }}
+                      label="Mata Pelajaran"
+                    >
+                      {kontenMatpel.size !== 0 ? generateMatPelMenuItem() : null}
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-          <Grid item container direction="column" style={{ margin: "auto" }}>
             <Grid item xs={12}>
               {emptyCondition.length === 0 ? (
                 <TableContainer component={Paper}>
@@ -1648,7 +1674,7 @@ function Report(props) {
               )}
             </Grid>
           </Grid>
-        </Grid>
+        </>
       )}
     </div>
   );
@@ -1656,13 +1682,13 @@ function Report(props) {
 
 Report.propTypes = {
   auth: PropTypes.object.isRequired,
-  setCurrentClass: PropTypes.func.isRequired,
-  classesCollection: PropTypes.object.isRequired,
   getOneUser: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
+  setCurrentClass: PropTypes.func.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.array.isRequired,
   assessmentsCollection: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
