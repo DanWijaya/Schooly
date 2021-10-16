@@ -782,32 +782,6 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  classPaper: {
-    "&:focus, &:hover": {
-      boxShadow:
-        "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 10px 2px rgba(60,64,67,0.15)",
-    },
-  },
-  classBackground: {
-    width: "100%",
-    height: "120px",
-    borderRadius: "3px 3px 0px 0px",
-  },
-  classIcon: {
-    width: "50px",
-    height: "50px",
-  },
-  classContent: {
-    padding: "20px 20px",
-  },
-  classPersonIcon: {
-    color: theme.palette.text.disabled,
-  },
-  classButtons: {
-    "&:focus, &:hover": {
-      backgroundColor: "#F1F1F1",
-    },
-  },
 }));
 
 function ClassList(props) {

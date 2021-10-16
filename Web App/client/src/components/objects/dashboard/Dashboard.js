@@ -41,6 +41,7 @@ import {
   Menu,
   MenuItem,
   Paper,
+  Tooltip,
   Typography
 } from "@material-ui/core";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
@@ -1200,6 +1201,7 @@ class Dashboard extends Component {
 
     return (
       <div className={classes.root}>
+        {/*Nanti diimport semua isinya sisakan root doang */}
         <Paper
           elevation={0}
           className={
@@ -1219,526 +1221,294 @@ class Dashboard extends Component {
         </Paper>
         <div style={{ marginTop: "20px" }}>
           {user.role === "Student" ? (
-            <Grid item container spacing={3}>
-              <Grid item xs={12} md={7} lg={8}>
-                <Grid container direction="column" spacing={2}>
-                  <Grid item>
-                    <Paper style={{ padding: "20px" }}>
-                      <Grid
-                        container
-                        justify="space-between"
-                        alignItems="center"
-                        style={{ marginBottom: "15px" }}
-                      >
-                        <Grid item>
-                          <Grid container alignItems="center">
-                            <AssignmentIcon
-                              style={{
-                                marginRight: "10px",
-                                fontSize: "22px",
-                                color: "grey",
-                              }}
-                            />
-                            <Typography variant="h5" color="primary">
-                              Tugas Anda
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                        <Grid item>
-                          <Link to="/daftar-tugas">
-                            <LightTooltip title="Lihat Semua" placement="top">
-                              <IconButton>
-                                <PageviewIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Link>
-                        </Grid>
-                      </Grid>
-                      <Grid container direction="column" spacing={1}>
-                        {listTasks()}
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                  <Grid item>
-                    <Paper style={{ padding: "20px" }}>
-                      <Grid
-                        container
-                        justify="space-between"
-                        alignItems="center"
-                        style={{ marginBottom: "15px" }}
-                      >
-                        <Grid item>
-                          <Grid container alignItems="center">
-                            <FaClipboardList
-                              style={{
-                                marginRight: "10px",
-                                fontSize: "22px",
-                                color: "grey",
-                              }}
-                            />
-                            <Typography variant="h5" color="primary">
-                              Kuis Yang Akan Datang
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                        <Grid item>
-                          <Link to="/daftar-kuis">
-                            <LightTooltip title="Lihat Semua" placement="top">
-                              <IconButton>
-                                <PageviewIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Link>
-                        </Grid>
-                      </Grid>
-                      <Grid container direction="column" spacing={1}>
-                        <ListAssessments
-                          category={null}
-                          subject={{}}
-                          type="Kuis"
-                          tab="pekerjaan-kelas"
-                          all_assessments={all_assessments}
-                          classId={classId}
-                          classes={classes}
-                          all_subjects_map={all_subjects_map}
-                          all_teachers={all_teachers}
-                        />
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                  <Grid item>
-                    <Paper style={{ padding: "20px" }}>
-                      <Grid
-                        container
-                        justify="space-between"
-                        alignItems="center"
-                        style={{ marginBottom: "15px" }}
-                      >
-                        <Grid item>
-                          <Grid container alignItems="center">
-                            <BsClipboardData
-                              style={{
-                                marginRight: "10px",
-                                fontSize: "22px",
-                                color: "grey",
-                              }}
-                            />
-                            <Typography variant="h5" color="primary">
-                              Ujian Yang Akan Datang
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                        <Grid item>
-                          <Link to="/daftar-ujian">
-                            <LightTooltip title="Lihat Semua" placement="top">
-                              <IconButton>
-                                <PageviewIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Link>
-                        </Grid>
-                      </Grid>
-                      <Grid container direction="column" spacing={1}>
-                        <ListAssessments
-                          category={null}
-                          subject={{}}
-                          type="Ujian"
-                          tab="pekerjaan-kelas"
-                          all_assessments={all_assessments}
-                          classId={classId}
-                          classes={classes}
-                          all_subjects_map={all_subjects_map}
-                          all_teachers={all_teachers}
-                        />
-                      </Grid>
-                    </Paper>
-                  </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={7} container direction="column" spacing={2}>
+                <Grid item>
+                  <Card style={{ borderTop: "8px solid red" }}>
+                    <CardContent>
+                      <Typography variant="h6">
+                        Belum Dikerjakan
+                      </Typography>
+                    </CardContent>
+                    <Divider />
+                    <CardContent>
+                      <Typography gutterBottom>
+                        Tugas
+                      </Typography>
+                      {listTasks()}
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item>
+                <Card style={{ borderTop: "8px solid yellow" }}>
+                  <CardContent>
+                    <Typography variant="h6">
+                      Akan Datang
+                    </Typography>
+                  </CardContent>
+                  <Divider />
+                  <CardContent>
+                    <Typography gutterBottom>
+                      Kuis
+                    </Typography>
+                    <ListAssessments
+                      category={null}
+                      subject={{}}
+                      type="Kuis"
+                      tab="pekerjaan-kelas"
+                      all_assessments={all_assessments}
+                      classId={classId}
+                      classes={classes}
+                      all_subjects_map={all_subjects_map}
+                      all_teachers={all_teachers}
+                    />
+                  </CardContent>
+                  <CardContent>
+                    <Typography gutterBottom>
+                      Ujian
+                    </Typography>
+                    <ListAssessments
+                      category={null}
+                      subject={{}}
+                      type="Ujian"
+                      tab="pekerjaan-kelas"
+                      all_assessments={all_assessments}
+                      classId={classId}
+                      classes={classes}
+                      all_subjects_map={all_subjects_map}
+                      all_teachers={all_teachers}
+                    />
+                  </CardContent>
+                </Card>
+                </Grid>
+                <Grid item>
+                <Card style={{ borderTop: "8px solid green" }}>
+                  <CardContent>
+                    <Typography variant="h6">
+                      Baru Diperiksa
+                    </Typography>
+                  </CardContent>
+                  <Divider />
+                  <CardContent>
+                    Isi tugas, kuis, ujian yang baru diperiksa maks 5 paling recent dari atas ke bawah.
+                  </CardContent>
+                </Card>
                 </Grid>
               </Grid>
-              <Hidden smDown>
-                <Grid item sm={12} md={5} lg={4}>
-                  <Grid container direction="column" spacing={2}>
-                    <Grid item>
-                      <Paper style={{ padding: "20px" }}>
-                        <Grid
-                          container
-                          justify="space-between"
-                          alignItems="center"
-                          style={{ marginBottom: "15px" }}
-                        >
-                          <Grid item>
-                            <Grid container alignItems="center">
-                              <Typography variant="h5" color="primary">
-                                Nilai Tugas Anda
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid container direction="column" spacing={1}>
-                          <Grid item className={classes.graph}>
-                            {graphTask(this.state.taskGraphCurrentSubject)}
-                          </Grid>
-                          <Grid item className={classes.graphButtons}>
-                            <IconButton
-                              onClick={() =>
-                                this.changeGraphSubject(
-                                  "Tugas",
-                                  "Left",
-                                  all_subjects.length
-                                )
-                              }
-                            >
-                              <ArrowBackIosIcon />
-                            </IconButton>
-                            {showSubject(this.state.taskGraphCurrentSubject)}
-                            <IconButton
-                              onClick={() =>
-                                this.changeGraphSubject(
-                                  "Tugas",
-                                  "Right",
-                                  all_subjects.length
-                                )
-                              }
-                            >
-                              <ArrowForwardIosIcon />
-                            </IconButton>
-                          </Grid>
-                        </Grid>
-                      </Paper>
-                    </Grid>
-                    <Grid item>
-                      <Paper style={{ padding: "20px" }}>
-                        <Grid
-                          container
-                          justify="space-between"
-                          alignItems="center"
-                          style={{ marginBottom: "15px" }}
-                        >
-                          <Grid item>
-                            <Grid container alignItems="center">
-                              <Typography variant="h5" color="primary">
-                                Nilai Kuis Anda
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid container direction="column" spacing={1}>
-                          <Grid item className={classes.graph}>
-                            {graphAssessment(
-                              this.state.quizGraphCurrentSubject,
-                              "Kuis"
-                            )}
-                          </Grid>
-                          <Grid item className={classes.graphButtons}>
-                            <IconButton
-                              onClick={() =>
-                                this.changeGraphSubject(
-                                  "Kuis",
-                                  "Left",
-                                  all_subjects.length
-                                )
-                              }
-                            >
-                              <ArrowBackIosIcon
-                                onClick={() =>
-                                  this.changeGraphSubject(
-                                    "Kuis",
-                                    "Left",
-                                    all_subjects.length
-                                  )
-                                }
-                              />
-                            </IconButton>
-                            {showSubject(this.state.quizGraphCurrentSubject)}
-                            <IconButton
-                              onClick={() =>
-                                this.changeGraphSubject(
-                                  "Kuis",
-                                  "Right",
-                                  all_subjects.length
-                                )
-                              }
-                            >
-                              <ArrowForwardIosIcon />
-                            </IconButton>
-                          </Grid>
-                        </Grid>
-                      </Paper>
-                    </Grid>
-                    <Grid item>
-                      <Paper style={{ padding: "20px" }}>
-                        <Grid
-                          container
-                          justify="space-between"
-                          alignItems="center"
-                          style={{ marginBottom: "15px" }}
-                        >
-                          <Grid item>
-                            <Grid container alignItems="center">
-                              <Typography variant="h5" color="primary">
-                                Nilai Ujian Anda
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid container direction="column" spacing={1}>
-                          <Grid item className={classes.graph}>
-                            {graphAssessment(
-                              this.state.examGraphCurrentSubject,
-                              "Ujian"
-                            )}
-                          </Grid>
-                          <Grid item className={classes.graphButtons}>
-                            <IconButton
-                              onClick={() =>
-                                this.changeGraphSubject(
-                                  "Ujian",
-                                  "Left",
-                                  all_subjects.length
-                                )
-                              }
-                            >
-                              <ArrowBackIosIcon />
-                            </IconButton>
-                            {showSubject(this.state.examGraphCurrentSubject)}
-                            <IconButton
-                              onClick={() =>
-                                this.changeGraphSubject(
-                                  "Ujian",
-                                  "Right",
-                                  all_subjects.length
-                                )
-                              }
-                            >
-                              <ArrowForwardIosIcon />
-                            </IconButton>
-                          </Grid>
-                        </Grid>
-                      </Paper>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Hidden>
+              <Grid item xs={12} md={5}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">
+                    Kegiatan Minggu Ini
+                  </Typography>
+                </CardContent>
+                <CardContent>
+                  Vertical stepper isi yang kayak punya admin.
+                </CardContent>
+                <Divider />
+                <CardContent>
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <Button color="primary">
+                      Lihat Semua
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+              </Grid>
             </Grid>
           ) : user.role === "Teacher" ? (
-            <>
-              <Grid
-                item
-                container
-                spacing={2}
-                justify="flex-end"
-                alignItems="center"
-              >
-                <Grid item>
-                  <Fab
-                    className={classes.createButton}
-                    onClick={(event) => this.handleMenuOpen(event)}
-                  >
-                    <AddIcon />
-                  </Fab>
-                  <Menu
-                    keepMounted
-                    anchorEl={this.state.anchorEl}
-                    open={Boolean(this.state.anchorEl)}
-                    onClose={this.handleMenuClose}
-                    getContentAnchorEl={null}
-                    style={{ marginTop: "10px" }}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "center",
-                    }}
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "center",
-                    }}
-                  >
-                    <Link to="/buat-pengumuman">
-                      <MenuItem className={classes.menuItem}>
-                        <ListItemIcon>
-                          <AnnouncementIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <Typography className={classes.menuItemText}>
-                              Buat Pengumuman
-                            </Typography>
-                          }
-                        />
-                      </MenuItem>
-                    </Link>
-                    <Link to="/buat-materi">
-                      <MenuItem className={classes.menuItem}>
-                        <ListItemIcon>
-                          <MenuBookIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <Typography className={classes.menuItemText}>
-                              Buat Materi
-                            </Typography>
-                          }
-                        />
-                      </MenuItem>
-                    </Link>
-                    <Link to="/buat-tugas">
-                      <MenuItem className={classes.menuItem}>
-                        <ListItemIcon>
-                          <AssignmentIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <Typography className={classes.menuItemText}>
-                              Buat Tugas
-                            </Typography>
-                          }
-                        />
-                      </MenuItem>
-                    </Link>
-                    <Link to="/buat-kuis">
-                      <MenuItem className={classes.menuItem}>
-                        <ListItemIcon>
-                          <FaClipboardList />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <Typography className={classes.menuItemText}>
-                              Buat Kuis
-                            </Typography>
-                          }
-                        />
-                      </MenuItem>
-                    </Link>
-                    <Link to="/buat-ujian">
-                      <MenuItem className={classes.menuItem}>
-                        <ListItemIcon>
-                          <BsClipboardData />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <Typography className={classes.menuItemText}>
-                              Buat Ujian
-                            </Typography>
-                          }
-                        />
-                      </MenuItem>
-                    </Link>
-                  </Menu>
-                </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6">
+                      Akses dengan Cepat
+                    </Typography>
+                    <Typography color="textSecondary" paragraph>
+                      Berikut adalah jumlah pemberitahuan dan pekerjaan yang telah ada berikan.
+                    </Typography>
+                    <Grid container direction="column" spacing={2}>
+                      <Grid item container spacing={4}>
+                        <Grid item style={{ display: "flex", alignItems: "center" }}>
+                          <AnnouncementIcon style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                          <Typography color="primary" display="inline">
+                            1 <Hidden smUp>Pengumuman</Hidden>
+                          </Typography>
+                        </Grid>
+                        <Grid item style={{ display: "flex", alignItems: "center" }}>
+                          <MenuBookIcon style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                          <Typography color="primary" display="inline">
+                            1 <Hidden smUp>Materi</Hidden>
+                          </Typography>
+                        </Grid>
+                        <Grid item style={{ display: "flex", alignItems: "center" }}>
+                          <AssignmentIcon style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                          <Typography color="primary" display="inline">
+                            1 <Hidden smUp>Tugas</Hidden>
+                          </Typography>
+                        </Grid>
+                        <Grid item style={{ display: "flex", alignItems: "center" }}>
+                          <FaClipboardList style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                          <Typography color="primary" display="inline">
+                            1 <Hidden smUp>Kuis</Hidden>
+                          </Typography>
+                        </Grid>
+                        <Grid item style={{ display: "flex", alignItems: "center" }}>
+                          <BsClipboardData style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                          <Typography color="primary" display="inline">
+                            1 <Hidden smUp>Ujian</Hidden>
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      <Grid item container justify="flex-end">
+                        <Fab
+                          size="medium"
+                          className={classes.createButton}
+                          onClick={(event) => this.handleMenuOpen(event)}
+                        >
+                          <AddIcon />
+                        </Fab>
+                        <Menu
+                          keepMounted
+                          open={Boolean(this.state.anchorEl)}
+                          onClose={this.handleMenuClose}
+                          anchorEl={this.state.anchorEl}
+                          getContentAnchorEl={null}
+                          style={{ marginTop: "10px" }}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "center",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "center",
+                          }}
+                        >
+                          <Link to="/buat-pengumuman">
+                            <MenuItem className={classes.menuItem}>
+                              <ListItemIcon>
+                                <AnnouncementIcon />
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={
+                                  <Typography className={classes.menuItemText}>
+                                    Buat Pengumuman
+                                  </Typography>
+                                }
+                              />
+                            </MenuItem>
+                          </Link>
+                          <Link to="/buat-materi">
+                            <MenuItem className={classes.menuItem}>
+                              <ListItemIcon>
+                                <MenuBookIcon />
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={
+                                  <Typography className={classes.menuItemText}>
+                                    Buat Materi
+                                  </Typography>
+                                }
+                              />
+                            </MenuItem>
+                          </Link>
+                          <Link to="/buat-tugas">
+                            <MenuItem className={classes.menuItem}>
+                              <ListItemIcon>
+                                <AssignmentIcon />
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={
+                                  <Typography className={classes.menuItemText}>
+                                    Buat Tugas
+                                  </Typography>
+                                }
+                              />
+                            </MenuItem>
+                          </Link>
+                          <Link to="/buat-kuis">
+                            <MenuItem className={classes.menuItem}>
+                              <ListItemIcon>
+                                <FaClipboardList />
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={
+                                  <Typography className={classes.menuItemText}>
+                                    Buat Kuis
+                                  </Typography>
+                                }
+                              />
+                            </MenuItem>
+                          </Link>
+                          <Link to="/buat-ujian">
+                            <MenuItem className={classes.menuItem}>
+                              <ListItemIcon>
+                                <BsClipboardData />
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={
+                                  <Typography className={classes.menuItemText}>
+                                    Buat Ujian
+                                  </Typography>
+                                }
+                              />
+                            </MenuItem>
+                          </Link>
+                        </Menu>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
               </Grid>
-              <Grid item xs={12} style={{ marginTop: "20px" }}>
-                <Grid container direction="column" spacing={2}>
-                  <Grid item>
-                    <Paper style={{ padding: "20px" }}>
-                      <Grid
-                        container
-                        justify="space-between"
-                        alignItems="center"
-                        style={{ marginBottom: "15px" }}
-                      >
-                        <Grid item>
-                          <Grid container alignItems="center">
-                            <AssignmentIcon
-                              color="action"
-                              style={{ marginRight: "10px", fontSize: "20px" }}
-                            />
-                            <Typography variant="h5" color="primary">
-                              Tugas yang Belum Diperiksa
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                        <Grid item>
-                          <Link to="/daftar-tugas">
-                            <LightTooltip title="Lihat Semua" placement="top">
-                              <IconButton>
-                                <PageviewIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Link>
-                        </Grid>
-                      </Grid>
-                      <Grid container direction="column" spacing={1}>
-                        {listTasksTeacher()}
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                  <Grid item>
-                    <Paper style={{ padding: "20px" }}>
-                      <Grid
-                        container
-                        justify="space-between"
-                        alignItems="center"
-                        style={{ marginBottom: "15px" }}
-                      >
-                        <Grid item>
-                          <Grid container alignItems="center">
-                            <FaClipboardList
-                              style={{
-                                marginRight: "10px",
-                                fontSize: "20px",
-                                color: "grey",
-                              }}
-                            />
-                            <Typography variant="h5" color="primary">
-                              Kuis yang Belum Diperiksa
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                        <Grid item>
-                          <Link to="/daftar-kuis">
-                            <LightTooltip title="Lihat Semua" placement="top">
-                              <IconButton>
-                                <PageviewIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Link>
-                        </Grid>
-                      </Grid>
-                      <Grid container direction="column" spacing={1}>
-                        {listAssessmentsTeacher("Kuis")}
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                  <Grid item>
-                    <Paper style={{ padding: "20px" }}>
-                      <Grid
-                        container
-                        justify="space-between"
-                        alignItems="center"
-                        style={{ marginBottom: "15px" }}
-                      >
-                        <Grid item>
-                          <Grid container alignItems="center">
-                            <BsClipboardData
-                              color="action"
-                              style={{
-                                marginRight: "10px",
-                                fontSize: "20px",
-                                color: "grey",
-                              }}
-                            />
-                            <Typography variant="h5" color="primary">
-                              Ujian yang Belum Diperiksa
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                        <Grid item>
-                          <Link to="/daftar-ujian">
-                            <LightTooltip title="Lihat Semua" placement="top">
-                              <IconButton>
-                                <PageviewIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Link>
-                        </Grid>
-                      </Grid>
-                      <Grid container direction="column" spacing={1}>
-                        {listAssessmentsTeacher("Ujian")}
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                </Grid>
+              <Grid item xs={12} md={7}>
+                <Card style={{ borderTop: "8px solid red" }}>
+                  <CardContent>
+                    <Typography variant="h6">
+                      Belum Diperiksa
+                    </Typography>
+                  </CardContent>
+                  <Divider />
+                  <CardContent>
+                    <Typography gutterBottom>
+                      Tugas
+                    </Typography>
+                    {listTasksTeacher()}
+                  </CardContent>
+                  <CardContent>
+                    <Typography gutterBottom>
+                      Kuis
+                    </Typography>
+                    {listAssessmentsTeacher("Kuis")}
+                  </CardContent>
+                  <CardContent>
+                    <Typography gutterBottom>
+                      Ujian
+                    </Typography>
+                    {listAssessmentsTeacher("Ujian")}
+                  </CardContent>
+                </Card>
               </Grid>
-            </>
+              <Grid item xs={12} md={5}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6">
+                      Kegiatan Minggu Ini
+                    </Typography>
+                  </CardContent>
+                  <CardContent>
+                    Vertical stepper isi yang kayak punya admin.
+                  </CardContent>
+                  <Divider />
+                  <CardContent>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                      <Button color="primary">
+                        Lihat Semua
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
           ) : user.role === "Admin" ? (
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -1861,10 +1631,25 @@ class Dashboard extends Component {
                 </Paper>
               </Grid>
               <Grid item xs={12} md={5}>
-                <Paper>
-                  Timeline kegiatan minggu ini pakai stepper vertikal.
-                  Biru centang udah lewat, biru incoming
-                </Paper>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6">
+                      Kegiatan Minggu Ini
+                    </Typography>
+                  </CardContent>
+                  <CardContent>
+                    Vertical stepper isi timeline kegiatan minggu ini.
+                    Hijau ceklis udah lewat, belum lewat warna biru.
+                  </CardContent>
+                  <Divider />
+                  <CardContent>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                      <Button color="primary">
+                        Lihat Semua
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               </Grid>
             </Grid>
           ) : user.role === "SuperAdmin" ? (
@@ -1906,17 +1691,6 @@ class Dashboard extends Component {
                                 //Ini bakal relatif valuenya dengan unit dengan jumlah terbanyak, yang terbanyak barnya full
                                 variant="determinate"
                                 value={70}
-                                classes={{
-                                  root: {
-                                    borderRadius: "2px",
-                                  },
-                                  colorPDrimary: {
-                                    backgroundColor: "transparent",
-                                  },
-                                  bar: {
-                                    borderRadius: "2px",
-                                  },
-                                }}
                               />
                             </Grid>
                             <Grid item>
