@@ -14,9 +14,9 @@ import {
   getAllUsers,
 } from "../../../actions/UserActions";
 import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
-import ClassItem from "../../objects/item/ClassItem";
-import SubjectItem from "../../objects/item/SubjectItem";
-import UserItem from "../../objects/item/UserItem";
+import ClassItem from "../item/ClassItem";
+import SubjectItem from "../item/SubjectItem";
+import UserItem from "../item/UserItem";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -46,7 +46,7 @@ import {
 import {
   DesktopWindows as DesktopWindowsIcon,
   LibraryBooks as LibraryBooksIcon,
-  SupervisorAccount as SupervisorAccountIcon
+  SupervisorAccount as SupervisorAccountIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaChalkboardTeacher } from "react-icons/fa";
@@ -158,7 +158,11 @@ function ViewUnit(props) {
               <Typography
                 color="textSecondary"
                 align="center"
-                style={{ marginBottom: "60px", wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                style={{
+                  marginBottom: "60px",
+                  wordBreak: "break-word",
+                  whiteSpace: "pre-wrap",
+                }}
               >
                 <CustomLinkify text={selectedUnits.description} />
               </Typography>
@@ -171,9 +175,7 @@ function ViewUnit(props) {
               >
                 <Tab
                   icon={<DesktopWindowsIcon />}
-                  label={
-                    <Typography variant="caption">Kelas</Typography>
-                  }
+                  label={<Typography variant="caption">Kelas</Typography>}
                   {...TabIndex(0)}
                 />
                 <Tab
@@ -185,9 +187,7 @@ function ViewUnit(props) {
                 />
                 <Tab
                   icon={<SupervisorAccountIcon />}
-                  label={
-                    <Typography variant="caption">Peserta</Typography>
-                  }
+                  label={<Typography variant="caption">Peserta</Typography>}
                   {...TabIndex(2)}
                 />
               </Tabs>
@@ -209,29 +209,32 @@ function ViewUnit(props) {
             <TabPanel value={tabValue} index={2}>
               <Grid container spacing={10} direction="column">
                 <Grid item>
-                  <Typography variant="h4">
-                    Pengelola
-                  </Typography>
+                  <Typography variant="h4">Pengelola</Typography>
                   <List>
-                    <Divider component="li" className={classes.unitMembersDivider} />
+                    <Divider
+                      component="li"
+                      className={classes.unitMembersDivider}
+                    />
                     <UserItem data={all_admins} avatar_map={avatar} />
                   </List>
                 </Grid>
                 <Grid item>
-                  <Typography variant="h4">
-                    Guru
-                  </Typography>
+                  <Typography variant="h4">Guru</Typography>
                   <List>
-                    <Divider component="li" className={classes.unitMembersDivider} />
+                    <Divider
+                      component="li"
+                      className={classes.unitMembersDivider}
+                    />
                     <UserItem data={all_teachers} avatar_map={avatar} />
                   </List>
                 </Grid>
                 <Grid item>
-                  <Typography variant="h4">
-                    Murid
-                  </Typography>
+                  <Typography variant="h4">Murid</Typography>
                   <List>
-                    <Divider component="li" className={classes.unitMembersDivider} />
+                    <Divider
+                      component="li"
+                      className={classes.unitMembersDivider}
+                    />
                     <UserItem data={all_students} avatar_map={avatar} />
                   </List>
                 </Grid>

@@ -10,7 +10,7 @@ import { registerUser, validateRegister } from "../../../actions/UserActions";
 import { getAllUnits } from "../../../actions/UnitActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import registerStepperArt from "./RegisterStepperArt.png";
-import UnitList from "../../objects/superadmin-only/UnitList";
+import UnitList from "../../objects/unit/UnitList";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";

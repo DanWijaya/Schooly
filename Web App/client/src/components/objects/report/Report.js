@@ -274,7 +274,7 @@ function Report(props) {
     setCurrentClass,
     refreshTeacher,
   } = props;
-  const { user, students_by_class, selectedUser } = props.auth;
+  const { user, students_by_class, selectedUser, all_roles } = props.auth;
   const { all_classes, all_classes_map } = props.classesCollection;
   const { all_subjects_map, all_subjects } = props.subjectsCollection;
   const allTaskArray = props.tasksCollection;
@@ -297,11 +297,15 @@ function Report(props) {
   }, []);
 
   React.useEffect(() => {
-    setCurrentClass(selectedUser.kelas);
+    if (selectedUser.kelas) {
+      setCurrentClass(selectedUser.kelas);
+    }
   }, [selectedUser]);
 
   React.useEffect(() => {
-    setKelas(props.classesCollection.kelas);
+    if (props.classesCollection.kelas) {
+      setKelas(props.classesCollection.kelas);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.classesCollection.kelas]);
 
@@ -1177,20 +1181,15 @@ function Report(props) {
   // ditambahkan dependency "role" untuk mengurus kasus ketika guru yang sedang berada di halaman rapor untuk suatu murid
   // mengklik tombol rapor di side drawer.
   React.useEffect(() => {
-    if (role === "Teacher") {
-      getAllClass(user.unit);
-      getAllTask(user.unit);
-      getAllAssessments(user.unit);
-    } else if (role === "Student") {
-      setKelasWali(new Map()); // agar setRows(handleIndividualReport()) dijalankan, tapi tidak perlu panggil getAllClass(user.unit)
-      getAllTask(user.unit);
-      getAllAssessments(user.unit);
-    } else {
+    if (role !== all_roles.SUPER_ADMIN) {
       getAllClass(user.unit);
       getAllClass(user.unit, "map");
+      getAllTask(user.unit);
+      getAllAssessments(user.unit);
+      if (role === all_roles.STUDENT) {
+        setKelasWali(new Map()); // agar setRows(handleIndividualReport()) dijalankan, tapi tidak perlu panggil getAllClass(user.unit)
+      }
     }
-    getAllSubjects(user.unit);
-    getAllSubjects(user.unit, "map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

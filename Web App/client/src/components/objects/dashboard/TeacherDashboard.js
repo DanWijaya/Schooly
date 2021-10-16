@@ -32,40 +32,69 @@ function TeacherDashboard(props) {
       <Grid item xs={12}>
         <Card>
           <CardContent>
-            <Typography variant="h6">
-              Akses dengan Cepat
-            </Typography>
+            <Typography variant="h6">Akses dengan Cepat</Typography>
             <Typography color="textSecondary" paragraph>
-              Berikut adalah jumlah pemberitahuan dan pekerjaan yang telah ada berikan.
+              Berikut adalah jumlah pemberitahuan dan pekerjaan yang telah anda
+              berikan.
             </Typography>
             <Grid container direction="column" spacing={2}>
               <Grid item container spacing={4}>
                 <Grid item style={{ display: "flex", alignItems: "center" }}>
-                  <AnnouncementIcon style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                  <AnnouncementIcon
+                    style={{
+                      color: "grey",
+                      marginRight: "10px",
+                      fontSize: "25px",
+                    }}
+                  />
                   <Typography color="primary" display="inline">
                     1 <Hidden smUp>Pengumuman</Hidden>
                   </Typography>
                 </Grid>
                 <Grid item style={{ display: "flex", alignItems: "center" }}>
-                  <MenuBookIcon style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                  <MenuBookIcon
+                    style={{
+                      color: "grey",
+                      marginRight: "10px",
+                      fontSize: "25px",
+                    }}
+                  />
                   <Typography color="primary" display="inline">
                     1 <Hidden smUp>Materi</Hidden>
                   </Typography>
                 </Grid>
                 <Grid item style={{ display: "flex", alignItems: "center" }}>
-                  <AssignmentIcon style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                  <AssignmentIcon
+                    style={{
+                      color: "grey",
+                      marginRight: "10px",
+                      fontSize: "25px",
+                    }}
+                  />
                   <Typography color="primary" display="inline">
                     1 <Hidden smUp>Tugas</Hidden>
                   </Typography>
                 </Grid>
                 <Grid item style={{ display: "flex", alignItems: "center" }}>
-                  <FaClipboardList style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                  <FaClipboardList
+                    style={{
+                      color: "grey",
+                      marginRight: "10px",
+                      fontSize: "25px",
+                    }}
+                  />
                   <Typography color="primary" display="inline">
                     1 <Hidden smUp>Kuis</Hidden>
                   </Typography>
                 </Grid>
                 <Grid item style={{ display: "flex", alignItems: "center" }}>
-                  <BsClipboardData style={{ color: "grey", marginRight: "10px", fontSize: "25px" }} />
+                  <BsClipboardData
+                    style={{
+                      color: "grey",
+                      marginRight: "10px",
+                      fontSize: "25px",
+                    }}
+                  />
                   <Typography color="primary" display="inline">
                     1 <Hidden smUp>Ujian</Hidden>
                   </Typography>
@@ -174,27 +203,19 @@ function TeacherDashboard(props) {
       <Grid item xs={12} md={7}>
         <Card style={{ borderTop: "8px solid red" }}>
           <CardContent>
-            <Typography variant="h6">
-              Belum Diperiksa
-            </Typography>
+            <Typography variant="h6">Belum Diperiksa</Typography>
           </CardContent>
           <Divider />
           <CardContent>
-            <Typography gutterBottom>
-              Tugas
-            </Typography>
+            <Typography gutterBottom>Tugas</Typography>
             {listTasksTeacher()}
           </CardContent>
           <CardContent>
-            <Typography gutterBottom>
-              Kuis
-            </Typography>
+            <Typography gutterBottom>Kuis</Typography>
             {listAssessmentsTeacher("Kuis")}
           </CardContent>
           <CardContent>
-            <Typography gutterBottom>
-              Ujian
-            </Typography>
+            <Typography gutterBottom>Ujian</Typography>
             {listAssessmentsTeacher("Ujian")}
           </CardContent>
         </Card>
@@ -202,9 +223,7 @@ function TeacherDashboard(props) {
       <Grid item xs={12} md={5}>
         <Card>
           <CardContent>
-            <Typography variant="h6">
-              Kegiatan Minggu Ini
-            </Typography>
+            <Typography variant="h6">Kegiatan Minggu Ini</Typography>
           </CardContent>
           <CardContent>
             Vertical stepper isi yang kayak punya admin.
@@ -212,15 +231,13 @@ function TeacherDashboard(props) {
           <Divider />
           <CardContent>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <Button color="primary">
-                Lihat Semua
-              </Button>
+              <Button color="primary">Lihat Semua</Button>
             </div>
           </CardContent>
         </Card>
       </Grid>
     </Grid>
-  )
-};
+  );
+}
 
 export default TeacherDashboard;
