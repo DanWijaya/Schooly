@@ -50,6 +50,7 @@ const db = require("./config/keys").mongoURI;
 // Connect to MongoDB
 mongoose.set("useUnifiedTopology", true);
 mongoose.set("useNewUrlParser", true);
+mongoose.set("useFindAndModify", true);
 mongoose
   .connect(
     db,

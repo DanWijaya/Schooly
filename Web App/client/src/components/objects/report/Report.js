@@ -282,11 +282,15 @@ function Report(props) {
   }, []);
 
   React.useEffect(() => {
-    setCurrentClass(selectedUser.kelas);
+    if (selectedUser.kelas) {
+      setCurrentClass(selectedUser.kelas);
+    }
   }, [selectedUser]);
 
   React.useEffect(() => {
-    setKelas(props.classesCollection.kelas);
+    if (props.classesCollection.kelas) {
+      setKelas(props.classesCollection.kelas);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.classesCollection.kelas]);
 

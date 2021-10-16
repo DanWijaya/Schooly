@@ -15,43 +15,55 @@ const { ObjectId } = require("mongodb");
 router.post("/create", (req, res) => {
   const { errors, isValid } = validateClassInput(req.body);
   if (!isValid) {
-    console.log("Not valid");
+    console.error("Not valid");
     return res.status(400).json(errors);
   }
 
-  Class.findOne({ name: req.body.name }).then((kelas) => {
-    if (kelas) {
-      return res.status(400).json({ name: "Nama kelas sudah dipakai" });
-    } else {
-      let dataKelas = {
-        name: req.body.name,
-        nihil: req.body.nihil,
-        ukuran: req.body.ukuran,
-        subject_assigned: req.body.mata_pelajaran.map((id) => new ObjectId(id)),
-        unit: ObjectId(req.body.unit),
-      };
+  Class.findOne({ name: req.body.name })
+    .then((cl) => {
+      if (cl) {
+        throw { name: "Nama kelas sudah dipakai" };
+      } else {
+        let classData = {
+          name: req.body.name,
+          nihil: req.body.nihil,
+          ukuran: req.body.ukuran,
+          subject_assigned: req.body.mata_pelajaran.map(
+            (id) => new ObjectId(id)
+          ),
+          unit: ObjectId(req.body.unit),
+        };
 
-      if (req.body.walikelas) {
-        dataKelas.walikelas = req.body.walikelas;
+        if (req.body.walikelas) {
+          classData.walikelas = req.body.walikelas;
+        }
+        const newClass = new Class(classData);
+
+        return newClass.save();
       }
-      const newKelas = new Class(dataKelas);
-
-      newKelas
-        .save()
-        .then((kelas) => res.json(kelas))
-        .catch((err) => console.log(err));
-    }
-  });
+    })
+    .then((cl) => {
+      return res.json(cl);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
+
 router.get("/view/:id", (req, res) => {
-  Class.findById(req.params.id).then((kelas) => {
-    if (!kelas) {
-      return res.status(400).json("Class does not exist");
-    } else {
-      // console.log(kelas);
-      res.json(kelas);
-    }
-  });
+  Class.findById(req.params.id)
+    .then((kelas) => {
+      if (!kelas) {
+        throw "Class does not exist";
+      }
+      console.log("APA DI RUN BAGUAN INI??");
+      return res.json(kelas);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/viewall/:unitId", (req, res) => {
@@ -59,38 +71,42 @@ router.get("/viewall/:unitId", (req, res) => {
   if (!unitId) {
     return res.json([]);
   }
-  Class.find({ unit: unitId }).then((classes, err) => {
-    if (!classes) res.status(400).json(err);
-    else {
+  Class.find({ unit: unitId })
+    .then((classes) => {
+      // if it is multiple results, should check with length.
+      if (!classes.length) {
+        // for multiple result request, don't need to throw err cause the result is emtpy array.
+        console.log("Class in the unit does not exist");
+      }
       classes.sort((a, b) => (a.name > b.name ? 1 : -1));
-      res.json(classes);
-    }
-  });
+      return res.json(classes);
+    })
+    .catch((err) => {
+      return res.status(400).json(err);
+    });
 });
 
 router.delete("/delete/:id", (req, res) => {
   let id = req.params.id;
 
-  Student.find({ kelas: id }, (err, students) => {
-    console.log("Students di kelas: ", students);
-
-    if (students.length) {
-      return res
-        .status(400)
-        .json({ has_student: "Kelas masih terdapat murid" });
-    } else {
-      Class.findByIdAndRemove(req.params.id).then((classes, err) => {
-        if (!classes) {
-          return res.status(400).json(err);
-        } else {
-          console.log(classes);
-          return res.json("Successfully deleted the class");
-        }
-      });
-    }
-  });
-
-  // .catch(res.json("Error happened"))
+  Student.find({ kelas: id })
+    .then((students) => {
+      console.log("Students di kelas: ", students);
+      if (students.length > 0) {
+        throw { has_student: "Kelas masih terdapat murid" };
+      }
+      return Class.findByIdAndDelete(req.params.id);
+    })
+    .then((cl) => {
+      if (!cl) {
+        throw "Class to delete is not found";
+      }
+      return res.json("Successfully deleted the class");
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/setCurrentClass/:id", (req, res) => {
@@ -100,14 +116,14 @@ router.get("/setCurrentClass/:id", (req, res) => {
   }
   Class.findById(id)
     .then((classData) => {
+      console.log("Ini class data: ", classData);
       if (!classData) {
-        console.error("Class is not found");
+        console.log("Class is not found");
       }
-      console.log("WOI", classData);
       return res.json(classData);
     })
     .catch((err) => {
-      throw err;
+      return res.status(400).json(err);
     });
 });
 
@@ -119,11 +135,19 @@ router.get("/viewSelectedClasses/", (req, res) => {
   if (Array.isArray(classes_ids)) {
     ids_to_find = classes_ids.map((id) => new ObjectId(id));
   }
-  Class.find({ _id: { $in: ids_to_find } }, (err, classes) => {
-    if (!classes) return res.status(400).json("Class to update not found");
 
-    return res.json(classes);
-  });
+  Class.find({ _id: { $in: ids_to_find } })
+    .then((classes) => {
+      if (!classes.length) {
+        throw "Selected classes not found";
+      }
+      return res.json(classes);
+      // return res.status(400).json("Class to update not found");
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.put("/update/:id", (req, res) => {
@@ -132,82 +156,36 @@ router.put("/update/:id", (req, res) => {
   const { errors, isValid } = validateClassInput(req.body);
   console.log(errors);
   if (!isValid) {
-    console.log("Not valid");
     return res.status(400).json(errors);
   }
 
-  Class.findById(id, (err, classData) => {
-    if (!classData) {
-      return res.status(400).json("Class to update not found");
-    }
-    // Initially there is else block
-    classData.name = req.body.name;
-    classData.ketua_kelas = req.body.ketua_kelas ? req.body.ketua_kelas : null;
-    classData.walikelas = req.body.walikelas ? req.body.walikelas : null;
-    classData.sekretaris = req.body.sekretaris ? req.body.sekretaris : null;
-    classData.bendahara = req.body.bendahara ? req.body.bendahara : null;
-    classData.ukuran = req.body.ukuran;
-    classData.subject_assigned = req.body.mata_pelajaran.map(
-      (id) => new ObjectId(id)
-    );
+  Class.findById(id)
+    .then((classData) => {
+      if (!classData) {
+        console.log("Class to update not found");
+      }
+      // Initially there is else block
+      classData.name = req.body.name;
+      classData.ketua_kelas = req.body.ketua_kelas
+        ? req.body.ketua_kelas
+        : null;
+      classData.walikelas = req.body.walikelas ? req.body.walikelas : null;
+      classData.sekretaris = req.body.sekretaris ? req.body.sekretaris : null;
+      classData.bendahara = req.body.bendahara ? req.body.bendahara : null;
+      classData.ukuran = req.body.ukuran;
+      classData.subject_assigned = req.body.mata_pelajaran.map(
+        (id) => new ObjectId(id)
+      );
 
-    //Karena field walikelas ini optional.
-
-    // if(req.body.walikelas){
-    //   console.log("Have", req.body.walikeas)
-    //   //Kalau walikelas field ada isi, diupdate.
-    //   classData.walikelas = req.body.walikelas;
-    // } else {
-    //   console.log("Don't Have", req.body.walikeas)
-    //   //Kalau walikelas field kosong, field walikelas dibuang.
-    //   classData.walikelas = null;
-    // }
-
-    console.log(classData);
-
-    classData
-      .save()
-      .then(() => {
-        res.status(200).json("Done with updating class");
-      })
-      .catch(() => {
-        console.log("Error in updating class");
-      });
-    // Pipeline on how to create a Async functions to be Synchronous function call
-    // Step 1: declare promise
-    // var myPromise = (id) => {
-    //     return new Promise((resolve, reject) => {
-    //         User.findById(id, (err, user) => {
-    //             if (!user) {
-    //                 reject(err)
-    //             } else {
-    //                 resolve(user);
-    //             }
-    //         })
-    //     })
-    // }
-    //Step 2: async promise handler
-    // var callMyPromise = async () => {
-    //     var walikelas_data = await(myPromise(req.body.walikelas));
-    //     var sekretaris_data = await(myPromise(req.body.sekretaris));
-    //     var bendahara_data = await(myPromise(req.body.bendahara));
-    //     var ketua_kelas_data = await(myPromise(req.body.ketua_kelas));
-
-    //     classData.walikelas = walikelas_data
-    //     classData.sekretaris = sekretaris_data
-    //     classData.bendahara = bendahara_data
-    //     classData.ketua_kelas = ketua_kelas_data
-
-    //     // classData.save()
-    //     return classData;
-    // }
-    //Step 3 : Make the call
-    // callMyPromise().then(function(classData) {
-
-    //     classData.save()
-    //     res.json("Done")
-    // });
-  });
+      return classData.save();
+    })
+    .then(() => {
+      return res.status(200).json("Done with updating class");
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.put("/class-officers", (req, res) => {
@@ -230,11 +208,11 @@ router.put("/class-officers", (req, res) => {
 
   Class.bulkWrite(operations, { ordered: false })
     .then(() => {
-      res.json("Unassign class officers complete");
+      return res.json("Unassign class officers complete");
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
+      console.error(err);
+      return res.status(500).json(err);
     });
 });
 
@@ -260,11 +238,11 @@ router.put("/homeroom-teachers", (req, res) => {
 
   Class.bulkWrite(operations, { ordered: false })
     .then(() => {
-      res.json("Set homeroom teachers complete");
+      return res.json("Set homeroom teachers complete");
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json(err);
+      return res.status(500).json(err);
     });
 });
 
