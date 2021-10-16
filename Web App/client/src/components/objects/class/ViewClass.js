@@ -536,7 +536,7 @@ function PersonListItem(props) {
   return (
     <ListItem>
       <ListItemAvatar>
-        <Avatar src={props.person_avatar} />
+        <Avatar src={props.person_avatar ? props.person_avatar : null} />
       </ListItemAvatar>
       <Hidden smUp implementation="css">
         <ListItemText
@@ -797,6 +797,7 @@ function ViewClass(props) {
   ) {
     let AssessmentsList = [];
     let result = [];
+    console.log(all_assessments);
     if (Boolean(all_assessments.length)) {
       var i;
       for (i = all_assessments.length - 1; i >= 0; i--) {
@@ -827,7 +828,7 @@ function ViewClass(props) {
               (!category ||
                 (category === "subject" &&
                   assessment.subject === subject._id)) &&
-              !assessment.submissions &&
+              !assessment.ended &&
               assessment.type === "Kuis" &&
               assessment.posted
             ) {
@@ -854,7 +855,7 @@ function ViewClass(props) {
               (!category ||
                 (category === "subject" &&
                   assessment.subject === subject._id)) &&
-              !assessment.submissions &&
+              !assessment.ended &&
               assessment.type === "Ujian" &&
               assessment.posted
             ) {
@@ -879,6 +880,8 @@ function ViewClass(props) {
           if (!category && result.length === 5) break;
           if (category === "subject" && result.length === 3) break;
         } else if (tab === "mata_pelajaran") {
+          // Kalau di mata pelajaran, kita munculin semua assessment.
+          // Jadi, !assessment.ended nya gak dicheck.
           let workStatus = !assessment.submissions
             ? ASSESSMENT_STATUS.SUBMITTED
             : ASSESSMENT_STATUS.SUBMITTED;
@@ -1467,7 +1470,9 @@ function ViewClass(props) {
                     <Grid container justify="space-between" alignItems="center">
                       <Grid item>
                         <PersonListItem
-                          person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
+                          person_avatar={
+                            isObjEmpty(walikelas) ? null : avatar[walikelas._id]
+                          }
                           person_name={walikelas.name}
                           person_role={
                             all_subjects_map
@@ -1522,11 +1527,7 @@ function ViewClass(props) {
                         {[
                           <Grid item>
                             <PersonListItem
-                              person_avatar={
-                                isObjEmpty(walikelas)
-                                  ? null
-                                  : avatar[walikelas._id]
-                              }
+                              person_avatar={avatar[student._id]}
                               person_name={student.name}
                               person_role={student_role(student._id)}
                             />

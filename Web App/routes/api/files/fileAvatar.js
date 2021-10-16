@@ -39,107 +39,110 @@ router.get("/", (req, res, next) => {
 
 // route to upload a pdf document file
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
-router.post("/upload/:id", upload.single("avatar"), (req, res) => {
-  const { file } = req;
-  const { id } = req.params;
+router.post("/upload/:user_id", upload.single("avatar"), async (req, res) => {
+  try {
+    const { file } = req;
+    const { user_id } = req.params;
+    let s3bucket = new AWS.S3({
+      accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
+      secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
+      region: keys.awsKey.AWS_REGION,
+    });
 
-  let s3bucket = new AWS.S3({
-    accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
-    secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
-    region: keys.awsKey.AWS_REGION,
-  });
-  //Where you want to store your file
-  var params = {
-    Bucket: keys.awsKey.AWS_BUCKET_NAME,
-    Key: "avatar/" + uuidv4() + "_" + file.originalname,
-    Body: file.buffer,
-    ContentType: file.mimetype,
-    ContentDisposition: `inline;filename=${file.originalname}`,
-  };
-  s3bucket.upload(params, function (err, data) {
-    if (err) {
-      return res.status(500).json({ error: true, Message: err });
-    }
-
-    FileAvatar.findOneAndDelete(
-      { user_id: id },
-      function (error, file, result) {
-        console.log(file);
-        if (!file) {
-          return "No avatar uplaoded";
-        }
-        let params = {
-          Bucket: keys.awsKey.AWS_BUCKET_NAME,
-          Key: file.s3_key,
-        };
-        s3bucket.deleteObject(params, (error, data) => {
-          if (error) return res.status(404).json(error);
-        });
-      }
-    );
-
-    var newFileUploaded = {
-      filename: file.originalname,
-      s3_key: params.Key,
-      s3_directory: "avatar/",
-      user_id: ObjectId(id),
+    var params = {
+      Bucket: keys.awsKey.AWS_BUCKET_NAME,
+      Key: "avatar/" + uuidv4() + "_" + file.originalname,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+      ContentDisposition: `inline;filename=${file.originalname}`,
     };
 
-    var document = new FileAvatar(newFileUploaded);
-    document.save(function (error, newFile) {
-      if (error) {
-        return res.status(404).json(error);
-      }
-      console.log("USER ID:", id);
-      console.log("New file: ", newFile._id);
-      User.findOneAndUpdate(
-        { _id: id },
-        { $set: { avatar: newFile._id } },
-        { new: true },
-        (error, user) => {
-          if (error) {
-            return res.status(404).json(error);
-          }
-
-          var payload = {
-            _id: user._id,
-            role: user.role,
-            avatar: user.avatar,
-
-            //Informasi Pribadi
-            name: user.name,
-            tanggal_lahir: user.tanggal_lahir,
-            jenis_kelamin: user.jenis_kelamin,
-            sekolah: user.sekolah,
-
-            //Kontak
-            email: user.email,
-            phone: user.phone,
-            emergency_phone: user.emergency_phone,
-            address: user.address,
-
-            //Kontak
-            hobi_minat: user.hobi_minat,
-            ket_non_teknis: user.ket_non_teknis,
-            cita_cita: user.cita_cita,
-            uni_impian: user.uni_impian,
-          };
-          if (user.role === "Student") {
-            payload.kelas = user.kelas;
-            payload.tugas = user.tugas;
-          } else if (user.role === "Teacher") {
-            payload.subject_teached = user.subject_teached;
-          }
-
-          console.log("Success!!!");
-          return res.json({
-            success: "Successfully uploaded the lampiran file",
-            user: payload,
+    const oldAvatar = await FileAvatar.findOneAndDelete({ user_id: user_id });
+    if (oldAvatar) {
+      let params = {
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
+        Key: oldAvatar.s3_key,
+      };
+      await new Promise((resolve, reject) => {
+        s3bucket
+          .deleteObject(params, (error, data) => {
+            if (error) return reject(err);
+          })
+          .on("httpDone", () => {
+            resolve();
           });
-        }
-      );
+      });
+    }
+
+    const promise = () => {
+      return new Promise((resolve, reject) => {
+        s3bucket
+          .upload(params, function (err, data) {
+            if (err) {
+              reject({ error: true, Message: err });
+            }
+          })
+          .on("httpUploadProgress", function (data) {
+            if (data.loaded == data.total) {
+              let newFileUploaded = {
+                filename: file.originalname,
+                s3_key: params.Key,
+                s3_directory: "user/",
+                user_id: user_id,
+              };
+              let document = new FileAvatar(newFileUploaded);
+              resolve(document);
+            }
+          });
+      });
+    };
+
+    const document = await promise();
+    const newAvatar = await document.save();
+    const user = await User.findOneAndUpdate(
+      { _id: user_id },
+      { $set: { avatar: newAvatar._id } },
+      { new: true }
+    );
+
+    var payload = {
+      _id: user._id,
+      role: user.role,
+      // avatar: user.avatar,
+
+      //Informasi Pribadi
+      name: user.name,
+      tanggal_lahir: user.tanggal_lahir,
+      jenis_kelamin: user.jenis_kelamin,
+      sekolah: user.sekolah,
+
+      //Kontak
+      email: user.email,
+      phone: user.phone,
+      emergency_phone: user.emergency_phone,
+      address: user.address,
+
+      //Kontak
+      hobi_minat: user.hobi_minat,
+      ket_non_teknis: user.ket_non_teknis,
+      cita_cita: user.cita_cita,
+      uni_impian: user.uni_impian,
+    };
+    if (user.role === "Student") {
+      payload.kelas = user.kelas;
+      payload.tugas = user.tugas;
+    } else if (user.role === "Teacher") {
+      payload.subject_teached = user.subject_teached;
+    }
+
+    console.log("Success!!!");
+    return res.json({
+      success: "Successfully uploaded the lampiran file",
+      user: payload,
     });
-  });
+  } catch (err) {
+    return res.status(500).json({ error: true, Message: err });
+  }
 });
 
 router.get("/download/:id", (req, res) => {

@@ -126,7 +126,9 @@ export const deleteMaterial = (materialId, history = null) => (dispatch) => {
   return axios
     .delete(`/api/materials/delete/${materialId}`)
     .then((res) => {
-      return axios.delete(`/api/files/materials/${materialId}`);
+      // let lampiran_to_delete = Array.from(res.data.lampiran)
+      // return axios.delete(`/api/upload/att_material/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete} })
+      return axios.delete(`/api/files/materials/all/${materialId}`);
     })
     .then((res) => {
       if (history) {

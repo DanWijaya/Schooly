@@ -58,7 +58,7 @@ import {
   Snackbar,
   TextField,
   Tooltip,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
@@ -68,7 +68,7 @@ import {
   Create as CreateIcon,
   Delete as DeleteIcon,
   Publish as PublishIcon,
-  Send as SendIcon
+  Send as SendIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -536,7 +536,7 @@ function ViewTaskStudent(props) {
     getTeachers,
     getStudents,
     getMultipleFileAvatar,
-    getSetting
+    getSetting,
   } = props;
   const { user, selectedUser, all_students, all_teachers } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
@@ -1073,7 +1073,7 @@ function ViewTaskStudent(props) {
   };
 
   const onDeleteFileSubmitTasks = (id) => {
-    deleteFileSubmitTasks(id).then((res) => {
+    deleteFileSubmitTasks([id]).then((res) => {
       getFileSubmitTasks_AT(tugasId, user._id).then((results) => {
         setFileTugas(results);
         handleCloseDeleteDialog();
@@ -1098,7 +1098,8 @@ function ViewTaskStudent(props) {
               Tugas {all_subjects_map.get(tasksCollection.subject)}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Oleh: {selectedUser._id !== tasksCollection.person_in_charge_id
+              Oleh:{" "}
+              {selectedUser._id !== tasksCollection.person_in_charge_id
                 ? null
                 : selectedUser.name}
             </Typography>
@@ -1153,24 +1154,30 @@ function ViewTaskStudent(props) {
               )}
             </Grid>
           </Paper>
-          <Paper className={classes.taskPaper} style={{marginTop: "20px"}}>
-            <Typography variant="h6" gutterBottom>Komentar Kelas</Typography>
+          <Paper className={classes.taskPaper} style={{ marginTop: "20px" }}>
+            <Typography variant="h6" gutterBottom>
+              Komentar Kelas
+            </Typography>
             <Divider style={{ marginBottom: "17.5px" }} />
             <Grid container spacing={2}>
-              {
-                (commentList.length !== 0) ?
-                  <>
-                    {
-                      commentList.map((comment, idx) => (
-                        generateComments(comment.author_id, comment.name, comment.createdAt, comment.content, comment.author_id === user._id, idx, comment.edited)
-                      ))
-                    }
-                    <Grid item xs={12}>
-                      <Divider />
-                    </Grid>
-                  </>
-                : null
-              }
+              {commentList.length !== 0 ? (
+                <>
+                  {commentList.map((comment, idx) =>
+                    generateComments(
+                      comment.author_id,
+                      comment.name,
+                      comment.createdAt,
+                      comment.content,
+                      comment.author_id === user._id,
+                      idx,
+                      comment.edited
+                    )
+                  )}
+                  <Grid item xs={12}>
+                    <Divider />
+                  </Grid>
+                </>
+              ) : null}
               {/* {
                 (commentList.length === 0) ?
                   <Grid item xs={12}>
@@ -1180,15 +1187,15 @@ function ViewTaskStudent(props) {
               } */}
               <Grid container item direction="row" alignItems="center">
                 <div className={classes.smAvatar}>
-                  <Avatar src={commentAvatar[user._id]}/>
+                  <Avatar src={commentAvatar[user._id]} />
                 </div>
                 <Box flexGrow={1}>
                   <TextField
                     className={classes.textField}
                     variant="outlined"
                     multiline
-                    style={{display: "flex"}}
-                    InputProps={{style: {borderRadius: "15px"}}}
+                    style={{ display: "flex" }}
+                    InputProps={{ style: { borderRadius: "15px" } }}
                     placeholder="Tambahkan komentar..."
                     onChange={handleCommentInputChange}
                     value={commentValue}
@@ -1196,7 +1203,10 @@ function ViewTaskStudent(props) {
                 </Box>
                 <div>
                   <LightTooltip title="Kirim">
-                    <SendIcon className={classes.sendIcon} onClick={handleCreateComment}/>
+                    <SendIcon
+                      className={classes.sendIcon}
+                      onClick={handleCreateComment}
+                    />
                   </LightTooltip>
                 </div>
               </Grid>
@@ -1220,8 +1230,16 @@ function ViewTaskStudent(props) {
               </Grid>
             )}
             <Divider style={{ margin: "10px 0px" }} />
-            <form onSubmit={onSubmitTugas} style={{ padding: "10px 0px 35px 0px" }}>
-              <Grid container direction="column" alignItems="center" spacing={1}>
+            <form
+              onSubmit={onSubmitTugas}
+              style={{ padding: "10px 0px 35px 0px" }}
+            >
+              <Grid
+                container
+                direction="column"
+                alignItems="center"
+                spacing={1}
+              >
                 <Grid item>
                   <input
                     type="file"
@@ -1275,7 +1293,8 @@ function ViewTaskStudent(props) {
                   : "Telah Diperiksa"}
               </Typography>
               <Typography variant="h6" gutterBottom>
-                Nilai: {!tasksCollection.grades
+                Nilai:{" "}
+                {!tasksCollection.grades
                   ? "N/A"
                   : !tasksCollection.grades[user._id]
                   ? "N/A"
@@ -1394,5 +1413,5 @@ export default connect(mapStateToProps, {
   getTeachers,
   getStudents,
   getMultipleFileAvatar,
-  getSetting
+  getSetting,
 })(ViewTaskStudent);

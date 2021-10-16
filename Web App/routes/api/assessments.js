@@ -377,13 +377,16 @@ router.get("/viewall/:unitId", (req, res) => {
       } else {
         res.json(
           assessments.map((assessment) => {
+            console.log("Munculin assessment:", assessment);
+            let ended = new Date() >= new Date(assessment.end_date);
             if (assessment.posted === null) {
               return {
                 ...assessment,
                 posted: new Date() >= new Date(assessment.post_date),
+                ended: ended,
               };
             } else {
-              return assessment;
+              return { ...assessment, ended: ended };
             }
           })
         );

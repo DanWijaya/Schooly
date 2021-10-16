@@ -103,8 +103,8 @@ export const deleteEvent = (eventId) => {
     .delete(`/api/events/delete/${eventId}`)
     .then(() => {
       // let lampiran_to_delete = Array.from(res.data.lampiran)
-      //REVIEW panggil routes yang di api/files/fileEvents.js untuk DELETE semua lampiran.
-      return axios.delete(`/api/files/events/${eventId}`);
+      //REVIEW panggil routes yang di api/files/file_events.js untuk DELETE semua lampiran.
+      return axios.delete(`/api/files/events/all/${eventId}`);
     })
     .catch((err) => {
       console.log(err.response.data);

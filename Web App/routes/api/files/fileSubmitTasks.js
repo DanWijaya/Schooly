@@ -42,64 +42,58 @@ router.get("/", (req, res, next) => {
 router.post(
   "/upload/:task_id&:author_id&:task_deadline",
   upload.array("tugas"),
-  (req, res) => {
-    const { files } = req;
-    const { task_id, author_id, task_deadline } = req.params;
-    const on_time = new Date() <= new Date(task_deadline);
+  async (req, res) => {
+    try {
+      const { files } = req;
+      const { task_id, author_id, task_deadline } = req.params;
+      const on_time = new Date() <= new Date(task_deadline);
 
-    let s3bucket = new AWS.S3({
-      accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
-      secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
-      region: keys.awsKey.AWS_REGION,
-    });
-    // var ResponseData =[]
-    //Where you want to store your file
-    console.log("File yang mau diupload: ", files);
-    var numsFileUploaded = 0;
-    files.map((file) => {
-      var params = {
-        Bucket: keys.awsKey.AWS_BUCKET_NAME,
-        Key: "submittask/" + uuidv4() + "_" + file.originalname,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-        ContentDisposition: `inline;filename=${file.originalname}`,
-      };
-      s3bucket
-        .upload(params, function (err, data) {
-          if (err) {
-            return res.status(500).json({ error: true, Message: err });
-          } else {
-            var newFileUploaded = {
-              filename: file.originalname,
-              s3_key: params.Key,
-              s3_directory: "submittask/",
-              task_id: task_id,
-              author_id: author_id,
-              on_time: on_time,
-            };
-            var document = new FileSubmitTask(newFileUploaded);
-            document.save(function (error, newFile) {
-              if (error) {
-                throw error;
+      let s3bucket = new AWS.S3({
+        accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
+        secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
+        region: keys.awsKey.AWS_REGION,
+      });
+
+      const promises = files.map((file) => {
+        var params = {
+          Bucket: keys.awsKey.AWS_BUCKET_NAME,
+          Key: "submittask/" + uuidv4() + "_" + file.originalname,
+          Body: file.buffer,
+          ContentType: file.mimetype,
+          ContentDisposition: `inline;filename=${file.originalname}`,
+        };
+        return new Promise((resolve, reject) => {
+          s3bucket
+            .upload(params, function (err, data) {
+              if (err) {
+                reject({ error: true, Message: err });
               }
-              console.log(newFile);
+            })
+            .on("httpUploadProgress", function (data) {
+              if (data.loaded == data.total) {
+                let newFileUploaded = {
+                  filename: file.originalname,
+                  s3_key: params.Key,
+                  s3_directory: "submittask/",
+                  task_id: task_id,
+                  author_id: author_id,
+                  on_time: on_time,
+                };
+                let document = new FileSubmitTask(newFileUploaded);
+                resolve(document);
+              }
             });
-          }
-        })
-        .on("httpUploadProgress", function (data) {
-          if (data.loaded == data.total) {
-            console.log("All files complete");
-            numsFileUploaded++;
-            if (numsFileUploaded == files.length) {
-              console.log("Submit task succeed");
-              // return res.json(true)
-              return res.json({
-                success: "Successfully uploaded the lampiran file",
-              });
-            }
-          }
         });
-    });
+      });
+
+      const documents = await Promise.all(promises);
+      await FileSubmitTask.insertMany(documents);
+      return res.json({
+        success: "Successfully uploaded the lampiran file",
+      });
+    } catch (err) {
+      return res.status(500).json({ error: true, Message: err });
+    }
   }
 );
 
@@ -130,82 +124,86 @@ router.get("/by_multiple_tasks", (req, res) => {
   });
 });
 
-// Router to delete a DOCUMENT file
-router.delete("/:id", (req, res) => {
-  const { delete_all } = req.body;
-  // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
-  if (!delete_all) {
-    FileSubmitTask.findByIdAndDelete(req.params.id, (err, file) => {
+router.delete("/all/:id", async (req, res) => {
+  try {
+    // req.params.id ini berupa id dari task.
+    const file_to_delete = await FileSubmitTask.find({
+      task_id: req.params.id,
+    });
+    // file_to_delete ini berupa ID dari file filenya.
+    if (!file_to_delete) {
+      return res.status(200).json("No file task to delete");
+    }
+    await FileSubmitTask.deleteMany({
+      task_id: req.params.id,
+    });
+
+    const promises = file_to_delete.map((file) => {
       let s3bucket = new AWS.S3();
       let params = {
         Bucket: keys.awsKey.AWS_BUCKET_NAME,
         Key: file.s3_key,
       };
-      s3bucket.deleteObject(params, (err, data) => {
-        if (!data) {
-          return res.status(404).json(err);
-        }
-        return res.status(200).send("Success");
+
+      return new Promise((resolve, reject) => {
+        s3bucket
+          .deleteObject(params, (err, data) => {
+            if (!data) {
+              reject(err);
+            }
+          })
+          .on("httpDone", function (data) {
+            resolve();
+          });
       });
     });
-  } else {
-    FileSubmitTask.find({ task_id: req.params.id }).then((tasks) => {
-      let id_list = tasks.map((m) => Object(m._id));
-      let file_to_delete = tasks;
 
-      FileSubmitTask.deleteMany(
-        {
-          _id: {
-            $in: id_list,
-          },
-        },
-        function (err, results) {
-          if (!results) {
-            return res.status(404).json(err);
-          }
-          //Now Delete the file from AWS-S3
-          // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObject-property
-          let s3bucket = new AWS.S3();
-          file_to_delete.forEach((file) => {
-            let params = {
-              Bucket: keys.awsKey.AWS_BUCKET_NAME,
-              Key: file.s3_key,
-            };
-            s3bucket.deleteObject(params, (err, data) => {
-              if (!data) return res.status(404).json(err);
-            });
-          });
-          return res.status(200).send("Success");
-        }
-      );
-    });
+    await Promise.all(promises);
+    return res.status(200).json("Success");
+  } catch (err) {
+    return res.status(404).json(err);
   }
-  /*else{
-    let id_list = file_to_delete.map((m) => Object(m._id))
-    FileSubmitTask.deleteMany({
-      _id: {
-        $in: id_list
-          }
-        }, function(err, results){
-        if(!results){
-          return res.status(404).json(err)
-        } 
+});
 
-        let s3bucket = new AWS.S3();
-        file_to_delete.forEach((file) => {
-          let params = {
-            Bucket: keys.awsKey.AWS_BUCKET_NAME,
-            Key: file.s3_key
-          };
-          s3bucket.deleteObject(params, (err, data) => {
-            if (!data)
-              return res.status(404).json(err)
-          });
-        })
-        return res.status(200).send("Success")
-    });
+// Router to delete a DOCUMENT file
+router.delete("/", async (req, res) => {
+  const { id_to_delete } = req.body;
+  if (!id_to_delete) {
+    return res.status(200).send("No file tasks to delete");
   }
-  */
+
+  try {
+    // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
+    let id_list = id_to_delete.map((m) => ObjectId(m));
+    console.log(id_list);
+    const results = await FileSubmitTask.find({ _id: { $in: id_list } });
+    await FileSubmitTask.deleteMany({ _id: { $in: id_list } });
+    console.log(results);
+    const promises = results.map((file) => {
+      let s3bucket = new AWS.S3();
+      let params = {
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
+        Key: file.s3_key,
+      };
+      return new Promise((resolve, reject) => {
+        s3bucket
+          .deleteObject(params, (err, data) => {
+            if (!data) {
+              reject(err);
+            }
+          })
+          .on("httpDone", function (data) {
+            resolve();
+          });
+      });
+    });
+
+    await Promise.all(promises);
+    console.log("Kelar");
+    return res.status(200).send("Success");
+  } catch (err) {
+    return res.status(404).json(err);
+  }
 });
 
 router.get("/by_task/:task_id", (req, res) => {

@@ -79,6 +79,7 @@ function EditProfilePicture(props) {
     uploadFileAvatar,
     avatar,
     setFileLimitSnackbar,
+    setAvatar,
   } = props;
 
   const fullScreen = useMediaQuery("(max-width:400px)");
@@ -119,18 +120,24 @@ function EditProfilePicture(props) {
     }
   };
 
-  const onSubmitForm = (e) => {
+  const onSubmitForm = async (e) => {
+    console.log("AVATAR TELAH DISUBMIT");
     e.preventDefault();
     let formData = new FormData();
-    formData.append("avatar", profileImg);
 
-    let userId = user._id;
-    uploadFileAvatar(userId, formData).then((res) => {
+    try {
+      await uploadFileAvatar(user._id, formData);
+      console.log("Avatar is uploaded successfully");
+      const new_avatar = await getFileAvatar(user._id);
+      console.log("Avatar is retrieved successfully");
+      console.log(new_avatar);
+      setAvatar(new_avatar);
       props.handleOpenAlert();
       handleCloseDialog();
-    });
-    // Fitur_4 punya:
-    // updateAvatar(userData, userId, formData);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   };
 
   function onImgLoad({ target: img }) {

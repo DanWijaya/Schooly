@@ -6,7 +6,6 @@ import {
   GET_TASKS_BY_CLASS,
 } from "./Types";
 import { BrowserRouter } from "react-router-dom";
-import { deleteFileSubmitTasks } from "./files/FileSubmitTaskActions";
 
 // Add Task
 export const createTask = (formData, taskData, history) => (dispatch) => {
@@ -169,9 +168,7 @@ export const deleteTask = (taskId, history = null) => (dispatch) => {
       return axios.delete(`/api/files/tasks/all/${taskId}`);
     })
     .then((res) => {
-      return axios.delete(`/api/files/submit_tasks/${taskId}`, {
-        data: { delete_all: true },
-      });
+      return axios.delete(`/api/files/submit_tasks/all/${taskId}`);
     })
     .then((res) => {
       if (history) {

@@ -12,6 +12,7 @@ import {
   GET_PENDING_TEACHERS,
   GET_PENDING_ADMINS,
   SET_DROPBOX_TOKEN,
+  GET_AVATAR,
 } from "../actions/Types";
 
 const isEmpty = require("is-empty");
@@ -31,12 +32,12 @@ const initialState = {
   pending_admins: [],
   selectedUser: {},
   retrieved_users: new Map(),
-  all_roles : {
+  all_roles: {
     SUPERADMIN: "SuperAdmin",
     ADMIN: "Admin",
     STUDENT: "Student",
     TEACHER: "Teacher",
-  }
+  },
   // dropbox_token: null,
 };
 
@@ -109,6 +110,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         pending_admins: action.payload,
+      };
+    case GET_AVATAR:
+      return {
+        ...state,
+        user: { ...state.user, avatar: action.payload },
       };
     default:
       return state;
