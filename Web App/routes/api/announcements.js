@@ -12,7 +12,6 @@ router.post("/create", (req, res) => {
   // Form Validation
   const { errors, isValid } = validateAnnouncementInput(req.body);
   if (!isValid) {
-    console.log(errors);
     return res.status(400).json(errors);
   }
 
@@ -25,7 +24,6 @@ router.post("/create", (req, res) => {
       class_assigned.forEach((kelas) => class_assigned_ids.push(kelas));
     }
   }
-  console.log(class_assigned_ids);
 
   const newAnnouncement = new Announcement({
     title: req.body.title,
@@ -38,11 +36,8 @@ router.post("/create", (req, res) => {
   });
   newAnnouncement
     .save()
-    .then((ann) => {
-      res.json(ann);
-      console.log("Announcement is created");
-    })
-    .catch((err) => console.log(err));
+    .then((ann) => res.json(ann))
+    .catch((err) => res.status(400).json(err));
 });
 
 //Define Update routing.
@@ -50,42 +45,40 @@ router.put("/update/:id", (req, res) => {
   const { errors, isValid } = validateAnnouncementInput(req.body);
 
   if (!isValid) {
-    console.log("Not valid lahhh");
     return res.status(400).json(errors);
   }
 
   let id = req.params.id;
 
   console.log(req.body);
-  Announcement.findById(id, (err, announcementData) => {
-    if (!announcementData)
-      return res.status(404).send("Announcement data is not found");
-    else {
+  Announcement.findById(id)
+    .then((announcementData) => {
+      if (!announcementData) {
+        throw "Announcement data is not found";
+      }
       announcementData.title = req.body.title;
       announcementData.description = req.body.description;
       announcementData.class_assigned = req.body.class_assigned;
       announcementData.to = req.body.to;
 
-      announcementData
-        .save()
-        .then((taskData) => res.json("Update Task complete"))
-        .catch((err) => res.status(400).send("Unable to update task database"));
-    }
-  });
+      return announcementData.save();
+    })
+    .then((announcementData) => res.json("Done with updating announcement"))
+    .catch((err) => res.status(400).send(err));
 });
 
 //Define View one announcement
 router.get("/viewOne/:id", (req, res) => {
   console.log("view one is runned");
   let id = req.params.id;
-  Announcement.findById(id, (err, announcementData) => {
-    if (!announcementData)
-      return res.status(404).send("Announcement data is not found");
-    else {
-      console.log("Announcementnya yang ini: ", announcementData);
+  Announcement.findById(id)
+    .then((announcementData) => {
+      if (!announcementData) {
+        throw "Announcement data is not found";
+      }
       return res.json(announcementData);
-    }
-  });
+    })
+    .catch((err) => res.status(404).send(err));
 });
 
 //Define View classes route
@@ -94,11 +87,14 @@ router.get("/viewall/:unitId", (req, res) => {
   if (!unitId) {
     return res.json([]);
   }
-  Announcement.find({ unit: unitId }).then((announcements, err) => {
-    if (!announcements)
-      return res.status(400).json("Announcements are not found");
-    else return res.json(announcements);
-  });
+  Announcement.find({ unit: unitId })
+    .then((announcements) => {
+      if (!announcements.length) {
+        throw "All Announcements are not found";
+      }
+      return res.json(announcements);
+    })
+    .catch((err) => res.status(400).json(err));
 });
 
 router.get("/viewAdmin/:unitId", (req, res) => {
@@ -125,7 +121,7 @@ router.get("/viewAdmin/:unitId", (req, res) => {
       );
     })
     .catch((err) => {
-      throw res.status(500).json(err);
+      return res.status(500).json(err);
     });
 });
 
@@ -133,41 +129,49 @@ router.get("/viewAdmin/:unitId", (req, res) => {
 router.get("/view/:id", (req, res) => {
   console.log("View announcement is runned");
   let id = req.params.id;
-  Announcement.find({ author_id: id }).then((announcements, err) => {
-    if (!announcements) {
-      console.log("announcement is not found");
-      return res.status(400).json("Announcements are not found");
-    } else {
-      // console.log(announcements);
+
+  Announcement.find({ author_id: id })
+    .then((announcements) => {
+      if (!announcements.length) {
+        console.log("Announcement is not found");
+      }
       return res.json(announcements);
-    }
-  });
+    })
+    .catch((err) => {
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/viewByClass/:id", (req, res) => {
   let id = req.params.id;
-  console.log(id);
-  console.log("View announcement by class is runned");
   // if want to get the MongoDB object that has id element in the array.
-  Announcement.find({ class_assigned: id }, (err, announcements) => {
-    if (!announcements) {
-      console.log("Not found");
-      return res.status(400).json("Announcement with that class is not found");
-    }
-    console.log("Announcements: ", announcements);
-    return res.json(announcements);
-  });
+
+  Announcement.find({ class_assigned: id })
+    .then((announcements) => {
+      if (!announcements.length) {
+        console.log("Announcement assigned to the class is not found");
+      }
+      console.log("Announcements: ", announcements);
+      return res.json(announcements);
+    })
+    .catch((err) => {
+      return res.status(400).json(err);
+    });
 });
 
 //Define delete routes
 router.delete("/delete/:id", (req, res) => {
-  Announcement.findByIdAndRemove(req.params.id).then((announcements, err) => {
-    if (!announcements) {
-      res.status(400).json(err);
-    } else {
-      res.json(announcements);
-    }
-  });
+  const { id } = req.params;
+  Announcement.findByIdAndRemove(req.params.id)
+    .then((announcements) => {
+      if (!announcements) {
+        throw "Announcement is not found";
+      }
+      return res.json(announcements);
+    })
+    .catch((err) => {
+      return res.status(400).json(err);
+    });
 });
 
 module.exports = router;
