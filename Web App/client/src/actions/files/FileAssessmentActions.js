@@ -57,6 +57,6 @@ export const viewFileAssessment = (id) => (dispatch) => {
 
 export const deleteFileAssessment = (id, file_to_delete, current_file) => {
   return axios.delete(`/api/files/assessments/${id}`, {
-    data: { file_to_delete: file_to_delete, current_file: current_file },
+    data: { id_to_delete: file_to_delete, current_file: current_file },
   });
 };

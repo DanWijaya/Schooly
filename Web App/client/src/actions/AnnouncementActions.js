@@ -112,9 +112,7 @@ export const deleteAnnouncement = (
     .then((res) => {
       console.log("Deleted: ", res.data);
       // let lampiran_to_delete = Array.from(res.data.lampiran)
-      return axios.delete(`/api/files/announcements/${announcementId}`);
-
-      // return "Announcement deleted has no lampiran"
+      return axios.delete(`/api/files/announcements/all/${announcementId}`);
     })
     .then((res) => {
       console.log(res);
@@ -125,7 +123,6 @@ export const deleteAnnouncement = (
         });
       }
       return true;
-      // window.location.href = "/daftar-pengumuman";
     })
     .catch((err) => {
       console.log(err);

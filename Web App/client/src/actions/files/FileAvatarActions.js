@@ -1,5 +1,6 @@
 import axios from "axios";
 import { setCurrentUser } from "../UserActions";
+import { GET_AVATAR } from "../Types";
 
 export const uploadFileAvatar = (id, formData) => (dispatch) => {
   console.log("uploading file avatar actions");
@@ -10,6 +11,7 @@ export const uploadFileAvatar = (id, formData) => (dispatch) => {
       return true;
     })
     .catch((err) => {
+      console.log(err);
       throw new Error(err);
     });
 };
@@ -18,6 +20,11 @@ export const getFileAvatar = (id) => (dispatch) => {
   return axios
     .get(`/api/files/avatar/by_user/${id}`)
     .then((res) => {
+      dispatch({
+        type: GET_AVATAR,
+        payload: res.data,
+      });
+      console.log(res.data);
       return res.data;
     })
     .catch((err) => new Error(err));
@@ -25,7 +32,7 @@ export const getFileAvatar = (id) => (dispatch) => {
 
 export const getMultipleFileAvatar = (id_list) => (dispatch) => {
   console.log(id_list);
-    return axios
+  return axios
     .get(`/api/files/avatar/multiuser`, { params: { id_list: id_list } })
     .then((res) => {
       console.log(res);
@@ -33,7 +40,6 @@ export const getMultipleFileAvatar = (id_list) => (dispatch) => {
       return res.data;
     })
     .catch((err) => new Error(err));
-  
 };
 
 export const downloadFileAvatar = (id) => (dispatch) => {

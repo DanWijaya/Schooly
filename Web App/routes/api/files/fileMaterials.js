@@ -21,58 +21,61 @@ AWS.config.update({
 
 // route to upload a pdf document file
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
-router.post("/upload/:id", upload.array("lampiran_materi"), (req, res) => {
-  const { files } = req;
-  let s3bucket = new AWS.S3({
-    accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
-    secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
-    region: keys.awsKey.AWS_REGION,
-  });
-  // var ResponseData =[]
-  //Where you want to store your file
-
-  var numsFileUploaded = 0;
-  files.map((file) => {
-    var params = {
-      Bucket: keys.awsKey.AWS_BUCKET_NAME,
-      Key: "materi/" + uuidv4() + "_" + file.originalname,
-      Body: file.buffer,
-      ContentType: file.mimetype,
-      ContentDisposition: `inline;filename=${file.originalname}`,
-    };
-    s3bucket
-      .upload(params, function (err, data) {
-        if (err) {
-          return res.status(500).json({ error: true, Message: err });
-        } else {
-          var newFileUploaded = {
-            filename: file.originalname,
-            s3_key: params.Key,
-            s3_directory: "materi/",
-            material_id: req.params.id,
-          };
-          var document = new FileMaterial(newFileUploaded);
-          document.save(function (error, newFile) {
-            if (error) {
-              throw error;
-            }
-            console.log(newFile);
-          });
-        }
-      })
-      .on("httpUploadProgress", function (data) {
-        if (data.loaded == data.total) {
-          numsFileUploaded++;
-          if (numsFileUploaded == files.length) {
-            return res.json({
-              _id: req.params.id,
-              success: "Successfully uploaded the lampiran file",
-            });
-          }
-        }
+router.post(
+  "/upload/:material_id",
+  upload.array("lampiran_materi"),
+  async (req, res) => {
+    try {
+      const { files } = req;
+      const { material_id, author_id } = req.params;
+      let s3bucket = new AWS.S3({
+        accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
+        secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
+        region: keys.awsKey.AWS_REGION,
       });
-  });
-});
+
+      let promises = files.map((file) => {
+        var params = {
+          Bucket: keys.awsKey.AWS_BUCKET_NAME,
+          Key: "material/" + uuidv4() + "_" + file.originalname,
+          Body: file.buffer,
+          ContentType: file.mimetype,
+          ContentDisposition: `inline;filename=${file.originalname}`,
+        };
+
+        return new Promise((resolve, reject) => {
+          s3bucket
+            .upload(params, function (err, data) {
+              if (err) {
+                reject({ error: true, Message: err });
+              }
+            })
+            .on("httpUploadProgress", function (data) {
+              if (data.loaded == data.total) {
+                let newFileUploaded = {
+                  filename: file.originalname,
+                  s3_key: params.Key,
+                  s3_directory: "materials/",
+                  material_id: material_id,
+                };
+                let document = new FileMaterial(newFileUploaded);
+                resolve(document);
+              }
+            });
+        });
+      });
+
+      const documents = await Promise.all(promises);
+      await FileMaterial.insertMany(documents);
+      return res.json({
+        _id: material_id,
+        success: "Successfully uploaded the lampiran file",
+      });
+    } catch (err) {
+      return res.status(500).json({ error: true, Message: err });
+    }
+  }
+);
 
 router.get("/download/:id", (req, res) => {
   let s3bucket = new AWS.S3();
@@ -91,68 +94,83 @@ router.get("/download/:id", (req, res) => {
   });
 });
 
+router.delete("/all/:id", async (req, res) => {
+  try {
+    // req.params.id ini berupa id dari material.
+    const file_to_delete = await FileMaterial.find({
+      material_id: req.params.id,
+    });
+    // file_to_delete ini berupa ID dari file filenya.
+    if (!file_to_delete) {
+      return res.status(200).json("No file materials to delete");
+    }
+    await FileMaterial.deleteMany({
+      material_id: req.params.id,
+    });
+
+    const promises = file_to_delete.map((file) => {
+      let s3bucket = new AWS.S3();
+      let params = {
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
+        Key: file.s3_key,
+      };
+
+      return new Promise((resolve, reject) => {
+        s3bucket
+          .deleteObject(params, (err, data) => {
+            if (!data) {
+              reject(err);
+            }
+          })
+          .on("httpDone", function (data) {
+            resolve();
+          });
+      });
+    });
+
+    await Promise.all(promises);
+    return res.status(200).json("Success");
+  } catch (err) {
+    return res.status(404).json(err);
+  }
+});
+
 // Router to delete a DOCUMENT file
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { file_to_delete } = req.body;
   // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
   if (!file_to_delete) {
-    FileMaterial.find({ material_id: req.params.id }).then((materials) => {
-      let id_list = materials.map((m) => ObjectId(m._id));
-      let file_to_delete = materials;
-
-      FileMaterial.deleteMany(
-        {
-          _id: {
-            $in: id_list,
-          },
-        },
-        function (err, results) {
-          if (!results) {
-            return res.status(404).json(err);
-          }
-          //Now Delete the file from AWS-S3
-          // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObject-property
-          let s3bucket = new AWS.S3();
-          file_to_delete.forEach((file) => {
-            let params = {
-              Bucket: keys.awsKey.AWS_BUCKET_NAME,
-              Key: file.s3_key,
-            };
-            s3bucket.deleteObject(params, (err, data) => {
-              if (!data) return res.status(404).json(err);
-            });
-          });
-          return res.status(200).send("Success");
-        }
-      );
-    });
-  } else {
+    return res.status(200).send("No file materials to delete");
+  }
+  try {
     let id_list = file_to_delete.map((m) => ObjectId(m._id));
-    FileMaterial.deleteMany(
-      {
-        _id: {
-          $in: id_list,
-        },
-      },
-      function (err, results) {
-        if (!results) {
-          return res.status(404).json(err);
-        }
+    console.log("Ini id list: ", id_list);
+    const results = await FileMaterial.find({ _id: { $in: id_list } });
+    await FileMaterial.deleteMany({ _id: { $in: id_list } });
 
-        let s3bucket = new AWS.S3();
-        file_to_delete.forEach((file) => {
-          let params = {
-            Bucket: keys.awsKey.AWS_BUCKET_NAME,
-            Key: file.s3_key,
-          };
-          s3bucket.deleteObject(params, (err, data) => {
-            console.log("Data materi: ", data);
-            if (err) return res.status(404).json(err);
+    const promises = results.map((file) => {
+      let s3bucket = new AWS.S3();
+      let params = {
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
+        Key: file.s3_key,
+      };
+      return new Promise((resolve, reject) => {
+        s3bucket
+          .deleteObject(params, (err, data) => {
+            if (!data) {
+              reject(err);
+            }
+          })
+          .on("httpDone", function (data) {
+            resolve();
           });
-        });
-        return res.status(200).send("Success");
-      }
-    );
+      });
+    });
+
+    await Promise.all(promises);
+    return res.status(200).send("Success");
+  } catch (err) {
+    return res.status(404).json(err);
   }
 });
 

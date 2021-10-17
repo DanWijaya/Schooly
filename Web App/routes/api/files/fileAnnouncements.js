@@ -32,54 +32,58 @@ router.get("/", (req, res, next) => {
 
 // Route to upload file
 router.post(
-  "/upload/:id",
+  "/upload/:announcement_id",
   upload.array("lampiran_announcement"),
-  (req, res) => {
-    const { files } = req;
-    let s3bucket = new AWS.S3();
-    var numsFileUploaded = 0;
-    files.map((file) => {
-      var params = {
-        Bucket: keys.awsKey.AWS_BUCKET_NAME,
-        Key: "announcement/" + uuidv4() + "_" + file.originalname,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-        ContentDisposition: `inline;filename=${file.originalname}`,
-      };
-      s3bucket
-        .upload(params, function (err, data) {
-          if (err) {
-            return res.status(500).json({ error: true, Message: err });
-          } else {
-            var newFileUploaded = {
-              filename: file.originalname,
-              s3_key: params.Key,
-              s3_directory: "announcements/",
-              announcement_id: req.params.id,
-            };
+  async (req, res) => {
+    try {
+      const { files } = req;
+      const { announcement_id, author_id } = req.params;
+      let s3bucket = new AWS.S3({
+        accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
+        secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
+        region: keys.awsKey.AWS_REGION,
+      });
 
-            var document = new FileAnnouncement(newFileUploaded);
-            document.save(function (error, newFile) {
-              if (error) {
-                throw error;
+      let promises = files.map((file) => {
+        var params = {
+          Bucket: keys.awsKey.AWS_BUCKET_NAME,
+          Key: "announcement/" + uuidv4() + "_" + file.originalname,
+          Body: file.buffer,
+          ContentType: file.mimetype,
+          ContentDisposition: `inline;filename=${file.originalname}`,
+        };
+
+        return new Promise((resolve, reject) => {
+          s3bucket
+            .upload(params, function (err, data) {
+              if (err) {
+                reject({ error: true, Message: err });
               }
-              console.log(newFile);
+            })
+            .on("httpUploadProgress", function (data) {
+              if (data.loaded == data.total) {
+                let newFileUploaded = {
+                  filename: file.originalname,
+                  s3_key: params.Key,
+                  s3_directory: "announcement/",
+                  announcement_id: announcement_id,
+                };
+                let document = new FileAnnouncement(newFileUploaded);
+                resolve(document);
+              }
             });
-          }
-        })
-        .on("httpUploadProgress", function (data) {
-          if (data.loaded == data.total) {
-            numsFileUploaded++;
-            if (numsFileUploaded == files.length) {
-              return res.json({
-                _id: req.params.id,
-                success: "Successfully uploaded the lampiran file",
-                numsFileUploaded: numsFileUploaded,
-              });
-            }
-          }
         });
-    });
+      });
+
+      const documents = await Promise.all(promises);
+      await FileAnnouncement.insertMany(documents);
+      return res.json({
+        _id: announcement_id,
+        success: "Successfully uploaded the lampiran file",
+      });
+    } catch (err) {
+      return res.status(500).json({ error: true, Message: err });
+    }
   }
 );
 
@@ -101,67 +105,83 @@ router.get("/download/:id", (req, res) => {
   });
 });
 
-// Router to delete a DOCUMENT file
-router.delete("/:id", (req, res) => {
-  const { file_to_delete } = req.body;
-
-  if (!file_to_delete) {
-    FileAnnouncement.find({ announcement_id: req.params.id }).then((items) => {
-      let id_list = items.map((m) => Object(m._id));
-      let file_to_delete = items;
-
-      FileAnnouncement.deleteMany(
-        {
-          _id: {
-            $in: id_list,
-          },
-        },
-        function (err, results) {
-          if (!results) {
-            return res.status(404).json(err);
-          }
-          //Now Delete the file from AWS-S3
-          // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObject-property
-          let s3bucket = new AWS.S3();
-          file_to_delete.forEach((file) => {
-            let params = {
-              Bucket: keys.awsKey.AWS_BUCKET_NAME,
-              Key: file.s3_key,
-            };
-            s3bucket.deleteObject(params, (err, data) => {
-              if (!data) return res.status(404).json(err);
-            });
-          });
-          return res.status(200).send("Success");
-        }
-      );
+router.delete("/all/:id", async (req, res) => {
+  try {
+    // req.params.id ini berupa id dari announcement.
+    const file_to_delete = await FileAnnouncement.find({
+      announcement_id: req.params.id,
     });
-  } else {
-    let id_list = file_to_delete.map((m) => Object(m._id));
-    FileAnnouncement.deleteMany(
-      {
-        _id: {
-          $in: id_list,
-        },
-      },
-      function (err, results) {
-        if (!results) {
-          return res.status(404).json(err);
-        }
+    // file_to_delete ini berupa ID dari file filenya.
+    if (!file_to_delete) {
+      return res.status(200).json("No file announcements to delete");
+    }
+    await FileAnnouncement.deleteMany({
+      announcement_id: req.params.id,
+    });
 
-        let s3bucket = new AWS.S3();
-        file_to_delete.forEach((file) => {
-          let params = {
-            Bucket: keys.awsKey.AWS_BUCKET_NAME,
-            Key: file.s3_key,
-          };
-          s3bucket.deleteObject(params, (err, data) => {
-            if (!data) return res.status(404).json(err);
+    const promises = file_to_delete.map((file) => {
+      let s3bucket = new AWS.S3();
+      let params = {
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
+        Key: file.s3_key,
+      };
+
+      return new Promise((resolve, reject) => {
+        s3bucket
+          .deleteObject(params, (err, data) => {
+            if (!data) {
+              reject(err);
+            }
+          })
+          .on("httpDone", function (data) {
+            resolve();
           });
-        });
-        return res.status(200).send("Success");
-      }
-    );
+      });
+    });
+
+    await Promise.all(promises);
+    return res.status(200).json("Success");
+  } catch (err) {
+    return res.status(404).json(err);
+  }
+});
+
+// Router to delete a DOCUMENT file
+router.delete("/:id", async (req, res) => {
+  const { file_to_delete } = req.body;
+  // file_to_delete ini berupa ID dari file filenya.
+  if (!file_to_delete) {
+    return res.status(200).send("No file nnouncements to delete");
+  }
+  try {
+    // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
+    let id_list = file_to_delete.map((m) => ObjectId(m._id));
+    const results = await FileAnnouncement.find({ _id: { $in: id_list } });
+    await FileAnnouncement.deleteMany({ _id: { $in: id_list } });
+
+    const promises = results.map((file) => {
+      let s3bucket = new AWS.S3();
+      let params = {
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
+        Key: file.s3_key,
+      };
+      return new Promise((resolve, reject) => {
+        s3bucket
+          .deleteObject(params, (err, data) => {
+            if (!data) {
+              reject(err);
+            }
+          })
+          .on("httpDone", function (data) {
+            resolve();
+          });
+      });
+    });
+
+    await Promise.all(promises);
+    return res.status(200).send("Success");
+  } catch (err) {
+    return res.status(404).json(err);
   }
 });
 
@@ -182,13 +202,6 @@ router.get("/:id", (req, res) => {
   FileAnnouncement.findById(req.params.id).then((result, err) => {
     if (!result) return res.status(400).json(err);
 
-    // let params = {
-    //   Bucket: keys.awsKey.AWS_BUCKET_NAME,
-    //   Key: result.s3_key,
-    //   Expires: 5 * 60,
-    //   ResponseContentDisposition: `inline;filename=${result.filename}`,
-    // };
-    // const url = s3bucket.getSignedUrl("getObject", params);
     const url = `${keys.cdn}/${result.s3_key}`;
     return res.status(200).json(url);
   });

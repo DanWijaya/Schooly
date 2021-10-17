@@ -24,12 +24,12 @@ import {
   ExpansionPanelSummary,
   Grid,
   Paper,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import {
   AssignmentOutlined as AssignmentIcon,
   ExpandMore as ExpandMoreIcon,
-  MenuBook as MenuBookIcon
+  MenuBook as MenuBookIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaClipboardList } from "react-icons/fa";
@@ -228,16 +228,12 @@ function ViewSubject(props) {
               <MaterialItem
                 link={`/materi/${material._id}`}
                 primaryText={material.name}
-                secondaryText={
-                  moment(material.createdAt)
-                    .locale("id")
-                    .format("DD MMM YYYY")
-                }
-                subSecondaryText={
-                  moment(material.createdAt)
-                    .locale("id")
-                    .format("HH.mm")
-                }
+                secondaryText={moment(material.createdAt)
+                  .locale("id")
+                  .format("DD MMM YYYY")}
+                subSecondaryText={moment(material.createdAt)
+                  .locale("id")
+                  .format("HH.mm")}
               />
             </Grid>
           );
@@ -306,16 +302,12 @@ function ViewSubject(props) {
                   primaryText={task.name}
                   status={assignmentStatus}
                   missing={TASK_STATUS.NOT_SUBMITTED}
-                  secondaryText={
-                    moment(task.createdAt)
-                      .locale("id")
-                      .format("DD MMM YYYY")
-                  }
-                  subSecondaryText={
-                    moment(task.createdAt)
-                      .locale("id")
-                      .format("HH.mm")
-                  }
+                  secondaryText={moment(task.createdAt)
+                    .locale("id")
+                    .format("DD MMM YYYY")}
+                  subSecondaryText={moment(task.createdAt)
+                    .locale("id")
+                    .format("HH.mm")}
                 />
               </Grid>
             );
@@ -334,16 +326,12 @@ function ViewSubject(props) {
                   primaryText={task.name}
                   status={assignmentStatus}
                   missing={TASK_STATUS.NOT_SUBMITTED}
-                  secondaryText={
-                    moment(task.createdAt)
-                      .locale("id")
-                      .format("DD MMM YYYY")
-                  }
-                  subSecondaryText={
-                    moment(task.createdAt)
-                      .locale("id")
-                      .format("HH.mm")
-                  }
+                  secondaryText={moment(task.createdAt)
+                    .locale("id")
+                    .format("DD MMM YYYY")}
+                  subSecondaryText={moment(task.createdAt)
+                    .locale("id")
+                    .format("HH.mm")}
                 />
               </Grid>
             );
@@ -408,16 +396,12 @@ function ViewSubject(props) {
                     primaryText={assessment.name}
                     status={assessmentStatus}
                     missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
-                    secondaryText={
-                      moment(assessment.createdAt)
-                        .locale("id")
-                        .format("DD MMM YYYY")
-                    }
-                    subSecondaryText={
-                      moment(assessment.createdAt)
-                        .locale("id")
-                        .format("HH.mm")
-                    }
+                    secondaryText={moment(assessment.createdAt)
+                      .locale("id")
+                      .format("DD MMM YYYY")}
+                    subSecondaryText={moment(assessment.createdAt)
+                      .locale("id")
+                      .format("HH.mm")}
                     title={assessment.name}
                     subject={
                       category === "subject"
@@ -451,16 +435,12 @@ function ViewSubject(props) {
                     primaryText={assessment.name}
                     status={assessmentStatus}
                     missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
-                    secondaryText={
-                      moment(assessment.createdAt)
-                        .locale("id")
-                        .format("DD MMM YYYY")
-                    }
-                    subSecondaryText={
-                      moment(assessment.createdAt)
-                        .locale("id")
-                        .format("HH.mm")
-                    }
+                    secondaryText={moment(assessment.createdAt)
+                      .locale("id")
+                      .format("DD MMM YYYY")}
+                    subSecondaryText={moment(assessment.createdAt)
+                      .locale("id")
+                      .format("HH.mm")}
                     title={assessment.name}
                     subject={
                       category === "subject"
@@ -500,16 +480,12 @@ function ViewSubject(props) {
                     primaryText={assessment.name}
                     status={assessmentStatus}
                     missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
-                    secondaryText={
-                      moment(assessment.createdAt)
-                        .locale("id")
-                        .format("DD MMM YYYY")
-                    }
-                    subSecondaryText={
-                      moment(assessment.createdAt)
-                        .locale("id")
-                        .format("HH.mm")
-                    }
+                    secondaryText={moment(assessment.createdAt)
+                      .locale("id")
+                      .format("DD MMM YYYY")}
+                    subSecondaryText={moment(assessment.createdAt)
+                      .locale("id")
+                      .format("HH.mm")}
                     title={assessment.name}
                     subject={
                       category === "subject"
@@ -542,16 +518,12 @@ function ViewSubject(props) {
                     primaryText={assessment.name}
                     status={assessmentStatus}
                     missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
-                    secondaryText={
-                      moment(assessment.createdAt)
-                        .locale("id")
-                        .format("DD MMM YYYY")
-                    }
-                    subSecondaryText={
-                      moment(assessment.createdAt)
-                        .locale("id")
-                        .format("HH.mm")
-                    }
+                    secondaryText={moment(assessment.createdAt)
+                      .locale("id")
+                      .format("DD MMM YYYY")}
+                    subSecondaryText={moment(assessment.createdAt)
+                      .locale("id")
+                      .format("HH.mm")}
                     title={assessment.name}
                     subject={
                       category === "subject"
@@ -586,7 +558,11 @@ function ViewSubject(props) {
         <Typography variant="h4" gutterBottom noWrap style={{ color: "white" }}>
           <b>{all_subjects_map.get(id)}</b>
         </Typography>
-        <Typography variant="h5" noWrap style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+        <Typography
+          variant="h5"
+          noWrap
+          style={{ color: "rgba(255, 255, 255, 0.7)" }}
+        >
           {kelas.name}
         </Typography>
       </Paper>
@@ -595,9 +571,7 @@ function ViewSubject(props) {
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <div className={classes.objectPanel}>
               <MenuBookIcon className={classes.objectIcon} />
-              <Typography variant="h6">
-                Materi
-              </Typography>
+              <Typography variant="h6">Materi</Typography>
             </div>
           </ExpansionPanelSummary>
           <Divider />
@@ -617,9 +591,7 @@ function ViewSubject(props) {
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <div className={classes.objectPanel}>
               <AssignmentIcon className={classes.objectIcon} />
-              <Typography variant="h6">
-                Tugas
-              </Typography>
+              <Typography variant="h6">Tugas</Typography>
             </div>
           </ExpansionPanelSummary>
           <Divider />
@@ -639,14 +611,13 @@ function ViewSubject(props) {
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <div className={classes.objectPanel}>
               <FaClipboardList className={classes.objectIcon} />
-              <Typography variant="h6">
-                Kuis
-              </Typography>
+              <Typography variant="h6">Kuis</Typography>
             </div>
           </ExpansionPanelSummary>
           <Divider />
           <ExpansionPanelDetails className={classes.objectDetails}>
-            {listAssessments("subject", id, "Kuis", "mata_pelajaran").length === 0 ? (
+            {listAssessments("subject", id, "Kuis", "mata_pelajaran").length ===
+            0 ? (
               <Empty />
             ) : (
               <div style={{ width: "100%" }}>
@@ -661,14 +632,13 @@ function ViewSubject(props) {
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <div className={classes.objectPanel}>
               <BsClipboardData className={classes.objectIcon} />
-              <Typography variant="h6">
-                Ujian
-              </Typography>
+              <Typography variant="h6">Ujian</Typography>
             </div>
           </ExpansionPanelSummary>
           <Divider />
           <ExpansionPanelDetails className={classes.objectDetails}>
-            {listAssessments("subject", id, "Ujian", "mata_pelajaran").length === 0 ? (
+            {listAssessments("subject", id, "Ujian", "mata_pelajaran")
+              .length === 0 ? (
               <Empty />
             ) : (
               <div style={{ width: "100%" }}>

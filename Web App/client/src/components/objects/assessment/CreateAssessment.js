@@ -542,8 +542,10 @@ class CreateAssessment extends Component {
 
       validateAssessment(assessmentData).catch((err) => {
         this.setState({ errors: err });
+        // this.handleOpenErrorSnackbar();
       });
       this.handleOpenErrorSnackbar();
+      //Coba pakai finally kayaknya gak bisa.
     }
   };
 

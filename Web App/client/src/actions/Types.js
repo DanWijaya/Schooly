@@ -18,6 +18,7 @@ export const PWD_RESET_HASH_FAILURE = "PWD_RESET_HASH_FAILURE";
 export const PWD_RESET_CLEAR = "PWD_RESET_CLEAR";
 export const PWD_SAVE_FAILURE = "PWD_SAVE_FAILURE";
 export const PWD_SAVE_SUCCESS = "PWD_SAVE_SUCCESS";
+export const GET_AVATAR = "GET_AVATAR";
 
 //(for Dropbox)
 export const SET_DROPBOX_TOKEN = "SET_DROPBOX_TOKEN";

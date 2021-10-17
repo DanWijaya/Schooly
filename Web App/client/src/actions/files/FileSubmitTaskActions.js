@@ -44,10 +44,6 @@ export const getFileSubmitTasks_AT = (task_id, author_id) => (dispatch) => {
     .then((res) => {
       console.log("Tasknya: ", res.data);
       return res.data;
-      // dispatch({
-      //     type: GET_MATERIAL_FILES,
-      //     payload: res.data
-      // })
     })
     .catch((err) => {
       dispatch({
@@ -97,18 +93,14 @@ export const viewFileSubmitTasks = (id) => (dispatch) => {
     .catch((err) => new Error(err));
 };
 
-export const deleteFileSubmitTasks = (id, delete_all = false) => (dispatch) => {
+export const deleteFileSubmitTasks = (id) => (dispatch) => {
+  console.log(id);
   return axios
-    .delete(`/api/files/submit_tasks/${id}`, {
-      data: { delete_all: delete_all },
+    .delete(`/api/files/submit_tasks/`, {
+      data: { id_to_delete: id },
     })
     .then((res) => {
       console.log(res.data);
-      // dispatch({
-      //   type: GET_SUCCESS_RESPONSE,
-      //   payload: res.data,
-      // });
       return "File submmited is deleted successfully";
-      // window.location.reload();
     });
 };

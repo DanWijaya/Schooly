@@ -97,7 +97,9 @@ function Profile(props) {
   const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
 
   React.useEffect(() => {
-    getFileAvatar(user._id).then((result) => setAvatar(result));
+    getFileAvatar(user._id)
+      .then((result) => setAvatar(result))
+      .catch((err) => console.log(err));
   }, [user._id]);
 
   // Initially classesCollection.kelas.name === undefined
@@ -168,7 +170,7 @@ function Profile(props) {
                 <EditProfilePicture
                   user={user}
                   avatar={avatar}
-                  // updateAvatar={uploadFileAvatar}
+                  setAvatar={setAvatar}
                   setFileLimitSnackbar={setFileLimitSnackbar}
                   fileLimitSnackbar={fileLimitSnackbar}
                   handleOpenAlert={handleOpenAlert}
