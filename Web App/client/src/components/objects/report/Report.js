@@ -1,6 +1,6 @@
 import React from "react";
-import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 import { Bar } from "react-chartjs-2";
 import PropTypes from "prop-types";
 import "moment/locale/id";
@@ -20,6 +20,7 @@ import {
   getAllAssessments,
 } from "../../../actions/AssessmentActions";
 import {
+  Avatar,
   Divider,
   FormControl,
   Grid,
@@ -71,65 +72,6 @@ const useStyles = makeStyles((theme) => ({
   content: {
     marginTop: "15px",
   },
-  avatar: {
-    margin: "auto",
-    width: theme.spacing(20),
-    height: theme.spacing(20),
-  },
-  profileDivider: {
-    backgroundColor: theme.palette.primary.main,
-    // margin: "15px 15px 5px 0px",
-    marginTop: "15px",
-  },
-  informationPaper: {
-    backgroundColor: theme.palette.primary.fade,
-    padding: "25px",
-  },
-  name: {
-    backgroundColor: theme.palette.primary.fade,
-    padding: "5px",
-    margin: "5px",
-  },
-  kelas: {
-    backgroundColor: theme.palette.primary.fade,
-  },
-  informationPictureContainer: {
-    display: "flex",
-    justifyContent: "center",
-    [theme.breakpoints.up("sm")]: {
-      justifyContent: "flex-end",
-    },
-  },
-  informationPicture: {
-    height: "100px",
-    [theme.breakpoints.up("sm")]: {
-      height: "125px",
-    },
-  },
-  profileDataItemAvatar: {
-    backgroundColor: "#00B7FF",
-  },
-  emptyProfileData: {
-    display: "flex",
-    justifyContent: "center",
-    maxWidth: "150px",
-    padding: "5px",
-    paddingLeft: "10px",
-    paddingRight: "10px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-  },
-  descriptionText: {
-    color: "white",
-    marginTop: "10px",
-    marginLeft: "20px",
-    fontWeight: "300",
-    fontStyle: "italic",
-  },
-  background_gradient: {
-    padding: "20px",
-    background: "linear-gradient(to bottom right, #00b7ff, #2196F3, #00b7ff)",
-  },
   tableHeader: {
     backgroundColor: theme.palette.primary.main,
   },
@@ -163,11 +105,6 @@ const useStyles = makeStyles((theme) => ({
       height: "200px",
     },
   },
-  customMargin: {
-    [theme.breakpoints.down("sm")]: {
-      marginBottom: theme.spacing(3),
-    },
-  },
   headerTableCell: {
     color: "white",
     borderRadius: "0",
@@ -180,6 +117,22 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       height: "200px",
     },
+  },
+  personalReportBackground: {
+    height: "225px",
+    padding: "20px 50px",
+    background: `linear-gradient(${theme.palette.primary.main} 70%, transparent 30%)`,
+    backgroundRepeat: "no-repeat",
+    [theme.breakpoints.down("sm")]: {
+      padding: "15px",
+    },
+  },
+  personalReportPaper: {
+    padding: "15px",
+  },
+  personalReportAvatar: {
+    width: "80px",
+    height: "80px",
   },
 }));
 
@@ -205,8 +158,6 @@ function ScoreGraph(props) {
   };
 
   return (
-    // A react-chart hyper-responsively and continuously fills the available
-    // space of its parent element automatically
     <div className={classes.graphParentContainer}>
       <Bar
         responsive
@@ -280,8 +231,8 @@ function Report(props) {
   const allTaskArray = props.tasksCollection;
   const { all_assessments } = props.assessmentsCollection;
 
-  const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
-  const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
+  const [rows, setRows] = React.useState([]); // This array element is an Object or Map which each contains the cell's value.
+  const [headers, setHeaders] = React.useState([]); // The element is the name strings of column from table.
 
   const { name, _id } = selectedUser;
   const id = _id;
@@ -314,33 +265,30 @@ function Report(props) {
   const countStdByClassUpdate = React.useRef(0);
   const countIRDependencyUpdate = React.useRef(0);
 
-  const [valueKelas, setValueKelas] = React.useState(""); // nama kelas yang sedang terpilih di Select
-  const [valueMatpel, setValueMatpel] = React.useState(""); // nama matpel yang sedang terpilih di Select
+  const [valueKelas, setValueKelas] = React.useState(""); // Selected class.
+  const [valueMatpel, setValueMatpel] = React.useState(""); // Selected subject.
 
-  // const [valueKelas, setValueKelas] = React.useState("5f4760f98dccb3468ccc0ffc"); // dev
-  // const [valueMatpel, setValueMatpel] = React.useState("5ee3443c10dea50651f0433e"); // dev
-
-  // berisi semua matpel yang boleh diakses saat pertama kali memilih di Select matpel
+  // Contains every subject that may be accessed first time at subject select.
   const [semuaMatpel, setSemuaMatpel] = React.useState(new Map());
 
-  // berisi semua kelas yang ada di database (karena guru minimal mengajar 1 matpel dan setiap matpel diajar ke semua kelas)
+  // Contains every class from database (because a teacher at least teaches a subject and every subject is teached to every class)
   const [semuaKelas, setSemuaKelas] = React.useState(new Map());
 
-  // berisi current menu item di Select.  key = idKelas, value = namaKelas
-  // info kelas wali tidak akan pernah dimasukkan ke sini, kelas wali disimpan di state kelasWali
+  // Contains current menu item in select. key = idKelas, value = namaKelas.
+  // Homeroom class information is not inserted here.
   const [kontenKelas, setKontenKelas] = React.useState(new Map());
 
-  // alasan dipisahkan dengan semuaKelas: untuk menghindari pencarian info wali kelas dari banyak kelas.
-  // isi kelasWali = Map {"id": <id kelas yang diwalikannya>, "name": <nama kelas yang diwalikannya>}
+  // The homeroom teacher class is seperated because to prevent the traverse of homeroom class from many class data.
+  // kelasWali content = Map {"id": <id of homeroom class>, "name": <name of homeroom class>}
   const [kelasWali, setKelasWali] = React.useState(new Map());
 
-  // berisi current menu item di Select. key = idMatpel, value = namaMatpel
+  // Contains current menu item in Select. key = idMatpel, value = namaMatpel
   const [kontenMatpel, setKontenMatpel] = React.useState(new Map());
 
   const [isClassSelected, setIsClassSelected] = React.useState(false);
   const [isSubjectSelected, setIsSubjectSelected] = React.useState(false);
 
-  // elemen array: (1) kode bahwa tidak ada murid dan (2) kode bahwa tidak ada task, kuis, dan assessment
+  // elemen array: (1) means there is no student and (2) means there is no task, quiz, and exam.
   const [emptyCondition, setEmptyCondition] = React.useState([]);
 
   // Graph
@@ -763,15 +711,15 @@ function Report(props) {
     return menuItems;
   }
 
-  // ini hanya digunakan untuk membuat tabel halaman rapor yang dibuka dari side drawer
-  // tipe argumen = Map (pakai Map biar urutan value sel tetap terjaga sesuai dengan urutan nama kolom)
+  // This is only used to make report table page when it is opened from sidedrawer.
+  // argument type = Map (Map is used so the value cell order is mantained by the name order of the column).
   function generateRowCellFormat1(row) {
-    let emptyCellSymbol = "-"; // jika sel kosong, masukkan "-"
+    let emptyCellSymbol = "-"; // if the cell is empty, returns "-".
     let cells = [];
     row.forEach((value, key) => {
       if (key !== "idMurid") {
         if (key === "namaMurid") {
-          // perlu "value !== undefined" karena 0 itu bernilai false
+          // Need "value !== undefined" because 0 equal to false.
           cells.push(
             <TableCell
               align="left"
@@ -795,8 +743,8 @@ function Report(props) {
     return <TableRow key={row.get("idMurid")}>{cells}</TableRow>;
   }
 
-  // ini digunakan untuk membuat tabel halaman rapor yang dibuka dari profile view murid atau profile
-  // tipe argumen = Object (bisa pakai Object karena urutan nama kolom dan jumlah kolomnya fix)
+  // This is used to make report table page when it is opened from profile or profile view.
+  // argument type = Object (Can use object because the order of column name and the number of column is fixed).
   function generateRowCellFormat2(row) {
     let trueSubject = false;
     let nonWaliView = false;
@@ -842,12 +790,10 @@ function Report(props) {
         }
       }
     }
-    let emptyCellSymbol = "-"; // jika sel isi kosong, masukkan "-"
+    let emptyCellSymbol = "-"; // If cell is empty, returns "-".
     if (trueSubject || nonWaliView) {
       return (
         <TableRow key={row.subject}>
-          {" "}
-          {/* nama subjek sudah dipastikan unik*/}
           <TableCell style={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
             {row.subject}
           </TableCell>
@@ -980,23 +926,23 @@ function Report(props) {
   }
 
   function handleKelasChange(event) {
-    // reminder: event.target.value berisi value Select yang sedang dipilih
+    // event.target.value contains currently selected value.
     let selectedClassId = event.target.value;
 
     if (isSubjectSelected) {
       setValueKelas(selectedClassId);
-      getStudentsByClass(selectedClassId); // ini akan membuat useEffect yg depend terhadap students_by_class menjadi dipanggil
+      getStudentsByClass(selectedClassId); // This will makeuseEffect that depends on students_by_class called.
     } else {
       setValueKelas(selectedClassId);
       setIsClassSelected(true);
       setValueMatpel("");
 
-      // jika guru adalah wali kelas dan kelas yang dipilih adalah kelas wali,
+      // If the teacher is a homeroom teacher and the class that is selected is the homeroom class of that teacher,
       if (kelasWali.size !== 0 && selectedClassId === kelasWali.get("id")) {
         setKontenMatpel(semuaMatpel);
       } else {
-        // jika guru bukan wali kelas atau kelas yang dipilih bukan kelas wali,
-        // tampilkan hanya semua matpel yang diajarkan ke kelas yang dipilih
+        // If the teacher is not a homeroom teacher or the class that is selected is not the homeroom class of that teacher,
+        // Shows only the subjects that is teached to selected class.
         let matpel = new Map();
         if (user.class_to_subject && user.class_to_subject[selectedClassId]) {
           user.class_to_subject[selectedClassId].forEach((subjectId) => {
@@ -1013,9 +959,9 @@ function Report(props) {
 
     if (isClassSelected) {
       setValueMatpel(selectedSubjectId);
-      getStudentsByClass(valueKelas); // ini akan membuat useEffect yg depend terhadap students_by_class menjadi dipanggil
+      getStudentsByClass(valueKelas); // This will makeuseEffect that depends on students_by_class called.
     } else {
-      // jika guru ini adalah guru wali
+      // If this teacher is a homeroom teacher
       let kelas = new Map();
       if (user.class_to_subject) {
         if (kelasWali.size !== 0) {
@@ -1027,8 +973,8 @@ function Report(props) {
                 kelas.set(classId, semuaKelas.get(classId));
               }
             }
-            kelas.delete(kelasWali.get("id")); // perlu didelete karena pada saat meng-generate opsi kelas, kelas yang diwalikan guru ini sudah ditambahkan
-          } // jika guru ini memilih mata pelajaran yang tidak diajarkannya, dia hanya dapat memilih kelas yg diwalikannya
+            kelas.delete(kelasWali.get("id")); // Need to be deleted because when generating class options, the homeroom class of this teacher is already added.
+          } // If this teacher choose subject that is themself not teaching, they can only choose their homeroom class.
         } else {
           for (let [classId, subjectIdArray] of Object.entries(
             user.class_to_subject
@@ -1049,16 +995,16 @@ function Report(props) {
 
   function handleIndividualReport() {
     let subjectArray = [];
-    // fungsi handleIndividualReport hanya dipanggil ketika role === "Student" atau role === "Teacher"
+    // handleIndividualReport is only called when role === "Student" atau role === "Teacher".
     if (role === "Student") {
-      // subjectArray isinya [{subject_id, subject_name},...]
+      // subjectArray contains [{subject_id, subject_name},...]
       subjectArray = Array.from(
         all_subjects_map,
         ([subjectId, subjectName]) => ({ subjectId, subjectName })
       );
     } else {
       if (kelas) {
-        // jika guru adalah wali kelas dan guru membuka rapor murid yang diwalikannya
+        // If the teacher is a homeroom teacher and the teacher opens a student's report from their homeroom class.
         if (kelasWali.size !== 0 && kelas._id === kelasWali.get("id")) {
           subjectArray = Array.from(
             all_subjects_map,
@@ -1075,7 +1021,7 @@ function Report(props) {
       }
     }
 
-    // Memastikan subjectArray sudah ada isinya sebelum diproses
+    // Ensuring subjectArray is filled before it is processed.
     if (subjectArray.length !== 0) {
       let scores = {};
       // scores akan berisi {
@@ -1086,7 +1032,7 @@ function Report(props) {
       //   } ...
       // }
       subjectArray.forEach((bySubject) => {
-        // bySubject.subjectId adalah id Subject
+        // bySubject.subjectId is subject's id.
         scores[bySubject.subjectId] = {
           subject: bySubject.subjectName,
           // totalTaskScore: undefined,
@@ -1099,8 +1045,8 @@ function Report(props) {
       });
 
       for (let task of allTaskArray) {
-        // id adalah id murid
-        // task.grades sudah dipastikan ada saat pembuatan task baru sehingga tidak perlu dicek null atau tidaknya lagi
+        // id is the student's id.
+        // task.grades is ensured not empty when there a new task is made so no need to check null or not anymore.
         if (
           Object.keys(scores).includes(task.subject) &&
           task.grades.constructor === Object &&
@@ -1117,9 +1063,9 @@ function Report(props) {
       }
 
       for (let assessment of all_assessments) {
-        // id adalah id murid
-        // (assessment.grades.constructor === Object) && (Object.keys(assessment.grades).length !== 0) sebenarnya tidak diperlukan karena
-        // grades sudah dipastikan tidak kosong. cek notes di model assessment buat info lebih lanjut
+        // id is the student's id.
+        // (assessment.grades.constructor === Object) && (Object.keys(assessment.grades).length !== 0) actually is not needed,
+        // because grades are ensured not empty. Check notes at assessment model for more information.
         if (
           Object.keys(scores).includes(assessment.subject) &&
           assessment.grades &&
@@ -1150,7 +1096,7 @@ function Report(props) {
         }
       }
 
-      // mengonversi scores menjadi hanya menyimpan nama subject dan nilai rata-rata, lalu menyimpannya di subjectScoreArray
+      // Convert scores into only saves subject name and average grades, and save it to subjectScoreArray.
       let subjectScoreArray = [];
       subjectArray.forEach((bySubject) => {
         let sbjScore = scores[bySubject.subjectId];
@@ -1177,9 +1123,9 @@ function Report(props) {
     }
   }
 
-  // ini dipanggil setelah selesai mount.
-  // ditambahkan dependency "role" untuk mengurus kasus ketika guru yang sedang berada di halaman rapor untuk suatu murid
-  // mengklik tombol rapor di side drawer.
+  // This is called after mounting is finished.
+  // Add dependency "role" to take care of case where teacher who view a student's indivual report.
+  // Click report button from sidedrawer.
   React.useEffect(() => {
     if (role !== all_roles.SUPER_ADMIN) {
       getAllClass(user.unit);
@@ -1187,13 +1133,13 @@ function Report(props) {
       getAllTask(user.unit);
       getAllAssessments(user.unit);
       if (role === all_roles.STUDENT) {
-        setKelasWali(new Map()); // agar setRows(handleIndividualReport()) dijalankan, tapi tidak perlu panggil getAllClass(user.unit)
+        setKelasWali(new Map()); // so that setRows(handleIndividualReport()) is run, but no need to call getAllClass(user.unit).
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // menentukan status guru (wali atau nonwali) setelah all_classes sudah ada
+  // To determine teacher's status (homeroom teacher or not) after all_classes is already obtained.
   React.useEffect(() => {
     countAllClassUpdate.current++;
     if (countAllClassUpdate.current === 2) {
@@ -1206,7 +1152,7 @@ function Report(props) {
       })
         .then((kelasWali) => {
           let infoKelasWali = new Map();
-          // jika guru adalah kelas wali, mengisi infoKelasWali dengan id dan nama kelas yang diwalikannya
+          // If the teacher is in their homeroom class, insert infoKelasWali with id dan class name of that class.
           if (kelasWali) {
             infoKelasWali.set("id", kelasWali._id);
             infoKelasWali.set("name", kelasWali.name);
@@ -1220,7 +1166,7 @@ function Report(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all_classes]);
 
-  // menggenerate konten tabel untuk halaman rapor murid perorangan setelah data-data yang diperlukan sudah ada
+  // Generate table content for individual student's report after the datas needed is already obtained.
   React.useEffect(() => {
     countIRDependencyUpdate.current++;
     if (countIRDependencyUpdate.current === 5) {
@@ -1235,10 +1181,10 @@ function Report(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allTaskArray, all_subjects_map, kelasWali, all_assessments]);
 
-  // menggenerate konten tabel untuk halaman rapor yg dibuka dengan mengklik icon lihat rapor sidebar
-  // setelah data-data yang diperlukan sudah ada.
-  // getStudentsByClass ada di fungsi handler Select dan dipanggil saat guru sudah memilih kelas dan subjek.
-  // valueMatpel dan valueKelas sudah dipastikan ada.
+  // Generate table content for report page that is opened from sidedrawer.
+  // After all the datas needed is already obtained.
+  // getStudentsByClass is in Select handler function and will be called when the teacher already selected class and subject.
+  // valueMatpel dan valueKelas is ensured not empty.
   React.useEffect(() => {
     countStdByClassUpdate.current++;
     if (countStdByClassUpdate.current === 2) {
@@ -1246,11 +1192,11 @@ function Report(props) {
       let condition = [];
       let hasGrade = false;
 
-      // akan berisi: [ map_row_1, map_row_2, ... ]
+      // Contains: [ map_row_1, map_row_2, ... ]
       let newRows = [];
-      // akan berisi: { id_student_1: map_row_1, id_student_2: map_row_2, ... }
+      // Contains: { id_student_1: map_row_1, id_student_2: map_row_2, ... }
       let newRowsObj = {};
-      // isi map_row_n: Map { idMurid: id_student_1, namaMurid: nama_student, id_task_1: nilai, ... , id_kuis_1: nilai, ..., id_assessment_1: nilai, ... }
+      // content of map_row_n: Map { idMurid: id_student_1, namaMurid: nama_student, id_task_1: nilai, ... , id_kuis_1: nilai, ..., id_assessment_1: nilai, ... }
 
       students_by_class.forEach((stdInfo) => {
         let temp = new Map();
@@ -1302,7 +1248,7 @@ function Report(props) {
               });
             });
           }
-        } // jika items kosong, hasGrade akan tetap bernilai false
+        } // If items are empty, hasGrade will remain have a false value.
       };
 
       getTasksBySubjectClass(valueMatpel, valueKelas)
@@ -1345,38 +1291,38 @@ function Report(props) {
           console.log(err);
         });
 
-      countStdByClassUpdate.current = 1; // karena requestnya perlu bisa dilakukan berkali-kali
+      countStdByClassUpdate.current = 1; // Because the request need to be done over and over again.
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [students_by_class]);
 
-  // menginisialisasi isi menu item komponen Select setelah
-  // setKelasWali, getAllClass(user.unit ,"map"), dan getAllSubjects(user.unit, "map") sudah selesai dijalankan semuanya.
+  // Initialize select's menu item content,
+  // after setKelasWali, getAllClass(user.unit ,"map"), and getAllSubjects(user.unit, "map") is already runned.
   React.useEffect(() => {
     countMIDependencyUpdate.current++;
     if (countMIDependencyUpdate.current === 4) {
       new Promise((resolve) => {
-        // menentukan status guru: wali atau nonwali
+        // To determine teacher's status: homeroom or not.
         let daftarMatpel = new Map();
         let daftarKelas = new Map();
 
-        // mengisi daftar kelas dengan semua kelas yang diajar oleh guru ini
+        // To fill class list with every class this teacher is teaching.
         user.class_teached.forEach((classId) => {
           daftarKelas.set(classId, all_classes_map.get(classId).name);
         });
 
         if (kelasWali.size !== 0) {
-          // jika user adalah guru wali
-          // agar kelas wali tidak muncul 2 kali di menu item Select
+          // If user is a homeroom teacher.
+          // so that homeroon class won't whoe twice at the select's options.
           daftarKelas.delete(kelasWali.get("id"));
 
-          // mengisi daftar matpel dengan semua mata pelajaran yang ada
+          // Fills subject list with every subject.
           all_subjects_map.forEach((subjectName, subjectId) => {
             daftarMatpel.set(subjectId, subjectName);
           });
         } else {
-          // jika user adalah guru yang tidak mewalikan kelas manapun
-          // mengisi daftar matpel dengan matpel yang diajar
+          // If user is not a homeroom teacher of any class.
+          // fills subject list with subject teached only.
           user.subject_teached.forEach((subjectId) => {
             daftarMatpel.set(subjectId, all_subjects_map.get(subjectId));
           });
@@ -1396,7 +1342,7 @@ function Report(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kelasWali, all_classes_map, all_subjects_map]);
 
-  // Untuk view dari sidebar teacher, untuk sekarang reserve special code "semua"
+  // To view from sidedrawer teacher, reserve special code "semua".
   let role;
   if (props.match.params.id === "semua" && user.role === "Teacher") {
     role = "Other";
@@ -1456,28 +1402,45 @@ function Report(props) {
         </>
       ) : role === "Teacher" ? (
         // Teacher view a student's report.
-        <Grid container direction="column" spacing={3}>
+        <Grid container direction="column" spacing={2}>
           <Grid item>
-            <Typography variant="h4" align="center" color="textPrimary">
-              Rapor Tahun {new Date().getFullYear()}
-            </Typography>
-            <Divider className={classes.profileDivider} />
+            <div className={classes.personalReportBackground}>
+              <Grid container alignItems="center" spacing={3}>
+                <Grid item>
+                  <Avatar className={classes.personalReportAvatar} />
+                </Grid>
+                <Grid item xs container direction="column">
+                  <Grid item>
+                    <Typography variant="h6" style={{ color: "white"}} >
+                      {name}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography style={{ color: "white"}}>
+                      Rapor Tahun {new Date().getFullYear()}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid container spacing={2} style={{ marginTop: "20px" }}>
+                <Grid item xs={6}>
+                  <Paper className={classes.personalReportPaper}>
+                    <Typography align="center">
+                      {kelas.name}
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={6}>
+                  <Paper className={classes.personalReportPaper}>
+                    <Typography align="center">
+                      Wali Kelas
+                    </Typography>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </div>
           </Grid>
-          <Grid container item direction="column" spacing={1}>
-            <Grid item>
-              <Typography>
-                <b>Nama: </b>
-                {name}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography>
-                <b>Kelas: </b>
-                {kelas.name}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item container direction="column" style={{ margin: "auto" }}>
+          <Grid item container direction="column">
             <Grid item>
               <TableContainer component={Paper}>
                 <Table
@@ -1523,7 +1486,7 @@ function Report(props) {
               <Typography gutterBottom>
                 Pilih kelas dan mata pelajaran untuk menampilkan nilai
               </Typography>
-              <Typography color="textSecondary" style={{ marginBottom: "25px" }}>
+              <Typography color="textSecondary" style={{ marginBottom: "30px" }}>
                 Nilai yang dapat dilihat adalah hasil pekerjaan dari semua mata pelajaran dari
                 kelas wali dan hasil pekerjaan dari mata pelajaran serta kelas yang diajar.
               </Typography>

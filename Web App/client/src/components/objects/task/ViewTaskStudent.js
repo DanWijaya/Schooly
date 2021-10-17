@@ -123,29 +123,6 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  rootChosen: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
-  },
-  rootUploaded: {
-    backgroundColor: "#F2F2F2",
-  },
-  submittedBadge: {
-    fontSize: "16px",
-    borderRadius: "8px",
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-  },
-  deleteTaskButton: {
-    marginLeft: "10px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
   wordFileTypeIcon: {
     backgroundColor: "#16B0DD",
   },
@@ -790,9 +767,7 @@ function ViewTaskStudent(props) {
     // Task that has not been uplaoded.
     if (fileTugas.length === 0 && fileToSubmit.length === 0) {
       return (
-        <Paper className={classes.submittedButton}>
-          <Typography variant="button">KOSONG</Typography>
-        </Paper>
+        <Typography color="textSecondary" align="center">Kosong</Typography>
       );
     } else {
       let temp = [];
