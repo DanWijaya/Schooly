@@ -12,15 +12,12 @@ import UploadDialog from "../../misc/dialog/UploadDialog";
 import {
   AppBar,
   Button,
-  Divider,
   FormControl,
   FormHelperText,
   Grid,
   MenuItem,
-  Paper,
   Select,
   TextField,
-  Toolbar,
   Typography
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
@@ -81,7 +78,7 @@ const styles = (theme) => ({
     flexDirection: "column",
     flexGrow: "1",
   },
-  fieldLabel: {
+  labelIcon: {
     fontSize: "14px",
     marginRight: "10px",
     color: "grey",
@@ -187,25 +184,25 @@ class CreateClass extends Component {
   };
 
   componentDidMount() {
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
-    handleNavbar(false);
-    handleSideDrawerExist(false);
-    handleFooter(false);
-
     const { user } = this.props.auth;
     this.props.getTeachers(user.unit);
     this.props.getAllSubjects(user.unit);
     this.props.getAllClass(user.unit);
+
+    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    handleNavbar(false);
+    handleSideDrawerExist(false);
+    handleFooter(false);
   }
 
   componentWillUnmount() {
+    this.props.clearErrors();
+    this.props.clearSuccess();
+
     const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
     handleNavbar(true);
     handleSideDrawerExist(true);
     handleFooter(true);
-
-    this.props.clearErrors();
-    this.props.clearSuccess();
   }
 
   render() {
@@ -252,14 +249,10 @@ class CreateClass extends Component {
               Setelah semua murid dimasukkan ke dalam kelas, jangan lupa untuk menyunting kelas dan
               menentukan ketua kelas, sekretaris, dan bendahara dari kelas yang baru dibuat.
             </Typography>
-            <Grid
-              container
-              direction="column"
-              spacing={4}
-            >
+            <Grid container direction="column" spacing={4}>
               <Grid item>
                 <div style={{ display: "flex", alignItems: "center"}}>
-                  <FaChalkboard className={classes.fieldLabel} />
+                  <FaChalkboard className={classes.labelIcon} />
                   <Typography for="name" color="primary">
                     Nama Kelas
                   </Typography>
@@ -280,7 +273,7 @@ class CreateClass extends Component {
               </Grid>
               <Grid item>
                 <div style={{ display: "flex", alignItems: "center"}}>
-                  <AssignmentIndIcon className={classes.fieldLabel} />
+                  <AssignmentIndIcon className={classes.labelIcon} />
                   <Typography for="walikelas" color="primary">
                     Wali Kelas
                   </Typography>
@@ -318,7 +311,7 @@ class CreateClass extends Component {
               </Grid>
               <Grid item>
                 <div style={{ display: "flex", alignItems: "center"}}>
-                  <LibraryBooksIcon className={classes.fieldLabel} />
+                  <LibraryBooksIcon className={classes.labelIcon} />
                   <Typography for="matapelajaran" color="primary">
                     Mata Pelajaran
                   </Typography>
