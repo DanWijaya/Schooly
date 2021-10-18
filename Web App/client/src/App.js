@@ -297,12 +297,18 @@ class App extends Component {
                         access={[Role.ADMIN]}
                         path="/buat-kelas"
                         component={CreateClass}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact
                         access={[Role.ADMIN]}
                         path="/sunting-kelas/:id"
                         component={EditClass}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact

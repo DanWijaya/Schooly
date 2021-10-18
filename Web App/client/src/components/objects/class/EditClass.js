@@ -1,86 +1,90 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers, getStudentsByClass } from "../../../actions/UserActions";
-import { clearErrors } from "../../../actions/ErrorActions";
+import { getAllClass, setCurrentClass, updateClass } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import {
-  getAllClass,
-  setCurrentClass,
-  updateClass,
-} from "../../../actions/ClassActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import {
+  AppBar,
   Button,
-  Divider,
   FormControl,
   FormHelperText,
   MenuItem,
   Grid,
   Select,
-  Paper,
   TextField,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { withStyles } from "@material-ui/core/styles";
-
-const theme = createMuiTheme({
-  overrides: {
-    MuiOutlinedInput: {
-      input: {},
-    },
-    MuiInputBase: {
-      input: {
-        borderBottom: "none",
-      },
-    },
-    MuiAutocomplete: {
-      input: {
-        borderBottom: "none",
-      },
-    },
-    MuiTextField: {
-      root: {
-        borderBottom: "none",
-      },
-    },
-  },
-});
+import {
+  AssignmentInd as AssignmentIndIcon,
+  Filter1 as Filter1Icon,
+  Filter2 as Filter2Icon,
+  Filter3 as Filter3Icon,
+  LibraryBooks as LibraryBooksIcon
+} from "@material-ui/icons";
+import { FaChalkboard } from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {
+    display: "flex",
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
-  content: {
-    padding: "20px",
+  menuBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    padding: "15px 20px",
+    boxShadow: "0 1px 6px 0px rgba(32,33,36,0.28)",
+    backgroundColor: "white",
+    color: "black",
   },
-  divider: {
-    [theme.breakpoints.down("md")]: {
+  cancelButton: {
+    width: "90px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    },
+    [theme.breakpoints.down("sm")]: {
       width: "100%",
-      height: "1px",
     },
   },
   editClassButton: {
-    width: "100%",
-    marginTop: "20px",
+    width: "90px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
     },
   },
-  underline: {
-    padding: 0,
+  toolbar: theme.mixins.toolbar,
+  content: {
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: "1",
+  },
+  labelIcon: {
+    fontSize: "14px",
+    marginRight: "10px",
+    color: "grey",
   },
 });
 
@@ -102,13 +106,12 @@ class EditClass extends Component {
       mata_pelajaran: null,
       allSubjectObject: null,
     };
-    // console.log(id);
-    // console.log("Aduh");
   }
 
   onChange = (e, otherfield = null) => {
-    // otherfield ini adalah yang untuk field controllers Select atau variannya.
-    // Karena Select ini tidak memiliki nilai e.target.id, maka awalnya kita lakukan check dulu jika
+    // This otherfield is for field controllers like Select or its variants.
+    // Becasue Select doesn't have e.target.id value, that's why it needs to be checked first.
+
     let field = otherfield ? otherfield : e.target.id;
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
@@ -122,7 +125,7 @@ class EditClass extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    // if (this.props.success && !prevProps.success) { // (?) kalau pake ini, kadang dialognya bisa kebuka, kadang tidak
+    // if (this.props.success && !prevProps.success) if this is used, sometime the dialog won't open.
     if (!this.props.errors && this.props.errors !== prevProps.errors) {
       this.handleOpenUploadDialog();
     }
@@ -222,19 +225,29 @@ class EditClass extends Component {
       setCurrentClass,
     } = this.props;
     if (id) {
-      //Case when the student opens view class and not assigned to any class yet.
+      // Case when the student opens view class and not assigned to any class yet.
       setCurrentClass(id);
     }
     getTeachers(user.unit);
     getStudentsByClass(this.props.match.params.id);
     getAllClass(user.unit);
     getAllSubjects(this.props.auth.user.unit);
+
+    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    handleNavbar(false);
+    handleSideDrawerExist(false);
+    handleFooter(false);
   }
 
   componentWillUnmount() {
     const { clearErrors } = this.props;
     clearErrors();
     clearSuccess();
+
+    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    handleNavbar(true);
+    handleSideDrawerExist(true);
+    handleFooter(true);
   }
 
   render() {
@@ -286,287 +299,268 @@ class EditClass extends Component {
     };
 
     document.title = "Schooly | Sunting Kelas";
-    console.log(this.state.walikelas);
-    if (user.role === "Teacher" || user.role === "Admin") {
-      return (
-        <div className={classes.root}>
-          <UploadDialog
-            openUploadDialog={this.state.openUploadDialog}
-            success={success}
-            messageUploading="Kelas sedang disunting"
-            messageSuccess="Kelas telah disunting"
-            redirectLink={`/kelas/${success}`}
-          />
-          <Paper>
-            <div className={classes.content}>
-              <Typography variant="h5" gutterBottom>
-                <b>Sunting Kelas</b>
-              </Typography>
-            </div>
-            <Divider />
-            <form noValidate onSubmit={this.onSubmit}>
-              <Grid container>
-                <Grid item xs={12} md className={classes.content}>
-                  <Grid container direction="column" spacing={4}>
-                    <Grid item>
-                      <Typography component="label" for="name" color="primary">
-                        Nama Kelas
-                      </Typography>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        id="name"
-                        onChange={this.onChange}
-                        value={this.state.name}
-                        error={errors.name}
-                        type="text"
-                        helperText={errors.name}
-                        className={classnames("", {
-                          invalid: errors.name,
-                        })}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <Typography
-                        component="label"
-                        for="walikelas"
-                        color="primary"
-                      >
-                        Wali Kelas
-                      </Typography>
-                      <FormControl
-                        id="walikelas"
-                        variant="outlined"
-                        color="primary"
-                        fullWidth
-                      >
-                        <Select
-                          value={walikelas}
-                          // displayEmpty
-                          onChange={(event) => {
-                            this.onChange(event, "walikelas");
-                          }}
-                        >
-                          {this.state.teacher_options !== null
-                            ? this.state.teacher_options.map((teacherInfo) => (
-                                <MenuItem
-                                  key={teacherInfo._id}
-                                  value={teacherInfo._id}
-                                >
-                                  {teacherInfo._id !== null ? (
-                                    teacherInfo.name
-                                  ) : (
-                                    <em>{teacherInfo.name}</em>
-                                  )}
-                                </MenuItem>
-                              ))
-                            : null}
-                          {/* {showValue(teacher_options, "teacher")} */}
-                        </Select>
-                        <FormHelperText></FormHelperText>
-                      </FormControl>
-                    </Grid>
-                    <Grid item>
-                      <Typography
-                        component="label"
-                        for="matapelajaran"
-                        color="primary"
-                      >
-                        Mata Pelajaran
-                      </Typography>
-                      <FormControl
-                        id="matapelajaran"
-                        color="primary"
-                        fullWidth
-                        className={classes.underline}
-                      >
-                        <Autocomplete
-                          multiple
-                          id="tags-outlined"
-                          options={
-                            this.state.allSubjectObject
-                              ? this.state.allSubjectObject
-                              : []
-                          }
-                          getOptionLabel={(option) => option.name}
-                          filterSelectedOptions
-                          classes={{
-                            input: classes.underline,
-                            inputRoot: classes.underline,
-                          }}
-                          value={
-                            this.state.mata_pelajaran
-                              ? this.state.mata_pelajaran
-                              : []
-                          }
-                          onChange={(event, value) => {
-                            this.onChange(value, "mata_pelajaran");
-                          }}
-                          renderInput={(params) => (
-                            <TextField
-                              variant="outlined"
-                              size="small"
-                              fullWidth
-                              className={classes.underline}
-                              classes={{ root: classes.underline }}
-                              InputProps={{ className: classes.underline }}
-                              error={errors.mata_pelajaran}
-                              helperText={errors.mata_pelajaran}
-                              {...params}
-                            />
-                          )}
-                        />
-                        {/* <FormHelperText>
-                        </FormHelperText> */}
-                      </FormControl>
-                    </Grid>
+
+    return (
+      <div className={classes.root}>
+        <form noValidate onSubmit={this.onSubmit} style={{ width: "100%" }}>
+          <AppBar position="fixed" className={classes.menuBar}>
+            <Grid container justify="space-between" alignItems="center">
+              <Grid item xs>
+                <Typography variant="h5" color="textSecondary">
+                  Kelas
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container alignItems="center" spacing={2}>
+                  <Grid item>
+                    <Link to="/daftar-kelas">
+                      <Button className={classes.cancelButton}>
+                        Batal
+                      </Button>
+                    </Link>
                   </Grid>
-                </Grid>
-                <Divider
-                  flexItem
-                  orientation="vertical"
-                  className={classes.divider}
-                />
-                <Grid item xs={12} md className={classes.content}>
-                  <Grid container direction="column" spacing={4}>
-                    <Grid item>
-                      <Typography
-                        component="label"
-                        for="ketua_kelas"
-                        color="primary"
-                      >
-                        Ketua Kelas
-                      </Typography>
-                      <FormControl
-                        id="ketua_kelas"
-                        variant="outlined"
-                        color="primary"
-                        fullWidth
-                      >
-                        <Select
-                          value={ketua_kelas}
-                          displayEmpty
-                          onChange={(event) => {
-                            this.onChange(event, "ketua_kelas");
-                          }}
-                        >
-                          {showValue(student_options, "student")}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item>
-                      <Typography
-                        component="label"
-                        for="sekretaris"
-                        color="primary"
-                      >
-                        Sekretaris
-                      </Typography>
-                      <FormControl
-                        id="sekretaris"
-                        variant="outlined"
-                        color="primary"
-                        fullWidth
-                      >
-                        <Select
-                          value={sekretaris}
-                          displayEmpty
-                          onChange={(event) => {
-                            this.onChange(event, "sekretaris");
-                          }}
-                        >
-                          {showValue(student_options, "student")}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item>
-                      <Typography
-                        component="label"
-                        for="bendahara"
-                        color="primary"
-                      >
-                        Bendahara
-                      </Typography>
-                      <FormControl
-                        id="bendahara"
-                        variant="outlined"
-                        color="primary"
-                        fullWidth
-                      >
-                        <Select
-                          value={bendahara}
-                          displayEmpty
-                          onChange={(event) => {
-                            this.onChange(event, "bendahara");
-                          }}
-                        >
-                          {showValue(student_options, "student")}
-                        </Select>
-                      </FormControl>
-                    </Grid>
+                  <Grid item>
+                    <Button type="submit" className={classes.editClassButton}>
+                      Sunting
+                    </Button>
                   </Grid>
                 </Grid>
               </Grid>
-              <Divider />
-              <div
-                style={{ display: "flex", justifyContent: "flex-end" }}
-                className={classes.content}
-              >
-                <div>
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    className={classes.editClassButton}
-                  >
-                    Sunting Kelas
-                  </Button>
-                </div>
-              </div>
-            </form>
-          </Paper>
-        </div>
-      );
-    } else {
-      return (
-        <div className={classes.root}>
-          <Typography variant="h5" align="center">
-            <b>Anda tidak mempunyai izin akses halaman ini.</b>
-          </Typography>
-        </div>
-      );
-    }
+            </Grid>
+          </AppBar>
+          <div className={classes.content}>
+            <div className={classes.toolbar} />
+            <Typography variant="h5">
+              Sunting Kelas
+            </Typography>
+            <Typography color="textSecondary" style={{ marginBottom: "35px" }}>
+              Tentukan ketua kelas, sekretaris, dan bendahara dari kelas ini.
+            </Typography>
+            <Grid container spacing={4}>
+              <Grid item xs={12} md>
+                <Grid container direction="column" spacing={4}>
+                  <Grid item>
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                      <FaChalkboard className={classes.labelIcon} />
+                      <Typography for="name" color="primary">
+                        Nama Kelas
+                      </Typography>
+                    </div>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="name"
+                      onChange={this.onChange}
+                      value={this.state.name}
+                      error={errors.name}
+                      type="text"
+                      helperText={errors.name}
+                      className={classnames("", {
+                        invalid: errors.name,
+                      })}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                      <AssignmentIndIcon className={classes.labelIcon} />
+                      <Typography for="walikelas" color="primary">
+                        Wali Kelas
+                      </Typography>
+                    </div>
+                    <FormControl
+                      fullWidth
+                      id="walikelas"
+                      variant="outlined"
+                      color="primary"
+                    >
+                      <Select
+                        value={walikelas}
+                        onChange={(event) => {
+                          this.onChange(event, "walikelas");
+                        }}
+                      >
+                        {this.state.teacher_options !== null
+                          ? this.state.teacher_options.map((teacherInfo) => (
+                              <MenuItem
+                                key={teacherInfo._id}
+                                value={teacherInfo._id}
+                              >
+                                {teacherInfo._id !== null ? (
+                                  teacherInfo.name
+                                ) : (
+                                  <span style={{ color: "grey" }}>{teacherInfo.name}</span>
+                                )}
+                              </MenuItem>
+                            ))
+                          : null}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                      <LibraryBooksIcon className={classes.labelIcon} />
+                      <Typography for="matapelajaran" color="primary">
+                        Mata Pelajaran
+                      </Typography>
+                    </div>
+                    <FormControl
+                      fullWidth
+                      id="matapelajaran"
+                      color="primary"
+                    >
+                      <Autocomplete
+                        multiple
+                        id="tags-outlined"
+                        options={
+                          this.state.allSubjectObject
+                            ? this.state.allSubjectObject
+                            : []
+                        }
+                        getOptionLabel={(option) => option.name}
+                        filterSelectedOptions
+                        value={
+                          this.state.mata_pelajaran
+                            ? this.state.mata_pelajaran
+                            : []
+                        }
+                        onChange={(event, value) => {
+                          this.onChange(value, "mata_pelajaran");
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            error={errors.mata_pelajaran}
+                            helperText={errors.mata_pelajaran}
+                            {...params}
+                          />
+                        )}
+                      />
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} md>
+                <Grid container direction="column" spacing={4}>
+                  <Grid item>
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                      <Filter1Icon className={classes.labelIcon} />
+                      <Typography for="ketua_kelas" color="primary">
+                        Ketua Kelas
+                      </Typography>
+                    </div>
+                    <FormControl
+                      fullWidth
+                      id="ketua_kelas"
+                      variant="outlined"
+                      color="primary"
+                    >
+                      <Select
+                        value={ketua_kelas}
+                        displayEmpty
+                        onChange={(event) => {
+                          this.onChange(event, "ketua_kelas");
+                        }}
+                      >
+                        {showValue(student_options, "student")}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                      <Filter2Icon className={classes.labelIcon} />
+                      <Typography for="sekretaris" color="primary">
+                        Sekretaris
+                      </Typography>
+                    </div>
+                    <FormControl
+                      fullWidth
+                      id="sekretaris"
+                      variant="outlined"
+                      color="primary"
+                    >
+                      <Select
+                        value={sekretaris}
+                        displayEmpty
+                        onChange={(event) => {
+                          this.onChange(event, "sekretaris");
+                        }}
+                      >
+                        {showValue(student_options, "student")}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                      <Filter3Icon className={classes.labelIcon} />
+                      <Typography for="bendahara" color="primary">
+                        Bendahara
+                      </Typography>
+                    </div>
+                    <FormControl
+                      fullWidth
+                      id="bendahara"
+                      variant="outlined"
+                      color="primary"
+                    >
+                      <Select
+                        value={bendahara}
+                        displayEmpty
+                        onChange={(event) => {
+                          this.onChange(event, "bendahara");
+                        }}
+                      >
+                        {showValue(student_options, "student")}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </div>
+        </form>
+        <UploadDialog
+          openUploadDialog={this.state.openUploadDialog}
+          success={success}
+          messageUploading="Kelas sedang disunting"
+          messageSuccess="Kelas telah disunting"
+          redirectLink={`/kelas/${success}`}
+        />
+      </div>
+    );
   }
 }
 
 EditClass.propTypes = {
-  setCurrentClass: PropTypes.func.isRequired,
-  updateClass: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired,
-  getTeachers: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  getStudentsByClass: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   getAllClass: PropTypes.func.isRequired,
-  success: PropTypes.object.isRequired,
+  setCurrentClass: PropTypes.func.isRequired,
+  updateClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
+  getStudentsByClass: PropTypes.func.isRequired,
+  getTeachers: PropTypes.func.isRequired,
+  success: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  errors: state.errors,
   auth: state.auth,
   classesCollection: state.classesCollection,
-  success: state.success,
   subjectsCollection: state.subjectsCollection,
+  success: state.success,
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, {
+  getAllClass,
   setCurrentClass,
   updateClass,
   getStudentsByClass,
   getTeachers,
   getAllSubjects,
-  clearErrors,
-  getAllClass,
   clearSuccess,
+  clearErrors,
 })(withStyles(styles)(EditClass));
