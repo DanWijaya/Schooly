@@ -453,15 +453,11 @@ router.put("/setUserDeactivated/:id", (req, res) => {
 
 router.put("/bulkSetUserDeactivated/", (req, res) => {
   let { id_list } = req.body;
-  User.updateMany({ _id: { $in: id_list } }, { active: false }, (err, user) => {
-    if (err) {
-      console.log(err);
-      return res.status(404).json("There is an error");
-    } else {
-      console.log("Updated Docs : ", user);
+  User.updateMany({ _id: { $in: id_list } }, { active: false })
+    .then((user) => {
       return res.json(user);
-    }
-  });
+    })
+    .catch((err) => res.status(400).json(err));
 });
 
 router.delete("/delete/:id", (req, res) => {

@@ -27,6 +27,7 @@ export const createAnnouncement = (formData, announcementData, history) => (
       else return res;
     })
     .then((res) => {
+      console.log(res);
       let success_res = res.data._id;
       dispatch({
         type: GET_SUCCESS_RESPONSE,

@@ -37,7 +37,10 @@ router.post("/create", (req, res) => {
   newAnnouncement
     .save()
     .then((ann) => res.json(ann))
-    .catch((err) => res.status(400).json(err));
+    .catch((err) => {
+      console.error("Unable to create the announcement");
+      res.status(400).json(err);
+    });
 });
 
 //Define Update routing.
@@ -64,7 +67,10 @@ router.put("/update/:id", (req, res) => {
       return announcementData.save();
     })
     .then((announcementData) => res.json("Done with updating announcement"))
-    .catch((err) => res.status(400).send(err));
+    .catch((err) => {
+      console.error("Unable to view update the announcement");
+      res.status(400).json(err);
+    });
 });
 
 //Define View one announcement
@@ -78,10 +84,12 @@ router.get("/viewOne/:id", (req, res) => {
       }
       return res.json(announcementData);
     })
-    .catch((err) => res.status(404).send(err));
+    .catch((err) => {
+      console.error("Unable to view the announcement");
+      res.status(400).json(err);
+    });
 });
 
-//Define View classes route
 router.get("/viewall/:unitId", (req, res) => {
   const { unitId } = req.params;
   if (!unitId) {
@@ -94,7 +102,10 @@ router.get("/viewall/:unitId", (req, res) => {
       }
       return res.json(announcements);
     })
-    .catch((err) => res.status(400).json(err));
+    .catch((err) => {
+      console.error("Unable to view all announcements");
+      res.status(400).json(err);
+    });
 });
 
 router.get("/viewAdmin/:unitId", (req, res) => {
@@ -121,7 +132,8 @@ router.get("/viewAdmin/:unitId", (req, res) => {
       );
     })
     .catch((err) => {
-      return res.status(500).json(err);
+      console.error("Unable to view announcement by admin");
+      res.status(400).json(err);
     });
 });
 
@@ -138,7 +150,8 @@ router.get("/view/:id", (req, res) => {
       return res.json(announcements);
     })
     .catch((err) => {
-      return res.status(400).json(err);
+      console.error("Unable to view the announcement");
+      res.status(400).json(err);
     });
 });
 
@@ -155,7 +168,8 @@ router.get("/viewByClass/:id", (req, res) => {
       return res.json(announcements);
     })
     .catch((err) => {
-      return res.status(400).json(err);
+      console.error("Unable to view announcement by class");
+      res.status(400).json(err);
     });
 });
 
@@ -170,7 +184,8 @@ router.delete("/delete/:id", (req, res) => {
       return res.json(announcements);
     })
     .catch((err) => {
-      return res.status(400).json(err);
+      console.error("Unable to delete announcement");
+      res.status(400).json(err);
     });
 });
 
