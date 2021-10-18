@@ -1,14 +1,16 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { clearErrors } from "../../../actions/ErrorActions";
-import { clearSuccess } from "../../../actions/SuccessActions";
+import { getTeachers } from "../../../actions/UserActions";
 import { createClass, getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getTeachers } from "../../../actions/UserActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import {
+  AppBar,
   Button,
   Divider,
   FormControl,
@@ -18,13 +20,20 @@ import {
   Paper,
   Select,
   TextField,
-  Typography,
+  Toolbar,
+  Typography
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { withStyles } from "@material-ui/core/styles";
+import {
+  AssignmentInd as AssignmentIndIcon,
+  LibraryBooks as LibraryBooksIcon
+} from "@material-ui/icons";
+import { FaChalkboard } from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {
+    display: "flex",
     margin: "auto",
     padding: "20px",
     paddingTop: "25px",
@@ -33,18 +42,49 @@ const styles = (theme) => ({
       maxWidth: "100%",
     },
   },
-  content: {
-    padding: "20px",
+  menuBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    padding: "15px 20px",
+    boxShadow: "0 1px 6px 0px rgba(32,33,36,0.28)",
+    backgroundColor: "white",
+    color: "black",
+  },
+  cancelButton: {
+    width: "90px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
   },
   createClassButton: {
-    width: "100%",
-    marginTop: "20px",
+    width: "90px",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
       color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
+  toolbar: theme.mixins.toolbar,
+  content: {
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: "1",
+  },
+  fieldLabel: {
+    fontSize: "14px",
+    marginRight: "10px",
+    color: "grey",
   },
 });
 
@@ -98,8 +138,8 @@ class CreateClass extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-    // otherfield ini adalah yang untuk field controllers Select atau variannya.
-    // Karena Select ini tidak memiliki nilai e.target.id, maka awalnya kita lakukan check dulu jika
+    // This otherfield is for field controllers like Select or its variants.
+    // Becasue Select doesn't have e.target.id value, that's why it needs to be checked first.
 
     let field = otherfield ? otherfield : e.target.id;
 
@@ -121,14 +161,13 @@ class CreateClass extends Component {
       name: this.state.name,
       nihil: this.state.nihil,
       walikelas: this.state.walikelas,
-      ukuran: 1, // Temporary biar tidak error
+      ukuran: 1, // Temporary so it won't be error
       ketua_kelas: this.state.ketua_kelas,
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
       unit: user.unit,
       mata_pelajaran: this.state.mata_pelajaran.map((matpel) => matpel._id),
     };
-    console.log(user);
 
     this.props
       .createClass(classObject, this.props.history)
@@ -148,6 +187,11 @@ class CreateClass extends Component {
   };
 
   componentDidMount() {
+    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    handleNavbar(false);
+    handleSideDrawerExist(false);
+    handleFooter(false);
+
     const { user } = this.props.auth;
     this.props.getTeachers(user.unit);
     this.props.getAllSubjects(user.unit);
@@ -155,41 +199,71 @@ class CreateClass extends Component {
   }
 
   componentWillUnmount() {
+    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    handleNavbar(true);
+    handleSideDrawerExist(true);
+    handleFooter(true);
+
     this.props.clearErrors();
     this.props.clearSuccess();
   }
 
   render() {
     const { classes, success } = this.props;
-    const { errors } = this.state;
     const { all_teachers, user } = this.props.auth;
+    const { errors } = this.state;
 
     document.title = "Schooly | Buat Kelas";
 
     return (
       <div className={classes.root}>
-        <Paper>
+        <form noValidate onSubmit={this.onSubmit} style={{ width: "100%" }}>
+          <AppBar position="fixed" className={classes.menuBar}>
+            <Grid container justify="space-between" alignItems="center">
+              <Grid item xs>
+                <Typography variant="h5" color="textSecondary">
+                  Kelas
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container alignItems="center" spacing={2}>
+                  <Grid item>
+                    <Link to="/daftar-kelas">
+                      <Button className={classes.cancelButton}>
+                        Batal
+                      </Button>
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Button type="submit" className={classes.createClassButton}>
+                      Buat
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </AppBar>
           <div className={classes.content}>
-            <Typography variant="h5" gutterBottom>
-              <b>Buat Kelas</b>
+            <div className={classes.toolbar} />
+            <Typography variant="h5">
+              Buat Kelas
             </Typography>
-            <Typography color="textSecondary">
-              Setelah semua murid masuk, jangan lupa untuk menyunting kelas dan
-              menentukan ketua kelas, sekretaris, dan bendahara kelas.
+            <Typography color="textSecondary" style={{ marginBottom: "35px" }}>
+              Setelah semua murid dimasukkan ke dalam kelas, jangan lupa untuk menyunting kelas dan
+              menentukan ketua kelas, sekretaris, dan bendahara dari kelas yang baru dibuat.
             </Typography>
-          </div>
-          <Divider />
-          <form noValidate onSubmit={this.onSubmit}>
             <Grid
               container
               direction="column"
               spacing={4}
-              className={classes.content}
             >
               <Grid item>
-                <Typography for="name" color="primary">
-                  Nama Kelas
-                </Typography>
+                <div style={{ display: "flex", alignItems: "center"}}>
+                  <FaChalkboard className={classes.fieldLabel} />
+                  <Typography for="name" color="primary">
+                    Nama Kelas
+                  </Typography>
+                </div>
                 <TextField
                   fullWidth
                   variant="outlined"
@@ -205,14 +279,17 @@ class CreateClass extends Component {
                 />
               </Grid>
               <Grid item>
-                <Typography for="walikelas" color="primary">
-                  Wali Kelas
-                </Typography>
+                <div style={{ display: "flex", alignItems: "center"}}>
+                  <AssignmentIndIcon className={classes.fieldLabel} />
+                  <Typography for="walikelas" color="primary">
+                    Wali Kelas
+                  </Typography>
+                </div>
                 <FormControl
+                  fullWidth
                   id="walikelas"
                   variant="outlined"
                   color="primary"
-                  fullWidth
                   error={Boolean(errors.walikelas)}
                 >
                   <Select
@@ -232,15 +309,20 @@ class CreateClass extends Component {
                         ))
                       : null}
                   </Select>
-                  <FormHelperText error>
-                    {Boolean(errors.walikelas) ? errors.walikelas : null}
-                  </FormHelperText>
+                  {Boolean(errors.walikelas) ? (
+                    <FormHelperText error>
+                      {errors.walikelas}
+                    </FormHelperText>
+                  ) : null}
                 </FormControl>
               </Grid>
               <Grid item>
-                <Typography for="matapelajaran" color="primary">
-                  Mata Pelajaran
-                </Typography>
+                <div style={{ display: "flex", alignItems: "center"}}>
+                  <LibraryBooksIcon className={classes.fieldLabel} />
+                  <Typography for="matapelajaran" color="primary">
+                    Mata Pelajaran
+                  </Typography>
+                </div>
                 <FormControl fullWidth id="matapelajaran" color="primary">
                   <Autocomplete
                     multiple
@@ -268,23 +350,8 @@ class CreateClass extends Component {
                 </FormControl>
               </Grid>
             </Grid>
-            <Divider />
-            <div
-              style={{ display: "flex", justifyContent: "flex-end" }}
-              className={classes.content}
-            >
-              <div>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  className={classes.createClassButton}
-                >
-                  Buat Kelas
-                </Button>
-              </div>
-            </div>
-          </form>
-        </Paper>
+          </div>
+        </form>
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
           success={success}
@@ -299,19 +366,19 @@ class CreateClass extends Component {
 
 CreateClass.propTypes = {
   createClass: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired,
   getTeachers: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  success: PropTypes.object.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
+  success: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  clearErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  errors: state.errors,
   auth: state.auth,
-  success: state.success,
-  subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
+  success: state.success,
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, {
@@ -319,6 +386,6 @@ export default connect(mapStateToProps, {
   getAllClass,
   getTeachers,
   getAllSubjects,
-  clearErrors,
   clearSuccess,
+  clearErrors,
 })(withStyles(styles)(CreateClass));

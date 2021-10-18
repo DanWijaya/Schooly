@@ -318,10 +318,10 @@ class Register extends Component {
             <Grid container direction="column" spacing={5}>
               <Grid item>
                 <FormControl
+                  fullWidth
                   id="role"
                   variant="outlined"
                   color="primary"
-                  fullWidth
                   error={Boolean(errors.role)}
                 >
                   <InputLabel id="role-label">Daftar Sebagai</InputLabel>
@@ -346,10 +346,10 @@ class Register extends Component {
               {this.state.role == "SuperAdmin" ? null : (
                 <Grid item>
                   <FormControl
+                    fullWidth
                     id="unit"
                     variant="outlined"
                     color="primary"
-                    fullWidth
                     error={Boolean(errors.unit)}
                   >
                     <InputLabel id="unit-label">Unit</InputLabel>

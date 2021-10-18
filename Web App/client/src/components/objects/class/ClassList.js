@@ -753,8 +753,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   createClassButton: {
-    boxShadow:
-      "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {

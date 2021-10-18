@@ -2,16 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers, getStudentsByClass } from "../../../actions/UserActions";
-import { clearErrors } from "../../../actions/ErrorActions";
+import { getAllClass, setCurrentClass, updateClass } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import {
-  getAllClass,
-  setCurrentClass,
-  updateClass,
-} from "../../../actions/ClassActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import {
   Button,
@@ -27,29 +23,6 @@ import {
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { withStyles } from "@material-ui/core/styles";
-
-const theme = createMuiTheme({
-  overrides: {
-    MuiOutlinedInput: {
-      input: {},
-    },
-    MuiInputBase: {
-      input: {
-        borderBottom: "none",
-      },
-    },
-    MuiAutocomplete: {
-      input: {
-        borderBottom: "none",
-      },
-    },
-    MuiTextField: {
-      root: {
-        borderBottom: "none",
-      },
-    },
-  },
-});
 
 const styles = (theme) => ({
   root: {
