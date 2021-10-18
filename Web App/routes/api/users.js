@@ -497,25 +497,26 @@ router.put("/classAssignment/:dummyClassId", (req, res) => {
 });
 
 router.put("/teacher/:teacherId", (req, res) => {
-  User.findById(req.params.teacherId, (err, user) => {
-    if (!user) {
-      return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan" });
-    } else {
-      user.subject_teached = req.body.subject_teached;
-      user.class_teached = req.body.class_teached;
-      user.class_to_subject = req.body.class_to_subject;
+  User.findById(req.params.teacherId)
+    .then((user) => {
+      if (!user) {
+        throw { usernotfound: "Pengguna tidak ditemukan" };
+      } else {
+        user.subject_teached = req.body.subject_teached;
+        user.class_teached = req.body.class_teached;
+        user.class_to_subject = req.body.class_to_subject;
 
-      user
-        .save()
-        .then(() => {
-          res.json("Update teacher completed");
-        })
-        .catch((err) => {
-          console.log(err);
-          res.status(400).json(err);
-        });
-    }
-  });
+        return user.save();
+      }
+    })
+    .then(() => {
+      console.log("Update teacher completed");
+      return res.json("Update teacher completed");
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.post("/registerStudentsBulk", (req, res) => {
@@ -541,7 +542,8 @@ router.post("/registerStudentsBulk", (req, res) => {
     })
     .then((results) => {
       return res.json(results);
-    });
+    })
+    .catch((err) => res.status(400).json(err));
 });
 
 // SuperAdmin Only

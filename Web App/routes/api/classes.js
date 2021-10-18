@@ -118,7 +118,7 @@ router.get("/setCurrentClass/:id", (req, res) => {
     .then((classData) => {
       console.log("Ini class data: ", classData);
       if (!classData) {
-        console.log("Class is not found");
+        throw "Class is not found";
       }
       return res.json(classData);
     })
@@ -139,7 +139,7 @@ router.get("/viewSelectedClasses/", (req, res) => {
   Class.find({ _id: { $in: ids_to_find } })
     .then((classes) => {
       if (!classes.length) {
-        throw "Selected classes not found";
+        console.log("Selected classes not found");
       }
       return res.json(classes);
       // return res.status(400).json("Class to update not found");
@@ -162,7 +162,7 @@ router.put("/update/:id", (req, res) => {
   Class.findById(id)
     .then((classData) => {
       if (!classData) {
-        console.log("Class to update not found");
+        throw "Class to update not found";
       }
       // Initially there is else block
       classData.name = req.body.name;
