@@ -10,12 +10,14 @@ import {
 } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { refreshTeacher } from "../../../actions/UserActions";
+import { getSetting } from "../../../actions/SettingActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
+  AppBar,
   Avatar,
   Button,
   Chip,
@@ -32,13 +34,19 @@ import {
   Select,
   Snackbar,
   TextField,
-  Typography,
+  Typography
 } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import AttachFileIcon from "@material-ui/icons/AttachFile";
 import Alert from "@material-ui/lab/Alert";
-import DeleteIcon from "@material-ui/icons/Delete";
+import { withStyles } from "@material-ui/core/styles";
 import {
+  Announcement as AnnouncementIcon,
+  AttachFile as AttachFileIcon,
+  Delete as DeleteIcon,
+  ShortText as ShortTextIcon,
+  SupervisorAccount as SupervisorAccountIcon
+} from "@material-ui/icons";
+import {
+  FaChalkboard,
   FaFile,
   FaFileAlt,
   FaFileExcel,
@@ -47,27 +55,61 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import { getSetting } from "../../../actions/SettingActions";
-
-const path = require("path");
 
 const styles = (theme) => ({
   root: {
+    display: "flex",
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
-  content: {
-    padding: "20px",
+  menuBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    padding: "15px 20px",
+    boxShadow: "0 1px 6px 0px rgba(32,33,36,0.28)",
+    backgroundColor: "white",
+    color: "black",
   },
-  divider: {
-    [theme.breakpoints.down("md")]: {
-      width: "100%",
-      height: "1px",
+  cancelButton: {
+    width: "90px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
+  editAnnouncementButton: {
+    width: "90px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
+  toolbar: theme.mixins.toolbar,
+  content: {
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: "1",
+  },
+  labelIcon: {
+    fontSize: "18px",
+    marginRight: "10px",
+    color: "grey",
   },
   chips: {
     display: "flex",
@@ -114,28 +156,9 @@ const styles = (theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
-  editAnnouncementButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-  },
-  cancelButton: {
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.main,
-      color: "white",
-    },
-    marginRight: "7.5px",
-  },
-  zeroHeightHelperText: {
-    height: "0",
-    display: "flex", // untuk men-disable "collapsing margin"
-  },
 });
+
+const path = require("path");
 
 function LampiranFile(props) {
   const { classes, name, filetype, i, handleLampiranDelete } = props;
@@ -223,8 +246,8 @@ class EditAnnouncement extends Component {
       errors: {},
       success: null,
       target_role: [],
-      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
-      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
+      classOptions: null, // Will be listed in menu.
+      allClassObject: null, // Used to get name of a class from its id without to traverse array that contains all class.
     };
   }
 
@@ -232,7 +255,6 @@ class EditAnnouncement extends Component {
   uploadedLampiran = React.createRef(null);
 
   componentDidMount() {
-    const { user } = this.props.auth;
     const {
       setCurrentClass,
       getOneAnnouncement,
@@ -241,6 +263,7 @@ class EditAnnouncement extends Component {
       refreshTeacher,
       getSetting,
     } = this.props;
+    const { user } = this.props.auth;
     const { id } = this.props.match.params;
 
     getOneAnnouncement(id);
@@ -255,18 +278,28 @@ class EditAnnouncement extends Component {
     } else if (user.role === "Teacher") {
       refreshTeacher(user._id);
     }
+
+    // const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    // handleNavbar(false);
+    // handleSideDrawerExist(false);
+    // handleFooter(false);
   }
 
   componentWillUnmount() {
     // this.props.clearErrors();
     this.props.clearSuccess();
+
+    // const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    // handleNavbar(true);
+    // handleSideDrawerExist(true);
+    // handleFooter(true);
   }
 
-  // kurang tau gimana cara ubah.
+  // Don't know how to change this.
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { selectedAnnouncements } = nextProps.announcements;
 
-    // if edited, nextProps.errors is false, supaya ndak run ini..
+    // If edited, nextProps.errors is false, so these code below won't be run.
     this.setState({
       title: selectedAnnouncements.title,
       description: selectedAnnouncements.description,
@@ -281,7 +314,7 @@ class EditAnnouncement extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas
+    // Comparing teacher information (auth.user) is done so teacher's information renewal by admin can renew the class and subject option.
     if (
       prevState.classOptions === null ||
       JSON.stringify(prevProps.auth.user) !==
@@ -301,7 +334,7 @@ class EditAnnouncement extends Component {
         let all_classes_obj = {};
 
         if (this.props.auth.user.role === "Teacher") {
-          // perlu dicek karena hanya guru yang memiliki atribut yang berisi kelas-kelas yand diajar
+          // Must be checked because only teacher that has attributes containing classes taught.
 
           this.props.classesCollection.all_classes.forEach((classInfo) => {
             all_classes_obj[classInfo._id] = classInfo.name;
@@ -373,14 +406,14 @@ class EditAnnouncement extends Component {
     let temp = Array.from(this.state.fileLampiran);
     let tempToDelete = this.state.fileLampiranToDelete;
     let tempToAdd = this.state.fileLampiranToAdd;
-    //Kalau yang udah keupload, ada field filename (yang belum adanya name)
-    //Untuk yang udah di DB.
+    // For the one that has already uploaded, there is filed filename (the one without name).
+    // For the one that has already in database.
     if (this.state.fileLampiran[i].filename !== undefined) {
-      //Remove the file in fileLampiranToDelete
+      // Remove the file in fileLampiranToDelete.
       tempToDelete.push(temp[i]);
     } else {
-      //Untuk yang belum di DB
-      //Remove the file in fileLampiranToAdd
+      // For the one that is not yet in database.
+      // Remove the file in fileLampiranToAdd.
       for (var j = 0; j < tempToAdd.length; j++) {
         if (tempToAdd[j].name === temp[i].name) {
           tempToAdd.splice(j, 1);
@@ -498,17 +531,6 @@ class EditAnnouncement extends Component {
   render() {
     document.title = "Schooly | Sunting Pengumuman";
 
-    const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
-    const MenuProps = {
-      PaperProps: {
-        style: {
-          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-          width: 250,
-        },
-      },
-    };
-
     const { classes } = this.props;
     const { fileLampiran, class_assigned, target_role, errors } = this.state;
     // const { success } = this.props;
@@ -581,71 +603,73 @@ class EditAnnouncement extends Component {
 
     return (
       <div className={classes.root}>
-        <UploadDialog
-          openUploadDialog={this.state.openUploadDialog}
-          success={success}
-          messageUploading="Pengumuman sedang disunting"
-          messageSuccess="Pengumuman telah disunting"
-          redirectLink={`/pengumuman/${this.props.match.params.id}`}
-        />
-        <DeleteDialog
-          openDeleteDialog={this.state.openDeleteDialog}
-          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-          itemType={"Sunting"}
-          itemName={this.state.title}
-          // itemName={this.state.name}
-          // isLink={true}
-          // redirectLink="/daftar-kuis"
-          redirectLink={`/daftar-pengumuman`}
-          isWarning={false}
-        />
-        <Paper>
+        <form noValidate onSubmit={this.onSubmit} style={{ width: "100%" }}>
+          <AppBar position="fixed" className={classes.menuBar}>
+            <Grid container justify="space-between" alignItems="center">
+              <Grid item xs>
+                <Typography variant="h5" color="textSecondary">
+                  Pengumuman
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container alignItems="center" spacing={2}>
+                  <Grid item>
+                    <Button onClick={this.handleOpenDeleteDialog} className={classes.cancelButton}>
+                      Batal
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button type="submit" className={classes.editAnnouncementButton}>
+                      Sunting
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </AppBar>
           <div className={classes.content}>
-            <Typography variant="h5" gutterBottom>
-              <b>Sunting Pengumuman</b>
+            <div className={classes.toolbar} />
+            <Typography variant="h5">
+              Buat Pengumuman
             </Typography>
-          </div>
-          <Divider />
-          <form noValidate onSubmit={this.onSubmit}>
-            <Grid container>
-              <Grid item xs={12} md className={classes.content}>
+            <Typography color="textSecondary" style={{ marginBottom: "35px" }}>
+              Sebarkan informasi secara satu arah, lampirkan berkas jika diperlukan.
+            </Typography>
+            <Grid container spacing={4}>
+              <Grid item xs={12} md>
                 <Grid container direction="column" spacing={4}>
                   <Grid item>
-                    <Typography component="label" for="title" color="primary">
-                      Judul
-                    </Typography>
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                      <AnnouncementIcon className={classes.labelIcon} />
+                      <Typography color="primary">
+                        Judul Pengumuman
+                      </Typography>
+                    </div>
                     <TextField
                       fullWidth
+                      type="text"
                       variant="outlined"
                       id="title"
                       onChange={this.onChange}
                       value={this.state.title}
                       error={errors.title}
-                      type="text"
-                      // helperText={errors.title}
+                      helperText={errors.title}
                       className={classnames("", {
                         invalid: errors.title,
                       })}
                     />
-                    {errors.title ? (
-                      <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText variant="outlined" error>
-                          {errors.title}
-                        </FormHelperText>
-                      </div>
-                    ) : null}
                   </Grid>
                   <Grid item>
-                    <Typography
-                      component="label"
-                      for="description"
-                      color="primary"
-                    >
-                      Deskripsi
-                    </Typography>
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                      <ShortTextIcon className={classes.labelIcon} />
+                      <Typography color="primary">
+                        Deskripsi
+                      </Typography>
+                    </div>
                     <TextField
                       fullWidth
                       multiline
+                      type="text"
                       rows="5"
                       rowsMax="25"
                       variant="outlined"
@@ -653,47 +677,33 @@ class EditAnnouncement extends Component {
                       onChange={(e) => this.onChange(e, "description")}
                       value={this.state.description}
                       error={errors.description}
-                      type="text"
-                      // helperText={errors.description}
+                      helperText={errors.description}
                       className={classnames("", {
                         invalid: errors.description,
                       })}
                     />
-                    {errors.description ? (
-                      <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText variant="outlined" error>
-                          {errors.description}
-                        </FormHelperText>
-                      </div>
-                    ) : null}
                   </Grid>
                 </Grid>
               </Grid>
-              <Divider
-                flexItem
-                orientation="vertical"
-                className={classes.divider}
-              />
-              <Grid item xs={12} md className={classes.content}>
+              <Grid item xs={12} md>
                 <Grid container direction="column" spacing={4}>
                   {user.role === "Student" ? null : user.role === "Admin" ? (
                     <Grid item>
-                      <Typography
-                        component="label"
-                        for="target_role"
-                        color="primary"
-                      >
-                        Ditujukan Kepada
-                      </Typography>
+                      <div style={{ display: "flex", alignItems: "center"}}>
+                        <SupervisorAccountIcon className={classes.labelIcon} />
+                        <Typography color="primary">
+                          Ditujukan kepada
+                        </Typography>
+                      </div>
                       <FormControl
-                        variant="outlined"
                         fullWidth
+                        variant="outlined"
+                        color="primary"
                         error={Boolean(errors.to)}
                       >
                         <Select
                           id="target_role"
                           multiple
-                          MenuProps={MenuProps}
                           value={target_role}
                           onChange={(event) => {
                             this.onChange(event, "target_role");
@@ -732,32 +742,29 @@ class EditAnnouncement extends Component {
                           })}
                         </Select>
                         {Boolean(errors.to) ? (
-                          <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>
-                              {errors.to}
-                            </FormHelperText>
-                          </div>
+                          <FormHelperText error>
+                            {errors.to}
+                          </FormHelperText>
                         ) : null}
                       </FormControl>
                     </Grid>
                   ) : (
                     <Grid item>
-                      <Typography
-                        component="label"
-                        for="class_assigned"
-                        color="primary"
-                      >
-                        Kelas yang Diumumkan
-                      </Typography>
+                      <div style={{ display: "flex", alignItems: "center"}}>
+                        <FaChalkboard className={classes.labelIcon} />
+                        <Typography color="primary">
+                          Kelas yang diberikan
+                        </Typography>
+                      </div>
                       <FormControl
-                        variant="outlined"
                         fullWidth
+                        variant="outlined"
+                        color="primary"
                         error={Boolean(errors.class_assigned)}
                       >
                         <Select
                           multiple
                           id="class_assigned"
-                          MenuProps={MenuProps}
                           value={class_assigned}
                           onChange={(event) => {
                             this.onChange(event, "class_assigned");
@@ -795,76 +802,66 @@ class EditAnnouncement extends Component {
                             : null}
                         </Select>
                         {Boolean(errors.class_assigned) ? (
-                          <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>
-                              {errors.class_assigned}
-                            </FormHelperText>
-                          </div>
+                          <FormHelperText error>
+                            {errors.class_assigned}
+                          </FormHelperText>
                         ) : null}
                       </FormControl>
                     </Grid>
                   )}
-                  <Grid item>
-                    <input
-                      type="file"
-                      multiple={true}
-                      name="lampiran"
-                      onChange={this.handleLampiranUpload}
-                      ref={this.lampiranUploader}
-                      id="file_control"
-                      accept="file/*"
-                      style={{ display: "none" }}
-                    />
-                    <input
-                      type="file"
-                      multiple={true}
-                      name="file"
-                      id="file"
-                      ref={this.uploadedLampiran}
-                      style={{ display: "none" }}
-                    />
-                    <Typography variant="body1">{"\u200B"}</Typography>
-                    <Button
-                      variant="contained"
-                      startIcon={<AttachFileIcon />}
-                      onClick={() => {
-                        this.lampiranUploader.current.click();
-                      }}
-                      className={classes.addFileButton}
-                    >
-                      Tambah Lampiran Berkas
-                    </Button>
-                    <Grid container spacing={1} style={{ marginTop: "10px" }}>
-                      {listFileChosen()}
-                    </Grid>
-                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <input
+                  multiple
+                  type="file"
+                  accept="file/*"
+                  name="lampiran"
+                  id="file_control"
+                  onChange={this.handleLampiranUpload}
+                  ref={this.lampiranUploader}
+                  style={{ display: "none" }}
+                />
+                <input
+                  multiple
+                  type="file"
+                  name="file"
+                  id="file"
+                  ref={this.uploadedLampiran}
+                  style={{ display: "none" }}
+                />
+                <Button
+                  variant="contained"
+                  startIcon={<AttachFileIcon />}
+                  onClick={() => {
+                    this.lampiranUploader.current.click();
+                  }}
+                  className={classes.addFileButton}
+                >
+                  Tambah Lampiran Berkas
+                </Button>
+                <Grid container spacing={1} style={{ marginTop: "10px" }}>
+                  {listFileChosen()}
                 </Grid>
               </Grid>
             </Grid>
-            <Divider />
-            <div
-              style={{ display: "flex", justifyContent: "flex-end" }}
-              className={classes.content}
-            >
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <Button
-                  variant="contained"
-                  className={classes.cancelButton}
-                  onClick={this.handleOpenDeleteDialog}
-                >
-                  Batal
-                </Button>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  className={classes.editAnnouncementButton}
-                >
-                  Sunting Pengumuman
-                </Button>
-              </div>
-            </div>
-          </form>
-        </Paper>
+          </div>
+        </form>
+        <UploadDialog
+          openUploadDialog={this.state.openUploadDialog}
+          success={success}
+          messageUploading="Pengumuman sedang disunting"
+          messageSuccess="Pengumuman telah disunting"
+          redirectLink={`/pengumuman/${this.props.match.params.id}`}
+        />
+        <DeleteDialog
+          openDeleteDialog={this.state.openDeleteDialog}
+          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+          itemType={"Sunting"}
+          itemName={this.state.title}
+          redirectLink={`/daftar-pengumuman`}
+          isWarning={false}
+        />
         <Snackbar
           open={this.state.fileLimitSnackbar}
           autoHideDuration={4000}
@@ -883,28 +880,28 @@ class EditAnnouncement extends Component {
 
 EditAnnouncement.propTypes = {
   auth: PropTypes.object.isRequired,
+  announcements: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
-  announcements: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors,
-  success: state.success,
-  announcements: state.announcementsCollection,
   classesCollection: state.classesCollection,
+  announcements: state.announcementsCollection,
   settingsCollection: state.settingsCollection,
+  success: state.success,
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, {
-  getOneAnnouncement,
-  updateAnnouncement,
-  setCurrentClass,
   getAllClass,
-  clearErrors,
-  clearSuccess,
+  setCurrentClass,
+  getOneAnnouncement,
   getFileAnnouncements,
+  updateAnnouncement,
   refreshTeacher,
   getSetting,
+  clearSuccess,
+  clearErrors,
 })(withStyles(styles)(EditAnnouncement));

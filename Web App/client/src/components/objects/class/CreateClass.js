@@ -79,7 +79,7 @@ const styles = (theme) => ({
     flexGrow: "1",
   },
   labelIcon: {
-    fontSize: "14px",
+    fontSize: "18px",
     marginRight: "10px",
     color: "grey",
   },
@@ -253,7 +253,7 @@ class CreateClass extends Component {
               <Grid item>
                 <div style={{ display: "flex", alignItems: "center"}}>
                   <FaChalkboard className={classes.labelIcon} />
-                  <Typography for="name" color="primary">
+                  <Typography color="primary">
                     Nama Kelas
                   </Typography>
                 </div>
@@ -274,7 +274,7 @@ class CreateClass extends Component {
               <Grid item>
                 <div style={{ display: "flex", alignItems: "center"}}>
                   <AssignmentIndIcon className={classes.labelIcon} />
-                  <Typography for="walikelas" color="primary">
+                  <Typography color="primary">
                     Wali Kelas
                   </Typography>
                 </div>
@@ -312,7 +312,7 @@ class CreateClass extends Component {
               <Grid item>
                 <div style={{ display: "flex", alignItems: "center"}}>
                   <LibraryBooksIcon className={classes.labelIcon} />
-                  <Typography for="matapelajaran" color="primary">
+                  <Typography color="primary">
                     Mata Pelajaran
                   </Typography>
                 </div>

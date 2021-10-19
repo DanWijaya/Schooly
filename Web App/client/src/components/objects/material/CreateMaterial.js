@@ -3,15 +3,17 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { getAllClass } from "../../../actions/ClassActions";
-import { clearErrors } from "../../../actions/ErrorActions";
-import { clearSuccess } from "../../../actions/SuccessActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { createMaterial } from "../../../actions/MaterialActions";
 import { refreshTeacher } from "../../../actions/UserActions";
+import { getSetting } from "../../../actions/SettingActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
+  AppBar,
   Avatar,
   Button,
   Chip,
@@ -26,15 +28,21 @@ import {
   MenuItem,
   Paper,
   Select,
-  TextField,
-  Typography,
   Snackbar,
+  TextField,
+  Typography
 } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import AttachFileIcon from "@material-ui/icons/AttachFile";
 import Alert from "@material-ui/lab/Alert";
-import DeleteIcon from "@material-ui/icons/Delete";
+import { withStyles } from "@material-ui/core/styles";
 import {
+  AttachFile as AttachFileIcon,
+  Delete as DeleteIcon,
+  LibraryBooks as LibraryBooksIcon,
+  MenuBook as MenuBookIcon,
+  ShortText as ShortTextIcon
+} from "@material-ui/icons";
+import {
+  FaChalkboard,
   FaFile,
   FaFileAlt,
   FaFileExcel,
@@ -43,34 +51,68 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import { getSetting } from "../../../actions/SettingActions";
-
-const path = require("path");
 
 const styles = (theme) => ({
   root: {
+    display: "flex",
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
-  content: {
-    padding: "20px",
+  menuBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    padding: "15px 20px",
+    boxShadow: "0 1px 6px 0px rgba(32,33,36,0.28)",
+    backgroundColor: "white",
+    color: "black",
   },
-  divider: {
-    [theme.breakpoints.down("md")]: {
-      width: "100%",
-      height: "1px",
+  cancelButton: {
+    width: "90px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
+  createMaterialButton: {
+    width: "90px",
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
+  toolbar: theme.mixins.toolbar,
+  content: {
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: "1",
+  },
+  labelIcon: {
+    fontSize: "18px",
+    marginRight: "10px",
+    color: "grey",
   },
   chips: {
     display: "flex",
     flexWrap: "wrap",
   },
   chip: {
-    marginRight: 2,
+    margin: "0px 1px",
   },
   addFileButton: {
     backgroundColor: theme.palette.primary.main,
@@ -110,28 +152,9 @@ const styles = (theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
-  createMaterialButton: {
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.main,
-      color: "white",
-    },
-  },
-  cancelButton: {
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.main,
-      color: "white",
-    },
-    marginRight: "7.5px",
-  },
-  zeroHeightHelperText: {
-    height: "0",
-    display: "flex", // untuk men-disable "collapsing margin"
-  },
 });
+
+const path = require("path");
 
 function LampiranFile(props) {
   const { classes, name, filetype, i, handleLampiranDelete } = props;
@@ -209,8 +232,6 @@ class CreateMaterial extends Component {
       focused: false,
       class_assigned: [],
       description: "",
-      errors: {},
-      success: null,
       fileLampiran: [],
       openUploadDialog: null,
       openDeleteDialog: null,
@@ -218,17 +239,19 @@ class CreateMaterial extends Component {
       over_limit: [],
       fileLimitSnackbar: false,
       // sortFlag: false
-      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
-      subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
-      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
-      allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
+      classOptions: null, // Will be showed as menu item when choosing class.
+      subjectOptions: null, // Will be showed as menu item when choosing subject.
+      allClassObject: null, // Used to get class name from class id without traversing class array.
+      allSubjectObject: null, // Used to get subject name from subject id without traversing subject array.
+      success: null,
+      errors: {},
     };
   }
 
   lampiranUploader = React.createRef(null);
 
   handleClickMenu = (event) => {
-    //Needed so it will not be run when filetugas = null or filetugas array is empty
+    // Needed so it will not be run when filetugas = null or filetugas array is empty.
     if (this.state.fileLampiran.length > 0 && !Boolean(this.state.anchorEl))
       this.setState({ anchorEl: event.currentTarget });
   };
@@ -254,7 +277,7 @@ class CreateMaterial extends Component {
   };
 
   onChange = (e, otherfield = null) => {
-    // dipindahkan (kode yg dari merge_fitur_4_cdn ada di bawah dan dikomen)
+    // merge_fitur_4_cdn codes are below
     let field = otherfield ? otherfield : e.target.id;
     if (this.state.errors[field]) {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
@@ -264,10 +287,10 @@ class CreateMaterial extends Component {
     if (otherfield) {
       if (otherfield === "deadline") {
         this.setState({ [otherfield]: e });
-        // e is the date value itself for KeyboardDatePicker
+        // e is the date value itself for KeyboardDatePicker.
       } else if (otherfield === "subject") {
-        // jika guru memilih mata pelajaran
-        // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
+        // If teacher choose a subject.
+        // Find all class that is taught by this teacher for the subject that has been chosen.
         let newClassOptions = [];
         if (this.props.auth.user.class_to_subject) {
           for (let [classId, subjectIdArray] of Object.entries(
@@ -287,15 +310,15 @@ class CreateMaterial extends Component {
           classOptions: newClassOptions,
         });
       } else if (otherfield === "class_assigned") {
-        // jika guru memilih kelas
+        // If teacher choose a class.
         let selectedClasses = e.target.value;
 
         if (selectedClasses.length === 0) {
-          // jika guru membatalkan semua pilihan kelas
+          // If teacher deselect all chosen class.
           this.setState((prevState, props) => {
             return {
               class_assigned: selectedClasses,
-              // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
+              // reset subject options (show all subjects that this teacher teach)
               subjectOptions: props.auth.user.subject_teached.map(
                 (subjectId) => ({
                   _id: subjectId,
@@ -305,8 +328,8 @@ class CreateMaterial extends Component {
             };
           });
         } else {
-          // jika guru menambahkan atau mengurangi pilihan kelas
-          // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
+          // If teacher add a class or remove a selected class.
+          // Find subject that is taught to every selected class.
           let subjectMatrix = [];
           if (this.props.auth.user.class_to_subject) {
             for (let classId of selectedClasses) {
@@ -328,7 +351,7 @@ class CreateMaterial extends Component {
             );
           }
 
-          // menambahkan matpel tersebut ke opsi matpel
+          // Add the subject to the subject option.
           let newSubjectOptions = [];
           subjects.forEach((subjectId) => {
             newSubjectOptions.push({
@@ -362,7 +385,7 @@ class CreateMaterial extends Component {
     e.preventDefault();
     let formData = new FormData();
 
-    //Check if there is any lampiran uploaded or not.
+    // Check if there is any lampiran uploaded or not.
     if (this.state.fileLampiran)
       for (var i = 0; i < this.state.fileLampiran.length; i++) {
         console.log(this.state.fileLampiran[i]);
@@ -401,7 +424,7 @@ class CreateMaterial extends Component {
       this.handleOpenUploadDialog();
     }
 
-    // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas dan mata pelajaran
+    // Comparing teacher information (auth.user) is done so teacher's information renewal by admin can renew the class and subject option.
     if (
       prevState.classOptions === null ||
       JSON.stringify(prevProps.auth.user) !==
@@ -428,7 +451,7 @@ class CreateMaterial extends Component {
           classOptions: newClassOptions,
           allClassObject: all_classes_obj,
         });
-      } // jika memang belum ada kelas yang tercatat di sistem, opsi kelas akan tetap null
+      } // If there is no class yet in the database, class option will always be null.
     }
 
     if (
@@ -458,7 +481,7 @@ class CreateMaterial extends Component {
           subjectOptions: newSubjectOptions,
           allSubjectObject: all_subjects_obj,
         });
-      } // jika memang belum ada matpel yang tercatat di sistem, opsi matpel akan tetap null
+      } // If there is no subject yet in the database, subject option will always be null.
     }
   }
 
@@ -468,11 +491,21 @@ class CreateMaterial extends Component {
     this.props.getAllSubjects(this.props.auth.user.unit);
     this.props.refreshTeacher(this.props.auth.user._id);
     this.props.getSetting();
+
+    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    handleNavbar(false);
+    handleSideDrawerExist(false);
+    handleFooter(false);
   }
 
   componentWillUnmount() {
     this.props.clearErrors();
     this.props.clearSuccess();
+
+    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    handleNavbar(true);
+    handleSideDrawerExist(true);
+    handleFooter(true);
   }
 
   handleLampiranDelete = (e, i) => {
@@ -481,7 +514,7 @@ class CreateMaterial extends Component {
     let temp = Array.from(this.state.fileLampiran);
     temp.splice(i, 1);
     if (temp.length === 0)
-      //If it is empty.
+      // If it is empty.
       this.handleCloseMenu();
     this.setState({ fileLampiran: temp });
   };
@@ -500,13 +533,13 @@ class CreateMaterial extends Component {
     let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
     let over_limit = temp.filter(
       (file) => file.size / Math.pow(10, 6) > uploadLimit
-    ); //10MB
+    ); // 10MB
     let file_to_upload = temp.filter(
       (file) => file.size / Math.pow(10, 6) <= uploadLimit
     );
 
     if (this.state.errors.lampiran_materi) {
-      // karena errornya ini berupa lampiran_materi
+      // Because the error is lampiran_materi
       this.setState({
         errors: { ...this.state.errors, lampiran_materi: null },
       });
@@ -520,14 +553,11 @@ class CreateMaterial extends Component {
   };
 
   render() {
-    const { classes } = this.props; // originally have errors
+    const { classes } = this.props;
+    const { user } = this.props.auth;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { class_assigned, fileLampiran, errors, success } = this.state;
-    const { user } = this.props.auth;
-
-    // console.log(class_assigned);
-    // console.log(errors);
 
     const fileType = (filename) => {
       let ext_file = path.extname(filename);
@@ -563,7 +593,6 @@ class CreateMaterial extends Component {
       let temp = [];
       if (fileLampiran.length > 0) {
         for (var i = 0; i < fileLampiran.length; i++) {
-          console.log(i);
           temp.push(
             <LampiranFile
               classes={classes}
@@ -578,322 +607,275 @@ class CreateMaterial extends Component {
       return temp;
     };
 
-    const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
-    const MenuProps = {
-      PaperProps: {
-        style: {
-          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-          width: 250,
-        },
-      },
-    };
-
     document.title = "Schooly | Buat Materi";
 
-    if (user.role === "Teacher") {
-      return (
-        <div className={classes.root}>
-          <UploadDialog
-            openUploadDialog={this.state.openUploadDialog}
-            success={success}
-            messageUploading="Materi sedang dibuat"
-            messageSuccess="Materi telah dibuat"
-            redirectLink={`/materi/${success}`}
-          />
-          <DeleteDialog
-            openDeleteDialog={this.state.openDeleteDialog}
-            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-            itemType={"Materi"}
-            itemName={this.state.name}
-            // isLink={true}
-            // redirectLink="/daftar-kuis"
-            redirectLink={`/daftar-materi`}
-            isWarning={false}
-          />
-          <Paper>
-            <div className={classes.content}>
-              <Typography variant="h5" gutterBottom>
-                <b>Buat Materi</b>
-              </Typography>
-              <Typography color="textSecondary">
-                Tambahkan keterangan materi untuk membuat materi.
-              </Typography>
-            </div>
-            <Divider />
-            <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)}>
-              <Grid container>
-                <Grid item xs={12} md className={classes.content}>
-                  <Grid container direction="column" spacing={4}>
-                    <Grid item>
-                      <Typography component="label" for="name" color="primary">
-                        Judul
-                      </Typography>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        id="name"
-                        onChange={this.onChange}
-                        value={this.state.name}
-                        error={errors.name}
-                        type="text"
-                        // helperText={errors.name}
-                        className={classnames("", {
-                          invalid: errors.name,
-                        })}
-                      />
-                      {errors.name ? (
-                        <div className={classes.zeroHeightHelperText}>
-                          <FormHelperText variant="outlined" error>
-                            {errors.name}
-                          </FormHelperText>
-                        </div>
-                      ) : null}
-                    </Grid>
-                    <Grid item>
-                      <Typography
-                        component="label"
-                        for="description"
-                        color="primary"
-                      >
-                        Deskripsi
-                      </Typography>
-                      <TextField
-                        fullWidth
-                        multiline
-                        rows="5"
-                        rowsMax="25"
-                        variant="outlined"
-                        id="description"
-                        onChange={(e) => this.onChange(e, "description")}
-                        value={this.state.description}
-                        error={errors.description}
-                        type="text"
-                        // helperText={errors.description}
-                        className={classnames("", {
-                          invalid: errors.description,
-                        })}
-                      />
-                      {errors.description ? (
-                        <div className={classes.zeroHeightHelperText}>
-                          <FormHelperText variant="outlined" error>
-                            {errors.description}
-                          </FormHelperText>
-                        </div>
-                      ) : null}
-                    </Grid>
+    return (
+      <div className={classes.root}>
+        <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)} style={{ width: "100%" }}>
+          <AppBar position="fixed" className={classes.menuBar}>
+            <Grid container justify="space-between" alignItems="center">
+              <Grid item xs>
+                <Typography variant="h5" color="textSecondary">
+                  Materi
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container alignItems="center" spacing={2}>
+                  <Grid item>
+                    <Button onClick={this.handleOpenDeleteDialog} className={classes.cancelButton}>
+                      Batal
+                    </Button>
                   </Grid>
-                </Grid>
-                <Divider
-                  flexItem
-                  orientation="vertical"
-                  className={classes.divider}
-                />
-                <Grid item xs={12} md className={classes.content}>
-                  <Grid container direction="column" spacing={4}>
-                    <Grid item>
-                      <Typography
-                        component="label"
-                        for="subject"
-                        color="primary"
-                      >
-                        Mata Pelajaran
-                      </Typography>
-                      <FormControl
-                        id="subject"
-                        variant="outlined"
-                        color="primary"
-                        fullWidth
-                        error={Boolean(errors.subject) && !this.state.subject}
-                      >
-                        <Select
-                          value={this.state.subject}
-                          onChange={(event) => {
-                            this.onChange(event, "subject");
-                          }}
-                        >
-                          {this.state.subjectOptions !== null
-                            ? this.state.subjectOptions.map((subject) => (
-                                <MenuItem key={subject._id} value={subject._id}>
-                                  {subject.name}
-                                </MenuItem>
-                              ))
-                            : null}
-                        </Select>
-                        {Boolean(errors.subject) && !this.state.subject ? (
-                          <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>
-                              {errors.subject}
-                            </FormHelperText>
-                          </div>
-                        ) : null}
-                      </FormControl>
-                    </Grid>
-                    <Grid item>
-                      <Typography
-                        component="label"
-                        for="class_assigned"
-                        color="primary"
-                      >
-                        Kelas yang Diberikan
-                      </Typography>
-                      <FormControl
-                        variant="outlined"
-                        fullWidth
-                        error={Boolean(errors.class_assigned)}
-                      >
-                        <Select
-                          multiple
-                          id="class_assigned"
-                          MenuProps={MenuProps}
-                          value={class_assigned}
-                          onChange={(event) => {
-                            this.onChange(event, "class_assigned");
-                            console.log(event.target.value);
-                          }}
-                          renderValue={(selected) => (
-                            <div className={classes.chips}>
-                              {selected.map((classId) => {
-                                return (
-                                  <Chip
-                                    key={classId}
-                                    label={
-                                      this.state.allClassObject
-                                        ? this.state.allClassObject[classId]
-                                        : null
-                                    }
-                                    className={classes.chip}
-                                  />
-                                );
-                              })}
-                            </div>
-                          )}
-                        >
-                          {this.state.classOptions !== null
-                            ? this.state.classOptions.map((classInfo) => (
-                                <MenuItem
-                                  selected={true}
-                                  key={classInfo._id}
-                                  value={classInfo._id}
-                                >
-                                  {classInfo.name}
-                                </MenuItem>
-                              ))
-                            : null}
-                        </Select>
-                        {Boolean(errors.class_assigned) ? (
-                          <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>
-                              {errors.class_assigned}
-                            </FormHelperText>
-                          </div>
-                        ) : null}
-                      </FormControl>
-                    </Grid>
-                    <Grid item>
-                      <input
-                        type="file"
-                        multiple={true}
-                        name="lampiran"
-                        id="file_control"
-                        onChange={this.handleLampiranUpload}
-                        ref={this.lampiranUploader}
-                        accept="file/*"
-                        style={{ display: "none" }}
-                      />
-                      <Button
-                        variant="contained"
-                        startIcon={<AttachFileIcon />}
-                        onClick={() => this.lampiranUploader.current.click()}
-                        className={classes.addFileButton}
-                      >
-                        Tambah Lampiran Berkas
-                      </Button>
-                      <FormHelperText error>
-                        {errors.lampiran_materi ?? "\u200B"}
-                      </FormHelperText>
-                      <Grid container spacing={1} style={{ marginTop: "10px" }}>
-                        {listFileChosen()}
-                      </Grid>
-                    </Grid>
+                  <Grid item>
+                    <Button type="submit" className={classes.createMaterialButton}>
+                      Buat
+                    </Button>
                   </Grid>
                 </Grid>
               </Grid>
-              <Divider />
-              <div
-                style={{ display: "flex", justifyContent: "flex-end" }}
-                className={classes.content}
-              >
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                  <Button
-                    variant="contained"
-                    className={classes.cancelButton}
-                    onClick={this.handleOpenDeleteDialog}
-                  >
-                    Batal
-                  </Button>
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    className={classes.createMaterialButton}
-                  >
-                    Buat Materi
-                  </Button>
-                </div>
-              </div>
-            </form>
-          </Paper>
-          <Snackbar
-            open={this.state.fileLimitSnackbar}
-            autoHideDuration={4000}
-            onClose={this.handleCloseErrorSnackbar}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            </Grid>
+          </AppBar>
+          <div className={classes.content}>
+            <div className={classes.toolbar} />
+            <Typography variant="h5">
+              Buat Materi
+            </Typography>
+            <Typography color="textSecondary" style={{ marginBottom: "35px" }}>
+              Satu berkas atau lebih harus dilampirkan untuk membuat sebuah materi.
+            </Typography>
+            <Grid container spacing={4}>
+              <Grid item xs={12} md>
+                <Grid container direction="column" spacing={4}>
+                  <Grid item>
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                      <MenuBookIcon className={classes.labelIcon} />
+                      <Typography color="primary">
+                        Judul Materi
+                      </Typography>
+                    </div>
+                    <TextField
+                      fullWidth
+                      type="text"
+                      variant="outlined"
+                      id="name"
+                      onChange={this.onChange}
+                      value={this.state.name}
+                      error={errors.name}
+                      helperText={errors.name}
+                      className={classnames("", {
+                        invalid: errors.name,
+                      })}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                      <ShortTextIcon className={classes.labelIcon} />
+                      <Typography color="primary">
+                        Deskripsi
+                      </Typography>
+                    </div>
+                    <TextField
+                      fullWidth
+                      multiline
+                      type="text"
+                      rows="5"
+                      rowsMax="25"
+                      variant="outlined"
+                      id="description"
+                      onChange={(e) => this.onChange(e, "description")}
+                      value={this.state.description}
+                      error={errors.description}
+                      helperText={errors.description}
+                      className={classnames("", {
+                        invalid: errors.description,
+                      })}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} md>
+                <Grid container direction="column" spacing={4}>
+                  <Grid item>
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                      <LibraryBooksIcon className={classes.labelIcon} />
+                      <Typography color="primary">
+                        Mata Pelajaran
+                      </Typography>
+                    </div>
+                    <FormControl
+                      fullWidth
+                      id="subject"
+                      variant="outlined"
+                      color="primary"
+                      error={Boolean(errors.subject) && !this.state.subject}
+                    >
+                      <Select
+                        value={this.state.subject}
+                        onChange={(event) => {
+                          this.onChange(event, "subject");
+                        }}
+                      >
+                        {this.state.subjectOptions !== null
+                          ? this.state.subjectOptions.map((subject) => (
+                              <MenuItem key={subject._id} value={subject._id}>
+                                {subject.name}
+                              </MenuItem>
+                            ))
+                          : null}
+                      </Select>
+                      {Boolean(errors.subject) && !this.state.subject ? (
+                        <FormHelperText error>
+                          {errors.subject}
+                        </FormHelperText>
+                      ) : null}
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                      <FaChalkboard className={classes.labelIcon} />
+                      <Typography color="primary">
+                        Kelas yang diberikan
+                      </Typography>
+                    </div>
+                    <FormControl
+                      fullWidth
+                      id="class_assigned"
+                      variant="outlined"
+                      color="primary"
+                      error={Boolean(errors.class_assigned)}
+                    >
+                      <Select
+                        multiple
+                        value={class_assigned}
+                        onChange={(event) => {
+                          this.onChange(event, "class_assigned");
+                          console.log(event.target.value);
+                        }}
+                        renderValue={(selected) => (
+                          <div className={classes.chips}>
+                            {selected.map((classId) => {
+                              return (
+                                <Chip
+                                  key={classId}
+                                  label={
+                                    this.state.allClassObject
+                                      ? this.state.allClassObject[classId]
+                                      : null
+                                  }
+                                  className={classes.chip}
+                                />
+                              );
+                            })}
+                          </div>
+                        )}
+                      >
+                        {this.state.classOptions !== null
+                          ? this.state.classOptions.map((classInfo) => (
+                              <MenuItem
+                                selected={true}
+                                key={classInfo._id}
+                                value={classInfo._id}
+                              >
+                                {classInfo.name}
+                              </MenuItem>
+                            ))
+                          : null}
+                      </Select>
+                      {Boolean(errors.class_assigned) ? (
+                        <FormHelperText error>
+                          {errors.class_assigned}
+                        </FormHelperText>
+                      ) : null}
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <input
+                  multiple
+                  type="file"
+                  accept="file/*"
+                  name="lampiran"
+                  id="file_control"
+                  onChange={this.handleLampiranUpload}
+                  ref={this.lampiranUploader}
+                  style={{ display: "none" }}
+                />
+                <Button
+                  variant="contained"
+                  startIcon={<AttachFileIcon />}
+                  onClick={() => this.lampiranUploader.current.click()}
+                  className={classes.addFileButton}
+                >
+                  Tambah Lampiran Berkas
+                </Button>
+                <FormHelperText error>
+                  {errors.lampiran_materi}
+                </FormHelperText>
+                <Grid container spacing={1} style={{ marginTop: "10px" }}>
+                  {listFileChosen()}
+                </Grid>
+              </Grid>
+            </Grid>
+          </div>
+        </form>
+        <UploadDialog
+          openUploadDialog={this.state.openUploadDialog}
+          success={success}
+          messageUploading="Materi sedang dibuat"
+          messageSuccess="Materi telah dibuat"
+          redirectLink={`/materi/${success}`}
+        />
+        <DeleteDialog
+          openDeleteDialog={this.state.openDeleteDialog}
+          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+          itemType={"Materi"}
+          itemName={this.state.name}
+          redirectLink={`/daftar-materi`}
+          isWarning={false}
+        />
+        <Snackbar
+          open={this.state.fileLimitSnackbar}
+          autoHideDuration={4000}
+          onClose={this.handleCloseErrorSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            elevation={6}
+            variant="filled"
+            onClose={this.handleCloseSnackbar}
+            severity="error"
           >
-            <Alert
-              elevation={6}
-              variant="filled"
-              onClose={this.handleCloseSnackbar}
-              severity="error"
-            >
-              {this.state.over_limit.length} file melebihi batas{" "}
-              {this.props.settingsCollection.upload_limit}MB!
-            </Alert>
-          </Snackbar>
-        </div>
-      );
-    } else {
-      return (
-        <div className={classes.root}>
-          <Typography variant="h5" align="center">
-            <b>Anda tidak mempunyai izin akses halaman ini.</b>
-          </Typography>
-        </div>
-      );
-    }
+            {this.state.over_limit.length} file melebihi batas{" "}
+            {this.props.settingsCollection.upload_limit}MB!
+          </Alert>
+        </Snackbar>
+      </div>
+    );
   }
 }
 
 CreateMaterial.propTypes = {
-  errors: PropTypes.object.isRequired,
-  success: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  success: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors,
-  success: state.success,
   subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
   settingsCollection: state.settingsCollection,
+  success: state.success,
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, {
   getAllClass,
   getAllSubjects,
   createMaterial,
-  clearErrors,
-  clearSuccess,
   refreshTeacher,
   getSetting,
+  clearSuccess,
+  clearErrors,
 })(withStyles(styles)(CreateMaterial));

@@ -6,6 +6,7 @@ import { createUnit } from "../../../actions/UnitActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import {
+  AppBar,
   Button,
   Divider,
   FormHelperText,
@@ -13,54 +14,72 @@ import {
   Paper,
   Select,
   TextField,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import AttachFileIcon from "@material-ui/icons/AttachFile";
-import MuiAlert from "@material-ui/lab/Alert";
-
-const path = require("path");
+import {
+  ShortText as ShortTextIcon,
+  Web as WebIcon
+} from "@material-ui/icons";
 
 const styles = (theme) => ({
   root: {
+    display: "flex",
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
-  content: {
-    padding: "20px",
-  },
-  divider: {
-    [theme.breakpoints.down("md")]: {
-      width: "100%",
-      height: "1px",
-    },
-  },
-  createUnitButton: {
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.main,
-      color: "white",
-    },
+  menuBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    padding: "15px 20px",
+    boxShadow: "0 1px 6px 0px rgba(32,33,36,0.28)",
+    backgroundColor: "white",
+    color: "black",
   },
   cancelButton: {
+    width: "90px",
     backgroundColor: theme.palette.error.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.error.main,
       color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
-    marginRight: "7.5px",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
   },
-  zeroHeightHelperText: {
-    height: "0",
-    display: "flex", // untuk men-disable "collapsing margin"
+  createUnitButton: {
+    width: "90px",
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
+  toolbar: theme.mixins.toolbar,
+  content: {
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: "1",
+  },
+  labelIcon: {
+    fontSize: "18px",
+    marginRight: "10px",
+    color: "grey",
   },
 });
+
+const path = require("path");
 
 class CreateUnit extends Component {
   constructor() {
@@ -104,32 +123,121 @@ class CreateUnit extends Component {
 
   onSubmit = (e, id) => {
     e.preventDefault();
-
     const unitData = {
       name: this.state.name,
       description: this.state.description,
     };
-    console.log(unitData);
 
     this.handleOpenUploadDialog();
-
     createUnit(unitData).then((res) => {
       this.setState({ success: res });
     });
   };
 
-  render() {
-    const { classes } = this.props; // originally have errors
-    const { errors, success } = this.state;
-    const { user } = this.props.auth;
+  componentDidMount() {
+    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    handleNavbar(false);
+    handleSideDrawerExist(false);
+    handleFooter(false);
+  }
 
-    // console.log(class_assigned);
-    // console.log(errors);
+  componentWillUnmount() {
+    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    handleNavbar(true);
+    handleSideDrawerExist(true);
+    handleFooter(true);
+  }
+
+  render() {
+    const { classes } = this.props;
+    const { user } = this.props.auth;
+    const { errors, success } = this.state;
 
     document.title = "Schooly | Buat Unit";
 
     return (
       <div className={classes.root}>
+        <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)} style={{ width: "100%" }}>
+          <AppBar position="fixed" className={classes.menuBar}>
+            <Grid container justify="space-between" alignItems="center">
+              <Grid item xs>
+                <Typography variant="h5" color="textSecondary">
+                  Unit
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container alignItems="center" spacing={2}>
+                  <Grid item>
+                    <Button onClick={this.handleOpenDeleteDialog} className={classes.cancelButton}>
+                      Batal
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button type="submit" className={classes.createUnitButton}>
+                      Buat
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </AppBar>
+          <div className={classes.content}>
+            <div className={classes.toolbar} />
+            <Typography variant="h5">
+              Buat Unit
+            </Typography>
+            <Typography color="textSecondary" style={{ marginBottom: "35px" }}>
+              Setelah sebuah unit dibuat, masukkan pengelola aktif ke dalam unit untuk mengatur guru dan murid di unit tersebut.
+            </Typography>
+            <Grid container direction="column" spacing={4}>
+              <Grid item>
+                <div style={{ display: "flex", alignItems: "center"}}>
+                  <WebIcon className={classes.labelIcon} />
+                  <Typography color="primary">
+                    Nama Unit
+                  </Typography>
+                </div>
+                <TextField
+                  fullWidth
+                  type="text"
+                  variant="outlined"
+                  id="name"
+                  onChange={this.onChange}
+                  value={this.state.name}
+                  error={errors.name}
+                  helperText={errors.name}
+                  className={classnames("", {
+                    invalid: errors.name,
+                  })}
+                />
+              </Grid>
+              <Grid item>
+                <div style={{ display: "flex", alignItems: "center"}}>
+                  <ShortTextIcon className={classes.labelIcon} />
+                  <Typography color="primary">
+                    Keterangan
+                  </Typography>
+                </div>
+                <TextField
+                  fullWidth
+                  multiline
+                  type="text"
+                  rows="5"
+                  rowsMax="25"
+                  variant="outlined"
+                  id="description"
+                  onChange={(e) => this.onChange(e, "description")}
+                  value={this.state.description}
+                  error={errors.description}
+                  helperText={errors.description}
+                  className={classnames("", {
+                    invalid: errors.description,
+                  })}
+                />
+              </Grid>
+            </Grid>
+          </div>
+        </form>
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
           success={success}
@@ -145,119 +253,23 @@ class CreateUnit extends Component {
           redirectLink="/daftar-unit"
           isWarning={false}
         />
-        <Paper>
-          <div className={classes.content}>
-            <Typography variant="h5" gutterBottom>
-              <b>Buat Unit</b>
-            </Typography>
-            <Typography color="textSecondary">
-              Tambahkan keterangan unit untuk membuat unit.
-            </Typography>
-          </div>
-          <Divider />
-          <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)}>
-            <Grid container>
-              <Grid item xs={12} md className={classes.content}>
-                <Grid container direction="column" spacing={4}>
-                  <Grid item>
-                    <Typography component="label" for="name" color="primary">
-                      Nama
-                    </Typography>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      id="name"
-                      onChange={this.onChange}
-                      value={this.state.name}
-                      error={errors.name}
-                      type="text"
-                      // helperText={errors.name}
-                      className={classnames("", {
-                        invalid: errors.name,
-                      })}
-                    />
-                    {errors.name ? (
-                      <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText variant="outlined" error>
-                          {errors.name}
-                        </FormHelperText>
-                      </div>
-                    ) : null}
-                  </Grid>
-                  <Grid item>
-                    <Typography
-                      component="label"
-                      for="description"
-                      color="primary"
-                    >
-                      Deskripsi
-                    </Typography>
-                    <TextField
-                      fullWidth
-                      multiline
-                      rows="5"
-                      rowsMax="25"
-                      variant="outlined"
-                      id="description"
-                      onChange={(e) => this.onChange(e, "description")}
-                      value={this.state.description}
-                      error={errors.description}
-                      type="text"
-                      className={classnames("", {
-                        invalid: errors.description,
-                      })}
-                    />
-                    {errors.description ? (
-                      <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText variant="outlined" error>
-                          {errors.description}
-                        </FormHelperText>
-                      </div>
-                    ) : null}
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            <div
-              style={{ display: "flex", justifyContent: "flex-end" }}
-              className={classes.content}
-            >
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <Button
-                  variant="contained"
-                  className={classes.cancelButton}
-                  onClick={this.handleOpenDeleteDialog}
-                >
-                  Batal
-                </Button>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  className={classes.createUnitButton}
-                >
-                  Buat Unit
-                </Button>
-              </div>
-            </div>
-          </form>
-        </Paper>
       </div>
     );
   }
 }
 
 CreateUnit.propTypes = {
-  errors: PropTypes.object.isRequired,
-  success: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  success: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors,
-  success: state.success,
-  subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
+  success: state.success,
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, {})(withStyles(styles)(CreateUnit));
