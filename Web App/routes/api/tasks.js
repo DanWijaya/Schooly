@@ -28,30 +28,22 @@ router.post("/create", (req, res) => {
   Task.findOne({ name: req.body.name, subject: req.body.subject })
     .then((task) => {
       if (task) {
-        return res.status(400).json({
+        throw {
           name: "Tugas dengan nama dan mata pelajaran yang sama sudah ada",
-        });
+        };
       } else {
         const newTask = new Task(req.body);
-        // const newTask = new Task({
-        // name: req.body.name,
-        // deadline: req.body.deadline,
-        // subject: req.body.subject,
-        // class_assigned: req.body.class_assigned,
-        // description: req.body.description,
-        // person_in_charge_id: req.body.person_in_charge_id
-        // })
-
-        newTask
-          .save()
-          .then((task) => {
-            console.log("Task is created");
-            res.json(task);
-          })
-          .catch((err) => console.log(err));
+        return newTask.save();
       }
     })
-    .catch((err) => res.status(400).json(err));
+    .then((task) => {
+      console.log("Task is created");
+      res.json(task);
+    })
+    .catch((err) => {
+      console.error("Unable to create task");
+      return res.status(400).json(err);
+    });
 });
 
 //Define View classes route
@@ -61,31 +53,44 @@ router.get("/viewall/:unitId", (req, res) => {
   if (!unitId) {
     return res.json([]);
   }
-  Task.find({ unit: unitId }).then((tasks, err) => {
-    if (!tasks) return res.status(400).json("Tasks are not found");
-    else return res.json(tasks);
-  });
+  Task.find({ unit: unitId })
+    .then((tasks, err) => {
+      if (!tasks) {
+        throw "Tasks are not found";
+      }
+      return res.json(tasks);
+    })
+    .catch((err) => {
+      console.error("Unable to view all tasks");
+      return res.status(400).json(err);
+    });
 });
 
 //Define delete routes
 router.delete("/delete/:id", (req, res) => {
-  Task.findByIdAndRemove(req.params.id).then((tasks, err) => {
-    if (!tasks) {
-      res.status(400).json(err);
-    } else {
-      res.json(tasks);
-    }
-  });
+  Task.findByIdAndRemove(req.params.id)
+    .then((taskData) => {
+      if (!taskData) throw "Task to delete is not found";
+      res.json(taskData);
+    })
+    .catch((err) => {
+      console.error("Unable to delete task");
+      return res.status(400).json(err);
+    });
 });
 
 //Define Get one task routes
 router.get("/view/:id", (req, res) => {
   let id = req.params.id;
-  Task.findById(id, (err, taskData) => {
-    if (!taskData) return res.status(404).json("Task is not found");
-
-    return res.json(taskData);
-  });
+  Task.findById(id)
+    .then((taskData) => {
+      if (!taskData) throw "Task is not found";
+      return res.json(taskData);
+    })
+    .catch((err) => {
+      console.error("Unable to view task");
+      return res.status(400).json(err);
+    });
 });
 
 router.post("/grade/:id", (req, res) => {
@@ -96,17 +101,19 @@ router.post("/grade/:id", (req, res) => {
     return res.status(400).json(errorsGrade);
   }
   let grade = req.body.grade;
-  Task.findById(id, (err, taskData) => {
-    if (!taskData) return res.status(404).send("Task data is not found");
-    //grade kan dia Map (key, value). grade -> (studentId, nilainya)
-    // untuk yang kasi nilai
-    taskData.grades.set(req.body.studentId, grade);
-
-    taskData
-      .save()
-      .then((taskData) => res.json("Grade Task complete"))
-      .catch((err) => res.status(400).send("Unable to find task in database"));
-  });
+  Task.findById(id)
+    .then((taskData) => {
+      if (!taskData) throw "Task to grade is not found";
+      //grade kan dia Map (key, value). grade -> (studentId, nilainya)
+      // untuk yang kasi nilai
+      taskData.grades.set(req.body.studentId, grade);
+      return taskData.save();
+    })
+    .then(() => res.json("Grade Task complete"))
+    .catch((err) => {
+      console.error("Unable to grade task");
+      return res.status(400).json(err);
+    });
 });
 
 //Define update routes
@@ -114,18 +121,16 @@ router.put("/update/:id", (req, res) => {
   let grade = req.body.grade;
   const { errors, isValid } = validateTaskInput(req.body);
   if (!isValid) {
-    console.log("Not Valid");
-    return res.status(400).json(errors);
+    console.log("Not valid");
+    throw errors;
   }
 
   let id = req.params.id;
 
   console.log(req.body.name);
-  Task.findById(id, (err, taskData) => {
-    if (!taskData) return res.status(404).send("Task data is not found");
-    else {
-      // taskData.grades
-      // Untuk taskData yang bukan edit atau kasi nilai
+  Task.findById(id)
+    .then((taskData) => {
+      if (!taskData) throw "Task data is not found";
       taskData.name = req.body.name;
       taskData.deadine = req.body.deadine;
       taskData.subject = req.body.subject;
@@ -133,22 +138,13 @@ router.put("/update/:id", (req, res) => {
       taskData.description = req.body.description;
       taskData.deadline = req.body.deadline;
 
-      // else {
-      //   const { errorsGrade, isValidGrade } = validateTaskGrade(req.body);
-      //   if (!isValidGrade) {
-      //     return res.status(400).json(errorsGrade);
-      //   }
-      //   //grade kan dia Map (key, value). grade -> (studentId, nilainya)
-      //   // untuk yang kasi nilai
-      //   taskData.grades.set(req.body.studentId, grade);
-      // }
-
-      taskData
-        .save()
-        .then((taskData) => res.json("Update Task complete"))
-        .catch((err) => res.status(400).send("Unable to update task database"));
-    }
-  });
+      return taskData.save();
+    })
+    .then((taskData) => res.json("Update Task complete"))
+    .catch((err) => {
+      console.error("Unable to update task");
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/view", (req, res) => {
@@ -161,67 +157,51 @@ router.get("/view", (req, res) => {
     query.class_assigned = { $elemMatch: { $eq: classId } };
   }
 
-  Task.find(query).then((tasks) => {
-    if (!tasks) {
-      return res.status(200).json("Belum ada tugas");
-    } else {
+  Task.find(query)
+    .then((tasks) => {
+      if (!tasks) {
+        throw "Belum ada tugas";
+      }
       return res.json(tasks);
-    }
-  });
+    })
+    .catch((err) => {
+      console.error("Unable to view task");
+      return res.status(400).json(err);
+    });
 });
-
-/* router.get("/byclass/:classId", (req, res) => {
-  Task.find({
-    class_assigned: { $elemMatch: { $eq: req.params.classId } },
-  }).then((tasks) => {
-    if (!tasks) {
-      return res.status(200).json("Belum ada tugas");
-    } else {
-      return res.status(200).json(tasks);
-    }
-  });
-}); */
 
 router.post("/comment/:taskId", (req, res) => {
   let comment = req.body;
-
-  Task.findById(req.params.taskId, (err, taskData) => {
-    if (!taskData) {
-      return res.status(404).send("Task data is not found");
-    } else {
-      if (comment.content.length === 0) {
-        res.status(400).json("Isi komentar tidak boleh kosong");
-        return;
-      }
+  Task.findById(req.params.taskId)
+    .then((taskData) => {
+      if (!taskData) throw { data: "Task data is not found", status: 404 };
+      if (!comment.content.length)
+        throw { data: "Isi komentar tidak boleh kosong", status: 400 };
 
       let newComments = taskData.comments ? [...taskData.comments] : [];
       comment.createdAt = new mongoose.Types.ObjectId().getTimestamp();
       newComments.push(comment);
-
       taskData.comments = newComments;
-      taskData
-        .save()
-        .then(() => {
-          res.json("Create task comment complete");
-        })
-        .catch(() => {
-          res.status(400).send("Unable to create task comment");
-        });
-    }
-  });
+      return taskData.save();
+    })
+    .then(() => {
+      return res.json("Create task comment is successful");
+    })
+    .catch((err) => {
+      // status code tergantung errornya (sebenarnya status code should not be a big deal).
+      console.error("Unable to create task comment");
+      return res.json(err);
+    });
 });
 
 router.put("/comment/:taskId", (req, res) => {
   let { updatedContent, commentId } = req.body;
 
-  Task.findById(req.params.taskId, (err, taskData) => {
-    if (!taskData) {
-      return res.status(404).send("Task data is not found");
-    } else {
-      if (updatedContent.length === 0) {
-        res.status(400).json("Isi komentar tidak boleh kosong");
-        return;
-      }
+  Task.findById(req.params.taskId)
+    .then((taskData) => {
+      if (!taskData) throw { data: "Task data is not found", status: 404 };
+      if (updatedContent.length === 0)
+        throw { data: "Isi komentar tidak boleh kosong", status: 400 };
 
       let newComments = taskData.comments ? [...taskData.comments] : [];
       for (let i = 0; i < newComments.length; i++) {
@@ -233,25 +213,22 @@ router.put("/comment/:taskId", (req, res) => {
       }
 
       taskData.comments = newComments;
-      taskData
-        .save()
-        .then(() => {
-          res.json("Edit task comment complete");
-        })
-        .catch(() => {
-          res.status(400).send("Unable to edit task comment");
-        });
-    }
-  });
+      return taskData.save();
+    })
+    .then(() => res.json("Edit task comment complete"))
+    .catch((err) => {
+      // status code tergantung errornya (sebenarnya status code should not be a big deal).
+      console.error("Unable to update task comment");
+      return res.json(err);
+    });
 });
 
 router.delete("/comment/:taskId&:commentId", (req, res) => {
   const { taskId, commentId } = req.params;
 
-  Task.findById(taskId, (err, taskData) => {
-    if (!taskData) {
-      return res.status(404).send("Task data is not found");
-    } else {
+  Task.findById(taskId)
+    .then((taskData) => {
+      if (!taskData) throw "Task data is not found";
       let newComments = taskData.comments ? [...taskData.comments] : [];
       for (let i = 0; i < newComments.length; i++) {
         if (newComments[i]._id.toString() === commentId) {
@@ -261,16 +238,14 @@ router.delete("/comment/:taskId&:commentId", (req, res) => {
       }
 
       taskData.comments = newComments;
-      taskData
-        .save()
-        .then(() => {
-          res.json("Delete task comment complete");
-        })
-        .catch(() => {
-          res.status(400).send("Unable to delete task comment");
-        });
-    }
-  });
+      return taskData.save();
+    })
+    .then(() => res.json("Delete task comment complete"))
+    .catch((err) => {
+      // status code tergantung errornya (sebenarnya status code should not be a big deal).
+      console.error("Unable to delete task");
+      return res.json(err);
+    });
 });
 
 module.exports = router;

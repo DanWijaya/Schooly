@@ -1,50 +1,54 @@
 // ikutin format, import" express, import model yang kamu buat tadi dan lain-lain
 // pakai router dkk buat post, get dan put, request. Jangan lupa panggil res.json atau res.status(<status_code>).json({..})
-// Pakai postman untuk buat setting ini.  
-// Di dalamnya, kamu pakai Setting.findById dan kawan"... ikutin saja. 
+// Pakai postman untuk buat setting ini.
+// Di dalamnya, kamu pakai Setting.findById dan kawan"... ikutin saja.
 
 const express = require("express");
 const router = express.Router();
 const Setting = require("../../models/setting/Setting");
 
-router.post("/create", (req,res) => {
+router.post("/create", (req, res) => {
   const newSetting = new Setting({
     upload_limit: req.body.upload_limit,
   });
-  console.log(newSetting);
   newSetting
     .save()
-    .then((setting) => {
+    .then((settingData) => {
       console.log("Setting is created");
-      console.log(setting);
-      return res.status(200).json(setting);
+      return res.status(200).json(settingData);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.error("Unable to create setting");
+      return res.status(400).json(err);
+    });
 });
 
-router.get("/view", (req,res) => {
+router.get("/view", (req, res) => {
   console.log("viewing setting");
-  Setting.findOne({}).then((setting) => {
-    if (!setting) return res.status(400).json("setting is not found");
-    else {
-      console.log("setting viewed : " , setting);
-      return res.status(200).json(setting);
-    }
-  });
+  Setting.findOne()
+    .then((settingData) => {
+      if (!settingData) throw "setting is not found";
+      return res.json(settingData);
+    })
+    .catch((err) => {
+      console.error("Unable to view the setting");
+      res.status(400).json(err);
+    });
 });
 
-router.put("/update", (req,res) => {
-  console.log ("body received: ", req.body);
-  Setting.findOne().then((settingData, err) => {
-    if (!settingData) return res.status(404).send("setting is not found");
-    else {
+router.put("/update", (req, res) => {
+  // console.log("body received: ", req.body);
+  Setting.findOne()
+    .then((settingData) => {
+      if (!settingData) throw "setting is not found";
       settingData.upload_limit = req.body.upload_limit;
-      settingData
-        .save()
-        .then((settingData) => res.json("Update Setting complete"))
-        .catch((err) => res.status(400).send("Unable to update setting database"));
-    }
-  });
+      return settingData.save();
+    })
+    .then((settingData) => res.json("Update Setting complete"))
+    .catch((err) => {
+      console.error("Unable to update setting");
+      res.status(400).send(err);
+    });
 });
 
 module.exports = router;
