@@ -134,7 +134,7 @@ router.post("/login", (req, res) => {
           payload,
           keys.secretOrKey,
           {
-            expiresIn: 31556926, // 1 year in seconds
+            expiresIn: 604800, // 1 year in seconds
           },
           (err, token) => {
             res.json({
@@ -144,9 +144,7 @@ router.post("/login", (req, res) => {
           }
         );
       } else {
-        return res
-          .status(400)
-          .json({ password: "Kata sandi tidak benar" });
+        return res.status(400).json({ password: "Kata sandi tidak benar" });
       }
     });
   });
@@ -352,17 +350,21 @@ router.put(
 
 router.get("/getteachers", (req, res) => {
   // console.log("GET teachers runned")
-  Teacher.find({ active: true }).sort({name: 1}).then((users, err) => {
-    if (!users) console.log("No teachers yet in Schooly System");
-    else return res.json(users);
-  });
+  Teacher.find({ active: true })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users) console.log("No teachers yet in Schooly System");
+      else return res.json(users);
+    });
 });
 
 router.get("/getstudents", (req, res) => {
-  Student.find({ active: true }).sort({name: 1}).then((users, err) => {
-    if (!users) console.log("No students yet in Schooly System");
-    else return res.json(users);
-  });
+  Student.find({ active: true })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users) console.log("No students yet in Schooly System");
+      else return res.json(users);
+    });
 });
 
 router.get("/getOneUser/:id", (req, res) => {
@@ -393,36 +395,44 @@ router.get("/getUsers", (req, res) => {
 
 router.get("/getstudentsbyclass/:id", (req, res) => {
   let id = req.params.id;
-  Student.find({ kelas: id, active: true}).sort({name: 1}).then((users, err) => {
-    if (!users) console.log("No students with this class ID");
-    else {
-      // console.log("Users by class : ", users)
-      return res.json(users);
-    }
-  });
+  Student.find({ kelas: id, active: true })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users) console.log("No students with this class ID");
+      else {
+        // console.log("Users by class : ", users)
+        return res.json(users);
+      }
+    });
 });
 
 router.get("/all_users", (req, res) => {
-  User.find({ active: true }).sort({name: 1}).then((users, err) => {
-    if (!users)
-      return res.status(404).json("No students yet in Schooly system");
-    else return res.json(users);
-  });
+  User.find({ active: true })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users)
+        return res.status(404).json("No students yet in Schooly system");
+      else return res.json(users);
+    });
 });
 
 // for admin only
 router.get("/getpendingstudents", (req, res) => {
-  Student.find({ active: false }).sort({name: 1}).then((users, err) => {
-    if (!users) return res.json([]);
-    else return res.json(users);
-  });
+  Student.find({ active: false })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users) return res.json([]);
+      else return res.json(users);
+    });
 });
 
 router.get("/getpendingteachers", (req, res) => {
-  Teacher.find({ active: false }).sort({name: 1}).then((users, err) => {
-    if (!users) return res.json([]);
-    else return res.json(users);
-  });
+  Teacher.find({ active: false })
+    .sort({ name: 1 })
+    .then((users, err) => {
+      if (!users) return res.json([]);
+      else return res.json(users);
+    });
 });
 
 router.put("/setuseractive/:id", (req, res) => {
@@ -507,29 +517,30 @@ router.put("/teacher/:teacherId", (req, res) => {
   });
 });
 
-router.post("/register_students_bulk", (req,res) => {
+router.post("/register_students_bulk", (req, res) => {
   let { classes, users } = req.body;
-  // terima req.body.classes 
+  // terima req.body.classes
   let class_map = new Map();
-  
+
   // isi dari classes_map (key,value) = (nama kelas, ObjectId)
-  Class.find( {name: {$in: classes}}).then((result) => {
-    result.forEach((item) => class_map.set(item.name, item._id));
-    let user_list = users.map((u) => {
-      u.kelas = class_map.get(u.kelas);
-      u.active = true;
-      
-      const saltRounds = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(u.password, saltRounds)
-      
-      u.password = hash;
-      return u;
+  Class.find({ name: { $in: classes } })
+    .then((result) => {
+      result.forEach((item) => class_map.set(item.name, item._id));
+      let user_list = users.map((u) => {
+        u.kelas = class_map.get(u.kelas);
+        u.active = true;
+
+        const saltRounds = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(u.password, saltRounds);
+
+        u.password = hash;
+        return u;
+      });
+      return User.insertMany(user_list);
+    })
+    .then((results) => {
+      return res.json(results);
     });
-    return User.insertMany(user_list);
-  }).then((results) => {
-    return res.json(results);
-  })
-})
+});
 
 module.exports = router;
-

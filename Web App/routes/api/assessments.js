@@ -391,12 +391,19 @@ router.get("/viewall", (req, res) => {
     });
 });
 
+//Request Yanti
 router.get("/view/:id", (req, res) => {
   let id = req.params.id;
   Assessment.findById(id, (err, assessment) => {
     if (!assessment) {
       res.status(404).json("Assessment is not found");
     } else {
+      //Buat soal True or Falsenya di 7 soal pertama, ambil 2 soal.
+      //Buat soal PG di 8 soal terakhir, ambil 15 soal.
+      //Untuk soal yang muridnya gak terima, sistemnya ngesimpan submission soal itu sebagai nilai spesial (mungkin '#')
+      let { questions } = assessment;
+
+      questionsToShow = questions.filter((qns, idx) => {});
       if (assessment.posted === null) {
         res.json({
           ...assessment,
@@ -408,6 +415,29 @@ router.get("/view/:id", (req, res) => {
     }
   }).lean();
 });
+
+// Original View assessment route
+/*
+router.get("/view/:id", (req, res) => {
+  let id = req.params.id;
+  Assessment.findById(id, (err, assessment) => {
+    if (!assessment) {
+      res.status(404).json("Assessment is not found");
+    } else {
+      
+      
+      if (assessment.posted === null) {
+        res.json({
+          ...assessment,
+          posted: new Date() >= new Date(assessment.post_date),
+        });
+      } else {
+        res.json(assessment);
+      }
+    }
+  }).lean();
+});
+*/
 
 router.delete("/delete/:id", (req, res) => {
   let id = req.params.id;
