@@ -36,10 +36,6 @@ import {
   TablePagination,
   Typography,
   Hidden,
-  Fab,
-  ListItemIcon,
-  ListItemText,
-  Menu,
   FormGroup,
   Checkbox,
 } from "@material-ui/core";
@@ -48,12 +44,7 @@ import {
   KeyboardDateTimePicker,
 } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
-import SettingsIcon from "@material-ui/icons/Settings";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import LinkIcon from "@material-ui/icons/Link";
-import CancelIcon from "@material-ui/icons/Cancel";
-import SendIcon from "@material-ui/icons/Send";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import Alert from "@material-ui/lab/Alert";
 import {
@@ -116,12 +107,6 @@ const styles = (theme) => ({
     },
   },
   settingsButton: {
-    // backgroundColor: "white",
-    // color: theme.palette.text.secondary,
-    // "&:focus, &:hover": {
-    //   backgroundColor: theme.palette.text.secondary,
-    //   color: "white",
-    // },
     [theme.breakpoints.down("xs")]: {
       paddingRight: "0",
       paddingLeft: "0",
@@ -153,7 +138,6 @@ const styles = (theme) => ({
   copyToClipboardButton: {
     marginLeft: "24px",
     color: theme.palette.copylink.main,
-    // color: theme.palette.primary.main,
   },
   assessmentSettings: {
     justifyContent: "flex-end",
@@ -168,8 +152,6 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
-      // backgroundColor: "white",
-      // color: theme.palette.primary.main,
     },
   },
   cancelButton: {
@@ -178,8 +160,6 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.error.main,
       color: "white",
-      // backgroundColor: "white",
-      // color: theme.palette.error.main,
     },
   },
   chips: {
@@ -189,15 +169,6 @@ const styles = (theme) => ({
   chip: {
     marginRight: 2,
   },
-  // settingsButton: {
-  //   backgroundColor: "grey",
-  //   color: "white",
-  //   "&:focus, &:hover": {
-  //     backgroundColor: "#555555",
-  //     color: "white",
-  //   },
-  //   marginInlineEnd: "2em",
-  // },
   menuVisible: {
     "& .MuiListItemIcon-root": {
       color: theme.palette.warning.main,
@@ -217,19 +188,6 @@ const styles = (theme) => ({
       color: theme.palette.copylink.main,
     },
   },
-  // menuCopy: {
-  //   "& .MuiListItemIcon-root": {
-  //     // color: theme.palette.primary.main
-  //     color: theme.palette.copylink.main,
-  //   },
-  //   "&:hover, &:focus": {
-  //     // backgroundColor: theme.palette.primary.main,
-  //     backgroundColor: theme.palette.copylink.main,
-  //     "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-  //       color: "white",
-  //     },
-  //   },
-  // },
   menuCancel: {
     "& .MuiListItemIcon-root": {
       color: theme.palette.error.main,
@@ -2353,7 +2311,6 @@ class EditAssessment extends Component {
                 <Paper>
                   <Grid
                     container
-                    // spacing={2}
                     justify="space-between"
                     alignItems="center"
                     className={classes.pageNavigatorContent}
@@ -2393,69 +2350,6 @@ class EditAssessment extends Component {
                             <LinkIcon />
                           </IconButton>
                         </LightTooltip>
-                        {/*<LightTooltip title={`Pengaturan`}>
-                        <IconButton
-                          disableRipple
-                          className={classes.settingsButton}
-                          onClick={(event) => this.handleMenuOpen(event)}
-                        >
-                          <SettingsIcon />
-                        </IconButton>
-                      </LightTooltip>
-                      <Menu
-                        keepMounted
-                        anchorEl={this.state.anchorEl}
-                        open={Boolean(this.state.anchorEl)}
-                        onClose={this.handleMenuClose}
-                        getContentAnchorEl={null}
-                        style={{ marginTop: "10px" }}
-                        anchorOrigin={{
-                          vertical: "top",
-                          horizontal: "center",
-                        }}
-                        transformOrigin={{
-                          vertical: "bottom",
-                          horizontal: "center",
-                        }}
-                      >
-                        <MenuItem
-                          button
-                          disabled={this.state.isScheduled}
-                          className={classes.menuVisible}
-                          onClick={this.handlePostToggle}
-                        >
-                          <ListItemIcon>
-                            {!this.state.posted ? (
-                              <VisibilityIcon />
-                            ) : (
-                              <VisibilityOffIcon />
-                            )}
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={
-                              !this.state.posted
-                                ? "Tampilkan ke Murid"
-                                : "Sembunyikan dari Murid"
-                            }
-                          />
-                        </MenuItem>
-                        <MenuItem
-                          button
-                          component="a"
-                          className={classes.menuCopy}
-                          onClick={() => {
-                            navigator.clipboard.writeText(linkToShare);
-                            this.handleOpenCopySnackBar();
-                          }}
-                        >
-                          <ListItemIcon>
-                            <LinkIcon />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={`Salin Tautan ${this.state.type}`}
-                          />
-                        </MenuItem>
-                      </Menu>*/}
                       </Grid>
                     </Grid>
                     <Grid item className={classes.assessmentSettings}>

@@ -87,9 +87,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Validator = require("validator");
-const isEmpty = require("is-empty");
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 

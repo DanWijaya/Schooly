@@ -11,12 +11,7 @@ import { refreshTeacher } from "../../../actions/UserActions";
 import { getSetting } from "../../../actions/SettingActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import {
-  getFileMaterials,
-  downloadFileMaterial,
-  viewFileMaterial,
-  getAllS3,
-} from "../../../actions/files/FileMaterialActions";
+import { getFileMaterials } from "../../../actions/files/FileMaterialActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -25,7 +20,6 @@ import {
   Avatar,
   Button,
   Chip,
-  Divider,
   FormControl,
   FormHelperText,
   Grid,

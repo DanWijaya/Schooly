@@ -18,8 +18,6 @@ import {
   Checkbox,
   FormGroup,
   Hidden,
-  InputAdornment,
-  FormHelperText,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -428,7 +426,7 @@ function QuestionItem(props) {
                         >
                           <Typography variant="caption">Belum diisi</Typography>
                           <LightTooltip
-                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. 
+                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal.
                         Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian."
                           >
                             <HelpIcon
@@ -448,7 +446,7 @@ function QuestionItem(props) {
                             Periksa kembali
                           </Typography>
                           <LightTooltip
-                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. 
+                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal.
                         Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian."
                           >
                             <HelpIcon
@@ -465,7 +463,7 @@ function QuestionItem(props) {
                           }}
                         >
                           <LightTooltip
-                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. 
+                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal.
                         Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian."
                           >
                             <HelpIcon

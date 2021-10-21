@@ -19,10 +19,8 @@ import { getOneTask, gradeTask } from "../../../actions/TaskActions";
 import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
 import Empty from "../../misc/empty/Empty";
 import CustomLinkify from "../../misc/linkify/Linkify";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
-  Box,
   Button,
   Divider,
   ExpansionPanel,
@@ -31,11 +29,9 @@ import {
   Fab,
   Grid,
   Hidden,
-  IconButton,
   List,
   ListItem,
   ListItemAvatar,
-  ListItemIcon,
   ListItemText,
   Paper,
   Snackbar,
@@ -49,7 +45,6 @@ import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   BarChart as BarChartIcon,
-  CloudDownload as CloudDownloadIcon,
   ExpandMore as ExpandMoreIcon,
   GetApp as GetAppIcon,
   QuestionAnswer as QuestionAnswerIcon,

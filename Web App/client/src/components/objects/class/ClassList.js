@@ -18,8 +18,6 @@ import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
-  Avatar,
-  Badge,
   Divider,
   Fab,
   Grid,
@@ -28,7 +26,6 @@ import {
   Menu,
   MenuItem,
   InputAdornment,
-  Paper,
   TableSortLabel,
   Typography,
   Snackbar,
@@ -44,11 +41,8 @@ import {
   ArrowBack as ArrowBackIcon,
   AssignmentInd as AssignmentIndIcon,
   Clear as ClearIcon,
-  Delete as DeleteIcon,
-  Edit as EditIcon,
   Search as SearchIcon,
   Sort as SortIcon,
-  SupervisorAccount as SupervisorAccountIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaChalkboard, FaChalkboardTeacher } from "react-icons/fa";

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
@@ -8,11 +8,7 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import {
   AppBar,
   Button,
-  Divider,
-  FormHelperText,
   Grid,
-  Paper,
-  Select,
   TextField,
   Typography
 } from "@material-ui/core";
@@ -78,8 +74,6 @@ const useStyles = makeStyles((theme) => ({
     color: "grey",
   },
 }));
-
-const path = require("path");
 
 function EditUnit(props) {
   const classes = useStyles();

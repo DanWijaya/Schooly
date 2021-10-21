@@ -1,9 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
-import "moment/locale/id";
 import {
   getPendingStudents,
   getPendingTeachers,
@@ -13,7 +11,6 @@ import {
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import UserMenu from "./UserMenu";
 import { TabPanel } from "../../misc/tab-panel/TabPanel";
 import {
   Avatar,
@@ -112,7 +109,6 @@ const ManageUsersToolbar = (props) => {
     orderBy,
     onRequestSort,
     role,
-    heading,
     activateCheckboxMode,
     deactivateCheckboxMode,
     currentCheckboxMode,

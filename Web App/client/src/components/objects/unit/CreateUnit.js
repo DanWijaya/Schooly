@@ -8,11 +8,7 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import {
   AppBar,
   Button,
-  Divider,
-  FormHelperText,
   Grid,
-  Paper,
-  Select,
   TextField,
   Typography
 } from "@material-ui/core";
@@ -78,8 +74,6 @@ const styles = (theme) => ({
     color: "grey",
   },
 });
-
-const path = require("path");
 
 class CreateUnit extends Component {
   constructor() {

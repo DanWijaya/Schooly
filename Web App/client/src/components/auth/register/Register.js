@@ -10,7 +10,6 @@ import { registerUser, validateRegister } from "../../../actions/UserActions";
 import { getAllUnits } from "../../../actions/UnitActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import registerStepperArt from "./RegisterStepperArt.png";
-import UnitList from "../../objects/unit/UnitList";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
@@ -343,7 +342,7 @@ class Register extends Component {
                   ) : null}
                 </FormControl>
               </Grid>
-              {this.state.role == "SuperAdmin" ? null : (
+              {this.state.role === "SuperAdmin" ? null : (
                 <Grid item>
                   <FormControl
                     fullWidth
@@ -545,14 +544,14 @@ class Register extends Component {
     const handleNext = () => {
       if (this.state.activeStep !== 2 || this.state.errors === null)
         var userData;
-      if (this.state.activeStep == 0) {
+      if (this.state.activeStep === 0) {
         userData = {
           name: this.state.name,
           email: this.state.email.toLowerCase(),
           password: this.state.password,
           password2: this.state.password2,
         };
-      } else if (this.state.activeStep == 1) {
+      } else if (this.state.activeStep === 1) {
         userData = {
           role: this.state.role,
           phone: this.state.phone,

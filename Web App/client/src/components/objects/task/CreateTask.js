@@ -20,7 +20,6 @@ import {
   Avatar,
   Button,
   Chip,
-  Divider,
   FormControl,
   FormHelperText,
   Grid,
@@ -647,7 +646,7 @@ class CreateTask extends Component {
                 Buat Tugas
               </Typography>
               <Typography color="textSecondary" style={{ marginBottom: "35px" }}>
-                Ganti keterangan tugas beserta lampiran berkas yang diberikan.
+                Berikan tugas dengan banyak kelas sekaligus, tambahkan lampiran berkas jika diperlukan.
               </Typography>
               <Grid container spacing={4}>
                 <Grid item xs={12} md>
