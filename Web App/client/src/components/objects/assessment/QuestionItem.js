@@ -2,9 +2,12 @@ import React from "react";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Button,
+  Checkbox,
   Divider,
   FormControl,
   FormControlLabel,
+  FormGroup,
+  FormHelperText,
   Grid,
   GridList,
   GridListTile,
@@ -14,74 +17,33 @@ import {
   Radio,
   RadioGroup,
   TextField,
-  Typography,
-  Checkbox,
-  FormGroup,
-  Hidden,
+  Tooltip,
+  Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
-import ClearIcon from "@material-ui/icons/Clear";
-import CloseIcon from "@material-ui/icons/Close";
-import DeleteIcon from "@material-ui/icons/Delete";
-import FilterNoneIcon from "@material-ui/icons/FilterNone";
-import HelpIcon from "@material-ui/icons/Help";
+import {
+  AddCircle as AddCircleIcon,
+  AddPhotoAlternate as AddPhotoAlternateIcon,
+  Clear as ClearIcon,
+  Close as CloseIcon,
+  Delete as DeleteIcon,
+  Help as HelpIcon,
+} from "@material-ui/icons";
+import { MdContentCopy } from "react-icons/md";
+
 
 const useStyles = makeStyles((theme) => ({
   content: {
-    padding: "20px 20px 30px 20px",
-  },
-  addOptionButton: {
-    backgroundColor: "white",
-    color: theme.palette.primary.main,
-    marginTop: "20px",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  addQuestionButton: {
-    color: "white",
-    padding: "2px",
-    borderRadius: "100%",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-    },
-  },
-  RadioQst: {
-    backgroundColor: theme.palette.radio.main,
-  },
-  CheckboxQst: {
-    padding: "3px",
-    backgroundColor: theme.palette.checkbox.main,
-  },
-  ShorttextQst: {
-    backgroundColor: theme.palette.shorttext.main,
-  },
-  LongtextQst: {
-    backgroundColor: theme.palette.longtext.main,
-  },
-  questionNameDiv: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    padding: "20px",
   },
   formLabel: {
     display: "flex",
     flexGrow: "1",
   },
-  helpIcon: {
-    cursor: "default",
-    color: "grey",
-    marginTop: "5px",
-  },
-  inputSize: {
-    fontSize: "inherit!important",
-  },
 }));
 
 function QuestionItem(props) {
+  const classes = useStyles();
   const {
     index,
     name,
@@ -106,10 +68,9 @@ function QuestionItem(props) {
     renderbtErrors,
     lampiranUrls,
   } = props;
-  const classes = useStyles();
 
   const [checked, setChecked] = React.useState(check_data);
-  const [dummyRender, setDummyRender] = React.useState(0); // Hanya Untuk Force Re-render
+  const [dummyRender, setDummyRender] = React.useState(0); // Only for force re-rendering.
   const [val, setValue] = React.useState("");
   const textRef = React.useRef(null);
   const [longtextValue, setLongtextValue] = React.useState("");
@@ -117,10 +78,10 @@ function QuestionItem(props) {
   const [localBtError, setLocalBtError] = React.useState(false);
   const [lampiranToPreview, setLampiranToPreview] = React.useState([]);
   const weightInput = React.useRef(null);
-  // dipakai untuk edit assessment
+  // Used to edit assessment
   // const [currentLampiran, setCurrentLampiran] = React.useState([])
 
-  // Fitur 2 - Fungsi Untuk Memastikan Kondisi Checked Pada Checkbox Ketika Dicentang
+  // function to check checked condition in checkbox when it is checked.
   function handleCheck(e, i, index, answer, type) {
     let temp_cek = checked;
     temp_cek[i] = e.target.checked;
@@ -137,14 +98,10 @@ function QuestionItem(props) {
 
   let list_options = JSON.parse(options);
   const imageUploader = React.useRef();
-  // console.log("A".charCodeAt(0))
   const imageUpload = () => {
     imageUploader.current.value = null;
     imageUploader.current.click();
   };
-
-  // console.log(options)
-  // console.log(type)
 
   const handlePreviewImage = (arr_lampiran) => {
     if (Array.isArray(arr_lampiran)) {
@@ -163,13 +120,12 @@ function QuestionItem(props) {
         .then((res) => {
           setLampiranToPreview(res);
         })
-        .catch((err) => console.log(err));
     }
   };
 
   const handleTextFieldChange = (e) => {
     if (e.target.value.length <= 1) {
-      //agar setelah mengetikan karakter, error "belum diisi" langsung hilang
+      // So that when typing a character, error "belum diisi" will vanish.
       handleChangeQuestion(e, index);
     }
     setLocalBtError(false);
@@ -198,7 +154,6 @@ function QuestionItem(props) {
     }
   }, [answer, type]);
   React.useEffect(() => {
-    // setLongtextValue("1");
     setLongtextValue(longtextWeight);
   }, [longtextWeight]);
   React.useEffect(() => {
@@ -211,7 +166,6 @@ function QuestionItem(props) {
     }
   }, [longtextValue]);
   React.useEffect(() => {
-    console.log("Lampiran to preview set to empty");
     setLampiranToPreview([]);
   }, []);
   React.useEffect(() => {
@@ -228,307 +182,131 @@ function QuestionItem(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lampiranToAdd.length]);
 
-  // console.log("Current lampiran : ", currentLampiran);
-  // console.log("Lampiran to preview: ", lampiranToPreview);
   let lampiranToUrl = isEdit ? new Map(JSON.parse(lampiranUrls)) : null;
 
   return (
     <Grid item>
-      <Paper>
-        <Grid container>
-          <Grid
-            item
-            xs
-            sm
-            md
-            container
-            direction="column"
-            spacing={2}
-            className={classes.content}
-          >
+      <Paper className={classes.content}>
+        <Typography variant="h6" gutterBottom>
+          Soal {index + 1}
+        </Typography>
+        <Grid container direction="column" spacing={2}>
+          <Grid item container direction="column" spacing={2}>
             <Grid item>
-              <Typography variant="h6" style={{ marginLeft: "5px" }}>
-                Soal {index + 1}
-              </Typography>
-              <Hidden smDown>
-                <GridList
-                  cols={3}
-                  cellHeight={300}
-                  style={{ margin: "10px 0px 10px 0px" }}
-                >
-                  {isEdit
-                    ? currentLampiran.map((image, i) => (
-                        <GridListTile key={image} cols={1}>
-                          <img
-                            alt="current img"
-                            // src={`/api/upload/att_assessment/${image}`
-                            src={lampiranToUrl.get(image.toString())}
-                          />
-                          <GridListTileBar
-                            titlePosition="top"
-                            actionIcon={
-                              <IconButton
-                                style={{ color: "white" }}
-                                onClick={(e) =>
-                                  handleQuestionImage(e, index, i)
-                                }
-                              >
-                                <CloseIcon />
-                              </IconButton>
-                            }
-                            title={`Gambar ${i + 1}`}
-                            actionPosition="right"
-                          />
-                        </GridListTile>
-                      ))
-                    : null}
-                  {lampiranToPreview.map((image, i) => (
-                    <GridListTile key={image} cols={1}>
-                      <img alt="current img" src={image} />
-                      <GridListTileBar
-                        titlePosition="top"
-                        actionIcon={
-                          <IconButton
-                            style={{ color: "white" }}
-                            // onClick={(e) => handleQuestionImage(e, index, i + currentLampiran.length)
-                            onClick={(e) => handleQuestionImage(e, index, i)}
-                          >
-                            <CloseIcon />
-                          </IconButton>
-                        }
-                        title={`Gambar ${i + 1 + currentLampiran.length}`}
-                        actionPosition="right"
-                      />
-                    </GridListTile>
-                  ))}
-                </GridList>
-              </Hidden>
-              <Hidden mdUp xsDown>
-                <GridList
-                  cols={2}
-                  cellHeight={300}
-                  style={{ margin: "10px 0px 10px 0px" }}
-                >
-                  {isEdit
-                    ? currentLampiran.map((image, i) => (
-                        <GridListTile key={image} cols={1}>
-                          <img
-                            alt="current img"
-                            // src={`/api/upload/att_assessment/${image}`
-                            src={lampiranToUrl.get(image.toString())}
-                          />
-                          <GridListTileBar
-                            titlePosition="top"
-                            actionIcon={
-                              <IconButton
-                                style={{ color: "white" }}
-                                // onClick={(e) => handleQuestionImage(e, index, i + currentLampiran.length)
-                                onClick={(e) =>
-                                  handleQuestionImage(e, index, i)
-                                }
-                              >
-                                <CloseIcon />
-                              </IconButton>
-                            }
-                            title={`Gambar ${i + 1}`}
-                            actionPosition="right"
-                          />
-                        </GridListTile>
-                      ))
-                    : null}
-                  {lampiranToPreview.map((image, i) => (
-                    <GridListTile key={image} cols={1}>
-                      <img alt="current img" src={image} />
-                      <GridListTileBar
-                        titlePosition="top"
-                        actionIcon={
-                          <IconButton
-                            style={{ color: "white" }}
-                            onClick={(e) => handleQuestionImage(e, index, i)}
-                          >
-                            <CloseIcon />
-                          </IconButton>
-                        }
-                        title={`Gambar ${i + 1 + currentLampiran.length}`}
-                        actionPosition="right"
-                      />
-                    </GridListTile>
-                  ))}
-                </GridList>
-              </Hidden>
-              <Hidden smUp>
-                <GridList
-                  cols={1}
-                  cellHeight={300}
-                  style={{ margin: "10px 0px 10px 0px" }}
-                >
-                  {isEdit
-                    ? currentLampiran.map((image, i) => (
-                        <GridListTile key={image} cols={1}>
-                          <img
-                            alt="current img"
-                            // src={`/api/upload/att_assessment/${image}`
-                            src={lampiranToUrl.get(image.toString())}
-                          />
-                          <GridListTileBar
-                            titlePosition="top"
-                            actionIcon={
-                              <IconButton
-                                style={{ color: "white" }}
-                                onClick={(e) =>
-                                  handleQuestionImage(e, index, i)
-                                }
-                              >
-                                <CloseIcon />
-                              </IconButton>
-                            }
-                            title={`Gambar ${i + 1}`}
-                            actionPosition="right"
-                          />
-                        </GridListTile>
-                      ))
-                    : null}
-                  {lampiranToPreview.map((image, i) => (
-                    <GridListTile key={image} cols={1}>
-                      <img alt="current img" src={image} />
-                      <GridListTileBar
-                        titlePosition="top"
-                        actionIcon={
-                          <IconButton
-                            style={{ color: "white" }}
-                            onClick={(e) => handleQuestionImage(e, index, i)}
-                          >
-                            <CloseIcon />
-                          </IconButton>
-                        }
-                        title={`Gambar ${i + 1 + currentLampiran.length}`}
-                        actionPosition="right"
-                      />
-                    </GridListTile>
-                  ))}
-                </GridList>
-              </Hidden>
+              <GridList
+                cols={3}
+                cellHeight={300}
+              >
+                {isEdit
+                  ? currentLampiran.map((image, i) => (
+                      <GridListTile key={image} cols={1}>
+                        <img
+                          alt="current img"
+                          src={lampiranToUrl.get(image.toString())}
+                        />
+                        <GridListTileBar
+                          titlePosition="top"
+                          actionIcon={
+                            <IconButton
+                              style={{ color: "white" }}
+                              onClick={(e) =>
+                                handleQuestionImage(e, index, i)
+                              }
+                            >
+                              <CloseIcon />
+                            </IconButton>
+                          }
+                          title={`Gambar ${i + 1}`}
+                          actionPosition="right"
+                        />
+                      </GridListTile>
+                    ))
+                  : null}
+                {lampiranToPreview.map((image, i) => (
+                  <GridListTile key={image} cols={1}>
+                    <img alt="current img" src={image} />
+                    <GridListTileBar
+                      titlePosition="top"
+                      actionIcon={
+                        <IconButton
+                          style={{ color: "white" }}
+                          onClick={(e) => handleQuestionImage(e, index, i)}
+                        >
+                          <CloseIcon />
+                        </IconButton>
+                      }
+                      title={`Gambar ${i + 1 + currentLampiran.length}`}
+                      actionPosition="right"
+                    />
+                  </GridListTile>
+                ))}
+              </GridList>
+            </Grid>
+            <Grid item>
               {type === "shorttext" ? (
-                <TextField
-                  FormHelperTextProps={{
-                    style: {
-                      marginRight: "12px",
-                    },
-                  }}
-                  helperText={
-                    <>
-                      {!name.length ? (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Typography variant="caption">Belum diisi</Typography>
-                          <LightTooltip
-                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal.
-                        Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian."
-                          >
-                            <HelpIcon
-                              fontSize="small"
-                              className={classes.helpIcon}
-                            />
-                          </LightTooltip>
-                        </div>
-                      ) : localBtError ? (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Typography variant="caption">
-                            Periksa kembali
-                          </Typography>
-                          <LightTooltip
-                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal.
-                        Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian."
-                          >
-                            <HelpIcon
-                              fontSize="small"
-                              className={classes.helpIcon}
-                            />
-                          </LightTooltip>
-                        </div>
-                      ) : (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-end",
-                          }}
-                        >
-                          <LightTooltip
-                            title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal.
-                        Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian."
-                          >
-                            <HelpIcon
-                              fontSize="small"
-                              className={classes.helpIcon}
-                            />
-                          </LightTooltip>
-                        </div>
-                      )}
-                    </>
-                  }
-                  error={!name.length || localBtError}
-                  multiline
-                  rowsMax={10}
-                  id="name"
-                  fullWidth
-                  variant="filled"
-                  value={val}
-                  inputRef={textRef}
-                  onChange={(e) => {
-                    handleTextFieldChange(e);
-                  }}
-                  onBlur={(e) => {
-                    handleBlur(e, index);
-                  }}
-                  // InputProps={{
-                  //   endAdornment: (
-                  //     <InputAdornment position="end">
-                  //       <LightTooltip title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian.">
-                  //         <HelpIcon fontSize="small" style={{cursor: "default", color: "grey" }} />
-                  //       </LightTooltip>
-                  //     </InputAdornment>
-                  //   ),
-                  // }}
-                />
+                <>
+                  <TextField
+                    fullWidth
+                    multiline
+                    variant="filled"
+                    id="name"
+                    rowsMax={10}
+                    value={val}
+                    inputRef={textRef}
+                    onChange={(e) => {handleTextFieldChange(e)}}
+                    onBlur={(e) => {handleBlur(e, index)}}
+                    error={!name.length || localBtError}
+                  />
+                  <FormHelperText style={{ marginLeft: "14px" }}>
+                    <Grid container justify="space-between" alignItems="center">
+                      <Grid item>
+                        {!name.length ? (
+                            <Typography variant="caption" color="error">
+                              Belum diisi
+                            </Typography>
+                          ) : localBtError ? (
+                            <Typography variant="caption" color="error">
+                              Periksa Kembali
+                            </Typography>
+                          ) : null
+                        }
+                      </Grid>
+                      <Grid item xs container justify="flex-end">
+                        <Grid item>
+                          <Tooltip title="Apit bagian jawaban dari soal dengan karakter `">
+                            <HelpIcon fontSize="small" />
+                          </Tooltip>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </FormHelperText>
+                </>
               ) : (
                 <TextField
-                  helperText={!name.length ? "Belum diisi" : null}
-                  error={!name.length}
-                  multiline
-                  rowsMax={10}
-                  id="name"
                   fullWidth
+                  multiline
                   variant="filled"
+                  id="name"
+                  rowsMax={10}
                   value={val}
                   inputRef={textRef}
-                  onChange={(e) => {
-                    handleTextFieldChange(e);
-                  }}
-                  onBlur={(e) => {
-                    handleChangeQuestion(e, index, textRef.current.value);
-                  }}
+                  onChange={(e) => {handleTextFieldChange(e)}}
+                  onBlur={(e) => {handleChangeQuestion(e, index, textRef.current.value)}}
+                  error={!name.length}
+                  helperText={!name.length ? "Belum diisi" : null}
                 />
               )}
             </Grid>
             <Grid item>
               {type === "radio" ? (
-                <FormControl component="fieldset" id="answer" fullWidth>
+                <FormControl id="answer" fullWidth>
                   <RadioGroup
+                    id="answer"
                     value={
                       answer && answer.length !== 0
                         ? answer[0].toUpperCase()
                         : null
                     }
-                    id="answer"
                     onChange={(e) =>
                       handleChangeQuestion(e, index, null, "answer", "radio")
                     }
@@ -537,22 +315,19 @@ function QuestionItem(props) {
                       <div style={{ display: "flex" }}>
                         <FormControlLabel
                           style={{ width: "100%" }}
+                          classes={{ label: classes.formLabel }}
                           value={String.fromCharCode(97 + i).toUpperCase()}
                           control={<Radio color="primary" />}
                           label={
                             <TextField
-                              helperText={!option.length ? "Belum diisi" : null}
-                              error={!option.length}
-                              onError={() => console.log("ERROR textfield")}
+                              placeholder="Isi Pilihan"
                               style={{ flexGrow: 1 }}
                               value={option}
-                              onChange={(e) =>
-                                handleQuestionOptions(e, i, index, "Edit")
-                              }
-                              placeholder="Isi Pilihan"
+                              onChange={(e) => handleQuestionOptions(e, i, index, "Edit")}
+                              error={!option.length}
+                              helperText={!option.length ? "Belum diisi" : null}
                             />
                           }
-                          classes={{ label: classes.formLabel }}
                         />
                         <IconButton
                           onClick={(e) =>
@@ -563,26 +338,25 @@ function QuestionItem(props) {
                         </IconButton>
                       </div>
                     ))}
-                    <div>
+                    <div style={{ marginTop: "16px" }}>
                       <Button
-                        className={classes.addOptionButton}
+                        color="primary"
                         startIcon={<AddCircleIcon />}
-                        onClick={(e) =>
-                          handleQuestionOptions(e, null, index, "Add")
-                        }
+                        onClick={(e) => handleQuestionOptions(e, null, index, "Add")}
                       >
-                        Tambah pilihan
+                        Tambah Opsi
                       </Button>
                     </div>
                   </RadioGroup>
                 </FormControl>
               ) : type === "checkbox" ? (
-                <FormControl component="fieldset" id="answer" fullWidth>
+                <FormControl id="answer" fullWidth>
                   <FormGroup>
                     {list_options.map((option, i) => (
                       <div style={{ display: "flex" }}>
                         <FormControlLabel
                           style={{ width: "100%" }}
+                          classes={{ label: classes.formLabel }}
                           value={String.fromCharCode(97 + i).toUpperCase()}
                           control={
                             <Checkbox
@@ -595,18 +369,14 @@ function QuestionItem(props) {
                           }
                           label={
                             <TextField
-                              helperText={!option.length ? "Belum diisi" : null}
-                              error={!option.length}
-                              onError={() => console.log("ERROR textfield")}
+                              placeholder="Isi Pilihan"
                               style={{ flexGrow: 1 }}
                               value={option}
-                              onChange={(e) =>
-                                handleQuestionOptions(e, i, index, "Edit")
-                              }
-                              placeholder="Isi Pilihan"
+                              onChange={(e) => handleQuestionOptions(e, i, index, "Edit")}
+                              error={!option.length}
+                              helperText={!option.length ? "Belum diisi" : null}
                             />
                           }
-                          classes={{ label: classes.formLabel }}
                         />
                         <IconButton
                           onClick={(e) =>
@@ -619,35 +389,30 @@ function QuestionItem(props) {
                     ))}
                     <div>
                       <Button
-                        className={classes.addOptionButton}
+                        color="primary"
                         startIcon={<AddCircleIcon />}
                         onClick={(e) =>
                           handleQuestionOptions(e, null, index, "Add")
                         }
                       >
-                        Tambah pilihan
+                        Tambah Opsi
                       </Button>
                     </div>
                   </FormGroup>
                 </FormControl>
+              ) : type === "shorttext" ? (
+                null
               ) : type === "longtext" ? (
-                <div style={{ marginTop: "16px" }}>
-                  <Typography style={{ marginBottom: "16px" }}>
-                    <b>Jawaban:</b>
+                <div>
+                  <Typography gutterBottom>
+                    Jawaban:
                   </Typography>
                   <TextField
-                    helperText={
-                      longtextAnswer.length === 0 ? "Belum diisi" : null
-                    }
-                    error={longtextAnswer.length === 0}
-                    multiline
-                    rowsMax={10}
                     fullWidth
+                    multiline
                     variant="outlined"
-                    // defaultValue={longtextAnswer}
-                    defaultValue={
-                      answer && answer.length !== 0 ? answer[0] : null
-                    }
+                    rowsMax={10}
+                    defaultValue={answer && answer.length !== 0 ? answer[0] : null}
                     onBlur={() => {
                       handleChangeQuestion(
                         longtextAnswer,
@@ -660,118 +425,83 @@ function QuestionItem(props) {
                     onChange={(e) => {
                       setLongtextAnswer(e.target.value);
                     }}
+                    error={longtextAnswer.length === 0}
+                    helperText={longtextAnswer.length === 0 ? "Belum diisi" : null}
                   />
                 </div>
               ) : null}
             </Grid>
           </Grid>
-          <Divider flexItem orientation="vertical" />
-          <Grid
-            item
-            xs={3}
-            sm={2}
-            md={1}
-            container
-            direction="column"
-            alignItems="center"
-            className={classes.content}
-          >
-            <Grid item>
-              <input
-                accept="image/*"
-                multiple
-                type="file"
-                name="avatar"
-                onChange={(e) => {
-                  handleQuestionImage(e, index, null);
-                }}
-                ref={imageUploader}
-                style={{
-                  display: "none",
-                  visibility: "hidden",
-                }}
-              />
-              <LightTooltip title="Tambahkan Gambar" placement="right">
-                <IconButton onClick={imageUpload}>
-                  <AddPhotoAlternateIcon />
-                </IconButton>
-              </LightTooltip>
-            </Grid>
-            <Grid item>
-              <LightTooltip title="Duplikat Soal" placement="right">
-                <IconButton onClick={() => handleDuplicateQuestion(index)}>
-                  <FilterNoneIcon />
-                </IconButton>
-              </LightTooltip>
-            </Grid>
-            <Grid item>
-              <LightTooltip title="Hapus Soal" placement="right">
-                <IconButton
-                  onClick={() => {
-                    deleteQuestion(index);
-                  }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </LightTooltip>
+          <Grid item>
+            <Divider />
+          </Grid>
+          <Grid item container justify="space-between" alignItems="center">
+            {props.type === "longtext" ? (
+              <Grid item>
+                <Grid container alignItems="center" spacing={2}>
+                  <Grid item>
+                    <Typography display="inline" color="primary">Bobot: </Typography>
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      type="number"
+                      value={longtextValue}
+                      inputRef={weightInput}
+                      onChange={(e) => {
+                        handleLongtextWeight(e, index);
+                      }}
+                      error={
+                        (isNaN(Number(longtextValue)) ||
+                          Number(longtextValue) <= 0) &&
+                        longtextValue !== undefined
+                      }
+                      InputProps={{
+                        style: { width: "70px" },
+                        endAdornment: (
+                          <Typography color="textSecondary" style={{ marginLeft: "5px" }}>Poin</Typography>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            ) : null}
+            <Grid item xs>
+              <Grid container justify="flex-end">
+                <Grid item>
+                  <input
+                    multiple
+                    type="file"
+                    accept="image/*"
+                    name="avatar"
+                    ref={imageUploader}
+                    style={{ display: "none" }}
+                    onChange={(e) => handleQuestionImage(e, index, null)}
+                  />
+                  <Tooltip title="Unggah Gambar">
+                    <IconButton onClick={imageUpload}>
+                      <AddPhotoAlternateIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Duplikat Soal">
+                    <IconButton onClick={() => handleDuplicateQuestion(index)}>
+                      <MdContentCopy />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Hapus Soal">
+                    <IconButton onClick={() => deleteQuestion(index)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-
-        {props.type === "longtext" ? (
-          <div>
-            <Divider />
-            <Grid
-              container
-              className={classes.content}
-              justify="flex-end"
-              alignItems="center"
-            >
-              <Grid item style={{ marginRight: "20px" }}>
-                <Typography color="primary">Bobot: </Typography>
-              </Grid>
-              <Grid item style={{ height: "3rem" }}>
-                <TextField
-                  value={longtextValue}
-                  inputRef={weightInput}
-                  onChange={(e) => {
-                    handleLongtextWeight(e, index);
-                  }}
-                  variant="outlined"
-                  // lihat catatan inisialisasi state longtextWeight di edit/create assessment untuk info terkait nilai longtextValue
-                  error={
-                    (isNaN(Number(longtextValue)) ||
-                      Number(longtextValue) <= 0) &&
-                    longtextValue !== undefined
-                  }
-                  helperText={
-                    (isNaN(Number(longtextValue)) ||
-                      Number(longtextValue) <= 0) &&
-                    longtextValue !== undefined
-                      ? "Periksa Kembali!"
-                      : null
-                  }
-                  FormHelperTextProps={{
-                    style: {
-                      marginLeft: "0",
-                      marginRight: "0",
-                    },
-                  }}
-                  InputProps={{
-                    style: {
-                      borderBottom: "none",
-                      boxShadow: "none",
-                      width: "100px",
-                    },
-                    endAdornment: (
-                      <Typography color="textSecondary">{` Poin`}</Typography>
-                    ),
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </div>
-        ) : null}
       </Paper>
     </Grid>
   );
@@ -780,7 +510,7 @@ function QuestionItem(props) {
 export default React.memo(
   QuestionItem,
   function arePropsEqual(prevProps, nextProps) {
-    // second argument
+    // Second argument
     return (
       prevProps.name === nextProps.name &&
       prevProps.options === nextProps.options &&

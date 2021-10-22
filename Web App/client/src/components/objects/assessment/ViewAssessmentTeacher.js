@@ -13,7 +13,6 @@ import { getFileAssessment } from "../../../actions/files/FileAssessmentActions"
 import Latex from "../../misc/latex/Latex";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Button,
   Divider,
@@ -23,18 +22,14 @@ import {
   GridListTileBar,
   GridList,
   Hidden,
-  Input,
   Paper,
   Snackbar,
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import SwitchBase from "@material-ui/core/internal/SwitchBase";
 import Alert from "@material-ui/lab/Alert";
 import {
-  Assignment as AssignmentIcon,
   CheckCircle as CheckCircleIcon,
-  Create as CreateIcon,
   Delete as DeleteIcon,
   Edit as EditIcon,
   FiberManualRecord as FiberManualRecordIcon,
