@@ -22,33 +22,34 @@ router.post("/create", (req, res) => {
     return res.status(400).json(errors);
   }
 
-  Assessment.findOne({ name: req.body.name, subject: req.body.subject }).then(
-    (assessment) => {
+  Assessment.findOne({ name: req.body.name, subject: req.body.subject })
+    .then((assessment) => {
       if (assessment) {
-        return res
-          .status(400)
-          .json({ name: "Quizzes with same name and subject already exist" });
-      } else {
-        let questions = req.body.questions;
-        let questions_no_lampiran = questions.map((qns) => {
-          delete qns.lampiran;
-          return qns;
-        });
-        let { class_assigned } = req.body;
-        var map = new Map();
-        class_assigned.forEach((a) => map.set(a, new Map()));
-        console.log(map);
-        const newAssessment = new Assessment({
-          ...req.body,
-          questions: questions_no_lampiran,
-        });
-        newAssessment
-          .save()
-          .then((quiz) => res.json(quiz))
-          .catch((err) => res.json(err));
+        throw { name: "Quizzes with same name and subject already exist" };
       }
-    }
-  );
+      let questions = req.body.questions;
+      let questions_no_lampiran = questions.map((qns) => {
+        delete qns.lampiran;
+        return qns;
+      });
+      let { class_assigned } = req.body;
+      var map = new Map();
+      class_assigned.forEach((a) => map.set(a, new Map()));
+      console.log(map);
+      const newAssessment = new Assessment({
+        ...req.body,
+        questions: questions_no_lampiran,
+      });
+      return newAssessment.save();
+    })
+    .then((assessment) => {
+      console.log("Create assessment completed");
+      return res.json(assessment);
+    })
+    .catch((err) => {
+      console.log("Create assessment failed");
+      res.status(400).json(err);
+    });
 });
 
 router.put("/update/:id", (req, res) => {
@@ -58,11 +59,9 @@ router.put("/update/:id", (req, res) => {
   }
 
   let id = req.params.id;
-
-  Assessment.findById(id, (err, assessmentData) => {
-    if (!assessmentData)
-      return res.status(404).send("Assessment data is not found");
-    else {
+  Assessment.findById(id)
+    .then((assessmentData) => {
+      if (!assessmentData) throw "Assessment data is not found";
       assessmentData.name = req.body.name;
       assessmentData.description = req.body.description;
       assessmentData.class_assigned = req.body.class_assigned;
@@ -239,23 +238,27 @@ router.put("/update/:id", (req, res) => {
         assessmentData.question_weight = req.body.question_weight;
       }
       assessmentData.questions = qns_list;
-      assessmentData
-        .save()
-        .then((ass) => res.json(update_answer))
-        .catch((err) => res.status(400).send("Unable to update task database"));
-    }
-  });
+      return assessmentData.save();
+    })
+    .then((assessment) => {
+      console.log("Update Assessment completed");
+      return res.json(assessment);
+    })
+    .catch((err) => {
+      console.log("Update Assessment failed");
+      return res.status(400).send("Unable to update task database");
+    });
 });
 
 router.put("/submit/:id", (req, res) => {
   let id = req.params.id;
   let { answers, classId, userId } = req.body;
 
-  Assessment.findById(id, (err, assessmentData) => {
-    console.log(assessmentData);
-    if (!assessmentData) {
-      return res.status(404).send("Assessment cannot be found");
-    } else {
+  Assessment.findById(id)
+    .then((assessmentData) => {
+      if (!assessmentData) {
+        throw "Assessment cannot be found";
+      }
       let now = new Date();
       if (now < new Date(assessmentData.post_date)) {
         return res.json("Assessment not posted");
@@ -356,12 +359,16 @@ router.put("/submit/:id", (req, res) => {
       assessmentData.submissions = submissions;
       assessmentData.submissions_timestamp = submissions_timestamp;
 
-      assessmentData
-        .save()
-        .then((ass) => res.json(ass))
-        .catch((err) => res.status(400).send("Unable to update task database"));
-    }
-  });
+      return assessmentData.save();
+    })
+    .then((ass) => {
+      console.log("Submit Assessment completed");
+      return res.json(ass);
+    })
+    .catch((err) => {
+      console.log("Submit Assessment failed");
+      return res.status(400).send(err);
+    });
 });
 
 router.get("/viewall/:unitId", (req, res) => {
@@ -372,34 +379,26 @@ router.get("/viewall/:unitId", (req, res) => {
   Assessment.find({ unit: unitId })
     .lean()
     .then((assessments) => {
-      if (!assessments) {
-        res.status(404).json("Assessments are not found");
-      } else {
-        res.json(
-          assessments.map((assessment) => {
-            console.log("Munculin assessment:", assessment);
-            let ended = new Date() >= new Date(assessment.end_date);
-            if (assessment.posted === null) {
-              return {
-                ...assessment,
-                posted: new Date() >= new Date(assessment.post_date),
-                ended: ended,
-              };
-            } else {
-              return { ...assessment, ended: ended };
-            }
-          })
-        );
+      if (!assessments.length) {
+        throw "Assessments are not found";
       }
+      return res.json(assessments);
+    })
+    .catch((err) => {
+      console.log("View all assessments failed");
+      return res.status(400).json(err);
     });
 });
 
 router.get("/view/:id", (req, res) => {
   let id = req.params.id;
-  Assessment.findById(id, (err, assessment) => {
-    if (!assessment) {
-      res.status(404).json("Assessment is not found");
-    } else {
+  Assessment.findById(id)
+    .lean()
+    .then((assessment) => {
+      if (!assessment) {
+        throw "Assessment is not found";
+      }
+      console.log("View Assessment completed");
       if (assessment.posted === null) {
         res.json({
           ...assessment,
@@ -408,19 +407,22 @@ router.get("/view/:id", (req, res) => {
       } else {
         res.json(assessment);
       }
-    }
-  }).lean();
+    })
+    .catch((err) => {
+      console.log("View Assessment failed");
+      return res.status(400).json(err);
+    });
 });
 
 router.delete("/delete/:id", (req, res) => {
   let id = req.params.id;
 
-  Assessment.findByIdAndRemove(id, (err, assessment) => {
-    if (!assessment)
-      return res.status(404).json("Quiz to be deleted not found");
-
-    return res.json(assessment);
-  });
+  Assessment.findByIdAndRemove(id)
+    .then((assessment) => {
+      if (!assessment) throw "Quiz to be deleted not found";
+      return res.json(assessment);
+    })
+    .catch((err) => res.status(400).json(err));
 });
 
 router.get("/view", (req, res) => {
@@ -439,45 +441,53 @@ router.get("/view", (req, res) => {
   Assessment.find(query)
     .lean()
     .then((assessments) => {
+      console.log("View Assessment completed");
       if (assessments.length === 0) {
-        res.status(404).json(`Belum ada ${type}`);
-      } else {
-        res.json(
-          assessments.map((assessment) => {
-            if (assessment.posted === null) {
-              return {
-                ...assessment,
-                posted: new Date() >= new Date(assessment.post_date),
-              };
-            } else {
-              return assessment;
-            }
-          })
-        );
+        console.log("Assessments are empty");
+        return res.json(assessments);
       }
+      return res.json(
+        assessments.map((assessment) => {
+          if (assessment.posted === null) {
+            return {
+              ...assessment,
+              posted: new Date() >= new Date(assessment.post_date),
+            };
+          } else {
+            return assessment;
+          }
+        })
+      );
+    })
+    .catch((err) => {
+      console.log("View assessment failed");
+      return res.status(400).json(err);
     });
 });
 
 router.put("/suspects/:assessmentId", (req, res) => {
-  Assessment.findById(req.params.assessmentId, (err, assessmentData) => {
-    if (!assessmentData) {
-      return res.status(404).send("Assessment data is not found");
-    } else {
+  Assessment.findById(req.params.assessmentId)
+    .then((assessmentData) => {
+      if (!assessmentData) {
+        throw "Assessment data is not found";
+      }
       assessmentData.suspects = req.body;
-      assessmentData
-        .save()
-        .then(() => res.json(req.body))
-        .catch(() =>
-          res.status(400).send(`Unable to update assessment suspects`)
-        );
-    }
-  });
+      return assessmentData.save();
+    })
+    .then((assessment) => {
+      console.log("Get Suspects completed");
+      return res.json(assessment);
+    })
+    .catch((err) => {
+      console.log("Get suspects failed");
+      return res.status(400).send(err);
+    });
 });
 
 router.put("/grades", (req, res) => {
   Assessment.findById(req.body.assessmentId, (err, assessmentData) => {
     if (!assessmentData) {
-      return res.status(404).send("Assessment data is not found");
+      throw "Assessment data is not found";
     } else {
       let questions = assessmentData.questions;
       let weights = assessmentData.question_weight;
@@ -581,45 +591,50 @@ router.put("/grades", (req, res) => {
       }
 
       assessmentData.grades = grades;
-      assessmentData
-        .save()
-        .then((ass) => {
-          res.json(ass);
-        })
-        .catch(() => res.status(400).send(`Unable to update grades attribute`));
+      return assessmentData.save();
     }
-  });
+  })
+    .then((ass) => {
+      console.log("Grade assessment completed");
+      return res.json(ass);
+    })
+    .catch((err) => {
+      console.log("Grade assessment failed");
+      return res.status(400).send(err);
+    });
 });
 
 router.get("/status/:id", (req, res) => {
-  Assessment.findById(req.params.id, (err, assessment) => {
-    if (!assessment) {
-      return res.status(404).json("Assessment not found");
-    }
-    let now = new Date();
-    let startDate = new Date(assessment.start_date);
-    let endDate = new Date(assessment.end_date);
-    let status;
-    if (now < startDate) {
-      status = -1;
-    } else if (now >= startDate && now <= endDate) {
-      status = 0;
-    } else {
-      // (now > endDate)
-      status = 1;
-    }
-    res.json({ status, now });
-  });
+  Assessment.findById(req.params.id)
+    .then((assessment) => {
+      if (!assessment) {
+        throw "Assessment not found";
+      }
+      let now = new Date();
+      let startDate = new Date(assessment.start_date);
+      let endDate = new Date(assessment.end_date);
+      let status;
+      if (now < startDate) {
+        status = -1;
+      } else if (now >= startDate && now <= endDate) {
+        status = 0;
+      } else {
+        // (now > endDate)
+        status = 1;
+      }
+      return res.json({ status, now });
+    })
+    .catch((err) => {
+      return res.status(400).json(err);
+    });
 });
 
 router.post("/validity", (req, res) => {
   const { errors, isValid } = validateAssessmentInput(req.body);
-  if (isValid) {
-    res.status(200);
-  } else {
-    // return res.status(400).json(errors);
-    res.status(400).json(errors);
+  if (!isValid) {
+    return res.status(400).json(errors);
   }
+  return res.status(200);
 });
 
 // Yanti's request to get the difficulty ranking of the questions.
