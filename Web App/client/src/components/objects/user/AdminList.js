@@ -12,9 +12,6 @@ import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Divider,
   FormControl,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
   Grid,
   InputAdornment,
   InputLabel,
@@ -28,20 +25,16 @@ import {
   TextField,
   Typography,
   ListItemAvatar,
-  Dialog,
   Avatar,
   Button,
   Select,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
-import EditIcon from "@material-ui/icons/Edit";
 import SortIcon from "@material-ui/icons/Sort";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { GoSearch } from "react-icons/go";
 import { BiSitemap } from "react-icons/bi";
-import CloseIcon from "@material-ui/icons/Close";
 import ClearIcon from "@material-ui/icons/Clear";
-import MuiAlert from "@material-ui/lab/Alert";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 

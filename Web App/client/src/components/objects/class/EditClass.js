@@ -13,7 +13,6 @@ import {
   AppBar,
   Button,
   FormControl,
-  FormHelperText,
   MenuItem,
   Grid,
   Select,
@@ -82,7 +81,7 @@ const styles = (theme) => ({
     flexGrow: "1",
   },
   labelIcon: {
-    fontSize: "14px",
+    fontSize: "18px",
     marginRight: "10px",
     color: "grey",
   },
@@ -342,7 +341,7 @@ class EditClass extends Component {
                   <Grid item>
                     <div style={{ display: "flex", alignItems: "center"}}>
                       <FaChalkboard className={classes.labelIcon} />
-                      <Typography for="name" color="primary">
+                      <Typography color="primary">
                         Nama Kelas
                       </Typography>
                     </div>
@@ -363,7 +362,7 @@ class EditClass extends Component {
                   <Grid item>
                     <div style={{ display: "flex", alignItems: "center"}}>
                       <AssignmentIndIcon className={classes.labelIcon} />
-                      <Typography for="walikelas" color="primary">
+                      <Typography color="primary">
                         Wali Kelas
                       </Typography>
                     </div>
@@ -399,7 +398,7 @@ class EditClass extends Component {
                   <Grid item>
                     <div style={{ display: "flex", alignItems: "center"}}>
                       <LibraryBooksIcon className={classes.labelIcon} />
-                      <Typography for="matapelajaran" color="primary">
+                      <Typography color="primary">
                         Mata Pelajaran
                       </Typography>
                     </div>
@@ -446,7 +445,7 @@ class EditClass extends Component {
                   <Grid item>
                     <div style={{ display: "flex", alignItems: "center"}}>
                       <Filter1Icon className={classes.labelIcon} />
-                      <Typography for="ketua_kelas" color="primary">
+                      <Typography color="primary">
                         Ketua Kelas
                       </Typography>
                     </div>
@@ -470,7 +469,7 @@ class EditClass extends Component {
                   <Grid item>
                     <div style={{ display: "flex", alignItems: "center"}}>
                       <Filter2Icon className={classes.labelIcon} />
-                      <Typography for="sekretaris" color="primary">
+                      <Typography color="primary">
                         Sekretaris
                       </Typography>
                     </div>
@@ -494,7 +493,7 @@ class EditClass extends Component {
                   <Grid item>
                     <div style={{ display: "flex", alignItems: "center"}}>
                       <Filter3Icon className={classes.labelIcon} />
-                      <Typography for="bendahara" color="primary">
+                      <Typography color="primary">
                         Bendahara
                       </Typography>
                     </div>

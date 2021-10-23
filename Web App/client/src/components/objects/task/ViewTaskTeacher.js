@@ -46,7 +46,6 @@ import {
   Fab,
   Grid,
   Hidden,
-  IconButton,
   ListItem,
   ListItemAvatar,
   ListItemText,

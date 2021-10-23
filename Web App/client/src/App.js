@@ -354,12 +354,18 @@ class App extends Component {
                         access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
                         path="/buat-pengumuman"
                         component={CreateAnnouncement}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact
                         access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
                         path="/sunting-pengumuman/:id"
                         component={EditAnnouncement}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact
@@ -380,12 +386,18 @@ class App extends Component {
                         access={[Role.TEACHER]}
                         path="/buat-materi"
                         component={CreateMaterial}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact
                         access={[Role.TEACHER]}
                         path="/sunting-materi/:id"
                         component={EditMaterial}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact
@@ -406,12 +418,18 @@ class App extends Component {
                         access={[Role.TEACHER]}
                         path="/buat-tugas"
                         component={CreateTask}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact
                         access={[Role.TEACHER]}
                         path="/sunting-tugas/:id"
                         component={EditTask}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact
@@ -602,6 +620,9 @@ class App extends Component {
                         path="/buat-unit"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={CreateUnit}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact
@@ -609,6 +630,9 @@ class App extends Component {
                         path="/sunting-unit/:id"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={EditUnit}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact

@@ -2,8 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
-import "moment/locale/id";
 import {
   getAllAdmins,
   setUserDeactivated,
@@ -35,13 +33,11 @@ import {
   Snackbar,
   TableSortLabel,
   TextField,
-  Toolbar,
   Typography,
 } from "@material-ui/core/";
 import Alert from "@material-ui/lab/Alert";
 import {
   ArrowBack as ArrowBackIcon,
-  Block as BlockIcon,
   Cancel as CancelIcon,
   CheckBox as CheckBoxIcon,
   CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
@@ -112,7 +108,6 @@ function ManageUsersToolbar(props) {
     orderBy,
     onRequestSort,
     role,
-    heading,
     currentCheckboxMode,
     rowCount,
     user,

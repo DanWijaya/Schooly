@@ -1,17 +1,9 @@
 import React from "react";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
-  Avatar,
-  Button,
   Grid,
-  Hidden,
   IconButton,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
   Menu,
   MenuItem,
-  Paper,
   Typography
 } from "@material-ui/core";
 import {

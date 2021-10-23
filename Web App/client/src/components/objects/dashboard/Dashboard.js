@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { Bar, Pie } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
@@ -19,7 +19,6 @@ import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import Empty from "../../misc/empty/Empty";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Badge,
@@ -31,7 +30,6 @@ import {
   Fab,
   Grid,
   Hidden,
-  IconButton,
   LinearProgress,
   List,
   ListItem,
@@ -41,30 +39,21 @@ import {
   Menu,
   MenuItem,
   Paper,
-  Tooltip,
   Typography,
 } from "@material-ui/core";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import {
   Add as AddIcon,
   Announcement as AnnouncementIcon,
-  ArrowBackIos as ArrowBackIosIcon,
-  ArrowForwardIos as ArrowForwardIosIcon,
   AssignmentOutlined as AssignmentIcon,
-  Pageview as PageviewIcon,
   Error as ErrorIcon,
   MenuBook as MenuBookIcon,
   Warning as WarningIcon,
   Web as WebIcon,
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
-import { AiOutlineUserSwitch } from "react-icons/ai";
 import { BsClipboardData } from "react-icons/bs";
-import {
-  FaClipboardList,
-  FaChalkboard,
-  FaChalkboardTeacher,
-} from "react-icons/fa";
+import { FaClipboardList } from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {

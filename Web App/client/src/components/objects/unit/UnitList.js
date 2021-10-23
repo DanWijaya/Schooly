@@ -2,14 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
 import { getAllUnits, deleteUnit } from "../../../actions/UnitActions";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
-  Badge,
   Button,
   Card,
   CardActions,
@@ -20,12 +18,8 @@ import {
   Hidden,
   IconButton,
   InputAdornment,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Menu,
   MenuItem,
-  Paper,
   Snackbar,
   TableSortLabel,
   TextField,
@@ -35,11 +29,9 @@ import Alert from "@material-ui/lab/Alert";
 import {
   ArrowBack as ArrowBackIcon,
   ArrowRightAlt as ArrowRightAltIcon,
-  CheckCircle as CheckCircleIcon,
   Clear as ClearIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  Pageview as PageviewIcon,
   Search as SearchIcon,
   Sort as SortIcon,
   Web as WebIcon

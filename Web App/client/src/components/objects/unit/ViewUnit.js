@@ -1,11 +1,8 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
-import "moment/locale/id";
 import { getOneUnit } from "../../../actions/UnitActions";
-import { getAllClass, getSelectedClasses } from "../../../actions/ClassActions";
+import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import {
   getStudents,
@@ -19,29 +16,15 @@ import SubjectItem from "../item/SubjectItem";
 import UserItem from "../item/UserItem";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import CustomLinkify from "../../misc/linkify/Linkify";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
 import {
-  Avatar,
-  Badge,
-  CircularProgress,
-  Fab,
-  Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Paper,
-  Tabs,
-  Tab,
-  Typography,
   Divider,
-  Hidden,
-  TextField,
-  Button,
-  Snackbar,
-  Box,
+  Grid,
+  List,
+  Paper,
+  Tab,
+  Tabs,
+  Typography
 } from "@material-ui/core";
 import {
   DesktopWindows as DesktopWindowsIcon,
@@ -49,7 +32,6 @@ import {
   SupervisorAccount as SupervisorAccountIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import { FaChalkboardTeacher } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
   root: {

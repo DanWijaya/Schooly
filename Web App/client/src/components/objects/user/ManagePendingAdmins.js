@@ -2,8 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
-import "moment/locale/id";
 import {
   setUserActive,
   deleteUser,
@@ -50,7 +48,6 @@ import {
   Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import { BiSitemap } from "react-icons/bi";
 import { FaUserLock } from "react-icons/fa";
 
 function createData(
@@ -110,7 +107,6 @@ function ManageUsersToolbar(props) {
     orderBy,
     onRequestSort,
     role,
-    heading,
     currentCheckboxMode,
     rowCount,
     user,

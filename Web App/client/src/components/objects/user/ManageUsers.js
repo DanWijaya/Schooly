@@ -2,8 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
-import "moment/locale/id";
 import {
   setUserDeactivated,
   getStudents,
@@ -17,15 +15,12 @@ import { getAllTask } from "../../../actions/TaskActions";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import UserMenu from "./UserMenu";
-import { TabPanel } from "../../misc/tab-panel/TabPanel";
 import {
   Avatar,
   Button,
   Checkbox,
   Dialog,
   Divider,
-  FormControlLabel,
   Grid,
   Hidden,
   IconButton,
@@ -113,7 +108,7 @@ function stableSort(array, comparator) {
 }
 
 function ManageUsersToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, role, heading } = props;
+  const { classes, order, orderBy, onRequestSort, role } = props;
   const {
     currentCheckboxMode,
     rowCount,
