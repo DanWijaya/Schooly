@@ -174,7 +174,7 @@ const Styles = responsiveFontSizes(
           style: {
             borderBottom: "none",
             boxShadow: "none",
-            margin: "0px 15px 5px 15px",
+            margin: "0px 15px",
           },
         },
       },
@@ -183,7 +183,7 @@ const Styles = responsiveFontSizes(
           style: {
             borderBottom: "none",
             boxShadow: "none",
-            margin: "0px 15px 0px 15px",
+            margin: "0px 15px",
             WebkitBoxShadow: "0 0 0 1000px white inset",
           },
         },

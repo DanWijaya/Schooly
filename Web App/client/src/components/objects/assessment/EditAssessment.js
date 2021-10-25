@@ -1,31 +1,32 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import DateFnsUtils from "@date-io/date-fns";
 import PropTypes from "prop-types";
+import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import "date-fns";
-import {
-  getOneAssessment,
-  updateAssessment,
-  validateAssessment,
-} from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getOneAssessment, updateAssessment, validateAssessment } from "../../../actions/AssessmentActions";
 import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
 import { refreshTeacher } from "../../../actions/UserActions";
+import { getSetting } from "../../../actions/SettingActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import {
+  Avatar,
   Button,
+  Checkbox,
   Chip,
   Divider,
   FormControl,
   FormControlLabel,
+  FormGroup,
   FormHelperText,
   Grid,
+  Hidden,
   MenuItem,
   IconButton,
   Paper,
@@ -35,35 +36,32 @@ import {
   TextField,
   TablePagination,
   Typography,
-  Hidden,
-  FormGroup,
-  Checkbox,
 } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
   KeyboardDateTimePicker,
 } from "@material-ui/pickers";
-import { withStyles } from "@material-ui/core/styles";
-import LinkIcon from "@material-ui/icons/Link";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import Alert from "@material-ui/lab/Alert";
+import { withStyles } from "@material-ui/core/styles";
 import {
-  RadioButtonChecked,
-  CheckBox,
-  TextFormat,
-  Subject,
+  CheckBox as CheckBoxIcon,
+  FiberManualRecord as FiberManualRecordIcon,
+  Info as InfoIcon,
+  Link as LinkIcon,
+  RadioButtonChecked as RadioButtonCheckedIcon,
+  Subject as SubjectIcon,
+  TextFormat as TextFormatIcon
 } from "@material-ui/icons";
-import InfoIcon from "@material-ui/icons/Info";
-import { getSetting } from "../../../actions/SettingActions";
 
 const styles = (theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
   addQuestionButton: {
     boxShadow: theme.shadows[2],
@@ -295,10 +293,10 @@ class EditAssessment extends Component {
       ready: false,
       lampiranUrls: new Map(),
       over_limit: [],
-      classOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih kelas
-      subjectOptions: null, // akan ditampilkan sebagai MenuItem pada saat memilih matpel
-      allClassObject: null, // digunakan untuk mendapatkan nama kelas dari id kelas tanpa perlu men-traverse array yang berisi semua kelas
-      allSubjectObject: null, // digunakan untuk mendapatkan nama matpel dari id matpel tanpa perlu men-traverse array yang berisi semua matpel
+      classOptions: null, // Will be showed as menu item when choosing class.
+      subjectOptions: null, // Will be showed as menu item when choosing subject.
+      allClassObject: null, // Used to get class name from class id without traversing class array.
+      allSubjectObject: null, // Used to get subject name from subject id without traversing subject array.
       inputHeight: null, // menyimpan tinggi textfield
       customHeight: null, // menyimpan tinggi label + textfield
       errors: {},
@@ -308,7 +306,8 @@ class EditAssessment extends Component {
     this.customHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi label "Judul" dan textfield
   }
 
-  imageUploader = React.createRef(null); // untuk ngerefer html object yang lain
+  // Ref is used to refer html inside render.
+  imageUploader = React.createRef(null); // To refer other html object.
 
   componentDidMount() {
     const {
@@ -404,7 +403,7 @@ class EditAssessment extends Component {
           longtextWeight: longtextWeight,
           ready: true,
           // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
-          // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
+          // So need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
         });
         if (selectedAssessments.post_date === null) {
           this.setState({
@@ -473,7 +472,7 @@ class EditAssessment extends Component {
     const { questions, lampiranToDelete } = this.state;
     const { updateAssessment, validateAssessment, history } = this.props;
 
-    // mencatat jumlah soal untuk tiap jenis soal
+    // Write down number of question of each question types.
     let typeCount = new Map([
       ["radio", 0],
       ["checkbox", 0],
@@ -485,7 +484,7 @@ class EditAssessment extends Component {
     }
 
     if (this.state.posted || this.state.isScheduled) {
-      // pengecekan isi soal
+      // Check question's content.
       for (var i = 0; i < questions.length; i++) {
         let qns = questions[i];
         if (!qns.name) {
@@ -515,7 +514,7 @@ class EditAssessment extends Component {
         renderbtErrors: !this.state.renderbtErrors,
       });
 
-      // pengecekan bobot
+      // Check question's maximum score point.
       let filteredtypeCount = Array.from(typeCount).filter(
         (pair) => pair[1] > 0
       );
@@ -525,7 +524,7 @@ class EditAssessment extends Component {
         for (let [type, count] of filteredtypeCount) {
           if (type === "longtext") {
             for (let weight of this.state.longtextWeight) {
-              // agar data assessment tidak disubmit ketika ada bobot yang tidak valid
+              // So that assessment data won't be submitted whene there are long answer questions' maximum score point that is not valid.
               if (
                 weight !== -1 &&
                 (isNaN(Number(weight)) || Number(weight) <= 0)
@@ -534,7 +533,7 @@ class EditAssessment extends Component {
               }
             }
           } else {
-            // agar data assessment tidak disubmit ketika ada bobot yang tidak valid
+            // So that assessment data won't be submitted whene there are non-long answer questions' maximum score point that is not valid.
             if (
               isNaN(Number(this.state.weights[type])) ||
               Number(this.state.weights[type]) <= 0
@@ -547,7 +546,7 @@ class EditAssessment extends Component {
     }
 
     let newWeights = { ...this.state.weights };
-    // Untuk kasus dimana tidak ada longtext, tetap perlu diassign value supaya tidak undefined
+    // For the case when there is no long answer question, still need to assign value so that it is not undefined.
     let newLongtextWeight = [...this.state.longtextWeight];
 
     for (let [type, count] of typeCount) {
@@ -573,14 +572,14 @@ class EditAssessment extends Component {
       longtextWeight: newLongtextWeight,
     });
 
-    // jika soal dan bobot sudah lengkap dan benar, submit
+    // If question and maximum score point is already correct, then submit.
     if (invalidQuestionIndex.length === 0 && completeWeight) {
-      // sebelumnya ada && Object.values(this.state.errors).every((error) => (!error))
+      // Before there is && Object.values(this.state.errors).every((error) => (!error))
       let longtext;
       if (typeCount.get("longtext") === 0) {
         longtext = null;
       } else {
-        // mengonversi bobot soal uraian dari string menjadi bilangan
+        // Convert long answer question maximum score point from string to integer.
         longtext = {};
         this.state.longtextWeight.forEach((val, idx) => {
           if (val !== -1) {
@@ -639,8 +638,6 @@ class EditAssessment extends Component {
       )
         .then((res) => {
           this.setState({ success: res });
-          // this.handleOpenUploadDialog();
-          // console.log("Assessment is updated successfully");
         })
         .catch((err) => {
           this.setState({ errors: err });
@@ -753,8 +750,8 @@ class EditAssessment extends Component {
 
         this.setState({ [otherfield]: e });
       } else if (otherfield === "subject") {
-        // jika guru memilih mata pelajaran
-        // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
+        // If teacher choose a subject.
+        // Find all class that is taught by this teacher for the subject that has been chosen.
         let newClassOptions = [];
         if (this.props.auth.user.class_to_subject) {
           for (let [classId, subjectIdArray] of Object.entries(
@@ -774,15 +771,15 @@ class EditAssessment extends Component {
           classOptions: newClassOptions,
         });
       } else if (otherfield === "class_assigned") {
-        // jika guru memilih kelas
+        // If teacher choose a class.
         let selectedClasses = e.target.value;
 
         if (selectedClasses.length === 0) {
-          // jika guru membatalkan semua pilihan kelas
+          // If teacher deselect all chosen class.
           this.setState((prevState, props) => {
             return {
               class_assigned: selectedClasses,
-              // reset opsi matpel (tampilkan semua matpel yang diajar guru ini pada opsi matpel)
+              // Reset subject options (show all subjects that this teacher teach)
               subjectOptions: props.auth.user.subject_teached.map(
                 (subjectId) => ({
                   _id: subjectId,
@@ -792,8 +789,8 @@ class EditAssessment extends Component {
             };
           });
         } else {
-          // jika guru menambahkan atau mengurangi pilihan kelas
-          // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
+          // If teacher add a class or remove a selected class.
+          // Find subject that is taught to every selected class.
           let subjectMatrix = [];
           if (this.props.auth.user.class_to_subject) {
             for (let classId of selectedClasses) {
@@ -813,7 +810,7 @@ class EditAssessment extends Component {
             );
           }
 
-          // menambahkan matpel tersebut ke opsi matpel
+          // Add the subject to the subject option.
           let newSubjectOptions = [];
           subjects.forEach((subjectId) => {
             newSubjectOptions.push({
@@ -846,8 +843,6 @@ class EditAssessment extends Component {
   handleCloseMenuTambah = (option) => {
     this.setState({ anchorEl: null });
     this.setState({ currentQuestionOption: option });
-    // console.log(option)
-    // console.log(this.state.currentQuestionOption)
     this.handleAddQuestion(option);
   };
 
@@ -990,40 +985,40 @@ class EditAssessment extends Component {
           questions[qnsIndex].options[0] = "";
           this.handleOpenCheckboxErrorSnackBar();
         } else {
-          // mencegah adanya soal pg yang tidak memiliki opsi
+          // Prevent there are multiple choice question that has no option.
           if (questions[qnsIndex].answer.length === 1) {
-            // jika hanya ada satu kunci jawaban (misal ["E"])
+            // If there is only one key anwer (for example ["E"]).
             if (
               questions[qnsIndex].answer[0].charCodeAt(0) - 65 ===
               optionIndex
             ) {
-              // jika opsi yang dihapus adalah opsi kunci jawaban, set kunci jawaban ke opsi pertama
+              // If the deleted option is the key answer, then set key answer to the first option.
               questions[qnsIndex].answer[0] = "A";
             } else {
-              //jika opsi yang dihapus bukan opsi kunci jawaban,
+              // If the deleted option is not the key answer.
               if (
                 questions[qnsIndex].answer[0].charCodeAt(0) - 65 >
                 optionIndex
               ) {
-                // nilai kunci jawaban akan dikurangi 1.
-                // misal: jika opsi "C" dihapus, kunci jawaban "E" akan diubah jadi "D",
-                // tapi kunci jawaban "B" tidak akan diubah jadi "A"
+                // Key answer value will be reduced by 1.
+                // For example: if option "C" is deleted, key answer "E" will be changed become "D".
+                // But key answer "B" will not be changed to "A".
                 questions[qnsIndex].answer[0] = String.fromCharCode(
                   97 + questions[qnsIndex].answer[0].charCodeAt(0) - 65 - 1
                 ).toUpperCase();
               }
             }
           } else {
-            // jika ada lebih dari satu kunci jawaban (misal ["E", "B", "Z"])
-            // hapus kunci jawaban
+            // If there is more than one key answer (for example ["E", "B", "Z"]).
+            // Delete key answer.
             questions[qnsIndex].answer = questions[qnsIndex].answer.filter(
               (value) => {
                 return value.charCodeAt(0) - 65 !== optionIndex;
               }
             );
-            // semua nilai kunci jawaban lain akan dikurangi 1.
-            // misal: jika opsi "C" dihapus, kunci jawaban "E" akan diubah jadi "D", kunci jawaban "Z" akan diubah jadi "Y",
-            // tapi kunci jawaban "B" tidak diubah jadi "A"
+            // Every other key answer value will be reduced by 1.
+            // For example: if option "C" is deleted, key answer "E" will be changed to "D", key answer "Z" will be changed to "Y",
+            // But key answer "B" will not be changed to "A".
             for (let i = 0; i < questions[qnsIndex].answer.length; i++) {
               if (
                 questions[qnsIndex].answer[i].charCodeAt(0) - 65 >
@@ -1046,17 +1041,17 @@ class EditAssessment extends Component {
             questions[qnsIndex].answer[0].charCodeAt(0) - 65 ===
             optionIndex
           ) {
-            // jika opsi yang dihapus adalah opsi kunci jawaban, set kunci jawaban ke opsi pertama
+            // If the deleted option is thee key answer option, set key answer to the first option.
             questions[qnsIndex].answer[0] = "A";
           } else {
-            //jika opsi yang dihapus bukan opsi kunci jawaban,
+            // If the deleted option is not the key answer.
             if (
               questions[qnsIndex].answer[0].charCodeAt(0) - 65 >
               optionIndex
             ) {
-              // nilai kunci jawaban akan dikurangi 1.
-              // misal: jika opsi "C" dihapus, kunci jawaban "E" akan diubah jadi "D",
-              // tapi kunci jawaban "B" tidak akan diubah jadi "A"
+              // Key answer value will be reduced by 1.
+              // For example: if option "C" is deleted, key answer "E" will be changed become "D".
+              // But key answer "B" will not be changed to "A".
               questions[qnsIndex].answer[0] = String.fromCharCode(
                 97 + questions[qnsIndex].answer[0].charCodeAt(0) - 65 - 1
               ).toUpperCase();
@@ -1078,9 +1073,9 @@ class EditAssessment extends Component {
   handleDuplicateQuestion = (i) => {
     console.log(i);
     let questions = this.state.questions;
-    // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
-    // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
-    // questions.splice(i+1, 0, question)
+    // If question is inserted directly, somehow it will also change if the duplicated one value is changed.
+    // Maybe if assigning question directly, the object will be identical? if destructure each of them and create a new object, it will be different.
+    // questions.splice(i+1, 0, question).
 
     if (questions[i].type === "shorttext" || questions[i].type === "longtext") {
       questions.splice(i + 1, 0, {
@@ -1151,9 +1146,9 @@ class EditAssessment extends Component {
     const uploadLimit = this.props.settingsCollection.upload_limit;
     if (Number.isInteger(indexToDelete)) {
       let item = questions[qnsIndex].lampiran[indexToDelete];
-      // delete question lampiran nya dari list
+      // Delete a question's image from list.
       questions[qnsIndex].lampiran.splice(indexToDelete, 1);
-      // lalu setelah itu kita simpan semua lampiran di dalam list untuk mengecek.
+      // Then, save all image in list to check.
       let all_lampiran_list = [];
       questions.forEach((qns) => {
         if (qns.lampiran.length) {
@@ -1161,11 +1156,11 @@ class EditAssessment extends Component {
         }
       });
 
-      // dipakai untuk handle kalau imagenya dari duplicate, tapi ada satu soal yang imagenya didelete lah.
+      // Use to handle if image is from duplication, but there is one question that its image is deleted.
       if (typeof item === "string") {
         let temp = this.state.lampiranToDelete;
         if (all_lampiran_list.indexOf(item) === -1) {
-          // kalau ngak ada, bakal dibuang.
+          // if there is nothing, it will be deleted.
           temp.push(item);
         }
         this.setState({ lampiranToDelete: temp, questions: questions });
@@ -1213,8 +1208,6 @@ class EditAssessment extends Component {
   };
 
   listQuestion = () => {
-    console.log(this.state.lampiranUrls);
-    console.log("List quesiton is runned");
     let { questions } = this.state;
     const { page, rowsPerPage } = this.state;
     let questionList = [];
@@ -1224,7 +1217,6 @@ class EditAssessment extends Component {
         let lampiranToAdd = question.lampiran.filter(
           (l) => typeof l !== "string"
         );
-        // console.log(lampiranToAdd);
         let currentLampiran = question.lampiran.filter(
           (l) => typeof l === "string"
         );
@@ -1237,7 +1229,6 @@ class EditAssessment extends Component {
               tempArray.push(Number(value.charCodeAt(0)) - 65);
             });
           }
-          console.log(tempArray);
           for (let j = 0; j < this.state.questions[i].options.length; j++) {
             if (tempArray.includes(j)) {
               booleanArray[j] = true;
@@ -1286,7 +1277,7 @@ class EditAssessment extends Component {
       this.handleOpenUploadDialog();
     }
 
-    // pembandingan info guru (auth.user) dilakukan agar pembaruan info guru oleh admin dapat memperbarui opsi kelas dan mata pelajaran
+    // Comparing teacher information (auth.user) is done so teacher's information renewal by admin can renew the class and subject option.
     if (
       prevState.classOptions === null ||
       JSON.stringify(prevProps.auth.user) !==
@@ -1307,7 +1298,7 @@ class EditAssessment extends Component {
           all_classes_obj[classInfo._id] = classInfo.name;
         });
 
-        // mencari semua kelas yang diajarkan oleh guru ini untuk matpel yang telah dipilih
+        // Find all class that is taught by this teacher for the subject that has been chosen.
         let newClassOptions = [];
         if (this.props.auth.user.class_to_subject) {
           for (let [classId, subjectIdArray] of Object.entries(
@@ -1349,7 +1340,7 @@ class EditAssessment extends Component {
           all_subjects_obj[subjectInfo._id] = subjectInfo.name;
         });
 
-        // mencari matpel yang diajarkan ke semua kelas yang sedang dipilih
+        // Find subject that is taught to every selected class.
         let subjectMatrix = [];
         if (this.props.auth.user.class_to_subject) {
           for (let classId of selectedAssessmentProps.class_assigned) {
@@ -1371,7 +1362,7 @@ class EditAssessment extends Component {
           );
         }
 
-        // menambahkan matpel tersebut ke opsi matpel
+        // Add the subject to the subject option.
         let newSubjectOptions = [];
         subjects.forEach((subjectId) => {
           newSubjectOptions.push({
@@ -1407,7 +1398,7 @@ class EditAssessment extends Component {
   };
 
   handleWeight = (e, type) => {
-    // e.target entah kenapa jadi undefined pas di dalam setState
+    // e.target somehow will be undefined inside setState.
     let value = e.target.value;
     this.setState((state) => {
       return { weights: { ...state.weights, [type]: value } };
@@ -1417,24 +1408,20 @@ class EditAssessment extends Component {
   weightInput = (classes) => {
     const columnTemplate = {
       radio: {
-        // root: classes.RadioQst,
-        text: <b>Pilihan Ganda</b>,
-        icon: <RadioButtonChecked />,
+        text: "Pilihan Ganda",
+        icon: <RadioButtonCheckedIcon fontSize="inherit" />,
       },
       checkbox: {
-        // root: classes.CheckboxQst,
-        text: <b>Kotak Centang</b>,
-        icon: <CheckBox />,
+        text: "Kotak Centang",
+        icon: <CheckBoxIcon fontSize="inherit" />,
       },
       shorttext: {
-        // root: classes.ShorttextQst,
-        text: <b>Isian Pendek</b>,
-        icon: <TextFormat />,
+        text: "Isian Pendek",
+        icon: <TextFormatIcon fontSize="inherit" />,
       },
       longtext: {
-        // root: classes.LongtextQst,
-        text: <b>Uraian</b>,
-        icon: <Subject />,
+        text: "Uraian",
+        icon: <SubjectIcon fontSize="inherit" />,
       },
     };
 
@@ -1462,17 +1449,15 @@ class EditAssessment extends Component {
       for (let i = 0; i < filteredtypeCount.length; i++) {
         let type = filteredtypeCount[i];
         let weight = this.state.weights[type];
-        console.log(weight);
         let showError =
           weight === null || (weight !== undefined && Number(weight) <= 0);
 
         mobileView.push(
           <Grid container>
             <Grid container>
-              {/* untuk menambahkan margin */}
               <FormHelperText>{"\u200B"}</FormHelperText>
             </Grid>
-            <div /* tidak pakai grid container agar widthnya tidak diset 100% */
+            <div
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -1613,69 +1598,69 @@ class EditAssessment extends Component {
         );
 
         desktopView.push(
-          <Grid
+          <Grid item xs
             container
-            item
-            xs={12 / filteredtypeCount.length}
-            spacing="1"
             direction="column"
-            justify="space-between"
             alignItems="center"
           >
-            <Grid item>{columnTemplate[type].icon}</Grid>
+            <Grid item>
+              <Typography variant="h4" color="textSecondary" gutterBottom>
+                {columnTemplate[type].icon}
+              </Typography>
+            </Grid>
             <Grid item>
               <Typography align="center">
                 {columnTemplate[type].text}
               </Typography>
             </Grid>
-            <Grid item>
-              <Typography component="label" for="weight" color="primary">
-                Bobot Per Soal:
+            <Grid item style={{ marginTop: "40px" }}>
+              <Typography color="primary" gutterBottom>
+                Bobot Per Soal
               </Typography>
             </Grid>
-            {type !== "longtext" ? (
-              <Grid item>
+            <Grid item>
+              {type !== "longtext" ? (
                 <TextField
-                  value={this.state.weights[type]}
-                  variant="outlined"
-                  key={type}
                   fullWidth
+                  variant="outlined"
+                  value={this.state.weights[type]}
+                  key={type}
                   onChange={(e) => {
                     this.handleWeight(e, type);
                   }}
                   error={showError}
-                  helperText={showError ? "Periksa Kembali!" : "\u200B"}
-                  FormHelperTextProps={{
-                    style: {
-                      marginLeft: "0",
-                      marginRight: "0",
-                    },
-                  }}
                   InputProps={{
                     style: {
-                      width: "100px",
+                      maxWidth: "125px",
+                      paddingLeft: "5px",
                     },
+                    startAdornment: (
+                      <Checkbox size="small" />
+                    ),
                     endAdornment: (
                       <Typography color="textSecondary">{` Poin`}</Typography>
                     ),
                   }}
+                  inputProps={{
+                    style: {
+                      borderBottom: "none",
+                      boxShadow: "none",
+                      margin: "0px 8px",
+                      WebkitBoxShadow: "0 0 0 1000px white inset",
+                    },
+                  }}
                 />
-              </Grid>
-            ) : (
-              <Grid item>
+              ) : (
                 <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
-                  <IconButton>
-                    <InfoIcon />
-                  </IconButton>
+                  <InfoIcon style={{ color: "grey" }} />
                 </LightTooltip>
-                <FormHelperText>{"\u200B"}</FormHelperText>
-              </Grid>
-            )}
+              )}
+            </Grid>
           </Grid>
         );
-        // jika elemen ini bukan elemen terakhir, tambahkan divider
+        // If this element is not the last element, then add a divider.
         if (i !== filteredtypeCount.length - 1) {
-          desktopView.push(<Divider orientation="vertical" flexItem />);
+          desktopView.push(<Grid item><Divider orientation="vertical" flexItem /></Grid>);
           mobileView.push(<Divider className={classes.dividerMargin} />);
         }
       }
@@ -1685,7 +1670,7 @@ class EditAssessment extends Component {
           <Hidden smDown>
             <Grid
               container
-              style={{ padding: "20px", height: "240px" }}
+              style={{ padding: "20px" }}
               justify="center"
             >
               {desktopView}
@@ -1709,18 +1694,16 @@ class EditAssessment extends Component {
   };
 
   render() {
-    const { class_assigned, errors, success } = this.state;
     const { classes } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { selectedAssessments } = this.props.assessmentsCollection;
+    const { class_assigned, errors, success } = this.state;
 
     const linkToShare =
       this.state.type === "Kuis"
         ? `https://${window.location.host}/kuis-murid/${this.props.match.params.id}`
         : `https://${window.location.host}/ujian-murid/${this.props.match.params.id}`;
-
-    document.title = `Schooly | Sunting ${this.state.type} `;
 
     const ToggleViewQuiz = withStyles((theme) => ({
       root: {
@@ -1760,56 +1743,17 @@ class EditAssessment extends Component {
       checked: {},
     }))(Switch);
 
+    document.title = `Schooly | Sunting ${this.state.type} `;
+
     if (Boolean(selectedAssessments.submissions)) {
       return (
-        <Grid
-          container
-          alignItems="center"
-          justify="center"
-          style={{ height: "20vh" }}
-        >
-          <Typography variant="h5" color="textSecondary" align="center">
-            Tidak dapat disunting karena sudah ada yang mengumpulkan
-          </Typography>
-        </Grid>
+        <Typography variant="h5" color="textSecondary" align="center">
+          Tidak dapat disunting karena sudah ada yang mengumpulkan
+        </Typography>
       );
     } else {
       return (
         <div className={classes.root}>
-          <DeleteDialog
-            openDeleteDialog={this.state.openDeleteDialog}
-            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-            itemType={
-              this.state.type
-                ? `Perubahan ${this.state.type}`
-                : "Perubahan Penilaian"
-            }
-            itemName={this.state.name}
-            // itemType="Kuis"
-            // itemName={this.state.name}
-            customMessage="Hapus perubahan"
-            // redirectLink="/daftar-kuis"
-            redirectLink={
-              this.state.type === "Kuis"
-                ? `/kuis-guru/${this.props.match.params.id}`
-                : `/ujian-guru/${this.props.match.params.id}`
-            }
-            customDecline="Tidak"
-            deleteItem=""
-            isLink={true}
-            isWarning={false}
-          />
-          <UploadDialog
-            openUploadDialog={this.state.openUploadDialog}
-            success={success}
-            messageUploading={`${this.state.type} sedang disunting`}
-            messageSuccess={`${this.state.type} telah disunting`}
-            redirectLink={
-              this.state.type === "Kuis"
-                ? `/kuis-guru/${this.props.match.params.id}`
-                : `/ujian-guru/${this.props.match.params.id}`
-            }
-          />
           <form onSubmit={(e) => this.onSubmit(e)}>
             <Grid container direction="column" spacing={3}>
               <Grid item>
@@ -2258,7 +2202,7 @@ class EditAssessment extends Component {
                       className={`${classes.addQuestionButton} ${classes.RadioQst}`}
                       onClick={() => this.handleCloseMenuTambah("radio")}
                     >
-                      <RadioButtonChecked />
+                      <RadioButtonCheckedIcon />
                     </IconButton>
                   </LightTooltip>
                 </Grid>
@@ -2268,7 +2212,7 @@ class EditAssessment extends Component {
                       className={`${classes.addQuestionButton} ${classes.CheckboxQst}`}
                       onClick={() => this.handleCloseMenuTambah("checkbox")}
                     >
-                      <CheckBox />
+                      <CheckBoxIcon />
                     </IconButton>
                   </LightTooltip>
                 </Grid>
@@ -2278,7 +2222,7 @@ class EditAssessment extends Component {
                       className={`${classes.addQuestionButton} ${classes.ShorttextQst}`}
                       onClick={() => this.handleCloseMenuTambah("shorttext")}
                     >
-                      <TextFormat />
+                      <TextFormatIcon />
                     </IconButton>
                   </LightTooltip>
                 </Grid>
@@ -2288,7 +2232,7 @@ class EditAssessment extends Component {
                       className={`${classes.addQuestionButton} ${classes.LongtextQst}`}
                       onClick={() => this.handleCloseMenuTambah("longtext")}
                     >
-                      <Subject />
+                      <SubjectIcon />
                     </IconButton>
                   </LightTooltip>
                 </Grid>
@@ -2379,6 +2323,37 @@ class EditAssessment extends Component {
               </Grid>
             </Grid>
           </form>
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType={
+              this.state.type
+                ? `Perubahan ${this.state.type}`
+                : "Perubahan Penilaian"
+            }
+            itemName={this.state.name}
+            customMessage="Hapus perubahan"
+            redirectLink={
+              this.state.type === "Kuis"
+                ? `/kuis-guru/${this.props.match.params.id}`
+                : `/ujian-guru/${this.props.match.params.id}`
+            }
+            customDecline="Tidak"
+            deleteItem=""
+            isLink={true}
+            isWarning={false}
+          />
+          <UploadDialog
+            openUploadDialog={this.state.openUploadDialog}
+            success={success}
+            messageUploading={`${this.state.type} sedang disunting`}
+            messageSuccess={`${this.state.type} telah disunting`}
+            redirectLink={
+              this.state.type === "Kuis"
+                ? `/kuis-guru/${this.props.match.params.id}`
+                : `/ujian-guru/${this.props.match.params.id}`
+            }
+          />
           <Snackbar
             open={this.state.checkboxSnackbarOpen}
             autoHideDuration={6000}
@@ -2446,36 +2421,36 @@ class EditAssessment extends Component {
 }
 
 EditAssessment.propTypes = {
-  updateAssessment: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  getOneAssessment: PropTypes.func.isRequired,
   assessmentsCollection: PropTypes.object.isRequired,
-  classesCollection: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
+  getOneAssessment: PropTypes.func.isRequired,
+  updateAssessment: PropTypes.func.isRequired,
   success: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  clearErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  errors: state.errors,
-  success: state.success,
+  auth: state.auth,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
   assessmentsCollection: state.assessmentsCollection,
-  auth: state.auth,
   settingsCollection: state.settingsCollection,
+  success: state.success,
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, {
-  getOneAssessment,
   getAllClass,
   getAllSubjects,
+  getOneAssessment,
   updateAssessment,
   validateAssessment,
-  clearErrors,
   getFileAssessment,
   refreshTeacher,
   getSetting,
+  clearErrors,
 })(withStyles(styles)(React.memo(EditAssessment)));

@@ -8,9 +8,9 @@ import { createAssessment, validateAssessment } from "../../../actions/Assessmen
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { refreshTeacher } from "../../../actions/UserActions";
-import { clearErrors } from "../../../actions/ErrorActions";
-import { clearSuccess } from "../../../actions/SuccessActions";
 import { getSetting } from "../../../actions/SettingActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -640,7 +640,7 @@ class CreateAssessment extends Component {
           this.setState((prevState, props) => {
             return {
               class_assigned: selectedClasses,
-              // reset subject options (show all subjects that this teacher teach)
+              // Reset subject options (show all subjects that this teacher teach)
               subjectOptions: props.auth.user.subject_teached.map(
                 (subjectId) => ({
                   _id: subjectId,
@@ -1220,19 +1220,19 @@ class CreateAssessment extends Component {
   weightInput = (classes) => {
     const columnTemplate = {
       radio: {
-        text: <b>Pilihan Ganda</b>,
+        text: "Pilihan Ganda",
         icon: <RadioButtonCheckedIcon />,
       },
       checkbox: {
-        text: <b>Kotak Centang</b>,
+        text: "Kotak Centang",
         icon: <CheckBoxIcon />,
       },
       shorttext: {
-        text: <b>Isian Pendek</b>,
+        text: "Isian Pendek",
         icon: <TextFormatIcon />,
       },
       longtext: {
-        text: <b>Uraian</b>,
+        text: "Uraian",
         icon: <SubjectIcon />,
       },
     };
@@ -1411,11 +1411,8 @@ class CreateAssessment extends Component {
         );
 
         desktopView.push(
-          <Grid
+          <Grid item xs
             container
-            item
-            xs={12 / filteredtypeCount.length}
-            spacing="1"
             direction="column"
             justify="space-between"
             alignItems="center"
@@ -1434,21 +1431,15 @@ class CreateAssessment extends Component {
             {type !== "longtext" ? (
               <Grid item>
                 <TextField
-                  defaultValue={this.state.weights[type]}
-                  variant="outlined"
-                  key={type}
                   fullWidth
+                  variant="outlined"
+                  defaultValue={this.state.weights[type]}
+                  key={type}
                   onChange={(e) => {
                     this.handleWeight(e, type);
                   }}
                   error={showError}
-                  helperText={showError ? "Periksa Kembali!" : "\u200B"}
-                  FormHelperTextProps={{
-                    style: {
-                      marginLeft: "0",
-                      marginRight: "0",
-                    },
-                  }}
+                  helperText={showError ? "Periksa Kembali!" : null}
                   InputProps={{
                     style: {
                       width: "100px",
@@ -1466,12 +1457,11 @@ class CreateAssessment extends Component {
                     <InfoIcon />
                   </IconButton>
                 </LightTooltip>
-                <FormHelperText>{"\u200B"}</FormHelperText>
               </Grid>
             )}
           </Grid>
         );
-        // jika elemen ini bukan elemen terakhir, tambahkan divider
+        // If this element is not the last element, then add a divider.
         if (i !== filteredtypeCount.length - 1) {
           desktopView.push(<Divider orientation="vertical" flexItem />);
           mobileView.push(<Divider className={classes.dividerMargin} />);
