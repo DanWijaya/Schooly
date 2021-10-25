@@ -222,15 +222,6 @@ function ManageUsersToolbar(props) {
                 OpenDialogCheckboxDelete,
               ]}
             />
-            {/* <UserMenu
-              options={["Nonaktifkan", "Hapus"]}
-              role={role}
-              row={null}
-              CheckboxDialog={CheckboxDialog}
-              handleOpenDeleteDialog={OpenDialogCheckboxDelete}
-              handleOpenDisableApproveDialog={OpenDialogCheckboxDisable}
-              rowCount={listCheckbox.length === 0}
-            /> */}
             {CheckboxDialog("Delete", role)}
           </Grid>
         </Grid>

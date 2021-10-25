@@ -33,12 +33,17 @@ import { MdContentCopy } from "react-icons/md";
 
 
 const useStyles = makeStyles((theme) => ({
-  content: {
+  root: {
     padding: "20px",
   },
-  formLabel: {
+  optionLabel: {
     display: "flex",
     flexGrow: "1",
+  },
+  optionField: {
+    "&::before": {
+      border: "none",
+    },
   },
 }));
 
@@ -186,8 +191,8 @@ function QuestionItem(props) {
 
   return (
     <Grid item>
-      <Paper className={classes.content}>
-        <Typography variant="h6" gutterBottom>
+      <Paper className={classes.root}>
+        <Typography variant="h6" paragraph>
           Soal {index + 1}
         </Typography>
         <Grid container direction="column" spacing={2}>
@@ -197,31 +202,30 @@ function QuestionItem(props) {
                 cols={3}
                 cellHeight={300}
               >
-                {isEdit
-                  ? currentLampiran.map((image, i) => (
-                      <GridListTile key={image} cols={1}>
-                        <img
-                          alt="current img"
-                          src={lampiranToUrl.get(image.toString())}
-                        />
-                        <GridListTileBar
-                          titlePosition="top"
-                          actionIcon={
-                            <IconButton
-                              style={{ color: "white" }}
-                              onClick={(e) =>
-                                handleQuestionImage(e, index, i)
-                              }
-                            >
-                              <CloseIcon />
-                            </IconButton>
-                          }
-                          title={`Gambar ${i + 1}`}
-                          actionPosition="right"
-                        />
-                      </GridListTile>
-                    ))
-                  : null}
+                {isEdit ? currentLampiran.map((image, i) => (
+                    <GridListTile key={image} cols={1}>
+                      <img
+                        alt="current img"
+                        src={lampiranToUrl.get(image.toString())}
+                      />
+                      <GridListTileBar
+                        titlePosition="top"
+                        actionIcon={
+                          <IconButton
+                            style={{ color: "white" }}
+                            onClick={(e) =>
+                              handleQuestionImage(e, index, i)
+                            }
+                          >
+                            <CloseIcon />
+                          </IconButton>
+                        }
+                        title={`Gambar ${i + 1}`}
+                        actionPosition="right"
+                      />
+                    </GridListTile>
+                  ))
+                : null}
                 {lampiranToPreview.map((image, i) => (
                   <GridListTile key={image} cols={1}>
                     <img alt="current img" src={image} />
@@ -262,7 +266,7 @@ function QuestionItem(props) {
                       <Grid item>
                         {!name.length ? (
                             <Typography variant="caption" color="error">
-                              Belum diisi
+                              Kosong
                             </Typography>
                           ) : localBtError ? (
                             <Typography variant="caption" color="error">
@@ -293,7 +297,7 @@ function QuestionItem(props) {
                   onChange={(e) => {handleTextFieldChange(e)}}
                   onBlur={(e) => {handleChangeQuestion(e, index, textRef.current.value)}}
                   error={!name.length}
-                  helperText={!name.length ? "Belum diisi" : null}
+                  helperText={!name.length ? "Kosong" : null}
                 />
               )}
             </Grid>
@@ -315,7 +319,7 @@ function QuestionItem(props) {
                       <div style={{ display: "flex" }}>
                         <FormControlLabel
                           style={{ width: "100%" }}
-                          classes={{ label: classes.formLabel }}
+                          classes={{ label: classes.optionLabel }}
                           value={String.fromCharCode(97 + i).toUpperCase()}
                           control={<Radio color="primary" />}
                           label={
@@ -325,7 +329,10 @@ function QuestionItem(props) {
                               value={option}
                               onChange={(e) => handleQuestionOptions(e, i, index, "Edit")}
                               error={!option.length}
-                              helperText={!option.length ? "Belum diisi" : null}
+                              helperText={!option.length ? "Kosong" : null}
+                              InputProps={{
+                                className: classes.optionField
+                              }}
                             />
                           }
                         />
@@ -356,7 +363,7 @@ function QuestionItem(props) {
                       <div style={{ display: "flex" }}>
                         <FormControlLabel
                           style={{ width: "100%" }}
-                          classes={{ label: classes.formLabel }}
+                          classes={{ label: classes.optionLabel }}
                           value={String.fromCharCode(97 + i).toUpperCase()}
                           control={
                             <Checkbox
@@ -374,7 +381,10 @@ function QuestionItem(props) {
                               value={option}
                               onChange={(e) => handleQuestionOptions(e, i, index, "Edit")}
                               error={!option.length}
-                              helperText={!option.length ? "Belum diisi" : null}
+                              helperText={!option.length ? "Kosong" : null}
+                              InputProps={{
+                                className: classes.optionField
+                              }}
                             />
                           }
                         />
@@ -387,7 +397,7 @@ function QuestionItem(props) {
                         </IconButton>
                       </div>
                     ))}
-                    <div>
+                    <div style={{ marginTop: "16px" }}>
                       <Button
                         color="primary"
                         startIcon={<AddCircleIcon />}
@@ -403,8 +413,8 @@ function QuestionItem(props) {
               ) : type === "shorttext" ? (
                 null
               ) : type === "longtext" ? (
-                <div>
-                  <Typography gutterBottom>
+                <>
+                  <Typography variant="body2" color="textSecondary" gutterBottom>
                     Jawaban:
                   </Typography>
                   <TextField
@@ -426,9 +436,9 @@ function QuestionItem(props) {
                       setLongtextAnswer(e.target.value);
                     }}
                     error={longtextAnswer.length === 0}
-                    helperText={longtextAnswer.length === 0 ? "Belum diisi" : null}
+                    helperText={longtextAnswer.length === 0 ? "Kosong" : null}
                   />
-                </div>
+                </>
               ) : null}
             </Grid>
           </Grid>
