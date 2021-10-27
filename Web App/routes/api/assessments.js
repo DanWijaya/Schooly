@@ -47,7 +47,7 @@ router.post("/create", (req, res) => {
       return res.json(assessment);
     })
     .catch((err) => {
-      console.log("Create assessment failed");
+      console.error("Create assessment failed");
       res.status(400).json(err);
     });
 });
@@ -245,7 +245,7 @@ router.put("/update/:id", (req, res) => {
       return res.json(assessment);
     })
     .catch((err) => {
-      console.log("Update Assessment failed");
+      console.error("Update Assessment failed");
       return res.status(400).send("Unable to update task database");
     });
 });
@@ -366,7 +366,7 @@ router.put("/submit/:id", (req, res) => {
       return res.json(ass);
     })
     .catch((err) => {
-      console.log("Submit Assessment failed");
+      console.error("Submit Assessment failed");
       return res.status(400).send(err);
     });
 });
@@ -385,7 +385,7 @@ router.get("/viewall/:unitId", (req, res) => {
       return res.json(assessments);
     })
     .catch((err) => {
-      console.log("View all assessments failed");
+      console.error("View all assessments failed");
       return res.status(400).json(err);
     });
 });
@@ -409,7 +409,7 @@ router.get("/view/:id", (req, res) => {
       }
     })
     .catch((err) => {
-      console.log("View Assessment failed");
+      console.error("View Assessment failed");
       return res.status(400).json(err);
     });
 });
@@ -422,7 +422,10 @@ router.delete("/delete/:id", (req, res) => {
       if (!assessment) throw "Quiz to be deleted not found";
       return res.json(assessment);
     })
-    .catch((err) => res.status(400).json(err));
+    .catch((err) => {
+      console.error("Delete task failed");
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/view", (req, res) => {
@@ -460,7 +463,7 @@ router.get("/view", (req, res) => {
       );
     })
     .catch((err) => {
-      console.log("View assessment failed");
+      console.error("View assessment failed");
       return res.status(400).json(err);
     });
 });
@@ -479,7 +482,7 @@ router.put("/suspects/:assessmentId", (req, res) => {
       return res.json(assessment);
     })
     .catch((err) => {
-      console.log("Get suspects failed");
+      console.error("Get suspects failed");
       return res.status(400).send(err);
     });
 });
@@ -599,7 +602,7 @@ router.put("/grades", (req, res) => {
       return res.json(ass);
     })
     .catch((err) => {
-      console.log("Grade assessment failed");
+      console.error("Grade assessment failed");
       return res.status(400).send(err);
     });
 });
@@ -693,9 +696,11 @@ router.get("/qnsDifficultyRanking/:id", async (req, res) => {
         .map((obj) => obj.ind + 1);
 
       //Hasilnya berupa nomor nomor soal. Pertama yang paling dikit benar, terakhir yang paling banyak benar.
+      console.log("Get qns difficulty completed");
       return res.json(qns_ranking);
     }
   } catch (err) {
+    console.error("Get Qns Difficulty failed");
     return res.status(404).json(err);
   }
 });

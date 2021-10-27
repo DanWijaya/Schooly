@@ -17,8 +17,6 @@ const mongoose = require("mongoose");
 
 router.post("/create", (req, res) => {
   // pakai body parser
-  console.log(req.body);
-  console.log("COBA MUNCULIN LAH");
   const { errors, isValid } = validateTaskInput(req.body);
   if (!isValid) {
     console.log("Not Valid");
@@ -37,11 +35,11 @@ router.post("/create", (req, res) => {
       }
     })
     .then((task) => {
-      console.log("Task is created");
-      res.json(task);
+      console.log("Create task completed");
+      return res.json(task);
     })
     .catch((err) => {
-      console.error("Unable to create task");
+      console.error("Create task failed");
       return res.status(400).json(err);
     });
 });
@@ -55,8 +53,8 @@ router.get("/viewall/:unitId", (req, res) => {
   }
   Task.find({ unit: unitId })
     .then((tasks, err) => {
-      if (!tasks) {
-        throw "Tasks are not found";
+      if (!tasks.length) {
+        console.log("Tasks in the unit are empty");
       }
       return res.json(tasks);
     })
@@ -71,7 +69,7 @@ router.delete("/delete/:id", (req, res) => {
   Task.findByIdAndRemove(req.params.id)
     .then((taskData) => {
       if (!taskData) throw "Task to delete is not found";
-      res.json(taskData);
+      return res.json(taskData);
     })
     .catch((err) => {
       console.error("Unable to delete task");
@@ -88,7 +86,7 @@ router.get("/view/:id", (req, res) => {
       return res.json(taskData);
     })
     .catch((err) => {
-      console.error("Unable to view task");
+      console.error("View task failed");
       return res.status(400).json(err);
     });
 });
@@ -109,9 +107,9 @@ router.post("/grade/:id", (req, res) => {
       taskData.grades.set(req.body.studentId, grade);
       return taskData.save();
     })
-    .then(() => res.json("Grade Task complete"))
+    .then(() => res.json("Grade Task completed"))
     .catch((err) => {
-      console.error("Unable to grade task");
+      console.error("Grade task failed");
       return res.status(400).json(err);
     });
 });
@@ -142,7 +140,7 @@ router.put("/update/:id", (req, res) => {
     })
     .then((taskData) => res.json("Update Task complete"))
     .catch((err) => {
-      console.error("Unable to update task");
+      console.error("Update task failed");
       return res.status(400).json(err);
     });
 });
@@ -165,7 +163,7 @@ router.get("/view", (req, res) => {
       return res.json(tasks);
     })
     .catch((err) => {
-      console.error("Unable to view task");
+      console.error("View Task failed");
       return res.status(400).json(err);
     });
 });
@@ -185,11 +183,11 @@ router.post("/comment/:taskId", (req, res) => {
       return taskData.save();
     })
     .then(() => {
-      return res.json("Create task comment is successful");
+      return res.json("Create task comment completed");
     })
     .catch((err) => {
       // status code tergantung errornya (sebenarnya status code should not be a big deal).
-      console.error("Unable to create task comment");
+      console.error("Create task comment failed");
       return res.json(err);
     });
 });
@@ -215,10 +213,10 @@ router.put("/comment/:taskId", (req, res) => {
       taskData.comments = newComments;
       return taskData.save();
     })
-    .then(() => res.json("Edit task comment complete"))
+    .then(() => res.json("Update task comment complete"))
     .catch((err) => {
       // status code tergantung errornya (sebenarnya status code should not be a big deal).
-      console.error("Unable to update task comment");
+      console.error("Update task comment failed");
       return res.json(err);
     });
 });
@@ -243,7 +241,7 @@ router.delete("/comment/:taskId&:commentId", (req, res) => {
     .then(() => res.json("Delete task comment complete"))
     .catch((err) => {
       // status code tergantung errornya (sebenarnya status code should not be a big deal).
-      console.error("Unable to delete task");
+      console.error("Delete task failed");
       return res.json(err);
     });
 });
