@@ -463,6 +463,9 @@ class App extends Component {
                         path="/buat-ujian"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={CreateAssessment}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact
@@ -470,6 +473,9 @@ class App extends Component {
                         path="/buat-kuis"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={CreateAssessment}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact
@@ -477,6 +483,9 @@ class App extends Component {
                         path="/sunting-kuis/:id"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={EditAssessment}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact
@@ -484,6 +493,9 @@ class App extends Component {
                         path="/sunting-ujian/:id"
                         handleSideDrawerExist={this.handleSideDrawerExist}
                         component={EditAssessment}
+                        handleSideDrawerExist={this.handleSideDrawerExist}
+                        handleFooter={this.handleFooter}
+                        handleNavbar={(data) => this.handleNavbar(data)}
                       />
                       <PrivateRoute
                         exact

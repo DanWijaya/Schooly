@@ -174,7 +174,7 @@ const Styles = responsiveFontSizes(
           style: {
             borderBottom: "none",
             boxShadow: "none",
-            margin: "0px 15px",
+            margin: "0px 15px 2.5px 15px",
           },
         },
       },
