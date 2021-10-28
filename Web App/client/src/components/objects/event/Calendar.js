@@ -1,75 +1,90 @@
 import React from "react";
-import "./Calendar.css";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import lokal from "date-fns/locale/id";
-import DateFnsUtils from "@date-io/date-fns";
+import Draggable from "react-draggable";
 import { Calendar as ReactCalendar } from "react-calendar";
+import Path from "path";
+import DateFnsUtils from "@date-io/date-fns";
+import lokal from "date-fns/locale/id";
+import moment from "moment";
+import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
+import { createEvent, updateEvent, getAllEvents, getOneEvent, deleteEvent } from "../../../actions/EventActions";
+import { downloadFileEvent, viewFileEvent, getFileEvents } from "../../../actions/files/FileEventActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getStudents, getTeachers } from "../../../actions/UserActions";
+import { getTasksBySubjectClass, getAllTask } from "../../../actions/TaskActions";
+import { getAssessments, getAllAssessments } from "../../../actions/AssessmentActions";
+import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
+import { getSetting } from "../../../actions/SettingActions";
+import "./Calendar.css";
+import CustomLinkify from "../../misc/linkify/Linkify";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
+  Avatar,
   Button,
-  IconButton,
+  Checkbox,
+  Chip,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Divider,
   Fab,
+  Fade,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormHelperText,
   Grid,
   Hidden,
-  Typography,
+  IconButton,
+  Input,
   ListItem,
   ListItemText,
   ListItemAvatar,
-  Avatar,
-  Paper,
-  Divider,
-  Dialog,
-  TextField,
-  Select,
   MenuItem,
-  FormHelperText,
-  FormControl,
+  Paper,
+  Select,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  Chip,
-  Input,
-  Snackbar,
-  useMediaQuery,
-  CircularProgress,
-  Fade,
+  TextField,
+  Typography,
+  useMediaQuery
 } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
   KeyboardDateTimePicker,
-  KeyboardDatePicker,
+  KeyboardDatePicker
 } from "@material-ui/pickers";
 import Alert from "@material-ui/lab/Alert";
+import {
+  Add as AddIcon,
+  AttachFile as AttachFileIcon,
+  Cancel as CancelIcon,
+  CheckCircle as CheckCircleIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  Close as CloseIcon,
+  Delete as DeleteIcon,
+  DragHandle as DragHandleIcon,
+  Edit as EditIcon,
+  EventNote as EventNoteIcon,
+  LocationOn as LocationOnIcon,
+  Search as SearchIcon,
+  Subject as SubjectIcon,
+  SupervisorAccount as SupervisorAccountIcon,
+  Timer as TimerIcon,
+  TimerOff as TimerOffIcon,
+} from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import EventNoteIcon from "@material-ui/icons/EventNote";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import TimerIcon from "@material-ui/icons/Timer";
-import TimerOffIcon from "@material-ui/icons/TimerOff";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import SubjectIcon from "@material-ui/icons/Subject";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import CancelIcon from "@material-ui/icons/Cancel";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import AddIcon from "@material-ui/icons/Add";
-import DragHandleIcon from "@material-ui/icons/DragHandle";
-import CloseIcon from "@material-ui/icons/Close";
-import AttachFileIcon from "@material-ui/icons/AttachFile";
-import SearchIcon from "@material-ui/icons/Search";
-import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 import {
+  FaClipboardList,
   FaFile,
   FaFileAlt,
   FaFileExcel,
@@ -78,36 +93,6 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
-import {
-  createEvent,
-  updateEvent,
-  getAllEvents,
-  getOneEvent,
-  deleteEvent,
-} from "../../../actions/EventActions";
-import {
-  downloadFileEvent,
-  viewFileEvent,
-  getFileEvents,
-} from "../../../actions/files/FileEventActions";
-import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getStudents, getTeachers } from "../../../actions/UserActions";
-import {
-  getTasksBySubjectClass,
-  getAllTask,
-} from "../../../actions/TaskActions";
-import {
-  getAssessments,
-  getAllAssessments,
-} from "../../../actions/AssessmentActions";
-import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
-import moment from "moment";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import Draggable from "react-draggable";
-import Path from "path";
-import CustomLinkify from "../../misc/linkify/Linkify";
-import { getSetting } from "../../../actions/SettingActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -1774,7 +1759,7 @@ function EventDialog(props) {
                       handleClickEdit();
                     }}
                   >
-                    <EditOutlinedIcon className={classes.dialogTopIcons} />
+                    <EditIcon className={classes.dialogTopIcons} />
                   </IconButton>
                 </LightTooltip>
                 <LightTooltip title="Hapus" style={{ marginRight: "24px" }}>
@@ -1784,7 +1769,7 @@ function EventDialog(props) {
                       handleOpenDeleteDialog();
                     }}
                   >
-                    <DeleteOutlinedIcon className={classes.dialogTopIcons} />
+                    <DeleteIcon className={classes.dialogTopIcons} />
                   </IconButton>
                 </LightTooltip>
               </>
@@ -2538,7 +2523,7 @@ function CustomDeleteDialog(props) {
                 onClick={() => {
                   handleDelete();
                 }}
-                startIcon={<DeleteOutlinedIcon />}
+                startIcon={<DeleteIcon />}
                 className={classes.dialogDeleteButton}
               >
                 Iya
@@ -5357,27 +5342,27 @@ function substractTime(date, millisecond) {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   eventsCollection: state.eventsCollection,
-  tasksCollection: state.tasksCollection,
-  subjectsCollection: state.subjectsCollection,
-  classesCollection: state.classesCollection,
   filesCollection: state.filesCollection,
+  classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
+  tasksCollection: state.tasksCollection,
   assessmentsCollection: state.assessmentsCollection,
   settingsCollection: state.settingsCollection,
 });
 
 export default connect(mapStateToProps, {
-  getSelectedClasses,
   getAllClass,
   getAllEvents,
-  getAllTask,
+  getOneEvent,
+  viewFileEvent,
+  getSelectedClasses,
   getAllSubjects,
+  getAllTask,
   getAllTaskFilesByUser,
-  getAllAssessments,
   getTasksBySubjectClass,
+  getAllAssessments,
   getAssessments,
   getStudents,
   getTeachers,
-  getOneEvent,
-  viewFileEvent,
   getSetting,
 })(Calendar);
