@@ -709,9 +709,9 @@ class CreateTask extends Component {
                       </div>
                       <FormControl
                         fullWidth
-                        id="subject"
                         variant="outlined"
                         color="primary"
+                        id="subject"
                         error={Boolean(errors.subject)}
                       >
                         <Select

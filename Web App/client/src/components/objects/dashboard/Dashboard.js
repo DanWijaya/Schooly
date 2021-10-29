@@ -107,15 +107,9 @@ const styles = (theme) => ({
     color: "black",
     "&:hover": {
       backgroundColor: theme.palette.success.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+      "& .MuiListItemIcon-root, & .MuiListItemText-root": {
         color: "white",
       },
-    },
-  },
-  menuItemText: {
-    color: "black",
-    "&:hover": {
-      color: "white",
     },
   },
   manageTaskButton: {
@@ -1420,7 +1414,7 @@ class Dashboard extends Component {
                               </ListItemIcon>
                               <ListItemText
                                 primary={
-                                  <Typography className={classes.menuItemText}>
+                                  <Typography>
                                     Buat Pengumuman
                                   </Typography>
                                 }
@@ -1434,7 +1428,7 @@ class Dashboard extends Component {
                               </ListItemIcon>
                               <ListItemText
                                 primary={
-                                  <Typography className={classes.menuItemText}>
+                                  <Typography>
                                     Buat Materi
                                   </Typography>
                                 }
@@ -1448,7 +1442,7 @@ class Dashboard extends Component {
                               </ListItemIcon>
                               <ListItemText
                                 primary={
-                                  <Typography className={classes.menuItemText}>
+                                  <Typography>
                                     Buat Tugas
                                   </Typography>
                                 }
@@ -1462,7 +1456,7 @@ class Dashboard extends Component {
                               </ListItemIcon>
                               <ListItemText
                                 primary={
-                                  <Typography className={classes.menuItemText}>
+                                  <Typography>
                                     Buat Kuis
                                   </Typography>
                                 }
@@ -1476,7 +1470,7 @@ class Dashboard extends Component {
                               </ListItemIcon>
                               <ListItemText
                                 primary={
-                                  <Typography className={classes.menuItemText}>
+                                  <Typography>
                                     Buat Ujian
                                   </Typography>
                                 }

@@ -131,7 +131,7 @@ function TeacherDashboard(props) {
                       </ListItemIcon>
                       <ListItemText
                         primary={
-                          <Typography className={classes.menuItemText}>
+                          <Typography>
                             Buat Pengumuman
                           </Typography>
                         }
@@ -145,7 +145,7 @@ function TeacherDashboard(props) {
                       </ListItemIcon>
                       <ListItemText
                         primary={
-                          <Typography className={classes.menuItemText}>
+                          <Typography>
                             Buat Materi
                           </Typography>
                         }
@@ -159,7 +159,7 @@ function TeacherDashboard(props) {
                       </ListItemIcon>
                       <ListItemText
                         primary={
-                          <Typography className={classes.menuItemText}>
+                          <Typography>
                             Buat Tugas
                           </Typography>
                         }
@@ -173,7 +173,7 @@ function TeacherDashboard(props) {
                       </ListItemIcon>
                       <ListItemText
                         primary={
-                          <Typography className={classes.menuItemText}>
+                          <Typography>
                             Buat Kuis
                           </Typography>
                         }
@@ -187,7 +187,7 @@ function TeacherDashboard(props) {
                       </ListItemIcon>
                       <ListItemText
                         primary={
-                          <Typography className={classes.menuItemText}>
+                          <Typography>
                             Buat Ujian
                           </Typography>
                         }

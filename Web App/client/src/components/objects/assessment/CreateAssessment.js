@@ -16,10 +16,17 @@ import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import {
+  AppBar,
+  Avatar,
+  Badge,
   Button,
+  ButtonGroup,
+  Card,
+  CardContent,
   Checkbox,
   Chip,
   Divider,
+  Drawer,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -27,14 +34,21 @@ import {
   Grid,
   Hidden,
   IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
+  Menu,
   MenuItem,
   Paper,
   Select,
   Snackbar,
   Switch,
-  TablePagination,
   TextField,
-  Typography
+  TablePagination,
+  Tooltip,
+  Typography,
 } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
@@ -43,13 +57,25 @@ import {
 import Alert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
 import {
+  Add as AddIcon,
+  ArrowDropDown as ArrowDropDownIcon,
   CheckBox as CheckBoxIcon,
   FiberManualRecord as FiberManualRecordIcon,
+  FormatListNumbered as FormatListNumberedIcon,
   Info as InfoIcon,
+  LibraryBooks as LibraryBooksIcon,
+  Link as LinkIcon,
   RadioButtonChecked as RadioButtonCheckedIcon,
+  ShortText as ShortTextIcon,
   Subject as SubjectIcon,
-  TextFormat as TextFormatIcon
+  TextFormat as TextFormatIcon,
+  Timer as TimerIcon,
+  TimerOff as TimerOffIcon,
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon
 } from "@material-ui/icons";
+import { BsClipboardData } from "react-icons/bs";
+import { FaChalkboard, FaClipboardList } from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {
@@ -61,150 +87,99 @@ const styles = (theme) => ({
       maxWidth: "100%",
     },
   },
-  content: {
-    padding: "20px 20px 30px 20px",
+  rootBackground: {
+    backgroundColor: "#F9F9F9",
   },
-  pageNavigatorContent: {
-    padding: "20px 20px 20px",
-    [theme.breakpoints.down("xs")]: {
-      padding: "20px 10px 20px",
-    },
-  },
-  settingsButton: {
-    [theme.breakpoints.down("xs")]: {
-      paddingRight: "0",
-      paddingLeft: "0",
-    },
-  },
-  divider: {
-    height: "100%",
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
-      height: "1px",
-    },
-  },
-  addQuestionButton: {
-    boxShadow: theme.shadows[2],
-    margin: "16px",
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-    },
-  },
-  RadioQst: {
-    backgroundColor: theme.palette.radio.main,
-    "&:focus, &:hover": {
-      color: theme.palette.radio.main,
-    },
-  },
-  CheckboxQst: {
-    backgroundColor: theme.palette.checkbox.main,
-    "&:focus, &:hover": {
-      color: theme.palette.checkbox.main,
-    },
-  },
-  ShorttextQst: {
-    backgroundColor: theme.palette.shorttext.main,
-    "&:focus, &:hover": {
-      color: theme.palette.shorttext.main,
-    },
-  },
-  LongtextQst: {
-    backgroundColor: theme.palette.longtext.main,
-    "&:focus, &:hover": {
-      color: theme.palette.longtext.main,
-    },
-  },
-  pageNavigator: {
-    justifyContent: "flex-start",
-    [theme.breakpoints.down("sm")]: {
-      justifyContent: "center",
-    },
-  },
-  assessmentSettings: {
-    justifyContent: "flex-end",
-    alignItems: "center",
-    [theme.breakpoints.down("md")]: {
-      justifyContent: "center",
-    },
-  },
-  createAssessmentButton: {
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.main,
-      color: "white",
-    },
+  menuBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    padding: "15px 20px",
+    boxShadow: "0 1px 3px 0px rgba(32,33,36,0.28)",
+    backgroundColor: "white",
+    color: "black",
   },
   cancelButton: {
+    width: "90px",
     backgroundColor: theme.palette.error.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.error.main,
       color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
+  createAssessmentButton: {
+    width: "90px",
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
+  createDropdownButton: {
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    },
+  },
+  toolbar: theme.mixins.toolbar,
+  content: {
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: "1",
+    marginBottom: "50px",
+  },
+  contentDetails: {
+    padding: "20px 20px 30px 20px",
+  },
+  labelIcon: {
+    fontSize: "18px",
+    marginRight: "10px",
+    color: "grey",
+  },
+  assessmentLabelIcon: {
+    fontSize: "15.5px",
+    marginRight: "10px",
+    color: "grey",
   },
   chips: {
     display: "flex",
     flexWrap: "wrap",
   },
   chip: {
-    marginRight: 2,
+    margin: "0px 1px",
   },
-  menuVisible: {
-    "& .MuiListItemIcon-root": {
-      color: theme.palette.warning.main,
-    },
-    "&:hover, &:focus": {
-      backgroundColor: theme.palette.warning.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: "white",
-      },
-    },
+  navigationDrawerPaper: {
+    width: "250px",
   },
-  menuCancel: {
-    "& .MuiListItemIcon-root": {
-      color: theme.palette.error.main,
-    },
-    "&:hover, &:focus": {
-      backgroundColor: theme.palette.error.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: "white",
-      },
-    },
+  assessmentMenu: {
+    top: "auto",
+    bottom: "0",
+    padding: "0px 10px",
+    display: "flex",
+    justify: "center",
+    backgroundColor: "transparent",
+    boxShadow: "none",
   },
-  menuSubmit: {
-    "& .MuiListItemIcon-root": {
-      color: theme.palette.success.main,
+  assessmentMenuPaper: {
+    margin: "auto",
+    borderRadius: "5px 5px 0px 0px",
+    padding: "15px 15px 5px 15px",
+    width: "100%",
+    maxWidth: "85%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
     },
-    "&:hover, &:focus": {
-      backgroundColor: theme.palette.success.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: "white",
-      },
-    },
-  },
-  dividerMargin: {
-    margin: "4px 0",
-  },
-  customSpacing: {
-    [theme.breakpoints.down("sm")]: {
-      marginTop: theme.spacing(2),
-    },
-  },
-  customPaddingBottom: {
-    [theme.breakpoints.up("md")]: {
-      paddingBottom: "0!important",
-    },
-  },
-  customPaddingTop: {
-    [theme.breakpoints.up("md")]: {
-      paddingTop: "0!important",
-    },
-  },
-  zeroHeightHelperText: {
-    height: "0",
-    display: "flex", // untuk men-disable "collapsing margin"
   },
 });
 
@@ -269,22 +244,22 @@ class CreateAssessment extends Component {
       subjectOptions: null, // Will be showed as menu item when choosing subject.
       allClassObject: null, // Used to get class name from class id without traversing class array.
       allSubjectObject: null, // Used to get subject name from subject id without traversing subject array.
-      inputHeight: null, // menyimpan tinggi textfield
-      customHeight: null, // menyimpan tinggi label + textfield
       errors: {},
       success: null,
     };
-    this.inputHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi textfield
-    this.customHeightRef = React.createRef(); // menyimpan referensi ke div yang berisi label "Judul" dan textfield
   }
 
   // Ref is used to refer html inside render.
   imageUploader = React.createRef(null); // To refer other html object.
 
   componentWillUnmount() {
-    this.props.clearErrors();
     this.props.clearSuccess();
-    this.props.handleSideDrawerExist(true);
+    this.props.clearErrors();
+
+    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    handleNavbar(true);
+    handleSideDrawerExist(true);
+    handleFooter(true);
   }
 
   handleCloseErrorSnackbar = (event, reason) => {
@@ -1136,7 +1111,6 @@ class CreateAssessment extends Component {
     const {
       getAllClass,
       getAllSubjects,
-      handleSideDrawerExist,
       refreshTeacher,
       getSetting,
     } = this.props;
@@ -1150,21 +1124,15 @@ class CreateAssessment extends Component {
       console.log("Kuis atau ujian tidak dispecify");
     }
 
-    handleSideDrawerExist(false);
     getAllClass(unit);
     getAllSubjects(unit);
     refreshTeacher(unit._id);
     getSetting();
-    if (this.inputHeightRef.current && this.customHeightRef.current) {
-      this.setState({
-        inputHeight: this.inputHeightRef.current.offsetHeight,
-        customHeight:
-          this.customHeightRef.current.offsetHeight +
-          this.inputHeightRef.current.offsetHeight +
-          32, // tinggi (label + textfield) + (textfield) + (space antara textfield dan label di bawahnya)
-        // customHeight: document.getElementById("top").getBoundingClientRect().top - document.getElementById("bottom").getBoundingClientRect().bottom // hasilnya salah
-      });
-    }
+
+    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    handleNavbar(false);
+    handleSideDrawerExist(false);
+    handleFooter(false);
   }
 
   handleChangePage = (event, newPage) => {
@@ -1249,14 +1217,7 @@ class CreateAssessment extends Component {
     ].filter((type) => typeCount.has(type));
 
     if (filteredtypeCount.length !== 0) {
-      let desktopView = [];
-      let mobileView = [
-        <>
-          <Typography variant="h6">Bobot Per Soal:</Typography>
-          <FormHelperText>{"\u200B"}</FormHelperText>
-          <Divider className={classes.dividerMargin} />
-        </>,
-      ];
+      let uniformMaxScore = [];
 
       for (let i = 0; i < filteredtypeCount.length; i++) {
         let type = filteredtypeCount[i];
@@ -1264,231 +1225,74 @@ class CreateAssessment extends Component {
         let showError =
           weight === null || (weight !== undefined && Number(weight) <= 0);
 
-        mobileView.push(
-          <Grid container>
-            <Grid container>
-              {/* untuk menambahkan margin */}
-              <FormHelperText>{"\u200B"}</FormHelperText>
-            </Grid>
-            <div /* tidak pakai grid container agar widthnya tidak diset 100% */
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                flexGrow: "1",
-              }}
-            >
-              <Grid container alignItems="center" style={{ flexGrow: "1" }}>
-                <Grid item style={{ marginRight: "20px" }}>
-                  {columnTemplate[type].icon}
-                </Grid>
-                <Grid item>
-                  <Hidden xsDown>
-                    <Typography align="left">
-                      {columnTemplate[type].text}
-                    </Typography>
-                  </Hidden>
-                  <Hidden smUp>
-                    <Typography align="left" style={{ fontSize: "0.8rem" }}>
-                      {columnTemplate[type].text}
-                    </Typography>
-                  </Hidden>
-                </Grid>
-              </Grid>
+        uniformMaxScore.push(
+          <ListItem>
+            <ListItemIcon>
+              {columnTemplate[type].icon}
+            </ListItemIcon>
+            <ListItemText
+              primary={
+                <Typography noWrap>
+                  {columnTemplate[type].text}
+                </Typography>
+              }
+            />
+            <div>
               {type !== "longtext" ? (
-                <FormHelperText>{"\u200B"}</FormHelperText>
-              ) : null}
-            </div>
-            {type !== "longtext" ? (
-              <Grid
-                item
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <Hidden xsDown>
-                  <TextField
-                    value={this.state.weights[type]}
-                    variant="outlined"
-                    key={type}
-                    fullWidth
-                    onChange={(e) => {
-                      this.handleWeight(e, type);
-                    }}
-                    error={showError}
-                    helperText={showError ? "Periksa Kembali!" : "\u200B"}
-                    FormHelperTextProps={{
-                      style: {
-                        marginLeft: "0",
-                        marginRight: "0",
-                      },
-                    }}
-                    InputProps={{
-                      style: {
-                        width: "100px",
-                      },
-                      endAdornment: (
-                        <Typography color="textSecondary">{` Poin`}</Typography>
-                      ),
-                    }}
-                  />
-                </Hidden>
-                <Hidden smUp>
-                  <TextField
-                    defaultValue={this.state.weights[type]}
-                    variant="outlined"
-                    key={type}
-                    fullWidth
-                    onChange={(e) => {
-                      this.handleWeight(e, type);
-                    }}
-                    error={showError}
-                    helperText={showError ? "Periksa Kembali!" : "\u200B"}
-                    FormHelperTextProps={{
-                      style: {
-                        marginLeft: "0",
-                        marginRight: "0",
-                      },
-                    }}
-                    InputProps={{
-                      style: {
-                        width: "85px",
-                      },
-                      endAdornment: (
-                        <Typography
-                          color="textSecondary"
-                          style={{ fontSize: "0.8rem" }}
-                        >{` Poin`}</Typography>
-                      ),
-                    }}
-                    inputProps={{
-                      style: {
-                        fontSize: "0.8rem",
-
-                        // ini dapet dari dev console inline style elemen input pada Textfield
-                        // kalau ini ga disertakan, isi input akan jadi aneh
-                        borderBottom: "none",
-                        boxShadow: "white 0px 0px 0px 1000px inset",
-                        margin: "0px 15px",
-                      },
-                    }}
-                  />
-                </Hidden>
-              </Grid>
-            ) : (
-              <Grid item>
-                <Hidden xsDown>
-                  <Grid
-                    item
-                    style={{ display: "flex", width: "100px" }}
-                    justify="center"
-                    alignItems="center"
-                  >
-                    <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
-                      <IconButton>
-                        <InfoIcon />
-                      </IconButton>
-                    </LightTooltip>
-                  </Grid>
-                </Hidden>
-                <Hidden smUp>
-                  <Grid
-                    item
-                    style={{ display: "flex", width: "85px" }}
-                    justify="center"
-                    alignItems="center"
-                  >
-                    <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
-                      <IconButton>
-                        <InfoIcon />
-                      </IconButton>
-                    </LightTooltip>
-                  </Grid>
-                </Hidden>
-              </Grid>
-            )}
-          </Grid>
-        );
-
-        desktopView.push(
-          <Grid item xs
-            container
-            direction="column"
-            justify="space-between"
-            alignItems="center"
-          >
-            <Grid item>{columnTemplate[type].icon}</Grid>
-            <Grid item>
-              <Typography align="center">
-                {columnTemplate[type].text}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography component="label" for="weight" color="primary">
-                Bobot Per Soal:
-              </Typography>
-            </Grid>
-            {type !== "longtext" ? (
-              <Grid item>
                 <TextField
                   fullWidth
                   variant="outlined"
-                  defaultValue={this.state.weights[type]}
+                  value={this.state.weights[type]}
                   key={type}
                   onChange={(e) => {
                     this.handleWeight(e, type);
                   }}
                   error={showError}
-                  helperText={showError ? "Periksa Kembali!" : null}
                   InputProps={{
                     style: {
-                      width: "100px",
+                      maxWidth: "125px",
+                      paddingLeft: "5px",
                     },
+                    startAdornment: (
+                      <Checkbox size="small" />
+                    ),
                     endAdornment: (
                       <Typography color="textSecondary">{` Poin`}</Typography>
                     ),
                   }}
+                  inputProps={{
+                    style: {
+                      borderBottom: "none",
+                      boxShadow: "none",
+                      margin: "0px 8px",
+                      WebkitBoxShadow: "0 0 0 1000px white inset",
+                    },
+                  }}
                 />
-              </Grid>
-            ) : (
-              <Grid item>
+              ) : (
                 <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
-                  <IconButton>
-                    <InfoIcon />
-                  </IconButton>
+                  <InfoIcon style={{ color: "grey" }} />
                 </LightTooltip>
-              </Grid>
-            )}
-          </Grid>
+              )}
+            </div>
+          </ListItem>
         );
-        // If this element is not the last element, then add a divider.
-        if (i !== filteredtypeCount.length - 1) {
-          desktopView.push(<Divider orientation="vertical" flexItem />);
-          mobileView.push(<Divider className={classes.dividerMargin} />);
-        }
       }
 
       return (
         <Paper>
-          <Hidden smDown>
-            <Grid
-              container
-              style={{ padding: "20px", height: "240px" }}
-              justify="center"
-            >
-              {desktopView}
-            </Grid>
-          </Hidden>
-          <Hidden mdUp>
-            <Grid
-              container
-              style={{ padding: "20px" }}
-              wrap="nowrap"
-              direction="column"
-            >
-              {mobileView}
-            </Grid>
-          </Hidden>
+          <div style={{ padding: "20px 20px 0px 20px" }}>
+            <Typography variant="h6" color="primary">
+              Bobot Per Soal
+            </Typography>
+            <Typography color="textSecondary" paragraph>
+              Seragamkan bobot untuk masing-masing jenis soal dengan mencentang kotak yang tersedia.
+            </Typography>
+            <Divider />
+          </div>
+          <List style={{ padding: "8px 4px 20px 4px" }}>
+            {uniformMaxScore}
+          </List>
         </Paper>
       );
     } else {
@@ -1504,669 +1308,557 @@ class CreateAssessment extends Component {
     const { pathname } = this.props.location;
     const { class_assigned, errors, success } = this.state;
 
-    const ToggleViewQuiz = withStyles((theme) => ({
-      root: {
-        width: 42,
-        height: 26,
-        padding: 0,
-        margin: theme.spacing(1),
-      },
-      switchBase: {
-        padding: 2,
-        color: theme.palette.warning.light,
-        "&$checked": {
-          transform: "translateX(16px)",
-          color: theme.palette.common.white,
-          "& + $track": {
-            backgroundColor: theme.palette.warning.light,
-            opacity: 1,
-            border: "none",
-          },
-        },
-        "&$focusVisible $thumb": {
-          color: "#52D869",
-          border: "6px solid #fff",
-        },
-      },
-      thumb: {
-        width: 10,
-        height: 10,
-      },
-      track: {
-        borderRadius: 24 / 2,
-        border: `1px solid ${theme.palette.grey[400]}`,
-        backgroundColor: theme.palette.grey[50],
-        opacity: 1,
-        transition: theme.transitions.create(["background-color", "border"]),
-      },
-      checked: {},
-    }))(Switch);
-
     document.title =
       this.state.type === "Kuis"
         ? "Schooly | Buat Kuis"
         : "Schooly | Buat Ujian";
 
     return (
-      <div className={classes.root}>
-        <form id="submitForm" onSubmit={(e) => this.onSubmit(e, user._id)}>
-          <Grid container direction="column" spacing={3}>
-            <Grid item>
-              <Paper>
-                <div className={classes.content}>
-                  <Typography variant="h5" gutterBottom>
-                    <b>Buat {this.state.type}</b>
+      <div className={classes.rootBackground}>
+        <div className={classes.root} style={{ width: "100%" }}>
+          <form id="submitForm" onSubmit={(e) => this.onSubmit(e, user._id)}>
+            <AppBar position="fixed" className={classes.menuBar}>
+              <Grid container justify="space-between" alignItems="center">
+                <Grid item xs>
+                  <Typography variant="h5" color="textSecondary">
+                    {this.state.type}
                   </Typography>
-                  <Typography color="textSecondary">
-                    Tambahkan keterangan untuk membuat{" "}
-                    {this.state.type.toLowerCase()}.
-                  </Typography>
-                </div>
-                <Divider />
-                <Grid container>
-                  <Grid item xs={12} md className={classes.content}>
-                    <Grid container direction="column" spacing={4}>
-                      <Grid item>
-                        <div ref={this.customHeightRef}>
-                          <Typography
-                            component="label"
-                            for="name"
-                            color="primary"
-                          >
-                            Judul
-                          </Typography>
-                          <div ref={this.inputHeightRef}>
+                </Grid>
+                <Grid item>
+                  <Grid container alignItems="center" spacing={2}>
+                    <Grid item>
+                      <Button onClick={this.handleOpenDeleteDialog} className={classes.cancelButton}>
+                        Batal
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <ButtonGroup variant="text">
+                        <Button type="submit" className={classes.createAssessmentButton}>
+                          Buat
+                        </Button>
+                        <Button size="small" onClick={this.handleMenuOpen} className={classes.createDropdownButton}>
+                          <ArrowDropDownIcon />
+                        </Button>
+                      </ButtonGroup>
+                      <Menu
+                        keepMounted
+                        anchorEl={this.state.anchorEl}
+                        open={Boolean(this.state.anchorEl)}
+                        onClose={this.handleMenuClose}
+                      >
+                        <MenuItem onClick={this.handlePostToggle} disabled={this.state.isScheduled}>
+                          <ListItemIcon>
+                            {this.state.posted ?
+                              <VisibilityIcon />
+                            :
+                              <VisibilityOffIcon />
+                            }
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={this.state.posted ? "Akses Murid (Hidup)" : "Akses Murid (Mati)"}
+                          />
+                        </MenuItem>
+                      </Menu>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </AppBar>
+            <div className={classes.content}>
+              <div className={classes.toolbar} />
+              <Grid container direction="column" spacing={3}>
+                <Grid item>
+                  <Paper>
+                    <div className={classes.contentDetails}>
+                      <Typography variant="h5" gutterBottom>
+                        Buat {this.state.type}
+                      </Typography>
+                      <Typography color="textSecondary">
+                        Disarankan untuk lengkapi data yang ada dan klik buat terlebih dahulu agar {this.state.type} tersimpan.
+                      </Typography>
+                    </div>
+                    <Divider />
+                    <Grid container>
+                      <Grid item xs={12} md={7} className={classes.contentDetails}>
+                        <Grid container direction="column" spacing={4}>
+                          <Grid item>
+                            <div style={{ display: "flex", alignItems: "center"}}>
+                              {this.state.type === "Ujian" ?
+                                <BsClipboardData className={classes.assessmentLabelIcon} />
+                              :
+                                <FaClipboardList className={classes.assessmentLabelIcon} />
+                              }
+                              <Typography color="primary">
+                                Judul {this.state.type}
+                              </Typography>
+                            </div>
                             <TextField
                               fullWidth
+                              type="text"
                               variant="outlined"
                               id="name"
-                              error={errors.name}
-                              // helperText={errors.name}
                               onChange={this.onChange}
+                              error={errors.name}
+                              helperText={errors.name}
                             />
-                            {errors.name ? (
-                              <div className={classes.zeroHeightHelperText}>
-                                <FormHelperText variant="outlined" error>
-                                  {errors.name}
-                                </FormHelperText>
-                              </div>
-                            ) : null}
-                          </div>
-                        </div>
-                      </Grid>
-                      <Grid item className={classes.customPaddingBottom}>
-                        <Typography
-                          component="label"
-                          for="class_assigned"
-                          color="primary"
-                        >
-                          Tipe Penilaian
-                        </Typography>
-                        <FormControl
-                          id="role"
-                          variant="outlined"
-                          color="primary"
-                          fullWidth
-                          error={Boolean(errors.type)}
-                        >
-                          <Select
-                            value={this.state.type}
-                            onChange={(event) => {
-                              this.onChange(event, "type");
-                            }}
-                          >
-                            <MenuItem value="Kuis">Kuis</MenuItem>
-                            <MenuItem value="Ujian">Ujian</MenuItem>
-                          </Select>
-                          {Boolean(errors.type) ? (
-                            <div className={classes.zeroHeightHelperText}>
-                              <FormHelperText variant="outlined" error>
-                                {errors.type}
-                              </FormHelperText>
+                          </Grid>
+                          <Grid item className={classes.customPaddingBottom}>
+                            {/* Mau dibuang tipe penilaiannya*/}
+                            <Typography
+                              component="label"
+                              for="class_assigned"
+                              color="primary"
+                            >
+                              Tipe Penilaian
+                            </Typography>
+                            <FormControl
+                              id="role"
+                              variant="outlined"
+                              color="primary"
+                              fullWidth
+                              error={Boolean(errors.type)}
+                            >
+                              <Select
+                                value={this.state.type}
+                                onChange={(event) => {
+                                  this.onChange(event, "type");
+                                }}
+                              >
+                                <MenuItem value="Kuis">Kuis</MenuItem>
+                                <MenuItem value="Ujian">Ujian</MenuItem>
+                              </Select>
+                              {Boolean(errors.type) ? (
+                                <div className={classes.zeroHeightHelperText}>
+                                  <FormHelperText variant="outlined" error>
+                                    {errors.type}
+                                  </FormHelperText>
+                                </div>
+                              ) : null}
+                            </FormControl>
+                          </Grid>
+                          <Grid item>
+                            <div style={{ display: "flex", alignItems: "center"}}>
+                              <ShortTextIcon className={classes.labelIcon} />
+                              <Typography color="primary">
+                                Deskripsi
+                              </Typography>
                             </div>
-                          ) : null}
-                        </FormControl>
+                            <TextField
+                              fullWidth
+                              multiline
+                              type="text"
+                              rows="5"
+                              rowsMax="25"
+                              variant="outlined"
+                              id="description"
+                              onChange={this.onChange}
+                              error={errors.description}
+                              helperText={errors.description}
+                            />
+                          </Grid>
+                        </Grid>
                       </Grid>
                       <Hidden smDown>
-                        {/* dummy checkbox agar kedua kolom form keterangan assessment simetris */}
-                        <Grid
-                          item
-                          style={{
-                            padding: "0",
-                            width: "0",
-                            visibility: "hidden",
-                          }}
-                        >
-                          <FormHelperText variant="outlined">
-                            {"\u200B"}
-                          </FormHelperText>
-                          <Checkbox size="small" disabled />
+                        <Grid item>
+                          <Divider flexItem orientation="vertical" />
                         </Grid>
                       </Hidden>
-                      <Grid item className={classes.customPaddingTop}>
-                        <Typography
-                          component="label"
-                          for="description"
-                          color="primary"
-                        >
-                          Deskripsi
-                        </Typography>
-                        <TextField
-                          multiline
-                          // 1 row = 17px. ukuran padding (cek dengan devtool) = 37px
-                          rows={(this.state.customHeight - 37) / 17}
-                          rowsMax="25"
-                          fullWidth
-                          error={errors.description}
-                          // helperText={errors.description}
-                          onChange={this.onChange}
-                          variant="outlined"
-                          id="description"
-                          type="text"
-                        />
-                        {errors.description ? (
-                          <div className={classes.zeroHeightHelperText}>
-                            <FormHelperText variant="outlined" error>
-                              {errors.description}
-                            </FormHelperText>
-                          </div>
-                        ) : null}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Divider
-                    flexItem
-                    orientation="vertical"
-                    className={classes.divider}
-                  />
-                  <Grid item xs={12} md className={classes.content}>
-                    <Grid container direction="column" spacing={4}>
-                      <Grid item container spacing={2}>
-                        <Grid item xs={12} md={6}>
-                          <Typography
-                            component="label"
-                            for="workTimeStart"
-                            color="primary"
-                          >
-                            {/* FIXME start date */}
-                            Waktu Mulai Pengerjaan
-                          </Typography>
-                          <MuiPickersUtilsProvider
-                            locale={lokal}
-                            utils={DateFnsUtils}
-                          >
-                            <KeyboardDateTimePicker
+                      <Hidden mdUp>
+                        <Grid item xs={12}>
+                          <Divider flexItem orientation="horizontal" />
+                        </Grid>
+                      </Hidden>
+                      <Grid item xs={12} md className={classes.contentDetails}>
+                        <Grid container direction="column" spacing={4}>
+                          <Grid item>
+                            <div style={{ display: "flex", alignItems: "center"}}>
+                              <LibraryBooksIcon className={classes.labelIcon} />
+                              <Typography color="primary">
+                                Mata Pelajaran
+                              </Typography>
+                            </div>
+                            <FormControl
                               fullWidth
-                              disablePast
-                              inputVariant="outlined"
-                              format="dd/MM/yyyy - HH:mm"
-                              ampm={false}
-                              okLabel="Simpan"
-                              cancelLabel="Batal"
-                              minDateMessage="Harus waktu yang akan datang"
-                              invalidDateMessage="Format tanggal tidak benar"
-                              id="workTimeStart"
-                              helperText={null}
-                              value={this.state.start_date}
-                              onChange={(date) =>
-                                this.onChange(date, "start_date")
-                              }
-                              // onError={(err) => {
-                              //   if (errors.start_date !== err) {
-                              //     this.setState({ errors: { ...errors, start_date: err } });
-                              //   }
-                              // }}
-                              error={
-                                errors.start_date_custom || errors.start_date
-                              }
-                            />
-                            <div className={classes.zeroHeightHelperText}>
-                              {/* <FormHelperText variant="outlined" error>{errors.start_date}</FormHelperText> */}
-                              {errors.start_date_custom ? (
-                                <FormHelperText variant="outlined" error>
-                                  {errors.start_date_custom}
-                                </FormHelperText>
-                              ) : errors.start_date ? (
-                                <FormHelperText variant="outlined" error>
-                                  {errors.start_date}
+                              variant="outlined"
+                              color="primary"
+                              id="subject"
+                              error={Boolean(errors.subject)}
+                            >
+                              <Select
+                                value={this.state.subject}
+                                onChange={(event) => {
+                                  this.onChange(event, "subject");
+                                }}
+                              >
+                                {this.state.subjectOptions !== null
+                                  ? this.state.subjectOptions.map((subject) => (
+                                      <MenuItem
+                                        key={subject._id}
+                                        value={subject._id}
+                                      >
+                                        {subject.name}
+                                      </MenuItem>
+                                    ))
+                                  : null}
+                              </Select>
+                              {Boolean(errors.subject) ? (
+                                <FormHelperText error>
+                                  {errors.subject}
                                 </FormHelperText>
                               ) : null}
+                            </FormControl>
+                          </Grid>
+                          <Grid item>
+                            <div style={{ display: "flex", alignItems: "center"}}>
+                              <FaChalkboard className={classes.labelIcon} />
+                              <Typography color="primary">
+                                Kelas yang diberikan
+                              </Typography>
                             </div>
-                          </MuiPickersUtilsProvider>
-                        </Grid>
-                        <Grid
-                          item
-                          xs={12}
-                          md={6}
-                          className={classes.customSpacing}
-                        >
-                          <Typography
-                            component="label"
-                            for="workTimeEnd"
-                            color="primary"
-                          >
-                            {/* FIXME end date */}
-                            Waktu Selesai Pengerjaan
-                          </Typography>
-                          <MuiPickersUtilsProvider
-                            locale={lokal}
-                            utils={DateFnsUtils}
-                          >
-                            <KeyboardDateTimePicker
+                            <FormControl
                               fullWidth
-                              disablePast
-                              inputVariant="outlined"
-                              format="dd/MM/yyyy - HH:mm"
-                              ampm={false}
-                              okLabel="Simpan"
-                              cancelLabel="Batal"
-                              invalidDateMessage="Format tanggal tidak benar"
-                              id="workTimeEnd"
-                              helperText={null}
-                              value={this.state.end_date}
-                              minDate={this.state.start_date}
-                              minDateMessage="Harus setelah Waktu Mulai Pengerjaan"
-                              onChange={(date) =>
-                                this.onChange(date, "end_date")
-                              }
-                              onError={(err) => {
-                                if (errors.end_date !== err) {
-                                  this.setState({
-                                    errors: { ...errors, end_date: err },
-                                  });
+                              variant="outlined"
+                              color="primary"
+                              id="class_assigned"
+                              error={Boolean(errors.class_assigned)}
+                            >
+                              <Select
+                                multiple
+                                value={class_assigned}
+                                onChange={(event) =>
+                                  this.onChange(event, "class_assigned")
                                 }
-                              }}
-                              error={errors.end_date_custom || errors.end_date}
-                            />
-                            <div className={classes.zeroHeightHelperText}>
-                              {/* <FormHelperText variant="outlined" error>{errors.end_date}</FormHelperText> */}
-                              {errors.end_date_custom ? (
-                                <FormHelperText variant="outlined" error>
-                                  {errors.end_date_custom}
-                                </FormHelperText>
-                              ) : errors.end_date ? (
-                                <FormHelperText variant="outlined" error>
-                                  {errors.end_date}
+                                renderValue={(selected) => (
+                                  <div className={classes.chips}>
+                                    {selected.map((classId) => {
+                                      return (
+                                        <Chip
+                                          key={classId}
+                                          label={
+                                            this.state.allClassObject
+                                              ? this.state.allClassObject[classId]
+                                              : null
+                                          }
+                                          className={classes.chip}
+                                        />
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              >
+                                {this.state.classOptions !== null
+                                  ? this.state.classOptions.map((classInfo) => (
+                                      <MenuItem
+                                        selected={true}
+                                        key={classInfo._id}
+                                        value={classInfo._id}
+                                      >
+                                        {classInfo.name}
+                                      </MenuItem>
+                                    ))
+                                  : null}
+                              </Select>
+                              {Boolean(errors.class_assigned) ? (
+                                <FormHelperText error>
+                                  {errors.class_assigned}
                                 </FormHelperText>
                               ) : null}
+                            </FormControl>
+                          </Grid>
+                          <Grid item>
+                            {/*FIXME Start Date*/}
+                            <div style={{ display: "flex", alignItems: "center"}}>
+                              <TimerIcon className={classes.labelIcon} />
+                              <Typography color="primary">
+                                Waktu Mulai
+                              </Typography>
                             </div>
-                          </MuiPickersUtilsProvider>
-                        </Grid>
-                      </Grid>
-                      <Grid item style={{ paddingBottom: "0" }}>
-                        <Typography
-                          component="label"
-                          for="postDate"
-                          color="primary"
-                        >
-                          Waktu Rilis
-                        </Typography>
-                        <MuiPickersUtilsProvider
-                          locale={lokal}
-                          utils={DateFnsUtils}
-                        >
-                          <KeyboardDateTimePicker
-                            disabled={!this.state.isScheduled}
-                            fullWidth
-                            inputVariant="outlined"
-                            format="dd/MM/yyyy - HH:mm"
-                            ampm={false}
-                            okLabel="Simpan"
-                            cancelLabel="Batal"
-                            invalidDateMessage="Format tanggal tidak benar"
-                            id="postDate"
-                            helperText={null}
-                            value={this.state.post_date}
-                            onChange={(date) =>
-                              this.onChange(date, "post_date")
-                            }
-                            onError={(err) => {
-                              if (errors.post_date !== err) {
-                                this.setState({
-                                  errors: { ...errors, post_date: err },
-                                });
-                              }
-                            }}
-                          />
-                          <div
-                            className={classes.zeroHeightHelperText}
-                            style={{ flexDirection: "column" }}
-                          >
-                            {errors.post_date ? (
-                              <FormHelperText variant="outlined" error>
-                                {errors.post_date}
-                              </FormHelperText>
-                            ) : null}
-                            {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang
-                              untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
-                            <FormGroup style={{ width: "fit-content" }}>
-                              <FormControlLabel
-                                label={
-                                  <Typography color="textPrimary">
-                                    Rilis Otomatis
-                                  </Typography>
+                            <MuiPickersUtilsProvider
+                              locale={lokal}
+                              utils={DateFnsUtils}
+                            >
+                              <KeyboardDateTimePicker
+                                fullWidth
+                                disablePast
+                                inputVariant="outlined"
+                                format="dd/MM/yyyy - HH:mm"
+                                ampm={false}
+                                okLabel="Simpan"
+                                cancelLabel="Batal"
+                                minDateMessage="Harus waktu yang akan datang"
+                                invalidDateMessage="Format tanggal tidak benar"
+                                id="workTimeStart"
+                                helperText={null}
+                                value={this.state.start_date}
+                                onChange={(date) =>
+                                  this.onChange(date, "start_date")
                                 }
-                                control={
-                                  <Checkbox
-                                    onChange={() => {
-                                      this.handleCheckScheduleMode();
-                                    }}
-                                    color="primary"
-                                    size="small"
-                                    checked={this.state.isScheduled}
-                                  />
+                                // onError={(err) => {
+                                //   if (errors.start_date !== err) {
+                                //     this.setState({ errors: { ...errors, start_date: err } });
+                                //   }
+                                // }}
+                                error={
+                                  errors.start_date_custom || errors.start_date
                                 }
+                                helperText={errors.start_date || errors.start_date_custom}
                               />
-                            </FormGroup>
-                          </div>
-                        </MuiPickersUtilsProvider>
-                      </Grid>
-                      {/* dummy checkbox untuk memberikan ruang bagi checkbox waktu rilis yang sebenarnya */}
-                      <Grid
-                        item
-                        style={{
-                          padding: "0",
-                          width: "0",
-                          visibility: "hidden",
-                        }}
-                      >
-                        <FormHelperText variant="outlined">
-                          {"\u200B"}
-                        </FormHelperText>
-                        <Checkbox size="small" disabled />
-                      </Grid>
-                      <Grid item style={{ paddingTop: "0" }}>
-                        <Typography
-                          component="label"
-                          for="subject"
-                          color="primary"
-                        >
-                          Mata Pelajaran
-                        </Typography>
-                        <FormControl
-                          id="subject"
-                          variant="outlined"
-                          color="primary"
-                          fullWidth
-                          error={Boolean(errors.subject)}
-                        >
-                          <Select
-                            value={this.state.subject}
-                            onChange={(event) => {
-                              this.onChange(event, "subject");
-                            }}
-                          >
-                            {this.state.subjectOptions !== null
-                              ? this.state.subjectOptions.map((subject) => (
-                                  <MenuItem
-                                    key={subject._id}
-                                    value={subject._id}
-                                  >
-                                    {subject.name}
-                                  </MenuItem>
-                                ))
-                              : null}
-                          </Select>
-                          {Boolean(errors.subject) ? (
-                            <div className={classes.zeroHeightHelperText}>
-                              <FormHelperText variant="outlined" error>
-                                {errors.subject}
-                              </FormHelperText>
+                            </MuiPickersUtilsProvider>
+                          </Grid>
+                          <Grid item>
+                            {/*FIXME End Date*/}
+                            <div style={{ display: "flex", alignItems: "center"}}>
+                              <TimerOffIcon className={classes.labelIcon} />
+                              <Typography color="primary">
+                                Waktu Selesai
+                              </Typography>
                             </div>
-                          ) : null}
-                        </FormControl>
-                      </Grid>
-                      <Grid item>
-                        <Typography
-                          component="label"
-                          for="class_assigned"
-                          color="primary"
-                        >
-                          Kelas yang Ditugaskan
-                        </Typography>
-                        <FormControl
-                          variant="outlined"
-                          fullWidth
-                          error={Boolean(errors.class_assigned)}
-                        >
-                          <Select
-                            multiple
-                            fullWidth
-                            variant="outlined"
-                            color="primary"
-                            id="class_assigned"
-                            value={class_assigned}
-                            onChange={(event) =>
-                              this.onChange(event, "class_assigned")
-                            }
-                            renderValue={(selected) => (
-                              <div className={classes.chips}>
-                                {selected.map((classId) => {
-                                  return (
-                                    <Chip
-                                      key={classId}
-                                      label={
-                                        this.state.allClassObject
-                                          ? this.state.allClassObject[classId]
-                                          : null
-                                      }
-                                      className={classes.chip}
-                                    />
-                                  );
-                                })}
-                              </div>
-                            )}
-                          >
-                            {this.state.classOptions !== null
-                              ? this.state.classOptions.map((classInfo) => (
-                                  <MenuItem
-                                    selected={true}
-                                    key={classInfo._id}
-                                    value={classInfo._id}
-                                  >
-                                    {classInfo.name}
-                                  </MenuItem>
-                                ))
-                              : null}
-                          </Select>
-                          {Boolean(errors.class_assigned) ? (
-                            <div className={classes.zeroHeightHelperText}>
-                              <FormHelperText variant="outlined" error>
-                                {errors.class_assigned}
-                              </FormHelperText>
-                            </div>
-                          ) : null}
-                        </FormControl>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Grid>
-            <Grid item>
-              {this.weightInput(classes)}
-            </Grid>
-            {this.listQuestion()}
-            <Grid item container justify="center">
-              <Grid item>
-                <LightTooltip title="Tambah soal pilihan ganda">
-                  <IconButton
-                    className={`${classes.addQuestionButton} ${classes.RadioQst}`}
-                    onClick={() => this.handleCloseMenuTambah("radio")}
-                  >
-                    <RadioButtonCheckedIcon />
-                  </IconButton>
-                </LightTooltip>
-              </Grid>
-              <Grid item>
-                <LightTooltip title="Tambah soal kotak centang">
-                  <IconButton
-                    className={`${classes.addQuestionButton} ${classes.CheckboxQst}`}
-                    onClick={() => this.handleCloseMenuTambah("checkbox")}
-                  >
-                    <CheckBoxIcon />
-                  </IconButton>
-                </LightTooltip>
-              </Grid>
-              <Grid item>
-                <LightTooltip title="Tambah soal isian pendek">
-                  <IconButton
-                    className={`${classes.addQuestionButton} ${classes.ShorttextQst}`}
-                    onClick={() => this.handleCloseMenuTambah("shorttext")}
-                  >
-                    <TextFormatIcon />
-                  </IconButton>
-                </LightTooltip>
-              </Grid>
-              <Grid item>
-                <LightTooltip title="Tambah soal uraian">
-                  <IconButton
-                    className={`${classes.addQuestionButton} ${classes.LongtextQst}`}
-                    onClick={() => this.handleCloseMenuTambah("longtext")}
-                  >
-                    <SubjectIcon />
-                  </IconButton>
-                </LightTooltip>
-              </Grid>
-            </Grid>
-            <Grid item container justify="center">
-              <Grid item>
-                <TablePagination
-                  labelRowsPerPage="Soal Per Halaman"
-                  rowsPerPageOptions={[5, 10]}
-                  component="div"
-                  count={this.state.questions.length}
-                  rowsPerPage={this.state.rowsPerPage}
-                  page={this.state.page}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Paper>
-                <Grid
-                  container
-                  justify="space-between"
-                  alignItems="center"
-                  className={classes.pageNavigatorContent}
-                >
-                  <Grid item className={classes.pageNavigator}>
-                    <Grid item>
-                      <LightTooltip
-                        title={!this.state.posted ? "Mati" : "Hidup"}
-                      >
-                        <FormControlLabel
-                          control={
-                            <ToggleViewQuiz
-                              icon={<FiberManualRecordIcon />}
-                              checkedIcon={<FiberManualRecordIcon />}
-                              disabled={this.state.isScheduled}
-                              checked={this.state.posted}
-                              onChange={this.handlePostToggle}
+                            <MuiPickersUtilsProvider
+                              locale={lokal}
+                              utils={DateFnsUtils}
+                            >
+                              <KeyboardDateTimePicker
+                                fullWidth
+                                disablePast
+                                inputVariant="outlined"
+                                format="dd/MM/yyyy - HH:mm"
+                                ampm={false}
+                                okLabel="Simpan"
+                                cancelLabel="Batal"
+                                invalidDateMessage="Format tanggal tidak benar"
+                                id="workTimeEnd"
+                                helperText={null}
+                                value={this.state.end_date}
+                                minDate={this.state.start_date}
+                                minDateMessage="Harus setelah Waktu Mulai Pengerjaan"
+                                onChange={(date) =>
+                                  this.onChange(date, "end_date")
+                                }
+                                onError={(err) => {
+                                  if (errors.end_date !== err) {
+                                    this.setState({
+                                      errors: { ...errors, end_date: err },
+                                    });
+                                  }
+                                }}
+                                error={errors.end_date_custom || errors.end_date}
+                                helperText={errors.end_date || errors.end_date_custom}
+                              />
+                            </MuiPickersUtilsProvider>
+                          </Grid>
+                          <Grid item>
+                            <FormControlLabel
+                              label={
+                                <Typography color="primary">
+                                  Jadwalkan Pemberian
+                                </Typography>
+                              }
+                              control={
+                                <Checkbox
+                                  size="small"
+                                  color="primary"
+                                  checked={this.state.isScheduled}
+                                  onChange={() => {
+                                    this.handleCheckScheduleMode();
+                                  }}
+                                />
+                              }
                             />
-                          }
-                          label={
-                            <Typography variant="subtitle2">
-                              Akses ke murid
-                            </Typography>
-                          }
-                          labelPlacement="bottom"
-                        />
-                      </LightTooltip>
-                    </Grid>
-                  </Grid>
-                  <Grid item className={classes.assessmentSettings}>
-                    <Grid container spacing={1}>
-                      <Grid item>
-                        <Button
-                          variant="contained"
-                          className={classes.cancelButton}
-                          onClick={this.handleOpenDeleteDialog}
-                        >
-                          Batal
-                        </Button>
+                            <MuiPickersUtilsProvider
+                              locale={lokal}
+                              utils={DateFnsUtils}
+                            >
+                              <KeyboardDateTimePicker
+                                fullWidth
+                                disabled={!this.state.isScheduled}
+                                inputVariant="outlined"
+                                format="dd/MM/yyyy - HH:mm"
+                                ampm={false}
+                                okLabel="Simpan"
+                                cancelLabel="Batal"
+                                invalidDateMessage="Format tanggal tidak benar"
+                                id="postDate"
+                                helperText={null}
+                                value={this.state.post_date}
+                                onChange={(date) =>
+                                  this.onChange(date, "post_date")
+                                }
+                                onError={(err) => {
+                                  if (errors.post_date !== err) {
+                                    this.setState({
+                                      errors: { ...errors, post_date: err },
+                                    });
+                                  }
+                                }}
+                                helperText={errors.post_date}
+                              />
+                            </MuiPickersUtilsProvider>
+                          </Grid>
+                        </Grid>
                       </Grid>
-                      <Grid item>
-                        <Button
-                          variant="contained"
-                          type="submit"
-                          className={classes.createAssessmentButton}
-                        >
-                          Buat {this.state.type}
-                        </Button>
-                      </Grid>
                     </Grid>
+                  </Paper>
+                </Grid>
+                <Grid item>
+                  {this.weightInput(classes)}
+                </Grid>
+                {this.listQuestion()}
+                <Grid item container justify="center">
+                  <Grid item>
+                    <TablePagination
+                      labelRowsPerPage="Soal Per Halaman"
+                      rowsPerPageOptions={[5, 10]}
+                      component="div"
+                      count={this.state.questions.length}
+                      rowsPerPage={this.state.rowsPerPage}
+                      page={this.state.page}
+                      onChangePage={this.handleChangePage}
+                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
                   </Grid>
                 </Grid>
-              </Paper>
-            </Grid>
-          </Grid>
-        </form>
-        {/* Ini Delete Dialog yang untuk cancel action saja, blm ada di DB*/}
-        <DeleteDialog
-          openDeleteDialog={this.state.openDeleteDialog}
-          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-          itemType={this.state.type ? this.state.type : "Penilaian"}
-          deleteItem=""
-          redirectLink={`daftar-${this.state.type.toLowerCase()}`}
-          isWarning={false}
-        />
-        <UploadDialog
-          openUploadDialog={this.state.openUploadDialog}
-          success={success}
-          messageUploading={`${this.state.type} sedang dibuat`}
-          messageSuccess={`${this.state.type} telah dibuat`}
-          redirectLink={`/${this.state.type.toLowerCase()}-guru/${success}`}
-        />
-        <Snackbar
-          open={this.state.checkboxSnackbarOpen}
-          autoHideDuration={6000}
-          onClose={this.handleCloseCheckboxErrorSnackBar}
-        >
-          <Alert
+              </Grid>
+              {/* Ini belum dibuat untuk drawernya
+              <Drawer
+                variant="temporary"
+                // anchor={theme.direction === "rtl" ? "right" : "left"}
+                open={mobileOpen}
+                onClose={handleDrawerMobile}
+                classes={{
+                  paper: classes.navigationDrawerPaper,
+                }}
+                ModalProps={{
+                  keepMounted: true,
+                }}
+              >
+                <List>
+                  <TablePagination
+                    labelRowsPerPage="Soal Per Halaman"
+                    rowsPerPageOptions={[5, 10]}
+                    component="div"
+                    count={this.state.questions.length}
+                    rowsPerPage={this.state.rowsPerPage}
+                    page={this.state.page}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  />
+                </List>
+              </Drawer>*/}
+              <AppBar position="fixed" className={classes.assessmentMenu}>
+                <Paper elevation={3} className={classes.assessmentMenuPaper}>
+                  <Grid container justify="space-around">
+                    <Grid item>
+                      <Tooltip title="Navigasi Soal" placement="top">
+                        <IconButton>
+                          <FormatListNumberedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip title="Tambah soal pilihan ganda" placement="top">
+                        <IconButton onClick={() => this.handleCloseMenuTambah("radio")}>
+                          <Badge badgeContent={<AddIcon fontSize="small" />}>
+                            <RadioButtonCheckedIcon />
+                          </Badge>
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip title="Tambah soal kotak centang" placement="top">
+                        <IconButton onClick={() => this.handleCloseMenuTambah("checkbox")}>
+                          <Badge badgeContent={<AddIcon fontSize="small" />}>
+                            <CheckBoxIcon />
+                          </Badge>
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip title="Tambah soal isian pendek" placement="top">
+                        <IconButton onClick={() => this.handleCloseMenuTambah("shorttext")}>
+                          <Badge badgeContent={<AddIcon fontSize="small" />}>
+                            <TextFormatIcon />
+                          </Badge>
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip title="Tambah soal uraian" placement="top">
+                        <IconButton onClick={() => this.handleCloseMenuTambah("longtext")}>
+                          <Badge badgeContent={<AddIcon fontSize="small" />}>
+                            <SubjectIcon />
+                          </Badge>
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </AppBar>
+            </div>
+          </form>
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType={this.state.type ? this.state.type : "Penilaian"}
+            deleteItem=""
+            redirectLink={`daftar-${this.state.type.toLowerCase()}`}
+            isWarning={false}
+          />
+          <UploadDialog
+            openUploadDialog={this.state.openUploadDialog}
+            success={success}
+            messageUploading={`${this.state.type} sedang dibuat`}
+            messageSuccess={`${this.state.type} telah dibuat`}
+            redirectLink={`/${this.state.type.toLowerCase()}-guru/${success}`}
+          />
+          <Snackbar
+            open={this.state.checkboxSnackbarOpen}
+            autoHideDuration={6000}
             onClose={this.handleCloseCheckboxErrorSnackBar}
-            severity="error"
           >
-            Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          open={this.state.radioSnackbarOpen}
-          autoHideDuration={6000}
-          onClose={this.handleCloseRadioErrorSnackBar}
-        >
-          <Alert onClose={this.handleCloseRadioErrorSnackBar} severity="error">
-            Soal Dalam Bentuk Pilihan Ganda Minimal Memiliki Satu Jawaban.
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          open={this.state.snackbarOpen}
-          autoHideDuration={4000}
-          onClose={this.handleCloseErrorSnackbar}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-          <Alert
-            elevation={6}
-            variant="filled"
-            onClose={this.handleCloseSnackbar}
-            severity="error"
+            <Alert
+              onClose={this.handleCloseCheckboxErrorSnackBar}
+              severity="error"
+            >
+              Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            open={this.state.radioSnackbarOpen}
+            autoHideDuration={6000}
+            onClose={this.handleCloseRadioErrorSnackBar}
           >
-            Masih ada bagian yang belum diisi atau salah, silakan diperiksa
-            kembali!
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          open={this.state.fileLimitSnackbar}
-          autoHideDuration={4000}
-          onClose={this.handleFileLimitSnackbar}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-          <Alert elevation={6} variant="filled" severity="error">
-            {this.state.over_limit.length} file melebihi batas{" "}
-            {this.props.settingsCollection.upload_limit}MB!
-          </Alert>
-        </Snackbar>
+            <Alert onClose={this.handleCloseRadioErrorSnackBar} severity="error">
+              Soal Dalam Bentuk Pilihan Ganda Minimal Memiliki Satu Jawaban.
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            open={this.state.snackbarOpen}
+            autoHideDuration={4000}
+            onClose={this.handleCloseErrorSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <Alert
+              elevation={6}
+              variant="filled"
+              onClose={this.handleCloseSnackbar}
+              severity="error"
+            >
+              Masih ada bagian yang belum diisi atau salah, silakan diperiksa
+              kembali!
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            open={this.state.fileLimitSnackbar}
+            autoHideDuration={4000}
+            onClose={this.handleFileLimitSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <Alert elevation={6} variant="filled" severity="error">
+              {this.state.over_limit.length} file melebihi batas{" "}
+              {this.props.settingsCollection.upload_limit}MB!
+            </Alert>
+          </Snackbar>
+        </div>
       </div>
     );
   }
@@ -2178,8 +1870,8 @@ CreateAssessment.propTypes = {
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   createAssessment: PropTypes.func.isRequired,
-  // errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
+  // errors: PropTypes.object.isRequired,
   clearErrors: PropTypes.func.isRequired,
 };
 

@@ -132,8 +132,3 @@ abbr {
 .react-calendar__tile > abbr {
   display: none;
 }
-/* @media only screen and (min-width: 1280px) {
-  abbr {
-    font-size: 0.8rem;
-  }
-} */
