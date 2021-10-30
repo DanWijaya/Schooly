@@ -1,11 +1,15 @@
 import React from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import MobileStepper from "@material-ui/core/MobileStepper";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { purple } from '@material-ui/core/colors';
 
 const tutorialSteps = [
   {
@@ -70,6 +74,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const PurpleSwitch = withStyles({
+  switchBase: {
+    color: purple[300],
+    '&$checked': {
+      color: purple[500],
+    },
+    '&$checked + $track': {
+      backgroundColor: purple[500],
+    },
+  },
+  thumb: {
+    // width: 20,
+    // height: 20,
+    // borderRadius: "50%",
+  },
+  checked: {},
+  track: {},
+})(Switch);
+
 export default function TextMobileStepper() {
   const classes = useStyles();
   const theme = useTheme();
@@ -91,6 +114,14 @@ export default function TextMobileStepper() {
   function onImgLoad({ target: img }) {
     setAvatarDimensions({ height: img.offsetHeight, width: img.offsetWidth });
   }
+
+  const [state, setState] = React.useState({
+    checked: true,
+  });
+
+  const handleChange = (event) => {
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
 
   return (
     <div className={classes.root}>
@@ -141,6 +172,12 @@ export default function TextMobileStepper() {
           </Button>
         }
       />
+      <FormControlLabel
+        control={<Switch />}
+      />
+      <Button>
+        Test
+      </Button>
     </div>
   );
 }
