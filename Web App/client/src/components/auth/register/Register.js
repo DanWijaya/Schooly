@@ -561,24 +561,26 @@ class Register extends Component {
         };
       }
 
-      // get errors on current page
-      validateRegister(userData, this.state.activeStep + 1).catch((err) => {
-        this.setState({ errors: err });
-      });
+      // // get errors on current page
+      // validateRegister(userData, this.state.activeStep + 1);
       // if no error exists, proceed to next page
-      validateRegister(userData, this.state.activeStep + 1).then(() => {
-        this.setState({ errors: {} });
-        if (Object.keys(this.state.errors).length === 0) {
-          this.setState((prevState) => ({
-            activeStep: prevState.activeStep + 1,
-            submitButtonActive: false,
-          }));
-        }
+      validateRegister(userData, this.state.activeStep + 1)
+        .then(() => {
+          this.setState({ errors: {} });
+          if (Object.keys(this.state.errors).length === 0) {
+            this.setState((prevState) => ({
+              activeStep: prevState.activeStep + 1,
+              submitButtonActive: false,
+            }));
+          }
 
-        if (this.state.activeStep === 2) {
-          this.setState({ submitButtonActive: true });
-        }
-      });
+          if (this.state.activeStep === 2) {
+            this.setState({ submitButtonActive: true });
+          }
+        })
+        .catch((err) => {
+          this.setState({ errors: err });
+        });
 
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;

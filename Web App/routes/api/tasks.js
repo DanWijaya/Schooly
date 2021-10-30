@@ -9,8 +9,6 @@ const {
 } = require("../../validation/TaskData");
 // Load Task model
 const Task = require("../../models/Task");
-const Class = require("../../models/Class");
-
 const mongoose = require("mongoose");
 
 //Define create route
@@ -138,7 +136,10 @@ router.put("/update/:id", (req, res) => {
 
       return taskData.save();
     })
-    .then((taskData) => res.json("Update Task complete"))
+    .then((taskData) => {
+      console.log("Update task completed");
+      return res.json("Update Task complete");
+    })
     .catch((err) => {
       console.error("Update task failed");
       return res.status(400).json(err);
@@ -157,8 +158,8 @@ router.get("/view", (req, res) => {
 
   Task.find(query)
     .then((tasks) => {
-      if (!tasks) {
-        throw "Belum ada tugas";
+      if (!tasks.length) {
+        console.log("Belum ada tugas");
       }
       return res.json(tasks);
     })
@@ -170,11 +171,12 @@ router.get("/view", (req, res) => {
 
 router.post("/comment/:taskId", (req, res) => {
   let comment = req.body;
-  Task.findById(req.params.taskId)
+  const { taskId } = req.params;
+
+  Task.findById(taskId)
     .then((taskData) => {
-      if (!taskData) throw { data: "Task data is not found", status: 404 };
-      if (!comment.content.length)
-        throw { data: "Isi komentar tidak boleh kosong", status: 400 };
+      if (!taskData) throw "Task data is not found";
+      if (!comment.content.length) throw "Isi komentar tidak boleh kosong";
 
       let newComments = taskData.comments ? [...taskData.comments] : [];
       comment.createdAt = new mongoose.Types.ObjectId().getTimestamp();
@@ -186,20 +188,18 @@ router.post("/comment/:taskId", (req, res) => {
       return res.json("Create task comment completed");
     })
     .catch((err) => {
-      // status code tergantung errornya (sebenarnya status code should not be a big deal).
       console.error("Create task comment failed");
-      return res.json(err);
+      return res.status(400).json(err);
     });
 });
 
 router.put("/comment/:taskId", (req, res) => {
   let { updatedContent, commentId } = req.body;
-
-  Task.findById(req.params.taskId)
+  const { taskId } = req.params;
+  Task.findById(taskId)
     .then((taskData) => {
-      if (!taskData) throw { data: "Task data is not found", status: 404 };
-      if (updatedContent.length === 0)
-        throw { data: "Isi komentar tidak boleh kosong", status: 400 };
+      if (!taskData) throw "Task data is not found";
+      if (updatedContent.length === 0) throw "Isi komentar tidak boleh kosong";
 
       let newComments = taskData.comments ? [...taskData.comments] : [];
       for (let i = 0; i < newComments.length; i++) {
@@ -213,11 +213,14 @@ router.put("/comment/:taskId", (req, res) => {
       taskData.comments = newComments;
       return taskData.save();
     })
-    .then(() => res.json("Update task comment complete"))
+    .then(() => {
+      console.log("Update task comment completed");
+      return res.json("Update task comment complete");
+    })
     .catch((err) => {
       // status code tergantung errornya (sebenarnya status code should not be a big deal).
       console.error("Update task comment failed");
-      return res.json(err);
+      return res.status(400).json(err);
     });
 });
 
@@ -238,11 +241,14 @@ router.delete("/comment/:taskId&:commentId", (req, res) => {
       taskData.comments = newComments;
       return taskData.save();
     })
-    .then(() => res.json("Delete task comment complete"))
+    .then(() => {
+      console.log("Delete task comment completed");
+      return res.json("Delete task comment complete");
+    })
     .catch((err) => {
       // status code tergantung errornya (sebenarnya status code should not be a big deal).
       console.error("Delete task failed");
-      return res.json(err);
+      return res.status(400).json(err);
     });
 });
 

@@ -20,16 +20,6 @@ AWS.config.update({
   region: keys.awsKey.AWS_REGION,
 });
 
-router.get("/", (req, res, next) => {
-  FileAnnouncement.find({}, (err, docs) => {
-    if (err) {
-      return next(err);
-    }
-
-    res.status(200).send(docs);
-  });
-});
-
 // Route to upload file
 router.post(
   "/upload/:announcement_id",
@@ -90,19 +80,27 @@ router.post(
 router.get("/download/:id", (req, res) => {
   let s3bucket = new AWS.S3();
 
-  FileAnnouncement.findById(req.params.id).then((result, err) => {
-    if (!result) return res.status(400).json(err);
+  FileAnnouncement.findById(req.params.id)
+    .then((result) => {
+      if (!result) throw "File announcement not found";
 
-    let params = {
-      Bucket: keys.awsKey.AWS_BUCKET_NAME,
-      Key: result.s3_key,
-      Expires: 5 * 60,
-      ResponseContentDisposition: `attachment;filename=${result.filename}`,
-    };
+      let params = {
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
+        Key: result.s3_key,
+        Expires: 5 * 60,
+        ResponseContentDisposition: `attachment;filename=${result.filename}`,
+      };
 
-    const url = s3bucket.getSignedUrl("getObject", params);
-    return res.status(200).json(url);
-  });
+      return s3bucket.getSignedUrlPromise("getObject", params);
+    })
+    .then((url) => {
+      console.log("Download file announcements completed");
+      return res.json(url);
+    })
+    .catch((err) => {
+      console.error("Download file announcements failed");
+      return res.status(400).json(err);
+    });
 });
 
 router.delete("/all/:id", async (req, res) => {
@@ -187,7 +185,7 @@ router.delete("/:id", async (req, res) => {
 
 router.get("/by_announcement/:id", (req, res) => {
   FileAnnouncement.find({ announcement_id: req.params.id })
-    .then((results, err) => {
+    .then((results) => {
       results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
       return res.status(200).json(results);
     })
@@ -197,14 +195,17 @@ router.get("/by_announcement/:id", (req, res) => {
 });
 
 router.get("/:id", (req, res) => {
-  let s3bucket = new AWS.S3();
+  FileAnnouncement.findById(req.params.id)
+    .then((result) => {
+      if (!result) throw "File announcement not found";
 
-  FileAnnouncement.findById(req.params.id).then((result, err) => {
-    if (!result) return res.status(400).json(err);
-
-    const url = `${keys.cdn}/${result.s3_key}`;
-    return res.status(200).json(url);
-  });
+      const url = `${keys.cdn}/${result.s3_key}`;
+      return res.json(url);
+    })
+    .catch((err) => {
+      console.error("Get File Announcement failed");
+      return res.status(400).json(err);
+    });
 });
 
 module.exports = router;

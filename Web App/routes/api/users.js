@@ -24,19 +24,19 @@ const { ObjectId } = require("mongodb");
 const Validator = require("validator");
 const isEmpty = require("is-empty");
 
+const sessionExpirySeconds = 604800;
+
 router.post("/validateRegister/:pageNum", (req, res) => {
-  const pageNum = req.params.pageNum;
-  if (pageNum == 1) {
-    const { errors1, isValid1 } = validateRegisterInput1(req.body);
-    if (isValid1) return res.status(200).json({});
-    return res.status(400).json(errors1); // return the result needed as error
-  }
-  if (pageNum == 2) {
-    const { errors2, isValid2 } = validateRegisterInput2(req.body);
-    if (isValid2) return res.status(200).json({});
-    return res.status(400).json(errors2);
-  }
-  return res.status(400);
+  const { pageNum } = req.params;
+  const validateRegisterFunction = (data) => {
+    if (pageNum == 1) return validateRegisterInput1(data);
+    if (pageNum == 2) return validateRegisterInput2(data);
+  };
+  const { errors, isValid } = validateRegisterFunction(req.body);
+  console.log(isValid);
+  if (!isValid) return res.status(400).json(errors);
+
+  return res.json({});
 });
 
 // @route POST api/users/register
@@ -45,234 +45,210 @@ router.post("/validateRegister/:pageNum", (req, res) => {
 // router.post("/register", (req, res) => {
 //   // Form validation
 
-router.post("/register", (req, res) => {
-  // Form validation
-  const { errors1, isValid1 } = validateRegisterInput1(req.body);
-  const { errors2, isValid2 } = validateRegisterInput2(req.body);
+router.post("/register", async (req, res) => {
+  try {
+    // Form validation
+    const { errors: errors1, isValid: isValid1 } = validateRegisterInput1(
+      req.body
+    );
+    const { errors: errors2, isValid: isValid2 } = validateRegisterInput2(
+      req.body
+    );
 
-  console.log(errors1);
-  console.log(errors2);
-  console.log(isValid1);
-  console.log(isValid2);
+    // Check validation
+    if (!isValid1 || !isValid2) throw { ...errors1, ...errors2 };
+    // return res.status(400).json({ ...errors1, ...errors2 });
 
-  // Check validation
-  if (!isValid1 || !isValid2) {
-    return res.status(400).json({ ...errors1, ...errors2 });
+    const user = await User.findOne({ email: req.body.email });
+    if (user) throw { email: "Email sudah terdaftar" };
+    let newUser;
+    if (req.body.role === "Student") newUser = new Student(req.body);
+    else if (req.body.role === "Teacher") newUser = new Teacher(req.body);
+    else if (req.body.role === "Admin") newUser = new Admin(req.body);
+    else if (req.body.role === "SuperAdmin") newUser = new SuperAdmin(req.body);
+    else throw { role: "Peran belum diisi" };
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newUser.password, salt);
+
+    newUser.password = hash;
+    const createdUser = await newUser.save();
+    return res.json(createdUser);
+  } catch (err) {
+    console.error("Register user failed");
+    return res.status(400).json(err);
   }
-  // res stands for response
-  // req.body.name
-  // req.body.subject_teached
-
-  User.findOne({ email: req.body.email }).then((user) => {
-    if (user) {
-      return res.status(400).json({ email: "Email sudah terdaftar" });
-    } else {
-      var newUser;
-      if (req.body.role === "Student") newUser = new Student(req.body);
-      else if (req.body.role === "Teacher") newUser = new Teacher(req.body);
-      else if (req.body.role === "Admin") newUser = new Admin(req.body);
-      else if (req.body.role === "SuperAdmin")
-        newUser = new SuperAdmin(req.body);
-      else {
-        return res.status(400).json({ role: "Peran belum diisi" });
-      }
-
-      // Hash password before saving in database
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if (err) throw err;
-          newUser.password = hash;
-          newUser
-            .save()
-            .then((user) => res.json(user))
-            .catch((err) => console.log(err));
-        });
-      });
-    }
-  });
 });
 
 // @route POST api/users/login
 // @desc Login user and return JWT token
 // @access Public
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
   // Form validation
+  try {
+    const { errors, isValid } = validateLoginInput(req.body);
 
-  const { errors, isValid } = validateLoginInput(req.body);
+    // Check validation
+    if (!isValid) throw errors;
 
-  // Check validation
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
+    const email = req.body.email;
+    const password = req.body.password;
 
-  const email = req.body.email;
-  const password = req.body.password;
+    // Find user by email
+    const user = await User.findOne({ email: email });
+    if (!user) throw { email: "Email tidak ditemukan" };
+    if (!user.active) throw { email: "Akun ini belum aktif" };
 
-  // Find user by email
-  User.findOne({ email: email }).then((user) => {
-    console.log(email);
-    console.log(user);
-    // Check if user exists
-    if (!user) {
-      return res.status(404).json({ email: "Email tidak ditemukan" });
-    }
-    if (!user.active) {
-      return res.status(404).json({ email: "Akun ini belum aktif" });
-    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) throw { password: "Kata sandi tidak benar" };
 
-    // Check password
-    bcrypt.compare(password, user.password).then((isMatch) => {
-      if (isMatch) {
-        // User matched
-        // Create JWT Payload
+    var payload = {
+      _id: user._id,
+      role: user.role,
+      avatar: user.avatar,
 
-        var payload = {
-          _id: user._id,
-          role: user.role,
-          avatar: user.avatar,
-
-          //Informasi Pribadi
-          name: user.name,
-          tanggal_lahir: user.tanggal_lahir,
-          jenis_kelamin: user.jenis_kelamin,
-          sekolah: user.sekolah,
-
-          //Kontak
-          email: user.email,
-          phone: user.phone,
-          emergency_phone: user.emergency_phone,
-          address: user.address,
-
-          //Kontak
-          hobi_minat: user.hobi_minat,
-          ket_non_teknis: user.ket_non_teknis,
-          cita_cita: user.cita_cita,
-          uni_impian: user.uni_impian,
-
-          //Unit
-          unit: user.unit,
-        };
-        if (user.role === "Student") {
-          payload.kelas = user.kelas;
-          payload.tugas = user.tugas;
-        } else if (user.role === "Teacher") {
-          payload.subject_teached = user.subject_teached;
-          payload.class_teached = user.class_teached;
-          payload.class_to_subject = user.class_to_subject;
-        }
-        // Sign token
-        jwt.sign(
-          payload,
-          keys.secretOrKey,
-          {
-            expiresIn: 31556926, // 1 year in seconds
-          },
-          (err, token) => {
-            res.json({
-              success: true,
-              token: "Bearer " + token,
-            });
-          }
-        );
-      } else {
-        return res.status(400).json({ password: "Kata sandi tidak benar" });
-      }
-    });
-  });
-});
-
-router.put("/update/data/:id", (req, res) => {
-  let email = req.body.email;
-  if (isEmpty(email)) {
-    return res.status(404).json({ email: "Email belum diisi" });
-  }
-  if (!Validator.isEmail(email)) {
-    console.log("Email is not valid");
-    return res.status(404).json({ email: "Email tidak benar" });
-  }
-
-  let id = req.params.id;
-  User.findById(id, (err, user) => {
-    if (!user) {
-      return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan" });
-    } else {
-      console.log("Before update");
-      console.log(user);
-
-      // Informasi Pribadi
-      // user.tugas = req.body.tugas
-      user.name = req.body.nama;
-      user.tanggal_lahir = req.body.tanggal_lahir;
-      user.jenis_kelamin = req.body.jenis_kelamin;
-      user.sekolah = req.body.sekolah;
+      //Informasi Pribadi
+      name: user.name,
+      tanggal_lahir: user.tanggal_lahir,
+      jenis_kelamin: user.jenis_kelamin,
+      sekolah: user.sekolah,
 
       //Kontak
-      user.email = req.body.email;
-      user.phone = req.body.no_telp;
-      user.emergency_phone = req.body.no_telp_darurat;
-      user.address = req.body.alamat;
+      email: user.email,
+      phone: user.phone,
+      emergency_phone: user.emergency_phone,
+      address: user.address,
+
+      //Kontak
+      hobi_minat: user.hobi_minat,
+      ket_non_teknis: user.ket_non_teknis,
+      cita_cita: user.cita_cita,
+      uni_impian: user.uni_impian,
+
+      //Unit
+      unit: user.unit,
+    };
+    if (user.role === "Student") {
+      payload.kelas = user.kelas;
+      payload.tugas = user.tugas;
+    } else if (user.role === "Teacher") {
+      payload.subject_teached = user.subject_teached;
+      payload.class_teached = user.class_teached;
+      payload.class_to_subject = user.class_to_subject;
+    }
+
+    // Sign token
+    jwt.sign(
+      payload,
+      keys.secretOrKey,
+      {
+        expiresIn: sessionExpirySeconds, //31556926 (1 year in seconds)
+      },
+      (err, token) => {
+        if (err) {
+          return res.status(400).json(err);
+        }
+        console.log("User session updated");
+        return res.json({
+          success: true,
+          token: "Bearer " + token,
+        });
+      }
+    );
+  } catch (err) {
+    console.error("User Login failed");
+    return res.status(400).json(err);
+  }
+});
+
+router.put("/update/data/:id", async (req, res) => {
+  try {
+    let email = req.body.email;
+
+    if (isEmpty(email)) {
+      throw { email: "Email belum diisi" };
+    }
+    if (!Validator.isEmail(email)) {
+      throw { email: "Email tidak benar" };
+    }
+
+    let id = req.params.id;
+    const user = await User.findById(id);
+    if (!user) throw { usernotfound: "Pengguna tidak ditemukan" };
+
+    user.name = req.body.nama;
+    user.tanggal_lahir = req.body.tanggal_lahir;
+    user.jenis_kelamin = req.body.jenis_kelamin;
+    user.sekolah = req.body.sekolah;
+
+    //Kontak
+    user.email = req.body.email;
+    user.phone = req.body.no_telp;
+    user.emergency_phone = req.body.no_telp_darurat;
+    user.address = req.body.alamat;
+
+    //Karir
+    user.hobi_minat = req.body.hobi_minat;
+    user.ket_non_teknis = req.body.ket_non_teknis;
+    user.cita_cita = req.body.cita_cita;
+    user.uni_impian = req.body.uni_impian;
+
+    const updatedUser = await user.save();
+    console.log("Update User data completed");
+
+    var payload = {
+      _id: updatedUser._id,
+      role: updatedUser.role,
+      avatar: updatedUser.avatar,
+
+      // Informasi Pribadi
+      name: updatedUser.name,
+      tanggal_lahir: updatedUser.tanggal_lahir,
+      jenis_kelamin: updatedUser.jenis_kelamin,
+      sekolah: updatedUser.sekolah,
+
+      //Kontak
+      email: updatedUser.email,
+      phone: updatedUser.phone,
+      emergency_phone: updatedUser.emergency_phone,
+      address: updatedUser.address,
 
       //Karir
-      user.hobi_minat = req.body.hobi_minat;
-      user.ket_non_teknis = req.body.ket_non_teknis;
-      user.cita_cita = req.body.cita_cita;
-      user.uni_impian = req.body.uni_impian;
+      hobi_minat: updatedUser.hobi_minat,
+      ket_non_teknis: updatedUser.ket_non_teknis,
+      cita_cita: updatedUser.cita_cita,
+      uni_impian: updatedUser.uni_impian,
+    };
 
-      console.log("After update");
-      console.log(user);
-      user
-        .save()
-        .then(console.log("Done with updating user data"))
-        .catch((err) => console.log(err));
-
-      var payload = {
-        _id: user._id,
-        role: user.role,
-        avatar: user.avatar,
-
-        // Informasi Pribadi
-        name: user.name,
-        tanggal_lahir: user.tanggal_lahir,
-        jenis_kelamin: user.jenis_kelamin,
-        sekolah: user.sekolah,
-
-        //Kontak
-        email: user.email,
-        phone: user.phone,
-        emergency_phone: user.emergency_phone,
-        address: user.address,
-
-        //Karir
-        hobi_minat: user.hobi_minat,
-        ket_non_teknis: user.ket_non_teknis,
-        cita_cita: user.cita_cita,
-        uni_impian: user.uni_impian,
-      };
-
-      if (user.role === "Student") {
-        payload.kelas = user.kelas;
-        payload.tugas = user.tugas;
-      } else if (user.role === "Teacher") {
-        payload.subject_teached = user.subject_teached;
-        payload.class_teached = user.class_teached;
-        payload.class_to_subject = user.class_to_subject;
-      }
-
-      jwt.sign(
-        payload,
-        keys.secretOrKey,
-        {
-          expiresIn: 31556926, // 1 year in seconds
-        },
-        (err, token) => {
-          res.json({
-            success: true,
-            token: "Bearer " + token,
-          });
-        }
-      );
+    if (updatedUser.role === "Student") {
+      payload.kelas = updatedUser.kelas;
+      payload.tugas = updatedUser.tugas;
+    } else if (updatedUser.role === "Teacher") {
+      payload.subject_teached = updatedUser.subject_teached;
+      payload.class_teached = updatedUser.class_teached;
+      payload.class_to_subject = updatedUser.class_to_subject;
     }
-  });
+
+    jwt.sign(
+      payload,
+      keys.secretOrKey,
+      {
+        expiresIn: sessionExpirySeconds, // 1 year in seconds
+      },
+      (err, token) => {
+        if (err) {
+          return res.status(400).json(err);
+        }
+        console.log("User session updated");
+        return res.json({
+          success: true,
+          token: "Bearer " + token,
+        });
+      }
+    );
+  } catch (err) {
+    console.error("Update user data failed");
+    return res.status(400).json(err);
+  }
 });
 
 router.get("/getTeachers/:unitId", (req, res) => {
@@ -282,9 +258,13 @@ router.get("/getTeachers/:unitId", (req, res) => {
   }
   Teacher.find({ active: true, unit: unitId })
     .sort({ name: 1 })
-    .then((users, err) => {
-      if (!users) console.log("No teachers yet in Schooly System");
+    .then((users) => {
+      if (!users.length) console.log("No teachers yet in Schooly System");
       else return res.json(users);
+    })
+    .catch((err) => {
+      console.error("Get teachers failed");
+      return res.status(400).json(err);
     });
 });
 
@@ -295,9 +275,13 @@ router.get("/getStudents/:unitId", (req, res) => {
   }
   Student.find({ active: true, unit: unitId })
     .sort({ name: 1 })
-    .then((users, err) => {
-      if (!users) console.log("No students yet in Schooly System");
+    .then((users) => {
+      if (!users.length) console.log("No students yet in Schooly System");
       else return res.json(users);
+    })
+    .catch((err) => {
+      console.error("Get students failed");
+      return res.status(400).json(err);
     });
 });
 
@@ -308,28 +292,40 @@ router.get("/getAdmins/:unitId", (req, res) => {
   }
   Admin.find({ active: true })
     .sort({ name: 1 })
-    .then((users, err) => {
+    .then((users) => {
       if (!users) console.log("No unit admins yet in Schooly System");
       else return res.json(users);
+    })
+    .catch((err) => {
+      console.error("Get admins failed");
+      return res.status(400).json(err);
     });
 });
 
 router.get("/getAllAdmins", (req, res) => {
   Admin.find({ active: true })
     .sort({ name: 1 })
-    .then((users, err) => {
+    .then((users) => {
       if (!users) console.log("No unit admins yet in Schooly System");
       else return res.json(users);
+    })
+    .catch((err) => {
+      console.error("Get all admins failed");
+      return res.status(400).json(err);
     });
 });
 
 router.get("/getOneUser/:id", (req, res) => {
   let id = req.params.id;
-  User.findById(id, (err, user) => {
-    console.log(user);
-    if (!user) return res.status(404).json("No user is found in Database");
-    else return res.json(user);
-  });
+  User.findById(id)
+    .then((user) => {
+      if (!user) throw "No user is found in Database";
+      return res.json(user);
+    })
+    .catch((err) => {
+      console.error("Get One user failed");
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/getUsers", (req, res) => {
@@ -341,23 +337,29 @@ router.get("/getUsers", (req, res) => {
     ids_to_find = userIds.map((id) => new ObjectId(id));
   }
 
-  User.find({ _id: { $in: userIds }, active: true }, (err, users) => {
-    console.log("usernya ini : ", users);
-    if (!users) return res.status(400).json("Users to update not found");
-    else return res.json(users);
-  });
+  User.find({ _id: { $in: userIds }, active: true })
+    .then((users) => {
+      console.log("usernya ini : ", users);
+      if (!users.length) throw "Users with the ids not found";
+      return res.json(users);
+    })
+    .catch((err) => {
+      console.error("Get users with particular ids failed");
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/getStudentsByClass/:id", (req, res) => {
   let id = req.params.id;
   Student.find({ kelas: id, active: true })
     .sort({ name: 1 })
-    .then((users, err) => {
-      if (!users) console.log("No students with this class ID");
-      else {
-        // console.log("Users by class : ", users)
-        return res.json(users);
-      }
+    .then((users) => {
+      if (!users.length) console.log("No students with this class ID");
+      return res.json(users);
+    })
+    .catch((err) => {
+      console.error("Get students by class failed");
+      return res.status(400).json(err);
     });
 });
 
@@ -369,9 +371,13 @@ router.get("/getAllUsers/:unitId", (req, res) => {
   User.find({ active: true, unit: req.params.unitId })
     .sort({ name: 1 })
     .lean()
-    .then((users, err) => {
-      if (!users) return res.status(404).json("No users yet in Schooly system");
-      else return res.json(users);
+    .then((users) => {
+      if (!users.length) console.log("No users yet in this unit");
+      return res.json(users);
+    })
+    .catch((err) => {
+      console.error("getAllUsers in unit failed");
+      return res.status(400).json(err);
     });
 });
 
@@ -383,9 +389,13 @@ router.get("/getPendingStudents/:unitId", (req, res) => {
   }
   Student.find({ active: false, unit: unitId })
     .sort({ name: 1 })
-    .then((users, err) => {
-      if (!users) return res.json([]);
-      else return res.json(users);
+    .then((users) => {
+      if (!users.length) console.log("Pending students in this unit is empty");
+      return res.json(users);
+    })
+    .catch((err) => {
+      console.error("getPendingStudents failed");
+      return res.status(400).json(err);
     });
 });
 
@@ -396,76 +406,106 @@ router.get("/getPendingTeachers/:unitId", (req, res) => {
   }
   Teacher.find({ active: false, unit: unitId })
     .sort({ name: 1 })
-    .then((users, err) => {
-      if (!users) return res.json([]);
-      else return res.json(users);
+    .then((users) => {
+      if (!users.length) console.log("Pending teachers in this unit is empty");
+      return res.json(users);
+    })
+    .catch((err) => {
+      console.error("getPendingTeachers in unit failed");
+      return res.status(400).json(err);
     });
 });
 
 router.get("/getAllPendingAdmins", (req, res) => {
   Admin.find({ active: false })
     .sort({ name: 1 })
-    .then((users, err) => {
-      if (!users) return res.json([]);
-      else return res.json(users);
+    .then((users) => {
+      if (!users.length) console.log("Pending admins in this unit is empty");
+      return res.json(users);
+    })
+    .catch((err) => {
+      console.error("getAllPendingAdmins in unit failed");
+      return res.status(400).json(err);
     });
 });
+
 router.put("/setUserActive/:id", (req, res) => {
   let id = req.params.id;
 
-  User.findById(id, (err, user) => {
-    if (!user) return res.status(404).json("User to be activated is not found");
-
-    user.active = true;
-    user
-      .save()
-      .then(res.json(user))
-      .catch((err) => res.json(err));
-  });
+  User.findById(id)
+    .then((user) => {
+      if (!user) throw "User to be activated is not found";
+      user.active = true;
+      return user.save();
+    })
+    .then((user) => {
+      console.log("setUserActive completed");
+      return res.json(user);
+    })
+    .catch((err) => {
+      console.error("setUserActive failed");
+      res.status(400).json(err);
+    });
 });
 
 router.put("/bulkSetUserActive/", (req, res) => {
   let { id_list } = req.body;
-  User.updateMany({ _id: { $in: id_list } }, { active: true }, (err, user) => {
-    if (err) {
-      console.log(err);
-      return res.status(404).json("There is an error");
-    } else {
-      console.log("Updated Docs : ", user);
+  User.updateMany({ _id: { $in: id_list } }, { active: true })
+    .then((user) => {
+      if (!user.length) console.log("Users to set active is empty");
+      console.log("bulkSetUserActive is completed");
       return res.json(user);
-    }
-  });
+    })
+    .catch((err) => {
+      console.error("bulkSetUserActive failed");
+      return res.status(400).json(err);
+    });
 });
 
 router.put("/setUserDeactivated/:id", (req, res) => {
   let id = req.params.id;
 
-  User.findById(id, (err, user) => {
-    if (!user) return res.status(404).json("User to be disabled is not found");
-    console.log(user);
-    user.active = false;
-    user
-      .save()
-      .then(res.json(user))
-      .catch((err) => console.log(err));
-  });
+  User.findById(id)
+    .then((user) => {
+      if (!user) throw "User to be disabled is not found";
+      user.active = false;
+      return user.save();
+    })
+    .then(() => {
+      console.log("setUserDeactivated completed");
+      return res.json(user);
+    })
+    .catch((err) => {
+      console.error("setUserDeactivated failed");
+      return res.status(400).json(err);
+    });
 });
 
 router.put("/bulkSetUserDeactivated/", (req, res) => {
   let { id_list } = req.body;
   User.updateMany({ _id: { $in: id_list } }, { active: false })
     .then((user) => {
+      if (!user.length) console.log("Users to deactivate is empty");
+      console.log("bulkSetUserDeactivated completed");
       return res.json(user);
     })
-    .catch((err) => res.status(400).json(err));
+    .catch((err) => {
+      console.error("bulkSetUserDeactivated failed");
+      return res.status(400).json(err);
+    });
 });
 
 router.delete("/delete/:id", (req, res) => {
   let userId = req.params.id;
-  User.findByIdAndDelete(userId, (err, user) => {
-    if (!user) return res.status(404).json("User to delete is not found");
-    else return res.json(user);
-  });
+  User.findByIdAndDelete(userId)
+    .then((user) => {
+      if (!user) throw "User to delete is not found";
+      return res.json(user);
+    })
+    .catch((err) => {
+      console.error("Delete User failed");
+      return res.status(400).json(err);
+    });
 });
 
 router.put("/classAssignment/:dummyClassId", (req, res) => {
@@ -484,11 +524,11 @@ router.put("/classAssignment/:dummyClassId", (req, res) => {
 
   Student.bulkWrite(operations, { ordered: false })
     .then(() => {
-      res.json("Bulkupdate student class completed");
+      return res.json("Bulkupdate student class completed");
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
+      console.error("Bulkupdate student class failed");
+      return res.status(500).json(err);
     });
 });
 
@@ -497,20 +537,19 @@ router.put("/teacher/:teacherId", (req, res) => {
     .then((user) => {
       if (!user) {
         throw { usernotfound: "Pengguna tidak ditemukan" };
-      } else {
-        user.subject_teached = req.body.subject_teached;
-        user.class_teached = req.body.class_teached;
-        user.class_to_subject = req.body.class_to_subject;
-
-        return user.save();
       }
+      user.subject_teached = req.body.subject_teached;
+      user.class_teached = req.body.class_teached;
+      user.class_to_subject = req.body.class_to_subject;
+
+      return user.save();
     })
-    .then(() => {
+    .then((user) => {
       console.log("Update teacher completed");
-      return res.json("Update teacher completed");
+      return res.json(user);
     })
     .catch((err) => {
-      console.log(err);
+      console.error("Update teacher failed");
       return res.status(400).json(err);
     });
 });
@@ -536,14 +575,18 @@ router.post("/registerStudentsBulk", (req, res) => {
       });
       return User.insertMany(user_list);
     })
-    .then((results) => {
-      return res.json(results);
+    .then((result) => {
+      console.log("registerStudentsBulk completed");
+      return res.json(result);
     })
-    .catch((err) => res.status(400).json(err));
+    .catch((err) => {
+      console.error("registerStudentsBulk failed");
+      return res.status(400).json(err);
+    });
 });
 
 // SuperAdmin Only
-router.put("/updateUnitAdmins", async (req, res) => {
+router.put("/updateUnitAdmins", (req, res) => {
   // userToUnit is an object with (key,value) = (userId,unitId)
   let operations = [];
   for (let [adminId, unitId] of Object.entries(req.body)) {
@@ -563,11 +606,11 @@ router.put("/updateUnitAdmins", async (req, res) => {
 
   Admin.bulkWrite(operations, { ordered: false })
     .then((result) => {
-      console.log(result);
+      console.log("updateUnitAdmins completed");
       return res.json(result);
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
       return res.status(500).json(err);
     });
 });
