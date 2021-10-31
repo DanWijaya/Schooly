@@ -75,6 +75,7 @@ router.post("/register", async (req, res) => {
     return res.json(createdUser);
   } catch (err) {
     console.error("Register user failed");
+    console.error(err);
     return res.status(400).json(err);
   }
 });
@@ -156,6 +157,7 @@ router.post("/login", async (req, res) => {
     );
   } catch (err) {
     console.error("User Login failed");
+    console.error(err);
     return res.status(400).json(err);
   }
 });
@@ -247,6 +249,7 @@ router.put("/update/data/:id", async (req, res) => {
     );
   } catch (err) {
     console.error("Update user data failed");
+    console.error(err);
     return res.status(400).json(err);
   }
 });
@@ -264,6 +267,7 @@ router.get("/getTeachers/:unitId", (req, res) => {
     })
     .catch((err) => {
       console.error("Get teachers failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -281,6 +285,7 @@ router.get("/getStudents/:unitId", (req, res) => {
     })
     .catch((err) => {
       console.error("Get students failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -298,6 +303,7 @@ router.get("/getAdmins/:unitId", (req, res) => {
     })
     .catch((err) => {
       console.error("Get admins failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -311,6 +317,7 @@ router.get("/getAllAdmins", (req, res) => {
     })
     .catch((err) => {
       console.error("Get all admins failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -324,6 +331,7 @@ router.get("/getOneUser/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Get One user failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -345,6 +353,7 @@ router.get("/getUsers", (req, res) => {
     })
     .catch((err) => {
       console.error("Get users with particular ids failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -359,6 +368,7 @@ router.get("/getStudentsByClass/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Get students by class failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -377,6 +387,7 @@ router.get("/getAllUsers/:unitId", (req, res) => {
     })
     .catch((err) => {
       console.error("getAllUsers in unit failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -395,6 +406,7 @@ router.get("/getPendingStudents/:unitId", (req, res) => {
     })
     .catch((err) => {
       console.error("getPendingStudents failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -412,6 +424,7 @@ router.get("/getPendingTeachers/:unitId", (req, res) => {
     })
     .catch((err) => {
       console.error("getPendingTeachers in unit failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -425,6 +438,7 @@ router.get("/getAllPendingAdmins", (req, res) => {
     })
     .catch((err) => {
       console.error("getAllPendingAdmins in unit failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -444,7 +458,8 @@ router.put("/setUserActive/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("setUserActive failed");
-      res.status(400).json(err);
+      console.error(err);
+      return res.status(400).json(err);
     });
 });
 
@@ -458,6 +473,7 @@ router.put("/bulkSetUserActive/", (req, res) => {
     })
     .catch((err) => {
       console.error("bulkSetUserActive failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -477,6 +493,7 @@ router.put("/setUserDeactivated/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("setUserDeactivated failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -491,6 +508,7 @@ router.put("/bulkSetUserDeactivated/", (req, res) => {
     })
     .catch((err) => {
       console.error("bulkSetUserDeactivated failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -504,6 +522,7 @@ router.delete("/delete/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Delete User failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -528,6 +547,7 @@ router.put("/classAssignment/:dummyClassId", (req, res) => {
     })
     .catch((err) => {
       console.error("Bulkupdate student class failed");
+      console.error(err);
       return res.status(500).json(err);
     });
 });
@@ -550,6 +570,7 @@ router.put("/teacher/:teacherId", (req, res) => {
     })
     .catch((err) => {
       console.error("Update teacher failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -581,6 +602,7 @@ router.post("/registerStudentsBulk", (req, res) => {
     })
     .catch((err) => {
       console.error("registerStudentsBulk failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -606,10 +628,11 @@ router.put("/updateUnitAdmins", (req, res) => {
 
   Admin.bulkWrite(operations, { ordered: false })
     .then((result) => {
-      console.log("updateUnitAdmins completed");
+      console.log("Update Unit Admins completed");
       return res.json(result);
     })
     .catch((err) => {
+      console.error("Update Unit Admins failed");
       console.error(err);
       return res.status(500).json(err);
     });

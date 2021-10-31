@@ -40,6 +40,7 @@ router.post("/create", (req, res) => {
     })
     .catch((err) => {
       console.error("Create material failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -70,6 +71,7 @@ router.put("/update/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Update material failed");
+      console.error(err);
       return res.status(404).send(err);
     });
 });
@@ -85,6 +87,7 @@ router.get("/viewOne/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("View material failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -101,6 +104,7 @@ router.get("/viewall", (req, res) => {
     })
     .catch((err) => {
       console.error("View all materials failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -115,6 +119,7 @@ router.get("/viewByClass/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Materials view by class failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -130,6 +135,7 @@ router.get("/viewByAuthor/:id", (req, res) => {
     })
     .catch((err) => {
       console.log("View material by author failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -145,6 +151,7 @@ router.delete("/delete/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Delete material failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -169,6 +176,7 @@ router.post("/comment/:materialId", (req, res) => {
     })
     .catch((err) => {
       console.error("Create material comment failed");
+      console.error(err);
       return res.status(400).send(err);
     });
 });
@@ -199,6 +207,7 @@ router.put("/comment/:materialId", (req, res) => {
     })
     .catch((err) => {
       console.error("Edit material comment failed");
+      console.error(err);
       return res.status(400).send(err);
     });
 });
@@ -226,6 +235,7 @@ router.delete("/comment/:materialId&:commentId", (req, res) => {
     })
     .catch((err) => {
       console.error("Delete material comment failed");
+      console.error(err);
       return res.status(400).send(err);
     });
 });

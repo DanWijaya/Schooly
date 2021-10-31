@@ -19,6 +19,7 @@ router.post("/create", (req, res) => {
     })
     .catch((err) => {
       console.error("Unable to create setting");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -32,6 +33,7 @@ router.get("/view", (req, res) => {
     })
     .catch((err) => {
       console.error("Unable to view the setting");
+      console.error(err);
       res.status(400).json(err);
     });
 });
@@ -47,6 +49,7 @@ router.put("/update", (req, res) => {
     .then((settingData) => res.json("Update Setting complete"))
     .catch((err) => {
       console.error("Unable to update setting");
+      console.error(err);
       res.status(400).send(err);
     });
 });

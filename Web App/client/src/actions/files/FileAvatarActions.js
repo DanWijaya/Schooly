@@ -31,7 +31,7 @@ export const getFileAvatar = (id) => (dispatch) => {
 };
 
 export const getMultipleFileAvatar = (id_list) => (dispatch) => {
-  console.log(id_list);
+  console.log("Ini id listya: ", id_list);
   return axios
     .get(`/api/files/avatar/multiuser`, { params: { id_list: id_list } })
     .then((res) => {

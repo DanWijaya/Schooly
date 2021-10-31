@@ -15,7 +15,6 @@ const { ObjectId } = require("mongodb");
 router.post("/create", (req, res) => {
   const { errors, isValid } = validateClassInput(req.body);
   if (!isValid) {
-    console.error("Not valid");
     return res.status(400).json(errors);
   }
 
@@ -46,6 +45,7 @@ router.post("/create", (req, res) => {
       return res.json(cl);
     })
     .catch((err) => {
+      console.error("Create class failed");
       console.error(err);
       return res.status(400).json(err);
     });
@@ -61,6 +61,7 @@ router.get("/view/:id", (req, res) => {
       return res.json(kelas);
     })
     .catch((err) => {
+      console.error("View class failed");
       console.error(err);
       return res.status(400).json(err);
     });
@@ -82,6 +83,8 @@ router.get("/viewall/:unitId", (req, res) => {
       return res.json(classes);
     })
     .catch((err) => {
+      console.error("View all class in unit failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -104,6 +107,7 @@ router.delete("/delete/:id", (req, res) => {
       return res.json("Successfully deleted the class");
     })
     .catch((err) => {
+      console.error("Delete class failed");
       console.error(err);
       return res.status(400).json(err);
     });
@@ -123,6 +127,8 @@ router.get("/setCurrentClass/:id", (req, res) => {
       return res.json(classData);
     })
     .catch((err) => {
+      console.error("Set current class failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -145,6 +151,7 @@ router.get("/viewSelectedClasses/", (req, res) => {
       // return res.status(400).json("Class to update not found");
     })
     .catch((err) => {
+      console.error("View selected classes failed");
       console.error(err);
       return res.status(400).json(err);
     });
@@ -183,6 +190,7 @@ router.put("/update/:id", (req, res) => {
       return res.status(200).json("Done with updating class");
     })
     .catch((err) => {
+      console.error("Update class failed");
       console.error(err);
       return res.status(400).json(err);
     });
@@ -211,6 +219,7 @@ router.put("/class-officers", (req, res) => {
       return res.json("Unassign class officers complete");
     })
     .catch((err) => {
+      console.error("Unassign class officers failed");
       console.error(err);
       return res.status(500).json(err);
     });
@@ -241,6 +250,7 @@ router.put("/homeroom-teachers", (req, res) => {
       return res.json("Set homeroom teachers complete");
     })
     .catch((err) => {
+      console.error("Set homeroom teahers failed");
       console.log(err);
       return res.status(500).json(err);
     });

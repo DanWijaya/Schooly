@@ -74,6 +74,8 @@ router.post(
         success: "Successfully uploaded the file",
       });
     } catch (err) {
+      console.error("Upload file event failed");
+      console.error(err);
       return res.status(500).json({ error: true, Message: err });
     }
   }
@@ -82,18 +84,24 @@ router.post(
 router.get("/download/:id", (req, res) => {
   let s3bucket = new AWS.S3();
 
-  FileEvent.findById(req.params.id).then((result, err) => {
-    if (!result) return res.status(400).json(err);
+  FileEvent.findById(req.params.id)
+    .then((result) => {
+      if (!result) throw "File event to download is empty";
 
-    let params = {
-      Bucket: keys.awsKey.AWS_BUCKET_NAME,
-      Key: result.s3_key,
-      Expires: 5 * 60,
-      ResponseContentDisposition: `attachment;filename=${result.filename}`,
-    };
-    const url = s3bucket.getSignedUrl("getObject", params);
-    return res.status(200).json(url);
-  });
+      let params = {
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
+        Key: result.s3_key,
+        Expires: 5 * 60,
+        ResponseContentDisposition: `attachment;filename=${result.filename}`,
+      };
+      const url = s3bucket.getSignedUrl("getObject", params);
+      return res.status(200).json(url);
+    })
+    .catch((err) => {
+      console.error("Download file event failed");
+      console.error(err);
+      return res.status(404).json(err);
+    });
 });
 
 router.delete("/all/:id", async (req, res) => {
@@ -102,7 +110,7 @@ router.delete("/all/:id", async (req, res) => {
     const file_to_delete = await FileEvent.find({ event_id: req.params.id });
     // file_to_delete ini berupa ID dari file filenya.
     if (!file_to_delete) {
-      return res.status(200).json("No file event to delete");
+      return res.json("No file events to delete");
     }
     await FileEvent.deleteMany({
       event_id: req.params.id,
@@ -129,8 +137,10 @@ router.delete("/all/:id", async (req, res) => {
     });
 
     await Promise.all(promises);
-    return res.status(200).json("Success");
+    return res.status(200).json("Delete file events by events completed");
   } catch (err) {
+    console.error("Delete file events by events failed");
+    console.error(err);
     return res.status(404).json(err);
   }
 });
@@ -167,19 +177,24 @@ router.delete("/:id", async (req, res) => {
     });
 
     await Promise.all(promises);
-    return res.status(200).send("Success");
+    return res.status(200).send("Delete file event completed");
   } catch (err) {
+    console.error("Delete file Event failed");
+    console.error(err);
     return res.status(404).json(err);
   }
 });
 
 router.get("/by_event/:id", (req, res) => {
   FileEvent.find({ event_id: req.params.id })
-    .then((results, err) => {
+    .then((results) => {
+      if (!results.length) console.log("File events by_event is empty");
       results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
       return res.status(200).json(results);
     })
     .catch((err) => {
+      console.error("Get file events by_event failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -187,18 +202,17 @@ router.get("/by_event/:id", (req, res) => {
 router.get("/:id", (req, res) => {
   let s3bucket = new AWS.S3();
 
-  FileEvent.findById(req.params.id).then((result, err) => {
-    if (!result) return res.status(400).json(err);
-    let params = {
-      Bucket: keys.awsKey.AWS_BUCKET_NAME,
-      Key: result.s3_key,
-      Expires: 5 * 60,
-      ResponseContentDisposition: `inline;filename=${result.filename}`,
-    };
-    // const url = s3bucket.getSignedUrl("getObject", params);
-    const url = `${keys.cdn}/${result.s3_key}`;
-    return res.status(200).json(url);
-  });
+  FileEvent.findById(req.params.id)
+    .then((result) => {
+      if (!result) throw "File event not found";
+      const url = `${keys.cdn}/${result.s3_key}`;
+      return res.json(url);
+    })
+    .catch((err) => {
+      console.error("Get file event failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 module.exports = router;

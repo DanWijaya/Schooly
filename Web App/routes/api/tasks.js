@@ -38,6 +38,7 @@ router.post("/create", (req, res) => {
     })
     .catch((err) => {
       console.error("Create task failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -58,6 +59,7 @@ router.get("/viewall/:unitId", (req, res) => {
     })
     .catch((err) => {
       console.error("Unable to view all tasks");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -71,6 +73,7 @@ router.delete("/delete/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Unable to delete task");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -85,6 +88,7 @@ router.get("/view/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("View task failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -108,6 +112,7 @@ router.post("/grade/:id", (req, res) => {
     .then(() => res.json("Grade Task completed"))
     .catch((err) => {
       console.error("Grade task failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -142,6 +147,7 @@ router.put("/update/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Update task failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -165,6 +171,7 @@ router.get("/view", (req, res) => {
     })
     .catch((err) => {
       console.error("View Task failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -189,6 +196,7 @@ router.post("/comment/:taskId", (req, res) => {
     })
     .catch((err) => {
       console.error("Create task comment failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -218,8 +226,8 @@ router.put("/comment/:taskId", (req, res) => {
       return res.json("Update task comment complete");
     })
     .catch((err) => {
-      // status code tergantung errornya (sebenarnya status code should not be a big deal).
       console.error("Update task comment failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -246,8 +254,8 @@ router.delete("/comment/:taskId&:commentId", (req, res) => {
       return res.json("Delete task comment complete");
     })
     .catch((err) => {
-      // status code tergantung errornya (sebenarnya status code should not be a big deal).
       console.error("Delete task failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });

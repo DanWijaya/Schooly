@@ -89,6 +89,8 @@ router.post(
         success: "Successfully uploaded the lampiran file",
       });
     } catch (err) {
+      console.error("Upload file task failed");
+      console.error(err);
       return res.status(500).json({ error: true, Message: err });
     }
   }
@@ -97,18 +99,24 @@ router.post(
 router.get("/download/:id", (req, res) => {
   let s3bucket = new AWS.S3();
 
-  FileTask.findById(req.params.id).then((result, err) => {
-    if (!result) return res.status(400).json(err);
+  FileTask.findById(req.params.id)
+    .then((result) => {
+      if (!result) throw "File task to download not found";
 
-    let params = {
-      Bucket: keys.awsKey.AWS_BUCKET_NAME,
-      Key: result.s3_key,
-      Expires: 5 * 60,
-      ResponseContentDisposition: `attachment;filename=${result.filename}`,
-    };
-    const url = s3bucket.getSignedUrl("getObject", params);
-    return res.status(200).json(url);
-  });
+      let params = {
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
+        Key: result.s3_key,
+        Expires: 5 * 60,
+        ResponseContentDisposition: `attachment;filename=${result.filename}`,
+      };
+      const url = s3bucket.getSignedUrl("getObject", params);
+      return res.status(200).json(url);
+    })
+    .catch((err) => {
+      console.error("Download file task failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 // Router to delete a DOCUMENT file
@@ -119,7 +127,7 @@ router.delete("/all/:id", async (req, res) => {
     const file_to_delete = await FileTask.find({ task_id: req.params.id });
     // file_to_delete ini berupa ID dari file filenya.
     if (!file_to_delete) {
-      return res.status(200).json("No file tasks to delete");
+      return res.json("No file tasks to delete");
     }
     await FileTask.deleteMany({
       task_id: req.params.id,
@@ -148,6 +156,8 @@ router.delete("/all/:id", async (req, res) => {
     await Promise.all(promises);
     return res.status(200).json("Success");
   } catch (err) {
+    console.error("Delete all file tasks failed");
+    console.error(err);
     return res.status(404).json(err);
   }
 });
@@ -157,12 +167,10 @@ router.delete("/:id", async (req, res) => {
   // file_to_delete ini berupa ID dari file filenya.
   console.log("Ini file to deletenya: ", file_to_delete);
   if (!file_to_delete) {
-    console.log("Jancuk");
-    return res.status(200).send("No file tasks to delete");
+    return res.json("No file tasks to delete");
   }
   try {
     // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
-    let id_list = file_to_delete.map((m) => ObjectId(m._id));
     console.log("Ini id list: ", id_list);
     const results = await FileTask.find({ _id: { $in: id_list } });
     console.log(results);
@@ -190,28 +198,39 @@ router.delete("/:id", async (req, res) => {
     await Promise.all(promises);
     return res.status(200).send("Success");
   } catch (err) {
+    console.error("Delete file tasks failed");
+    console.error(err);
     return res.status(404).json(err);
   }
 });
 
 router.get("/by_task/:id", (req, res) => {
-  return FileTask.find({ task_id: req.params.id }).then((results, err) => {
-    if (!results) return res.status(400).json(err);
-    else {
+  return FileTask.find({ task_id: req.params.id })
+    .then((results, err) => {
+      if (!results.length) console.log("Get file task by_task is empty");
       results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
       return res.status(200).json(results);
-    }
-  });
+    })
+    .catch((err) => {
+      console.error("Get File tasks by_task failed");
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/:id", (req, res) => {
   let s3bucket = new AWS.S3();
 
-  FileTask.findById(req.params.id).then((result, err) => {
-    if (!result) return res.status(400).json(err);
-    const url = `${keys.cdn}/${result.s3_key}`;
-    return res.status(200).json(url); // end of getObject
-  });
+  FileTask.findById(req.params.id)
+    .then((result) => {
+      if (!result) throw "File task not found";
+      const url = `${keys.cdn}/${result.s3_key}`;
+      return res.status(200).json(url); // end of getObject
+    })
+    .catch((err) => {
+      console.error("Get File tasks failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 module.exports = router;

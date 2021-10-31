@@ -21,6 +21,7 @@ router.post("/create", (req, res) => {
     .then((unit) => res.json(unit))
     .catch((err) => {
       console.error("Create unit failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -47,6 +48,7 @@ router.put("/update", (req, res) => {
     })
     .catch((err) => {
       console.error("Update unit failed");
+      console.error(err);
       return res.status(400).send(err);
     });
 });
@@ -60,6 +62,7 @@ router.delete("/delete/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Delete Unit failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -72,6 +75,7 @@ router.get("/viewall", (req, res) => {
     })
     .catch((err) => {
       console.error("View all units failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -85,6 +89,7 @@ router.get("/viewallmap", (req, res) => {
     })
     .catch((err) => {
       console.error("View all units in map failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -100,6 +105,7 @@ router.get("/view/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("View Unit failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });

@@ -13,7 +13,11 @@ router.post("/create", (req, res) => {
   newEvent
     .save()
     .then((event) => res.json(event._id))
-    .catch(() => res.status(400).json("Unable to create event"));
+    .catch((err) => {
+      console.error("Create event failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/viewAll/:unitId", (req, res) => {
@@ -21,18 +25,27 @@ router.get("/viewAll/:unitId", (req, res) => {
   if (!unitId) {
     return res.json([]);
   }
+
   Event.find({ unit: unitId })
     .then((events) => res.json(events))
-    .catch((err) => res.status(400).json(err));
+    .catch((err) => {
+      console.error("View all units failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/viewOne/:id", (req, res) => {
-  Event.findById(req.params.id, (err, event) => {
-    if (!event) {
-      return res.status(404).json("Event not found");
-    }
-    res.json(event);
-  });
+  Event.findById(req.params.id)
+    .then((event) => {
+      if (!event) throw "Event not found";
+      return res.json(event);
+    })
+    .catch((err) => {
+      console.error("View one event failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.put("/update/:id", (req, res) => {
@@ -42,9 +55,7 @@ router.put("/update/:id", (req, res) => {
   }
 
   Event.findById(req.params.id, (err, eventData) => {
-    if (!eventData) {
-      return res.status(404).json("Event not found");
-    }
+    if (!eventData) throw "Event to update not found";
 
     eventData.name = req.body.name;
     eventData.location = req.body.location;
@@ -53,20 +64,27 @@ router.put("/update/:id", (req, res) => {
     eventData.to = req.body.to;
     eventData.description = req.body.description;
 
-    eventData
-      .save()
-      .then(() => res.json("Update event completed"))
-      .catch(() => res.status(400).json("Unable to update event"));
-  });
+    return eventData.save();
+  })
+    .then(() => res.json("Update event completed"))
+    .catch((err) => {
+      console.error("Update event failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.delete("/delete/:id", (req, res) => {
-  Event.findByIdAndRemove(req.params.id, (err, event) => {
-    if (!event) {
-      return res.status(404).json("Event not found");
-    }
-    res.json("Delete event completed");
-  });
+  Event.findByIdAndRemove(req.params.id)
+    .then((event) => {
+      if (!event) throw "Event to delete not found";
+      return res.json("Delete event completed");
+    })
+    .catch((err) => {
+      console.error("Delete event failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 module.exports = router;

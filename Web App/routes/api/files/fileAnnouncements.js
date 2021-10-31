@@ -72,6 +72,8 @@ router.post(
         success: "Successfully uploaded the lampiran file",
       });
     } catch (err) {
+      console.error("UPload file announcement failed");
+      console.error(err);
       return res.status(500).json({ error: true, Message: err });
     }
   }
@@ -99,6 +101,7 @@ router.get("/download/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Download file announcements failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -111,7 +114,7 @@ router.delete("/all/:id", async (req, res) => {
     });
     // file_to_delete ini berupa ID dari file filenya.
     if (!file_to_delete) {
-      return res.status(200).json("No file announcements to delete");
+      return res.json("No file announcements to delete");
     }
     await FileAnnouncement.deleteMany({
       announcement_id: req.params.id,
@@ -140,6 +143,8 @@ router.delete("/all/:id", async (req, res) => {
     await Promise.all(promises);
     return res.status(200).json("Success");
   } catch (err) {
+    console.error("Delete all file announcements failed");
+    console.error(err);
     return res.status(404).json(err);
   }
 });
@@ -179,6 +184,8 @@ router.delete("/:id", async (req, res) => {
     await Promise.all(promises);
     return res.status(200).send("Success");
   } catch (err) {
+    console.error("Delete file announcements failed");
+    console.error(err);
     return res.status(404).json(err);
   }
 });
@@ -190,6 +197,8 @@ router.get("/by_announcement/:id", (req, res) => {
       return res.status(200).json(results);
     })
     .catch((err) => {
+      console.error("file by_announcement failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -204,6 +213,7 @@ router.get("/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Get File Announcement failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });

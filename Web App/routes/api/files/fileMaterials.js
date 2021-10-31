@@ -72,6 +72,8 @@ router.post(
         success: "Successfully uploaded the lampiran file",
       });
     } catch (err) {
+      console.error("Upload fileMaterials failed");
+      console.error(err);
       return res.status(500).json({ error: true, Message: err });
     }
   }
@@ -80,18 +82,24 @@ router.post(
 router.get("/download/:id", (req, res) => {
   let s3bucket = new AWS.S3();
 
-  FileMaterial.findById(req.params.id).then((result, err) => {
-    if (!result) return res.status(400).json(err);
+  FileMaterial.findById(req.params.id)
+    .then((result) => {
+      if (!result) return res.status(400).json(err);
 
-    let params = {
-      Bucket: keys.awsKey.AWS_BUCKET_NAME,
-      Key: result.s3_key,
-      Expires: 5 * 60,
-      ResponseContentDisposition: `attachment;filename=${result.filename}`,
-    };
-    const url = s3bucket.getSignedUrl("getObject", params);
-    return res.status(200).json(url);
-  });
+      let params = {
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
+        Key: result.s3_key,
+        Expires: 5 * 60,
+        ResponseContentDisposition: `attachment;filename=${result.filename}`,
+      };
+      const url = s3bucket.getSignedUrl("getObject", params);
+      return res.json(url);
+    })
+    .catch((err) => {
+      console.error("Download file Material failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.delete("/all/:id", async (req, res) => {
@@ -102,7 +110,7 @@ router.delete("/all/:id", async (req, res) => {
     });
     // file_to_delete ini berupa ID dari file filenya.
     if (!file_to_delete) {
-      return res.status(200).json("No file materials to delete");
+      return res.json("No file materials to delete");
     }
     await FileMaterial.deleteMany({
       material_id: req.params.id,
@@ -129,8 +137,10 @@ router.delete("/all/:id", async (req, res) => {
     });
 
     await Promise.all(promises);
-    return res.status(200).json("Success");
+    return res.json("Success");
   } catch (err) {
+    console.error("Error in deleting all file materials files");
+    console.error(err);
     return res.status(404).json(err);
   }
 });
@@ -140,7 +150,7 @@ router.delete("/:id", async (req, res) => {
   const { file_to_delete } = req.body;
   // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
   if (!file_to_delete) {
-    return res.status(200).send("No file materials to delete");
+    return res.json("No file materials to delete");
   }
   try {
     let id_list = file_to_delete.map((m) => ObjectId(m._id));
@@ -168,37 +178,40 @@ router.delete("/:id", async (req, res) => {
     });
 
     await Promise.all(promises);
-    return res.status(200).send("Success");
+    return res.send("Success");
   } catch (err) {
+    console.error("Delete File material failed");
+    console.error(err);
     return res.status(404).json(err);
   }
 });
 
 router.get("/by_material/:id", (req, res) => {
-  FileMaterial.find({ material_id: req.params.id }).then((results, err) => {
-    if (!results) return res.status(400).json(err);
-    else {
+  FileMaterial.find({ material_id: req.params.id })
+    .then((results) => {
+      if (!results.length) throw "File material by_material is empty";
       results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
-      return res.status(200).json(results);
-    }
-  });
+      return res.json(results);
+    })
+    .catch((err) => {
+      console.error("File material by_material failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/:id", (req, res) => {
-  let s3bucket = new AWS.S3();
-
-  FileMaterial.findById(req.params.id).then((result, err) => {
-    if (!result) return res.status(400).json(err);
-    let params = {
-      Bucket: keys.awsKey.AWS_BUCKET_NAME,
-      Key: result.s3_key,
-      Expires: 5 * 60,
-      ResponseContentDisposition: `inline;filename=${result.filename}`,
-    };
-    // const url = s3bucket.getSignedUrl("getObject", params);
-    const url = `${keys.cdn}/${result.s3_key}`;
-    return res.status(200).json(url);
-  });
+  FileMaterial.findById(req.params.id)
+    .then((result) => {
+      if (!result) throw "File material is empty";
+      const url = `${keys.cdn}/${result.s3_key}`;
+      return res.json(url);
+    })
+    .catch((err) => {
+      console.error("Get one file material failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 module.exports = router;

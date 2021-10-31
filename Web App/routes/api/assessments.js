@@ -48,7 +48,8 @@ router.post("/create", (req, res) => {
     })
     .catch((err) => {
       console.error("Create assessment failed");
-      res.status(400).json(err);
+      console.error(err);
+      return res.status(400).json(err);
     });
 });
 
@@ -246,6 +247,7 @@ router.put("/update/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Update Assessment failed");
+      console.error(err);
       return res.status(400).send("Unable to update task database");
     });
 });
@@ -367,6 +369,7 @@ router.put("/submit/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Submit Assessment failed");
+      console.error(err);
       return res.status(400).send(err);
     });
 });
@@ -386,6 +389,7 @@ router.get("/viewall/:unitId", (req, res) => {
     })
     .catch((err) => {
       console.error("View all assessments failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -410,6 +414,7 @@ router.get("/view/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("View Assessment failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -424,6 +429,7 @@ router.delete("/delete/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Delete task failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -464,6 +470,7 @@ router.get("/view", (req, res) => {
     })
     .catch((err) => {
       console.error("View assessment failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -483,6 +490,7 @@ router.put("/suspects/:assessmentId", (req, res) => {
     })
     .catch((err) => {
       console.error("Get suspects failed");
+      console.error(err);
       return res.status(400).send(err);
     });
 });
@@ -603,6 +611,7 @@ router.put("/grades", (req, res) => {
     })
     .catch((err) => {
       console.error("Grade assessment failed");
+      console.error(err);
       return res.status(400).send(err);
     });
 });
@@ -701,6 +710,7 @@ router.get("/qnsDifficultyRanking/:id", async (req, res) => {
     }
   } catch (err) {
     console.error("Get Qns Difficulty failed");
+    console.error(err);
     return res.status(404).json(err);
   }
 });

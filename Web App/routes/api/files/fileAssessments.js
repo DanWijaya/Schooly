@@ -106,6 +106,8 @@ router.post(
         _id: req.params.id,
       });
     } catch (err) {
+      console.error("Upload file assessment failed");
+      console.error(err);
       return res.status(500).json({ error: true, Message: err });
     }
   }
@@ -114,18 +116,28 @@ router.post(
 router.get("/download/:id", (req, res) => {
   let s3bucket = new AWS.S3();
 
-  FileAssessment.findById(req.params.id).then((result, err) => {
-    if (!result) return res.status(400).json(err);
+  FileAssessment.findById(req.params.id)
+    .then((result) => {
+      if (!result) throw "File announcement not found";
 
-    let params = {
-      Bucket: keys.awsKey.AWS_BUCKET_NAME,
-      Key: result.s3_key,
-      Expires: 5 * 60,
-      ResponseContentDisposition: `attachment;filename=${result.filename}`,
-    };
-    const url = s3bucket.getSignedUrl("getObject", params);
-    return res.status(200).json(url);
-  });
+      let params = {
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
+        Key: result.s3_key,
+        Expires: 5 * 60,
+        ResponseContentDisposition: `attachment;filename=${result.filename}`,
+      };
+
+      return s3bucket.getSignedUrlPromise("getObject", params);
+    })
+    .then((url) => {
+      console.log("Download file assessments completed");
+      return res.json(url);
+    })
+    .catch((err) => {
+      console.error("Download file assessments failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.delete("/all/:id", async (req, res) => {
@@ -165,6 +177,8 @@ router.delete("/all/:id", async (req, res) => {
     await Promise.all(promises);
     return res.status(200).json("Success");
   } catch (err) {
+    console.error("Delete all file assessments failed");
+    console.error(err);
     return res.status(404).json(err);
   }
 });
@@ -203,25 +217,29 @@ router.delete("/:id", async (req, res) => {
     await Promise.all(promises);
     return res.status(200).send("Success");
   } catch (err) {
+    console.error("Delete file assessments failed");
+    console.error(err);
     return res.status(404).json(err);
   }
 });
 
 router.get("/by_assessment/:id", (req, res) => {
-  FileAssessment.find({ assessment_id: req.params.id }).then((results, err) => {
-    if (!results) return res.status(400).json(err);
-    else {
+  FileAssessment.find({ assessment_id: req.params.id })
+    .then((results) => {
       console.log("Assessment: ", results);
       results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
       return res.status(200).json(results);
-    }
-  });
+    })
+    .catch((err) => {
+      console.error("file by_assessment failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.post("/getS3Url", (req, res) => {
   // file_ids nya unique.
   let { file_ids } = req.body;
-  let s3bucket = new AWS.S3();
 
   Promise.all(
     file_ids.map((id) => {
@@ -230,23 +248,23 @@ router.post("/getS3Url", (req, res) => {
           if (!result) {
             reject(err);
           }
-          // let params = {
-          //   Bucket: keys.awsKey.AWS_BUCKET_NAME,
-          //   Key: result.s3_key,
-          //   Expires: 5 * 60,
-          //   ResponseContentDisposition: `inline;filename=${result.filename}`,
-          // };
-          // const url = s3bucket.getSignedUrl("getObject", params);
           const url = `${keys.cdn}/${result.s3_key}`;
           resolve(url);
         });
       });
     })
-  ).then((results) => {
-    // let all_idToUrl = new Map();
-    // results.forEach((idToUrl) => all_idToUrl = new Map([...all_idToUrl, ...idToUrl]))
-    return res.status(200).json({ urls: results, ids: file_ids });
-  });
+  )
+    .then((results) => {
+      // let all_idToUrl = new Map();
+      // results.forEach((idToUrl) => all_idToUrl = new Map([...all_idToUrl, ...idToUrl]))
+      console.error("getS3Url fileAssessments completed");
+      return res.status(200).json({ urls: results, ids: file_ids });
+    })
+    .catch((err) => {
+      console.error("getS3Url fileAssessments failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 module.exports = router;

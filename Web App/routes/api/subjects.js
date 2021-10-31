@@ -11,7 +11,7 @@ const Subject = require("../../models/Subject");
 router.post("/create", (req, res) => {
   const { errors, isValid } = validateSubjectInput(req.body);
   if (!isValid) {
-    console.log("not valid data");
+    console.log("Not valid data");
     return res.status(404).json(errors);
   }
 
@@ -30,6 +30,7 @@ router.post("/create", (req, res) => {
     })
     .catch((err) => {
       console.error("Create Subject failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -59,19 +60,24 @@ router.put("/edit/:id", async (req, res) => {
     return res.status(200).json("Update Subject completed");
   } catch (err) {
     console.error("Update Subject failed");
+    console.error(err);
     return res.status(400).json(err);
   }
 });
 
 router.get("/view/:id", (req, res) => {
-  Subject.findById(req.params.id).then((subject) => {
-    if (!subject) {
-      return res.status(400).json("Class does not exist");
-    } else {
-      // console.log(kelas);
-      res.json(subject);
-    }
-  });
+  Subject.findById(req.params.id)
+    .then((subject) => {
+      if (!subject) {
+        throw "Class does not exist";
+      }
+      return res.json(subject);
+    })
+    .catch((err) => {
+      console.error("View subject failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/viewall/:unitId", (req, res) => {
@@ -89,6 +95,7 @@ router.get("/viewall/:unitId", (req, res) => {
     })
     .catch((err) => {
       console.error("View all units failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });
@@ -102,6 +109,7 @@ router.delete("/delete/:id", (req, res) => {
     })
     .catch((err) => {
       console.error("Delete Subject failed");
+      console.error(err);
       return res.status(400).json(err);
     });
 });

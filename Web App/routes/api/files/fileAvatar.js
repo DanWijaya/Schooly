@@ -20,28 +20,11 @@ AWS.config.update({
   region: keys.awsKey.AWS_REGION,
 });
 
-// Get all Documents Routes
-router.get("/", (req, res, next) => {
-  FileAvatar.find(
-    {},
-    null,
-    {
-      sort: { createdAt: 1 },
-    },
-    (err, docs) => {
-      if (err) {
-        return next(err);
-      }
-      res.status(200).send(docs);
-    }
-  );
-});
-
 // route to upload a pdf document file
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
 router.post("/upload/:user_id", upload.single("avatar"), async (req, res) => {
   try {
-    const { file } = req;
+    const { files } = req;
     const { user_id } = req.params;
     let s3bucket = new AWS.S3({
       accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
@@ -141,6 +124,8 @@ router.post("/upload/:user_id", upload.single("avatar"), async (req, res) => {
       user: payload,
     });
   } catch (err) {
+    console.error("File Avatar upload failed");
+    console.error(err);
     return res.status(500).json({ error: true, Message: err });
   }
 });
@@ -148,18 +133,23 @@ router.post("/upload/:user_id", upload.single("avatar"), async (req, res) => {
 router.get("/download/:id", (req, res) => {
   let s3bucket = new AWS.S3();
 
-  FileAvatar.find({ user_id: req.params.id }).then((result, err) => {
-    if (!result) return res.status(400).json(err);
+  FileAvatar.find({ user_id: req.params.id })
+    .then((result) => {
+      if (!result) throw "No file avatar";
 
-    let params = {
-      Bucket: keys.awsKey.AWS_BUCKET_NAME,
-      Key: result.s3_key,
-      Expires: 5 * 60,
-      ResponseContentDisposition: `attachment;filename=${result.filename}`,
-    };
-    const url = s3bucket.getSignedUrl("getObject", params);
-    return res.status(200).json(url);
-  });
+      let params = {
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
+        Key: result.s3_key,
+        Expires: 5 * 60,
+        ResponseContentDisposition: `attachment;filename=${result.filename}`,
+      };
+      const url = s3bucket.getSignedUrl("getObject", params);
+      return res.status(200).json(url);
+    })
+    .catch((err) => {
+      console.error("Download file avatar failed");
+      return res.status(400).json(err);
+    });
 });
 
 // Router to delete a DOCUMENT file
@@ -227,20 +217,23 @@ router.delete("/:id", (req, res) => {
 });
 
 router.get("/by_user/:id", (req, res) => {
-  let s3bucket = new AWS.S3();
   const { id } = req.params;
   // .findOne({ user_id: id })
-  console.log(id);
-  FileAvatar.findOne({ user_id: id }).then((result, err) => {
-    console.log(result, err);
-    if (!result) {
-      console.log("No avatar added");
-      return res.json("No avatar is added");
-    }
+  FileAvatar.findOne({ user_id: id })
+    .then((result) => {
+      console.log(result, err);
+      if (!result) {
+        console.log("No avatar added");
+        return res.json("No avatar is added");
+      }
 
-    const url = `${keys.cdn}/${result.s3_key}`;
-    return res.status(200).json(url);
-  });
+      const url = `${keys.cdn}/${result.s3_key}`;
+      return res.status(200).json(url);
+    })
+    .catch((err) => {
+      console.error("Get avatar by_user failed");
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/multiuser", (req, res) => {
@@ -250,20 +243,22 @@ router.get("/multiuser", (req, res) => {
     id_list = [];
   }
   id_list = id_list.map((id) => ObjectId(id));
-  FileAvatar.find({ user_id: { $in: id_list } }, (err, avatars) => {
-    if (!avatars) {
-      console.log("Users avatar is not found at all");
-      return res.status(400).json({});
-    }
-    console.log(avatars);
-    var urls = {};
-    avatars.forEach((a) => {
-      urls[a.user_id] = `${keys.cdn}/${a.s3_key}`;
+  FileAvatar.find({ user_id: { $in: id_list } })
+    .then((avatars) => {
+      if (!avatars.length) {
+        console.log("Users avatar is not found at all");
+      }
+      var urls = {};
+      avatars.forEach((a) => {
+        urls[a.user_id] = `${keys.cdn}/${a.s3_key}`;
+      });
+      console.log("Get multiple users avatar completed");
+      return res.json(urls);
+    })
+    .catch((err) => {
+      console.error("Get multiple users avatar failed");
+      return res.status(400).json(err);
     });
-    console.log("URL:", urls);
-
-    return res.status(200).json(urls);
-  });
 });
 
 module.exports = router;

@@ -20,23 +20,6 @@ AWS.config.update({
   region: keys.awsKey.AWS_REGION,
 });
 
-// Get all Documents Routes
-router.get("/", (req, res, next) => {
-  FileSubmitTask.find(
-    {},
-    null,
-    {
-      sort: { createdAt: 1 },
-    },
-    (err, docs) => {
-      if (err) {
-        return next(err);
-      }
-      res.status(200).send(docs);
-    }
-  );
-});
-
 // route to upload a pdf document file
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
 router.post(
@@ -92,6 +75,8 @@ router.post(
         success: "Successfully uploaded the lampiran file",
       });
     } catch (err) {
+      console.error("Upload file Submit task failed");
+      console.error(err);
       return res.status(500).json({ error: true, Message: err });
     }
   }
@@ -100,28 +85,46 @@ router.post(
 router.get("/download/:id", (req, res) => {
   let s3bucket = new AWS.S3();
 
-  FileSubmitTask.findById(req.params.id).then((result, err) => {
-    if (!result) return res.status(400).json(err);
+  FileSubmitTask.findById(req.params.id)
+    .then((result, err) => {
+      if (!result) throw "File submit tasks not found";
 
-    let params = {
-      Bucket: keys.awsKey.AWS_BUCKET_NAME,
-      Key: result.s3_key,
-      Expires: 5 * 60,
-      ResponseContentDisposition: `attachment;filename=${result.filename}`,
-    };
-    const url = s3bucket.getSignedUrl("getObject", params);
-    return res.status(200).json(url);
-  });
+      let params = {
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
+        Key: result.s3_key,
+        Expires: 5 * 60,
+        ResponseContentDisposition: `attachment;filename=${result.filename}`,
+      };
+      return s3bucket.getSignedUrlPromise("getObject", params);
+
+      // const url = s3bucket.getSignedUrl("getObject", params);
+      // return res.status(200).json(url);
+    })
+    .then((url) => {
+      console.log("Download file submit tasks completed");
+      return res.json(url);
+    })
+    .catch((err) => {
+      console.error("Download file submit tasks failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/by_multiple_tasks", (req, res) => {
   let { id_list } = req.query;
 
-  FileSubmitTask.find({ _id: { $in: id_list } }).then((results) => {
-    return res
-      .status(200)
-      .json({ fileSubmitTasks: results, tasks_id: id_list });
-  });
+  FileSubmitTask.find({ _id: { $in: id_list } })
+    .then((results) => {
+      return res
+        .status(200)
+        .json({ fileSubmitTasks: results, tasks_id: id_list });
+    })
+    .catch((err) => {
+      console.error("Download file submit tasks by_multiple_tasks failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.delete("/all/:id", async (req, res) => {
@@ -161,7 +164,9 @@ router.delete("/all/:id", async (req, res) => {
     await Promise.all(promises);
     return res.status(200).json("Success");
   } catch (err) {
-    return res.status(404).json(err);
+    console.error("Delete all submit tasks by task failed");
+    console.error(err);
+    return res.status(400).json(err);
   }
 });
 
@@ -199,9 +204,10 @@ router.delete("/", async (req, res) => {
     });
 
     await Promise.all(promises);
-    console.log("Kelar");
     return res.status(200).send("Success");
   } catch (err) {
+    console.error("Delete multiple submit tasks failed");
+    console.error(err);
     return res.status(404).json(err);
   }
 });
@@ -209,66 +215,85 @@ router.delete("/", async (req, res) => {
 router.get("/by_task/:task_id", (req, res) => {
   const { task_id } = req.params;
 
-  FileSubmitTask.find({ task_id: task_id }).then((results, err) => {
-    if (!results) return res.status(400).json(err);
-    else {
-      results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
-      return res.status(200).json(results);
-    }
-  });
-});
-
-router.get("/by_task_author/:task_id&:author_id", (req, res) => {
-  const { task_id, author_id } = req.params;
-
-  FileSubmitTask.find({ task_id: task_id, author_id: author_id }).then(
-    (results, err) => {
+  FileSubmitTask.find({ task_id: task_id })
+    .then((results) => {
       if (!results) return res.status(400).json(err);
       else {
         results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
         return res.status(200).json(results);
       }
-    }
-  );
+    })
+    .catch((err) => {
+      console.error("Delete submit tasks by_task failed");
+      console.error(err);
+      return res.status(404).json(err);
+    });
+});
+
+router.get("/by_task_author/:task_id&:author_id", (req, res) => {
+  const { task_id, author_id } = req.params;
+
+  FileSubmitTask.find({ task_id: task_id, author_id: author_id })
+    .then((results) => {
+      if (!results.length) throw "FileSubmitTask by_task_author is empty";
+
+      results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
+      return res.status(200).json(results);
+    })
+    .catch((err) => {
+      console.error("get FileSubmitTask by_task_author failed");
+      console.error(err);
+      return res.status(404).json(err);
+    });
 });
 
 router.get("/by_author/:author_id", (req, res) => {
   FileSubmitTask.find({ author_id: req.params.author_id })
     .lean()
     .then((results) => {
-      if (results.length === 0) {
-        res.status(404).json("Files not found");
-      } else {
-        res.json(results);
+      if (!results.length) {
+        console.log("Files not found");
       }
+      return res.json(results);
+    })
+    .catch((err) => {
+      console.error("get FileSubmitTask by_author failed");
+      console.error(err);
+      return res.status(400).json(err);
     });
 });
 
 router.get("/:id", (req, res) => {
-  let s3bucket = new AWS.S3();
-
-  FileSubmitTask.findById(req.params.id).then((result, err) => {
-    if (!result) return res.status(400).json(err);
-    const url = `${keys.cdn}/${result.s3_key}`;
-    return res.status(200).json(url);
-  });
+  FileSubmitTask.findById(req.params.id)
+    .then((result) => {
+      if (!result) throw "File Submit Tasks not found";
+      const url = `${keys.cdn}/${result.s3_key}`;
+      return res.json(url);
+    })
+    .catch((err) => {
+      console.error("get FileSubmitTask by_author failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
 });
 
 router.get("/noatmpt/:author_id", (req, res) => {
   const { author_id } = req.params;
-  console.log("USER IDSDSD:", author_id);
   let set_result = new Set();
   FileSubmitTask.find({ author_id: author_id })
-    .then((files, err) => {
+    .then((files) => {
+      if (!files.length)
+        console.log("File Submit tasks by specific author is empty");
       files.forEach((item) => {
         set_result.add(item.task_id.toString());
       });
-      return res.status(200).json(Array.from(set_result));
+      return res.json(Array.from(set_result));
     })
     .catch((err) => {
-      return res.status(404).json(err);
+      console.error("get FileSubmitTask by_author failed");
+      console.error(err);
+      return res.status(400).json(err);
     });
-  // return res.status(200).json(Array.from(set_result))
 });
 
 module.exports = router;
