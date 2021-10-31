@@ -36,7 +36,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import {
   ArrowBackIos as ArrowBackIosIcon,
@@ -240,8 +240,9 @@ function Report(props) {
   const [kelas, setKelas] = React.useState("");
 
   React.useEffect(() => {
-    getOneUser(props.match.params.id);
+    const { id } = props.match.params;
     if (user.role === "Teacher") {
+      if (id !== "semua") getOneUser(id);
       refreshTeacher(user._id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1357,7 +1358,12 @@ function Report(props) {
       {role === "Student" ? (
         // Student report view from sidedrawer.
         <>
-          <Grid container alignItems="center" spacing={2} className={classes.header}>
+          <Grid
+            container
+            alignItems="center"
+            spacing={2}
+            className={classes.header}
+          >
             <Grid item>
               <div className={classes.headerIcon}>
                 <AssessmentIcon />
@@ -1375,14 +1381,12 @@ function Report(props) {
               {createGraph()}
             </Grid>
             <Grid item xs={12} md={5}>
-              Graph radar literally dari tabel bawah buat semua matpel juga dirata2in tapi tugas, kuis, ujiannya.
+              Graph radar literally dari tabel bawah buat semua matpel juga
+              dirata2in tapi tugas, kuis, ujiannya.
             </Grid>
             <Grid item xs={12}>
               <TableContainer component={Paper}>
-                <Table
-                  size="medium"
-                  style={{ overflow: "hidden" }}
-                >
+                <Table size="medium" style={{ overflow: "hidden" }}>
                   <TableHead className={classes.tableHeader}>
                     <TableRow>
                       {headers.map((nama) => {
@@ -1411,12 +1415,12 @@ function Report(props) {
                 </Grid>
                 <Grid item xs container direction="column">
                   <Grid item>
-                    <Typography variant="h6" style={{ color: "white"}} >
+                    <Typography variant="h6" style={{ color: "white" }}>
                       {name}
                     </Typography>
                   </Grid>
                   <Grid item>
-                    <Typography style={{ color: "white"}}>
+                    <Typography style={{ color: "white" }}>
                       Rapor Tahun {new Date().getFullYear()}
                     </Typography>
                   </Grid>
@@ -1425,16 +1429,12 @@ function Report(props) {
               <Grid container spacing={2} style={{ marginTop: "20px" }}>
                 <Grid item xs={6}>
                   <Paper className={classes.personalReportPaper}>
-                    <Typography align="center">
-                      {kelas.name}
-                    </Typography>
+                    <Typography align="center">{kelas.name}</Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={6}>
                   <Paper className={classes.personalReportPaper}>
-                    <Typography align="center">
-                      Wali Kelas
-                    </Typography>
+                    <Typography align="center">Wali Kelas</Typography>
                   </Paper>
                 </Grid>
               </Grid>
@@ -1468,7 +1468,12 @@ function Report(props) {
       ) : (
         // Teacher report view from sidedrawer.
         <>
-          <Grid container alignItems="center" spacing={2} className={classes.header}>
+          <Grid
+            container
+            alignItems="center"
+            spacing={2}
+            className={classes.header}
+          >
             <Grid item>
               <div className={classes.headerIcon}>
                 <AssessmentIcon />
@@ -1486,9 +1491,13 @@ function Report(props) {
               <Typography gutterBottom>
                 Pilih kelas dan mata pelajaran untuk menampilkan nilai
               </Typography>
-              <Typography color="textSecondary" style={{ marginBottom: "30px" }}>
-                Nilai yang dapat dilihat adalah hasil pekerjaan dari semua mata pelajaran dari
-                kelas wali dan hasil pekerjaan dari mata pelajaran serta kelas yang diajar.
+              <Typography
+                color="textSecondary"
+                style={{ marginBottom: "30px" }}
+              >
+                Nilai yang dapat dilihat adalah hasil pekerjaan dari semua mata
+                pelajaran dari kelas wali dan hasil pekerjaan dari mata
+                pelajaran serta kelas yang diajar.
               </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -1521,7 +1530,9 @@ function Report(props) {
                       }}
                       label="Mata Pelajaran"
                     >
-                      {kontenMatpel.size !== 0 ? generateMatPelMenuItem() : null}
+                      {kontenMatpel.size !== 0
+                        ? generateMatPelMenuItem()
+                        : null}
                     </Select>
                   </FormControl>
                 </Grid>

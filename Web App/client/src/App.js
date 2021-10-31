@@ -568,7 +568,6 @@ class App extends Component {
                         path="/rapor/:id"
                         component={Report}
                       />
-
                       {/* Route User */}
                       <PrivateRoute
                         exact

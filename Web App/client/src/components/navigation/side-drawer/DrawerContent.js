@@ -26,7 +26,7 @@ import {
   FaClipboardList,
   FaUserFriends,
   FaUserLock,
-  FaUsersCog
+  FaUsersCog,
 } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({

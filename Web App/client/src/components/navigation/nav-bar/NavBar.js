@@ -104,11 +104,9 @@ function NavBar(props) {
   };
 
   React.useEffect(() => {
-    getFileAvatar(user._id)
-      // .then((result) => {
-      //   setAvatar(result);
-      // })
-      .catch((err) => console.log(err));
+    if (user._id) {
+      getFileAvatar(user._id).catch((err) => console.log(err));
+    }
   }, [user._id]);
 
   React.useEffect(() => {
