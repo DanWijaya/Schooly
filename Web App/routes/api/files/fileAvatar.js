@@ -24,7 +24,7 @@ AWS.config.update({
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
 router.post("/upload/:user_id", upload.single("avatar"), async (req, res) => {
   try {
-    const { files } = req;
+    const { file } = req;
     const { user_id } = req.params;
     let s3bucket = new AWS.S3({
       accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
@@ -219,12 +219,12 @@ router.delete("/:id", (req, res) => {
 router.get("/by_user/:id", (req, res) => {
   const { id } = req.params;
   // .findOne({ user_id: id })
+  console.log(id);
   FileAvatar.findOne({ user_id: id })
     .then((result) => {
-      console.log(result, err);
       if (!result) {
         console.log("No avatar added");
-        return res.json("No avatar is added");
+        return res.json("");
       }
 
       const url = `${keys.cdn}/${result.s3_key}`;

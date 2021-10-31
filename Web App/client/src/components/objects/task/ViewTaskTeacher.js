@@ -15,11 +15,6 @@ import {
 } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import {
-  uploadTugas,
-  downloadLampiran,
-  previewLampiran,
-} from "../../../actions/UploadActions";
-import {
   getOneUser,
   getTeachers,
   getStudents,
@@ -267,8 +262,6 @@ function ViewTaskTeacher(props) {
   const {
     deleteTask,
     tasksCollection,
-    downloadLampiran,
-    previewLampiran,
     getOneTask,
     getAllClass,
     getAllSubjects,
@@ -931,13 +924,10 @@ ViewTaskTeacher.propTypes = {
   tasksCollection: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
-  downloadLampiran: PropTypes.func.isRequired,
-  previewLampiran: PropTypes.func.isRequired,
   deleteTask: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   updateUserData: PropTypes.func.isRequired,
   getOneUser: PropTypes.func.isRequired, // For the person in charge task.
-  getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
   getOneTask: PropTypes.func.isRequired,
 };
 
@@ -951,10 +941,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  uploadTugas,
   deleteTask,
-  downloadLampiran,
-  previewLampiran,
   getOneTask,
   getOneUser,
   getAllClass,

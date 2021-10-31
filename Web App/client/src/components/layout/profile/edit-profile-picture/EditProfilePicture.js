@@ -75,11 +75,12 @@ function EditProfilePicture(props) {
   const classes = useStyles();
   const {
     user,
-    updateAvatar,
     uploadFileAvatar,
     avatar,
     setFileLimitSnackbar,
     setAvatar,
+    getFileAvatar,
+    handleOpenAlert,
   } = props;
 
   const fullScreen = useMediaQuery("(max-width:400px)");
@@ -124,7 +125,7 @@ function EditProfilePicture(props) {
     console.log("AVATAR TELAH DISUBMIT");
     e.preventDefault();
     let formData = new FormData();
-
+    formData.append("avatar", profileImg);
     try {
       await uploadFileAvatar(user._id, formData);
       console.log("Avatar is uploaded successfully");
@@ -132,7 +133,7 @@ function EditProfilePicture(props) {
       console.log("Avatar is retrieved successfully");
       console.log(new_avatar);
       setAvatar(new_avatar);
-      props.handleOpenAlert();
+      handleOpenAlert();
       handleCloseDialog();
     } catch (err) {
       console.error(err);

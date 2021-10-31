@@ -26,13 +26,11 @@ import {
   deleteTaskComment,
 } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getTaskFilesByUser } from "../../../actions/UploadActions";
 import {
   getOneUser,
   getTeachers,
   getStudents,
 } from "../../../actions/UserActions";
-import { uploadTugas, deleteTugas } from "../../../actions/UploadActions";
 import { getSetting } from "../../../actions/SettingActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
@@ -497,7 +495,6 @@ function ViewTaskStudent(props) {
     downloadFileSubmitTasks,
     getFileSubmitTasks_AT,
     deleteFileSubmitTasks,
-    deleteTugas,
     success,
     errors,
     tasksCollection,
@@ -567,7 +564,6 @@ function ViewTaskStudent(props) {
   // This page is only for student later on, so for now put the user.role logic condition
   // This is like componentDidUpdate(). If the value inside the array changes, it will be rerun.
   useEffect(() => {
-    // getTaskFilesByUser(user._id, tugasId)
     getFileSubmitTasks_AT(tugasId, user._id).then((results) =>
       setFileTugas(results)
     );
@@ -767,7 +763,9 @@ function ViewTaskStudent(props) {
     // Task that has not been uplaoded.
     if (fileTugas.length === 0 && fileToSubmit.length === 0) {
       return (
-        <Typography color="textSecondary" align="center">Kosong</Typography>
+        <Typography color="textSecondary" align="center">
+          Kosong
+        </Typography>
       );
     } else {
       let temp = [];
@@ -819,7 +817,6 @@ function ViewTaskStudent(props) {
       formData.append("tugas", fileToSubmit[i]);
     }
     handleOpenUploadDialog();
-    // uploadTugas(formData, tugasId, user._id, new Date() < new Date(tasksCollection.deadline))
     uploadFileSubmitTasks(
       formData,
       tugasId,
@@ -1369,14 +1366,11 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  uploadTugas,
   clearSuccess,
   clearErrors,
-  deleteTugas,
   getFileTasks,
   downloadFileTasks,
   viewFileTasks,
-  getTaskFilesByUser,
   getOneUser,
   getOneTask,
   getAllSubjects,

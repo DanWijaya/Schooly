@@ -7,11 +7,6 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getStudents } from "../../../actions/UserActions";
 import {
-  getTaskFilesByUser,
-  downloadTugas,
-  previewTugas,
-} from "../../../actions/UploadActions";
-import {
   getFileSubmitTasks_T,
   viewFileSubmitTasks,
 } from "../../../actions/files/FileSubmitTaskActions";
@@ -228,8 +223,6 @@ function SubmittedTaskList(props) {
     getAllClass,
     tasksCollection,
     getStudents,
-    downloadTugas,
-    previewTugas,
     gradeTask,
     success,
     getFileSubmitTasks_T,
@@ -285,15 +278,6 @@ function SubmittedTaskList(props) {
     setGrade(gradeMap);
   };
 
-  const onDownloadFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran") downloadTugas(id);
-    else if (fileCategory === "lampiran/bulk") {
-      for (var i = 0; i < id.length; i++) {
-        downloadTugas(id[i]);
-      }
-    }
-  };
-
   const onPreviewFile = (id, fileCategory = "none") => {
     if (fileCategory === "lampiran") viewFileSubmitTasks(id);
   };
@@ -316,7 +300,6 @@ function SubmittedTaskList(props) {
       setGradeStatus(gradeStatusMap);
       // getOneTask(task_id);
       gradeTask(taskId, gradingData, student_name);
-      // moveToDropbox(dropbox_token, student_task_files_id);
     }
   };
 
@@ -745,11 +728,8 @@ SubmittedTaskList.propTypes = {
   subjectsCollection: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
-  getTaskFilesByUser: PropTypes.func.isRequired,
   getOneTask: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
-  downloadTugas: PropTypes.func.isRequired,
-  previewTugas: PropTypes.func.isRequired,
   gradeTask: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
 };
@@ -764,13 +744,9 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getStudents,
-  getTaskFilesByUser,
   getOneTask,
-  downloadTugas,
-  previewTugas,
   gradeTask,
   getAllClass,
-  // moveToDropbox,
   getAllSubjects,
   getFileSubmitTasks_T,
   viewFileSubmitTasks,

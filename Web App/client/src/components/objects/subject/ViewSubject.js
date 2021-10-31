@@ -8,7 +8,6 @@ import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import { getMaterial } from "../../../actions/MaterialActions";
-import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import subjectBackground from "./subject-background/SubjectBackground";
@@ -88,7 +87,6 @@ function ViewSubject(props) {
     getAllTask,
     getAllSubjects,
     tasksCollection,
-    getAllTaskFilesByUser,
     getMaterial,
     getAllAssessments,
     assessmentsCollection,
@@ -124,7 +122,6 @@ function ViewSubject(props) {
     }
     setCurrentClass(user.kelas);
     getAllTask(user.unit);
-    getAllTaskFilesByUser(user._id);
     getAllSubjects(user.unit, "map");
     getAllAssessments(user.unit);
     getTeachers(user.unit, "map");
@@ -665,7 +662,6 @@ ViewSubject.propTypes = {
   getAllSubjects: PropTypes.func.isRequired,
   getAllTask: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
-  getAllTaskFilesByUser: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
 };
@@ -684,7 +680,6 @@ export default connect(mapStateToProps, {
   setCurrentClass,
   getAllSubjects,
   getAllTask,
-  getAllTaskFilesByUser,
   getMaterial,
   getAllAssessments,
   getTeachers,

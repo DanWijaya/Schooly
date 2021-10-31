@@ -6,7 +6,6 @@ import moment from "moment";
 import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import {
   getStudents,
   getStudentsByClass,
@@ -573,7 +572,6 @@ function ViewClass(props) {
     tasksCollection,
     getTeachers,
     getMaterial,
-    getAllTaskFilesByUser,
     getAllTask,
     getTaskAtmpt,
     getAllAssessments,
@@ -1006,7 +1004,6 @@ function ViewClass(props) {
       // getTeachers(user.unit, "map"); // dipindahkan
       getStudents(user.unit);
 
-      getAllTaskFilesByUser(user._id); // get the all_user_files
       getAllAssessments(user.unit);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1580,7 +1577,6 @@ ViewClass.propTypes = {
   getAllTask: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
-  getAllTaskFilesByUser: PropTypes.func.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
 };
@@ -1602,7 +1598,6 @@ export default connect(mapStateToProps, {
   getAllTask,
   getTeachers,
   getMaterial,
-  getAllTaskFilesByUser,
   getAllAssessments,
   getStudents,
   getTaskAtmpt,

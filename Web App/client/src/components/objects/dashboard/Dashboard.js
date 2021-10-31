@@ -5,7 +5,6 @@ import { Bar } from "react-chartjs-2";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
@@ -672,7 +671,6 @@ class Dashboard extends Component {
   componentDidMount() {
     const {
       getAllTask,
-      getAllTaskFilesByUser,
       getAllSubjects,
       getAllAssessments,
       getStudentsByClass,
@@ -694,7 +692,6 @@ class Dashboard extends Component {
         getStudentsByClass(user.kelas);
       }
       getAllAssessments(user.unit);
-      getAllTaskFilesByUser(user._id); // The one that gets takfiles which is only for students.
       getStudents(user.unit);
     }
 
@@ -1414,9 +1411,7 @@ class Dashboard extends Component {
                               </ListItemIcon>
                               <ListItemText
                                 primary={
-                                  <Typography>
-                                    Buat Pengumuman
-                                  </Typography>
+                                  <Typography>Buat Pengumuman</Typography>
                                 }
                               />
                             </MenuItem>
@@ -1427,11 +1422,7 @@ class Dashboard extends Component {
                                 <MenuBookIcon />
                               </ListItemIcon>
                               <ListItemText
-                                primary={
-                                  <Typography>
-                                    Buat Materi
-                                  </Typography>
-                                }
+                                primary={<Typography>Buat Materi</Typography>}
                               />
                             </MenuItem>
                           </Link>
@@ -1441,11 +1432,7 @@ class Dashboard extends Component {
                                 <AssignmentIcon />
                               </ListItemIcon>
                               <ListItemText
-                                primary={
-                                  <Typography>
-                                    Buat Tugas
-                                  </Typography>
-                                }
+                                primary={<Typography>Buat Tugas</Typography>}
                               />
                             </MenuItem>
                           </Link>
@@ -1455,11 +1442,7 @@ class Dashboard extends Component {
                                 <FaClipboardList />
                               </ListItemIcon>
                               <ListItemText
-                                primary={
-                                  <Typography>
-                                    Buat Kuis
-                                  </Typography>
-                                }
+                                primary={<Typography>Buat Kuis</Typography>}
                               />
                             </MenuItem>
                           </Link>
@@ -1469,11 +1452,7 @@ class Dashboard extends Component {
                                 <BsClipboardData />
                               </ListItemIcon>
                               <ListItemText
-                                primary={
-                                  <Typography>
-                                    Buat Ujian
-                                  </Typography>
-                                }
+                                primary={<Typography>Buat Ujian</Typography>}
                               />
                             </MenuItem>
                           </Link>
@@ -1782,7 +1761,6 @@ Dashboard.propTypes = {
   assessmentsCollection: PropTypes.object.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getAllTask: PropTypes.func.isRequired,
-  getAllTaskFilesByUser: PropTypes.func.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
   getStudentsByClass: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
@@ -1808,6 +1786,5 @@ export default withRouter(
     getStudentsByClass,
     getAllTask,
     getAllAssessments,
-    getAllTaskFilesByUser,
   })(withStyles(styles)(Dashboard))
 );

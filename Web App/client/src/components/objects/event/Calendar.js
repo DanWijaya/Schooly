@@ -8,13 +8,28 @@ import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import moment from "moment";
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
-import { createEvent, updateEvent, getAllEvents, getOneEvent, deleteEvent } from "../../../actions/EventActions";
-import { downloadFileEvent, viewFileEvent, getFileEvents } from "../../../actions/files/FileEventActions";
+import {
+  createEvent,
+  updateEvent,
+  getAllEvents,
+  getOneEvent,
+  deleteEvent,
+} from "../../../actions/EventActions";
+import {
+  downloadFileEvent,
+  viewFileEvent,
+  getFileEvents,
+} from "../../../actions/files/FileEventActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getStudents, getTeachers } from "../../../actions/UserActions";
-import { getTasksBySubjectClass, getAllTask } from "../../../actions/TaskActions";
-import { getAssessments, getAllAssessments } from "../../../actions/AssessmentActions";
-import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
+import {
+  getTasksBySubjectClass,
+  getAllTask,
+} from "../../../actions/TaskActions";
+import {
+  getAssessments,
+  getAllAssessments,
+} from "../../../actions/AssessmentActions";
 import { getSetting } from "../../../actions/SettingActions";
 import "./Calendar.css";
 import CustomLinkify from "../../misc/linkify/Linkify";
@@ -54,12 +69,12 @@ import {
   TableRow,
   TextField,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
   KeyboardDateTimePicker,
-  KeyboardDatePicker
+  KeyboardDatePicker,
 } from "@material-ui/pickers";
 import Alert from "@material-ui/lab/Alert";
 import {
@@ -2664,7 +2679,6 @@ function Calendar(props) {
     getAllClass,
     getAllEvents,
     getAllTask,
-    getAllTaskFilesByUser,
     getAllSubjects,
     getAllAssessments,
     getStudents,
@@ -2756,7 +2770,6 @@ function Calendar(props) {
     getAllAssessments(user.unit);
     getStudents(user.unit);
     getTeachers(user.unit);
-    getAllTaskFilesByUser(user._id);
     getAllSubjects(user.unit, "map");
     getSetting();
 
@@ -5358,7 +5371,6 @@ export default connect(mapStateToProps, {
   getSelectedClasses,
   getAllSubjects,
   getAllTask,
-  getAllTaskFilesByUser,
   getTasksBySubjectClass,
   getAllAssessments,
   getAssessments,
