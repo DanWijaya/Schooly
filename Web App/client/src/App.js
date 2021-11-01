@@ -190,6 +190,7 @@ class App extends Component {
       <div>
         <Provider store={store}>
           <ThemeProvider theme={theme}>
+            {/*CssBaseline*/}
             <GlobalStyles />
             <Router>
               <ScrollToTop />

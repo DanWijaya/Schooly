@@ -22,6 +22,9 @@ const GlobalStyles = withStyles((theme) => ({
     //   height: "100%"
     // },
     input: {
+      "&[type=password]": {
+        "&::-ms-reveal": { display: "none" },
+      },
       "&[type=number]": {
         MozAppearance: "textfield",
         "&::-webkit-outer-spin-button": { margin: 0, WebkitAppearance: "none" },
