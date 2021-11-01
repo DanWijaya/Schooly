@@ -178,6 +178,21 @@ export default function TextMobileStepper() {
       <Button>
         Test
       </Button>
+      <Typography variant="h2">
+      h2. Heading
+      </Typography>
+      <Typography variant="h6">
+      Akses dengan Cepat
+      </Typography>
+      <Typography variant="body1">
+      Kelas dan Mata Pelajaran
+      </Typography>
+      <Typography variant="body1">
+       body1
+      </Typography>
+      <Typography variant="body2">
+        body2
+      </Typography>
     </div>
   );
 }

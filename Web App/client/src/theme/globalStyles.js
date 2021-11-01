@@ -26,7 +26,7 @@ const GlobalStyles = withStyles((theme) => ({
         MozAppearance: "textfield",
         "&::-webkit-outer-spin-button": { margin: 0, WebkitAppearance: "none" },
         "&::-webkit-inner-spin-button": { margin: 0, WebkitAppearance: "none" }
-      }
+      },
     },
     textarea: {
       "&::-webkit-input-placeholder": { color: theme.palette.text.disabled },
@@ -35,7 +35,6 @@ const GlobalStyles = withStyles((theme) => ({
       "&::placeholder": { color: theme.palette.text.disabled }
     },
     a: { color: theme.palette.primary.main },
-    // img: { display: "block", maxWidth: "100%" }
   }
 }))(() => null);
 

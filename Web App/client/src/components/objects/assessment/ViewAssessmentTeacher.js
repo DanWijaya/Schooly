@@ -70,9 +70,9 @@ const useStyles = makeStyles((theme) => ({
   },
   copyLinkButton: {
     textTransform: "none",
-    color: theme.palette.copylink.main,
+    color: theme.palette.warning.main,
     "&:hover": {
-      backgroundColor: theme.palette.copylink.fade,
+      backgroundColor: theme.palette.warning.fade,
     },
   },
   editButton: {

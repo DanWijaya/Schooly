@@ -1,42 +1,41 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-  getAllAdmins,
-  updateTeacher,
-  updateUnitAdmins,
-} from "../../../actions/UserActions";
 import { getAllUnits } from "../../../actions/UnitActions";
+import { getAllAdmins, updateTeacher, updateUnitAdmins } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
+  Avatar,
+  Button,
   Divider,
   FormControl,
   Grid,
+  Hidden,
+  IconButton,
   InputAdornment,
   InputLabel,
-  IconButton,
-  Hidden,
   Menu,
   MenuItem,
   ListItem,
+  ListItemAvatar,
   ListItemText,
+  Select,
   TableSortLabel,
   TextField,
-  Typography,
-  ListItemAvatar,
-  Avatar,
-  Button,
-  Select,
+  Typography
 } from "@material-ui/core/";
+import {
+  ArrowBack as ArrowBackIcon,
+  Clear as ClearIcon,
+  ExpandMore as ExpandMoreIcon,
+  Search as SearchIcon,
+  Sort as SortIcon
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import SortIcon from "@material-ui/icons/Sort";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { GoSearch } from "react-icons/go";
 import { BiSitemap } from "react-icons/bi";
-import ClearIcon from "@material-ui/icons/Clear";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import UploadDialog from "../../misc/dialog/UploadDialog";
 
 function createData(data) {
   const { _id, name, email, unit } = data;
@@ -178,7 +177,7 @@ function AdminListToolbar(props) {
                       style={{ marginLeft: "-5px", marginRight: "-5px" }}
                     >
                       <IconButton size="small">
-                        <GoSearch />
+                        <SearchIcon />
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -212,10 +211,10 @@ function AdminListToolbar(props) {
           ) : (
             <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
               <IconButton
-                className={classes.goSearchButton}
+                className={classes.SearchIconButton}
                 onClick={() => setSearchBarFocus(true)}
               >
-                <GoSearch className={classes.goSearchIconMobile} />
+                <SearchIcon className={classes.SearchIconIconMobile} />
               </IconButton>
             </LightTooltip>
           )}
@@ -242,7 +241,7 @@ function AdminListToolbar(props) {
                   style={{ marginLeft: "-5px", marginRight: "-5px" }}
                 >
                   <IconButton size="small">
-                    <GoSearch />
+                    <SearchIcon />
                   </IconButton>
                 </InputAdornment>
               ),
@@ -320,15 +319,6 @@ function AdminListToolbar(props) {
     </div>
   );
 }
-
-// TeacherListToolbar.propTypes = {
-//   classes: PropTypes.object.isRequired,
-//   onRequestSort: PropTypes.func.isRequired,
-//   onSelectAllClick: PropTypes.func.isRequired,
-//   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-//   orderBy: PropTypes.string.isRequired,
-//   rowCount: PropTypes.number.isRequired,
-// };
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -443,7 +433,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TeacherList(props) {
+function AdminList(props) {
   const classes = useStyles();
 
   const { getAllAdmins, updateTeacher, getAllUnits, updateUnitAdmins } = props;
@@ -453,28 +443,17 @@ function TeacherList(props) {
 
   const all_admin_obj = React.useRef({});
   const [rows, setRows] = React.useState([]);
-  /*
-    isi:
-    {
-      <id Pengelola>: {
-        subject: [<info mata pelajaran 1>, <info mata pelajaran 2>, ...],
-        class: [<info kelas 1>, <info kelas 2>, ...],
-      },
-      ...
-
-    } key -> id semua Pengelola yang ada di db
-  */
   const [selectedValues, setSelectedValues] = React.useState({});
 
-  // SEARCH
+  // Search Filter
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
 
-  // SORT
+  // Sorting
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
 
-  // DIALOG SUNTING
+  // Edit Dialog
   const [openUploadDialog, setOpenUploadDialog] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
@@ -517,8 +496,6 @@ function TeacherList(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchFilter]);
-
-  // AUTOCOMPLETE: untuk memilih subject yang diajar dan kelas yang diajar tiap Pengelola
 
   function handleRequestSort(event, property) {
     const isAsc = orderBy === property && order === "asc";
@@ -565,45 +542,16 @@ function TeacherList(props) {
   };
 
   const onSubmit = () => {
-    console.log("JANCUK MUNCUL");
     setOpenUploadDialog(true);
     updateUnitAdmins(selectedValues).then((res) => {
       setSuccess(true);
     });
   };
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
-
   document.title = "Schooly | Sunting Unit Pengelola";
 
   return (
     <div className={classes.root}>
-      <UploadDialog
-        openUploadDialog={openUploadDialog}
-        success={success}
-        messageUploading={`Unit pengelola sedang disimpan`}
-        messageSuccess={`Unit pengelola berhasil disimpan`}
-        redirectLink="/pengelola-aktif"
-      />
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Pengaturan unit Pengelola"
-        deleteItem={null}
-        itemName={null}
-        isLink={true}
-        redirectLink="/pengelola-aktif"
-        isWarning={false}
-      />
       <AdminListToolbar
         classes={classes}
         order={order}
@@ -612,7 +560,6 @@ function TeacherList(props) {
         rowCount={rows ? rows.length : 0}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
-        //Two props added for search filter.
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
       />
@@ -625,7 +572,7 @@ function TeacherList(props) {
         ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
-            console.log(row.unit);
+
             return (
               <Grid item>
                 <ListItem className={classes.listItem}>
@@ -712,25 +659,41 @@ function TeacherList(props) {
           </Button>
         </div>
       </div>
+      <UploadDialog
+        openUploadDialog={openUploadDialog}
+        success={success}
+        messageUploading={`Unit pengelola sedang disimpan`}
+        messageSuccess={`Unit pengelola berhasil disimpan`}
+        redirectLink="/pengelola-aktif"
+      />
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Pengaturan unit Pengelola"
+        deleteItem={null}
+        itemName={null}
+        isLink={true}
+        redirectLink="/pengelola-aktif"
+        isWarning={false}
+      />
     </div>
   );
 }
 
 const mapStateToProps = (state) => ({
-  errors: state.errors,
-  success: state.success,
   auth: state.auth,
+  unitsCollection: state.unitsCollection,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
-  unitsCollection: state.unitsCollection,
+  success: state.success,
+  errors: state.errors,
 });
 
-// parameter 1 : reducer , parameter 2 : actions
 export default connect(mapStateToProps, {
-  getAllAdmins,
   getAllUnits,
-  updateTeacher,
-  clearErrors,
-  clearSuccess,
+  getAllAdmins,
   updateUnitAdmins,
-})(TeacherList);
+  updateTeacher,
+  clearSuccess,
+  clearErrors,
+})(AdminList);

@@ -1,10 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import {
-  getAllClass,
-  setHomeroomTeachers,
-} from "../../../actions/ClassActions";
+import { getAllClass, setHomeroomTeachers } from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -21,7 +18,7 @@ import {
   Paper,
   Snackbar,
   TextField,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
@@ -197,7 +194,6 @@ function EditHomeroomTeacher(props) {
         .catch((err) => {
           setOpenUploadDialog(false);
           handleOpenSnackbar("error", "Pengubahan wali kelas gagal dilakukan");
-          console.log(err);
         });
     } else {
       setOpenUploadDialog(true);

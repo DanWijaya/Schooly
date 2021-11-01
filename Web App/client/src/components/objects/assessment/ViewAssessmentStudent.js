@@ -579,7 +579,7 @@ function ViewAssessmentStudent(props) {
   const [showStartButton, setShowStartButton] = React.useState(false);
   const [showClosedMessage, setShowClosedMessage] = React.useState(false);
 
-  // When onSubmit is triggered, will clear localStorage.removeItem("remainingTime");
+  // When onSubmit is triggered, will clear localStorage.removeItem("remainingTime").
   React.useEffect(() => {
     getStatus(id).then((res) => {
       if (res.data.status === -1) {
