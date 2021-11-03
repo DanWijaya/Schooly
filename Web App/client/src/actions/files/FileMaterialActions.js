@@ -1,7 +1,5 @@
 import axios from "axios";
 
-// TESTING DENGAN S3
-
 export const uploadFileMaterials = (id, formData) => {
   return axios.post(`/api/files/materials/upload/${id}`, formData);
 };

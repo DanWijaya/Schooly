@@ -23,7 +23,7 @@ export const getFileAssessment = (id) => (dispatch) => {
     })
     .then((res) => {
       const { ids, urls } = res.data;
-      // ids dan urls nya itu sesuai dengan urutannya.
+      // ids and urls will be got sorted.
       let idsToUrls = new Map();
       for (var i = 0; i < urls.length; i++) {
         idsToUrls.set(ids[i], urls[i]);

@@ -24,7 +24,7 @@ import {
 
 // Guide for UserActions.
 /*
-  If the get actions name contains "all" keywords like getAllObject, then get the object in the entire database. 
+  If the get actions name contains "all" keywords like getAllObject, then get the object in the entire database.
   Otherwise, get the objects by unit.
 */
 
@@ -58,11 +58,11 @@ export const updateUserData = (userData, userId, history) => (dispatch) => {
 
       localStorage.setItem("jwtToken", token);
       console.log("Foto udah diganti");
-      // Set token to Auth header
+      // Set token to Auth header.
       setAuthToken(token);
-      // Decode token to get user data
+      // Decode token to get user data.
       const decoded = jwt_decode(token);
-      // Set current user
+      // Set current user.
       dispatch(setCurrentUser(decoded));
       console.log("Successfully update user data");
       return true;
@@ -83,15 +83,15 @@ export const updateAvatar = (userData, userId, formData) => (dispatch) => {
     .put("/api/users/update/avatar/" + userId, formData)
 
     .then((res) => {
-      // Set token to localStorage
+      // Set token to localStorage.
       const { token } = res.data;
       localStorage.setItem("jwtToken", token);
       console.log("Foto udah diganti");
-      // Set token to Auth header
+      // Set token to Auth header.
       setAuthToken(token);
-      // Decode token to get user data
+      // Decode token to get user data.
       const decoded = jwt_decode(token);
-      // Set current user
+      // Set current user.
       dispatch(setCurrentUser(decoded));
       if (Boolean(userData.avatar))
         return axios.delete(`/api/upload/avatar/${userData.avatar}`);
@@ -105,25 +105,25 @@ export const updateAvatar = (userData, userId, formData) => (dispatch) => {
     });
 };
 
-// to initiate a dispatch, pass the result to the dispatch() function.
-// Login - get user token
+// To initiate a dispatch, pass the result to the dispatch() function.
+// Login, get user token.
 export const loginUser = (userData) => (dispatch) => {
   return axios
     .post("/api/users/login", userData)
     .then((res) => {
       console.log("Berhasil login");
-      // Save to localStorage
-      // Set token to localStorage
+      // Save to localStorage.
+      // Set token to localStorage.
       const { token } = res.data;
       localStorage.setItem("jwtToken", token);
 
-      // Set token to Auth header
+      // Set token to Auth header.
       setAuthToken(token);
 
-      // Decode token to get user data
+      // Decode token to get user data.
       const decoded = jwt_decode(token);
 
-      // Set current user
+      // Set current user.
       dispatch(setCurrentUser(decoded));
       return true;
     })
@@ -137,15 +137,15 @@ export const loginUser = (userData) => (dispatch) => {
     });
 };
 
-// Log user out
+// Log user out.
 export const logoutUser = () => (dispatch) => {
-  // Remove token from local storage
+  // Remove token from local storage.
   localStorage.removeItem("jwtToken");
   // localStorage.removeItem("dropbox_token");
-  // Remove auth header for future requests
+  // Remove auth header for future requests.
   setAuthToken(false);
   console.log("test");
-  // Set current user to empty object {} which will set isAuthenticated to false
+  // Set current user to empty object {} which will set isAuthenticated to false.
   dispatch(setCurrentUser({}));
   // setDropboxToken(false);
   // if (history !== undefined)
@@ -153,7 +153,7 @@ export const logoutUser = () => (dispatch) => {
   window.location.href = "/masuk";
 };
 
-// Set logged in user
+// Set logged in user.
 export const setCurrentUser = (decoded) => {
   console.log("The role is: ", decoded.role);
 
@@ -163,7 +163,7 @@ export const setCurrentUser = (decoded) => {
   };
 };
 
-// User loading
+// User loading.
 export const setUserLoading = () => {
   return {
     type: USER_LOADING,
@@ -279,7 +279,7 @@ export const getStudentsByClass = (classId) => (dispatch) => {
     });
 };
 
-// actions for admin only
+// Actions for administrators only.
 export const getPendingStudents = (unitId) => (dispatch) => {
   return axios
     .get(`/api/users/getpendingstudents/${unitId}`)

@@ -5,15 +5,15 @@ import {
   GET_SUCCESS_RESPONSE,
 } from "./Types";
 
-// SEND EMAIL TO API FOR HASHING
+// Send email to API for hashing.
 export const createHash = (email) => {
   return async (dispatch) => {
-    // Contact the API
+    // Contact the API.
 
     await fetch(
-      // Where to contact
+      // Where to contact.
       "/api/authentication/saveresethash",
-      // What to send
+      // What to send.
       {
         method: "POST",
         body: JSON.stringify({ email }),
@@ -33,7 +33,7 @@ export const createHash = (email) => {
       .then((json) => {
         console.log(json);
         if (json.success) {
-          // If email is in database
+          // If email is in database.
           dispatch({
             type: PWD_RESET_HASH_CREATED,
             payload: json,
@@ -49,7 +49,8 @@ export const createHash = (email) => {
         }
       })
       .catch((err) => {
-        // If there is a problem email and mailgun service sending tke email (ex: email is not in recipient list)
+        // If there is a problem email and mailgun service sending tke email
+        // Example: email is not in recipient list.
         console.log("Mailgun has error in sending email");
         console.log(err, "Errornya ini");
         dispatch({
@@ -61,14 +62,14 @@ export const createHash = (email) => {
   };
 };
 
-// Save a user's password
+// Save a user's password.
 export function savePassword(data) {
   return async (dispatch) => {
-    // Contact the API
+    // Contact the API.
     await fetch(
-      // Where to contact
+      // Where to contact.
       "/api/authentication/savepassword",
-      // What to send
+      // What to send.
       {
         method: "POST",
         body: JSON.stringify(data),

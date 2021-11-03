@@ -23,7 +23,7 @@ export const createAnnouncement = (formData, announcementData, history) => (
           `/api/files/announcements/upload/${res.data._id}`,
           formData
         );
-      } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
+      } // Must return something, if not it will continue to the next "then".
       else return res;
     })
     .then((res) => {
@@ -162,7 +162,7 @@ export const updateAnnouncement = (
   annId,
   history
 ) => (dispatch) => {
-  // formData is the lampiran files
+  // formData is the attachment files.
   return axios
     .put(`/api/announcements/update/${annId}`, annData)
     .then((res) => {
@@ -191,7 +191,7 @@ export const updateAnnouncement = (
       if (formData.has("lampiran_announcement")) {
         console.log("Lampiran announcement going to be uploaded");
         return axios.post(`/api/files/announcements/upload/${annId}`, formData);
-      } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
+      } // // Must return something, if not it will continue to the next "then".
       else return "Successfully updated task with no lampiran";
     })
     .then((res) => {

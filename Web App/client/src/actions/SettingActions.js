@@ -1,11 +1,5 @@
-// Kamu harus buat actions typenya dulu di Types.js
-// ikutin format, import" axios.
-// pakai axios dkk buat post, get dan put request. Jangan lupa panggil res.json atau res.status(<status_code>).json({..})
-// FUnctionality yang dipakai user hanya get dan put sih
-// Di dalamnya, kamu pakai Setting.findById dan kawan"... ikutin saja.
-
-import { GET_SETTING, GET_ERRORS, GET_SUCCESS_RESPONSE } from "./Types";
 import axios from "axios";
+import { GET_SETTING, GET_ERRORS, GET_SUCCESS_RESPONSE } from "./Types";
 
 export const createSetting = (settingData) => (dispatch) => {
   return axios

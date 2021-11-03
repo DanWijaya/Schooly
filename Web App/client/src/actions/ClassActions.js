@@ -37,7 +37,7 @@ export const createClass = (classData, history) => (dispatch) => {
 
 // View All Class
 export const getAllClass = (unitId, data = "array") => (dispatch) => {
-  // id nya berupa unitId
+  // the id is unitId.
   return axios
     .get(`/api/classes/viewall/${unitId}`)
     .then((res) => {

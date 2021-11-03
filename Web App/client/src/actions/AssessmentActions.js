@@ -66,7 +66,7 @@ export const updateAssessment = (
   lampiran_to_delete,
   history
 ) => (dispatch) => {
-  // formData is the lampiran files
+  // formData is the attachment files.
   return axios
     .put(`/api/assessments/update/${assessmentId}`, assessmentData)
     .then((res) => {
@@ -79,7 +79,7 @@ export const updateAssessment = (
           data: { id_to_delete: lampiran_to_delete },
         });
       } else {
-        // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
+        // Must return something, if not it will continue to the next "then".
         return "Successfully updated task with no lampiran";
       }
     })
@@ -139,7 +139,7 @@ export const getAllAssessments = (unitId) => (dispatch) => {
     });
 };
 
-//View One Task
+// View One Task
 export const getOneAssessment = (id, rslv = null) => (dispatch) => {
   axios
     .get(`/api/assessments/view/${id}`)
@@ -312,11 +312,14 @@ export const getKeyAnswers = (assessmentId) => {
     });
 };
 
-// Implementasinya dengan cara urutkan soal berdasarkan jumlah benar oleh murid murid.
+// Question Analytics
+// The implementation is done with sorting the question according correct answered questions.
 export const getQuestionAnalytics = (assessmentId, top_K = 10) => {
   return axios.get(`/qnsDifficultyRanking/${assessmentId}`);
-  /* @params : {
-    1. assessmentID -> Id of the assessment
-    2. top_K -> untuk pilih mau munculin berapa soal tersulit
-    */
+  /*
+  @params : {
+    1. assessmentID -> Id of the assessment.
+    2. top_K -> To choose how many hardest question that want to be shown.
+  }
+  */
 };
