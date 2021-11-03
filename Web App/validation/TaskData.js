@@ -2,7 +2,7 @@ const Validator = require("validator");
 const isEmpty = require("is-empty");
 
 function validateTaskGrade(data) {
-  // the data is grade
+  // The data is grade.
   let errors = {};
   if (isEmpty(data.grade)) {
     if (data.grade > 100 || data.grade < 0) {
@@ -17,7 +17,7 @@ function validateTaskGrade(data) {
 
 function validateTaskInput(data) {
   let errors = {};
-  // isEmpty method is used for string, so don't use it for class_assigned data bcs it is array.
+  // isEmpty method is used for string, so don't use it for class_assigned data because it is an array.
   // name,
   // subject,
   // description,
@@ -49,12 +49,15 @@ function validateTaskInput(data) {
   if (Validator.isEmpty(data.subject)) {
     errors.subject = "Mata Pelajaran belum diisi";
   }
+
   if (Validator.isEmpty(data.description)) {
     errors.description = "Deskripsi belum diisi";
   }
+
   if (Validator.isEmpty(data.deadline)) {
     errors.deadline = "Batas waktu belum diisi";
   }
+  
   console.log("Class assigned: ", data.class_assigned);
   if (data.class_assigned.length == 0) {
     errors.class_assigned = "Kelas yang ditujukan belum diisi";

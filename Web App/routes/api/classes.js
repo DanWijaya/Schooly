@@ -1,15 +1,10 @@
-const express = require("express");
-const router = express.Router();
-const keys = require("../../config/keys");
-const mongoose = require("mongoose");
-
-// Load input validation
-const validateClassInput = require("../../validation/ClassData");
-
-// Load the required Model
 const Class = require("../../models/Class");
 const Student = require("../../models/user_model/Student");
-
+const express = require("express");
+const router = express.Router();
+const mongoose = require("mongoose");
+const keys = require("../../config/keys");
+const validateClassInput = require("../../validation/ClassData");
 const { ObjectId } = require("mongodb");
 
 router.post("/create", (req, res) => {
@@ -74,9 +69,9 @@ router.get("/viewall/:unitId", (req, res) => {
   }
   Class.find({ unit: unitId })
     .then((classes) => {
-      // if it is multiple results, should check with length.
+      // If it is multiple results, should check with length.
       if (!classes.length) {
-        // for multiple result request, don't need to throw err cause the result is emtpy array.
+        // For multiple result request, don't need to throw err because the result is an emtpy array.
         console.log("Class in the unit does not exist");
       }
       classes.sort((a, b) => (a.name > b.name ? 1 : -1));
@@ -171,7 +166,7 @@ router.put("/update/:id", (req, res) => {
       if (!classData) {
         throw "Class to update not found";
       }
-      // Initially there is else block
+      // Initially there is else block.
       classData.name = req.body.name;
       classData.ketua_kelas = req.body.ketua_kelas
         ? req.body.ketua_kelas
@@ -203,7 +198,7 @@ router.put("/class-officers", (req, res) => {
 
     for (let role of rolesToDelete) {
       fieldToUnset[role] = "";
-      // valuenya akan diabaikan, jadi boleh apa saja
+      // The value can be ignored, so that may be anything.
     }
 
     operations.push({
@@ -233,7 +228,7 @@ router.put("/homeroom-teachers", (req, res) => {
     if (teacherId) {
       updateArgument = { walikelas: teacherId };
     } else {
-      // jika teacherId null, atribut walikelas kelas ini akan dihapus
+      // If teacherId is null, homeroom teacher atrribute in this class will be deleted.
       updateArgument = { $unset: { walikelas: "" } };
     }
 

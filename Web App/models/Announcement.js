@@ -1,17 +1,10 @@
-// Require Mongoose
-const mongoose = require("mongoose");
-const { ObjectId } = require("mongodb");
+const { ObjectId } = require("mongodb"); // API from mongoose MongoDB
+const mongoose = require("mongoose"); // Require Mongoose
+const Schema = mongoose.Schema; // Define a Schema
 
-// Define a Schema
-const Schema = mongoose.Schema;
-
-// Create Schema
+// Create Announcement Schema
 const AnnoucementSchema = new Schema(
   {
-    unit: {
-      type: ObjectId,
-      default: null,
-    },
     title: {
       type: String,
       required: true,
@@ -20,6 +13,10 @@ const AnnoucementSchema = new Schema(
       type: String,
       required: true,
     },
+    unit: {
+      type: ObjectId,
+      default: null,
+    },
     lampiran: [
       {
         type: Object,
@@ -27,8 +24,8 @@ const AnnoucementSchema = new Schema(
       },
     ],
 
-    // jika dibuat oleh admin, array ini berisi satu elemen: null.
-    // ditambahkan null agar tidak perlu mengecek role author_id saat validasi.
+    // If it is made by administrator, this array contain one element which is null.
+    // Added null so that doesn't need to check role author_id during validation.
     class_assigned: [
       {
         type: ObjectId,
@@ -39,7 +36,7 @@ const AnnoucementSchema = new Schema(
       required: true,
     },
 
-    // elemen pada array ini bernilai: "Student" atau "Teacher"
+    // Element in this array is either "Student" or "Teacher".
     to: {
       type: [String],
       validate: [
@@ -55,6 +52,3 @@ const AnnoucementSchema = new Schema(
 
 const Announcement = mongoose.model("announcements", AnnoucementSchema);
 module.exports = Announcement;
-
-// export
-// Kalau di Schooly, di luar client folder pakai module.exports. Kalau di dlm client folder pakai export.

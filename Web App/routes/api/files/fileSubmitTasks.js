@@ -1,16 +1,17 @@
-// 'use strict'
+const FileSubmitTask = require("../../../models/lampiran/FileSubmitTask");
 const express = require("express");
 const router = express.Router();
-const FileSubmitTask = require("../../../models/lampiran/FileSubmitTask");
 const multer = require("multer");
 var AWS = require("aws-sdk");
 var fs = require("fs");
+const keys = require("../../../config/keys");
 const { ObjectId } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
-const keys = require("../../../config/keys");
 
 // Multer ships with storage engines DiskStorage and MemoryStorage
-// And Multer adds a body object and a file or files object to the request object. The body object contains the values of the text fields of the form, the file or files object contains the files uploaded via the form.
+// And Multer adds a body object and a file or files object to the request object.
+// The body object contains the values of the text fields of the form,
+// the file or files object contains the files uploaded via the form.
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
@@ -20,7 +21,7 @@ AWS.config.update({
   region: keys.awsKey.AWS_REGION,
 });
 
-// route to upload a pdf document file
+// Route to upload a PDF document file.
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
 router.post(
   "/upload/:task_id&:author_id&:task_deadline",
@@ -96,7 +97,6 @@ router.get("/download/:id", (req, res) => {
         ResponseContentDisposition: `attachment;filename=${result.filename}`,
       };
       return s3bucket.getSignedUrlPromise("getObject", params);
-
       // const url = s3bucket.getSignedUrl("getObject", params);
       // return res.status(200).json(url);
     })
@@ -129,11 +129,11 @@ router.get("/by_multiple_tasks", (req, res) => {
 
 router.delete("/all/:id", async (req, res) => {
   try {
-    // req.params.id ini berupa id dari task.
+    // req.params.id is the id of the task.
     const file_to_delete = await FileSubmitTask.find({
       task_id: req.params.id,
     });
-    // file_to_delete ini berupa ID dari file filenya.
+    // file_to_delete is the id of the files.
     if (!file_to_delete) {
       return res.status(200).json("No file task to delete");
     }
@@ -170,15 +170,15 @@ router.delete("/all/:id", async (req, res) => {
   }
 });
 
-// Router to delete a DOCUMENT file
+// Router to delete a DOCUMENT file.
 router.delete("/", async (req, res) => {
   const { id_to_delete } = req.body;
+  // file_to_delete is the id of the files.
   if (!id_to_delete) {
     return res.status(200).send("No file tasks to delete");
   }
-
   try {
-    // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
+    // if file_to_delete is undefined, means that the object is deleted and hence all files should be deleted.
     let id_list = id_to_delete.map((m) => ObjectId(m));
     console.log(id_list);
     const results = await FileSubmitTask.find({ _id: { $in: id_list } });

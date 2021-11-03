@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const keys = require("../../config/keys");
 const shortid = require("shortid");
+const keys = require("../../config/keys");
 
 const mailSender = require("../../mail/mailSender");
 const OTP = require("../../models/OTP");
@@ -32,7 +32,7 @@ router.route("/visitor/:id").put((req, res, next) => {
         .status(401)
         .send({ success: false, msg: "Incorrect code was input" });
     } else {
-      // Allow the user to register
+      // Allow the user to register.
     }
   });
 });
@@ -41,7 +41,7 @@ router.route("/sendotptovisitor").post((req, res, next) => {
   let visitorEmail = req.body.company_email;
   let newGeneratedOTP = shortid.generate();
 
-  // Create the otp and mongo-related data for saving into OTP mongo schema
+  // Create the otp and mongo-related data for saving into OTP mongo schema.
   let thisOTP_Mongo = {
     visitor_email: visitorEmail,
     generated_otp: newGeneratedOTP,

@@ -1,22 +1,29 @@
-const mongoose = require("mongoose");
-const { ObjectId } = require("mongodb");
-const Schema = mongoose.Schema;
+const { ObjectId } = require("mongodb"); // API from mongoose MongoDB
+const mongoose = require("mongoose"); // Require Mongoose
+const Schema = mongoose.Schema; // Define a Schema
 
-// Create Schema
+// Create Class Schema
 const ClassSchema = new Schema({
-  unit: {
-    type: ObjectId,
-    default: null,
-  },
   name: {
     type: String,
     required: true,
   },
-  // 1 guru hanya boleh menjadi wali untuk 1 atau 0 kelas.
-  // ini dipastikan saat pembuatan kelas (opsi wali kelas hanya akan berisi guru nonwali).
+  // 1 Teacher can only be homeroom teacher for 1 or 0 class.
+  // This is ensured when the class is created (homeroom teacher options only contains non homeroom teachers).
   walikelas: {
     type: ObjectId,
     // required: true
+  },
+  unit: {
+    type: ObjectId,
+    default: null,
+  },
+  unit: {
+    type: ObjectId,
+    ref: "units"
+  },
+  subject_assigned: {
+    type: [ObjectId],
   },
   // ini semestinya bakal dihapus
   ukuran: {
@@ -27,11 +34,6 @@ const ClassSchema = new Schema({
     type: Boolean,
     default: true,
   },
-  /* 
-  - ketua_kelas, bendahara, dan sekretaris bisa 1 orang yang sama
-  - field ketua_kelas, bendahara, dan sekretaris akan dihapus ketika admin memindahkan murid yang bersangkutan ke kelas lain
-  - ketua_kelas, bendahara, dan sekretaris tidak bisa disunting menjadi kosong
-  */
   ketua_kelas: {
     type: ObjectId,
     ref: "users",
@@ -44,13 +46,11 @@ const ClassSchema = new Schema({
     type: ObjectId,
     ref: "users",
   },
-  subject_assigned: {
-    type: [ObjectId],
-  },
-  unit: {
-    type: ObjectId,
-    ref: "units"
-  }
+  /*
+  - Class president, secretary, and treasurer can be the same person.
+  - Class president, secretary, and treasurer field will be deleted if administrator move students with those roles to another class.
+  - Class president, secretary, and treasurer can't be editted into empty.
+  */
 });
 
 const Class = mongoose.model("class", ClassSchema);

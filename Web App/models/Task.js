@@ -1,25 +1,21 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const { ObjectId } = require("mongodb");
+const { ObjectId } = require("mongodb"); // API from mongoose MongoDB
+const mongoose = require("mongoose"); // Require Mongoose
+const Schema = mongoose.Schema; // Define a Schema
 
 // Create Task Schema
 const TaskSchema = new Schema(
   {
-    unit: {
-      type: ObjectId,
-      default: null,
-    },
     name: {
       type: String,
       required: true,
     },
-    deadline: {
-      type: Date,
-      required: [true, "The task has no deadline?"],
-    },
-    subject: {
-      type: ObjectId,
+    description: {
+      type: String,
       required: true,
+    },
+    unit: {
+      type: ObjectId,
+      default: null,
     },
     class_assigned: [
       {
@@ -27,12 +23,12 @@ const TaskSchema = new Schema(
         required: true,
       },
     ],
-    person_in_charge_id: {
+    subject: {
       type: ObjectId,
       required: true,
     },
-    description: {
-      type: String,
+    person_in_charge_id: {
+      type: ObjectId,
       required: true,
     },
     lampiran: [
@@ -41,11 +37,14 @@ const TaskSchema = new Schema(
         default: [],
       },
     ],
+    deadline: {
+      type: Date,
+      required: [true, "The task has no deadline?"],
+    },
     grades: {
       type: Map,
-      default: new Map(), // userId -> the score.
+      default: new Map(), // userId - score.
     },
-
     // submissions: {
     //     type: Map,
     //     default: new Map()
@@ -73,7 +72,6 @@ const TaskSchema = new Schema(
       },
     ],
   },
-
   { timestamps: true }
 );
 

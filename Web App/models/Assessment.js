@@ -1,17 +1,26 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const { ObjectId } = require("mongodb");
+const { ObjectId } = require("mongodb"); // API from mongoose MongoDB
+const mongoose = require("mongoose"); // Require Mongoose
+const Schema = mongoose.Schema; // Define a Schema
 
-// Create AssessmentSchema
+// Create Assessment Schema
 const AssessmentSchema = new Schema(
   {
-    unit: {
-      type: ObjectId,
-      default: null,
-    },
     name: {
       type: String,
       required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    // The value of this attribute is Quiz or Exam.
+    type: {
+      type: String,
+      required: true,
+    },
+    unit: {
+      type: ObjectId,
+      default: null,
     },
     class_assigned: [
       {
@@ -19,15 +28,11 @@ const AssessmentSchema = new Schema(
         required: true,
       },
     ],
-    author_id: {
+    subject: {
       type: ObjectId,
       required: true,
     },
-    description: {
-      type: String,
-      required: true,
-    },
-    subject: {
+    author_id: {
       type: ObjectId,
       required: true,
     },
@@ -39,6 +44,17 @@ const AssessmentSchema = new Schema(
       type: Date,
       required: true,
     },
+    posted: {
+      type: Boolean,
+      // required: true,
+      // default: false
+    },
+    // If "posted" attributes has a value of null, this attribute contains date posted.
+    // If "posted" attribute has a value of true atau false, this attribute will be filled with null.
+    post_date: {
+      type: Date,
+      // required: true
+    },
     questions: [
       {
         name: { type: String, default: "" },
@@ -48,28 +64,90 @@ const AssessmentSchema = new Schema(
         type: { type: String, required: true },
       },
     ],
-    posted: {
-      type: Boolean,
-      // required: true,
-      // default: false
+    question_weight: {
+      radio: Number,
+      checkbox: Number,
+      shorttext: Number,
+      longtext: Object,
     },
+    /*
+    Example of question_weight:
+    {
+      radio: 5,
+      checkbox: 5,
+      shorttext: 3,
+      longtext: {
+        0: 20,
+        1: 20,
+        2: 20
+      }
+    }
 
-    // jika atribut "posted" bernilai null, atribut ini berisi tanggal posting.
-    // jika atribut "posted" berisi true atau false, atribut ini bernilai null.
-    post_date: {
-      type: Date,
-      // required: true
+    The value "longtext" is an Object that has key-value pair of <long text question index> - <weight>.
+    This pair is not inserted into "longtext".
+    <weight> can contain a value of null. <weight> contains a value o null when assessment is saved with empty weight for that long text question.
+
+    <question type> has a value of null, only if the assessment doesn't has a question with the type of <question type>.
+    For example: Assessment A only has multiple choice, then it is filled with
+    question_weight: {
+      radio: <nilai bobot pg>,
+      checkbox: null,
+      shorttext: null,
+      longtext: null
+    }
+
+    Weight of all question in an assessment are ensured to be filled and doesn't has a value less or equal to 0.
+    */
+
+    submissions: {
+      type: Map,
     },
+    /*
+    When an assessment is made for the first time, it won't have this attribute.
+    This attribute contains the pair of <student's id> - <array of answer>.
+
+    These are the example of submission for assessment with multiple choice, checkbox, short text, and long text, respectively from 1 to 4.
+    Map {
+      5f44d55155cedc284824f5c1: [
+        ["B"], ["A", "D"], [null, "jawaban isian", ""], ["jawaban esai"]
+      ],
+      5f5d8ffc6dd1f432b4f45ebb: [
+        [], [], [], []
+      ]
+    }
+
+    Number of element <answer array> is equal to number of questions (questions.length) in an assessment.
+    <answer array>[i] is the student answer for the question with index of i (questions[i]).
+    All <answer array> element are arrays that have number of element greater or equal to 0.
+
+    Number of element in <answer array> element of short text question is not ensured equal to the number of the blanks.
+    For example:
+    There is one short text question that has 3 blanks (answer.length untuk soal ini = 3) and
+    if a student only answer the second blank. When it is submitted, the answer array for this question will be
+    [null, "answer"].
+    (null is actually undefined, but is converted to null by JSON.stringify when making http request)
+    */
+
+
+    submissions_timestamp: {
+      type: Map,
+    },
+    /*
+    When an assessment is made for the first time, it won't have this attribute.
+    This attribute contains the pair of <student's id> - <timestamp of receival from server>.
+    */
+
     grades: {
       type: Map,
       // of: Object
     },
     /*
-    isi grades adalah pasangan <id murid> - <value> dengan <value> adalah Object yang memiliki 2 pasangan key - value berikut:
-    1) "total_grade" - <nilai dengan range 0-100>
-    2) "longtext_grades" - < Object yg memiliki pasangan-pasangan key-value = <idx soal uraian>-<nilai dengan range 0-bobot soal> >
+    Grades contains the pair of <student's id> - <value>,
+    with <value> is an Object that has another two pair of key - value:
+    1) "total_grade" - <score with range of 0 - 100>
+    2) "longtext_grades" - <Object that has pairs of key-value = <long text question idx> - <score with the range of 0 - question weight>>
 
-    contoh value grades:
+    Example of grade value:
     Map {
       5e9486667f32fa38946dc963: {
         total_grade: 95,
@@ -89,88 +167,21 @@ const AssessmentSchema = new Schema(
       }
     }
 
-    - jika suatu soal uraian sudah dinilai, pasangan <idx soal uraian> - <nilai dengan range 0-bobot soal> akan ditambahkan ke dalam longtext_grades.
-      jika belum dinilai, pasangan tidak ditambahkan.
-    - ketika assessment pertama kali dibuat, atribut grades tidak ada. 
-      atribut grades hanya ada jika:
-      - assessment memiliki soal uraian dan guru sudah menilai minimal 1 jawaban uraian dari 1 murid
-      (jika jawaban uraian seorang murid belum dinilai sama sekali, key id murid tersebut tidak akan ada di atribut grades); atau
-      - assessment tidak memiliki soal uraian dan minimal ada 1 murid yang sudah mengumpulkan jawaban; 
-    - jika murid mengumpulkan assessment yang tidak memiliki soal uraian, total_grades akan dihitung dengan longtext_grades diset menjadi null
-    - (assessments.js, endpoint update grade uraian) 
-      ketika guru selesai menentukan nilai jawaban uraian terakhir dan menyimpannya (longtext_grades sudah lengkap), total_grade akan dihitung.
-      jika longtext_grades belum lengkap, total_grade bernilai null. 
-    */
+    If a long text question is already graded, the <long text question idx> - <score with the range of 0 - question weight> pair will be added to longtext_grades.
+    If it is not graded, then it won't be added.
 
-    submissions_timestamp: {
-      type: Map,
-    },
-    /* 
-    - ketika assessment pertama kali dibuat, atribut ini tidak ada
-    - isi atribut ini adalah pasangan <id murid> - <timestamp ketika submission diterima oleh server>
-    */
+    When an assessment is made for the first time, it won't have this attribute.
+    It will only has this attribute when:
+    - The assessment has long text question dan teacher has scored at least 1 long text question from 1 student.
+      (If a student's long text question answer is not yet scored, that sudent's id key id will not be in attributes grades) or
+    - Assessment doesn't has long text question dan there is at least 1 student that has submitted their answer.
 
-    submissions: {
-      type: Map,
-    },
-    /* 
-    - ketika assessment pertama kali dibuat, atribut ini tidak ada
-    - isi atribut ini adalah pasangan <id murid> - <array jawaban>. berikut adalah contoh submission untuk assessment dengan 
-    tipe soal nomor 1 sampai 4: radio, checkbox, isian, esai.
-    Map {
-      5f44d55155cedc284824f5c1: [
-        ["B"], ["A", "D"], [null, "jawaban isian", ""], ["jawaban esai"]
-      ],
-      5f5d8ffc6dd1f432b4f45ebb: [
-        [], [], [], []
-      ]
-    }
-    - jumlah elemen <array jawaban> sama dengan jumlah pertanyaan (questions.length) pada assessment
-    - <array jawaban>[i] adalah jawaban murid untuk pertanyaan di index i (questions[i])
-    - semua elemen <array jawaban> adalah array yang memiliki jumlah elemen >= 0
-    - jumlah elemen di dalam elemen <array jawaban> soal bertipe isian tidak dipastikan sama dengan banyaknya kotak isian.
-    misal ada satu soal isian yang ada 3 kotak isian (answer.length untuk soal ini = 3) dan 
-    misal murid hanya menulis jawaban pada kotak isian ke-2. setelah disubmit, array jawaban 
-    untuk soal ini = [null (sebenernya undefined, tapi diconvert jadi null oleh JSON.stringify saat membuat http request), "jawaban 2"].
+    - If student  submit an assessment that has no long text question, total_grades will be counted with longtext_grades is set to null.
+    - (assessments.js, endpoint update of long text question grade)
+      When teacher finish determine the last long text question answer grade and save it (longtext_grades is complete), total_grade will be counted.
+      If longtext_grades is not complete, total_grade equals to null.
     */
-
-    type: {
-      type: String,
-      required: true,
-    },
-    // value atribut ini: "Kuis" atau Ujian"
-
-    suspects: [ObjectId], // id murid
-    question_weight: {
-      radio: Number,
-      checkbox: Number,
-      shorttext: Number,
-      longtext: Object,
-    },
-    /* 
-    contoh value question_weight:
-    {
-      radio: 5,
-      checkbox: 5,
-      shorttext: 3,
-      longtext: {
-        0: 20,
-        1: 20,
-        2: 20
-      }
-    }
-    - value "longtext" adalah Object yg memiliki pasangan-pasangan key-value: <index soal uraian>-<bobot>. 
-    pasangan <index soal non uraian>-<bobot> tidak akan dimasukan di "longtext". 
-    <bobot> bisa bernilai null. <bobot> bernilai null ketika assessment disimpan dengan kondisi nilai bobot kosong untuk soal uraian tersebut.
-    - "<tipe soal>: null" jika dan hanya jika assessment tidak memiliki soal bertipe <tipe soal>. 
-    contoh: assessment A cuma punya soal pg, maka isi question_weight: {
-      radio: <nilai bobot pg>,
-      checkbox: null,
-      shorttext: null,
-      longtext: null
-    } 
-    - bobot semua soal yang ada pada suatu assessment dipastikan diisi dan tidak bernilai <= 0
-    */
+    suspects: [ObjectId], // student's id
   },
   { timestamps: true }
 );

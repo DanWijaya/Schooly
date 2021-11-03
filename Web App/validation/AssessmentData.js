@@ -3,12 +3,12 @@ const isEmpty = require("is-empty");
 
 module.exports = function validateAssessmentInput(data) {
   let errors = {};
-  // data keys: name, subject, description, type
+  
   console.log(data);
   for (let key of Object.keys(data)) {
     if (key !== "posted") {
       if (isEmpty(data[key])) {
-        data[key] = "";
+        data[key] = ""; // data keys are name, subject, description, and type.
       }
     }
   }
@@ -40,6 +40,7 @@ module.exports = function validateAssessmentInput(data) {
   if (!data.class_assigned.length) {
     errors.class_assigned = "Kelas yang ditujukan belum diisi";
   }
+
   if (!data.questions.length) {
     errors.questions = "Soal belum diberikan!";
   }

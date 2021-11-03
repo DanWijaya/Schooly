@@ -1,16 +1,17 @@
-// 'use strict'
+const FileTask = require("../../../models/lampiran/FileTask");
 const express = require("express");
 const router = express.Router();
-const FileTask = require("../../../models/lampiran/FileTask");
 const multer = require("multer");
 var AWS = require("aws-sdk");
 var fs = require("fs");
+const keys = require("../../../config/keys");
 const { ObjectId } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
-const keys = require("../../../config/keys");
 
 // Multer ships with storage engines DiskStorage and MemoryStorage
-// And Multer adds a body object and a file or files object to the request object. The body object contains the values of the text fields of the form, the file or files object contains the files uploaded via the form.
+// And Multer adds a body object and a file or files object to the request object.
+// The body object contains the values of the text fields of the form,
+// the file or files object contains the files uploaded via the form.
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
@@ -20,7 +21,7 @@ AWS.config.update({
   region: keys.awsKey.AWS_REGION,
 });
 
-// Get all Documents Routes
+// Get all documents Routes.
 router.get("/", (req, res, next) => {
   FileTask.find(
     {},
@@ -119,13 +120,12 @@ router.get("/download/:id", (req, res) => {
     });
 });
 
-// Router to delete a DOCUMENT file
-
+// Route to delete a DOCUMENT file.
 router.delete("/all/:id", async (req, res) => {
   try {
-    // req.params.id ini berupa id dari task.
+    // req.params.id is the id of the task.
     const file_to_delete = await FileTask.find({ task_id: req.params.id });
-    // file_to_delete ini berupa ID dari file filenya.
+    // file_to_delete is the id of the files.
     if (!file_to_delete) {
       return res.json("No file tasks to delete");
     }
@@ -164,13 +164,13 @@ router.delete("/all/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   const { file_to_delete } = req.body;
-  // file_to_delete ini berupa ID dari file filenya.
+  // file_to_delete is the id of the files.
   console.log("Ini file to deletenya: ", file_to_delete);
   if (!file_to_delete) {
     return res.json("No file tasks to delete");
   }
   try {
-    // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
+    // if file_to_delete is undefined, means that the object is deleted and hence all files should be deleted.
     console.log("Ini id list: ", id_list);
     const results = await FileTask.find({ _id: { $in: id_list } });
     console.log(results);

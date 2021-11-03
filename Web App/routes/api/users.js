@@ -1,28 +1,24 @@
-const express = require("express");
-const router = express.Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const keys = require("../../config/keys");
-// const passport = require("passport");
-
-// Load input validation
-const {
-  validateRegisterInput1,
-  validateRegisterInput2,
-} = require("../../validation/Register");
-const validateLoginInput = require("../../validation/Login");
-// const validateUserDataInput = require("../../validation/UserData")
-
-// Load User model
 const User = require("../../models/user_model/User");
 const Class = require("../../models/Class");
 const Student = require("../../models/user_model/Student");
 const Teacher = require("../../models/user_model/Teacher");
 const Admin = require("../../models/user_model/Admin");
 const SuperAdmin = require("../../models/user_model/SuperAdmin");
-const { ObjectId } = require("mongodb");
 const Validator = require("validator");
 const isEmpty = require("is-empty");
+const express = require("express");
+const router = express.Router();
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+// const passport = require("passport");
+const keys = require("../../config/keys");
+const {
+  validateRegisterInput1,
+  validateRegisterInput2,
+} = require("../../validation/Register");
+const validateLoginInput = require("../../validation/Login");
+// const validateUserDataInput = require("../../validation/UserData")
+const { ObjectId } = require("mongodb");
 
 const sessionExpirySeconds = 604800;
 
@@ -42,12 +38,9 @@ router.post("/validateRegister/:pageNum", (req, res) => {
 // @route POST api/users/register
 // @desc Register user
 // @access Public
-// router.post("/register", (req, res) => {
-//   // Form validation
-
 router.post("/register", async (req, res) => {
   try {
-    // Form validation
+    // Form validation.
     const { errors: errors1, isValid: isValid1 } = validateRegisterInput1(
       req.body
     );
@@ -55,7 +48,7 @@ router.post("/register", async (req, res) => {
       req.body
     );
 
-    // Check validation
+    // Check validation.
     if (!isValid1 || !isValid2) throw { ...errors1, ...errors2 };
     // return res.status(400).json({ ...errors1, ...errors2 });
 
@@ -84,17 +77,17 @@ router.post("/register", async (req, res) => {
 // @desc Login user and return JWT token
 // @access Public
 router.post("/login", async (req, res) => {
-  // Form validation
+  // Form validation.
   try {
     const { errors, isValid } = validateLoginInput(req.body);
 
-    // Check validation
+    // Check validation.
     if (!isValid) throw errors;
 
     const email = req.body.email;
     const password = req.body.password;
 
-    // Find user by email
+    // Find user by email.
     const user = await User.findOne({ email: email });
     if (!user) throw { email: "Email tidak ditemukan" };
     if (!user.active) throw { email: "Akun ini belum aktif" };
@@ -107,26 +100,24 @@ router.post("/login", async (req, res) => {
       role: user.role,
       avatar: user.avatar,
 
-      //Informasi Pribadi
+      // Personal Information
       name: user.name,
       tanggal_lahir: user.tanggal_lahir,
       jenis_kelamin: user.jenis_kelamin,
       sekolah: user.sekolah,
+      unit: user.unit,
 
-      //Kontak
+      // Contacts
       email: user.email,
       phone: user.phone,
       emergency_phone: user.emergency_phone,
       address: user.address,
 
-      //Kontak
+      // Career
       hobi_minat: user.hobi_minat,
       ket_non_teknis: user.ket_non_teknis,
       cita_cita: user.cita_cita,
       uni_impian: user.uni_impian,
-
-      //Unit
-      unit: user.unit,
     };
     if (user.role === "Student") {
       payload.kelas = user.kelas;
@@ -137,7 +128,7 @@ router.post("/login", async (req, res) => {
       payload.class_to_subject = user.class_to_subject;
     }
 
-    // Sign token
+    // Sign token.
     jwt.sign(
       payload,
       keys.secretOrKey,
@@ -177,18 +168,19 @@ router.put("/update/data/:id", async (req, res) => {
     const user = await User.findById(id);
     if (!user) throw { usernotfound: "Pengguna tidak ditemukan" };
 
+    // Personal Information
     user.name = req.body.nama;
     user.tanggal_lahir = req.body.tanggal_lahir;
     user.jenis_kelamin = req.body.jenis_kelamin;
     user.sekolah = req.body.sekolah;
 
-    //Kontak
+    // Contacts
     user.email = req.body.email;
     user.phone = req.body.no_telp;
     user.emergency_phone = req.body.no_telp_darurat;
     user.address = req.body.alamat;
 
-    //Karir
+    // Career
     user.hobi_minat = req.body.hobi_minat;
     user.ket_non_teknis = req.body.ket_non_teknis;
     user.cita_cita = req.body.cita_cita;
@@ -202,19 +194,19 @@ router.put("/update/data/:id", async (req, res) => {
       role: updatedUser.role,
       avatar: updatedUser.avatar,
 
-      // Informasi Pribadi
+      // Personal Information
       name: updatedUser.name,
       tanggal_lahir: updatedUser.tanggal_lahir,
       jenis_kelamin: updatedUser.jenis_kelamin,
       sekolah: updatedUser.sekolah,
 
-      //Kontak
+      // Contacts
       email: updatedUser.email,
       phone: updatedUser.phone,
       emergency_phone: updatedUser.emergency_phone,
       address: updatedUser.address,
 
-      //Karir
+      // Career
       hobi_minat: updatedUser.hobi_minat,
       ket_non_teknis: updatedUser.ket_non_teknis,
       cita_cita: updatedUser.cita_cita,
@@ -577,10 +569,10 @@ router.put("/teacher/:teacherId", (req, res) => {
 
 router.post("/registerStudentsBulk", (req, res) => {
   let { classes, users } = req.body;
-  // terima req.body.classes
+  // Receive req.body.classes.
   let class_map = new Map();
 
-  // isi dari classes_map (key,value) = (nama kelas, ObjectId)
+  // classes_map (key,value) = (nama kelas, ObjectId).
   Class.find({ name: { $in: classes } })
     .then((result) => {
       result.forEach((item) => class_map.set(item.name, item._id));
@@ -609,7 +601,7 @@ router.post("/registerStudentsBulk", (req, res) => {
 
 // SuperAdmin Only
 router.put("/updateUnitAdmins", (req, res) => {
-  // userToUnit is an object with (key,value) = (userId,unitId)
+  // userToUnit is an object with (key,value) = (userId,unitId).
   let operations = [];
   for (let [adminId, unitId] of Object.entries(req.body)) {
     let updateArgument = {};

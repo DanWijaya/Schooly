@@ -1,13 +1,11 @@
+const Unit = require("../../models/Unit");
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const keys = require("../../config/keys");
-
-const validateUnitInput = require("../../validation/UnitData");
-const Unit = require("../../models/Unit");
-
 const mongoose = require("mongoose");
+const keys = require("../../config/keys");
+const validateUnitInput = require("../../validation/UnitData");
 
 router.post("/create", (req, res) => {
   const { errors, isValid } = validateUnitInput(req.body);

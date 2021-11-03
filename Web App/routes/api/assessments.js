@@ -1,19 +1,18 @@
+const Assessment = require("../../models/Assessment");
 const Validator = require("validator");
 const isEmpty = require("is-empty");
-
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const keys = require("../../config/keys");
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
+const keys = require("../../config/keys");
 const mailgun = require("mailgun-js")({
   apiKey: keys.mailGunService.apiKey,
   domain: keys.mailGunService.domain,
 });
-const passport = require("passport");
 const validateAssessmentInput = require("../../validation/AssessmentData");
-const Assessment = require("../../models/Assessment");
 const { Double } = require("mongodb");
 
 router.post("/create", (req, res) => {
@@ -115,21 +114,20 @@ router.put("/update/:id", (req, res) => {
         if (assessmentData.submissions) {
           let weights = req.body.question_weight;
           for (const [key, value] of assessmentData.submissions.entries()) {
-            // key berisi id murid, sedangkan value berisi semua jawaban murid tersebut untuk assessment ini.
+            // Key contains student's id, whereas value contains all students' answer for this assessment.
             let point_accumulator = 0;
             let weight_accumulator = 0;
             let longtextGrade = {};
             let isLongtextQuestionAdded = false;
             for (let i = 0; i < questions.length; i++) {
-              // 1. jika soal ini dihapus, semua jawaban murid akan diabaikan dan soal ini tidak masuk dalam penilaian
-
-              // 2. jika soal ini sudah ada sebelum perubahan assessment dilakukan, (baik mengalami perubahan maupun tidak),
+              // If this question is deleted, all of the students' answer will be ignored and this question won't be involved in grading.
+              // If this question is already created before a change of the assessment is made, (whether there is a change or not),
               if (transformIdx[i] !== -1) {
-                // value.length sudah dipastikan sama dengan questions.length sebelum assessment diubah (ViewAssessmentStudent.js)
-                // value[i] adalah jawaban murid untuk pertanyaan ke-(i + 1), misal value[0] adalah jawaban murid untuk pertanyaan pertama.
-                // value[i] sudah dipastikan berbentuk array (tidak mungkin undefined atau null). value[i] bisa berupa array kosong.
-                // questions[i].answer adalah kunci jawaban untuk pertanyaan ke-(i + 1).
-                // value dan questions[i].answer adalah array of array
+                // value.length is already ensured equal to questions.length before assessment is changed (ViewAssessmentStudent.js).
+                // value[i] is the student's answer for question-(i + 1), for example value[0] is the student's answer for the first question.
+                // value[i] is an array (so that it can't be undefined atau null). value[i] can contain empty array.
+                // questions[i].answer is the key answer for question-(i + 1).
+                // value and questions[i].answer are array of array.
                 if (questions[i].type === "radio") {
                   if (questions[i].answer[0] === value[transformIdx[i]][0]) {
                     point_accumulator += 1 * weights.radio;
@@ -147,8 +145,8 @@ router.put("/update/:id", (req, res) => {
                   weight_accumulator += 1 * weights.checkbox;
 
                   if (temp_correct > 0) {
-                    // saat pembuatan / sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
-                    // karena itu, questions[i].answer.length pasti tidak 0
+                    // When creating/editing assessment, the question key answer is already ensured not empty.
+                    // Because of that, questions[i].answer.length certainly is not 0.
                     point_accumulator +=
                       (weights.checkbox * temp_correct) /
                       questions[i].answer.length;
@@ -161,8 +159,8 @@ router.put("/update/:id", (req, res) => {
                       temp_correct++;
                     }
                   }
-                  // saat pembuatan / sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
-                  // karena itu, questions[i].answer.length pasti tidak 0
+                  // When creating/editing assessment, the question key answer is already ensured not empty.
+                  // Because of that, questions[i].answer.length certainly is not 0.
                   weight_accumulator += 1 * weights.shorttext;
                   point_accumulator +=
                     (weights.shorttext * temp_correct) /
@@ -182,7 +180,7 @@ router.put("/update/:id", (req, res) => {
                     let newLongtextWeight =
                       req.body.question_weight.longtext[i];
 
-                    // longtext_grade baru = longtext_grade lama * bobot baru / bobot lama
+                    // new longtext_grade = old longtext_grade * new weight / old weight.
                     let newLongtextGrade =
                       (oldLongtextGrade * newLongtextWeight) /
                       oldLongtextWeight;
@@ -191,20 +189,20 @@ router.put("/update/:id", (req, res) => {
                     weight_accumulator += newLongtextWeight;
                     point_accumulator += newLongtextGrade;
                   } else {
-                    // jika perubahan assessment dilakukan sebelum guru selesai memberikan nilai untuk semua jawaban uraian murid ini,
+                    // If a change of assessment is made before the teacher finish grading for all long text question of this student,
                     break;
                   }
                 }
               } else {
-                // 3. jika soal ini baru ditambahkan
+                // If this question is just added.
 
-                // jika soal ini bertipe radio, checkbox, atau isian (dapat dicek secara otomatis),
-                // semua murid dianggap tidak menjawab soal ini
+                // If this question can be checked automatically (multiple choice, checkbox, or short text),
+                // all student is considered haven't answered this question.
                 if (questions[i].type !== "longtext") {
                   weight_accumulator += 1 * weights[questions[i].type];
                 } else {
-                  // jika soal ini bertipe uraian, batalkan penilaian.
-                  // penilaian nilai total akan dilakukan setelah guru sudah memberikan nilai kepada semua soal uraian secara manual
+                  // If this question is a long text question type, cancel the automatic grading.
+                  // Total grade will be done after teacher already grade all long text question manually.
                   isLongtextQuestionAdded = true;
                   break;
                 }
@@ -212,7 +210,7 @@ router.put("/update/:id", (req, res) => {
             }
 
             if (!isLongtextQuestionAdded) {
-              // weight_accumulator sudah dipastikan tidak 0
+              // weight_accumulator is already ensured not 0.
               let score = (100 * point_accumulator) / weight_accumulator;
               if (assessmentData.grades) {
                 assessmentData.grades.set(key, {
@@ -293,26 +291,26 @@ router.put("/submit/:id", (req, res) => {
           break;
         }
       }
-      // jika tidak ada soal uraian, nilai total bisa langsung dihitung
+      // If there is no long text question, total score can be counted instantly.
       if (!hasLongtextQuestion) {
         if (!assessmentData.grades) {
-          // jika murid ini adalah murid pertama yang submit jawaban
+          // If this student is the first student who submit the answer.
           grades = new Map();
         } else {
           grades = new Map(assessmentData.grades);
         }
 
         // if (!grades.has(userId)) {
-        let studentId = userId; //agar sebagian kode bisa direuse di updateGrade
+        let studentId = userId; // So that half of the code can be reused in updateGrade.
 
         let weights = assessmentData.question_weight;
         let point_accumulator = 0;
         let weight_accumulator = 0;
         for (let i = 0; i < questions.length; i++) {
-          // answers.length sudah dipastikan sama dengan questions.length di ViewAssessmentStudent.js
-          // answers[i] adalah jawaban murid untuk pertanyaan ke-(i + 1), misal answer[0] adalah jawaban murid untuk pertanyaan pertama.
-          // questions[i].answer adalah kunci jawaban untuk pertanyaan ke-(i + 1).
-          // answers dan questions[i].answer adalah array of array
+          // answers.length is already ensured same with questions.length in ViewAssessmentStudent.js.
+          // answers[i] is the student's answer for question-(i + 1), for example answer[0] is the student's answer for the first question.
+          // questions[i].answer is the key answer for question-(i + 1).
+          // answers dan questions[i].answer are array of array.
           if (questions[i].type === "radio") {
             if (questions[i].answer[0] === answers[i][0]) {
               point_accumulator += 1 * weights.radio;
@@ -330,8 +328,8 @@ router.put("/submit/:id", (req, res) => {
             weight_accumulator += 1 * weights.checkbox;
 
             if (temp_correct > 0) {
-              // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
-              // karena itu, questions[i].answer.length pasti tidak 0
+              // When creating/editing assessment, the question key answer is already ensured not empty.
+              // Because of that, questions[i].answer.length certainly is not 0.
               point_accumulator +=
                 (weights.checkbox * temp_correct) / questions[i].answer.length;
             }
@@ -342,8 +340,8 @@ router.put("/submit/:id", (req, res) => {
                 temp_correct++;
               }
             }
-            // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
-            // karena itu, questions[i].answer.length pasti tidak 0
+            // When creating/editing assessment, the question key answer is already ensured not empty.
+            // Because of that, questions[i].answer.length certainly is not 0.
             weight_accumulator += 1 * weights.shorttext;
             point_accumulator +=
               (weights.shorttext * temp_correct) / questions[i].answer.length;
@@ -354,10 +352,9 @@ router.put("/submit/:id", (req, res) => {
           total_grade: parseFloat(score.toFixed(1)),
           longtext_grades: null,
         });
-        // }
 
         assessmentData.grades = grades;
-      } // jika ada soal uraian, penghitungan nilai akan ditunda hingga semua jawaban uraian untuk suatu murid sudah dinilai
+      } // If there is a long text question, the final score will not be counted first until every long text question answer for a student already graded.
       assessmentData.submissions = submissions;
       assessmentData.submissions_timestamp = submissions_timestamp;
 
@@ -513,17 +510,17 @@ router.put("/grades", (req, res) => {
 
       let newLtGrades;
       let grades;
-      // pas pertama kali assessment dibuat, atribut grades tidak ada.
-      // jika murid ini adalah murid pertama yang diberi nilai,
+      // When an assessment is made for the first time, it won't have this attribute.
+      // If this student is the first graded student,
       if (!assessmentData.grades) {
         newLtGrades = {};
         grades = new Map();
       } else {
-        // jika murid ini bukan murid pertama yang dinilai
+        // If this student is not the first graded student,
         grades = new Map(assessmentData.grades);
 
-        // jika semua jawaban uraian suatu murid belum dinilai, atribut grades pada assessment tidak akan menyimpan data murid tersebut
-        // jika jawaban uraian murid ini belum pernah dinilai (ini adalah nilai uraian pertama yang diperoleh)
+        // If all long text answer question of a student is not yet graded, grades attribute in assessment will not save that student's data.
+        // If long text answer of this student has not been graded yet (This is the first long text question score that is gained).
         if (!assessmentData.grades.has(studentId)) {
           newLtGrades = {};
         } else {
@@ -533,7 +530,7 @@ router.put("/grades", (req, res) => {
       newLtGrades[questionIdx] = longtextGrade;
 
       if (longtextQstCount === Object.keys(newLtGrades).length) {
-        // jika nilai soal uraian sudah lengkap, hitung nilai total murid ini
+        // If all of long text question is already graded, count the final score for this student.
 
         let answers = assessmentData.submissions.get(studentId);
         let point_accumulator = Object.values(newLtGrades).reduce(
@@ -544,10 +541,10 @@ router.put("/grades", (req, res) => {
         );
 
         for (let i = 0; i < questions.length; i++) {
-          // answers.length sudah dipastikan sama dengan questions.length di ViewAssessmentStudent.js
-          // answers[i] adalah jawaban murid untuk pertanyaan ke-(i + 1), misal answer[0] adalah jawaban murid untuk pertanyaan pertama.
-          // questions[i].answer adalah kunci jawaban untuk pertanyaan ke-(i + 1).
-          // answers dan questions[i].answer adalah array of array
+          // answers.length is already ensured same with questions.length in ViewAssessmentStudent.js.
+          // answers[i] is the student's answer for question-(i + 1), for example answer[0] is the student's answer for the first question.
+          // questions[i].answer is the key answer for question-(i + 1).
+          // answers dan questions[i].answer are array of array.
           if (questions[i].type === "radio") {
             if (questions[i].answer[0] === answers[i][0]) {
               point_accumulator += 1 * weights.radio;
@@ -566,8 +563,8 @@ router.put("/grades", (req, res) => {
             weight_accumulator += 1 * weights.checkbox;
 
             if (temp_correct > 0) {
-              // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
-              // karena itu, questions[i].answer.length pasti tidak 0
+              // When creating/editing assessment, the question key answer is already ensured not empty.
+              // Because of that, questions[i].answer.length certainly is not 0.
               point_accumulator +=
                 (weights.checkbox * temp_correct) / questions[i].answer.length;
             }
@@ -579,8 +576,8 @@ router.put("/grades", (req, res) => {
               }
             }
 
-            // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
-            // karena itu, questions[i].answer.length pasti tidak 0
+            // When creating/editing assessment, the question key answer is already ensured not empty.
+            // Because of that, questions[i].answer.length certainly is not 0.
             weight_accumulator += 1 * weights.shorttext;
             point_accumulator +=
               (weights.shorttext * temp_correct) / questions[i].answer.length;
@@ -594,7 +591,7 @@ router.put("/grades", (req, res) => {
           longtext_grades: newLtGrades,
         });
       } else {
-        // jika nilai uraian belum lengkap
+        // If not all of the long text question is finished graded.
         grades.set(studentId, {
           total_grade: null,
           longtext_grades: newLtGrades,
@@ -649,11 +646,12 @@ router.post("/validity", (req, res) => {
   return res.status(200);
 });
 
-// Yanti's request to get the difficulty ranking of the questions.
+// Assessment Analytics
+// Get the difficulty ranking of the questions.
 router.get("/qnsDifficultyRanking/:id", async (req, res) => {
   let { id } = req.params;
 
-  //Dapatin Kunci Jawabannya dulu
+  // Get the key answer first.
   const getKeyAnswers = new Promise((resolve, reject) => {
     Assessment.findById(id, (err, assessmentData) => {
       if (!assessmentData) reject("Assessment not found");
@@ -676,7 +674,7 @@ router.get("/qnsDifficultyRanking/:id", async (req, res) => {
   try {
     const result = await getKeyAnswers;
     const { key_answers, assessmentData } = result;
-    // Setelah itu diproses jawabannya.
+    // Then process the answers.
     let { submissions } = assessmentData;
     if (Object.keys(submissions).length == 0) {
       return res.status(404).json("Submission for this assessment is empty");
@@ -704,7 +702,7 @@ router.get("/qnsDifficultyRanking/:id", async (req, res) => {
         })
         .map((obj) => obj.ind + 1);
 
-      //Hasilnya berupa nomor nomor soal. Pertama yang paling dikit benar, terakhir yang paling banyak benar.
+      // The results will the question numbers, from the hardest to easiest.
       console.log("Get qns difficulty completed");
       return res.json(qns_ranking);
     }

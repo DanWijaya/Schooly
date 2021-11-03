@@ -1,7 +1,7 @@
+const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const User = require("./User");
-const { ObjectId } = require("mongodb");
 
 const Student = User.discriminator(
   "Student",

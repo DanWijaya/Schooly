@@ -1,16 +1,20 @@
-const express = require("express");
-const router = express.Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const FileAvatar = require("../../../models/lampiran/FileAvatar");
 const User = require("../../../models/user_model/User");
-
+const express = require("express");
+const router = express.Router();
 const multer = require("multer");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 var AWS = require("aws-sdk");
 var fs = require("fs");
 const { ObjectId } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
 const keys = require("../../../config/keys");
+
+// Multer ships with storage engines DiskStorage and MemoryStorage
+// And Multer adds a body object and a file or files object to the request object.
+// The body object contains the values of the text fields of the form,
+// the file or files object contains the files uploaded via the form.
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
@@ -20,7 +24,7 @@ AWS.config.update({
   region: keys.awsKey.AWS_REGION,
 });
 
-// route to upload a pdf document file
+// Route to upload file.
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
 router.post("/upload/:user_id", upload.single("avatar"), async (req, res) => {
   try {
@@ -93,19 +97,19 @@ router.post("/upload/:user_id", upload.single("avatar"), async (req, res) => {
       role: user.role,
       // avatar: user.avatar,
 
-      //Informasi Pribadi
+      // Personal Information
       name: user.name,
       tanggal_lahir: user.tanggal_lahir,
       jenis_kelamin: user.jenis_kelamin,
       sekolah: user.sekolah,
 
-      //Kontak
+      // Contacts
       email: user.email,
       phone: user.phone,
       emergency_phone: user.emergency_phone,
       address: user.address,
 
-      //Kontak
+      // Career
       hobi_minat: user.hobi_minat,
       ket_non_teknis: user.ket_non_teknis,
       cita_cita: user.cita_cita,
@@ -152,10 +156,10 @@ router.get("/download/:id", (req, res) => {
     });
 });
 
-// Router to delete a DOCUMENT file
+// Router to delete a DOCUMENT file.
 router.delete("/:id", (req, res) => {
   const { file_to_delete } = req.body;
-  // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
+  // if file_to_delete is undefined, means that the object is deleted and hence all files should be deleted.
   if (!file_to_delete) {
     FileAvatar.find({ user_id: req.params.id }).then((avatars) => {
       let id_list = avatars.map((m) => Object(m._id));
@@ -171,7 +175,7 @@ router.delete("/:id", (req, res) => {
           if (!results) {
             return res.status(404).json(err);
           }
-          //Now Delete the file from AWS-S3
+          // Now Delete the file from AWS-S3.
           // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObject-property
           let s3bucket = new AWS.S3();
           file_to_delete.forEach((file) => {

@@ -1,15 +1,17 @@
-// 'use strict'
+const FileMaterial = require("../../../models/lampiran/FileMaterial");
 const express = require("express");
 const router = express.Router();
-const FileMaterial = require("../../../models/lampiran/FileMaterial");
 const multer = require("multer");
 var AWS = require("aws-sdk");
 var fs = require("fs");
 const { ObjectId } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
 const keys = require("../../../config/keys");
+
 // Multer ships with storage engines DiskStorage and MemoryStorage
-// And Multer adds a body object and a file or files object to the request object. The body object contains the values of the text fields of the form, the file or files object contains the files uploaded via the form.
+// And Multer adds a body object and a file or files object to the request object.
+// The body object contains the values of the text fields of the form,
+// the file or files object contains the files uploaded via the form.
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
@@ -19,7 +21,7 @@ AWS.config.update({
   region: keys.awsKey.AWS_REGION,
 });
 
-// route to upload a pdf document file
+// Route to upload a PDF document file.
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
 router.post(
   "/upload/:material_id",
@@ -104,11 +106,11 @@ router.get("/download/:id", (req, res) => {
 
 router.delete("/all/:id", async (req, res) => {
   try {
-    // req.params.id ini berupa id dari material.
+    // req.params.id is the id of the material.
     const file_to_delete = await FileMaterial.find({
       material_id: req.params.id,
     });
-    // file_to_delete ini berupa ID dari file filenya.
+    // file_to_delete is the id of the files.
     if (!file_to_delete) {
       return res.json("No file materials to delete");
     }
@@ -145,10 +147,10 @@ router.delete("/all/:id", async (req, res) => {
   }
 });
 
-// Router to delete a DOCUMENT file
+// Router to delete a DOCUMENT file.
 router.delete("/:id", async (req, res) => {
   const { file_to_delete } = req.body;
-  // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
+  // if file_to_delete is undefined, means that the object is deleted and hence all files should be deleted.
   if (!file_to_delete) {
     return res.json("No file materials to delete");
   }

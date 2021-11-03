@@ -20,16 +20,16 @@ const isEmpty = require("is-empty");
 const initialState = {
   isAuthenticated: false,
   user: {},
+  all_users: [],
+  all_admins: [],
   all_teachers: [],
   all_teachers_map: new Map(),
   all_students: [],
-  all_admins: [],
-  all_users: [],
   students_by_class: [],
   loading: false,
-  pending_students: [],
-  pending_teachers: [],
   pending_admins: [],
+  pending_teachers: [],
+  pending_students: [],
   selectedUser: {},
   retrieved_users: new Map(),
   all_roles: {
@@ -49,15 +49,32 @@ export default function (state = initialState, action) {
         isAuthenticated: !isEmpty(action.payload),
         user: action.payload,
       };
-    // case SET_DROPBOX_TOKEN:
-    //   return {
-    //     ...state,
-    //     dropbox_token: action.payload,
-    //   };
     case USER_LOADING:
       return {
         ...state,
         loading: true,
+      };
+    case GET_USERS:
+      let retrieved = new Map();
+      action.payload.map((user) => retrieved.set(user._id, user));
+      return {
+        ...state,
+        retrieved_users: retrieved,
+      };
+    case GET_ONE_USER: // Teacher or student or anyone.
+      return {
+        ...state,
+        selectedUser: action.payload,
+      };
+    case GET_AVATAR:
+      return {
+        ...state,
+        user: { ...state.user, avatar: action.payload },
+      };
+    case GET_ALL_ADMINS:
+      return {
+        ...state,
+        all_admins: action.payload,
       };
     case GET_ALL_TEACHERS:
       return {
@@ -74,48 +91,31 @@ export default function (state = initialState, action) {
         ...state,
         all_students: action.payload,
       };
-    case GET_ALL_ADMINS:
-      return {
-        ...state,
-        all_admins: action.payload,
-      };
     case GET_STUDENTS_BY_CLASS:
       return {
         ...state,
         students_by_class: action.payload,
-      };
-    case GET_ONE_USER: //teacher or student or anyone lah.
-      return {
-        ...state,
-        selectedUser: action.payload,
-      };
-    case GET_USERS:
-      let retrieved = new Map();
-      action.payload.map((user) => retrieved.set(user._id, user));
-      return {
-        ...state,
-        retrieved_users: retrieved,
-      };
-    case GET_PENDING_STUDENTS:
-      return {
-        ...state,
-        pending_students: action.payload,
-      };
-    case GET_PENDING_TEACHERS:
-      return {
-        ...state,
-        pending_teachers: action.payload,
       };
     case GET_PENDING_ADMINS:
       return {
         ...state,
         pending_admins: action.payload,
       };
-    case GET_AVATAR:
+    case GET_PENDING_TEACHERS:
       return {
         ...state,
-        user: { ...state.user, avatar: action.payload },
+        pending_teachers: action.payload,
       };
+    case GET_PENDING_STUDENTS:
+      return {
+        ...state,
+        pending_students: action.payload,
+      };
+    // case SET_DROPBOX_TOKEN:
+    //   return {
+    //     ...state,
+    //     dropbox_token: action.payload,
+    //   };
     default:
       return state;
   }
