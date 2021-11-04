@@ -255,7 +255,7 @@ router.get("/getTeachers/:unitId", (req, res) => {
     .sort({ name: 1 })
     .then((users) => {
       if (!users.length) console.log("No teachers yet in Schooly System");
-      else return res.json(users);
+      return res.json(users);
     })
     .catch((err) => {
       console.error("Get teachers failed");
@@ -272,8 +272,9 @@ router.get("/getStudents/:unitId", (req, res) => {
   Student.find({ active: true, unit: unitId })
     .sort({ name: 1 })
     .then((users) => {
+      console.log("Ini studentsnya : ", users);
       if (!users.length) console.log("No students yet in Schooly System");
-      else return res.json(users);
+      return res.json(users);
     })
     .catch((err) => {
       console.error("Get students failed");
@@ -290,8 +291,8 @@ router.get("/getAdmins/:unitId", (req, res) => {
   Admin.find({ active: true })
     .sort({ name: 1 })
     .then((users) => {
-      if (!users) console.log("No unit admins yet in Schooly System");
-      else return res.json(users);
+      if (!users.length) console.log("No unit admins yet in Schooly System");
+      return res.json(users);
     })
     .catch((err) => {
       console.error("Get admins failed");
@@ -304,8 +305,8 @@ router.get("/getAllAdmins", (req, res) => {
   Admin.find({ active: true })
     .sort({ name: 1 })
     .then((users) => {
-      if (!users) console.log("No unit admins yet in Schooly System");
-      else return res.json(users);
+      if (!users.length) console.log("No unit admins yet in Schooly System");
+      return res.json(users);
     })
     .catch((err) => {
       console.error("Get all admins failed");
@@ -344,7 +345,7 @@ router.get("/getUsers", (req, res) => {
   User.find({ _id: { $in: userIds }, active: true })
     .then((users) => {
       console.log("usernya ini : ", users);
-      if (!users.length) throw "Users with the ids not found";
+      if (!users.length) console.log("Users in the database still empty");
       return res.json(users);
     })
     .catch((err) => {

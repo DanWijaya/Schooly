@@ -214,7 +214,7 @@ function ManageUsersToolbar(props) {
               actions={["Hapus"]}
               row={null}
               handleActionOnClick={[OpenDialogCheckboxDelete]}
-              rowCount={listCheckbox.length === 0}
+              checked={listCheckbox.length === 0}
             />
             {CheckboxDialog("Delete", "Student")}
           </Grid>

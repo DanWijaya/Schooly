@@ -9,11 +9,15 @@ import {
   deleteUser,
 } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import { getStudentsByClass } from "../../../actions/UserActions";
+import {
+  getStudentsByClass,
+  bulkSetUserDeactivated,
+} from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import DeactivateDialog from "../../misc/dialog/DeactivateDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -128,7 +132,6 @@ function ManageUsersToolbar(props) {
     searchFilterHint,
     updateSearchFilter,
   } = props;
-  // OpenDialogCheckboxApprove
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property, role);
@@ -216,7 +219,7 @@ function ManageUsersToolbar(props) {
           <Grid item>
             <OptionMenu
               actions={["Nonaktifkan", "Hapus"]}
-              rowCount={listCheckbox.length === 0}
+              ch={listCheckbox.length === 0}
               handleActionOnClick={[
                 OpenDialogCheckboxDisable,
                 OpenDialogCheckboxDelete,
@@ -488,7 +491,13 @@ const useStyles = makeStyles((theme) => ({
 
 function ManageUsers(props) {
   const classes = useStyles();
-  const { setUserDeactivated, deleteUser, getTeachers, getStudents } = props;
+  const {
+    setUserDeactivated,
+    deleteUser,
+    getTeachers,
+    getStudents,
+    bulkSetUserDeactivated,
+  } = props;
   const {
     all_students,
     all_teachers,
@@ -516,6 +525,7 @@ function ManageUsers(props) {
   // Checkbox Dialog
   // const [openApproveCheckboxDialogStudent, setOpenApproveCheckboxDialogStudent] = React.useState(null);
   // const [openApproveCheckboxDialogTeacher, setOpenApproveCheckboxDialogTeacher] = React.useState(null);
+
   const [
     openDeleteCheckboxDialogStudent,
     setOpenDeleteCheckboxDialogStudent,
@@ -752,6 +762,7 @@ function ManageUsers(props) {
     currentListBooleanStudent = [];
     currentListBooleanTeacher = [];
 
+    console.log("Retrieve users is runned");
     if (Array.isArray(all_students)) {
       all_students
         .filter(
@@ -1088,7 +1099,6 @@ function ManageUsers(props) {
               getComparator(order_student, orderBy_student)
             ).map((row, index) => {
               const labelId = index;
-              console.log(booleanCheckboxStudent);
               return (
                 <div>
                   <Link to={`/lihat-profil/${row._id}`}>
@@ -1252,6 +1262,12 @@ function ManageUsers(props) {
         )}
       </TabPanel>
       {DisableDialog()}
+      {/* <DeactivateDialog
+        open={openDisableCheckboxDialogStudent}
+        onClose={handleCloseCheckboxDisableDialog}
+        itemName="Pengguna terpilih"
+        onAction={() => {
+        }}/> */}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
@@ -1307,4 +1323,5 @@ export default connect(mapStateToProps, {
   getAllTask,
   setUserDeactivated,
   deleteUser,
+  bulkSetUserDeactivated,
 })(ManageUsers);

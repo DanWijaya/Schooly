@@ -351,7 +351,8 @@ export const getAllPendingAdmins = () => (dispatch) => {
       });
     })
     .catch((err) => {
-      console.log("Error in getting Students by class");
+      console.error(err);
+      throw err;
     });
 };
 
@@ -375,8 +376,8 @@ export const bulkSetUserActive = (id_list) => (dispatch) => {
       return res.data;
     })
     .catch((err) => {
-      throw err;
       console.error(err);
+      throw err;
     });
 };
 
@@ -387,21 +388,21 @@ export const setUserDeactivated = (userId) => (dispatch) => {
       return res.data;
     })
     .catch((err) => {
-      throw err;
       console.error(err);
+      throw err;
     });
 };
 
 export const bulkSetUserDeactivated = (id_list) => (dispatch) => {
   let data = { id_list: id_list };
   return axios
-    .put(`/api/users/bulksetuseractive/`, data)
+    .put(`/api/users/bulkSetUserDeactivated/`, data)
     .then((res) => {
       return res.data;
     })
     .catch((err) => {
-      throw err;
       console.error(err);
+      throw err;
     });
 };
 export const deleteUser = (userId) => (dispatch) => {

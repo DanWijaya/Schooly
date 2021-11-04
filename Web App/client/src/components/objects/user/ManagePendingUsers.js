@@ -230,7 +230,7 @@ const ManageUsersToolbar = (props) => {
           <Grid item>
             <OptionMenu
               actions={["Hapus"]}
-              rowCount={listCheckbox.length === 0}
+              checked={listCheckbox.length === 0}
               handleActionOnClick={[OpenDialogCheckboxDelete]}
             />
             {CheckboxDialog("Delete", role)}
