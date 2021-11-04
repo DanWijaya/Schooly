@@ -1,11 +1,11 @@
 import axios from "axios";
+import { BrowserRouter } from "react-router-dom";
 import {
   GET_ALL_TASKS,
   GET_ERRORS,
   GET_SUCCESS_RESPONSE,
   GET_TASKS_BY_CLASS,
 } from "./Types";
-import { BrowserRouter } from "react-router-dom";
 
 // Add Task
 export const createTask = (formData, taskData, history) => (dispatch) => {
@@ -15,14 +15,14 @@ export const createTask = (formData, taskData, history) => (dispatch) => {
       console.log("this is the res", res.data._id);
       console.log("Will run this");
       console.log(formData.has("lampiran_tugas"));
-      // dispatch action. Ada dua atribut. type dan payload
+      // Dispatch actions. There are two attributes, which are type dan payload.
       dispatch({
         type: GET_ERRORS,
         payload: false,
       });
       if (formData.has("lampiran_tugas")) {
         return axios.post(`/api/files/tasks/upload/${res.data._id}`, formData);
-      } // Must return something, if false it won't continue to the next "then"
+      } // Must return something, if false it won't continue to the next "then".
       else {
         return res;
       }
@@ -104,7 +104,7 @@ export const updateTask = (
   taskId,
   history
 ) => (dispatch) => {
-  // formData is the lampiran files
+  // formData is the attachment files.
   return axios
     .put(`/api/tasks/update/${taskId}`, taskData)
     .then((res) => {
@@ -125,7 +125,7 @@ export const updateTask = (
     .then((res) => {
       if (formData.has("lampiran_tugas"))
         return axios.post(`/api/files/tasks/upload/${taskId}`, formData);
-      // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
+        // Must return something, if not it will continue to the next "then".
       else return "Successfully updated task with no lampiran";
     })
     .then((res) => {

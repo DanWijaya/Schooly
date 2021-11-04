@@ -1,39 +1,37 @@
+const User = require("../../models/user_model/User");
 const Validator = require("validator");
 const isEmpty = require("is-empty");
-
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const keys = require("../../config/keys");
 const crypto = require("crypto");
+const passport = require("passport");
+const keys = require("../../config/keys");
 const mailgun = require("mailgun-js")({
   apiKey: keys.mailGunService.apiKey,
   domain: keys.mailGunService.domain,
 });
-const passport = require("passport");
 
 // This is not secure at all to put the apiKey.
-// Load input validation
-// Load User model
+// Load input validation.
+// Load User model.
 
-const User = require("../../models/user_model/User");
-
-// POST to saveresethash
+// POST to saveresethash.
 router.post("/saveresethash", async (req, res) => {
   let result;
   let error_message;
   console.log("Save rest hash is runned");
   try {
-    // Check and make sure the email exists
+    // Check and make sure the email exists.
     const query = User.findOne({ email: req.body.email });
     const foundUser = await query.exec();
 
-    // If the user exists, save their password hash
+    // If the user exists, save their password hash.
     const timeInMs = Date.now();
     const hashString = `${req.body.email}${timeInMs}`;
     const secret = keys.crypto.secret;
-    // The secret key should not be stored here in the code..
+    // The secret key should not be stored here in the code.
 
     const hash = crypto
       .createHmac("sha256", secret)
@@ -46,7 +44,7 @@ router.post("/saveresethash", async (req, res) => {
       timeZone: "Asia/Bangkok",
     });
     foundUser.save((err) => {
-      // Put together the email
+      // Put together the email.
       const emailData = {
         from: `Schoolysystem-no-reply <postmaster@sandboxa9362837cf4f4b1ca75f325216ac2b8e.mailgun.org>`,
         to: foundUser.email,
@@ -54,10 +52,10 @@ router.post("/saveresethash", async (req, res) => {
         html: `Permohonan untuk mengubah kata sandi akun Schooly dengan alamat email ${foundUser.email} dilakukan. Silahkan klik tautan dibawah ini. <b>Tautan ini hanya berlaku selama 5 menit dan hanya bisa digunakan untuk mengubah kata sandi satu kali.</b> <br/><br/> <a href=http://${window.location.hostname}:5000/akun/ubah-katasandi/${foundUser.passwordReset}>Ubah Kata Sandi</a>`,
       };
 
-      // Send it
+      // Send it.
       mailgun.messages().send(emailData, (error, body) => {
         if (error || !body) {
-          // pas kaloa da masalah dgn Mailgunnya ndak bisa send email
+          // When there is a problem with mailgun which is the email can't be sent.
           result = res.send(
             JSON.stringify({ problem: "Terjadi masalah, silahkan coba lagi" })
           );
@@ -67,7 +65,7 @@ router.post("/saveresethash", async (req, res) => {
       });
     });
   } catch (err) {
-    // This is for if the user doesn't exist
+    // This is for if the user doesn't exist.
     result = res.send(
       JSON.stringify({ problem: "Email ini tidak ada di database kami" })
     );
@@ -75,11 +73,11 @@ router.post("/saveresethash", async (req, res) => {
   return result;
 });
 
-// POST to savepassword
+// POST to savepassword.
 router.post("/savepassword", async (req, res) => {
   let result;
   try {
-    // Look up user in the DB based on reset hash
+    // Look up user in the database based on reset hash.
     const query = User.findOne({ passwordReset: req.body.hash });
     const foundUser = await query.exec();
     console.log(foundUser.email);
@@ -89,7 +87,7 @@ router.post("/savepassword", async (req, res) => {
       (current_time.getTime() - foundUser.passwordResetTime.getTime()) / 1000; // in seconds
     let minute_difference = (diff /= 60);
 
-    // If the user exists save their new password
+    // If the user exists save their new password.
     console.log(req.body.password, "PAssword");
     console.log(req.body);
     if (Validator.isEmpty(req.body.password)) {
@@ -117,7 +115,7 @@ router.post("/savepassword", async (req, res) => {
         })
       );
     } else {
-      // Hash password before saving in database
+      // Hash password before saving in database.
       bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(req.body.password, salt, (err, hash) => {
           if (err) throw err;
@@ -139,7 +137,7 @@ router.post("/savepassword", async (req, res) => {
     }
   } catch (err) {
     console.log("There is an error");
-    // If the hash didn't bring up a user, error out
+    // If the hash didn't bring up a user, error out.
     result = res.send(
       JSON.stringify({
         reset_problem:
@@ -184,7 +182,7 @@ router.post("/changepassword", (req, res) => {
         .json({ emailnotfound: "Pengguna dengan email ini tidak ditemukan" });
     }
 
-    // Check password
+    // Check password.
     bcrypt.compare(old_password, user.password).then((isMatch) => {
       if (isMatch) {
         bcrypt.compare(new_password, user.password).then((isMatch) => {
@@ -193,7 +191,7 @@ router.post("/changepassword", (req, res) => {
               new_password: "Kata sandi baru dan lama tidak boleh sama",
             });
 
-          // User matched, then hash the new password before saving to Database.
+          // User matched, then hash the new password before saving to database.
           bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(new_password, salt, (err, hash) => {
               if (err) throw err;

@@ -6,7 +6,7 @@ import {
   GET_SUCCESS_RESPONSE,
 } from "./Types";
 
-// Add material
+// Add Material
 export const createMaterial = (formData, materialData, history) => (
   dispatch
 ) => {
@@ -15,8 +15,8 @@ export const createMaterial = (formData, materialData, history) => (
     .post("/api/materials/create", materialData)
     .then((res) => {
       console.log(formData.getAll("lampiran_materi"));
-      // memebrikan signal ke Store untuk mengubah/menambahkan state aplikasi
-      // kalau secara codenya, dilakukan dgn cara dispatch action
+      // Give signal to Store to change/add the app's state.
+      // From the code persepctive, it is done by dipatching actions.
       dispatch({
         type: GET_ERRORS,
         payload: false,
@@ -29,7 +29,7 @@ export const createMaterial = (formData, materialData, history) => (
           formData
         );
       } else {
-        // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
+        // Must return something, if not it will continue to the next "then".
         console.log("Successfully created material.");
         return res;
       }
@@ -62,7 +62,7 @@ export const getAllMaterials = () => (dispatch) => {
 
 export const getMaterial = (Id, category) => (dispatch) => {
   if (category === "by_author") {
-    // the id will be author's id
+    // The id will be author's id.
     axios
       .get(`/api/materials/viewByAuthor/${Id}`)
       .then((res) => {
@@ -80,7 +80,7 @@ export const getMaterial = (Id, category) => (dispatch) => {
         });
       });
   } else if (category === "by_class") {
-    // the id will be the class id.
+    // The id will be the class' id.
     axios
       .get(`/api/materials/viewByClass/${Id}`)
       .then((res) => {
@@ -159,7 +159,7 @@ export const updateMaterial = (
   materialId,
   history
 ) => (dispatch) => {
-  // formData is the lampiran files
+  // formData is the attachment files.
   return axios
     .put(`/api/materials/update/${materialId}`, materialData)
     .then((res) => {
@@ -188,7 +188,7 @@ export const updateMaterial = (
           `/api/files/materials/upload/${materialId}`,
           formData
         );
-      } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
+      } // Must return something, if not it will continue to the next "then".
       else return res;
     })
     .then((res) => {

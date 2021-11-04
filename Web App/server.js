@@ -4,10 +4,11 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const path = require("path");
-//untuk users punya
+
+// Users
 const users = require("./routes/api/users");
 
-// untuk files punya
+// Files
 const fileMaterials = require("./routes/api/files/fileMaterials");
 const fileAnnouncements = require("./routes/api/files/fileAnnouncements");
 const fileTasks = require("./routes/api/files/fileTasks");
@@ -16,7 +17,7 @@ const fileAvatar = require("./routes/api/files/fileAvatar");
 const fileAssessments = require("./routes/api/files/fileAssessments");
 const fileEvents = require("./routes/api/files/fileEvents");
 
-// untuk objects punya
+// Objects
 const tasks = require("./routes/api/tasks");
 const classes = require("./routes/api/classes");
 const subjects = require("./routes/api/subjects");
@@ -27,7 +28,7 @@ const assessments = require("./routes/api/assessments");
 const events = require("./routes/api/events");
 const units = require("./routes/api/units");
 
-// untuk setting
+// Settings
 const settings = require("./routes/api/settings");
 
 const app = express();
@@ -41,7 +42,6 @@ app.use(
 
 // for parsing application/json
 // app.use(express.json());
-
 app.use(bodyParser.json());
 
 // DB Config
@@ -71,12 +71,14 @@ app.use(passport.initialize());
 // Passport config
 require("./passport")(passport);
 console.log("Check routes");
+
 // Routes
 app.use("/api/users", users);
-app.use("/api/tasks", tasks);
+app.use("/api/units", units);
 app.use("/api/classes", classes);
+app.use("/api/tasks", tasks);
 
-//Handle files routing
+// Handle files routing
 app.use("/api/files/materials", fileMaterials);
 app.use("/api/files/announcements", fileAnnouncements);
 app.use("/api/files/tasks", fileTasks);
@@ -85,7 +87,7 @@ app.use("/api/files/avatar", fileAvatar);
 app.use("/api/files/assessments", fileAssessments);
 app.use("/api/files/events", fileEvents);
 
-//Handle object routing
+// Handle objects routing
 app.use("/api/subjects", subjects);
 app.use("/api/authentication", authentication);
 app.use("/api/announcements", announcements);
@@ -93,11 +95,10 @@ app.use("/api/materials", materials);
 app.use("/api/assessments", assessments);
 app.use("/api/events", events);
 
-//Handle setting routing
+// Handle setting routing
 app.use("/api/settings", settings);
 
-app.use("/api/units", units);
-// Always put this in the end
+// Always put this in the end.
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`Server up and running on port ${port} !`));

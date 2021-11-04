@@ -1,13 +1,11 @@
+const Material = require("../../models/Material");
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const keys = require("../../config/keys");
-
-const validateMaterialInput = require("../../validation/MaterialData");
-const Material = require("../../models/Material");
-
 const mongoose = require("mongoose");
+const keys = require("../../config/keys");
+const validateMaterialInput = require("../../validation/MaterialData");
 
 router.post("/create", (req, res) => {
   const { errors, isValid } = validateMaterialInput(req.body);
@@ -15,7 +13,7 @@ router.post("/create", (req, res) => {
     return res.status(400).json(errors);
   }
 
-  //Check Validation
+  // Check validation.
   let class_assigned = req.body.class_assigned;
   let class_assigned_ids = [];
 
@@ -76,7 +74,7 @@ router.put("/update/:id", (req, res) => {
     });
 });
 
-//Define View one material
+// Define view one material.
 router.get("/viewOne/:id", (req, res) => {
   let id = req.params.id;
   Material.findById(id)
@@ -92,7 +90,7 @@ router.get("/viewOne/:id", (req, res) => {
     });
 });
 
-//Define View classes route
+// Define view classes routes.
 router.get("/viewall", (req, res) => {
   Material.find({})
     .then((materials) => {
@@ -111,7 +109,7 @@ router.get("/viewall", (req, res) => {
 
 router.get("/viewByClass/:id", (req, res) => {
   let id = req.params.id;
-  // if want to get the MongoDB object that has id element in the array.
+  // If the MongoDB object want to be got has id element in the array.
   Material.find({ class_assigned: id })
     .then((materials) => {
       if (!materials.length) console.log("Materials in the class are empty");
@@ -140,7 +138,7 @@ router.get("/viewByAuthor/:id", (req, res) => {
     });
 });
 
-//Define delete routes
+// Define delete routes.
 router.delete("/delete/:id", (req, res) => {
   Material.findByIdAndRemove(req.params.id)
     .then((materials) => {

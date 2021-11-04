@@ -1,15 +1,23 @@
+const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const { ObjectId } = require("mongodb");
 
+// Create Event Schema
 const EventSchema = new Schema(
   {
+    name: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+    },
     unit: {
       type: ObjectId,
       default: null,
     },
-    name: {
-      type: String,
+    author_id: {
+      type: ObjectId,
       required: true,
     },
     location: {
@@ -23,8 +31,6 @@ const EventSchema = new Schema(
       type: Date,
       required: true,
     },
-
-    // elemen pada array ini bernilai: "Student", "Teacher", atau "Admin"
     to: {
       type: [String],
       validate: [
@@ -34,13 +40,7 @@ const EventSchema = new Schema(
         "Pihak penerima tidak boleh kosong",
       ],
     },
-    description: {
-      type: String,
-    },
-    author_id: {
-      type: ObjectId,
-      required: true,
-    },
+    // Element in this array has the value either "Student", "Teacher", or "Administrator".
   },
   { timestamps: true }
 );

@@ -38,7 +38,7 @@ export const getFileSubmitTasks_T = (task_id) => (dispatch) => {
     });
 };
 export const getFileSubmitTasks_AT = (task_id, author_id) => (dispatch) => {
-  //artinya mencari filesubmittasks by tasks and author
+  // Means that find filesubmittasks by tasks and author.
   return axios
     .get(`/api/files/submit_tasks/by_task_author/${task_id}&${author_id}`)
     .then((res) => {

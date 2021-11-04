@@ -20,7 +20,7 @@ module.exports = {
           "This is your Code to view download the Tender document that you requested. Please copy and paste it back in the ap-port site",
         action: {
           button: {
-            color: "#22BC66", // Optional action button color
+            color: "#22BC66", // Optional action button color.
             text: code,
           },
         },

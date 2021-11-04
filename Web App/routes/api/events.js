@@ -1,7 +1,7 @@
+const Event = require("../../models/Event");
 const express = require("express");
 const router = express.Router();
 const validateEventInput = require("../../validation/EventData");
-const Event = require("../../models/Event");
 
 router.post("/create", (req, res) => {
   const { errors, isValid } = validateEventInput(req.body);

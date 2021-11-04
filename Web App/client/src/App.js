@@ -10,13 +10,14 @@ import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import store from "./Store";
 import { setCurrentUser, logoutUser } from "./actions/UserActions";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
 import { ThemeProvider } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import GlobalStyles from "./theme/globalStyles";
+import theme from "./theme";
 // Page Components
 import Footer from "./Footer";
 import Navigation from "./components/navigation/Navigation";
-import Styles from "./Styles";
 // Auth
 import Register from "./components/auth/register/Register";
 import Login from "./components/auth/login/Login";
@@ -184,8 +185,9 @@ class App extends Component {
     return (
       <div>
         <Provider store={store}>
-          <ThemeProvider theme={Styles}>
-            {/*<CssBaseline />*/}
+          <ThemeProvider theme={theme}>
+            {/*CssBaseline*/}
+            <GlobalStyles />
             <Router>
               <ScrollToTop />
               <div style={{ display: "flex" }}>

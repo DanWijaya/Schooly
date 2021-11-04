@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const mongoose = require("mongoose"); // Require Mongoose
+const Schema = mongoose.Schema; // Define a Schema
 
 let otpSchema = new Schema(
   {

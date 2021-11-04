@@ -1,44 +1,21 @@
-import PropTypes from 'prop-types';
-import { useMemo } from 'react';
-// material
-import { CssBaseline } from '@material-ui/core';
-import { ThemeProvider, createTheme, StyledEngineProvider } from '@material-ui/core/styles';
-//
-import shape from './shape';
-import palette from './palette';
-import typography from './typography';
-import GlobalStyles from './globalStyles';
-import componentsOverride from './overrides';
-import shadows, { customShadows } from './shadows';
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
+import breakpoints from "./theme/breakpoints";
+import palette from "./theme/palette";
+import props from "./theme/props";
+import overrides from "./theme/overrides";
+import typography from "./theme/typography";
 
-// ----------------------------------------------------------------------
+const theme = responsiveFontSizes(
+  createMuiTheme({
+    breakpoints: breakpoints,
+    palette: palette,
+    typography: typography,
+  })
+);
 
-ThemeConfig.propTypes = {
-  children: PropTypes.node
-};
+theme.props = props(theme);
+theme.overrides = overrides(theme);
 
-export default function ThemeConfig({ children }) {
-  const themeOptions = useMemo(
-    () => ({
-      palette,
-      shape,
-      typography,
-      shadows,
-      customShadows
-    }),
-    []
-  );
+// For more information check the default theme of material UI.
 
-  const theme = createTheme(themeOptions);
-  theme.components = componentsOverride(theme);
-
-  return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <GlobalStyles />
-        {children}
-      </ThemeProvider>
-    </StyledEngineProvider>
-  );
-}
+export default theme;

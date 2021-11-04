@@ -4,7 +4,7 @@ import {
   GET_TASKS_BY_SUBJECTS,
 } from "../actions/Types";
 
-// GET_TASKS akan membuat initial state ini menjadi refer ke array of task
+// GET_TASKS will make this initial state referring array of task.
 const initialState = {};
 
 export default function (state = initialState, action) {

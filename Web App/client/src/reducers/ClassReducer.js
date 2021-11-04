@@ -7,11 +7,11 @@ import {
 } from "../actions/Types";
 
 const initialState = {
-  school_classes: [], // Ini bakal jadi semua kelas yang ada di Database. 
-  all_classes: [], // Ini bakal jadi per unit
+  school_classes: [], // This will be all of the class in Database.
+  all_classes: [], // This will become classes of each unit.
   all_classes_map: new Map(),
   selectedClasses: [],
-  kelas: {}, // for student
+  kelas: {}, // For student.
 };
 
 export default function (state = initialState, action) {
@@ -52,8 +52,8 @@ export default function (state = initialState, action) {
         ...state,
         kelas: action.payload,
       };
-    
-    
+
+
     default:
       return state;
   }

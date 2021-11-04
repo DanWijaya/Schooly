@@ -1,7 +1,6 @@
-// 'use strict'
+const FileEvent = require("../../../models/lampiran/FileEvent");
 const express = require("express");
 const router = express.Router();
-const FileEvent = require("../../../models/lampiran/FileEvent");
 const multer = require("multer");
 var AWS = require("aws-sdk");
 var fs = require("fs");
@@ -22,7 +21,7 @@ AWS.config.update({
   region: keys.awsKey.AWS_REGION,
 });
 
-// route to upload a pdf document file
+// Route to upload a PDF document file.
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
 router.post(
   "/upload/:event_id",
@@ -106,9 +105,9 @@ router.get("/download/:id", (req, res) => {
 
 router.delete("/all/:id", async (req, res) => {
   try {
-    // req.params.id ini berupa id dari event.
+    // req.params.id is the id of the event.
     const file_to_delete = await FileEvent.find({ event_id: req.params.id });
-    // file_to_delete ini berupa ID dari file filenya.
+    // file_to_delete is the id of the files.
     if (!file_to_delete) {
       return res.json("No file events to delete");
     }
@@ -147,12 +146,12 @@ router.delete("/all/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   const { file_to_delete } = req.body;
-  // file_to_delete ini berupa ID dari file filenya.
+  // file_to_delete is the id of the files.
   if (!file_to_delete) {
     return res.status(200).send("No file events to delete");
   }
   try {
-    // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
+    // if file_to_delete is undefined, means that the object is deleted and hence all files should be deleted.
     let id_list = file_to_delete.map((m) => ObjectId(m._id));
     const results = await FileEvent.find({ _id: { $in: id_list } });
     await FileEvent.deleteMany({ _id: { $in: id_list } });

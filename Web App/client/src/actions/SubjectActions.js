@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   GET_SUBJECT,
   GET_ALL_SUBJECTS,
@@ -5,7 +6,6 @@ import {
   GET_ALL_SUBJECTS_MAP,
   GET_SUCCESS_RESPONSE,
 } from "./Types";
-import axios from "axios";
 
 export const getSubject = (subjectId) => (dispatch) => {
   axios

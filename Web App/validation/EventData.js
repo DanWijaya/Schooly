@@ -22,8 +22,8 @@ module.exports = function validateEventInput(data) {
     errors.end_date_custom = "Waktu selesai belum diisi";
   }
 
-  // jika to berisi array kosong, atribut ini tidak akan direplace dengan "".
-  // dengan menggunakan length, array kosong dan string kosong akan bisa dihandle sekaligus
+  // If to contains an empty array, this attribute will not be replaced with "".
+  // When using length, empty array and empty string can be handled simultenaously.
   if (!data.to.length) {
     errors.to = "Pihak penerima belum diisi";
   }

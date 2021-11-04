@@ -5,12 +5,10 @@ module.exports = function validateClassInput(data) {
   let errors = {};
 
   // console.log(data.walikelas)
-  // Convert empty fields to an empty strings so validator functions can be used
-  // data has:
-  // name, walikelas
+  // Convert empty fields to an empty strings so validator functions can be used.
   for (let key of Object.keys(data)) {
     if (isEmpty(data[key])) {
-      data[key] = "";
+      data[key] = ""; // data keys are name and wali_kelas.
     }
   }
 

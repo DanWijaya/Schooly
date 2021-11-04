@@ -1,13 +1,13 @@
+import axios from "axios";
+import { Dropbox } from "dropbox";
 import {
   GET_FILE_BY_USER,
   GET_ALL_FILES_BY_USER,
-  GET_ERRORS,
+  GET_ALL_MATERIALS,
   GET_ALL_LAMPIRAN_BY_TASK,
   GET_SUCCESS_RESPONSE,
-  GET_ALL_MATERIALS,
+  GET_ERRORS,
 } from "./Types";
-import axios from "axios";
-import { Dropbox } from "dropbox";
 
 export const uploadTugas = (tugas, userData, taskId, ontime) => (dispatch) => {
   if (userData.role === "Student") {
@@ -107,7 +107,7 @@ export const previewTugas = (tugas_id) => (dispatch) => {
   window.open(
     `http://${window.location.hostname}:5000/api/upload/file_tugas/previewtugas/${tugas_id}`,
     "_blank"
-  ); // previously has "_blank"
+  ); // Previously has "_blank".
 };
 
 export const moveToDropbox = (dropbox_token, tugas_ids) => (dispatch) => {
@@ -140,7 +140,7 @@ export const moveToDropbox = (dropbox_token, tugas_ids) => (dispatch) => {
     });
 };
 
-// Upload lampiran is handled together with createTask.
+// Upload attachment is handled together with createTask.
 export const getAllLampiranByTask = (lampiran) => (dispatch) => {
   console.log("Get lampiran by task is runned");
 
@@ -189,7 +189,7 @@ export const deleteLampiran = (lampiran_to_delete, task_id) => {
     });
 };
 
-// Deal with the lampiran on Announcements
+// Deal with attachments in Announcement.
 export const downloadLampiranAnnouncement = (lampiran_id) => (dispatch) => {
   console.log("Downloading lampiran");
   window.open(
@@ -203,7 +203,7 @@ export const previewLampiranAnnouncement = (lampiran_id) => (dispatch) => {
   window.open(
     `http://${window.location.hostname}:5000/api/upload/att_announcement/preview/${lampiran_id}`,
     "_blank"
-  ); // previously has "_blank"
+  ); // Previously has "_blank".
 };
 
 export const deleteLampiranAnnouncement = (lampiran_to_delete, task_id) => {
@@ -220,7 +220,7 @@ export const deleteLampiranAnnouncement = (lampiran_to_delete, task_id) => {
     });
 };
 
-// Deal with the lampiran on Materials
+// Deal with attachments in Material.
 export const downloadLampiranMateri = (materi_id) => (dispatch) => {
   console.log("Downloading lampiran", materi_id);
   console.log(materi_id);

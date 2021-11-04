@@ -1,28 +1,24 @@
-import { merge } from 'lodash';
-import Card from './Card';
-import Lists from './Lists';
-import Paper from './Paper';
-import Input from './Input';
-import Button from './Button';
-import Tooltip from './Tooltip';
-import Backdrop from './Backdrop';
-import Typography from './Typography';
-import IconButton from './IconButton';
-import Autocomplete from './Autocomplete';
+import { merge } from "lodash";
+import Autocomplete from "./overrides/Autocomplete";
+import Button from "./overrides/Button";
+import Fab from "./overrides/Fab";
+import IconButton from "./overrides/IconButton";
+import Lists from "./overrides/Lists";
+import Pickers from "./overrides/Pickers";
+import Tabs from "./overrides/Tabs";
+import TextFields from "./overrides/TextFields";
 
-// ----------------------------------------------------------------------
-
-export default function ComponentsOverrides(theme) {
+function overrides(theme) {
   return merge(
-    Card(theme),
-    Lists(theme),
-    Paper(theme),
-    Input(theme),
+    Autocomplete(theme),
     Button(theme),
-    Tooltip(theme),
-    Backdrop(theme),
-    Typography(theme),
+    Fab(theme),
     IconButton(theme),
-    Autocomplete(theme)
+    Lists(theme),
+    Pickers(theme),
+    Tabs(theme),
+    TextFields(theme),
   );
 }
+
+export default overrides;

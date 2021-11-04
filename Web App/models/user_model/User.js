@@ -1,26 +1,34 @@
-// Require Mongoose
-const mongoose = require("mongoose");
-const { ObjectId } = require("mongodb");
-// API dari mongoose MongoDb.
-
-// Define a Schema
-const Schema = mongoose.Schema;
+const { ObjectId } = require("mongodb"); // API from mongoose MongoDB
+const mongoose = require("mongoose"); // Require mongoose
+const Schema = mongoose.Schema; // Define a Schema
 
 const options = { discriminatorKey: "role" };
 
-// Create Schema (New way)
-
+// Create User Schema
 const UserSchema = new Schema(
   {
-    password: {
-      type: String,
-      required: true,
+    active: {
+      type: Boolean,
+      default: false,
     },
     avatar: {
       type: String,
       default: "",
     },
-    // Informasi Pribadi
+    password: {
+      type: String,
+      required: true,
+    },
+    passwordReset: {
+      type: String,
+      select: false,
+    },
+    passwordResetTime: {
+      type: Date,
+      select: true,
+    },
+
+    // Personal Information
     name: {
       type: String,
       required: true,
@@ -37,8 +45,12 @@ const UserSchema = new Schema(
       type: String,
       default: null,
     },
+    unit: {
+      type: ObjectId,
+      default: null,
+    },
 
-    //Kontak
+    // Contacts
     email: {
       type: String,
       required: true,
@@ -56,7 +68,7 @@ const UserSchema = new Schema(
       required: true,
     },
 
-    //Karir
+    // Career
     hobi_minat: {
       type: String,
       default: null,
@@ -71,22 +83,6 @@ const UserSchema = new Schema(
     },
     uni_impian: {
       type: String,
-      default: null,
-    },
-    active: {
-      type: Boolean,
-      default: false,
-    },
-    passwordReset: {
-      type: String,
-      select: false,
-    },
-    passwordResetTime: {
-      type: Date,
-      select: true,
-    },
-    unit: {
-      type: ObjectId,
       default: null,
     },
   },

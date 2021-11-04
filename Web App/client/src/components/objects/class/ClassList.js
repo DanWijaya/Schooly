@@ -642,13 +642,13 @@ function ClassListToolbar(props) {
           ) : null}
           {user.role === "Admin" ? (
             <Grid item>
-              <LightTooltip title="Atur Wali Kelas">
-                <Link to="/atur-walikelas">
+              <Link to="/atur-walikelas">
+                <LightTooltip title="Atur Wali Kelas">
                   <IconButton>
                     <AssignmentIndIcon />
                   </IconButton>
-                </Link>
-              </LightTooltip>
+                </LightTooltip>
+              </Link>
             </Grid>
           ) : null}
           <Grid item>

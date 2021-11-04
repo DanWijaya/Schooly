@@ -12,7 +12,7 @@ const initialState = {
   all_user_files: [],
   lampiran_files: [],
   all_lampiran_files: [],
-  selectedFile: {}, // for download or preview
+  selectedFile: {}, // For download or preview.
 };
 
 export default function (state = initialState, action) {

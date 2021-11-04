@@ -1,4 +1,4 @@
-export default function TextFields.js(theme) {
+export default function TextFields(theme) {
   return {
     TextField: {
       InputLabelProps: {

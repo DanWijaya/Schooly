@@ -220,9 +220,9 @@ class Login extends Component {
                           value={this.state.email}
                           helperText={errors.email}
                           error={Boolean(errors.email)}
-                          className={classnames("", {
-                            invalid: errors.email,
-                          })}
+                          // className={classnames("", {
+                          //   invalid: errors.email,
+                          // })}
                         />
                       </Grid>
                       <Grid item>

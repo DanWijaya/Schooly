@@ -2,7 +2,7 @@ import axios from "axios";
 import { GET_ALL_UNITS, GET_UNIT } from "./Types";
 
 export const createUnit = (unitData) => {
-  // try not to use dispatch
+  // Try not to use dispatch.
   return axios
     .post("/api/units/create", unitData)
     .then((res) => {

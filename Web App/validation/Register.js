@@ -16,7 +16,7 @@ function validateRegisterInput1(data) {
     errors.email = "Email tidak benar";
   }
 
-  // Password checks error messagenya terlalu panjang kadang kadang
+  // Password checks the error message too long sometimes.
   if (Validator.isEmpty(data.password)) {
     errors.password = "Kata sandi belum diisi";
   } else {
@@ -28,7 +28,7 @@ function validateRegisterInput1(data) {
     }
   }
 
-  //Password confirmation checks
+  // Password confirmation checks
   if (Validator.isEmpty(data.password2)) {
     errors.password2 = "Konfirmasi kata sandi belum diisi";
   }
@@ -63,7 +63,7 @@ function validateRegisterInput2(data) {
     }
   }
 
-  //Role checks
+  // Role checks
   if (Validator.isEmpty(data.role)) {
     errors.role = "Peran belum diisi";
   }
@@ -99,7 +99,7 @@ function validateRegisterInput2(data) {
     errors.address = "Alamat belum diisi";
   }
 
-  //tanggal lahir checks
+  // Birth date checks
   if (!data.tanggal_lahir) {
     errors.tanggal_lahir = "Tanggal lahir belum diisi";
   }

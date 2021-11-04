@@ -1,24 +1,20 @@
+const Task = require("../../models/Task");
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const keys = require("../../config/keys");
-
-//Load input validation
 const {
   validateTaskInput,
   validateTaskGrade,
 } = require("../../validation/TaskData");
-// Load Task model
-const Task = require("../../models/Task");
-const mongoose = require("mongoose");
 
-//Define create route
-
+// Define create routes.
 router.post("/create", (req, res) => {
-  // pakai body parser
+  // Use body parser.
   const { errors, isValid } = validateTaskInput(req.body);
   if (!isValid) {
     console.log("Not Valid");
-    return res.status(400).json(errors); // errors ini kan juga json
+    return res.status(400).json(errors); // These errors is also json.
   }
   console.log(req.body);
   Task.findOne({ name: req.body.name, subject: req.body.subject })
@@ -43,9 +39,9 @@ router.post("/create", (req, res) => {
     });
 });
 
-//Define View classes route
+// Define view classes routes.
 router.get("/viewall/:unitId", (req, res) => {
-  // pokoknya kalau ada request, requestnya harus diiringi dengan response.
+  // When there is a request, the request must be followed with response.
   const { unitId } = req.params;
   if (!unitId) {
     return res.json([]);
@@ -64,7 +60,7 @@ router.get("/viewall/:unitId", (req, res) => {
     });
 });
 
-//Define delete routes
+// Define delete routes.
 router.delete("/delete/:id", (req, res) => {
   Task.findByIdAndRemove(req.params.id)
     .then((taskData) => {
@@ -78,7 +74,7 @@ router.delete("/delete/:id", (req, res) => {
     });
 });
 
-//Define Get one task routes
+// Define get one task routes.
 router.get("/view/:id", (req, res) => {
   let id = req.params.id;
   Task.findById(id)
@@ -104,8 +100,8 @@ router.post("/grade/:id", (req, res) => {
   Task.findById(id)
     .then((taskData) => {
       if (!taskData) throw "Task to grade is not found";
-      //grade kan dia Map (key, value). grade -> (studentId, nilainya)
-      // untuk yang kasi nilai
+      // Grade is Map (key, value) = (student's id, score).
+      // For the one who has been graded.
       taskData.grades.set(req.body.studentId, grade);
       return taskData.save();
     })
@@ -117,7 +113,7 @@ router.post("/grade/:id", (req, res) => {
     });
 });
 
-//Define update routes
+// Define update routes.
 router.put("/update/:id", (req, res) => {
   let grade = req.body.grade;
   const { errors, isValid } = validateTaskInput(req.body);

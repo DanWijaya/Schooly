@@ -1,15 +1,15 @@
+const Announcement = require("../../models/Announcement");
+const User = require("../../models/user_model/User");
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const validateAnnouncementInput = require("../../validation/AnnouncementData");
-const Announcement = require("../../models/Announcement");
-const User = require("../../models/user_model/User");
 const { ObjectId } = require("mongodb");
 
 router.post("/create", (req, res) => {
-  // Form Validation
+  // Form validation.
   const { errors, isValid } = validateAnnouncementInput(req.body);
   if (!isValid) {
     return res.status(400).json(errors);
@@ -44,7 +44,7 @@ router.post("/create", (req, res) => {
     });
 });
 
-//Define Update routing.
+// Define update routing.
 router.put("/update/:id", (req, res) => {
   const { errors, isValid } = validateAnnouncementInput(req.body);
 
@@ -75,7 +75,7 @@ router.put("/update/:id", (req, res) => {
     });
 });
 
-//Define View one announcement
+// Define view one announcement.
 router.get("/viewOne/:id", (req, res) => {
   console.log("view one is runned");
   let id = req.params.id;
@@ -163,7 +163,7 @@ router.get("/view/:id", (req, res) => {
 
 router.get("/viewByClass/:id", (req, res) => {
   let id = req.params.id;
-  // if want to get the MongoDB object that has id element in the array.
+  // If want to get the MongoDB object that has id element in the array.
 
   Announcement.find({ class_assigned: id })
     .then((announcements) => {
@@ -180,7 +180,7 @@ router.get("/viewByClass/:id", (req, res) => {
     });
 });
 
-//Define delete routes
+// Define delete routes.
 router.delete("/delete/:id", (req, res) => {
   const { id } = req.params;
   Announcement.findByIdAndRemove(req.params.id)

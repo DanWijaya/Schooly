@@ -1,12 +1,9 @@
+const Subject = require("../../models/Subject");
 const express = require("express");
 const router = express.Router();
-const keys = require("../../config/keys");
 const mongoose = require("mongoose");
-
+const keys = require("../../config/keys");
 const validateSubjectInput = require("../../validation/SubjectData");
-
-// Load Subject model
-const Subject = require("../../models/Subject");
 
 router.post("/create", (req, res) => {
   const { errors, isValid } = validateSubjectInput(req.body);
@@ -42,7 +39,7 @@ router.put("/edit/:id", async (req, res) => {
     if (!isValid) {
       throw errors;
     }
-    //Check if there is existing subject with same name.
+    // Check if there is existing subject with same name.
     const subject1 = await Subject.findOne({
       name: req.body.name,
       unit: req.body.unit,
