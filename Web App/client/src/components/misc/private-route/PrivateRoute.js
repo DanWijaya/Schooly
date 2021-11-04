@@ -17,7 +17,7 @@ const PrivateRoute = ({
     <Route
       {...rest}
       render={(props) =>
-        auth.isAuthenticated === true ? (
+        auth.isAuthenticated ? (
           !access || access.indexOf(auth.user.role) !== -1 ? (
             <Component
               {...props}
@@ -33,7 +33,6 @@ const PrivateRoute = ({
             to={{
               pathname: "/masuk",
               state: {
-                // untuk mengarahkan murid ke halaman assessment setelah login
                 url: props.match.url,
               },
             }}
