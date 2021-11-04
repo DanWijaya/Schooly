@@ -97,9 +97,11 @@ function Profile(props) {
   const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
 
   React.useEffect(() => {
-    getFileAvatar(user._id)
-      .then((result) => setAvatar(result))
-      .catch((err) => console.log(err));
+    if (user._id) {
+      getFileAvatar(user._id)
+        .then((result) => setAvatar(result))
+        .catch((err) => console.error(err));
+    }
   }, [user._id]);
 
   // Initially classesCollection.kelas.name === undefined
@@ -218,7 +220,7 @@ function Profile(props) {
       </Snackbar>
       <Grid container direction="column" alignItems="center" spacing={2}>
         <Grid item>
-          {user.avatar ? (
+          {avatar ? (
             <Badge
               overlap="circle"
               anchorOrigin={{

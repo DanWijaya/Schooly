@@ -95,7 +95,7 @@ router.post("/upload/:user_id", upload.single("avatar"), async (req, res) => {
     var payload = {
       _id: user._id,
       role: user.role,
-      // avatar: user.avatar,
+      avatar: user.avatar,
 
       // Personal Information
       name: user.name,
@@ -122,7 +122,6 @@ router.post("/upload/:user_id", upload.single("avatar"), async (req, res) => {
       payload.subject_teached = user.subject_teached;
     }
 
-    console.log("Success!!!");
     return res.json({
       success: "Successfully uploaded the lampiran file",
       user: payload,
@@ -159,64 +158,69 @@ router.get("/download/:id", (req, res) => {
 // Router to delete a DOCUMENT file.
 router.delete("/:id", (req, res) => {
   const { file_to_delete } = req.body;
-  // if file_to_delete is undefined, means that the object is deleted and hence all files should be deleted.
-  if (!file_to_delete) {
-    FileAvatar.find({ user_id: req.params.id }).then((avatars) => {
-      let id_list = avatars.map((m) => Object(m._id));
-      let file_to_delete = avatars;
+  // if file_to_delete is undefined, means that it is used to delete one avatar from one user.
 
-      FileAvatar.deleteMany(
-        {
-          _id: {
-            $in: id_list,
-          },
-        },
-        function (err, results) {
-          if (!results) {
-            return res.status(404).json(err);
-          }
-          // Now Delete the file from AWS-S3.
-          // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObject-property
+  if (!file_to_delete) {
+    FileAvatar.findOneAndDelete({ user_id: req.params.id })
+      .then((avatar) => {
+        console.log(avatar);
+        if (avatar) {
           let s3bucket = new AWS.S3();
-          file_to_delete.forEach((file) => {
-            let params = {
-              Bucket: keys.awsKey.AWS_BUCKET_NAME,
-              Key: file.s3_key,
-            };
-            s3bucket.deleteObject(params, (err, data) => {
-              if (!data) return res.status(404).json(err);
-            });
-          });
-          return res.status(200).send("Success");
+          let params = {
+            Bucket: keys.awsKey.AWS_BUCKET_NAME,
+            Key: avatar.s3_key,
+          };
+          return s3bucket.deleteObject(params).promise();
         }
-      );
-    });
+        console.log("No avatar to delete");
+        return res.json("No avatar to delete");
+      })
+      .then((data) => {
+        console.log("Delete file avatar in S3 completed");
+        return res.json(data);
+      })
+      .catch((err) => {
+        console.error("Delete file avatar in S3 failed");
+        console.error(err);
+        return res.status(404).json(err);
+      });
   } else {
     let id_list = file_to_delete.map((m) => Object(m._id));
-    FileAvatar.deleteMany(
-      {
-        _id: {
-          $in: id_list,
-        },
-      },
-      function (err, results) {
-        if (!results) {
-          return res.status(404).json(err);
-        }
 
+    FileAvatar.deleteMany({ _id: { $in: id_list } })
+      .then((results) => {
+        if (!results) {
+          console.log("No file avatars to delete");
+          return res.json("No file avatars to delete");
+        }
         let s3bucket = new AWS.S3();
-        file_to_delete.forEach((file) => {
+        let promises = file_to_delete.forEach((file) => {
           let params = {
             Bucket: keys.awsKey.AWS_BUCKET_NAME,
             Key: file.s3_key,
           };
-          s3bucket.deleteObject(params, (err, data) => {
-            if (!data) return res.status(404).json(err);
+          return new Promise((resolve, reject) => {
+            s3bucket
+              .deleteObject(params, (error, data) => {
+                if (error) return reject(err);
+              })
+              .on("httpDone", () => {
+                resolve();
+              });
           });
         });
-        return res.status(200).send("Success");
-      }
-    );
+
+        return Promise.all(promises);
+      })
+      .then(() => {
+        console.log("Delete multiple avatars completed");
+        return res.json("Delete multiple file avatars completed");
+      })
+      .catch((err) => {
+        console.error("Delete multiple avatars failed");
+        console.error(err);
+        return res.status(400).json(err);
+      });
   }
 });
 
@@ -230,7 +234,6 @@ router.get("/by_user/:id", (req, res) => {
         console.log("No avatar added");
         return res.json("");
       }
-
       const url = `${keys.cdn}/${result.s3_key}`;
       return res.status(200).json(url);
     })

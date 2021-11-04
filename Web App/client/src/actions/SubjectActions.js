@@ -27,7 +27,7 @@ export const getSubject = (subjectId) => (dispatch) => {
 };
 
 export const getAllSubjects = (unitId, data = "array") => (dispatch) => {
-  axios
+  return axios
     .get(`/api/subjects/viewall/${unitId}`)
     .then((res) => {
       // console.log("Run get all subjects")
@@ -42,7 +42,7 @@ export const getAllSubjects = (unitId, data = "array") => (dispatch) => {
           payload: res.data,
         });
       }
-      console.log("getAllSubjects (" + data + ") completed");
+      return res.data;
     })
     .catch((err) => {
       console.log(err, "Error in retrieving all subjects");

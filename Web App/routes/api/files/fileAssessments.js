@@ -149,7 +149,7 @@ router.delete("/all/:id", async (req, res) => {
     });
     // file_to_delete is the id of the files.
     if (!file_to_delete) {
-      return res.status(200).json("No file assessment to delete");
+      return res.json("No file assessment to delete");
     }
     await FileAssessment.deleteMany({
       assessment_id: req.params.id,
@@ -216,7 +216,7 @@ router.delete("/:id", async (req, res) => {
     });
 
     await Promise.all(promises);
-    return res.status(200).send("Success");
+    return res.json("Success");
   } catch (err) {
     console.error("Delete file assessments failed");
     console.error(err);
@@ -227,7 +227,8 @@ router.delete("/:id", async (req, res) => {
 router.get("/by_assessment/:id", (req, res) => {
   FileAssessment.find({ assessment_id: req.params.id })
     .then((results) => {
-      console.log("Assessment: ", results);
+      if (!results.length)
+        console.log("File announcement by_assessment is empty");
       results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
       return res.status(200).json(results);
     })
@@ -259,7 +260,7 @@ router.post("/getS3Url", (req, res) => {
       // let all_idToUrl = new Map();
       // results.forEach((idToUrl) => all_idToUrl = new Map([...all_idToUrl, ...idToUrl]))
       console.error("getS3Url fileAssessments completed");
-      return res.status(200).json({ urls: results, ids: file_ids });
+      return res.json({ urls: results, ids: file_ids });
     })
     .catch((err) => {
       console.error("getS3Url fileAssessments failed");

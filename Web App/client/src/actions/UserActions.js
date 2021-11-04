@@ -233,7 +233,6 @@ export const getAllUsers = (unitId) => (dispatch) => {
     });
 };
 export const getOneUser = (userId) => (dispatch) => {
-  console.log(userId);
   return axios
     .get("/api/users/getOneUser/" + userId)
     .then((res) => {
@@ -411,6 +410,9 @@ export const deleteUser = (userId) => (dispatch) => {
     .then((res) => {
       return res.data;
     })
+    .then((res) => {
+      return axios.delete(`/api/files/avatar/${userId}`);
+    })
     .catch((err) => {
       console.error("Error in deleting user");
       throw err;
@@ -457,14 +459,16 @@ export const updateUnitAdmins = (data, adminId) => (dispatch) => {
 };
 
 export const refreshTeacher = (teacherId) => (dispatch) => {
-  axios
-    .get("/api/users/getOneUser/" + teacherId)
-    .then((res) => {
-      dispatch(setCurrentUser(res.data));
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  if (teacherId) {
+    axios
+      .get("/api/users/getOneUser/" + teacherId)
+      .then((res) => {
+        dispatch(setCurrentUser(res.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 };
 
 export const bulkRegisterUsers = (data) => {

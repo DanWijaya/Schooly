@@ -110,7 +110,9 @@ function NavBar(props) {
   }, [user._id]);
 
   React.useEffect(() => {
-    setAvatar(user.avatar);
+    if (user.avatar) {
+      setAvatar(user.avatar);
+    }
   }, [user.avatar]);
 
   // Menu items in Mobile

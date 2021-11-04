@@ -694,6 +694,7 @@ function Report(props) {
 
   function generateMatPelMenuItem() {
     let menuItems = [];
+    console.log(kontenMatpel);
     kontenMatpel.forEach((namaMatPel, idMatPel) => {
       if (user.subject_teached.includes(idMatPel)) {
         menuItems.push(
@@ -940,6 +941,7 @@ function Report(props) {
 
       // If the teacher is a homeroom teacher and the class that is selected is the homeroom class of that teacher,
       if (kelasWali.size !== 0 && selectedClassId === kelasWali.get("id")) {
+        console.log(semuaMatpel);
         setKontenMatpel(semuaMatpel);
       } else {
         // If the teacher is not a homeroom teacher or the class that is selected is not the homeroom class of that teacher,
@@ -1133,6 +1135,8 @@ function Report(props) {
       getAllClass(user.unit, "map");
       getAllTask(user.unit);
       getAllAssessments(user.unit);
+      getAllSubjects(user.unit);
+      getAllSubjects(user.unit, "map");
       if (role === all_roles.STUDENT) {
         setKelasWali(new Map()); // so that setRows(handleIndividualReport()) is run, but no need to call getAllClass(user.unit).
       }
@@ -1301,6 +1305,7 @@ function Report(props) {
   // after setKelasWali, getAllClass(user.unit ,"map"), and getAllSubjects(user.unit, "map") is already runned.
   React.useEffect(() => {
     countMIDependencyUpdate.current++;
+    console.log("countMIDependencyUpdate : ", countMIDependencyUpdate);
     if (countMIDependencyUpdate.current === 4) {
       new Promise((resolve) => {
         // To determine teacher's status: homeroom or not.
@@ -1337,7 +1342,7 @@ function Report(props) {
           setKontenMatpel(hasil.daftarMatpel);
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

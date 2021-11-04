@@ -70,7 +70,6 @@ export const getSelectedClasses = (classes_ids) => (dispatch) => {
     })
     .then((res) => {
       // console.log("Class to be edited");
-      // dispatch(setCurrentClass(res.data))
       console.log(res);
       dispatch({
         type: GET_CLASSES,

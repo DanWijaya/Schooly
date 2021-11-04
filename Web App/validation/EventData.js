@@ -28,10 +28,6 @@ module.exports = function validateEventInput(data) {
     errors.to = "Pihak penerima belum diisi";
   }
 
-  // if (Validator.isEmpty(data.description)) {
-  //   errors.description = "Deskripsi belum diisi";
-  // }
-
   return {
     errors,
     isValid: isEmpty(errors),

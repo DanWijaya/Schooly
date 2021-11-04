@@ -51,7 +51,7 @@ router.post(
         region: keys.awsKey.AWS_REGION,
       });
 
-      let promises = files.map((file) => {
+      const promises = files.map((file) => {
         var params = {
           Bucket: keys.awsKey.AWS_BUCKET_NAME,
           Key: "task/" + uuidv4() + "_" + file.originalname,
@@ -82,7 +82,6 @@ router.post(
             });
         });
       });
-
       const documents = await Promise.all(promises);
       await FileTask.insertMany(documents);
       return res.json({
@@ -171,10 +170,10 @@ router.delete("/:id", async (req, res) => {
   }
   try {
     // if file_to_delete is undefined, means that the object is deleted and hence all files should be deleted.
-    console.log("Ini id list: ", id_list);
-    const results = await FileTask.find({ _id: { $in: id_list } });
+    console.log("Ini id list: ", file_to_delete);
+    const results = await FileTask.find({ _id: { $in: file_to_delete } });
     console.log(results);
-    await FileTask.deleteMany({ _id: { $in: id_list } });
+    await FileTask.deleteMany({ _id: { $in: file_to_delete } });
 
     const promises = results.map((file) => {
       let s3bucket = new AWS.S3();

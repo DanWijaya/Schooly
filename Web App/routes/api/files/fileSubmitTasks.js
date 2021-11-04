@@ -217,7 +217,7 @@ router.get("/by_task/:task_id", (req, res) => {
 
   FileSubmitTask.find({ task_id: task_id })
     .then((results) => {
-      if (!results) return res.status(400).json(err);
+      if (!results.length) console.log("file task by task is empty");
       else {
         results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
         return res.status(200).json(results);
@@ -235,7 +235,8 @@ router.get("/by_task_author/:task_id&:author_id", (req, res) => {
 
   FileSubmitTask.find({ task_id: task_id, author_id: author_id })
     .then((results) => {
-      if (!results.length) throw "FileSubmitTask by_task_author is empty";
+      if (!results.length)
+        console.log("FileSubmitTask by_task_author is empty");
 
       results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
       return res.status(200).json(results);

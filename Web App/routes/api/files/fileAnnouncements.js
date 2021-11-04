@@ -194,6 +194,8 @@ router.delete("/:id", async (req, res) => {
 router.get("/by_announcement/:id", (req, res) => {
   FileAnnouncement.find({ announcement_id: req.params.id })
     .then((results) => {
+      if (!results.length)
+        console.log("File announcement by announcement is empty");
       results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
       return res.status(200).json(results);
     })

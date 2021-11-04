@@ -856,8 +856,6 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
   materialsFiles: state.materialsFiles,
-  // errors: state.errors,
-  // success: state.success
 });
 
 export default connect(mapStateToProps, {

@@ -122,7 +122,6 @@ function EditProfilePicture(props) {
   };
 
   const onSubmitForm = async (e) => {
-    console.log("AVATAR TELAH DISUBMIT");
     e.preventDefault();
     let formData = new FormData();
     formData.append("avatar", profileImg);

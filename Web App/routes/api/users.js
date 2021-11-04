@@ -316,6 +316,10 @@ router.get("/getAllAdmins", (req, res) => {
 
 router.get("/getOneUser/:id", (req, res) => {
   let id = req.params.id;
+  if (!id) {
+    console.log("Id passed is undefined in getOneUser");
+    return res.json({});
+  }
   User.findById(id)
     .then((user) => {
       if (!user) throw "No user is found in Database";
@@ -479,7 +483,7 @@ router.put("/setUserDeactivated/:id", (req, res) => {
       user.active = false;
       return user.save();
     })
-    .then(() => {
+    .then((user) => {
       console.log("setUserDeactivated completed");
       return res.json(user);
     })
