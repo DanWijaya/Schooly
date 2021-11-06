@@ -405,6 +405,7 @@ export const bulkSetUserDeactivated = (id_list) => (dispatch) => {
       throw err;
     });
 };
+
 export const deleteUser = (userId) => (dispatch) => {
   return axios
     .delete(`/api/users/delete/${userId}`)
@@ -420,6 +421,19 @@ export const deleteUser = (userId) => (dispatch) => {
     });
 };
 
+export const bulkDeleteUser = (id_list) => (dispatch) => {
+  let data = { id_list: id_list };
+  // For delete and get header, pass parameter must be like {data: data}
+  return axios
+    .delete(`/api/users/bulkDelete/`, { data: data })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.error(err);
+      throw err;
+    });
+};
 export const moveStudents = (data, dummyClassId) => {
   return axios
     .put(`/api/users/classAssignment/${dummyClassId}`, data)

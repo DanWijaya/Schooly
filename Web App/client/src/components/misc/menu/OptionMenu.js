@@ -17,6 +17,15 @@ function OptionMenu(props) {
     setAnchorEl(null);
   };
 
+  const actionOnClick = (e, idx) => {
+    if (row) {
+      handleActionOnClick[idx](e, row);
+      // handleActionOnClick[idx](e, row._id, row.name);
+    } else {
+      handleActionOnClick[idx](e);
+    }
+  };
+
   return (
     <div>
       <IconButton onClick={handleClick} disabled={rowCount}>
@@ -41,8 +50,9 @@ function OptionMenu(props) {
               key={option}
               selected={option === "Detail"}
               onClick={(e) => {
-                handleActionOnClick[idx](e, row._id, row.name);
-                handleClose();
+                actionOnClick(e, idx, row);
+                // handleActionOnClick[idx](e, row._id, row.name);
+                // handleClose();
               }}
             >
               {option}

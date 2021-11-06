@@ -54,14 +54,13 @@ export const viewFileTasks = (id) => (dispatch) => {
 };
 
 export const deleteFileTasks = (id, delete_all = false) => (dispatch) => {
-  axios
-    .delete(`/api/files/tasks/${id}`, { data: { delete_all: delete_all } })
-    .then((res) => {
-      console.log(res.data);
-      dispatch({
-        type: GET_SUCCESS_RESPONSE,
-        payload: res.data,
-      });
-      window.location.reload();
+  let data = { delete_all: delete_all };
+  axios.delete(`/api/files/tasks/${id}`, { data: data }).then((res) => {
+    console.log(res.data);
+    dispatch({
+      type: GET_SUCCESS_RESPONSE,
+      payload: res.data,
     });
+    window.location.reload();
+  });
 };

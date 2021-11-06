@@ -524,6 +524,23 @@ router.delete("/delete/:id", (req, res) => {
     });
 });
 
+router.delete("/bulkDelete", (req, res) => {
+  console.log("/bulkDelete is runned");
+  let { id_list } = req.body;
+  console.log(id_list);
+  User.deleteMany({ _id: { $in: id_list } })
+    .then((user) => {
+      if (!user.length) console.log("Users to delete is empty");
+      console.log("bulkDelete completed");
+      return res.json(user);
+    })
+    .catch((err) => {
+      console.error("bulkDelete failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
+});
+
 router.put("/classAssignment/:dummyClassId", (req, res) => {
   let operations = [];
   for (let [classId, studentIdArray] of Object.entries(req.body)) {

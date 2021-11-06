@@ -893,18 +893,34 @@ function ManageUsers(props) {
   };
 
   // Delete Dialog
-  const handleOpenDeleteDialog = (e, id, name) => {
+  const handleOpenDeleteDialog = (e, row) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
-    setSelectedUserId(id);
-    setSelectedUserName(name);
+    if (row) {
+      setSelectedUserId(row._id);
+      setSelectedUserName(row.name);
+    } else {
+      if (panel == 0) {
+        setSelectedUserId(listCheckboxStudent);
+      } else if (panel == 1) {
+        setSelectedUserId(listCheckboxTeacher);
+      }
+    }
   };
 
-  const handleOpenApproveDialog = (e, id, name) => {
+  const handleOpenApproveDialog = (e, row) => {
     e.stopPropagation();
     setOpenApproveDialog(true);
-    setSelectedUserId(id);
-    setSelectedUserName(name);
+    if (row) {
+      setSelectedUserId(row._id);
+      setSelectedUserName(row.name);
+    } else {
+      if (panel == 0) {
+        setSelectedUserId(listCheckboxStudent);
+      } else if (panel == 1) {
+        setSelectedUserId(listCheckboxTeacher);
+      }
+    }
   };
 
   const handleCloseDeleteDialog = () => {
@@ -1126,9 +1142,11 @@ function ManageUsers(props) {
     setOpenSnackbar(false);
   };
 
-  const [value, setValue] = React.useState(0);
+  const [panel, setPanel] = React.useState(0);
   const handleTabs = (e, val) => {
-    setValue(val);
+    // panel : 0 -> Student
+    // panel : 1 -> Teacher
+    setPanel(val);
   };
 
   document.title = "Schooly | Pengguna Tidak Aktif";
@@ -1153,7 +1171,7 @@ function ManageUsers(props) {
         </Grid>
       </Grid>
       <Tabs
-        value={value}
+        value={panel}
         indicatorColor="primary"
         textColor="primary"
         onChange={handleTabs}
@@ -1168,7 +1186,7 @@ function ManageUsers(props) {
           label={<Typography className={classes.userTabTitle}>Guru</Typography>}
         />
       </Tabs>
-      <TabPanel value={value} index={0}>
+      <TabPanel value={panel} index={0}>
         <ManageUsersToolbar
           searchFilterHint="Cari Murid"
           role="Student"
@@ -1260,7 +1278,7 @@ function ManageUsers(props) {
           </List>
         )}
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={panel} index={1}>
         <ManageUsersToolbar
           searchFilterHint="Cari Guru"
           role="Teacher"
