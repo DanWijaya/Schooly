@@ -1020,6 +1020,7 @@ function ManageAdmins(props) {
         open={openDeactivateDialog}
         onClose={handleCloseDeactivateDialog}
         itemName={selectedUserName}
+        itemType="Pengelola"
         onAction={() => {
           onDeactivateUser(selectedUserId);
         }}

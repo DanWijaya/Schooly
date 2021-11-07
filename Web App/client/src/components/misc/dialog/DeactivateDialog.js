@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function DisableDialog(props) {
+function DeactivateDialog(props) {
   const classes = useStyles();
   const { open, onClose, itemName, onAction, itemType } = props;
 
@@ -102,4 +102,69 @@ function DisableDialog(props) {
   );
 }
 
-export default DisableDialog;
+export default DeactivateDialog;
+
+/*
+function DisableDialog() {
+    return (
+      <Dialog open={openDeactivateDialog} onClose={handleCloseDeactivateDialog}>
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          className={classes.dialogBox}
+        >
+          <Grid
+            item
+            container
+            justify="center"
+            style={{ marginBottom: "20px" }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Nonaktifkan pengguna berikut?
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            container
+            justify="center"
+            style={{ marginBottom: "20px" }}
+          >
+            <Typography variant="h6" align="center" gutterBottom>
+              <b>{selectedUserName}</b>
+            </Typography>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            spacing={2}
+            style={{ marginBottom: "10px" }}
+          >
+            <Grid item>
+              <Button
+                onClick={() => {
+                  onDeactivateUser(selectedUserId);
+                }}
+                startIcon={<BlockIcon />}
+                className={classes.dialogDisableButton}
+              >
+                Nonaktifkan
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                onClick={handleCloseDeactivateDialog}
+                startIcon={<CancelIcon />}
+                className={classes.dialogCancelButton}
+              >
+                Batal
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Dialog>
+    );
+  }
+*/
