@@ -315,17 +315,6 @@ function ManageUsersToolbar(props) {
             </Hidden>
           </Grid>
           <Hidden smDown>
-            {role === "Teacher" ? (
-              <Grid item style={{ display: searchBarFocus ? "none" : "block" }}>
-                <Link to="/data-ajar-guru">
-                  <LightTooltip title="Sunting Data Ajar Guru">
-                    <IconButton>
-                      <BiSitemap />
-                    </IconButton>
-                  </LightTooltip>
-                </Link>
-              </Grid>
-            ) : null}
             <Grid item>
               <LightTooltip title="Urutkan Akun">
                 <IconButton onClick={handleOpenSortMenu}>
@@ -371,70 +360,52 @@ function ManageUsersToolbar(props) {
             </Grid>
           </Hidden>
           <Hidden mdUp>
-            {searchBarFocus || searchFilter
-              ? null
-              : [
-                  role === "Teacher" ? (
-                    <Grid
-                      item
-                      style={{ display: searchBarFocus ? "none" : "block" }}
+            {searchBarFocus || searchFilter ? null : (
+              // When search bar is not on focus and searchFilter is empty
+              <Grid item>
+                <LightTooltip title="Urutkan Akun">
+                  <IconButton onClick={handleOpenSortMenu}>
+                    <SortIcon />
+                  </IconButton>
+                </LightTooltip>
+                <Menu
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseSortMenu}
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                >
+                  {headCells.map((headCell, i) => (
+                    <MenuItem
+                      key={headCell.id}
+                      sortDirection={orderBy === headCell.id ? order : false}
+                      onClick={createSortHandler(headCell.id)}
                     >
-                      <Link to="/data-ajar-guru">
-                        <LightTooltip title="Sunting Data Ajar Guru">
-                          <IconButton>
-                            <BiSitemap />
-                          </IconButton>
-                        </LightTooltip>
-                      </Link>
-                    </Grid>
-                  ) : null,
-                  // When search bar is not on focus and searchFilter is empty
-                  <Grid item>
-                    <LightTooltip title="Urutkan Akun">
-                      <IconButton onClick={handleOpenSortMenu}>
-                        <SortIcon />
-                      </IconButton>
-                    </LightTooltip>
-                    <Menu
-                      keepMounted
-                      open={Boolean(anchorEl)}
-                      onClose={handleCloseSortMenu}
-                      anchorEl={anchorEl}
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "left",
-                      }}
-                    >
-                      {headCells.map((headCell, i) => (
-                        <MenuItem
-                          key={headCell.id}
-                          sortDirection={
-                            orderBy === headCell.id ? order : false
-                          }
-                          onClick={createSortHandler(headCell.id)}
-                        >
-                          <TableSortLabel
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : "asc"}
-                          >
-                            {headCell.label}
-                            {orderBy === headCell.id ? (
-                              <span className={classes.visuallyHidden}>
-                                {order === "desc"
-                                  ? "sorted descending"
-                                  : "sorted ascending"}
-                              </span>
-                            ) : null}
-                          </TableSortLabel>
-                        </MenuItem>
-                      ))}
-                    </Menu>
-                  </Grid>,
-                ]}
+                      <TableSortLabel
+                        active={orderBy === headCell.id}
+                        direction={orderBy === headCell.id ? order : "asc"}
+                      >
+                        {headCell.label}
+                        {orderBy === headCell.id ? (
+                          <span className={classes.visuallyHidden}>
+                            {order === "desc"
+                              ? "sorted descending"
+                              : "sorted ascending"}
+                          </span>
+                        ) : null}
+                      </TableSortLabel>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Grid>
+            )}
           </Hidden>
         </Grid>
       </Grid>
