@@ -113,12 +113,10 @@ function ManageUsersToolbar(props) {
   const { classes, order, orderBy, onRequestSort, role } = props;
   const {
     rowCount,
-    user,
     listCheckbox,
     selectAllData,
     deSelectAllData,
-    lengthListCheckbox,
-    handleOpenDisableDialog,
+    handleOpenDeactivateDialog,
     handleOpenDeleteDialog,
     setSearchBarFocus,
     searchBarFocus,
@@ -127,6 +125,7 @@ function ManageUsersToolbar(props) {
     updateSearchFilter,
   } = props;
 
+  const disabledCheckbox = rowCount === 0;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property, role);
   };
@@ -197,15 +196,24 @@ function ManageUsersToolbar(props) {
             <Checkbox color="primary" />
             */}
             {listCheckbox.length === 0 ? (
-              <IconButton onClick={() => selectAllData(role)}>
+              <IconButton
+                onClick={() => selectAllData(role)}
+                disabled={disabledCheckbox}
+              >
                 <CheckBoxOutlineBlankIcon style={{ color: "grey" }} />
               </IconButton>
             ) : listCheckbox.length === rowCount ? (
-              <IconButton onClick={() => deSelectAllData(role)}>
+              <IconButton
+                onClick={() => deSelectAllData(role)}
+                disabled={disabledCheckbox}
+              >
                 <CheckBoxIcon className={classes.checkboxIcon} />
               </IconButton>
             ) : (
-              <IconButton onClick={() => deSelectAllData(role)}>
+              <IconButton
+                onClick={() => deSelectAllData(role)}
+                disabled={disabledCheckbox}
+              >
                 <IndeterminateCheckBoxIcon className={classes.checkboxIcon} />
               </IconButton>
             )}
@@ -214,11 +222,11 @@ function ManageUsersToolbar(props) {
             <OptionMenu
               actions={["Nonaktifkan", "Hapus"]}
               handleActionOnClick={[
-                handleOpenDisableDialog,
+                handleOpenDeactivateDialog,
                 handleOpenDeleteDialog,
               ]}
+              disabled={listCheckbox.length === 0}
             />
-            {/* {CheckboxDialog("Delete", role)} */}
           </Grid>
         </Grid>
         <Grid
@@ -604,8 +612,6 @@ function ManageUsers(props) {
 
   let student_rows = [];
   let teacher_rows = [];
-  let currentListBooleanStudent;
-  let currentListBooleanTeacher;
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -753,8 +759,6 @@ function ManageUsers(props) {
   const retrieveUsers = () => {
     student_rows = [];
     teacher_rows = [];
-    currentListBooleanStudent = [];
-    currentListBooleanTeacher = [];
 
     if (Array.isArray(all_students)) {
       all_students
@@ -765,7 +769,6 @@ function ManageUsers(props) {
         )
         .forEach((data) => {
           userRowItem(data);
-          currentListBooleanStudent.push(false);
         });
     }
     if (Array.isArray(all_teachers)) {
@@ -777,7 +780,6 @@ function ManageUsers(props) {
         )
         .forEach((data) => {
           userRowItem(data);
-          currentListBooleanTeacher.push(false);
         });
     }
   };
@@ -855,7 +857,7 @@ function ManageUsers(props) {
     }
   };
 
-  const handleOpenDisableDialog = (e, row) => {
+  const handleOpenDeactivateDialog = (e, row) => {
     e.stopPropagation();
     setOpenDisableDialog(true);
     if (row) {
@@ -939,13 +941,11 @@ function ManageUsers(props) {
           rowCount={student_rows ? student_rows.length : 0}
           handleOpenDeleteDialog={handleOpenDeleteDialog}
           handleCloseDeleteDialog={handleCloseDeleteDialog}
-          handleOpenDisableDialog={handleOpenDisableDialog}
-          handleCloseDisableDialog={handleCloseDeactivateDialog}
-          lengthListCheckbox={listCheckboxStudent.length}
+          handleOpenDeactivateDialog={handleOpenDeactivateDialog}
+          handleCloseDeactivateDialog={handleCloseDeactivateDialog}
           listCheckbox={listCheckboxStudent}
           selectAllData={selectAllData}
           deSelectAllData={deSelectAllData}
-          user={user}
           setSearchBarFocus={setSearchBarFocusS}
           searchBarFocus={searchBarFocusS}
           searchFilter={searchFilterS}
@@ -1005,7 +1005,7 @@ function ManageUsers(props) {
                           actions={["Nonaktifkan", "Hapus"]}
                           row={row}
                           handleActionOnClick={[
-                            handleOpenDisableDialog,
+                            handleOpenDeactivateDialog,
                             handleOpenDeleteDialog,
                           ]}
                         />
@@ -1031,17 +1031,13 @@ function ManageUsers(props) {
           rowCount={teacher_rows ? teacher_rows.length : 0}
           handleOpenDeleteDialog={handleOpenDeleteDialog}
           handleCloseDeleteDialog={handleCloseDeleteDialog}
-          handleOpenDisableDialog={handleOpenDisableDialog}
-          handleCloseDisableDialog={handleCloseDeactivateDialog}
-          lengthListCheckbox={listCheckboxTeacher.length}
+          handleOpenDeactivateDialog={handleOpenDeactivateDialog}
+          handleCloseDeactivateDialog={handleCloseDeactivateDialog}
           listCheckbox={listCheckboxTeacher}
-          listBooleanCheckbox={currentListBooleanTeacher}
-          listBooleanCheckboxState={booleanCheckboxTeacher}
           selectAllData={selectAllData}
           deSelectAllData={deSelectAllData}
           setSearchBarFocus={setSearchBarFocusT}
           searchBarFocus={searchBarFocusT}
-          //Two props added for search filter.
           searchFilter={searchFilterT}
           updateSearchFilter={updateSearchFilterT}
         />
@@ -1094,7 +1090,7 @@ function ManageUsers(props) {
                           actions={["Nonaktifkan", "Hapus"]}
                           row={row}
                           handleActionOnClick={[
-                            handleOpenDisableDialog,
+                            handleOpenDeactivateDialog,
                             handleOpenDeleteDialog,
                           ]}
                         />

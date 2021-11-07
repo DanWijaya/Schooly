@@ -4,7 +4,7 @@ import { IconButton, Menu, MenuItem, Typography } from "@material-ui/core";
 import { MoreVert as MoreVertIcon } from "@material-ui/icons";
 
 function OptionMenu(props) {
-  const { actions, row, rowCount, handleActionOnClick } = props;
+  const { actions, row, disabled, handleActionOnClick } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const open = Boolean(anchorEl);
@@ -28,7 +28,7 @@ function OptionMenu(props) {
 
   return (
     <div>
-      <IconButton onClick={handleClick} disabled={rowCount}>
+      <IconButton onClick={handleClick} disabled={disabled}>
         <MoreVertIcon />
       </IconButton>
       <Menu

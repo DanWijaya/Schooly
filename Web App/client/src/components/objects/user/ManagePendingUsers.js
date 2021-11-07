@@ -123,8 +123,9 @@ function ManageUsersToolbar(props) {
     searchBarFocus,
     searchFilter,
     searchFilterHint,
-    updateSearchFilter,
+    setSearchFilter,
   } = props;
+  const disabledCheckbox = rowCount === 0;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property, role);
@@ -179,11 +180,11 @@ function ManageUsersToolbar(props) {
   };
 
   const onChange = (e) => {
-    updateSearchFilter(e.target.value);
+    setSearchFilter(e.target.value);
   };
 
   const onClear = (e) => {
-    updateSearchFilter("");
+    setSearchFilter("");
   };
 
   return (
@@ -196,15 +197,24 @@ function ManageUsersToolbar(props) {
             <Checkbox color="primary" />
             */}
             {listCheckbox.length === 0 ? (
-              <IconButton onClick={() => selectAllData(role)}>
+              <IconButton
+                onClick={() => selectAllData(role)}
+                disabled={disabledCheckbox}
+              >
                 <CheckBoxOutlineBlankIcon style={{ color: "grey" }} />
               </IconButton>
             ) : listCheckbox.length === rowCount ? (
-              <IconButton onClick={() => deSelectAllData(role)}>
+              <IconButton
+                onClick={() => deSelectAllData(role)}
+                disabled={disabledCheckbox}
+              >
                 <CheckBoxIcon className={classes.checkboxIcon} />
               </IconButton>
             ) : (
-              <IconButton onClick={() => deSelectAllData(role)}>
+              <IconButton
+                onClick={() => deSelectAllData(role)}
+                disabled={disabledCheckbox}
+              >
                 <IndeterminateCheckBoxIcon className={classes.checkboxIcon} />
               </IconButton>
             )}
@@ -216,8 +226,8 @@ function ManageUsersToolbar(props) {
                 handleOpenDisableDialog,
                 handleOpenDeleteDialog,
               ]}
+              disabled={listCheckbox.length === 0}
             />
-            {/* {CheckboxDialog("Delete", role)} */}
           </Grid>
         </Grid>
         <Grid
@@ -520,7 +530,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ManageUsers(props) {
+function ManagePendingUsers(props) {
   const classes = useStyles();
   const {
     setUserActive,
@@ -541,9 +551,9 @@ function ManageUsers(props) {
   const [openActivateDialog, setOpenActivateDialog] = React.useState(null);
   const [selectedUserId, setSelectedUserId] = React.useState(null);
   const [selectedUserName, setSelectedUserName] = React.useState(null);
-  const [searchFilterS, updateSearchFilterS] = React.useState("");
+  const [searchFilterS, setSearchFilterS] = React.useState("");
   const [searchBarFocusS, setSearchBarFocusS] = React.useState(false);
-  const [searchFilterT, updateSearchFilterT] = React.useState("");
+  const [searchFilterT, setSearchFilterT] = React.useState("");
   const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
 
   // List Checkbox
@@ -567,8 +577,6 @@ function ManageUsers(props) {
   const [avatarJSON, setAvatarJSON] = React.useState({});
   let student_rows = [];
   let teacher_rows = [];
-  let currentListBooleanStudent;
-  let currentListBooleanTeacher;
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -707,8 +715,6 @@ function ManageUsers(props) {
   const retrieveUsers = () => {
     student_rows = [];
     teacher_rows = [];
-    currentListBooleanStudent = [];
-    currentListBooleanTeacher = [];
 
     if (Array.isArray(pending_students)) {
       pending_students
@@ -719,7 +725,6 @@ function ManageUsers(props) {
         )
         .forEach((data) => {
           userRowItem(data);
-          currentListBooleanStudent.push(false);
         });
     }
     if (Array.isArray(pending_teachers)) {
@@ -731,7 +736,6 @@ function ManageUsers(props) {
         )
         .forEach((data) => {
           userRowItem(data);
-          currentListBooleanTeacher.push(false);
         });
     }
   };
@@ -893,7 +897,7 @@ function ManageUsers(props) {
           setSearchBarFocus={setSearchBarFocusS}
           searchBarFocus={searchBarFocusS}
           searchFilter={searchFilterS}
-          updateSearchFilter={updateSearchFilterS}
+          setSearchFilter={setSearchFilterS}
         />
         <Divider />
         {student_rows.length === 0 ? (
@@ -921,11 +925,6 @@ function ManageUsers(props) {
                       <Hidden xsDown>
                         <ListItemAvatar>
                           <Avatar src={avatarJSON[row._id]} />
-                          {/* {!row.avatar ? (
-                            <Avatar />
-                          ) : (
-                            <Avatar src={`/api/upload/avatar/${row.avatar}`} />
-                          )} */}
                         </ListItemAvatar>
                       </Hidden>
                       <ListItemText
@@ -983,15 +982,13 @@ function ManageUsers(props) {
           handleCloseDisableDialog={handleCloseActivateDialog}
           lengthListCheckbox={listCheckboxTeacher.length}
           listCheckbox={listCheckboxTeacher}
-          listBooleanCheckbox={currentListBooleanTeacher}
-          listBooleanCheckboxState={booleanCheckboxTeacher}
           selectAllData={selectAllData}
           deSelectAllData={deSelectAllData}
           setSearchBarFocus={setSearchBarFocusT}
           searchBarFocus={searchBarFocusT}
           //Two props added for search filter.
           searchFilter={searchFilterT}
-          updateSearchFilter={updateSearchFilterT}
+          setSearchFilter={setSearchFilterT}
         />
         <Divider />
         {teacher_rows.length === 0 ? (
@@ -1095,7 +1092,7 @@ function ManageUsers(props) {
   );
 }
 
-ManageUsers.propTypes = {
+ManagePendingUsers.propTypes = {
   auth: PropTypes.object.isRequired,
   getPendingStudents: PropTypes.func.isRequired,
   getPendingTeachers: PropTypes.func.isRequired,
@@ -1119,4 +1116,4 @@ export default connect(mapStateToProps, {
   deleteUser,
   bulkDeleteUser,
   getMultipleFileAvatar,
-})(ManageUsers);
+})(ManagePendingUsers);

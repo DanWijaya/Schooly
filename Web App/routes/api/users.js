@@ -431,6 +431,7 @@ router.get("/getAllPendingAdmins", (req, res) => {
     .sort({ name: 1 })
     .then((users) => {
       if (!users.length) console.log("Pending admins in this unit is empty");
+      console.log("getAllPendingAdmins completed");
       return res.json(users);
     })
     .catch((err) => {
