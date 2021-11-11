@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useContext } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -103,9 +103,16 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function ManageUsersToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, role } = props;
+const ManageAdminsContext = createContext(null);
+
+function ManagePendingAdminsToolbar(props) {
+  const { searchFilterHint } = props;
   const {
+    classes,
+    order,
+    orderBy,
+    onRequestSort,
+    role,
     rowCount,
     listCheckbox,
     selectAllData,
@@ -115,9 +122,8 @@ function ManageUsersToolbar(props) {
     setSearchBarFocus,
     searchBarFocus,
     searchFilter,
-    searchFilterHint,
     setSearchFilter,
-  } = props;
+  } = useContext(ManageAdminsContext);
 
   const disabledCheckbox = rowCount === 0;
   const createSortHandler = (property) => (event) => {
@@ -724,143 +730,148 @@ function ManagePendingAdmins(props) {
   document.title = "Schooly | Pengguna Tidak Aktif";
 
   return (
-    <div className={classes.root}>
-      <Grid
-        container
-        alignItems="center"
-        spacing={2}
-        className={classes.header}
-      >
-        <Grid item>
-          <div className={classes.headerIcon}>
-            <FaUserLock />
-          </div>
+    <ManageAdminsContext.Provider
+      value={{
+        deleteUser,
+        classes,
+        order,
+        orderBy,
+        handleRequestSort,
+        rowCount: rows ? rows.length : 0,
+        handleOpenDeleteDialog,
+        handleCloseDeleteDialog,
+        handleOpenActivateDialog,
+        handleCloseActivateDialog,
+        listCheckbox,
+        selectAllData,
+        deSelectAllData,
+        setSearchBarFocus,
+        searchBarFocus,
+        searchFilter,
+        setSearchFilter,
+      }}
+    >
+      <div className={classes.root}>
+        <Grid
+          container
+          alignItems="center"
+          spacing={2}
+          className={classes.header}
+        >
+          <Grid item>
+            <div className={classes.headerIcon}>
+              <FaUserLock />
+            </div>
+          </Grid>
+          <Grid item>
+            <Typography variant="h5" align="left">
+              Pengguna Tidak Aktif
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Typography variant="h5" align="left">
-            Pengguna Tidak Aktif
-          </Typography>
-        </Grid>
-      </Grid>
-      <ManageUsersToolbar
-        searchFilterHint="Cari Pengelola"
-        deleteUser={deleteUser}
-        classes={classes}
-        order={order}
-        orderBy={orderBy}
-        onRequestSort={handleRequestSort}
-        rowCount={rows ? rows.length : 0}
-        handleOpenDeleteDialog={handleOpenDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        handleOpenActivateDialog={handleOpenActivateDialog}
-        handleCloseActivateDialog={handleCloseActivateDialog}
-        listCheckbox={listCheckbox}
-        selectAllData={selectAllData}
-        deSelectAllData={deSelectAllData}
-        setSearchBarFocus={setSearchBarFocus}
-        searchBarFocus={searchBarFocus}
-        searchFilter={searchFilter}
-        setSearchFilter={setSearchFilter}
-      />
-      <Divider />
-      {rows.length === 0 ? (
-        <Empty />
-      ) : (
-        <List className={classes.userList}>
-          {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            const labelId = index;
-            return (
-              <div>
-                <Link to={`/lihat-profil/${row._id}`}>
-                  <ListItem className={classes.accountItem}>
-                    <ListItemIcon>
-                      <Checkbox
-                        color="primary"
-                        onClick={(e) => {
-                          handleChangeListStudent(e, index, row);
-                        }}
-                        checked={Boolean(booleanCheckbox[index])}
-                      />
-                    </ListItemIcon>
-                    <Hidden xsDown>
-                      <ListItemAvatar>
-                        <Avatar src={avatarJSON[row._id]} />
-                      </ListItemAvatar>
-                    </Hidden>
-                    <ListItemText
-                      primary={
-                        <Typography id={labelId} noWrap>
-                          {row.name}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          noWrap
+        <ManagePendingAdminsToolbar searchFilterHint="Cari Pengelola" />
+        <Divider />
+        {rows.length === 0 ? (
+          <Empty />
+        ) : (
+          <List className={classes.userList}>
+            {stableSort(rows, getComparator(order, orderBy)).map(
+              (row, index) => {
+                const labelId = index;
+                return (
+                  <div>
+                    <Link to={`/lihat-profil/${row._id}`}>
+                      <ListItem className={classes.accountItem}>
+                        <ListItemIcon>
+                          <Checkbox
+                            color="primary"
+                            onClick={(e) => {
+                              handleChangeListStudent(e, index, row);
+                            }}
+                            checked={Boolean(booleanCheckbox[index])}
+                          />
+                        </ListItemIcon>
+                        <Hidden xsDown>
+                          <ListItemAvatar>
+                            <Avatar src={avatarJSON[row._id]} />
+                          </ListItemAvatar>
+                        </Hidden>
+                        <ListItemText
+                          primary={
+                            <Typography id={labelId} noWrap>
+                              {row.name}
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography
+                              variant="body2"
+                              color="textSecondary"
+                              noWrap
+                            >
+                              {row.email}
+                            </Typography>
+                          }
+                        />
+                        <ListItemSecondaryAction
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
                         >
-                          {row.email}
-                        </Typography>
-                      }
-                    />
-                    <ListItemSecondaryAction
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <OptionMenu
-                        actions={["Aktifkan", "Hapus"]}
-                        row={row}
-                        handleActionOnClick={[
-                          handleOpenActivateDialog,
-                          handleOpenDeleteDialog,
-                        ]}
-                      />
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                </Link>
-                <Divider />
-              </div>
-            );
-          })}
-        </List>
-      )}
-      <ActivateDialog
-        open={openActivateDialog}
-        onClose={handleCloseActivateDialog}
-        itemName={selectedUserName}
-        itemType="Pengguna"
-        onAction={() => {
-          onActivateUser(selectedUserId);
-        }}
-      />
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Pengguna"
-        itemName={selectedUserName}
-        deleteItem={() => {
-          onDeleteUser(selectedUserId);
-        }}
-      />
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={4000}
-        onClose={(event, reason) => {
-          handleCloseSnackbar(event, reason);
-        }}
-      >
-        <Alert
-          variant="filled"
-          severity="success"
+                          <OptionMenu
+                            actions={["Aktifkan", "Hapus"]}
+                            row={row}
+                            handleActionOnClick={[
+                              handleOpenActivateDialog,
+                              handleOpenDeleteDialog,
+                            ]}
+                          />
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                    </Link>
+                    <Divider />
+                  </div>
+                );
+              }
+            )}
+          </List>
+        )}
+        <ActivateDialog
+          open={openActivateDialog}
+          onClose={handleCloseActivateDialog}
+          itemName={selectedUserName}
+          itemType="Pengguna"
+          onAction={() => {
+            onActivateUser(selectedUserId);
+          }}
+        />
+        <DeleteDialog
+          openDeleteDialog={openDeleteDialog}
+          handleCloseDeleteDialog={handleCloseDeleteDialog}
+          itemType="Pengguna"
+          itemName={selectedUserName}
+          deleteItem={() => {
+            onDeleteUser(selectedUserId);
+          }}
+        />
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={4000}
           onClose={(event, reason) => {
             handleCloseSnackbar(event, reason);
           }}
         >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-    </div>
+          <Alert
+            variant="filled"
+            severity="success"
+            onClose={(event, reason) => {
+              handleCloseSnackbar(event, reason);
+            }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </div>
+    </ManageAdminsContext.Provider>
   );
 }
 
