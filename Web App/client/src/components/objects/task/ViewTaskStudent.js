@@ -15,10 +15,7 @@ import {
   getFileTasks,
   viewFileTasks,
 } from "../../../actions/files/FileTaskActions";
-import {
-  getFileAvatar,
-  getMultipleFileAvatar,
-} from "../../../actions/files/FileAvatarActions";
+import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
 import {
   getOneTask,
   createTaskComment,

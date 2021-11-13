@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../../../actions/UserActions";
-import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
+import { getMyFileAvatar } from "../../../actions/files/FileAvatarActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -91,7 +91,7 @@ function NavBar(props) {
     sideDrawerExist,
     mobileView,
     logoutUser,
-    getFileAvatar,
+    getMyFileAvatar,
   } = props;
   const { user } = props.auth;
   const [avatar, setAvatar] = React.useState(null);
@@ -105,7 +105,11 @@ function NavBar(props) {
 
   React.useEffect(() => {
     if (user._id) {
-      getFileAvatar(user._id).catch((err) => console.log(err));
+      getMyFileAvatar(user._id)
+        .then((avatar) => {
+          setAvatar(avatar);
+        })
+        .catch((err) => console.log(err));
     }
   }, [user._id]);
 
@@ -309,6 +313,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { logoutUser, getFileAvatar })(
+export default connect(mapStateToProps, { logoutUser, getMyFileAvatar })(
   React.memo(NavBar)
 );

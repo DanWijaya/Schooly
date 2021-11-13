@@ -20,10 +20,7 @@ import {
 } from "../../../actions/TaskActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
-import {
-  getFileAvatar,
-  getMultipleFileAvatar,
-} from "../../../actions/files/FileAvatarActions";
+import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
 import viewClassPicture from "./ViewClassPicture.png";
 import AssessmentItem from "../item/AssessmentItem";
 import TaskItem from "../item/TaskItem";
@@ -576,7 +573,6 @@ function ViewClass(props) {
     getTaskAtmpt,
     getAllAssessments,
     assessmentsCollection,
-    getFileAvatar,
     getMultipleFileAvatar,
     getTaskByClass,
   } = props;
@@ -1601,7 +1597,6 @@ export default connect(mapStateToProps, {
   getAllAssessments,
   getStudents,
   getTaskAtmpt,
-  getFileAvatar,
   getMultipleFileAvatar,
   getTaskByClass,
 })(ViewClass);

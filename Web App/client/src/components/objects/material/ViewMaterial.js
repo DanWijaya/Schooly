@@ -19,10 +19,7 @@ import {
   editMaterialComment,
   deleteMaterialComment,
 } from "../../../actions/MaterialActions";
-import {
-  getFileAvatar,
-  getMultipleFileAvatar,
-} from "../../../actions/files/FileAvatarActions";
+import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
@@ -256,7 +253,6 @@ function ViewMaterial(props) {
     getStudents,
     clearErrors,
     clearSuccess,
-    getFileAvatar,
     getMultipleFileAvatar,
   } = props;
   const { user, all_students, all_teachers } = props.auth;
@@ -872,6 +868,5 @@ export default connect(mapStateToProps, {
   getStudents,
   clearErrors,
   clearSuccess,
-  getFileAvatar,
   getMultipleFileAvatar,
 })(ViewMaterial);

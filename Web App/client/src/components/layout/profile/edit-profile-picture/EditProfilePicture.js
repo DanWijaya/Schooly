@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   uploadFileAvatar,
-  getFileAvatar,
+  getMyFileAvatar,
 } from "../../../../actions/files/FileAvatarActions";
 import defaultAvatar from "./DefaultAvatar.svg";
 import {
@@ -79,7 +79,7 @@ function EditProfilePicture(props) {
     avatar,
     setFileLimitSnackbar,
     setAvatar,
-    getFileAvatar,
+    getMyFileAvatar,
     handleOpenAlert,
   } = props;
 
@@ -128,7 +128,7 @@ function EditProfilePicture(props) {
     try {
       await uploadFileAvatar(user._id, formData);
       console.log("Avatar is uploaded successfully");
-      const new_avatar = await getFileAvatar(user._id);
+      const new_avatar = await getMyFileAvatar(user._id);
       console.log("Avatar is retrieved successfully");
       console.log(new_avatar);
       setAvatar(new_avatar);
@@ -285,6 +285,6 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(mapStateToProps, { uploadFileAvatar, getFileAvatar })(
+export default connect(mapStateToProps, { uploadFileAvatar, getMyFileAvatar })(
   EditProfilePicture
 );

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setCurrentUser } from "../UserActions";
-import { GET_AVATAR } from "../Types";
+import { GET_MY_AVATAR } from "../Types";
 
 export const uploadFileAvatar = (id, formData) => (dispatch) => {
   return axios
@@ -15,15 +15,25 @@ export const uploadFileAvatar = (id, formData) => (dispatch) => {
     });
 };
 
-export const getFileAvatar = (id) => (dispatch) => {
+//Get File Avatar for current logged in user.
+export const getMyFileAvatar = (id) => (dispatch) => {
   return axios
     .get(`/api/files/avatar/by_user/${id}`)
     .then((res) => {
       dispatch({
-        type: GET_AVATAR,
+        type: GET_MY_AVATAR,
         payload: res.data,
       });
-      console.log(res.data);
+      return res.data;
+    })
+    .catch((err) => new Error(err));
+};
+
+//get file avatat for other user than logged in one.
+export const getUserFileAvatar = (id) => (dispatch) => {
+  return axios
+    .get(`/api/files/avatar/by_user/${id}`)
+    .then((res) => {
       return res.data;
     })
     .catch((err) => new Error(err));

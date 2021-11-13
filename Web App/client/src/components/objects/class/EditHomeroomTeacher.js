@@ -1,7 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getAllClass, setHomeroomTeachers } from "../../../actions/ClassActions";
+import {
+  getAllClass,
+  setHomeroomTeachers,
+} from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -18,7 +21,7 @@ import {
   Paper,
   Snackbar,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
@@ -100,7 +103,7 @@ function EditHomeroomTeacher(props) {
           classId: null,
         };
       }
-
+      console.log(tempstatusWali);
       let tempstatusKelas = {};
       for (let classInfo of all_classes) {
         if (classInfo.walikelas) {
@@ -111,6 +114,7 @@ function EditHomeroomTeacher(props) {
         }
         all_classes_wali.current[classInfo._id] = classInfo.walikelas;
       }
+      console.log(tempstatusKelas);
       setStatusKelas(tempstatusKelas);
       setStatusWali(tempstatusWali);
     }

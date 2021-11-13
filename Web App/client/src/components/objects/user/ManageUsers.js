@@ -58,6 +58,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { BiSitemap } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
 import OptionMenu from "../../misc/menu/OptionMenu";
+import {
+  removeDisabledDeletedOfficers,
+  removeHomeroomTeachers,
+} from "../../../actions/ClassActions";
 
 function createData(
   _id,
@@ -191,10 +195,6 @@ function ManageUsersToolbar(props) {
       <Grid container>
         <Grid item xs container alignItems="center" spacing={1}>
           <Grid item>
-            {/*
-            Perlu diubah jadi komponen checkbox biar posisinya nda aneh
-            <Checkbox color="primary" />
-            */}
             {listCheckbox.length === 0 ? (
               <IconButton
                 onClick={() => selectAllData(role)}
@@ -808,10 +808,12 @@ function ManageUsers(props) {
     }
 
     if (panel == 0) {
+      await removeDisabledDeletedOfficers(id);
       const students = await getStudents(user.unit);
       setListCheckboxStudent([]);
       setBooleanCheckboxStudent(students.map(() => false));
     } else if (panel == 1) {
+      await removeHomeroomTeachers(id);
       const teachers = await getTeachers(user.unit);
       setListCheckboxTeacher([]);
       setBooleanCheckboxTeacher(teachers.map(() => false));
@@ -828,10 +830,12 @@ function ManageUsers(props) {
       await setUserDeactivated(id);
     }
     if (panel == 0) {
+      await removeDisabledDeletedOfficers(id);
       const students = await getStudents(user.unit);
       setListCheckboxStudent([]);
       setBooleanCheckboxStudent(students.map(() => false));
     } else if (panel == 1) {
+      await removeHomeroomTeachers(id);
       const teachers = await getTeachers(user.unit);
       setListCheckboxTeacher([]);
       setBooleanCheckboxTeacher(teachers.map(() => false));

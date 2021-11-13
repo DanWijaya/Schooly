@@ -57,6 +57,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { BiSitemap } from "react-icons/bi";
 import { FaUserLock } from "react-icons/fa";
 import OptionMenu from "../../misc/menu/OptionMenu";
+import {
+  removeDisabledDeletedOfficers,
+  removeHomeroomTeachers,
+} from "../../../actions/ClassActions";
 
 function createData(
   _id,
@@ -762,8 +766,19 @@ function ManagePendingUsers(props) {
     } else {
       await deleteUser(id);
     }
-    await getPendingStudents(user.unit);
-    await getPendingTeachers(user.unit);
+
+    if (panel == 0) {
+      await removeDisabledDeletedOfficers(id);
+      const students = await getPendingStudents(user.unit);
+      setListCheckboxStudent([]);
+      setBooleanCheckboxStudent(students.map(() => false));
+    } else if (panel == 1) {
+      await removeHomeroomTeachers(id);
+      const teachers = await getPendingTeachers(user.unit);
+      setListCheckboxTeacher([]);
+      setBooleanCheckboxTeacher(teachers.map(() => false));
+    }
+
     handleOpenSnackbar("Pengguna berhasil dihapus");
     handleCloseDeleteDialog();
   };

@@ -25,10 +25,7 @@ import {
   viewFileTasks,
   downloadFileTasks,
 } from "../../../actions/files/FileTaskActions";
-import {
-  getFileAvatar,
-  getMultipleFileAvatar,
-} from "../../../actions/files/FileAvatarActions";
+import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
 import { getFileSubmitTasks_T } from "../../../actions/files/FileSubmitTaskActions";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";

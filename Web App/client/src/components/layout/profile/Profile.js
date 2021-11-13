@@ -5,7 +5,7 @@ import moment from "moment";
 import "moment/locale/id";
 import {
   uploadFileAvatar,
-  getFileAvatar,
+  getMyFileAvatar,
 } from "../../../actions/files/FileAvatarActions";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
@@ -90,7 +90,7 @@ function Profile(props) {
     setCurrentClass,
     classesCollection,
     uploadFileAvatar,
-    getFileAvatar,
+    getMyFileAvatar,
   } = props;
 
   const [avatar, setAvatar] = React.useState(null);
@@ -98,7 +98,7 @@ function Profile(props) {
 
   React.useEffect(() => {
     if (user._id) {
-      getFileAvatar(user._id)
+      getMyFileAvatar(user._id)
         .then((result) => setAvatar(result))
         .catch((err) => console.error(err));
     }
@@ -503,5 +503,5 @@ export default connect(mapStateToProps, {
   updateAvatar,
   setCurrentClass,
   uploadFileAvatar,
-  getFileAvatar,
+  getMyFileAvatar,
 })(Profile);

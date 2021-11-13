@@ -10,7 +10,7 @@ import {
 import {
   getAllClass,
   deleteClass,
-  unassignClassOfficers,
+  removeMovedOfficers,
 } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import ClassItem from "../item/ClassItem";
@@ -413,7 +413,7 @@ function ClassListToolbar(props) {
         }
 
         if (Object.keys(classesToUpdate).length !== 0) {
-          unassignClassOfficers(classesToUpdate)
+          removeMovedOfficers(classesToUpdate)
             .then(() => {
               console.log("Penghapusan pengurus kelas berhasil dilakukan");
             })
@@ -747,7 +747,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   createClassButton: {
-    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    boxShadow:
+      "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {

@@ -6,7 +6,7 @@ import moment from "moment";
 import "moment/locale/id";
 import { updateAvatar, getOneUser } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
+import { getUserFileAvatar } from "../../../actions/files/FileAvatarActions";
 import DataItem from "./DataItem";
 import {
   Avatar,
@@ -33,6 +33,7 @@ import {
   Work as WorkIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import getUnixTime from "date-fns/getUnixTime";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,7 +77,7 @@ function ProfileView(props) {
   const {
     setCurrentClass,
     classesCollection,
-    getFileAvatar,
+    getUserFileAvatar,
     getOneUser,
   } = props;
 
@@ -84,24 +85,18 @@ function ProfileView(props) {
   const [namakelas, setNamaKelas] = React.useState("");
 
   React.useEffect(() => {
-    getOneUser(props.match.params.id).then((selectedUser) => {
+    const fetchData = async () => {
+      const selectedUser = await getOneUser(props.match.params.id);
       if (selectedUser.role === "Student") {
-        setCurrentClass(selectedUser.kelas);
+        const kelas = await setCurrentClass(selectedUser.kelas);
+        setNamaKelas(kelas.name);
       }
-      getFileAvatar(selectedUser._id).then((result) => setAvatar(result));
-    });
-
+      const result = await getUserFileAvatar(selectedUser._id);
+      setAvatar(result);
+    };
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  React.useEffect(() => {
-    setCurrentClass(selectedUser.kelas);
-  }, [selectedUser]);
-
-  React.useEffect(() => {
-    setNamaKelas(classesCollection.kelas.name);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [classesCollection]);
 
   const {
     name,
@@ -148,7 +143,7 @@ function ProfileView(props) {
           </Typography>
           <Typography variant="h6" color="textSecondary" align="center">
             {roleMap.get(role)}
-            {!namakelas || !role !== "Student" ? null : ` ${namakelas}`}
+            {!namakelas || role !== "Student" ? null : ` ${namakelas}`}
           </Typography>
         </Grid>
       </Grid>
@@ -342,7 +337,6 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   updateAvatar,
   setCurrentClass,
-  getFileAvatar,
+  getUserFileAvatar,
   getOneUser,
-  getFileAvatar,
 })(ProfileView);

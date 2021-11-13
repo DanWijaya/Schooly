@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const keys = require("../../config/keys");
 const validateClassInput = require("../../validation/ClassData");
 const { ObjectId } = require("mongodb");
+const User = require("../../models/user_model/User");
 
 router.post("/create", (req, res) => {
   const { errors, isValid } = validateClassInput(req.body);
@@ -191,7 +192,7 @@ router.put("/update/:id", (req, res) => {
     });
 });
 
-router.put("/class-officers", (req, res) => {
+router.put("/remove-moved-officers", (req, res) => {
   let operations = [];
   for (let [classId, rolesToDelete] of Object.entries(req.body)) {
     let fieldToUnset = {};
@@ -220,7 +221,47 @@ router.put("/class-officers", (req, res) => {
     });
 });
 
-router.put("/homeroom-teachers", (req, res) => {
+router.put("/remove-disabled-deleted-officers", async (req, res) => {
+  const { userIdList } = req.body;
+  const rolesToCheck = ["ketua_kelas", "sekretaris", "bendahara"];
+  console.log("Remove deleted officers running");
+  console.log(userIdList);
+  try {
+    const users = await Student.find({ _id: userIdList });
+    const classIdList = users.map((u) => u.kelas);
+    const classes = await Class.find({ _id: { $in: classIdList } });
+    let operations = [];
+    for (cl of classes) {
+      let roleToRemove = {};
+      for (role of rolesToCheck) {
+        if (!cl[role]) {
+          continue;
+        }
+        if (userIdList.indexOf(cl[role].toString()) !== -1) {
+          roleToRemove[role] = null;
+        }
+      }
+      if (Object.keys(roleToRemove).length === 0) {
+        continue;
+      }
+      operations.push({
+        updateOne: {
+          filter: { _id: cl._id },
+          update: roleToRemove,
+        },
+      });
+    }
+    console.log(operations);
+    await Class.bulkWrite(operations, { ordered: false });
+    return res.json("removeDisabledDeletedOfficers complete");
+  } catch (err) {
+    console.error("removeDisabledDeletedOfficers failed");
+    console.error(err);
+    return res.status(400).json(err);
+  }
+});
+
+router.put("/set-hteachers", (req, res) => {
   let operations = [];
   for (let [classId, teacherId] of Object.entries(req.body)) {
     let updateArgument = {};
@@ -248,6 +289,23 @@ router.put("/homeroom-teachers", (req, res) => {
       console.error("Set homeroom teahers failed");
       console.log(err);
       return res.status(500).json(err);
+    });
+});
+
+router.put("/remove-hteachers", (req, res) => {
+  const { userIdList } = req.body;
+
+  Class.updateMany(
+    { walikelas: { $in: userIdList } },
+    { $set: { walikelas: null } }
+  )
+    .then(() => {
+      return res.json("Remove homeroom teachers complete");
+    })
+    .catch((err) => {
+      console.error("Remove homeroom teachers failed");
+      console.error(err);
+      return res.status(400).json(err);
     });
 });
 

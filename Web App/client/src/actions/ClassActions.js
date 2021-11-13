@@ -130,7 +130,6 @@ export const deleteClass = (classId, history) => (dispatch) => {
 };
 
 export const setCurrentClass = (classId) => (dispatch) => {
-  // console.log("set current class is runned")
   // sebelumnya tidak ada return
   return axios
     .get(`/api/classes/setCurrentClass/${classId}`)
@@ -153,22 +152,54 @@ export const setCurrentClass = (classId) => (dispatch) => {
     });
 };
 
-export const unassignClassOfficers = (classesData) => {
+export const removeMovedOfficers = (classesData) => {
   return axios
-    .put("/api/classes/class-officers", classesData)
+    .put("/api/classes/remove-moved-officers", classesData)
     .then(() => {
-      console.log("unassignClassOfficers completed");
+      console.log("removeMovedOfficers completed");
     })
     .catch((err) => {
       throw new Error(err.response.data);
     });
 };
 
-export const setHomeroomTeachers = (classesData) => {
+export const removeDisabledDeletedOfficers = (userIdList) => {
+  if (!Array.isArray(userIdList)) {
+    userIdList = [userIdList];
+  }
+
+  const data = { userIdList: userIdList };
   return axios
-    .put("/api/classes/homeroom-teachers", classesData)
+    .put("/api/classes/remove-disabled-deleted-officers", data)
+    .then(() => {
+      console.log("removeDisabledDeletedOfficers completed");
+    })
+    .catch((err) => {
+      throw new Error(err.response.data);
+    });
+};
+export const setHomeroomTeachers = (classesData) => {
+  // hteachers means Home room teachers
+  return axios
+    .put("/api/classes/set-hteachers", classesData)
     .then(() => {
       console.log("setHomeroomTeachers completed");
+    })
+    .catch((err) => {
+      throw new Error(err.response.data);
+    });
+};
+
+export const removeHomeroomTeachers = (userIdList) => {
+  if (!Array.isArray(userIdList)) {
+    userIdList = [userIdList];
+  }
+  // hteachers means Home room teachers
+  const data = { userIdList: userIdList };
+  return axios
+    .put("/api/classes/remove-hteachers/", data)
+    .then(() => {
+      console.log("removeHomeroomTeachers completed");
     })
     .catch((err) => {
       throw new Error(err.response.data);

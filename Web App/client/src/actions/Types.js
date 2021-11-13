@@ -1,7 +1,7 @@
 // USER ACTION TYPES
 export const USER_LOADING = "USER_LOADING";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
-export const GET_AVATAR = "GET_AVATAR";
+export const GET_MY_AVATAR = "GET_MY_AVATAR";
 export const GET_USERS = "GET_USERS";
 export const GET_ONE_USER = "GET_ONE_USER";
 export const GET_ALL_USERS = "GET_ALL_USERS";
