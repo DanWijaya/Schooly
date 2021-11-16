@@ -601,7 +601,7 @@ class App extends Component {
                       <PrivateRoute
                         exact
                         access={[Role.SUPERADMIN]}
-                        path="/sunting-pengelola"
+                        path="/data-unit-pengelola"
                         component={AdminList}
                       />
                       <PrivateRoute
