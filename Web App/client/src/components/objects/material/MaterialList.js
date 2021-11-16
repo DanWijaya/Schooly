@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
 import {
   getAllMaterials,
   getMaterial,
@@ -15,22 +14,14 @@ import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
-  Avatar,
   Divider,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
   Fab,
   Grid,
   Hidden,
   IconButton,
   InputAdornment,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Menu,
   MenuItem,
-  Paper,
   Snackbar,
   TableSortLabel,
   TextField,
@@ -40,14 +31,12 @@ import Alert from "@material-ui/lab/Alert";
 import {
   ArrowBack as ArrowBackIcon,
   Clear as ClearIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
   MenuBook as MenuBookIcon,
-  Pageview as PageviewIcon,
   Search as SearchIcon,
-  Sort as SortIcon
+  Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import MaterialItem from "../item/MaterialItem";
 
 function createData(
   _id,
@@ -402,45 +391,6 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  viewMaterialButton: {
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
-    },
-  },
-  editMaterialButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  deleteMaterialButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
-  materialPanelSummary: {
-    "&:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
-  },
-  assignmentLate: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  assignmentLateTeacher: {
-    backgroundColor: theme.palette.primary.main,
-    marginRight: "10px",
-  },
-  listItem: {
-    padding: "6px 16px",
-  },
 }));
 
 function MaterialList(props) {
@@ -453,8 +403,8 @@ function MaterialList(props) {
     getTeachers,
   } = props;
   const { user, all_teachers_map } = props.auth;
-  const { all_classes_map } = props.classesCollection;
-  const { all_subjects_map } = props.subjectsCollection;
+  // const { all_classes_map } = props.classesCollection;
+  // const { all_subjects_map } = props.subjectsCollection;
   const { all_materials, selectedMaterials } = props.materialsCollection;
 
   const [order, setOrder] = React.useState("asc");
@@ -610,216 +560,10 @@ function MaterialList(props) {
       {rows.length === 0 ? (
         <Empty />
       ) : (
-        <Grid container direction="column" spacing={2}>
-          {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-            let viewpage = `/materi/${row._id}`;
-            return (
-              <Grid item>
-                {user.role === "Teacher" ? (
-                  <ExpansionPanel button variant="outlined">
-                    <ExpansionPanelSummary
-                      className={classes.materialPanelSummary}
-                    >
-                      <Grid
-                        container
-                        spacing={1}
-                        justify="space-between"
-                        alignItems="center"
-                      >
-                        <Grid item>
-                          <Hidden smUp implementation="css">
-                            <Typography variant="subtitle1" id={labelId}>
-                              {row.materialtitle}
-                            </Typography>
-                            <Typography variant="caption" color="textSecondary">
-                              {all_subjects_map.get(row.subject)}
-                            </Typography>
-                          </Hidden>
-                          <Hidden xsDown implementation="css">
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              <ListItemAvatar>
-                                <Avatar
-                                  className={classes.assignmentLateTeacher}
-                                >
-                                  <MenuBookIcon />
-                                </Avatar>
-                              </ListItemAvatar>
-                              <div>
-                                <Typography variant="h6" color="textPrimary">
-                                  {row.materialtitle}
-                                </Typography>
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  {all_subjects_map.get(row.subject)}
-                                </Typography>
-                              </div>
-                            </div>
-                          </Hidden>
-                        </Grid>
-                        <Grid item xs container spacing={1} justify="flex-end">
-                          <Grid item>
-                            <LightTooltip title="Lihat Lebih Lanjut">
-                              <Link to={viewpage}>
-                                <IconButton
-                                  size="small"
-                                  className={classes.viewMaterialButton}
-                                >
-                                  <PageviewIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
-                          <Grid item>
-                            <LightTooltip title="Sunting">
-                              <Link to={`/sunting-materi/${row._id}`}>
-                                <IconButton
-                                  size="small"
-                                  className={classes.editMaterialButton}
-                                >
-                                  <EditIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
-                          <Grid item>
-                            <LightTooltip title="Hapus">
-                              <IconButton
-                                size="small"
-                                className={classes.deleteMaterialButton}
-                                onClick={(e) => {
-                                  handleOpenDeleteDialog(
-                                    e,
-                                    row._id,
-                                    row.materialtitle
-                                  );
-                                }}
-                              >
-                                <DeleteIcon fontSize="small" />
-                              </IconButton>
-                            </LightTooltip>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </ExpansionPanelSummary>
-                    <Divider />
-                    <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
-                      <Grid container>
-                        <Grid item xs={12}>
-                          <Typography variant="body1">
-                            Kelas yang Diberikan:{" "}
-                            {!all_classes_map.size
-                              ? null
-                              : row.class_assigned.map((kelas, i) => {
-                                  if (all_classes_map.get(kelas)) {
-                                    if (i === row.class_assigned.length - 1)
-                                      return `${
-                                        all_classes_map.get(kelas).name
-                                      }`;
-                                    return `${
-                                      all_classes_map.get(kelas).name
-                                    }, `;
-                                  }
-                                  return null;
-                                })}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography variant="body1" color="textSecondary">
-                            Waktu Dibuat:{" "}
-                            {moment(row.createdAt)
-                              .locale("id")
-                              .format("DD MMM YYYY, HH.mm")}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
-                ) : (
-                  <Link to={viewpage}>
-                    <Paper variant="outlined">
-                      <ListItem className={classes.listItem}>
-                        <Hidden smUp implementation="css">
-                          <ListItemText
-                            primary={
-                              <Typography
-                                variant="subtitle1"
-                                color="textPrimary"
-                              >
-                                {row.materialtitle}
-                              </Typography>
-                            }
-                            secondary={
-                              <Typography
-                                variant="caption"
-                                color="textSecondary"
-                              >
-                                {all_subjects_map.get(row.subject)}
-                              </Typography>
-                            }
-                          />
-                        </Hidden>
-                        <Hidden xsDown implementation="css">
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            <ListItemAvatar>
-                              <Avatar className={classes.assignmentLate}>
-                                <MenuBookIcon />
-                              </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                              primary={
-                                <Typography variant="h6" color="textPrimary">
-                                  {row.materialtitle}
-                                </Typography>
-                              }
-                              secondary={
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  {all_subjects_map.get(row.subject)}
-                                </Typography>
-                              }
-                            />
-                          </div>
-                        </Hidden>
-                        <ListItemText
-                          align="right"
-                          primary={
-                            <Typography variant="body2" color="textSecondary">
-                              {moment(row.createdAt)
-                                .locale("id")
-                                .format("DD MMM YYYY")}
-                            </Typography>
-                          }
-                          secondary={moment(row.createdAt)
-                            .locale("id")
-                            .format("HH.mm")}
-                        />
-                      </ListItem>
-                    </Paper>
-                  </Link>
-                )}
-              </Grid>
-            );
-          })}
-        </Grid>
+        <MaterialItem
+          data={stableSort(rows, getComparator(order, orderBy))}
+          handleOpenDeleteDialog={handleOpenDeleteDialog}
+        />
       )}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
@@ -874,7 +618,6 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
 });
 
-// parameter 1 : reducer , parameter 2 : actions
 export default connect(mapStateToProps, {
   getAllClass,
   getSelectedClasses,
