@@ -2,8 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
-import "moment/locale/id";
 import { getAllTask, deleteTask } from "../../../actions/TaskActions";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 import { getAllClass } from "../../../actions/ClassActions";
@@ -12,42 +10,29 @@ import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
-  Avatar,
-  Badge,
   IconButton,
   Divider,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
   Fab,
   Grid,
   Hidden,
   InputAdornment,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Menu,
   MenuItem,
-  Paper,
   Snackbar,
   TableSortLabel,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
   ArrowBack as ArrowBackIcon,
   Assignment as AssignmentIcon,
-  CheckCircle as CheckCircleIcon,
   Clear as ClearIcon,
-  Edit as EditIcon,
-  Error as ErrorIcon,
-  Delete as DeleteIcon,
-  Pageview as PageviewIcon,
   Search as SearchIcon,
-  Sort as SortIcon
+  Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import TaskItem from "../item/TaskItem";
 
 function createData(
   _id,
@@ -210,7 +195,7 @@ function TaskListToolbar(props) {
                     style: {
                       borderRadius: "22.5px",
                       maxWidth: "450px",
-                      width: "100%"
+                      width: "100%",
                     },
                     startAdornment: (
                       <InputAdornment
@@ -231,7 +216,9 @@ function TaskListToolbar(props) {
                             e.stopPropagation();
                             onClear(e);
                           }}
-                          style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                          style={{
+                            visibility: !searchFilter ? "hidden" : "visible",
+                          }}
                         >
                           <ClearIcon />
                         </IconButton>
@@ -263,7 +250,7 @@ function TaskListToolbar(props) {
                         style: {
                           borderRadius: "22.5px",
                           maxWidth: "450px",
-                          width: "100%"
+                          width: "100%",
                         },
                         endAdornment: (
                           <InputAdornment
@@ -277,7 +264,11 @@ function TaskListToolbar(props) {
                                 e.stopPropagation();
                                 onClear(e);
                               }}
-                              style={{ visibility: !searchFilter ? "hidden" : "visible" }}
+                              style={{
+                                visibility: !searchFilter
+                                  ? "hidden"
+                                  : "visible",
+                              }}
                             >
                               <ClearIcon />
                             </IconButton>
@@ -371,7 +362,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   createTaskButton: {
-    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    boxShadow:
+      "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -398,59 +390,6 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: 20,
     width: 1,
-  },
-  viewTaskButton: {
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
-    },
-  },
-  editTaskButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  deleteTaskButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
-  taskPanelSummary: {
-    "&:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
-  },
-  taskPaper: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "stretch",
-  },
-  errorIcon: {
-    color: theme.palette.error.main,
-  },
-  warningIcon: {
-    color: theme.palette.warning.main,
-  },
-  checkIcon: {
-    color: theme.palette.success.main,
-  },
-  listItem: {
-    padding: "6px 16px"
-  },
-  assignmentLate: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  assignmentLateTeacher: {
-    backgroundColor: theme.palette.primary.main,
-    marginRight: "10px",
   },
 }));
 
@@ -618,7 +557,12 @@ function TaskList(props) {
 
   return (
     <div className={classes.root}>
-      <Grid container alignItems="center" spacing={2} className={classes.header}>
+      <Grid
+        container
+        alignItems="center"
+        spacing={2}
+        className={classes.header}
+      >
         <Grid item>
           <div className={classes.headerIcon}>
             <AssignmentIcon />
@@ -647,239 +591,10 @@ function TaskList(props) {
       {rows.length === 0 ? (
         <Empty />
       ) : (
-        <Grid container direction="column" spacing={2}>
-          {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-          const labelId = `enhanced-table-checkbox-${index}`;
-          let viewpage =
-            user.role === "Student"
-              ? `/tugas-murid/${row._id}`
-              : `/tugas-guru/${row._id}`;
-          return (
-            <Grid item>
-              {user.role === "Teacher" ? (
-                <ExpansionPanel button variant="outlined">
-                  <ExpansionPanelSummary className={classes.taskPanelSummary}>
-                    <Grid
-                      container
-                      spacing={1}
-                      justify="space-between"
-                      alignItems="center"
-                    >
-                      <Grid item>
-                        <Hidden smUp implementation="css">
-                          <Typography variant="h6" id={labelId}>
-                            {row.tasktitle}
-                          </Typography>
-                          <Typography variant="caption" color="textSecondary">
-                            {all_subjects_map.get(row.subject)}
-                          </Typography>
-                        </Hidden>
-                        <Hidden xsDown implementation="css">
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            <ListItemAvatar>
-                              <Avatar
-                                className={classes.assignmentLateTeacher}
-                              >
-                                <AssignmentIcon />
-                              </Avatar>
-                            </ListItemAvatar>
-                            <div>
-                              <Typography variant="h6" id={labelId}>
-                                {row.tasktitle}
-                              </Typography>
-                              <Typography
-                                variant="body2"
-                                color="textSecondary"
-                              >
-                                {all_subjects_map.get(row.subject)}
-                              </Typography>
-                            </div>
-                          </div>
-                        </Hidden>
-                      </Grid>
-                      <Grid item xs container spacing={1} justify="flex-end">
-                        <Grid item>
-                          <LightTooltip title="Lihat Lebih Lanjut">
-                            <Link to={viewpage}>
-                              <IconButton
-                                size="small"
-                                className={classes.viewTaskButton}
-                              >
-                                <PageviewIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Sunting">
-                            <Link to={`/sunting-tugas/${row._id}`}>
-                              <IconButton
-                                size="small"
-                                className={classes.editTaskButton}
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Hapus">
-                            <IconButton
-                              size="small"
-                              className={classes.deleteTaskButton}
-                              onClick={(e) => {
-                                handleOpenDeleteDialog(
-                                  e,
-                                  row._id,
-                                  row.tasktitle
-                                );
-                              }}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </ExpansionPanelSummary>
-                  <Divider />
-                  <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <Typography variant="body1">
-                          Kelas yang Ditugaskan:{" "}
-                          {!all_classes_map.size
-                            ? null
-                            : row.class_assigned.map((id, i) => {
-                                if (all_classes_map.get(id)) {
-                                  if (i === row.class_assigned.length - 1)
-                                    return `${all_classes_map.get(id).name}`;
-                                  return `${all_classes_map.get(id).name}, `;
-                                } else {
-                                  return undefined;
-                                }
-                              })}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography variant="body1" color="textSecondary">
-                          Waktu Dibuat:{" "}
-                          {moment(row.createdAt)
-                            .locale("id")
-                            .format("DD MMM YYYY, HH.mm")}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography variant="body1" color="textSecondary">
-                          Batas Waktu:{" "}
-                          {moment(row.deadline)
-                            .locale("id")
-                            .format("DD MMM YYYY, HH.mm")}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
-              ) : (
-                <Link to={viewpage}>
-                  <Paper
-                    button
-                    component="a"
-                    variant="outlined"
-                    className={classes.taskPaper}
-                  >
-                    <Badge
-                      style={{ display: "flex", flexDirection: "row" }}
-                      badgeContent={
-                        row.submissionStatus === false ? (
-                        // workStatus(row) === "Belum Dikumpulkan" ? (
-                          <ErrorIcon className={classes.errorIcon} />
-                        ) : (
-                          <CheckCircleIcon className={classes.checkIcon} />
-                        )
-                      }
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                    >
-                      <ListItem
-                        // button
-                        // component="a"
-                        className={classes.listItem}
-                      >
-                        <Hidden smUp implementation="css">
-                          <ListItemText
-                            primary={
-                              <Typography variant="h6">
-                                {row.tasktitle}
-                              </Typography>
-                            }
-                            secondary={all_subjects_map.get(row.subject)}
-                          />
-                        </Hidden>
-                        <Hidden xsDown implementation="css">
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            <ListItemAvatar>
-                              <Avatar className={classes.assignmentLate}>
-                                <AssignmentIcon />
-                              </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                              primary={
-                                <Typography variant="h6">
-                                  {row.tasktitle}
-                                </Typography>
-                              }
-                              secondary={all_subjects_map.get(row.subject)}
-                            />
-                          </div>
-                        </Hidden>
-                        {/* <ListItemText
-                          align="right"
-                          primary={
-                            <Typography variant="subtitle" color="textSecondary">
-                              {row.date}
-                            </Typography>
-                          }
-                          secondary={row.time}
-                        /> */}
-                        <ListItemText
-                          align="right"
-                          primary={
-                            <Typography variant="body2" color="textSecondary">
-                              {moment(row.createdAt)
-                                .locale("id")
-                                .format("DD MMM YYYY")}
-                            </Typography>
-                          }
-                          secondary={moment(row.createdAt)
-                            .locale("id")
-                            .format("HH.mm")}
-                        />
-                      </ListItem>
-                    </Badge>
-                  </Paper>
-                </Link>
-              )}
-            </Grid>
-          );
-        })}
-        </Grid>
+        <TaskItem
+          data={stableSort(rows, getComparator(order, orderBy))}
+          handleOpenDeleteDialog={handleOpenDeleteDialog}
+        />
       )}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}

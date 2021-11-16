@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import "moment/locale/id";
 import PropTypes from "prop-types";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Divider,
@@ -25,7 +27,6 @@ import {
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 
 const useStyles = makeStyles((theme) => ({
   root: {
