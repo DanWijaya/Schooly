@@ -21,6 +21,7 @@ const validateLoginInput = require("../../validation/Login");
 const { ObjectId } = require("mongodb");
 
 const sessionExpirySeconds = 604800;
+const fieldToInclude = "+password";
 
 router.post("/validateRegister/:pageNum", (req, res) => {
   const { pageNum } = req.params;
@@ -52,7 +53,9 @@ router.post("/register", async (req, res) => {
     if (!isValid1 || !isValid2) throw { ...errors1, ...errors2 };
     // return res.status(400).json({ ...errors1, ...errors2 });
 
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email }).select(
+      fieldToInclude
+    );
     if (user) throw { email: "Email sudah terdaftar" };
     let newUser;
     if (req.body.role === "Student") newUser = new Student(req.body);
@@ -88,7 +91,7 @@ router.post("/login", async (req, res) => {
     const password = req.body.password;
 
     // Find user by email.
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email }).select(fieldToInclude);
     if (!user) throw { email: "Email tidak ditemukan" };
     if (!user.active) throw { email: "Akun ini belum aktif" };
 
@@ -288,7 +291,7 @@ router.get("/getAdmins/:unitId", (req, res) => {
   if (!unitId) {
     return res.json([]);
   }
-  Admin.find({ active: true })
+  Admin.find({ active: true, unit: unitId })
     .sort({ name: 1 })
     .then((users) => {
       if (!users.length) console.log("No unit admins yet in Schooly System");
