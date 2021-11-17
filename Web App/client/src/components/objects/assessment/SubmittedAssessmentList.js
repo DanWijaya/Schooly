@@ -10,28 +10,28 @@ import {
   getOneAssessment,
   updateAssessmentSuspects,
 } from "../../../actions/AssessmentActions";
+import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
-  Box,
   Button,
   Divider,
   ExpansionPanel,
   ExpansionPanelSummary,
+  Fab,
+  Grid,
+  Hidden,
+  IconButton,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Paper,
-  Tabs,
-  Tab,
-  Typography,
-  Grid,
-  Hidden,
   Menu,
   MenuItem,
+  Paper,
+  Tab,
+  Tabs,
   TableSortLabel,
-  IconButton,
-  Fab,
+  Typography,
 } from "@material-ui/core";
 import {
   CheckBox as CheckBoxIcon,
@@ -195,32 +195,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div hidden={value !== index} id={`simple-tabpanel-${index}`} {...other}>
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function TabIndex(index) {
-  return {
-    id: `simple-tab-${index}`,
-  };
-}
-
 function GradeButton(props) {
   const classes = useStyles();
   const { studentId, classId, assessmentId, assessmentType } = props;
@@ -265,15 +239,18 @@ function SubmittedAssessmentList(props) {
   const classes = useStyles();
 
   const { getOneAssessment, getAllClass, getStudents, getAllSubjects } = props;
+  const { all_students, user } = props.auth;
+  const { all_classes } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
-  const { all_classes } = props.classesCollection;
-  const { all_students, user } = props.auth;
   const assessment_id = props.match.params.id;
 
   const [value, setValue] = React.useState(0);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("name");
 
-  // jika tidak ada suspects, state ini akan bernilai array kosong
+  // If there is no suspects, this state will contain an empty array.
   const [suspects, setSuspects] = React.useState(null);
 
   React.useEffect(() => {
@@ -290,29 +267,32 @@ function SubmittedAssessmentList(props) {
     }
   }, [selectedAssessments]);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("name");
+  const rows = React.useRef([]);
+  // Thi will save objects that has student's id and name (1 object = 1 student) for every student that get this assessment.
 
-  const rows = React.useRef([]); // akan menyimpan object-object yang berisi id dan nama murid (1 object = 1 murid) untuk semua murid yang mendapatkan assessment ini
   function createData(_id, name) {
     return { _id, name };
   }
+
   const assessmentRowItem = (data) => {
     let newRows = rows.current;
     newRows.push(createData(data._id, data.name));
 
     rows.current = newRows;
   };
+
   const handleOpenSortMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleCloseSortMenu = () => {
     setAnchorEl(null);
   };
+
   const createSortHandler = (property) => (event) => {
     handleRequestSort(event, property);
   };
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -322,8 +302,10 @@ function SubmittedAssessmentList(props) {
   const headCells = [
     { id: "name", numeric: false, disablePadding: true, label: "Nama Murid" },
   ];
+
   function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
+
     stabilizedThis.sort((a, b) => {
       const order = comparator(a[0], b[0]);
       if (order !== 0) return order;
@@ -331,6 +313,7 @@ function SubmittedAssessmentList(props) {
     });
     return stabilizedThis.map((el) => el[0]);
   }
+
   function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
       return -1;
@@ -340,6 +323,7 @@ function SubmittedAssessmentList(props) {
     }
     return 0;
   }
+
   function getComparator(order, orderBy) {
     return order === "desc"
       ? (a, b) => descendingComparator(a, b, orderBy)
@@ -404,7 +388,6 @@ function SubmittedAssessmentList(props) {
   };
 
   const handleExportAssessment = () => {
-    console.log(selectedAssessments);
     let result = "";
     let classArray = [];
     selectedAssessments.class_assigned.forEach((kelas, i) => {
@@ -418,11 +401,9 @@ function SubmittedAssessmentList(props) {
       }
       classArray.push([kelas]);
     });
-    console.log(Object.keys(selectedAssessments.grades));
 
     let gradeKeys = Object.keys(selectedAssessments.grades);
     let gradeValues = Object.values(selectedAssessments.grades);
-    console.log(gradeValues);
     gradeKeys.forEach((student_id, i) => {
       let studentData = all_students.find((std) => std._id === student_id);
       let studentName = studentData.name;
@@ -460,7 +441,7 @@ function SubmittedAssessmentList(props) {
         }
       }
     }
-    console.log(result);
+
     const blob = new Blob([result], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -475,15 +456,14 @@ function SubmittedAssessmentList(props) {
     if (!selectedAssessments.class_assigned || !all_students) {
       return null;
     } else {
-      // asumsi: jika selectedAssessments.class_assigned sudah ada,
-      // selectedAssessments pasti sudah ada sehingga selectedAssessments.questions dan selectedAssessments.question_weight juga pasti ada
+      // It is assumed that if selectedAssessments.class_assigned already exist,
+      // selectedAssessments is already exist then selectedAssessments.questions and selectedAssessments.question_weight is also already exist.
       let types = new Set();
       for (
         let questionIdx = 0;
         questionIdx < selectedAssessments.questions.length;
         questionIdx++
       ) {
-        // tipe soal yg ada: ["radio", "checkbox", "shorttext", "longtext"];
         types.add(selectedAssessments.questions[questionIdx].type);
         if (types.size === 4) {
           break;
@@ -519,26 +499,22 @@ function SubmittedAssessmentList(props) {
       const columnTemplate = {
         radio: {
           root: classes.RadioQst,
-          text1: <b>Pilihan Ganda</b>,
-          // text2: (<b>Pilihan Ganda</b>),
+          text: <b>Pilihan Ganda</b>,
           icon: <RadioButtonCheckedIcon />,
         },
         checkbox: {
           root: classes.CheckboxQst,
-          text1: <b>Kotak Centang</b>,
-          // text2: (<b>Kotak Centang</b>),
+          text: <b>Kotak Centang</b>,
           icon: <CheckBoxIcon />,
         },
         shorttext: {
           root: classes.ShorttextQst,
-          text1: <b>Isian Pendek</b>,
-          // text2: (<b>Isian Pendek</b>),
+          text: <b>Isian Pendek</b>,
           icon: <TextFormatIcon />,
         },
         longtext: {
           root: classes.LongtextQst,
-          text1: <b>Uraian</b>,
-          // text2: (<b>Uraian</b>),
+          text: <b>Uraian</b>,
           icon: <SubjectIcon />,
         },
       };
@@ -547,11 +523,11 @@ function SubmittedAssessmentList(props) {
         let students_in_class = [];
         let isClassSubmissionEmpty = true;
 
-        let all_student_object = {}; // akan menyimpan info semua murid yang mendapatkan assessment ini
-        rows.current = []; // akan menyimpan object-object yang berisi id dan nama murid (1 object = 1 murid) untuk semua murid yang mendapatkan assessment ini
+        let all_student_object = {}; // Will save every student that get this assessment.
+        rows.current = []; // Will save object that has student's id and name  (1 object = 1 student) for all student that get this assessment.
 
         for (var j = 0; j < all_students.length; j++) {
-          // jika murid ini mendapatkan assessment ini,
+          // If this student get this assessment,
           if (all_students[j].kelas === selectedAssessments.class_assigned[i]) {
             let student = all_students[j];
 
@@ -565,28 +541,27 @@ function SubmittedAssessmentList(props) {
           getComparator(order, orderBy)
         );
 
-        // untuk setiap murid,
+        // For every student,
         for (let row of sortedRows) {
           let student = all_student_object[row._id];
           let scores = null;
           let isAllEssayGraded = false;
 
-          // jika murid mengerjakan assessment ini
+          // If the student has done this assessment,
           if (
             selectedAssessments.submissions &&
             selectedAssessments.submissions[student._id]
           ) {
-            // harus deep cloning. object ini akan digunakan untuk menyimpan nilai tiap tipe soal
+            // Needs to deep cloning. This object will be used to save score of every question.
             scores = JSON.parse(JSON.stringify(scoresTemplate));
 
             if (hasLongtextQuestion) {
-              console.log("ADA Long text");
               if (
                 selectedAssessments.grades &&
                 selectedAssessments.grades[student._id]
               ) {
-                // jika semua jawaban soal uraian sudah dinilai, tampilkan nilainya.
-                // ini cukup karena asumsi: bobot setiap soal uraian sudah dipastikan ada.
+                // If every answer has already been graded, then show the score.
+                // This is enough because it is assumed that every long text question weight is ensured exist.
                 if (
                   Object.keys(
                     selectedAssessments.grades[student._id].longtext_grades
@@ -596,16 +571,16 @@ function SubmittedAssessmentList(props) {
                 ) {
                   isAllEssayGraded = true;
 
-                  // menjumlahkan nilai semua soal uraian murid ini
+                  // Sums all longtext queestion for this student.
                   scores.longtext.totalpoint = Object.values(
                     selectedAssessments.grades[student._id].longtext_grades
                   ).reduce((sum, currentVal) => sum + currentVal);
-                } // jika tidak, scores.longtext.totalpoint tetap bernilai null (tampilkan pesan belum dinilai)
+                } // If not, scores.longtext.totalpoint will still has the value of null (shows not graded message).
               }
             }
 
             let weights = selectedAssessments.question_weight;
-            // untuk setiap soal yang ada pada assessment ini,
+            // For every question in this assessment,
             for (
               let questionIdx = 0;
               questionIdx < selectedAssessments.questions.length;
@@ -619,9 +594,7 @@ function SubmittedAssessmentList(props) {
                 selectedAssessments.submissions[student._id][questionIdx];
 
               if (studentAnswer.length !== 0) {
-                // jika murid menjawab soal ini
-
-                // menghitung nilai untuk soal ini
+                // If student answer this question, then count the score for this question.
                 if (questionType === "radio") {
                   if (questionAnswer[0] === studentAnswer[0]) {
                     scores.radio.totalpoint += 1 * weights.radio;
@@ -663,11 +636,9 @@ function SubmittedAssessmentList(props) {
                     (weights.shorttext * temp_correct) / questionAnswer.length;
                   scores.shorttext.totalweight += 1 * weights.shorttext;
                 }
-                // soal uraian tidak dicek
+                // Long text question is not checked.
               } else {
-                // jika murid ga menjawab soal ini
-
-                // beri nilai 0
+                // If student didn't answer this question, then get a zero score.
                 if (questionType === "radio") {
                   scores.radio.totalweight += 1 * weights.radio;
                 } else if (questionType === "checkbox") {
@@ -677,7 +648,7 @@ function SubmittedAssessmentList(props) {
                 }
               }
             }
-          } // jika murid tidak mengerjakan assessment ini, scores tetap = null
+          } // If student didn't do this assessment, his/her score will be null.
 
           // layar desktop
           let columns1 = [];
@@ -714,7 +685,7 @@ function SubmittedAssessmentList(props) {
                   </Grid>
                   <Grid item>
                     <Typography align="center">
-                      {columnTemplate[type].text1}
+                      {columnTemplate[type].text}
                     </Typography>
                   </Grid>
                   <Grid item>
@@ -760,7 +731,7 @@ function SubmittedAssessmentList(props) {
                       className={classes.mobileCustomFontSize400Down}
                     >
                       {/* {columnTemplate[type].text2} */}
-                      {columnTemplate[type].text1}
+                      {columnTemplate[type].text}
                     </Typography>
                   </Grid>
                   <Grid
@@ -1074,9 +1045,8 @@ function SubmittedAssessmentList(props) {
     return selectedAssessments.class_assigned.length > 0 ? TabPanelList : null;
   };
 
-  document.title = `Schooly | Daftar ${
-    selectedAssessments.type === "Kuis" ? "Kuis" : "Ujian"
-  } Terkumpul`;
+  document.title = `Schooly | Daftar ${selectedAssessments.type === "Kuis" ? "Kuis" : "Ujian"} Terkumpul`;
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paperbox}>

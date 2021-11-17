@@ -90,25 +90,6 @@ function Footer(props) {
           </Grid>
         </Grid>
       </Grid>
-      <Hidden smUp>
-        <div style={{ paddingLeft: "15px" }}>
-          <Typography variant="body2" gutterBottom>
-            <Link to="/tentang-schooly">Tentang Schooly</Link>
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            <Link to="/bantuan">Bantuan</Link>
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            <a href="mailto:schoolysystem@gmail.com">Hubungi Kami</a>
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            <Link to="/legal/ketentuan-penggunaan">Ketentuan Pengunaan</Link>
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            <Link to="/legal/kebijakan-privasi">Kebijakan Privasi</Link>
-          </Typography>
-        </div>
-      </Hidden>
       <Hidden xsDown>
         <Grid container justify="space-between">
           <Grid item>
@@ -137,6 +118,25 @@ function Footer(props) {
             </Grid>
           </Grid>
         </Grid>
+      </Hidden>
+      <Hidden smUp>
+        <div style={{ paddingLeft: "15px" }}>
+          <Typography variant="body2" gutterBottom>
+            <Link to="/tentang-schooly">Tentang Schooly</Link>
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            <Link to="/bantuan">Bantuan</Link>
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            <a href="mailto:schoolysystem@gmail.com">Hubungi Kami</a>
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            <Link to="/legal/ketentuan-penggunaan">Ketentuan Pengunaan</Link>
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            <Link to="/legal/kebijakan-privasi">Kebijakan Privasi</Link>
+          </Typography>
+        </div>
       </Hidden>
     </div>
   ) : null;

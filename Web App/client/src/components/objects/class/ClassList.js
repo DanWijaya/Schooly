@@ -464,15 +464,6 @@ function ClassListToolbar(props) {
       <Grid container justify="space-between" alignItems="center">
         {user.role === "Admin" ? (
           <Grid item>
-            <Hidden mdUp>
-              <LightTooltip title="Buat Kelas">
-                <Link to="/buat-kelas">
-                  <Fab size="medium" className={classes.createClassButton}>
-                    <FaChalkboard className={classes.createClassIconMobile} />
-                  </Fab>
-                </Link>
-              </LightTooltip>
-            </Hidden>
             <Hidden smDown>
               <Link to="/buat-kelas">
                 <Fab
@@ -484,6 +475,15 @@ function ClassListToolbar(props) {
                   Buat Kelas
                 </Fab>
               </Link>
+            </Hidden>
+            <Hidden mdUp>
+              <LightTooltip title="Buat Kelas">
+                <Link to="/buat-kelas">
+                  <Fab size="medium" className={classes.createClassButton}>
+                    <FaChalkboard className={classes.createClassIconMobile} />
+                  </Fab>
+                </Link>
+              </LightTooltip>
             </Hidden>
           </Grid>
         ) : null}

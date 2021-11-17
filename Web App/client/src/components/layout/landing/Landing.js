@@ -275,6 +275,219 @@ class Landing extends Component {
                   <u>berkembang</u> dari waktu ke waktu.
                 </Typography>
               </Grid>
+              <Hidden smDown>
+                <Grid item xs={4} lg={3}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
+                    <Avatar className={classes.featuresAvatarDesktop}>
+                      <FaUserCog className={classes.featuresIconDesktop} />
+                    </Avatar>
+                    <Typography align="center" paragraph>
+                      Akun Pengelola
+                    </Typography>
+                    <Typography variant="body2" align="center">
+                      Atur dan kelola pengguna yang ada dengan mudah dan
+                      terstruktur.
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={4} lg={3}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
+                    <Avatar className={classes.featuresAvatarDesktop}>
+                      <FaceIcon className={classes.featuresIconDesktop} />
+                    </Avatar>
+                    <Typography align="center" paragraph>
+                      Pendataan Pengguna
+                    </Typography>
+                    <Typography variant="body2" align="center">
+                      Temukan kontak orang sepersekolahanmu. Perbarui pendataan
+                      data pribadi kepada sekolah dengan mudah.
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={4} lg={3}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
+                    <Avatar className={classes.featuresAvatarDesktop}>
+                      <FaSchool className={classes.featuresIconDesktop} />
+                    </Avatar>
+                    <Typography align="center" paragraph>
+                      Unit
+                    </Typography>
+                    <Typography variant="body2" align="center">
+                      Atur pengguna yang ada sesuai dengan unit-unit sekolahmu.
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={4} lg={3}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
+                    <Avatar className={classes.featuresAvatarDesktop}>
+                      <FaChalkboard className={classes.featuresIconDesktop} />
+                    </Avatar>
+                    <Typography align="center" paragraph>
+                      Kelas
+                    </Typography>
+                    <Typography variant="body2" align="center">
+                      Kelompokkan murid-murid yang ada sesuai dengan kelas dan
+                      mata pelajaran masing-masing.
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={4} lg={3}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
+                    <Avatar className={classes.featuresAvatarDesktop}>
+                      <EventNoteIcon className={classes.featuresIconDesktop} />
+                    </Avatar>
+                    <Typography align="center" paragraph>
+                      Kalender
+                    </Typography>
+                    <Typography variant="body2" align="center">
+                      Jadwal persekolahanmu terangkum secara otomatis, mulai
+                      dari tugas, ujian, hingga kegiatan lainnya.
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={4} lg={3}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
+                    <Avatar className={classes.featuresAvatarDesktop}>
+                      <AiFillNotification
+                        className={classes.featuresIconDesktop}
+                      />
+                    </Avatar>
+                    <Typography align="center" paragraph>
+                      Kegiatan
+                    </Typography>
+                    <Typography variant="body2" align="center">
+                      Umumkan kegiatan akademik dan non-akademik baik ke pihak
+                      Guru, Murid, ataupun keduanya.
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={4} lg={3}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
+                    <Avatar className={classes.featuresAvatarDesktop}>
+                      <AnnouncementIcon
+                        className={classes.featuresIconDesktop}
+                      />
+                    </Avatar>
+                    <Typography align="center" paragraph>
+                      Pengumuman
+                    </Typography>
+                    <Typography variant="body2" align="center">
+                      Sebarkan informasi persekolahan dengan mudah dan cepat.
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={4} lg={3}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
+                    <Avatar className={classes.featuresAvatarDesktop}>
+                      <QuestionAnswerIcon
+                        className={classes.featuresIconDesktop}
+                      />
+                    </Avatar>
+                    <Typography align="center" paragraph>
+                      Komentar
+                    </Typography>
+                    <Typography variant="body2" align="center">
+                      Diskusikan tugasmu baik bersama teman-teman sekelas
+                      ataupun sang guru pemberi tugas.
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={4} lg={3}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
+                    <Avatar className={classes.featuresAvatarDesktop}>
+                      <MenuBookIcon className={classes.featuresIconDesktop} />
+                    </Avatar>
+                    <Typography align="center" paragraph>
+                      Materi
+                    </Typography>
+                    <Typography variant="body2" align="center">
+                      Kertas tidak ada, tas pun jadi ringan. Berikan materi
+                      kepada murid dengan beberapa ketuk saja, tanpa harus
+                      dicetak.
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={4} lg={3}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
+                    <Avatar className={classes.featuresAvatarDesktop}>
+                      <AssignmentIcon className={classes.featuresIconDesktop} />
+                    </Avatar>
+                    <Typography align="center" paragraph>
+                      Tugas
+                    </Typography>
+                    <Typography variant="body2" align="center">
+                      Tidak perlu lupa akan tugas-tugas yang ada dan kumpulkan
+                      dengan mudah.
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={4} lg={3}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
+                    <Avatar className={classes.featuresAvatarDesktop}>
+                      <BsClipboardData
+                        className={classes.featuresIconDesktop}
+                      />
+                    </Avatar>
+                    <Typography align="center" paragraph>
+                      Kuis & Ujian
+                    </Typography>
+                    <Typography variant="body2" align="center">
+                      Buat kuis atau ujian dengan berbagai jenis tipe soal,
+                      hasilnya pun dapat diperiksa secara otomatis.
+                    </Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={4} lg={3}>
+                  <Paper
+                    variant="outlined"
+                    className={classes.featuresPaperDesktop}
+                  >
+                    <Avatar className={classes.featuresAvatarDesktop}>
+                      <AssessmentIcon className={classes.featuresIconDesktop} />
+                    </Avatar>
+                    <Typography align="center" paragraph>
+                      Rapor
+                    </Typography>
+                    <Typography variant="body2" align="center">
+                      Pantau perubahan nilai-nilai yang ada secara cepat dan
+                      dinamis dalam bentuk tabel ataupun grafik.
+                    </Typography>
+                  </Paper>
+                </Grid>
+              </Hidden>
               <Hidden mdUp>
                 <Grid item xs={12} container spacing={1}>
                   <Grid item xs={12}>
@@ -520,219 +733,6 @@ class Landing extends Component {
                       </ListItem>
                     </Paper>
                   </Grid>
-                </Grid>
-              </Hidden>
-              <Hidden smDown>
-                <Grid item xs={4} lg={3}>
-                  <Paper
-                    variant="outlined"
-                    className={classes.featuresPaperDesktop}
-                  >
-                    <Avatar className={classes.featuresAvatarDesktop}>
-                      <FaUserCog className={classes.featuresIconDesktop} />
-                    </Avatar>
-                    <Typography align="center" paragraph>
-                      Akun Pengelola
-                    </Typography>
-                    <Typography variant="body2" align="center">
-                      Atur dan kelola pengguna yang ada dengan mudah dan
-                      terstruktur.
-                    </Typography>
-                  </Paper>
-                </Grid>
-                <Grid item xs={4} lg={3}>
-                  <Paper
-                    variant="outlined"
-                    className={classes.featuresPaperDesktop}
-                  >
-                    <Avatar className={classes.featuresAvatarDesktop}>
-                      <FaceIcon className={classes.featuresIconDesktop} />
-                    </Avatar>
-                    <Typography align="center" paragraph>
-                      Pendataan Pengguna
-                    </Typography>
-                    <Typography variant="body2" align="center">
-                      Temukan kontak orang sepersekolahanmu. Perbarui pendataan
-                      data pribadi kepada sekolah dengan mudah.
-                    </Typography>
-                  </Paper>
-                </Grid>
-                <Grid item xs={4} lg={3}>
-                  <Paper
-                    variant="outlined"
-                    className={classes.featuresPaperDesktop}
-                  >
-                    <Avatar className={classes.featuresAvatarDesktop}>
-                      <FaSchool className={classes.featuresIconDesktop} />
-                    </Avatar>
-                    <Typography align="center" paragraph>
-                      Unit
-                    </Typography>
-                    <Typography variant="body2" align="center">
-                      Atur pengguna yang ada sesuai dengan unit-unit sekolahmu.
-                    </Typography>
-                  </Paper>
-                </Grid>
-                <Grid item xs={4} lg={3}>
-                  <Paper
-                    variant="outlined"
-                    className={classes.featuresPaperDesktop}
-                  >
-                    <Avatar className={classes.featuresAvatarDesktop}>
-                      <FaChalkboard className={classes.featuresIconDesktop} />
-                    </Avatar>
-                    <Typography align="center" paragraph>
-                      Kelas
-                    </Typography>
-                    <Typography variant="body2" align="center">
-                      Kelompokkan murid-murid yang ada sesuai dengan kelas dan
-                      mata pelajaran masing-masing.
-                    </Typography>
-                  </Paper>
-                </Grid>
-                <Grid item xs={4} lg={3}>
-                  <Paper
-                    variant="outlined"
-                    className={classes.featuresPaperDesktop}
-                  >
-                    <Avatar className={classes.featuresAvatarDesktop}>
-                      <EventNoteIcon className={classes.featuresIconDesktop} />
-                    </Avatar>
-                    <Typography align="center" paragraph>
-                      Kalender
-                    </Typography>
-                    <Typography variant="body2" align="center">
-                      Jadwal persekolahanmu terangkum secara otomatis, mulai
-                      dari tugas, ujian, hingga kegiatan lainnya.
-                    </Typography>
-                  </Paper>
-                </Grid>
-                <Grid item xs={4} lg={3}>
-                  <Paper
-                    variant="outlined"
-                    className={classes.featuresPaperDesktop}
-                  >
-                    <Avatar className={classes.featuresAvatarDesktop}>
-                      <AiFillNotification
-                        className={classes.featuresIconDesktop}
-                      />
-                    </Avatar>
-                    <Typography align="center" paragraph>
-                      Kegiatan
-                    </Typography>
-                    <Typography variant="body2" align="center">
-                      Umumkan kegiatan akademik dan non-akademik baik ke pihak
-                      Guru, Murid, ataupun keduanya.
-                    </Typography>
-                  </Paper>
-                </Grid>
-                <Grid item xs={4} lg={3}>
-                  <Paper
-                    variant="outlined"
-                    className={classes.featuresPaperDesktop}
-                  >
-                    <Avatar className={classes.featuresAvatarDesktop}>
-                      <AnnouncementIcon
-                        className={classes.featuresIconDesktop}
-                      />
-                    </Avatar>
-                    <Typography align="center" paragraph>
-                      Pengumuman
-                    </Typography>
-                    <Typography variant="body2" align="center">
-                      Sebarkan informasi persekolahan dengan mudah dan cepat.
-                    </Typography>
-                  </Paper>
-                </Grid>
-                <Grid item xs={4} lg={3}>
-                  <Paper
-                    variant="outlined"
-                    className={classes.featuresPaperDesktop}
-                  >
-                    <Avatar className={classes.featuresAvatarDesktop}>
-                      <QuestionAnswerIcon
-                        className={classes.featuresIconDesktop}
-                      />
-                    </Avatar>
-                    <Typography align="center" paragraph>
-                      Komentar
-                    </Typography>
-                    <Typography variant="body2" align="center">
-                      Diskusikan tugasmu baik bersama teman-teman sekelas
-                      ataupun sang guru pemberi tugas.
-                    </Typography>
-                  </Paper>
-                </Grid>
-                <Grid item xs={4} lg={3}>
-                  <Paper
-                    variant="outlined"
-                    className={classes.featuresPaperDesktop}
-                  >
-                    <Avatar className={classes.featuresAvatarDesktop}>
-                      <MenuBookIcon className={classes.featuresIconDesktop} />
-                    </Avatar>
-                    <Typography align="center" paragraph>
-                      Materi
-                    </Typography>
-                    <Typography variant="body2" align="center">
-                      Kertas tidak ada, tas pun jadi ringan. Berikan materi
-                      kepada murid dengan beberapa ketuk saja, tanpa harus
-                      dicetak.
-                    </Typography>
-                  </Paper>
-                </Grid>
-                <Grid item xs={4} lg={3}>
-                  <Paper
-                    variant="outlined"
-                    className={classes.featuresPaperDesktop}
-                  >
-                    <Avatar className={classes.featuresAvatarDesktop}>
-                      <AssignmentIcon className={classes.featuresIconDesktop} />
-                    </Avatar>
-                    <Typography align="center" paragraph>
-                      Tugas
-                    </Typography>
-                    <Typography variant="body2" align="center">
-                      Tidak perlu lupa akan tugas-tugas yang ada dan kumpulkan
-                      dengan mudah.
-                    </Typography>
-                  </Paper>
-                </Grid>
-                <Grid item xs={4} lg={3}>
-                  <Paper
-                    variant="outlined"
-                    className={classes.featuresPaperDesktop}
-                  >
-                    <Avatar className={classes.featuresAvatarDesktop}>
-                      <BsClipboardData
-                        className={classes.featuresIconDesktop}
-                      />
-                    </Avatar>
-                    <Typography align="center" paragraph>
-                      Kuis & Ujian
-                    </Typography>
-                    <Typography variant="body2" align="center">
-                      Buat kuis atau ujian dengan berbagai jenis tipe soal,
-                      hasilnya pun dapat diperiksa secara otomatis.
-                    </Typography>
-                  </Paper>
-                </Grid>
-                <Grid item xs={4} lg={3}>
-                  <Paper
-                    variant="outlined"
-                    className={classes.featuresPaperDesktop}
-                  >
-                    <Avatar className={classes.featuresAvatarDesktop}>
-                      <AssessmentIcon className={classes.featuresIconDesktop} />
-                    </Avatar>
-                    <Typography align="center" paragraph>
-                      Rapor
-                    </Typography>
-                    <Typography variant="body2" align="center">
-                      Pantau perubahan nilai-nilai yang ada secara cepat dan
-                      dinamis dalam bentuk tabel ataupun grafik.
-                    </Typography>
-                  </Paper>
                 </Grid>
               </Hidden>
             </Grid>
