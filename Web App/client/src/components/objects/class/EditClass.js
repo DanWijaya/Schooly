@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import { getTeachers, getStudentsByClass } from "../../../actions/UserActions";
 import { getAllClass, setCurrentClass, updateClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -349,14 +348,11 @@ class EditClass extends Component {
                       fullWidth
                       variant="outlined"
                       id="name"
+                      type="text"
                       onChange={this.onChange}
                       value={this.state.name}
                       error={errors.name}
-                      type="text"
                       helperText={errors.name}
-                      className={classnames("", {
-                        invalid: errors.name,
-                      })}
                     />
                   </Grid>
                   <Grid item>
@@ -404,27 +400,27 @@ class EditClass extends Component {
                     </div>
                     <FormControl
                       fullWidth
-                      id="matapelajaran"
                       color="primary"
+                      id="matapelajaran"
                     >
                       <Autocomplete
                         multiple
-                        id="tags-outlined"
+                        filterSelectedOptions
+                        size="small"
+                        getOptionLabel={(option) => option.name}
                         options={
                           this.state.allSubjectObject
                             ? this.state.allSubjectObject
                             : []
                         }
-                        getOptionLabel={(option) => option.name}
-                        filterSelectedOptions
+                        onChange={(event, value) => {
+                          this.onChange(value, "mata_pelajaran");
+                        }}
                         value={
                           this.state.mata_pelajaran
                             ? this.state.mata_pelajaran
                             : []
                         }
-                        onChange={(event, value) => {
-                          this.onChange(value, "mata_pelajaran");
-                        }}
                         renderInput={(params) => (
                           <TextField
                             fullWidth

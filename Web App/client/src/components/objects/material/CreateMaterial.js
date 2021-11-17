@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { createMaterial } from "../../../actions/MaterialActions";
@@ -655,16 +654,13 @@ class CreateMaterial extends Component {
                     </div>
                     <TextField
                       fullWidth
-                      type="text"
                       variant="outlined"
                       id="name"
+                      type="text"
                       onChange={this.onChange}
                       value={this.state.name}
                       error={errors.name}
                       helperText={errors.name}
-                      className={classnames("", {
-                        invalid: errors.name,
-                      })}
                     />
                   </Grid>
                   <Grid item>
@@ -677,18 +673,15 @@ class CreateMaterial extends Component {
                     <TextField
                       fullWidth
                       multiline
+                      variant="outlined"
+                      id="description"
                       type="text"
                       rows="5"
                       rowsMax="25"
-                      variant="outlined"
-                      id="description"
                       onChange={(e) => this.onChange(e, "description")}
                       value={this.state.description}
                       error={errors.description}
                       helperText={errors.description}
-                      className={classnames("", {
-                        invalid: errors.description,
-                      })}
                     />
                   </Grid>
                 </Grid>
@@ -704,9 +697,9 @@ class CreateMaterial extends Component {
                     </div>
                     <FormControl
                       fullWidth
-                      id="subject"
                       variant="outlined"
                       color="primary"
+                      id="subject"
                       error={Boolean(errors.subject) && !this.state.subject}
                     >
                       <Select
@@ -739,18 +732,15 @@ class CreateMaterial extends Component {
                     </div>
                     <FormControl
                       fullWidth
-                      id="class_assigned"
                       variant="outlined"
                       color="primary"
+                      id="class_assigned"
                       error={Boolean(errors.class_assigned)}
                     >
                       <Select
                         multiple
                         value={class_assigned}
-                        onChange={(event) => {
-                          this.onChange(event, "class_assigned");
-                          console.log(event.target.value);
-                        }}
+                        onChange={(event) => { this.onChange(event, "class_assigned") }}
                         renderValue={(selected) => (
                           <div className={classes.chips}>
                             {selected.map((classId) => {
@@ -793,10 +783,10 @@ class CreateMaterial extends Component {
               <Grid item xs={12}>
                 <input
                   multiple
+                  id="file_control"
                   type="file"
                   accept="file/*"
                   name="lampiran"
-                  id="file_control"
                   onChange={this.handleLampiranUpload}
                   ref={this.lampiranUploader}
                   style={{ display: "none" }}

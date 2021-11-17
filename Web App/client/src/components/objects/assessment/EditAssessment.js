@@ -86,7 +86,7 @@ const styles = (theme) => ({
       maxWidth: "100%",
     },
   },
-  rootBackground: {
+  background: {
     backgroundColor: "#F9F9F9",
   },
   menuBar: {
@@ -1408,9 +1408,7 @@ class EditAssessment extends Component {
                   variant="outlined"
                   value={this.state.weights[type]}
                   key={type}
-                  onChange={(e) => {
-                    this.handleWeight(e, type);
-                  }}
+                  onChange={(e) => {this.handleWeight(e, type)}}
                   error={showError}
                   InputProps={{
                     style: {
@@ -1486,7 +1484,7 @@ class EditAssessment extends Component {
       );
     } else {
       return (
-        <div className={classes.rootBackground}>
+        <div className={classes.background}>
           <div className={classes.root}>
             <form onSubmit={(e) => this.onSubmit(e)} style={{ width: "100%" }}>
               <AppBar position="fixed" className={classes.menuBar}>
@@ -1599,10 +1597,10 @@ class EditAssessment extends Component {
                                 Tipe Penilaian
                               </Typography>
                               <FormControl
-                                id="role"
+                                fullWidth
                                 variant="outlined"
                                 color="primary"
-                                fullWidth
+                                id="role"
                                 error={Boolean(errors.type)}
                               >
                                 <Select
@@ -1631,11 +1629,11 @@ class EditAssessment extends Component {
                               <TextField
                                 fullWidth
                                 multiline
+                                id="description"
                                 type="text"
                                 rows="5"
                                 rowsMax="25"
                                 variant="outlined"
-                                id="description"
                                 onChange={this.onChange}
                                 value={this.state.description}
                                 error={errors.description}
@@ -1767,17 +1765,15 @@ class EditAssessment extends Component {
                                   fullWidth
                                   disablePast
                                   inputVariant="outlined"
+                                  id="workTimeStart"
                                   format="dd/MM/yyyy - HH:mm"
                                   ampm={false}
                                   okLabel="Simpan"
                                   cancelLabel="Batal"
                                   minDateMessage="Harus waktu yang akan datang"
                                   invalidDateMessage="Format tanggal tidak benar"
-                                  id="workTimeStart"
+                                  onChange={(date) => this.onChange(date, "start_date")}
                                   value={this.state.start_date}
-                                  onChange={(date) =>
-                                    this.onChange(date, "start_date")
-                                  }
                                   onError={(err) => {
                                     if (errors.start_date !== err) {
                                       this.setState({
@@ -1806,19 +1802,16 @@ class EditAssessment extends Component {
                                 <KeyboardDateTimePicker
                                   fullWidth
                                   inputVariant="outlined"
+                                  id="workTimeEnd"
                                   format="dd/MM/yyyy - HH:mm"
                                   ampm={false}
                                   okLabel="Simpan"
                                   cancelLabel="Batal"
-                                  invalidDateMessage="Format tanggal tidak benar"
-                                  id="workTimeEnd"
-                                  helperText={null}
-                                  value={this.state.end_date}
                                   minDate={this.state.start_date}
                                   minDateMessage="Harus setelah Waktu Mulai Pengerjaan"
-                                  onChange={(date) =>
-                                    this.onChange(date, "end_date")
-                                  }
+                                  invalidDateMessage="Format tanggal tidak benar"
+                                  onChange={(date) => this.onChange(date, "end_date")}
+                                  value={this.state.end_date}
                                   onError={(err) => {
                                     if (errors.end_date !== err) {
                                       this.setState({
@@ -1857,17 +1850,14 @@ class EditAssessment extends Component {
                                   fullWidth
                                   disabled={!this.state.isScheduled}
                                   inputVariant="outlined"
+                                  id="postDate"
                                   format="dd/MM/yyyy - HH:mm"
                                   ampm={false}
                                   okLabel="Simpan"
                                   cancelLabel="Batal"
                                   invalidDateMessage="Format tanggal tidak benar"
-                                  id="postDate"
-                                  helperText={null}
+                                  onChange={(date) => this.onChange(date, "post_date")}
                                   value={this.state.post_date}
-                                  onChange={(date) =>
-                                    this.onChange(date, "post_date")
-                                  }
                                   onError={(err) => {
                                     if (errors.post_date !== err) {
                                       this.setState({
@@ -1891,9 +1881,9 @@ class EditAssessment extends Component {
                   <Grid item container justify="center">
                     <Grid item>
                       <TablePagination
+                        component="div"
                         labelRowsPerPage="Soal Per Halaman"
                         rowsPerPageOptions={[5, 10]}
-                        component="div"
                         count={this.state.questions.length}
                         rowsPerPage={this.state.rowsPerPage}
                         page={this.state.page}

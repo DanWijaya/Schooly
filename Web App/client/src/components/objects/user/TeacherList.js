@@ -122,9 +122,9 @@ function TeacherListToolbar(props) {
           <TextField
             variant="outlined"
             id="searchFilterDesktop"
+            placeholder="Cari Guru"
             value={searchFilter}
             onChange={onChange}
-            placeholder="Cari Guru"
             InputProps={{
               style: {
                 borderRadius: "22.5px",

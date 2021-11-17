@@ -236,10 +236,10 @@ function ManagePendingAdminsToolbar(props) {
               <TextField
                 variant="outlined"
                 id="searchFilterDesktop"
+                placeholder={searchFilterHint}
                 value={searchFilter}
                 onChange={onChange}
                 autoFocus={searchFilter.length > 0}
-                placeholder={searchFilterHint}
                 InputProps={{
                   style: { borderRadius: "22.5px" },
                   startAdornment: (
@@ -277,12 +277,12 @@ function ManagePendingAdminsToolbar(props) {
               {searchBarFocus || searchFilter ? (
                 //Show textfield when searchBar is onfocus or searchFilter is not empty
                 <TextField
+                  autoFocus
                   variant="outlined"
                   id="searchFilterMobile"
-                  value={searchFilter}
                   placeholder={searchFilterHint}
+                  value={searchFilter}
                   onChange={onChange}
-                  autoFocus
                   onClick={(e) => {
                     setSearchBarFocus(true);
                   }}

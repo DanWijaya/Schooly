@@ -158,14 +158,14 @@ function AdminListToolbar(props) {
                 <ArrowBackIcon />
               </IconButton>
               <TextField
+                autoFocus
                 fullWidth
                 variant="outlined"
                 id="searchFilterMobile"
+                placeholder="Cari Pengelola"
                 value={searchFilter}
                 onChange={onChange}
-                autoFocus
                 onClick={(e) => setSearchBarFocus(true)}
-                placeholder="Cari Pengelola"
                 style={{
                   maxWidth: "200px",
                   marginLeft: "10px",
@@ -225,11 +225,11 @@ function AdminListToolbar(props) {
           <TextField
             variant="outlined"
             id="searchFilterDesktop"
+            placeholder="Cari Pengelola"
             value={searchFilter}
             onChange={onChange}
             onClick={() => setSearchBarFocus(true)}
             onBlur={() => setSearchBarFocus(false)}
-            placeholder="Cari Pengelola"
             style={{
               maxWidth: "250px",
               marginRight: "10px",

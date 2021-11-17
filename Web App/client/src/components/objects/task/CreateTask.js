@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import "date-fns";
-import classnames from "classnames";
 import { getOneUser, refreshTeacher } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -660,16 +659,13 @@ class CreateTask extends Component {
                       </div>
                       <TextField
                         fullWidth
-                        type="text"
                         variant="outlined"
                         id="name"
+                        type="text"
                         onChange={this.onChange}
                         value={this.state.name}
                         error={errors.name}
                         helperText={errors.name}
-                        className={classnames("", {
-                          invalid: errors.name,
-                        })}
                       />
                     </Grid>
                     <Grid item>
@@ -682,18 +678,15 @@ class CreateTask extends Component {
                       <TextField
                         fullWidth
                         multiline
+                        variant="outlined"
+                        id="description"
                         type="text"
                         rows="5"
                         rowsMax="25"
-                        variant="outlined"
-                        id="description"
                         onChange={(e) => this.onChange(e, "description")}
                         value={this.state.description}
                         error={errors.description}
                         helperText={errors.description}
-                        className={classnames("", {
-                          invalid: errors.description,
-                        })}
                       />
                     </Grid>
                   </Grid>
@@ -747,9 +740,9 @@ class CreateTask extends Component {
                       </div>
                       <FormControl
                         fullWidth
-                        id="class_assigned"
                         variant="outlined"
                         color="primary"
+                        id="class_assigned"
                         error={Boolean(errors.class_assigned)}
                       >
                         <Select
@@ -810,16 +803,15 @@ class CreateTask extends Component {
                           fullWidth
                           disablePast
                           inputVariant="outlined"
+                          id="deadline"
                           format="dd/MM/yyyy - HH:mm"
                           ampm={false}
                           okLabel="Simpan"
                           cancelLabel="Batal"
                           minDateMessage="Harus waktu yang akan datang"
                           invalidDateMessage="Format tanggal tidak benar"
-                          id="deadline"
-                          value={this.state.deadline}
-                          helperText={null}
                           onChange={(date) => this.onDateChange(date)}
+                          value={this.state.deadline}
                           // onError={(err) => {
                           //   if (errors.deadline !== err) {
                           //     this.setState({errors: { ...errors, deadline: err }});
@@ -839,9 +831,9 @@ class CreateTask extends Component {
                 <Grid item xs={12}>
                   <input
                     multiple
+                    id="file_control"
                     type="file"
                     accept="file/*"
-                    id="file_control"
                     name="lampiran"
                     onChange={this.handleLampiranUpload}
                     ref={this.lampiranUploader}

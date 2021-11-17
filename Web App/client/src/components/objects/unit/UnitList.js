@@ -182,11 +182,11 @@ function UnitListToolbar(props) {
                 <TextField
                   variant="outlined"
                   id="searchFilterDesktop"
+                  placeholder="Cari Unit"
                   value={searchFilter}
                   onChange={onChange}
                   onClick={() => setSearchBarFocus(true)}
                   onBlur={() => setSearchBarFocus(false)}
-                  placeholder="Cari Unit"
                   InputProps={{
                     style: {
                       borderRadius: "22.5px",
@@ -235,13 +235,13 @@ function UnitListToolbar(props) {
                       <ArrowBackIcon />
                     </IconButton>
                     <TextField
+                      autoFocus
                       variant="outlined"
                       id="searchFilterMobile"
+                      placeholder="Cari Unit"
                       value={searchFilter}
                       onChange={onChange}
-                      autoFocus
                       onClick={(e) => setSearchBarFocus(true)}
-                      placeholder="Cari Unit"
                       InputProps={{
                         style: {
                           borderRadius: "22.5px",

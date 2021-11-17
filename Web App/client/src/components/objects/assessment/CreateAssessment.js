@@ -87,7 +87,7 @@ const styles = (theme) => ({
       maxWidth: "100%",
     },
   },
-  rootBackground: {
+  background: {
     backgroundColor: "#F9F9F9",
   },
   menuBar: {
@@ -1244,9 +1244,7 @@ class CreateAssessment extends Component {
                   variant="outlined"
                   value={this.state.weights[type]}
                   key={type}
-                  onChange={(e) => {
-                    this.handleWeight(e, type);
-                  }}
+                  onChange={(e) => {this.handleWeight(e, type)}}
                   error={showError}
                   InputProps={{
                     style: {
@@ -1314,7 +1312,7 @@ class CreateAssessment extends Component {
         : "Schooly | Buat Ujian";
 
     return (
-      <div className={classes.rootBackground}>
+      <div className={classes.background}>
         <div className={classes.root} style={{ width: "100%" }}>
           <form id="submitForm" onSubmit={(e) => this.onSubmit(e, user._id)}>
             <AppBar position="fixed" className={classes.menuBar}>
@@ -1394,15 +1392,15 @@ class CreateAssessment extends Component {
                             </div>
                             <TextField
                               fullWidth
-                              type="text"
                               variant="outlined"
                               id="name"
+                              type="text"
                               onChange={this.onChange}
                               error={errors.name}
                               helperText={errors.name}
                             />
                           </Grid>
-                          <Grid item className={classes.customPaddingBottom}>
+                          <Grid item>
                             {/* Mau dibuang tipe penilaiannya*/}
                             <Typography
                               component="label"
@@ -1446,11 +1444,11 @@ class CreateAssessment extends Component {
                             <TextField
                               fullWidth
                               multiline
+                              variant="outlined"
+                              id="description"
                               type="text"
                               rows="5"
                               rowsMax="25"
-                              variant="outlined"
-                              id="description"
                               onChange={this.onChange}
                               error={errors.description}
                               helperText={errors.description}
@@ -1581,26 +1579,21 @@ class CreateAssessment extends Component {
                                 fullWidth
                                 disablePast
                                 inputVariant="outlined"
+                                id="workTimeStart"
                                 format="dd/MM/yyyy - HH:mm"
                                 ampm={false}
                                 okLabel="Simpan"
                                 cancelLabel="Batal"
                                 minDateMessage="Harus waktu yang akan datang"
                                 invalidDateMessage="Format tanggal tidak benar"
-                                id="workTimeStart"
-                                helperText={null}
+                                onChange={(date) => this.onChange(date, "start_date")}
                                 value={this.state.start_date}
-                                onChange={(date) =>
-                                  this.onChange(date, "start_date")
-                                }
                                 // onError={(err) => {
                                 //   if (errors.start_date !== err) {
                                 //     this.setState({ errors: { ...errors, start_date: err } });
                                 //   }
                                 // }}
-                                error={
-                                  errors.start_date_custom || errors.start_date
-                                }
+                                error={errors.start_date_custom || errors.start_date}
                                 helperText={errors.start_date || errors.start_date_custom}
                               />
                             </MuiPickersUtilsProvider>
@@ -1621,19 +1614,16 @@ class CreateAssessment extends Component {
                                 fullWidth
                                 disablePast
                                 inputVariant="outlined"
+                                id="workTimeEnd"
                                 format="dd/MM/yyyy - HH:mm"
                                 ampm={false}
                                 okLabel="Simpan"
                                 cancelLabel="Batal"
-                                invalidDateMessage="Format tanggal tidak benar"
-                                id="workTimeEnd"
-                                helperText={null}
-                                value={this.state.end_date}
                                 minDate={this.state.start_date}
                                 minDateMessage="Harus setelah Waktu Mulai Pengerjaan"
-                                onChange={(date) =>
-                                  this.onChange(date, "end_date")
-                                }
+                                invalidDateMessage="Format tanggal tidak benar"
+                                onChange={(date) => this.onChange(date, "end_date")}
+                                value={this.state.end_date}
                                 onError={(err) => {
                                   if (errors.end_date !== err) {
                                     this.setState({
@@ -1672,17 +1662,14 @@ class CreateAssessment extends Component {
                                 fullWidth
                                 disabled={!this.state.isScheduled}
                                 inputVariant="outlined"
+                                id="postDate"
                                 format="dd/MM/yyyy - HH:mm"
                                 ampm={false}
                                 okLabel="Simpan"
                                 cancelLabel="Batal"
                                 invalidDateMessage="Format tanggal tidak benar"
-                                id="postDate"
-                                helperText={null}
+                                onChange={(date) => this.onChange(date, "post_date")}
                                 value={this.state.post_date}
-                                onChange={(date) =>
-                                  this.onChange(date, "post_date")
-                                }
                                 onError={(err) => {
                                   if (errors.post_date !== err) {
                                     this.setState({
@@ -1706,9 +1693,9 @@ class CreateAssessment extends Component {
                 <Grid item container justify="center">
                   <Grid item>
                     <TablePagination
+                      component="div"
                       labelRowsPerPage="Soal Per Halaman"
                       rowsPerPageOptions={[5, 10]}
-                      component="div"
                       count={this.state.questions.length}
                       rowsPerPage={this.state.rowsPerPage}
                       page={this.state.page}

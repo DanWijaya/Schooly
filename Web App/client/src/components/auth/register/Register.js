@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import { clearErrors } from "../../../actions/ErrorActions";
@@ -235,15 +234,12 @@ class Register extends Component {
                   fullWidth
                   variant="outlined"
                   id="name"
+                  type="text"
                   label="Nama Lengkap"
                   onChange={this.onChange}
                   value={this.state.name}
                   error={errors.name}
-                  type="text"
                   helperText={errors.name}
-                  className={classnames("", {
-                    invalid: errors.name,
-                  })}
                 />
               </Grid>
               <Grid item>
@@ -251,19 +247,16 @@ class Register extends Component {
                   fullWidth
                   variant="outlined"
                   id="email"
+                  type="email"
                   label="Email"
                   onChange={this.onChange}
                   value={this.state.email}
                   error={errors.email}
-                  type="email"
                   helperText={
                     errors.email
                       ? errors.email
-                      : "Isi dengan email sekolah Anda jika ada"
+                      : "Gunakan email sekolah Anda jika ada"
                   }
-                  className={classnames("", {
-                    invalid: errors.email,
-                  })}
                 />
               </Grid>
               <Grid item>
@@ -273,14 +266,11 @@ class Register extends Component {
                       fullWidth
                       variant="outlined"
                       id="password"
+                      type="password"
                       label="Kata Sandi"
                       onChange={this.onChange}
                       value={this.state.password}
                       error={errors.password}
-                      type="password"
-                      className={classnames("", {
-                        invalid: errors.password,
-                      })}
                     />
                   </Grid>
                   <Grid item xs={12} md={6}>
@@ -288,14 +278,11 @@ class Register extends Component {
                       fullWidth
                       variant="outlined"
                       id="password2"
+                      type="password"
                       label="Konfirmasi"
                       onChange={this.onChange}
                       value={this.state.password2}
                       error={errors.password2}
-                      type="password"
-                      className={classnames("", {
-                        invalid: errors.password2,
-                      })}
                     />
                   </Grid>
                 </Grid>
@@ -318,14 +305,13 @@ class Register extends Component {
               <Grid item>
                 <FormControl
                   fullWidth
-                  id="role"
                   variant="outlined"
                   color="primary"
+                  id="role"
                   error={Boolean(errors.role)}
                 >
                   <InputLabel id="role-label">Daftar Sebagai</InputLabel>
                   <Select
-                    labelId="role-label"
                     label="Daftar Sebagai"
                     value={this.state.role}
                     onChange={(event) => {
@@ -338,7 +324,9 @@ class Register extends Component {
                     <MenuItem value="SuperAdmin">Pengelola Sekolah</MenuItem>
                   </Select>
                   {Boolean(errors.role) ? (
-                    <FormHelperText>{errors.role}</FormHelperText>
+                    <FormHelperText>
+                      {errors.role}
+                    </FormHelperText>
                   ) : null}
                 </FormControl>
               </Grid>
@@ -346,14 +334,13 @@ class Register extends Component {
                 <Grid item>
                   <FormControl
                     fullWidth
-                    id="unit"
                     variant="outlined"
                     color="primary"
+                    id="unit"
                     error={Boolean(errors.unit)}
                   >
                     <InputLabel id="unit-label">Unit</InputLabel>
                     <Select
-                      labelId="unit-label"
                       label="Unit"
                       value={this.state.unit}
                       onChange={(event) => {
@@ -375,14 +362,14 @@ class Register extends Component {
                   <KeyboardDatePicker
                     fullWidth
                     disableFuture
-                    label="Tanggal Lahir"
                     inputVariant="outlined"
-                    maxDateMessage="Harus waktu yang akan datang"
-                    invalidDateMessage="Format tanggal tidak benar"
+                    id="tanggal_lahir"
                     format="dd MMM yyyy"
+                    label="Tanggal Lahir"
                     okLabel="Simpan"
                     cancelLabel="Batal"
-                    id="tanggal_lahir"
+                    invalidDateMessage="Format tanggal tidak benar"
+                    maxDateMessage="Harus waktu yang akan datang"
                     defaultValue={null}
                     error={errors.tanggal_lahir}
                     helperText={errors.tanggal_lahir}
@@ -398,14 +385,11 @@ class Register extends Component {
                       fullWidth
                       variant="outlined"
                       id="phone"
+                      type="tel"
                       label="Nomor Telepon"
                       onChange={this.onChange}
                       value={this.state.phone}
                       error={errors.phone}
-                      type="tel"
-                      className={classnames("", {
-                        invalid: errors.phone,
-                      })}
                     />
                   </Grid>
                   <Grid item xs={12} md={6}>
@@ -413,14 +397,11 @@ class Register extends Component {
                       fullWidth
                       variant="outlined"
                       id="emergency_phone"
+                      type="tel"
                       label="Nomor Telepon Darurat"
                       onChange={this.onChange}
                       value={this.state.emergency_phone}
                       error={errors.emergency_phone}
-                      type="tel"
-                      className={classnames("", {
-                        invalid: errors.emergency_phone,
-                      })}
                     />
                   </Grid>
                 </Grid>
@@ -439,19 +420,16 @@ class Register extends Component {
                 <TextField
                   fullWidth
                   multiline
-                  rows="2"
-                  rowsMax="3"
                   variant="outlined"
                   id="address"
+                  type="text"
                   label="Alamat"
+                  rows="2"
+                  rowsMax="3"
                   onChange={this.onChange}
                   value={this.state.address}
                   error={errors.address}
-                  type="text"
                   helperText={errors.address}
-                  className={classnames("", {
-                    invalid: errors.address,
-                  })}
                 />
               </Grid>
             </Grid>
@@ -561,9 +539,8 @@ class Register extends Component {
         };
       }
 
-      // // get errors on current page
-      // validateRegister(userData, this.state.activeStep + 1);
-      // if no error exists, proceed to next page
+      // Get errors on current page.
+      // If no error exists, proceed to next page.
       validateRegister(userData, this.state.activeStep + 1)
         .then(() => {
           this.setState({ errors: {} });
@@ -737,11 +714,11 @@ class Register extends Component {
 }
 
 Register.propTypes = {
-  registerUser: PropTypes.func.isRequired,
-  getAllUnits: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
   unitsCollection: PropTypes.object.isRequired,
+  getAllUnits: PropTypes.func.isRequired,
+  registerUser: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({

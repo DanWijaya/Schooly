@@ -201,11 +201,11 @@ function TaskListToolbar(props) {
                 <TextField
                   variant="outlined"
                   id="searchFilterDesktop"
+                  placeholder="Cari Tugas"
                   value={searchFilter}
                   onChange={onChange}
                   onClick={() => setSearchBarFocus(true)}
                   onBlur={() => setSearchBarFocus(false)}
-                  placeholder="Cari Tugas"
                   InputProps={{
                     style: {
                       borderRadius: "22.5px",
@@ -252,13 +252,13 @@ function TaskListToolbar(props) {
                       <ArrowBackIcon />
                     </IconButton>
                     <TextField
+                      autoFocus
                       variant="outlined"
                       id="searchFilterMobile"
+                      placeholder="Cari Tugas"
                       value={searchFilter}
                       onChange={onChange}
-                      autoFocus
                       onClick={(e) => setSearchBarFocus(true)}
-                      placeholder="Cari Tugas"
                       InputProps={{
                         style: {
                           borderRadius: "22.5px",

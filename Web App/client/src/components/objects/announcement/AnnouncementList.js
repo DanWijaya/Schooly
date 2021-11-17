@@ -195,11 +195,11 @@ function AnnouncementListToolbar(props) {
                 <TextField
                   variant="outlined"
                   id="searchFilterDesktop"
+                  placeholder="Cari Pengumuman"
                   value={searchFilter}
                   onChange={onChange}
                   onClick={() => setSearchBarFocus(true)}
                   onBlur={() => setSearchBarFocus(false)}
-                  placeholder="Cari Pengumuman"
                   InputProps={{
                     style: {
                       borderRadius: "22.5px",
@@ -248,13 +248,13 @@ function AnnouncementListToolbar(props) {
                       <ArrowBackIcon />
                     </IconButton>
                     <TextField
+                      autoFocus
                       variant="outlined"
                       id="searchFilterMobile"
+                      placeholder="Cari Pengumuman"
                       value={searchFilter}
                       onChange={onChange}
-                      autoFocus
                       onClick={(e) => setSearchBarFocus(true)}
-                      placeholder="Cari Pengumuman"
                       InputProps={{
                         style: {
                           borderRadius: "22.5px",
@@ -464,14 +464,14 @@ function AnnouncementListSubToolbar(props) {
                 <ArrowBackIcon />
               </IconButton>
               <TextField
+                autoFocus
                 fullWidth
                 variant="outlined"
                 id={author_role}
+                placeholder="Cari Pengumuman"
                 value={searchFilter}
                 onChange={onChange}
-                autoFocus
                 onClick={(e) => setSearchBarFocus(true)}
-                placeholder="Cari Pengumuman"
                 style={{
                   maxWidth: "200px",
                   marginLeft: "10px",
@@ -530,12 +530,11 @@ function AnnouncementListSubToolbar(props) {
           <TextField
             variant="outlined"
             id={author_role}
+            placeholder="Cari Pengumuman"
             value={searchFilter}
             onChange={onChange}
             onClick={() => setSearchBarFocus(true)}
             onBlur={() => setSearchBarFocus(false)}
-            placeholder="Cari Pengumuman"
-            // onBlur={() => setSearchBarFocus(false)}
             style={{
               maxWidth: "250px",
               marginRight: "10px",

@@ -16,6 +16,6 @@ const theme = responsiveFontSizes(
 theme.props = props(theme);
 theme.overrides = overrides(theme);
 
-// For more information check the default theme of material UI.
+// For more information check the default theming of material UI.
 
 export default theme;

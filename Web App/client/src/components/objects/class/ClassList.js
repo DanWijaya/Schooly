@@ -500,11 +500,11 @@ function ClassListToolbar(props) {
               <TextField
                 variant="outlined"
                 id="searchFilterDesktop"
+                placeholder="Cari Kelas"
                 value={searchFilter}
                 onChange={onChange}
                 onClick={() => setSearchBarFocus(true)}
                 onBlur={() => setSearchBarFocus(false)}
-                placeholder="Cari Kelas"
                 InputProps={{
                   style: {
                     borderRadius: "22.5px",
@@ -553,13 +553,13 @@ function ClassListToolbar(props) {
                     <ArrowBackIcon />
                   </IconButton>
                   <TextField
+                    autoFocus
                     variant="outlined"
                     id="searchFilterMobile"
+                    placeholder="Cari Kelas"
                     value={searchFilter}
                     onChange={onChange}
-                    autoFocus
                     onClick={(e) => setSearchBarFocus(true)}
-                    placeholder="Cari Kelas"
                     InputProps={{
                       style: {
                         borderRadius: "22.5px",

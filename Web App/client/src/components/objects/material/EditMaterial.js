@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import "date-fns";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -793,16 +792,13 @@ class EditMaterial extends Component {
                     </div>
                     <TextField
                       fullWidth
-                      type="text"
                       variant="outlined"
                       id="name"
+                      type="text"
                       onChange={this.onChange}
                       value={this.state.name}
                       error={errors.name}
                       helperText={errors.name}
-                      className={classnames("", {
-                        invalid: errors.name,
-                      })}
                     />
                   </Grid>
                   <Grid item>
@@ -815,18 +811,15 @@ class EditMaterial extends Component {
                     <TextField
                       fullWidth
                       multiline
+                      variant="outlined"
+                      id="description"
                       type="text"
                       rows="5"
                       rowsMax="25"
-                      variant="outlined"
-                      id="description"
                       onChange={(e) => this.onChange(e, "description")}
                       value={this.state.description}
                       error={errors.description}
                       helperText={errors.description}
-                      className={classnames("", {
-                        invalid: errors.description,
-                      })}
                     />
                   </Grid>
                 </Grid>
@@ -841,10 +834,10 @@ class EditMaterial extends Component {
                       </Typography>
                     </div>
                     <FormControl
-                      id="subject"
+                      fullWidth
                       variant="outlined"
                       color="primary"
-                      fullWidth
+                      id="subject"
                       error={Boolean(errors.subject)}
                     >
                       <Select
@@ -877,9 +870,9 @@ class EditMaterial extends Component {
                     </div>
                     <FormControl
                       fullWidth
-                      id="class_assigned"
                       variant="outlined"
                       color="primary"
+                      id="class_assigned"
                       error={Boolean(errors.class_assigned)}
                     >
                       <Select
@@ -932,9 +925,9 @@ class EditMaterial extends Component {
               <Grid item xs={12}>
                 <input
                   multiple
+                  id="file_control"
                   type="file"
                   accept="file/*"
-                  id="file_control"
                   name="lampiran"
                   onChange={this.handleLampiranUpload}
                   ref={this.lampiranUploader}

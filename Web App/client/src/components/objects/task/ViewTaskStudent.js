@@ -997,11 +997,11 @@ function ViewTaskStudent(props) {
           {selectedCommentIdx !== null && selectedCommentIdx === idx ? (
             <div style={{ display: "flex", flexDirection: "column" }}>
               <TextField
+                multiline
                 variant="outlined"
                 onChange={handleCommentEditorChange}
                 value={commentEditorValue}
                 style={{ marginTop: "5px" }}
-                multiline
               />
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Button

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import { getTeachers } from "../../../actions/UserActions";
 import { createClass, getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -261,14 +260,11 @@ class CreateClass extends Component {
                   fullWidth
                   variant="outlined"
                   id="name"
+                  type="text"
                   onChange={this.onChange}
                   value={this.state.name}
                   error={errors.name}
-                  type="text"
                   helperText={errors.name}
-                  className={classnames("", {
-                    invalid: errors.name,
-                  })}
                 />
               </Grid>
               <Grid item>
@@ -280,9 +276,9 @@ class CreateClass extends Component {
                 </div>
                 <FormControl
                   fullWidth
-                  id="walikelas"
                   variant="outlined"
                   color="primary"
+                  id="walikelas"
                   error={Boolean(errors.walikelas)}
                 >
                   <Select
@@ -316,18 +312,21 @@ class CreateClass extends Component {
                     Mata Pelajaran
                   </Typography>
                 </div>
-                <FormControl fullWidth id="matapelajaran" color="primary">
+                <FormControl
+                  fullWidth
+                  color="primary"
+                  id="matapelajaran"
+                >
                   <Autocomplete
                     multiple
-                    id="tags-outlined"
+                    filterSelectedOptions
+                    size="small"
+                    getOptionLabel={(option) => option.name}
                     options={
                       this.props.subjectsCollection
                         ? this.props.subjectsCollection.all_subjects
                         : null
                     }
-                    getOptionLabel={(option) => option.name}
-                    filterSelectedOptions
-                    size="small"
                     onChange={(event, value) => {
                       this.onChange(value, "mata_pelajaran");
                     }}

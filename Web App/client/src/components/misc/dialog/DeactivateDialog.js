@@ -64,19 +64,15 @@ function DeactivateDialog(props) {
         className={classes.root}
       >
         <Grid item>
-          {/* <Typography variant="h5" align="center">
-            Hapus {itemType} berikut? */}
           <Typography variant="h6" gutterBottom>
             Nonaktifkan {itemType} berikut?
           </Typography>
         </Grid>
-        {/* <Grid item container direction="column" alignItems="center"> */}
         <Grid item>
           <Typography align="center" gutterBottom>
             <b>{itemName}</b>
           </Typography>
         </Grid>
-        {/* </Grid> */}
         <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item>
             <Button
@@ -103,68 +99,3 @@ function DeactivateDialog(props) {
 }
 
 export default DeactivateDialog;
-
-/*
-function DisableDialog() {
-    return (
-      <Dialog open={openDeactivateDialog} onClose={handleCloseDeactivateDialog}>
-        <Grid
-          container
-          direction="column"
-          alignItems="center"
-          className={classes.dialogBox}
-        >
-          <Grid
-            item
-            container
-            justify="center"
-            style={{ marginBottom: "20px" }}
-          >
-            <Typography variant="h6" gutterBottom>
-              Nonaktifkan pengguna berikut?
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            container
-            justify="center"
-            style={{ marginBottom: "20px" }}
-          >
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedUserName}</b>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{ marginBottom: "10px" }}
-          >
-            <Grid item>
-              <Button
-                onClick={() => {
-                  onDeactivateUser(selectedUserId);
-                }}
-                startIcon={<BlockIcon />}
-                className={classes.dialogDisableButton}
-              >
-                Nonaktifkan
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeactivateDialog}
-                startIcon={<CancelIcon />}
-                className={classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
-    );
-  }
-*/

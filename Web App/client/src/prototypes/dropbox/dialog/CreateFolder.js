@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import { Button, Dialog, Grid, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
-import classnames from "classnames";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -130,9 +129,6 @@ function CreateFolder(props) {
             error={errors.name}
             type="text"
             helperText={errors.name}
-            className={classnames("", {
-              invalid: errors.name,
-            })}
           />
           <Grid container justify="center" spacing={2}>
             <Grid item>

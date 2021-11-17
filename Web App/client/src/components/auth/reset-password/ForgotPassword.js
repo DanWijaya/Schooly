@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import { createHash } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
@@ -152,15 +151,12 @@ class ForgotPassword extends Component {
                             fullWidth
                             variant="outlined"
                             id="email"
+                            type="email"
                             label="Email"
                             onChange={this.onChange}
                             value={email}
                             error={Boolean(errors.problem)}
-                            type="email"
                             helperText={errors.problem}
-                            className={classnames("", {
-                              invalid: errors.email || errors.emailnotfound,
-                            })}
                           />
                         </Grid>
                         <Grid

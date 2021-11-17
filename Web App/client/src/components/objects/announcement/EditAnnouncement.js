@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import { getFileAnnouncements } from "../../../actions/files/FileAnnouncementActions";
 import {
   getOneAnnouncement,
@@ -646,16 +645,13 @@ class EditAnnouncement extends Component {
                     </div>
                     <TextField
                       fullWidth
-                      type="text"
                       variant="outlined"
                       id="title"
+                      type="text"
                       onChange={this.onChange}
                       value={this.state.title}
                       error={errors.title}
                       helperText={errors.title}
-                      className={classnames("", {
-                        invalid: errors.title,
-                      })}
                     />
                   </Grid>
                   <Grid item>
@@ -668,18 +664,15 @@ class EditAnnouncement extends Component {
                     <TextField
                       fullWidth
                       multiline
+                      variant="outlined"
+                      id="description"
                       type="text"
                       rows="5"
                       rowsMax="25"
-                      variant="outlined"
-                      id="description"
                       onChange={(e) => this.onChange(e, "description")}
                       value={this.state.description}
                       error={errors.description}
                       helperText={errors.description}
-                      className={classnames("", {
-                        invalid: errors.description,
-                      })}
                     />
                   </Grid>
                 </Grid>
@@ -698,10 +691,10 @@ class EditAnnouncement extends Component {
                         fullWidth
                         variant="outlined"
                         color="primary"
+                        id="target_role"
                         error={Boolean(errors.to)}
                       >
                         <Select
-                          id="target_role"
                           multiple
                           value={target_role}
                           onChange={(event) => {
@@ -759,11 +752,11 @@ class EditAnnouncement extends Component {
                         fullWidth
                         variant="outlined"
                         color="primary"
+                        id="class_assigned"
                         error={Boolean(errors.class_assigned)}
                       >
                         <Select
                           multiple
-                          id="class_assigned"
                           value={class_assigned}
                           onChange={(event) => {
                             this.onChange(event, "class_assigned");
@@ -813,19 +806,19 @@ class EditAnnouncement extends Component {
               <Grid item xs={12}>
                 <input
                   multiple
+                  id="file_control"
                   type="file"
                   accept="file/*"
                   name="lampiran"
-                  id="file_control"
                   onChange={this.handleLampiranUpload}
                   ref={this.lampiranUploader}
                   style={{ display: "none" }}
                 />
                 <input
                   multiple
+                  id="file"
                   type="file"
                   name="file"
-                  id="file"
                   ref={this.uploadedLampiran}
                   style={{ display: "none" }}
                 />

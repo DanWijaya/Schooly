@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import { createUnit } from "../../../actions/UnitActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -193,16 +192,13 @@ class CreateUnit extends Component {
                 </div>
                 <TextField
                   fullWidth
-                  type="text"
                   variant="outlined"
                   id="name"
+                  type="text"
                   onChange={this.onChange}
                   value={this.state.name}
                   error={errors.name}
                   helperText={errors.name}
-                  className={classnames("", {
-                    invalid: errors.name,
-                  })}
                 />
               </Grid>
               <Grid item>
@@ -215,18 +211,15 @@ class CreateUnit extends Component {
                 <TextField
                   fullWidth
                   multiline
+                  variant="outlined"
+                  id="description"
                   type="text"
                   rows="5"
                   rowsMax="25"
-                  variant="outlined"
-                  id="description"
                   onChange={(e) => this.onChange(e, "description")}
                   value={this.state.description}
                   error={errors.description}
                   helperText={errors.description}
-                  className={classnames("", {
-                    invalid: errors.description,
-                  })}
                 />
               </Grid>
             </Grid>

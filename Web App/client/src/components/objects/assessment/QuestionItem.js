@@ -31,7 +31,6 @@ import {
 } from "@material-ui/icons";
 import { MdContentCopy } from "react-icons/md";
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: "20px",

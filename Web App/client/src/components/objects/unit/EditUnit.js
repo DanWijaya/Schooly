@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import { getOneUnit, updateUnit } from "../../../actions/UnitActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -188,16 +187,13 @@ function EditUnit(props) {
               </div>
               <TextField
                 fullWidth
-                type="text"
                 variant="outlined"
                 id="name"
+                type="text"
                 onChange={onChange}
                 value={objData.name}
                 error={errors.name}
                 helperText={errors.name}
-                className={classnames("", {
-                  invalid: errors.name,
-                })}
               />
             </Grid>
             <Grid item>
@@ -210,18 +206,15 @@ function EditUnit(props) {
               <TextField
                 fullWidth
                 multiline
+                variant="outlined"
+                id="description"
                 type="text"
                 rows="5"
                 rowsMax="25"
-                variant="outlined"
-                id="description"
                 onChange={(e) => onChange(e, "description")}
                 value={objData.description}
                 error={errors.description}
                 helperText={errors.description}
-                className={classnames("", {
-                  invalid: errors.description,
-                })}
               />
             </Grid>
           </Grid>

@@ -34,8 +34,8 @@ function FileSetting(props){
         </Grid>
         <Grid item className={classes.textFieldContainer}>
           <TextField
-            type="number"
             variant="outlined"
+            type="number"
             value={fileUploadLimit}
             onChange={(e) => {
               setIsChanged(true)

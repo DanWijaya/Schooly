@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import { savePassword } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
@@ -133,15 +132,12 @@ class ResetPassword extends Component {
                           fullWidth
                           variant="outlined"
                           id="password"
+                          type="password"
                           label="Kata Sandi Baru"
                           onChange={this.onChange}
                           value={password}
                           error={Boolean(errors.password_entry)}
-                          type="password"
                           helperText={errors.password_entry}
-                          classname={classnames("", {
-                            invalid: errors.email || errors.emailnotfound,
-                          })}
                         />
                       </Grid>
                       <Grid item>
@@ -149,15 +145,12 @@ class ResetPassword extends Component {
                           fullWidth
                           variant="outlined"
                           id="password2"
+                          type="password"
                           label="Konfirmasi Kata Sandi Baru"
                           onChange={this.onChange}
                           value={password2}
                           error={Boolean(errors.password_match)}
-                          type="password"
                           helperText={errors.password_match}
-                          classname={classnames("", {
-                            invalid: errors.email || errors.emailnotfound,
-                          })}
                         />
                       </Grid>
                       <Grid item>

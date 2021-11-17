@@ -213,11 +213,11 @@ function AssessmentListToolbar(props) {
                 <TextField
                   variant="outlined"
                   id="searchFilterDesktop"
+                  placeholder="Cari Kuis"
                   value={searchFilter}
                   onChange={onChange}
                   onClick={() => setSearchBarFocus(true)}
                   onBlur={() => setSearchBarFocus(false)}
-                  placeholder="Cari Kuis"
                   InputProps={{
                     style: {
                       borderRadius: "22.5px",
@@ -266,13 +266,13 @@ function AssessmentListToolbar(props) {
                       <ArrowBackIcon />
                     </IconButton>
                     <TextField
+                      autoFocus
                       variant="outlined"
                       id="searchFilterMobile"
+                      placeholder="Cari Kuis"
                       value={searchFilter}
                       onChange={onChange}
-                      autoFocus
                       onClick={(e) => setSearchBarFocus(true)}
-                      placeholder="Cari Kuis"
                       InputProps={{
                         style: {
                           borderRadius: "22.5px",

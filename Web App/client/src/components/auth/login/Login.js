@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import { loginUser } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
@@ -218,11 +217,8 @@ class Login extends Component {
                           label="Email"
                           onChange={this.onChange}
                           value={this.state.email}
-                          helperText={errors.email}
                           error={Boolean(errors.email)}
-                          // className={classnames("", {
-                          //   invalid: errors.email,
-                          // })}
+                          helperText={errors.email}
                         />
                       </Grid>
                       <Grid item>
@@ -234,11 +230,8 @@ class Login extends Component {
                           label="Kata Sandi"
                           onChange={this.onChange}
                           value={this.state.password}
-                          helperText={errors.password}
                           error={Boolean(errors.password)}
-                          className={classnames("", {
-                            invalid: errors.password,
-                          })}
+                          helperText={errors.password}
                           onFocus={() => {
                             this.setIsFocused(true);
                           }}

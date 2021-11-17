@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import "moment/locale/id";
 import {
   getSubject,
@@ -153,11 +152,11 @@ function SubjectListToolbar(props) {
               <TextField
                 variant="outlined"
                 id="searchFilterDesktop"
+                placeholder="Cari Mata Pelajaran"
                 value={searchFilter}
                 onChange={onChange}
                 onClick={() => setSearchBarFocus(true)}
                 onBlur={() => setSearchBarFocus(false)}
-                placeholder="Cari Mata Pelajaran"
                 InputProps={{
                   style: {
                     borderRadius: "22.5px",
@@ -561,18 +560,15 @@ function SubjectList(props) {
             </Typography>
           ) : null}
           <TextField
-            style={{ margin: "10px 0px" }}
             fullWidth
             variant="outlined"
             id="name"
+            type="text"
             onChange={onChange}
             value={subject.name}
             error={errors.name}
-            type="text"
             helperText={errors.name}
-            className={classnames("", {
-              invalid: errors.name,
-            })}
+            style={{ margin: "10px 0px" }}
           />
           <Grid item container justify="center" spacing={2}>
             <Grid item>

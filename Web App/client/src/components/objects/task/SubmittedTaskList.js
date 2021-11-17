@@ -539,6 +539,9 @@ function SubmittedTaskList(props) {
                           onChange={(e) => {
                             handleChangeGrade(e, student._id);
                           }}
+                          InputProps={{
+                            endAdornment: "/ 100",
+                          }}
                           inputProps={{
                             style: {
                               borderBottom: "none",
@@ -546,9 +549,6 @@ function SubmittedTaskList(props) {
                               margin: "0px",
                               width: "35px",
                             },
-                          }}
-                          InputProps={{
-                            endAdornment: "/ 100",
                           }}
                         />
                       </Grid>

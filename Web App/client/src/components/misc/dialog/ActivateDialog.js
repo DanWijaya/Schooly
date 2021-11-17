@@ -65,19 +65,15 @@ function ActivateDialog(props) {
         className={classes.root}
       >
         <Grid item>
-          {/* <Typography variant="h5" align="center">
-            Hapus {itemType} berikut? */}
           <Typography variant="h6" gutterBottom>
             Aktifkan {itemType} berikut?
           </Typography>
         </Grid>
-        {/* <Grid item container direction="column" alignItems="center"> */}
         <Grid item>
           <Typography align="center" gutterBottom>
             <b>{itemName}</b>
           </Typography>
         </Grid>
-        {/* </Grid> */}
         <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item>
             <Button
