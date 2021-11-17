@@ -335,6 +335,15 @@ function ManageAdminsToolbar(props) {
             </Hidden>
           </Grid>
           <Hidden smDown>
+            <Grid item style={{ display: searchBarFocus ? "none" : "block" }}>
+              <Link to="/data-unit-pengelola">
+                <LightTooltip title="Sunting Data Unit Pengelola">
+                  <IconButton>
+                    <BiSitemap />
+                  </IconButton>
+                </LightTooltip>
+              </Link>
+            </Grid>
             <Grid item>
               <LightTooltip title="Urutkan Akun">
                 <IconButton onClick={handleOpenSortMenu}>
@@ -380,52 +389,68 @@ function ManageAdminsToolbar(props) {
             </Grid>
           </Hidden>
           <Hidden mdUp>
-            {searchBarFocus || searchFilter ? null : (
-              // When search bar is not on focus and searchFilter is empty
-              <Grid item>
-                <LightTooltip title="Urutkan Akun">
-                  <IconButton onClick={handleOpenSortMenu}>
-                    <SortIcon />
-                  </IconButton>
-                </LightTooltip>
-                <Menu
-                  keepMounted
-                  open={Boolean(anchorEl)}
-                  onClose={handleCloseSortMenu}
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  {headCells.map((headCell, i) => (
-                    <MenuItem
-                      key={headCell.id}
-                      sortDirection={orderBy === headCell.id ? order : false}
-                      onClick={createSortHandler(headCell.id)}
+            {searchBarFocus || searchFilter
+              ? null
+              : [
+                  <Grid
+                    item
+                    style={{ display: searchBarFocus ? "none" : "block" }}
+                  >
+                    <Link to="/data-unit-pengelola">
+                      <LightTooltip title="Sunting Data Unit Pengelola">
+                        <IconButton>
+                          <BiSitemap />
+                        </IconButton>
+                      </LightTooltip>
+                    </Link>
+                  </Grid>,
+                  // When search bar is not on focus and searchFilter is empty
+                  <Grid item>
+                    <LightTooltip title="Urutkan Akun">
+                      <IconButton onClick={handleOpenSortMenu}>
+                        <SortIcon />
+                      </IconButton>
+                    </LightTooltip>
+                    <Menu
+                      keepMounted
+                      open={Boolean(anchorEl)}
+                      onClose={handleCloseSortMenu}
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                      }}
                     >
-                      <TableSortLabel
-                        active={orderBy === headCell.id}
-                        direction={orderBy === headCell.id ? order : "asc"}
-                      >
-                        {headCell.label}
-                        {orderBy === headCell.id ? (
-                          <span className={classes.visuallyHidden}>
-                            {order === "desc"
-                              ? "sorted descending"
-                              : "sorted ascending"}
-                          </span>
-                        ) : null}
-                      </TableSortLabel>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Grid>
-            )}
+                      {headCells.map((headCell, i) => (
+                        <MenuItem
+                          key={headCell.id}
+                          sortDirection={
+                            orderBy === headCell.id ? order : false
+                          }
+                          onClick={createSortHandler(headCell.id)}
+                        >
+                          <TableSortLabel
+                            active={orderBy === headCell.id}
+                            direction={orderBy === headCell.id ? order : "asc"}
+                          >
+                            {headCell.label}
+                            {orderBy === headCell.id ? (
+                              <span className={classes.visuallyHidden}>
+                                {order === "desc"
+                                  ? "sorted descending"
+                                  : "sorted ascending"}
+                              </span>
+                            ) : null}
+                          </TableSortLabel>
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </Grid>,
+                ]}
           </Hidden>
         </Grid>
       </Grid>
