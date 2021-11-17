@@ -6,6 +6,7 @@ import { getAllTask, deleteTask } from "../../../actions/TaskActions";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import TaskItem from "../item/TaskItem";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -32,7 +33,6 @@ import {
   Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import TaskItem from "../item/TaskItem";
 
 function createData(
   _id,
@@ -112,7 +112,6 @@ function TaskListToolbar(props) {
       disablePadding: false,
       label: "Mata Pelajaran",
     },
-    // { id: "deadline", numeric: false, disablePadding: false, label: "Batas Waktu" },
     {
       id: "createdAt",
       numeric: false,
@@ -128,7 +127,6 @@ function TaskListToolbar(props) {
   ];
 
   if (role === "Student") {
-    // Don't include the class_assigned basically.
     headCells.pop();
   }
 
@@ -448,7 +446,6 @@ function TaskList(props) {
           setSubmittedTaskIds(submittedTaskIdSet);
         });
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
