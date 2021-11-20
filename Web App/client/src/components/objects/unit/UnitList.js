@@ -344,12 +344,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "25px",
   },
   headerIcon: {
-    display: "flex",
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    fontSize: "25px",
-    padding: "7.5px",
-    borderRadius: "5px",
+    fontSize: "20px",
   },
   toolbar: {
     padding: "16px 0px",
@@ -523,9 +520,9 @@ function UnitList(props) {
     <div className={classes.root}>
       <Grid container alignItems="center" spacing={2} className={classes.header}>
         <Grid item>
-          <div className={classes.headerIcon}>
+          <Avatar variant="rounded" className={classes.headerIcon}>
             <WebIcon />
-          </div>
+          </Avatar>
         </Grid>
         <Grid item>
           <Typography variant="h5" align="left">

@@ -7,7 +7,9 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import {
   AppBar,
   Button,
+  Divider,
   Grid,
+  Paper,
   TextField,
   Typography
 } from "@material-ui/core";
@@ -19,14 +21,17 @@ import {
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
     margin: "auto",
     padding: "20px",
     paddingTop: "25px",
-    maxWidth: "80%",
+    maxWidth: "85%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
+  },
+  background: {
+    backgroundColor: "#F9F9F9",
+    minHeight: "100%",
   },
   menuBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -35,20 +40,7 @@ const styles = (theme) => ({
     backgroundColor: "white",
     color: "black",
   },
-  cancelButton: {
-    width: "90px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.main,
-      color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
-    },
-  },
-  createUnitButton: {
+  createButton: {
     width: "90px",
     backgroundColor: theme.palette.success.main,
     color: "white",
@@ -58,7 +50,20 @@ const styles = (theme) => ({
       boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
-      width: "100%",
+      width: "75px",
+    },
+  },
+  deleteButton: {
+    width: "90px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "75px",
     },
   },
   toolbar: theme.mixins.toolbar,
@@ -66,6 +71,9 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     flexGrow: "1",
+  },
+  contentDetails: {
+    padding: "20px 20px 25px 20px",
   },
   labelIcon: {
     fontSize: "18px",
@@ -149,97 +157,106 @@ class CreateUnit extends Component {
     document.title = "Schooly | Buat Unit";
 
     return (
-      <div className={classes.root}>
-        <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)} style={{ width: "100%" }}>
-          <AppBar position="fixed" className={classes.menuBar}>
-            <Grid container justify="space-between" alignItems="center">
-              <Grid item xs>
-                <Typography variant="h5" color="textSecondary">
-                  Unit
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Grid container alignItems="center" spacing={2}>
-                  <Grid item>
-                    <Button onClick={this.handleOpenDeleteDialog} className={classes.cancelButton}>
-                      Batal
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button type="submit" className={classes.createUnitButton}>
-                      Buat
-                    </Button>
+      <div className={classes.background}>
+        <div className={classes.root}>
+          <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)} style={{ width: "100%" }}>
+            <AppBar position="fixed" className={classes.menuBar}>
+              <Grid container justify="space-between" alignItems="center">
+                <Grid item xs>
+                  <Typography variant="h6" color="textSecondary">
+                    Unit
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Grid container alignItems="center" spacing={1}>
+                    <Grid item>
+                      <Button type="submit" className={classes.createButton}>
+                        Buat
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button onClick={this.handleOpenDeleteDialog} className={classes.deleteButton}>
+                        Batal
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </AppBar>
-          <div className={classes.content}>
-            <div className={classes.toolbar} />
-            <Typography variant="h5">
-              Buat Unit
-            </Typography>
-            <Typography color="textSecondary" style={{ marginBottom: "35px" }}>
-              Setelah sebuah unit dibuat, masukkan pengelola aktif ke dalam unit untuk mengatur guru dan murid di unit tersebut.
-            </Typography>
-            <Grid container direction="column" spacing={4}>
-              <Grid item>
-                <div style={{ display: "flex", alignItems: "center"}}>
-                  <WebIcon className={classes.labelIcon} />
-                  <Typography color="primary">
-                    Nama Unit
+            </AppBar>
+            <div className={classes.content}>
+              <div className={classes.toolbar} />
+              <Paper>
+                <div className={classes.contentDetails}>
+                  <Typography variant="h5" gutterBottom>
+                    Buat Unit
+                  </Typography>
+                  <Typography color="textSecondary">
+                    Setelah sebuah Unit dibuat, masukkan pengelola aktif ke dalam unit untuk mengatur guru dan murid di Unit tersebut.
                   </Typography>
                 </div>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  id="name"
-                  type="text"
-                  onChange={this.onChange}
-                  value={this.state.name}
-                  error={errors.name}
-                  helperText={errors.name}
-                />
-              </Grid>
-              <Grid item>
-                <div style={{ display: "flex", alignItems: "center"}}>
-                  <ShortTextIcon className={classes.labelIcon} />
-                  <Typography color="primary">
-                    Keterangan
-                  </Typography>
+                <Divider />
+                <div className={classes.contentDetails}>
+                  <Grid container direction="column" spacing={4}>
+                    <Grid item>
+                      <div style={{ display: "flex", alignItems: "center"}}>
+                        <WebIcon className={classes.labelIcon} />
+                        <Typography color="primary">
+                          Nama Unit
+                        </Typography>
+                      </div>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        id="name"
+                        type="text"
+                        onChange={this.onChange}
+                        value={this.state.name}
+                        error={errors.name}
+                        helperText={errors.name}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <div style={{ display: "flex", alignItems: "center"}}>
+                        <ShortTextIcon className={classes.labelIcon} />
+                        <Typography color="primary">
+                          Keterangan
+                        </Typography>
+                      </div>
+                      <TextField
+                        fullWidth
+                        multiline
+                        variant="outlined"
+                        id="description"
+                        type="text"
+                        rows="5"
+                        rowsMax="25"
+                        onChange={(e) => this.onChange(e, "description")}
+                        value={this.state.description}
+                        error={errors.description}
+                        helperText={errors.description}
+                      />
+                    </Grid>
+                  </Grid>
                 </div>
-                <TextField
-                  fullWidth
-                  multiline
-                  variant="outlined"
-                  id="description"
-                  type="text"
-                  rows="5"
-                  rowsMax="25"
-                  onChange={(e) => this.onChange(e, "description")}
-                  value={this.state.description}
-                  error={errors.description}
-                  helperText={errors.description}
-                />
-              </Grid>
-            </Grid>
-          </div>
-        </form>
-        <UploadDialog
-          openUploadDialog={this.state.openUploadDialog}
-          success={success}
-          messageUploading="Unit sedang dibuat"
-          messageSuccess="Unit telah dibuat"
-          redirectLink={`/daftar-unit`}
-        />
-        <DeleteDialog
-          openDeleteDialog={this.state.openDeleteDialog}
-          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-          itemType="Unit"
-          itemName={this.state.name}
-          redirectLink="/daftar-unit"
-          isWarning={false}
-        />
+              </Paper>
+            </div>
+          </form>
+          <UploadDialog
+            openUploadDialog={this.state.openUploadDialog}
+            success={success}
+            messageUploading="Unit sedang dibuat"
+            messageSuccess="Unit telah dibuat"
+            redirectLink={`/daftar-unit`}
+          />
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType="Unit"
+            itemName={this.state.name}
+            redirectLink="/daftar-unit"
+            isWarning={false}
+          />
+        </div>
       </div>
     );
   }

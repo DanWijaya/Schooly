@@ -372,9 +372,9 @@ function AnnouncementListSubToolbar(props) {
       if (Object.keys(kelas).length > 0 || user.kelas === undefined) {
         title = "Pengumuman dari Ketua Kelas";
       }
-      // Object.keys(kelas).length === 0 berarti kelas belum selesai dimuat.
-      // agar judul tidak berganti dari "ketua kelas" (saat kelas belum dimuat) menjadi "saya" (setelah kelas dimuat),
-      // judul saat kelas belum dimuat dibuat kosong.
+      // Object.keys(kelas).length === 0 means that class is not finished loading.
+      // It is done like this so that the title doesn't change from "class president" (when it is loaded) into "mine" (after it has finished loading),
+      // The title will be empty when the class is not yet loaded.
     }
   }
 
@@ -401,7 +401,6 @@ function AnnouncementListSubToolbar(props) {
       disablePadding: false,
       label: "Waktu Dibuat",
     },
-    // { id: "name_lowcased", numeric: false, disablePadding: false, label: "Waktu Ditugaskan" },
   ];
 
   // Sort Menu
@@ -413,7 +412,7 @@ function AnnouncementListSubToolbar(props) {
     setAnchorEl(null);
   };
 
-  // FOR SEARCH FILTER.
+  // Search Filter
   const onChange = (e) => {
     updateSearchFilter(e.target.value);
   };
@@ -973,12 +972,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "25px",
   },
   headerIcon: {
-    display: "flex",
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    fontSize: "25px",
-    padding: "7.5px",
-    borderRadius: "5px",
+    fontSize: "20px",
   },
   announcementTabs: {
     borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
@@ -1247,9 +1243,9 @@ function AnnouncementList(props) {
         className={classes.header}
       >
         <Grid item>
-          <div className={classes.headerIcon}>
+          <Avatar variant="rounded" className={classes.headerIcon}>
             <AnnouncementIcon />
-          </div>
+          </Avatar>
         </Grid>
         <Grid item>
           <Typography variant="h5" align="left">

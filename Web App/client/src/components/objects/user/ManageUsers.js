@@ -465,12 +465,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "25px",
   },
   headerIcon: {
-    display: "flex",
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    fontSize: "25px",
-    padding: "7.5px",
-    borderRadius: "5px",
+    fontSize: "20px",
   },
   userTabs: {
     borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
@@ -907,9 +904,9 @@ function ManageUsers(props) {
         className={classes.header}
       >
         <Grid item>
-          <div className={classes.headerIcon}>
+          <Avatar variant="rounded" className={classes.headerIcon}>
             <FaUserFriends />
-          </div>
+          </Avatar>
         </Grid>
         <Grid item>
           <Typography variant="h5" align="left">
