@@ -250,7 +250,7 @@ export const getOneUser = (userId) => (dispatch) => {
 };
 
 export const getUsers = (userIds) => (dispatch) => {
-  axios
+  return axios
     .get("/api/users/getUsers", { params: { userIds: userIds } })
     .then((res) => {
       console.log("These are the users: ", res.data);
@@ -258,6 +258,7 @@ export const getUsers = (userIds) => (dispatch) => {
         type: GET_USERS,
         payload: res.data,
       });
+      return res.data;
     })
     .catch((err) => console.log("Error in getting users"));
 };

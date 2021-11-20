@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import {
   CheckCircle as CheckCircleIcon,
-  Error as ErrorIcon
+  Error as ErrorIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaClipboardList } from "react-icons/fa";
@@ -43,13 +43,34 @@ const useStyles = makeStyles((theme) => ({
 
 function AssessmentItem(props) {
   const classes = useStyles();
-  const { link, type, status, missing, primaryText, subPrimaryText, secondaryText, subSecondaryText } = props;
-
+  const {
+    link,
+    type,
+    status,
+    missing,
+    primaryText,
+    subPrimaryText,
+    secondaryText,
+    subSecondaryText,
+  } = props;
+  const { data, handleOpenDeleteDialog } = props;
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-  const handleOpenDialog = (title, subject, teacher_name, start_date, end_date) => {
-    setCurrentDialogInfo({ title, subject, teacher_name, start_date, end_date });
+  const handleOpenDialog = (
+    title,
+    subject,
+    teacher_name,
+    start_date,
+    end_date
+  ) => {
+    setCurrentDialogInfo({
+      title,
+      subject,
+      teacher_name,
+      start_date,
+      end_date,
+    });
     setOpenDialog(true);
   };
   const handleCloseDialog = () => {
@@ -87,22 +108,14 @@ function AssessmentItem(props) {
                   horizontal: "right",
                 }}
               >
-              <Avatar className={classes.assessmentIcon}>
-                {type === "Kuis" ? (
-                  <FaClipboardList />
-                ) : (
-                  <BsClipboardData />
-                )}
-              </Avatar>
+                <Avatar className={classes.assessmentIcon}>
+                  {type === "Kuis" ? <FaClipboardList /> : <BsClipboardData />}
+                </Avatar>
               </Badge>
             </ListItemAvatar>
             <ListItemText
-              primary={
-                <Typography noWrap>
-                  {primaryText}
-                </Typography>
-              }
-              secondary = {
+              primary={<Typography noWrap>{primaryText}</Typography>}
+              secondary={
                 <Typography variant="body2" color="textSecondary" noWrap>
                   {subPrimaryText}
                 </Typography>
@@ -144,10 +157,7 @@ function AssessmentItem(props) {
           >
             Guru: {currentDialogInfo.teacher_name}
           </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-          >
+          <Typography variant="subtitle1" align="center">
             Mulai: {currentDialogInfo.start_date}
           </Typography>
           <Typography variant="subtitle1" align="center">

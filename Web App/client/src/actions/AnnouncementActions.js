@@ -57,7 +57,7 @@ export const getAllAnnouncements = (userId) => (dispatch) => {
 
 export const getAnnouncement = (Id, category) => (dispatch) => {
   if (category === "by_author") {
-    axios
+    return axios
       .get(`/api/announcements/view/${Id}`)
       .then((res) => {
         console.log("Announcement datas are received");
@@ -65,6 +65,7 @@ export const getAnnouncement = (Id, category) => (dispatch) => {
           type: GET_ANNOUNCEMENT,
           payload: res.data,
         });
+        return res.data;
       })
       .catch((err) => {
         console.log(err);
@@ -74,12 +75,13 @@ export const getAnnouncement = (Id, category) => (dispatch) => {
         });
       });
   } else if (category === "by_class") {
-    axios.get(`/api/announcements/viewByClass/${Id}`).then((res) => {
+    return axios.get(`/api/announcements/viewByClass/${Id}`).then((res) => {
       console.log("Announcement by class is received");
       dispatch({
         type: GET_ANNOUNCEMENT,
         payload: res.data,
       });
+      return res.data;
     });
   }
 };

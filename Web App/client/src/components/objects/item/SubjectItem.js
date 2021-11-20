@@ -4,7 +4,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import {
   LibraryBooks as LibraryBooksIcon,
@@ -15,10 +15,12 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     borderRadius: "4px",
-    boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.12), 0px 2px 8px 2px rgba(60,64,67,0.10)",
+    boxShadow:
+      "0px 2px 3px 0px rgba(60,64,67,0.12), 0px 2px 8px 2px rgba(60,64,67,0.10)",
     "&:focus, &:hover": {
-      boxShadow: "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
-    }
+      boxShadow:
+        "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
+    },
   },
   subjectIcon: {
     display: "flex",
@@ -34,7 +36,9 @@ const useStyles = makeStyles((theme) => ({
   },
   subjectItemContent: {
     padding: "10px 10px 10px 20px",
-  },}));
+  },
+}));
+
 function SubjectItem(props) {
   const classes = useStyles();
   const {
@@ -59,11 +63,16 @@ function SubjectItem(props) {
         <Grid item className={classes.subjectIcon}>
           <LibraryBooksIcon />
         </Grid>
-        <Grid item xs container justify="space-between" alignItems="center" className={classes.subjectItemContent}>
+        <Grid
+          item
+          xs
+          container
+          justify="space-between"
+          alignItems="center"
+          className={classes.subjectItemContent}
+        >
           <Grid item>
-            <Typography noWrap>
-              {subject.name}
-            </Typography>
+            <Typography noWrap>{subject.name}</Typography>
           </Grid>
           <Grid item>
             <IconButton onClick={handleClick}>
@@ -84,7 +93,9 @@ function SubjectItem(props) {
               }}
             >
               <MenuItem
-                onClick={(e) => handleOpenFormDialog(e, subject._id, subject.name, true)}
+                onClick={(e) =>
+                  handleOpenFormDialog(e, subject._id, subject.name, true)
+                }
               >
                 Sunting
               </MenuItem>

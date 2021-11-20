@@ -254,11 +254,7 @@ function TaskItem(props) {
                       horizontal: "right",
                     }}
                   >
-                    <ListItem
-                      // button
-                      // component="a"
-                      className={classes.listItem}
-                    >
+                    <ListItem className={classes.listItem}>
                       <Hidden smUp implementation="css">
                         <ListItemText
                           primary={
