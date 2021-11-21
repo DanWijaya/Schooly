@@ -18,6 +18,7 @@ import OptionMenu from "../../misc/menu/OptionMenu";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import DeactivateDialog from "../../misc/dialog/DeactivateDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { TabPanel } from "../../misc/tab-panel/TabPanel";
 import {
   Avatar,
   Checkbox,
@@ -877,11 +878,6 @@ function ManageUsers(props) {
     // Panel: 1 -> Teacher list panel.
     setPanel(val);
   };
-
-  function TabPanel(props) {
-    const { children, value, index } = props;
-    return <div>{value === index && <div>{children}</div>}</div>;
-  }
 
   document.title = "Schooly | Daftar Pengguna";
 

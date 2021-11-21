@@ -15,6 +15,7 @@ import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import ActivateDialog from "../../misc/dialog/ActivateDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { TabPanel } from "../../misc/tab-panel/TabPanel";
 import {
   Avatar,
   Button,
@@ -844,11 +845,6 @@ function ManagePendingUsers(props) {
     // panel : 1 -> Teacher list panel
     setPanel(val);
   };
-
-  function TabPanel(props) {
-    const { children, value, index } = props;
-    return <div>{value === index && <div>{children}</div>}</div>;
-  }
 
   document.title = "Schooly | Pengguna Tidak Aktif";
 

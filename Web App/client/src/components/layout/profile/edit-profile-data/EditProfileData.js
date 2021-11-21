@@ -7,6 +7,7 @@ import lokal from "date-fns/locale/id";
 import { updateUserData } from "../../../../actions/UserActions";
 import { clearErrors } from "../../../../actions/ErrorActions";
 import DataField from "../DataField";
+import { TabPanel, TabIndex } from "../../../misc/tab-panel/TabPanel";
 import {
   Button,
   Box,
@@ -86,28 +87,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div hidden={value !== index} id={`tabpanel-${index}`} {...other}>
-      {value === index && <Box>{children}</Box>}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function TabIndex(index) {
-  return {
-    id: `tab-${index}`,
-  };
-}
 
 function EditProfileData(props) {
   const classes = useStyles();
