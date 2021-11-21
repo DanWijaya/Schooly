@@ -1,7 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { getAllUnits } from "../../../actions/UnitActions";
-import { getAllAdmins, updateTeacher, updateUnitAdmins } from "../../../actions/UserActions";
+import {
+  getAllAdmins,
+  updateTeacher,
+  updateUnitAdmins,
+} from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -25,14 +29,14 @@ import {
   Select,
   TableSortLabel,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core/";
 import {
   ArrowBack as ArrowBackIcon,
   Clear as ClearIcon,
   ExpandMore as ExpandMoreIcon,
   Search as SearchIcon,
-  Sort as SortIcon
+  Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { BiSitemap } from "react-icons/bi";
@@ -114,7 +118,7 @@ function AdminListToolbar(props) {
 
   const onClear = (e, id) => {
     updateSearchFilter("");
-    document.getElementById(id).focus();
+    // document.getElementById(id).focus();
   };
 
   return (

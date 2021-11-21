@@ -30,6 +30,7 @@ import {
 } from "@material-ui/icons";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
+import OptionMenu from "../../misc/menu/OptionMenu";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -95,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
 
 function TaskItem(props) {
   const classes = useStyles();
-  const { data, handleOpenDeleteDialog } = props;
+  const { data, handleOpenDeleteDialog, submittedIds } = props;
   const { user } = props.auth;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
@@ -103,210 +104,85 @@ function TaskItem(props) {
   return (
     <Grid container direction="column" spacing={2}>
       {data.map((row, index) => {
-        const labelId = `enhanced-table-checkbox-${index}`;
         let viewpage =
           user.role === "Student"
             ? `/tugas-murid/${row._id}`
             : `/tugas-guru/${row._id}`;
         return (
           <Grid item>
-            {user.role === "Teacher" ? (
-              <ExpansionPanel button variant="outlined">
-                <ExpansionPanelSummary className={classes.taskPanelSummary}>
-                  <Grid
-                    container
-                    spacing={1}
-                    justify="space-between"
-                    alignItems="center"
-                  >
-                    <Grid item>
-                      <Hidden smUp implementation="css">
-                        <Typography variant="h6" id={labelId}>
-                          {row.tasktitle}
-                        </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                          {all_subjects_map.get(row.subject)}
-                        </Typography>
-                      </Hidden>
-                      <Hidden xsDown implementation="css">
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <ListItemAvatar>
-                            <Avatar className={classes.assignmentLateTeacher}>
-                              <AssignmentIcon />
-                            </Avatar>
-                          </ListItemAvatar>
-                          <div>
-                            <Typography variant="h6" id={labelId}>
-                              {row.tasktitle}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              {all_subjects_map.get(row.subject)}
-                            </Typography>
-                          </div>
-                        </div>
-                      </Hidden>
-                    </Grid>
-                    <Grid item xs container spacing={1} justify="flex-end">
-                      <Grid item>
-                        <LightTooltip title="Lihat Lebih Lanjut">
-                          <Link to={viewpage}>
-                            <IconButton
-                              size="small"
-                              className={classes.viewTaskButton}
-                            >
-                              <PageviewIcon fontSize="small" />
-                            </IconButton>
-                          </Link>
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip title="Sunting">
-                          <Link to={`/sunting-tugas/${row._id}`}>
-                            <IconButton
-                              size="small"
-                              className={classes.editTaskButton}
-                            >
-                              <EditIcon fontSize="small" />
-                            </IconButton>
-                          </Link>
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip title="Hapus">
-                          <IconButton
-                            size="small"
-                            className={classes.deleteTaskButton}
-                            onClick={(e) => {
-                              handleOpenDeleteDialog(e, row._id, row.tasktitle);
-                            }}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </ExpansionPanelSummary>
-                <Divider />
-                <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <Typography variant="body1">
-                        Kelas yang Ditugaskan:{" "}
-                        {!all_classes_map.size
-                          ? null
-                          : row.class_assigned.map((id, i) => {
-                              if (all_classes_map.get(id)) {
-                                if (i === row.class_assigned.length - 1)
-                                  return `${all_classes_map.get(id).name}`;
-                                return `${all_classes_map.get(id).name}, `;
-                              } else {
-                                return undefined;
-                              }
-                            })}
+            <Link to={viewpage}>
+              <Paper variant="outlined" className={classes.root}>
+                <ListItem button>
+                  <ListItemAvatar>
+                    {user.role === "Student" ? (
+                      <Badge
+                        overlap="circle"
+                        badgeContent={
+                          submittedIds.has(row._id) ? (
+                            <CheckCircleIcon
+                              className={classes.completedIcon}
+                            />
+                          ) : (
+                            <ErrorIcon className={classes.missingIcon} />
+                          )
+                        }
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                      >
+                        <Avatar className={classes.assignmentIcon}>
+                          <AssignmentIcon />
+                        </Avatar>
+                      </Badge>
+                    ) : (
+                      <Avatar className={classes.assignmentIcon}>
+                        <AssignmentIcon />
+                      </Avatar>
+                    )}
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={<Typography noWrap>{row.name}</Typography>}
+                    secondary={
+                      <Typography variant="body2" color="textSecondary" noWrap>
+                        {all_subjects_map.get(row.subject)}
                       </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant="body1" color="textSecondary">
-                        Waktu Dibuat:{" "}
+                    }
+                  />
+                  <ListItemText
+                    align="right"
+                    primary={
+                      <Typography variant="body2" color="textSecondary" noWrap>
                         {moment(row.createdAt)
                           .locale("id")
-                          .format("DD MMM YYYY, HH.mm")}
+                          .format("DD MMM YYYY")}
                       </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant="body1" color="textSecondary">
-                        Batas Waktu:{" "}
-                        {moment(row.deadline)
-                          .locale("id")
-                          .format("DD MMM YYYY, HH.mm")}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-            ) : (
-              <Link to={viewpage}>
-                <Paper
-                  button
-                  component="a"
-                  variant="outlined"
-                  className={classes.taskPaper}
-                >
-                  <Badge
-                    style={{ display: "flex", flexDirection: "row" }}
-                    badgeContent={
-                      row.submissionStatus === false ? (
-                        <ErrorIcon className={classes.missingIcon} />
-                      ) : (
-                        <CheckCircleIcon className={classes.completedIcon} />
-                      )
                     }
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                  >
-                    <ListItem className={classes.listItem}>
-                      <Hidden smUp implementation="css">
-                        <ListItemText
-                          primary={
-                            <Typography variant="h6">
-                              {row.tasktitle}
-                            </Typography>
-                          }
-                          secondary={all_subjects_map.get(row.subject)}
-                        />
-                      </Hidden>
-                      <Hidden xsDown implementation="css">
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <ListItemAvatar>
-                            <Avatar className={classes.assignmentLate}>
-                              <AssignmentIcon />
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary={
-                              <Typography variant="h6">
-                                {row.tasktitle}
-                              </Typography>
-                            }
-                            secondary={all_subjects_map.get(row.subject)}
-                          />
-                        </div>
-                      </Hidden>
-                      <ListItemText
-                        align="right"
-                        primary={
-                          <Typography variant="body2" color="textSecondary">
-                            {moment(row.createdAt)
-                              .locale("id")
-                              .format("DD MMM YYYY")}
-                          </Typography>
-                        }
-                        secondary={moment(row.createdAt)
-                          .locale("id")
-                          .format("HH.mm")}
+                    secondary={
+                      <Typography variant="body2" color="textSecondary" noWrap>
+                        {moment(row.createdAt).locale("id").format("HH.mm")}
+                      </Typography>
+                    }
+                  />
+                  {user.role === "Teacher" ? (
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <OptionMenu
+                        actions={["Sunting", "Hapus"]}
+                        row={row}
+                        handleActionOnClick={[
+                          `/sunting-tugas/${row._id}`,
+                          handleOpenDeleteDialog,
+                        ]}
                       />
-                    </ListItem>
-                  </Badge>
-                </Paper>
-              </Link>
-            )}
+                    </div>
+                  ) : null}
+                </ListItem>
+              </Paper>
+            </Link>
           </Grid>
         );
       })}

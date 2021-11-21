@@ -45,19 +45,30 @@ function OptionMenu(props) {
         }}
       >
         {actions.map((option, idx) => {
-          return (
-            <MenuItem
-              key={option}
-              selected={option === "Detail"}
-              onClick={(e) => {
-                actionOnClick(e, idx, row);
-                // handleActionOnClick[idx](e, row._id, row.name);
-                // handleClose();
-              }}
-            >
-              {option}
-            </MenuItem>
-          );
+          if (typeof handleActionOnClick[idx] === "string") {
+            return (
+              <Link to={handleActionOnClick[idx]} style={{ color: "black" }}>
+                <MenuItem key={option} selected={option === "Detail"}>
+                  {option}
+                </MenuItem>
+              </Link>
+            );
+          } else {
+            return (
+              <MenuItem
+                key={option}
+                selected={option === "Detail"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  actionOnClick(e, idx);
+                  handleClose();
+                  // handleActionOnClick[idx](e, row._id, row.name);
+                }}
+              >
+                {option}
+              </MenuItem>
+            );
+          }
         })}
       </Menu>
     </div>

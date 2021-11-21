@@ -23,7 +23,7 @@ import {
   Snackbar,
   TableSortLabel,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core/";
 import Alert from "@material-ui/lab/Alert";
 import {
@@ -34,7 +34,7 @@ import {
   Delete as DeleteIcon,
   Search as SearchIcon,
   Sort as SortIcon,
-  Web as WebIcon
+  Web as WebIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -146,7 +146,7 @@ function UnitListToolbar(props) {
 
   const onClear = (e, id) => {
     updateSearchFilter("");
-    document.getElementById(id).focus();
+    // document.getElementById(id).focus();
   };
 
   return (
@@ -251,7 +251,10 @@ function UnitListToolbar(props) {
                         endAdornment: (
                           <InputAdornment
                             position="end"
-                            style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                            style={{
+                              marginLeft: "-10px",
+                              marginRight: "-10px",
+                            }}
                           >
                             <IconButton
                               size="small"
@@ -261,7 +264,9 @@ function UnitListToolbar(props) {
                                 onClear(e);
                               }}
                               style={{
-                                visibility: !searchFilter ? "hidden" : "visible",
+                                visibility: !searchFilter
+                                  ? "hidden"
+                                  : "visible",
                               }}
                             >
                               <ClearIcon />
@@ -356,7 +361,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   createUnitButton: {
-    boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    boxShadow:
+      "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -521,7 +527,12 @@ function UnitList(props) {
 
   return (
     <div className={classes.root}>
-      <Grid container alignItems="center" spacing={2} className={classes.header}>
+      <Grid
+        container
+        alignItems="center"
+        spacing={2}
+        className={classes.header}
+      >
         <Grid item>
           <div className={classes.headerIcon}>
             <WebIcon />
@@ -558,10 +569,7 @@ function UnitList(props) {
             return (
               <Grid item xs={12} sm={6} md={4}>
                 <Card>
-                  <Avatar
-                    variant="square"
-                    className={classes.unitBackground}
-                  >
+                  <Avatar variant="square" className={classes.unitBackground}>
                     <WebIcon className={classes.unitIcon} />
                   </Avatar>
                   <CardContent>
@@ -571,15 +579,20 @@ function UnitList(props) {
                     <Typography variant="body2" color="textSecondary">
                       // Deskripsi disini
                       <br />
-                      Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                      across all continents except Antarctica
+                      Lizards are a widespread group of squamate reptiles, with
+                      over 6,000 species, ranging across all continents except
+                      Antarctica
                     </Typography>
                   </CardContent>
                   <CardActions>
                     <Grid container justify="space-between">
                       <Grid item>
                         <Link to={viewpage}>
-                          <Button size="small" color="primary" endIcon={<ArrowRightAltIcon />}>
+                          <Button
+                            size="small"
+                            color="primary"
+                            endIcon={<ArrowRightAltIcon />}
+                          >
                             Lihat
                           </Button>
                         </Link>
@@ -587,7 +600,10 @@ function UnitList(props) {
                       <Grid item>
                         <LightTooltip title="Sunting">
                           <Link to={`/sunting-unit/${row._id}`}>
-                            <IconButton size="small" className={classes.unitButtons}>
+                            <IconButton
+                              size="small"
+                              className={classes.unitButtons}
+                            >
                               <EditIcon fontSize="small" />
                             </IconButton>
                           </Link>
@@ -597,11 +613,7 @@ function UnitList(props) {
                             size="small"
                             className={classes.unitButtons}
                             onClick={(e) => {
-                              handleOpenDeleteDialog(
-                                e,
-                                row._id,
-                                row.unitTitle
-                              );
+                              handleOpenDeleteDialog(e, row._id, row.unitTitle);
                             }}
                           >
                             <DeleteIcon fontSize="small" />

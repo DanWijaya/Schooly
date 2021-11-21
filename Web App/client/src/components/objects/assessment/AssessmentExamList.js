@@ -173,7 +173,7 @@ function AssessmentListToolbar(props) {
   };
   const onClear = (e, id) => {
     updateSearchFilter("");
-    document.getElementById(id).focus();
+    // document.getElementById(id).focus();
   };
 
   return (

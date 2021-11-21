@@ -772,7 +772,7 @@ function ManageAdmins(props) {
     setOpenDeactivateDialog(false);
   };
 
-  document.title = "Schooly | Pengguna Aktif";
+  document.title = "Schooly | Pengelola Aktif";
 
   return (
     <ManageAdminsContext.Provider
@@ -810,7 +810,7 @@ function ManageAdmins(props) {
           </Grid>
           <Grid item>
             <Typography variant="h5" align="left">
-              Pengguna Aktif
+              Pengelola Aktif
             </Typography>
           </Grid>
         </Grid>
@@ -884,7 +884,7 @@ function ManageAdmins(props) {
           open={openDeactivateDialog}
           onClose={handleCloseActivateDialog}
           itemName={selectedUserName}
-          itemType="Pengguna"
+          itemType="Pengelola"
           onAction={() => {
             onActivateUser(selectedUserId);
           }}
@@ -892,7 +892,7 @@ function ManageAdmins(props) {
         <DeleteDialog
           openDeleteDialog={openDeleteDialog}
           handleCloseDeleteDialog={handleCloseDeleteDialog}
-          itemType="Pengguna"
+          itemType="Pengelola"
           itemName={selectedUserName}
           deleteItem={() => {
             onDeleteUser(selectedUserId);

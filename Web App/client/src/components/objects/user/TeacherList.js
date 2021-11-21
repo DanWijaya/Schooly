@@ -31,7 +31,7 @@ import {
   Clear as ClearIcon,
   ExpandMore as ExpandMoreIcon,
   Search as SearchIcon,
-  Sort as SortIcon
+  Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { BiSitemap } from "react-icons/bi";
@@ -112,7 +112,7 @@ function TeacherListToolbar(props) {
 
   const onClear = (e, id) => {
     updateSearchFilter("");
-    document.getElementById(id).focus();
+    // document.getElementById(id).focus();
   };
 
   return (
@@ -129,7 +129,7 @@ function TeacherListToolbar(props) {
               style: {
                 borderRadius: "22.5px",
                 maxWidth: "450px",
-                width: "100%"
+                width: "100%",
               },
               startAdornment: (
                 <InputAdornment
@@ -140,10 +140,7 @@ function TeacherListToolbar(props) {
                 </InputAdornment>
               ),
               endAdornment: (
-                <InputAdornment
-                  position="end"
-                  style={{ marginLeft: "-10px" }}
-                >
+                <InputAdornment position="end" style={{ marginLeft: "-10px" }}>
                   <IconButton
                     size="small"
                     onClick={(e) => {
@@ -477,7 +474,12 @@ function TeacherList(props) {
 
   return (
     <div className={classes.root}>
-      <Grid container alignItems="center" spacing={2} className={classes.header}>
+      <Grid
+        container
+        alignItems="center"
+        spacing={2}
+        className={classes.header}
+      >
         <Grid item>
           <div className={classes.headerIcon}>
             <BiSitemap />
@@ -504,105 +506,105 @@ function TeacherList(props) {
       ) : (
         <Grid container direction="column" spacing={2}>
           {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-          const labelId = index;
-          return (
-            <Grid item>
-              <ExpansionPanel variant="outlined">
-                <ExpansionPanelSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  className={classes.teacherPanel}
-                >
-                <Grid container alignItems="center" spacing={2}>
-                  <Hidden xsDown>
-                    <Grid item>
-                      {!row.avatar ? (
-                        <Avatar />
-                      ) : (
-                        <Avatar
-                          src={`/api/upload/avatar/${row.avatar}`}
+            const labelId = index;
+            return (
+              <Grid item>
+                <ExpansionPanel variant="outlined">
+                  <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    className={classes.teacherPanel}
+                  >
+                    <Grid container alignItems="center" spacing={2}>
+                      <Hidden xsDown>
+                        <Grid item>
+                          {!row.avatar ? (
+                            <Avatar />
+                          ) : (
+                            <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                          )}
+                        </Grid>
+                      </Hidden>
+                      <Grid item>
+                        <Typography id={labelId} noWrap>
+                          {row.name}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          noWrap
+                        >
+                          {row.email}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </ExpansionPanelSummary>
+                  <Divider />
+                  <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
+                    <Grid container direction="column" spacing={2}>
+                      <Grid item>
+                        <Typography color="primary">Mata Pelajaran</Typography>
+                        <Autocomplete
+                          multiple
+                          size="small"
+                          filterSelectedOptions
+                          options={all_subjects}
+                          getOptionLabel={(option) => option.name}
+                          getOptionSelected={(option, value) =>
+                            option._id === value._id
+                          }
+                          onChange={(event, value) => {
+                            handleChangeSubject(value, row._id);
+                          }}
+                          value={
+                            selectedValues[row._id]
+                              ? selectedValues[row._id].subject
+                              : null
+                          }
+                          renderInput={(params) => (
+                            <TextField variant="outlined" {...params} />
+                          )}
                         />
-                      )}
+                      </Grid>
+                      <Grid item>
+                        <Typography color="primary">Kelas</Typography>
+                        <Autocomplete
+                          multiple
+                          size="small"
+                          options={all_classes ? all_classes : null}
+                          getOptionLabel={(option) => option.name}
+                          getOptionSelected={(option, value) =>
+                            option._id === value._id
+                          }
+                          filterSelectedOptions
+                          onChange={(event, value) => {
+                            handleChangeClass(value, row._id);
+                          }}
+                          value={
+                            selectedValues[row._id]
+                              ? selectedValues[row._id].class
+                              : null
+                          }
+                          renderInput={(params) => (
+                            <TextField variant="outlined" {...params} />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item container justify="flex-end">
+                        <Button
+                          className={classes.saveButton}
+                          onClick={() => {
+                            handleSave(row._id);
+                          }}
+                        >
+                          Simpan
+                        </Button>
+                      </Grid>
                     </Grid>
-                  </Hidden>
-                  <Grid item>
-                    <Typography id={labelId} noWrap>
-                      {row.name}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" noWrap>
-                      {row.email}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                </ExpansionPanelSummary>
-                <Divider />
-                <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
-                  <Grid container direction="column" spacing={2}>
-                    <Grid item>
-                      <Typography color="primary">
-                        Mata Pelajaran
-                      </Typography>
-                      <Autocomplete
-                        multiple
-                        size="small"
-                        filterSelectedOptions
-                        options={all_subjects}
-                        getOptionLabel={(option) => option.name}
-                        getOptionSelected={(option, value) =>
-                          option._id === value._id
-                        }
-                        onChange={(event, value) => {
-                          handleChangeSubject(value, row._id);
-                        }}
-                        value={
-                          selectedValues[row._id]
-                          ? selectedValues[row._id].subject
-                          : null
-                        }
-                        renderInput={(params) => (
-                          <TextField variant="outlined" {...params} />
-                        )}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <Typography color="primary">
-                        Kelas
-                      </Typography>
-                      <Autocomplete
-                        multiple
-                        size="small"
-                        options={all_classes ? all_classes : null}
-                        getOptionLabel={(option) => option.name}
-                        getOptionSelected={(option, value) => option._id === value._id}
-                        filterSelectedOptions
-                        onChange={(event, value) => {
-                          handleChangeClass(value, row._id);
-                        }}
-                        value={
-                          selectedValues[row._id]
-                          ? selectedValues[row._id].class
-                          : null
-                        }
-                        renderInput={(params) => (
-                          <TextField variant="outlined" {...params} />
-                        )}
-                      />
-                    </Grid>
-                    <Grid item container justify="flex-end">
-                      <Button
-                        className={classes.saveButton}
-                        onClick={() => {
-                          handleSave(row._id);
-                        }}
-                      >
-                        Simpan
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-            </Grid>
-          );
-        })}
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              </Grid>
+            );
+          })}
         </Grid>
       )}
       <Snackbar

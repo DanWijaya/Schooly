@@ -38,15 +38,8 @@ import {
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
-function createData(
-  _id,
-  materialtitle,
-  subject,
-  author,
-  class_assigned,
-  createdAt
-) {
-  return { _id, materialtitle, subject, author, class_assigned, createdAt };
+function createData(_id, name, subject, author, class_assigned, createdAt) {
+  return { _id, name, subject, author, class_assigned, createdAt };
 }
 
 var rows = [];
@@ -96,7 +89,7 @@ function MaterialListToolbar(props) {
 
   const headCells = [
     {
-      id: "materialtitle",
+      id: "name",
       numeric: false,
       disablePadding: true,
       label: "Nama Materi",
@@ -146,7 +139,7 @@ function MaterialListToolbar(props) {
 
   const onClear = (e, id) => {
     updateSearchFilter("");
-    document.getElementById(id).focus();
+    // document.getElementById(id).focus();
   };
 
   return (
@@ -498,6 +491,7 @@ function MaterialList(props) {
   retrieveMaterials();
 
   const onDeleteMaterial = (id) => {
+    console.log("DELETE", id);
     deleteMaterial(id).then((res) => {
       handleOpenDeleteSnackbar();
       handleCloseDeleteDialog();
@@ -511,11 +505,11 @@ function MaterialList(props) {
   };
 
   // Delete Dialog
-  const handleOpenDeleteDialog = (e, id, name) => {
+  const handleOpenDeleteDialog = (e, row) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
-    setSelectedMaterialId(id);
-    setSelectedMaterialName(name);
+    setSelectedMaterialId(row._id);
+    setSelectedMaterialName(row.name);
   };
 
   const handleCloseDeleteDialog = () => {
@@ -571,6 +565,7 @@ function MaterialList(props) {
         itemType="Materi"
         itemName={selectedMaterialName}
         deleteItem={() => {
+          console.log("idnya:", selectedMaterialId);
           onDeleteMaterial(selectedMaterialId);
         }}
       />

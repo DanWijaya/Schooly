@@ -1202,7 +1202,6 @@ function ViewClass(props) {
                     <Grid container justify="space-between" alignItems="center">
                       <Grid item>
                         <PersonListItem
-                          // person_avatar={`/api/upload/avatar/${student.avatar}`}
                           person_avatar={avatar[student._id]}
                           person_name={student.name}
                           person_id={student._id}

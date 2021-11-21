@@ -727,7 +727,7 @@ function ManagePendingAdmins(props) {
     setOpenActivateDialog(false);
   };
 
-  document.title = "Schooly | Pengguna Tidak Aktif";
+  document.title = "Schooly | Pengelola Tidak Aktif";
 
   return (
     <ManageAdminsContext.Provider
@@ -765,7 +765,7 @@ function ManagePendingAdmins(props) {
           </Grid>
           <Grid item>
             <Typography variant="h5" align="left">
-              Pengguna Tidak Aktif
+              Pengelola Tidak Aktif
             </Typography>
           </Grid>
         </Grid>
@@ -839,7 +839,7 @@ function ManagePendingAdmins(props) {
           open={openActivateDialog}
           onClose={handleCloseActivateDialog}
           itemName={selectedUserName}
-          itemType="Pengguna"
+          itemType="Pengelola"
           onAction={() => {
             onActivateUser(selectedUserId);
           }}
@@ -847,7 +847,7 @@ function ManagePendingAdmins(props) {
         <DeleteDialog
           openDeleteDialog={openDeleteDialog}
           handleCloseDeleteDialog={handleCloseDeleteDialog}
-          itemType="Pengguna"
+          itemType="Pengelola"
           itemName={selectedUserName}
           deleteItem={() => {
             onDeleteUser(selectedUserId);

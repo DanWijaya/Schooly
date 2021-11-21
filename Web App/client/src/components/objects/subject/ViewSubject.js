@@ -205,46 +205,15 @@ function ViewSubject(props) {
 
   // }
 
-  function listMaterials(
-    category = null,
-    subject = {},
-    tab = "pekerjaan_kelas"
-  ) {
-    let materialList = [];
-
-    if (Boolean(selectedMaterials.length)) {
-      for (var i = selectedMaterials.length - 1; i >= 0; i--) {
-        let material = selectedMaterials[i];
-        if (
-          !category ||
-          (category === "subject" && material.subject === subject)
-        ) {
-          materialList.push(
-            <Grid item>
-              <MaterialItem
-                link={`/materi/${material._id}`}
-                primaryText={material.name}
-                secondaryText={moment(material.createdAt)
-                  .locale("id")
-                  .format("DD MMM YYYY")}
-                subSecondaryText={moment(material.createdAt)
-                  .locale("id")
-                  .format("HH.mm")}
-              />
-            </Grid>
-          );
-        }
-        if (tab === "pekerjaan_kelas") {
-          if (!category && materialList.length === 5)
-            // Number of item to the index, so that it has to be index = selectedMaterials.length - 5.
-            break;
-          if (category === "subject" && materialList.length === 3)
-            // Number of item to the index, so that it has to be index = selectedMaterials.length - 5.
-            break;
-        }
-      }
+  function listMaterials(subject, tab = "pekerjaan_kelas") {
+    if (!Boolean(selectedMaterials.length)) {
+      return <MaterialItem data={[]} />;
     }
-    return materialList;
+    let materialList = selectedMaterials
+      .reverse()
+      .filter((material) => material.subject == subject);
+
+    return <MaterialItem data={materialList} />;
   }
 
   function listTasks(category = null, subject = null, tab = "pekerjaan_kelas") {
@@ -291,22 +260,23 @@ function ViewSubject(props) {
               (category === "subject" && task.subject === subject)) &&
             assignmentStatus === TASK_STATUS.SUBMITTED
           ) {
-            result.push(
-              <Grid item>
-                <TaskItem
-                  link={`/tugas-murid/${task._id}`}
-                  primaryText={task.name}
-                  status={assignmentStatus}
-                  missing={TASK_STATUS.NOT_SUBMITTED}
-                  secondaryText={moment(task.createdAt)
-                    .locale("id")
-                    .format("DD MMM YYYY")}
-                  subSecondaryText={moment(task.createdAt)
-                    .locale("id")
-                    .format("HH.mm")}
-                />
-              </Grid>
-            );
+            result.push(task);
+            // result.push(
+            //   <Grid item>
+            //     <TaskItem
+            //       link={`/tugas-murid/${task._id}`}
+            //       primaryText={task.name}
+            //       status={assignmentStatus}
+            //       missing={TASK_STATUS.NOT_SUBMITTED}
+            //       secondaryText={moment(task.createdAt)
+            //         .locale("id")
+            //         .format("DD MMM YYYY")}
+            //       subSecondaryText={moment(task.createdAt)
+            //         .locale("id")
+            //         .format("HH.mm")}
+            //     />
+            //   </Grid>
+            // );
             if (!category && result.length === 5) break;
             if (category === "subject" && result.length === 3) break;
           }
@@ -315,27 +285,28 @@ function ViewSubject(props) {
             !category ||
             (category === "subject" && task.subject === subject)
           ) {
-            result.push(
-              <Grid item>
-                <TaskItem
-                  link={`/tugas-murid/${task._id}`}
-                  primaryText={task.name}
-                  status={assignmentStatus}
-                  missing={TASK_STATUS.NOT_SUBMITTED}
-                  secondaryText={moment(task.createdAt)
-                    .locale("id")
-                    .format("DD MMM YYYY")}
-                  subSecondaryText={moment(task.createdAt)
-                    .locale("id")
-                    .format("HH.mm")}
-                />
-              </Grid>
-            );
+            result.push(task);
+            // result.push(
+            //   <Grid item>
+            //     <TaskItem
+            //       link={`/tugas-murid/${task._id}`}
+            //       primaryText={task.name}
+            //       status={assignmentStatus}
+            //       missing={TASK_STATUS.NOT_SUBMITTED}
+            //       secondaryText={moment(task.createdAt)
+            //         .locale("id")
+            //         .format("DD MMM YYYY")}
+            //       subSecondaryText={moment(task.createdAt)
+            //         .locale("id")
+            //         .format("HH.mm")}
+            //     />
+            //   </Grid>
+            // );
           }
         }
       }
     }
-    return result;
+    return <TaskItem data={result} submittedIds={submittedTaskIds} />;
   }
 
   function listAssessments(
@@ -572,12 +543,12 @@ function ViewSubject(props) {
           </ExpansionPanelSummary>
           <Divider />
           <ExpansionPanelDetails className={classes.objectDetails}>
-            {listMaterials("subject", id, "mata_pelajaran").length === 0 ? (
+            {listMaterials(id, "mata_pelajaran").length === 0 ? (
               <Empty />
             ) : (
               <div style={{ width: "100%" }}>
                 <Grid container direction="column" spacing={2}>
-                  {listMaterials("subject", id, "mata_pelajaran")}
+                  {listMaterials(id, "mata_pelajaran")}
                 </Grid>
               </div>
             )}

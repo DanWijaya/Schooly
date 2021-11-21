@@ -36,7 +36,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 function createData(
   _id,
-  tasktitle,
+  name,
   subject,
   deadline,
   class_assigned,
@@ -45,7 +45,7 @@ function createData(
 ) {
   return {
     _id,
-    tasktitle,
+    name,
     subject,
     deadline,
     class_assigned,
@@ -101,7 +101,7 @@ function TaskListToolbar(props) {
 
   const headCells = [
     {
-      id: "tasktitle",
+      id: "name",
       numeric: false,
       disablePadding: true,
       label: "Nama Tugas",
@@ -146,7 +146,7 @@ function TaskListToolbar(props) {
 
   const onClear = (e, id) => {
     updateSearchFilter("");
-    document.getElementById(id).focus();
+    // document.getElementById(id).focus();
   };
 
   return (
@@ -411,7 +411,7 @@ function TaskList(props) {
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
-  const [submittedTaskIds, setSubmittedTaskIds] = React.useState(null);
+  const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
   const taskRowItem = (data) => {
@@ -591,6 +591,7 @@ function TaskList(props) {
         <TaskItem
           data={stableSort(rows, getComparator(order, orderBy))}
           handleOpenDeleteDialog={handleOpenDeleteDialog}
+          submittedIds={submittedTaskIds}
         />
       )}
       <DeleteDialog
