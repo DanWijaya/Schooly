@@ -24,7 +24,6 @@ import {
   Grid,
   Hidden,
   IconButton,
-  Input,
   Menu,
   MenuItem,
   Paper,
@@ -42,13 +41,8 @@ import { Alert, ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import {
   Ballot as BallotIcon,
   CheckCircle as CheckCircleIcon,
-  ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon,
   Error as ErrorIcon,
-  Explore as ExploreIcon,
   HelpOutline as HelpOutlineIcon,
-  NavigateBefore as NavigateBeforeIcon,
-  NavigateNext as NavigateNextIcon,
   Sort as SortIcon,
   SupervisorAccount as SupervisorAccountIcon,
 } from "@material-ui/icons";

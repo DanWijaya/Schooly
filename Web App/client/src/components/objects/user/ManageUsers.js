@@ -12,15 +12,15 @@ import {
   bulkSetUserDeactivated,
 } from "../../../actions/UserActions";
 import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
+import { removeDisabledDeletedOfficers, removeHomeroomTeachers } from "../../../actions/ClassActions";
 import Empty from "../../misc/empty/Empty";
+import OptionMenu from "../../misc/menu/OptionMenu";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import DeactivateDialog from "../../misc/dialog/DeactivateDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
-  Button,
   Checkbox,
-  Dialog,
   Divider,
   Grid,
   Hidden,
@@ -43,13 +43,9 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
-  Block as BlockIcon,
-  Cancel as CancelIcon,
   CheckBox as CheckBoxIcon,
   CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
-  CheckCircle as CheckCircleIcon,
   Clear as ClearIcon,
-  DataUsageRounded,
   IndeterminateCheckBox as IndeterminateCheckBoxIcon,
   Search as SearchIcon,
   Sort as SortIcon,
@@ -57,11 +53,6 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { BiSitemap } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
-import OptionMenu from "../../misc/menu/OptionMenu";
-import {
-  removeDisabledDeletedOfficers,
-  removeHomeroomTeachers,
-} from "../../../actions/ClassActions";
 
 function createData(
   _id,
@@ -597,14 +588,14 @@ function ManageUsers(props) {
     []
   );
 
-  //Snackbar
+  // Snackbar
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
   // Tabs
   const [panel, setPanel] = React.useState(0);
 
-  //Avatars
+  // Avatars
   const [avatarJSON, setAvatarJSON] = React.useState({});
 
   let student_rows = [];
@@ -623,14 +614,14 @@ function ManageUsers(props) {
   };
 
   const handleChangeListStudent = (e, index, row) => {
-    //Handle the check of Checkboxes.
+    // Handle the check of Checkboxes.
     e.stopPropagation();
     e.preventDefault();
     let currentBooleanList = booleanCheckboxStudent;
     currentBooleanList[index] = !currentBooleanList[index];
     setBooleanCheckboxStudent([...currentBooleanList]);
 
-    //Handle the list of chosen .
+    // Handle the list of chosen .
     let currentCheckboxList = listCheckboxStudent;
     let data = row._id;
 
@@ -644,14 +635,14 @@ function ManageUsers(props) {
   };
 
   const handleChangeListTeacher = (e, index, row) => {
-    //Handle the check of checkboxes
+    // Handle the check of checkboxes.
     e.stopPropagation();
     e.preventDefault();
     let currentBooleanList = booleanCheckboxTeacher;
     currentBooleanList[index] = !currentBooleanList[index];
     setBooleanCheckboxTeacher([...currentBooleanList]);
 
-    //Handle the list of chosen .
+    // Handle the list of chosen.
     let currentCheckboxList = listCheckboxTeacher;
     let data = row._id;
 
@@ -665,7 +656,6 @@ function ManageUsers(props) {
   };
 
   const selectAllData = (type) => {
-    console.log(type);
     if (type === "Student") {
       let allDataStudent = [];
       let booleanAllDataStudent = [];
@@ -804,12 +794,12 @@ function ManageUsers(props) {
       await deleteUser(id);
     }
 
-    if (panel == 0) {
+    if (panel === 0) {
       await removeDisabledDeletedOfficers(id);
       const students = await getStudents(user.unit);
       setListCheckboxStudent([]);
       setBooleanCheckboxStudent(students.map(() => false));
-    } else if (panel == 1) {
+    } else if (panel === 1) {
       await removeHomeroomTeachers(id);
       const teachers = await getTeachers(user.unit);
       setListCheckboxTeacher([]);
@@ -821,17 +811,17 @@ function ManageUsers(props) {
 
   const onDeactivateUser = async (id) => {
     if (Array.isArray(id)) {
-      // If it is a lists, deactivate in bulk
+      // If it is a lists, deactivate in bulk.
       await bulkSetUserDeactivated(id);
     } else {
       await setUserDeactivated(id);
     }
-    if (panel == 0) {
+    if (panel === 0) {
       await removeDisabledDeletedOfficers(id);
       const students = await getStudents(user.unit);
       setListCheckboxStudent([]);
       setBooleanCheckboxStudent(students.map(() => false));
-    } else if (panel == 1) {
+    } else if (panel === 1) {
       await removeHomeroomTeachers(id);
       const teachers = await getTeachers(user.unit);
       setListCheckboxTeacher([]);
@@ -850,9 +840,9 @@ function ManageUsers(props) {
       setSelectedUserName(row.name);
     } else {
       setSelectedUserName("");
-      if (panel == 0) {
+      if (panel === 0) {
         setSelectedUserId(listCheckboxStudent);
-      } else if (panel == 1) {
+      } else if (panel === 1) {
         setSelectedUserId(listCheckboxTeacher);
       }
     }
@@ -866,9 +856,9 @@ function ManageUsers(props) {
       setSelectedUserName(row.name);
     } else {
       setSelectedUserName("");
-      if (panel == 0) {
+      if (panel === 0) {
         setSelectedUserId(listCheckboxStudent);
-      } else if (panel == 1) {
+      } else if (panel === 1) {
         setSelectedUserId(listCheckboxTeacher);
       }
     }
@@ -883,8 +873,8 @@ function ManageUsers(props) {
   };
 
   const handleTabs = (e, val) => {
-    // panel : 0 -> Student list panel
-    // panel : 1 -> Teacher list panel
+    // Panel: 0 -> Student list panel.
+    // Panel: 1 -> Teacher list panel.
     setPanel(val);
   };
 

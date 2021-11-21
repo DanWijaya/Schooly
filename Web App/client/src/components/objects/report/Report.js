@@ -1477,9 +1477,9 @@ function Report(props) {
             className={classes.header}
           >
             <Grid item>
-              <div className={classes.headerIcon}>
+              <Avatar variant="rounded" className={classes.headerIcon}>
                 <AssessmentIcon />
-              </div>
+              </Avatar>
             </Grid>
             <Grid item>
               <Typography variant="h5" align="left">
