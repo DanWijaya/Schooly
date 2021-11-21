@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {
   getAllMaterials,
-  getMaterial,
+  getMaterialByClass,
+  getMaterialByAuthor,
   deleteMaterial,
 } from "../../../actions/MaterialActions";
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
@@ -388,7 +389,8 @@ function MaterialList(props) {
   const classes = useStyles();
   const {
     getAllSubjects,
-    getMaterial,
+    getMaterialByClass,
+    getMaterialByAuthor,
     deleteMaterial,
     getAllClass,
     getTeachers,
@@ -438,10 +440,10 @@ function MaterialList(props) {
     getAllClass(user.unit, "map");
     getTeachers(user.unit, "map");
     if (user.role === "Teacher") {
-      getMaterial(user._id, "by_author");
+      getMaterialByAuthor(user._id);
     } else {
       // For student.
-      getMaterial(user.kelas, "by_class");
+      getMaterialByClass(user.kelas);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -494,10 +496,10 @@ function MaterialList(props) {
       handleOpenDeleteSnackbar();
       handleCloseDeleteDialog();
       if (user.role === "Teacher") {
-        getMaterial(user._id, "by_author");
+        getMaterialByAuthor(user._id);
       } else {
         // for student
-        getMaterial(user.kelas, "by_class");
+        getMaterialByClass(user.kelas);
       }
     });
   };
@@ -616,7 +618,8 @@ export default connect(mapStateToProps, {
   getSelectedClasses,
   getAllSubjects,
   getTeachers,
-  getMaterial,
+  getMaterialByClass,
+  getMaterialByAuthor,
   getAllMaterials,
   deleteMaterial,
 })(MaterialList);

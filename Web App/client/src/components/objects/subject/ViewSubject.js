@@ -7,7 +7,7 @@ import { getTeachers } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
-import { getMaterial } from "../../../actions/MaterialActions";
+import { getMaterialByClass } from "../../../actions/MaterialActions";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import subjectBackground from "./subject-background/SubjectBackground";
@@ -87,7 +87,7 @@ function ViewSubject(props) {
     getAllTask,
     getAllSubjects,
     tasksCollection,
-    getMaterial,
+    getMaterialByClass,
     getAllAssessments,
     assessmentsCollection,
     getTeachers,
@@ -118,9 +118,9 @@ function ViewSubject(props) {
 
   React.useEffect(() => {
     if (user.role === "Student") {
-      getMaterial(user.kelas, "by_class");
+      getMaterialByClass(user.kelas);
+      setCurrentClass(user.kelas);
     }
-    setCurrentClass(user.kelas);
     getAllTask(user.unit);
     getAllSubjects(user.unit, "map");
     getAllAssessments(user.unit);
@@ -157,57 +157,9 @@ function ViewSubject(props) {
     });
   }
 
-  // let tasksBySubjectClass = [];
-  // const generateTaskBySubject = (target=null) => {
-  //   tasksByClass.map((task) => {
-  //     let workCategoryAvatar = (
-  //       <Avatar className={classes.assignmentLate}>
-  //         <AssignmentLateIcon/>
-  //       </Avatar>
-  //     )
-
-  //     let workStatus = "Belum Dikumpulkan"
-  //     // for (var i = 0; i < all_user_files.length; i++) {
-  //     //   if (all_user_files[i].for_task_object === task._id) {
-  //     //     workStatus = "Telah Dikumpulkan"
-  //     //     workCategoryAvatar = (
-  //     //       <Avatar className={classes.assignmentTurnedIn}>
-  //     //         <AssignmentTurnedInIcon/>
-  //     //       </Avatar>
-  //     //     )
-  //     //     break;
-  //     //   }
-  //     // }
-
-  //     if (task.subject === id) {
-  //     tasksBySubjectClass.push(
-  //       <AssignmentListItem
-  //         work_title={task.name}
-  //         work_category_avatar={workCategoryAvatar}
-  //         work_sender={`Mata Pelajaran: ${all_subjects_map.get(task.subject)}`}
-  //         work_status={workStatus}
-  //         work_deadline={moment(task.deadline).format("DD MMM YYYY")}
-  //         work_link={`/tugas-murid/${task._id}`}
-  //       />
-  //     )
-  //   }
-  //   return tasksBySubjectClass
-  // })
-
-  // if (target === "length")
-  //   return tasksBySubjectClass.length;
-
-  // return tasksBySubjectClass.length === 0 ?
-  // (<Typography variant="h5" align="center" gutterBottom>
-  //   Kosong
-  // </Typography>)
-  // : tasksBySubjectClass
-
-  // }
-
-  function listMaterials(subject, tab = "pekerjaan_kelas") {
+  function listMaterials(subject) {
     if (!Boolean(selectedMaterials.length)) {
-      return <MaterialItem data={[]} />;
+      return <Empty />;
     }
     let materialList = selectedMaterials
       .reverse()
@@ -216,97 +168,20 @@ function ViewSubject(props) {
     return <MaterialItem data={materialList} />;
   }
 
-  function listTasks(category = null, subject = null, tab = "pekerjaan_kelas") {
-    let tasksList = [];
-    let result = [];
-    if (Boolean(tasksCollection.length)) {
-      var i;
-      for (i = tasksCollection.length - 1; i >= 0; i--) {
-        let task = tasksCollection[i];
-        let class_assigned = task.class_assigned;
-        if (class_assigned.indexOf(classId) !== -1) {
-          tasksList.push(task);
-        }
-        // if(i === tasksCollection.length - 5){ // item terakhir harus pas index ke 4.
-        //   break;
-        // }
-      }
-
-      for (i = 0; i < tasksList.length; i++) {
-        let task = tasksList[i];
-
-        let assignmentStatus;
-        if (submittedTaskIds.has(task._id)) {
-          assignmentStatus = TASK_STATUS.SUBMITTED;
-        } else {
-          assignmentStatus = TASK_STATUS.NOT_SUBMITTED;
-        }
-
-        // console.log(all_user_files)
-        // for (var j = 0; j < all_user_files.length; j++){
-        //     if(all_user_files[j].for_task_object === task._id){
-        //     workStatus = "Telah Dikumpulkan"
-        //     workCategoryAvatar = (
-        //       <Avatar className={classes.assignmentTurnedIn}>
-        //         <AssignmentTurnedInIcon/>
-        //       </Avatar>
-        //     )
-        //     break;
-        //   }
-        // }
-        if (tab === "pekerjaan_kelas") {
-          if (
-            (!category ||
-              (category === "subject" && task.subject === subject)) &&
-            assignmentStatus === TASK_STATUS.SUBMITTED
-          ) {
-            result.push(task);
-            // result.push(
-            //   <Grid item>
-            //     <TaskItem
-            //       link={`/tugas-murid/${task._id}`}
-            //       primaryText={task.name}
-            //       status={assignmentStatus}
-            //       missing={TASK_STATUS.NOT_SUBMITTED}
-            //       secondaryText={moment(task.createdAt)
-            //         .locale("id")
-            //         .format("DD MMM YYYY")}
-            //       subSecondaryText={moment(task.createdAt)
-            //         .locale("id")
-            //         .format("HH.mm")}
-            //     />
-            //   </Grid>
-            // );
-            if (!category && result.length === 5) break;
-            if (category === "subject" && result.length === 3) break;
-          }
-        } else if (tab === "mata_pelajaran") {
-          if (
-            !category ||
-            (category === "subject" && task.subject === subject)
-          ) {
-            result.push(task);
-            // result.push(
-            //   <Grid item>
-            //     <TaskItem
-            //       link={`/tugas-murid/${task._id}`}
-            //       primaryText={task.name}
-            //       status={assignmentStatus}
-            //       missing={TASK_STATUS.NOT_SUBMITTED}
-            //       secondaryText={moment(task.createdAt)
-            //         .locale("id")
-            //         .format("DD MMM YYYY")}
-            //       subSecondaryText={moment(task.createdAt)
-            //         .locale("id")
-            //         .format("HH.mm")}
-            //     />
-            //   </Grid>
-            // );
-          }
-        }
-      }
+  function listTasks(subject) {
+    if (!Boolean(tasksCollection.length)) {
+      return <Empty />;
     }
-    return <TaskItem data={result} submittedIds={submittedTaskIds} />;
+    let taskList = tasksCollection.reverse().filter((task) => {
+      let class_assigned = task.class_assigned;
+      if (Array.isArray(class_assigned)) {
+        return (
+          class_assigned.indexOf(classId) !== -1 && task.subject === subject
+        );
+      }
+      return false;
+    });
+    return <TaskItem data={taskList} submittedIds={submittedTaskIds} />;
   }
 
   function listAssessments(
@@ -543,15 +418,7 @@ function ViewSubject(props) {
           </ExpansionPanelSummary>
           <Divider />
           <ExpansionPanelDetails className={classes.objectDetails}>
-            {listMaterials(id, "mata_pelajaran").length === 0 ? (
-              <Empty />
-            ) : (
-              <div style={{ width: "100%" }}>
-                <Grid container direction="column" spacing={2}>
-                  {listMaterials(id, "mata_pelajaran")}
-                </Grid>
-              </div>
-            )}
+            {listMaterials(id)}
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
@@ -563,15 +430,7 @@ function ViewSubject(props) {
           </ExpansionPanelSummary>
           <Divider />
           <ExpansionPanelDetails className={classes.objectDetails}>
-            {listTasks("subject", id, "mata_pelajaran").length === 0 ? (
-              <Empty />
-            ) : (
-              <div style={{ width: "100%" }}>
-                <Grid container direction="column" spacing={2}>
-                  {listTasks("subject", id, "mata_pelajaran")}
-                </Grid>
-              </div>
-            )}
+            {listTasks(id)}
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
@@ -633,7 +492,7 @@ ViewSubject.propTypes = {
   getAllSubjects: PropTypes.func.isRequired,
   getAllTask: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
-  getMaterial: PropTypes.func.isRequired,
+  getMaterialByClass: PropTypes.func.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
 };
 
@@ -651,7 +510,7 @@ export default connect(mapStateToProps, {
   setCurrentClass,
   getAllSubjects,
   getAllTask,
-  getMaterial,
+  getMaterialByClass,
   getAllAssessments,
   getTeachers,
 })(ViewSubject);

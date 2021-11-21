@@ -3,17 +3,10 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import "moment/locale/id";
 import PropTypes from "prop-types";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Badge,
-  IconButton,
-  Divider,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
   Grid,
-  Hidden,
   ListItem,
   ListItemAvatar,
   ListItemText,
@@ -23,10 +16,7 @@ import {
 import {
   Assignment as AssignmentIcon,
   CheckCircle as CheckCircleIcon,
-  Edit as EditIcon,
   Error as ErrorIcon,
-  Delete as DeleteIcon,
-  Pageview as PageviewIcon,
 } from "@material-ui/icons";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
@@ -37,11 +27,6 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
-  },
-  taskPaper: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "stretch",
   },
   assignmentIcon: {
     backgroundColor: theme.palette.primary.main,
@@ -57,37 +42,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "8px",
     backgroundColor: "white",
     color: theme.palette.success.main,
-  },
-  assignmentLateTeacher: {
-    backgroundColor: theme.palette.primary.main,
-    marginRight: "10px",
-  },
-  assignmentLate: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  viewTaskButton: {
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
-    },
-  },
-  editTaskButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  deleteTaskButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
   },
   listItem: {
     padding: "6px 16px",
@@ -118,7 +72,7 @@ function TaskItem(props) {
                       <Badge
                         overlap="circle"
                         badgeContent={
-                          submittedIds.has(row._id) ? (
+                          submittedIds.has(row._id) || row.grades[user._id] ? (
                             <CheckCircleIcon
                               className={classes.completedIcon}
                             />

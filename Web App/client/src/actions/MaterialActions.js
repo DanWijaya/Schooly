@@ -60,6 +60,48 @@ export const getAllMaterials = () => (dispatch) => {
   });
 };
 
+export const getMaterialByAuthor = (authorId) => (dispatch) => {
+  return axios
+    .get(`/api/materials/viewByAuthor/${authorId}`)
+    .then((res) => {
+      console.log("getMaterialByAuthor is successful");
+      dispatch({
+        type: GET_MATERIAL,
+        payload: res.data,
+      });
+      return res.data;
+    })
+    .catch((err) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err,
+      });
+      console.error(err);
+      throw err;
+    });
+};
+
+export const getMaterialByClass = (classId) => (dispatch) => {
+  return axios
+    .get(`/api/materials/viewByClass/${classId}`)
+    .then((res) => {
+      console.log("getMaterialByClass completed");
+      dispatch({
+        type: GET_MATERIAL,
+        payload: res.data,
+      });
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err,
+      });
+      throw err;
+    });
+};
+
 export const getMaterial = (Id, category) => (dispatch) => {
   if (category === "by_author") {
     // The id will be author's id.

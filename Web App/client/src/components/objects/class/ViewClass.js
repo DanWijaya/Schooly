@@ -11,9 +11,8 @@ import {
   getStudentsByClass,
   getTeachers,
 } from "../../../actions/UserActions";
-import { getMaterial } from "../../../actions/MaterialActions";
+import { getMaterialByClass } from "../../../actions/MaterialActions";
 import {
-  getAllTask,
   getSubmittedTasks,
   getTaskAtmpt,
   getTaskByClass,
@@ -406,14 +405,6 @@ function AssessmentListItem(props) {
                 }
                 secondary={props.work_subject}
               />
-              {/* <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="body2" color="textSecondary">
-                    Mulai: {props.work_starttime}
-                  </Typography>
-                }
-              /> */}
               <ListItemText
                 align="right"
                 primary={
@@ -568,8 +559,7 @@ function ViewClass(props) {
     getAllSubjects,
     tasksCollection,
     getTeachers,
-    getMaterial,
-    getAllTask,
+    getMaterialByClass,
     getTaskAtmpt,
     getAllAssessments,
     assessmentsCollection,
@@ -581,7 +571,6 @@ function ViewClass(props) {
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
   const classId = props.match.params.id;
-  // const { all_user_files } = props.filesCollection;
 
   const [walikelas, setWalikelas] = React.useState({});
   const [taskAtmpt, setTaskAtmpt] = React.useState([]);
@@ -589,27 +578,6 @@ function ViewClass(props) {
   const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
 
   const all_assessments = assessmentsCollection.all_assessments;
-
-  function showTasks(data) {
-    if (data.length === 0) {
-      return <Empty />;
-    } else {
-      return sortAscByCreatedAt(data).map((row) => (
-        <AssignmentListItem
-          work_title={row.name}
-          work_category_avatar={row.workCategoryAvatar}
-          work_subject={
-            row.category === "subject"
-              ? null
-              : all_subjects_map.get(row.subject)
-          }
-          work_status={row.workStatus}
-          work_dateposted={row.createdAt}
-          work_link={`/tugas-murid/${row._id}`}
-        />
-      ));
-    }
-  }
 
   function showAssessments(data) {
     if (data.length === 0) {
@@ -638,149 +606,48 @@ function ViewClass(props) {
     }
   }
 
-  function showMaterials(data) {
-    if (data.length === 0) {
+  function listTasks(subjectId) {
+    if (!Boolean(tasksCollection.length)) {
       return <Empty />;
-    } else {
-      return sortAscByCreatedAt(data).map((row) => (
-        <MaterialListitem
-          work_title={row.name}
-          work_category_avatar={row.workCategoryAvatar}
-          work_subject={all_subjects_map.get(row.subject)}
-          work_link={`/materi/${row._id}`}
-          work_dateposted={row.createdAt}
-        />
-      ));
     }
+    let taskList = [];
+    if (panel === 0) {
+      // If panel is "Pekerjaan Kelas"
+      taskList = tasksCollection.slice(0, 5);
+    } else if (panel === 1) {
+      // If panel is "Mata Pelajaran"
+      taskList = tasksCollection
+        .reverse()
+        .filter((task) => {
+          let class_assigned = task.class_assigned;
+          if (Array.isArray(class_assigned)) {
+            return (
+              class_assigned.indexOf(classId) !== -1 &&
+              task.subject === subjectId
+            );
+          }
+          return false;
+        })
+        .slice(0, 3);
+    }
+    return <TaskItem data={taskList} submittedIds={submittedTaskIds} />;
   }
 
-  function showAllbySubject(data) {
-    if (data.length === 0) {
+  function listMaterials(subjectId) {
+    if (!Boolean(selectedMaterials.length)) {
       return <Empty />;
-    } else {
-      return sortAscByCreatedAt(data).map((row) => {
-        if (row.objectType === "Tugas") {
-          return (
-            <AssignmentListItem
-              work_title={row.name}
-              work_category_avatar={row.workCategoryAvatar}
-              work_subject={
-                row.category === "subject"
-                  ? null
-                  : all_subjects_map.get(row.subject)
-              }
-              work_status={row.workStatus}
-              work_dateposted={row.createdAt}
-              work_link={`/tugas-murid/${row._id}`}
-            />
-          );
-        } else if (row.objectType === "Material") {
-          return (
-            <MaterialListitem
-              work_title={row.name}
-              work_category_avatar={row.workCategoryAvatar}
-              work_subject={all_subjects_map.get(row.subject)}
-              work_link={`/materi/${row._id}`}
-              work_dateposted={row.createdAt}
-            />
-          );
-        } else {
-          return (
-            <AssessmentListItem
-              work_title={row.name}
-              work_category_avatar={row.workCategoryAvatar}
-              work_subject={
-                row.category === "subject"
-                  ? null
-                  : all_subjects_map.get(row.subject)
-              }
-              work_status={row.workStatus}
-              work_teacher_name={row.teacher_name}
-              work_starttime={moment(row.start_date)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_endtime={moment(row.end_date)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_dateposted={row.createdAt}
-            />
-          );
-        }
-      });
     }
-  }
-
-  function listTasks(category = null, subject = {}, tab = "pekerjaan_kelas") {
-    let tasksList = [];
-    let result = [];
-    if (Boolean(tasksCollection.length)) {
-      var i;
-      for (i = tasksCollection.length - 1; i >= 0; i--) {
-        if (taskAtmpt.indexOf(tasksCollection[i]._id) === -1) {
-          // Get the not attempted task.
-          tasksList.push(tasksCollection[i]);
-        }
-        // if(i === tasksCollection.length - 5){ // Last item must be at 4th index.
-        //   break;
-        // }
-      }
-
-      for (i = 0; i < tasksList.length; i++) {
-        let task = tasksList[i];
-        let workCategoryAvatar = (
-          <Avatar className={classes.assignmentLate}>
-            <AssignmentIcon />
-          </Avatar>
-        );
-
-        let workStatus;
-        if (submittedTaskIds.has(task._id)) {
-          workStatus = TASK_STATUS.SUBMITTED;
-        } else {
-          workStatus = TASK_STATUS.NOT_SUBMITTED;
-        }
-
-        if (tab === "pekerjaan_kelas") {
-          if (
-            (!category ||
-              (category === "subject" && task.subject === subject._id)) &&
-            workStatus &&
-            workStatus === TASK_STATUS.NOT_SUBMITTED
-          ) {
-            result.push({
-              _id: task._id,
-              name: task.name,
-              workCategoryAvatar: workCategoryAvatar,
-              subject: task.subject,
-              workStatus: workStatus,
-              createdAt: task.createdAt,
-              objectType: "Tugas",
-              category: category,
-            });
-            if (!category && result.length === 5) break;
-
-            if (category === "subject" && result.length === 3) break;
-          }
-        } else if (tab === "mata_pelajaran") {
-          if (
-            !category ||
-            (category === "subject" && task.subject === subject._id)
-          ) {
-            result.push({
-              _id: task._id,
-              name: task.name,
-              workCategoryAvatar: workCategoryAvatar,
-              subject: task.subject,
-              workStatus: workStatus,
-              createdAt: task.createdAt,
-              objectType: "Task",
-              category: category,
-            });
-          }
-        }
-      }
+    let materialList = [];
+    if (panel == 0) {
+      // If panel is "Pekerjaan Kelas"
+      materialList = selectedMaterials.slice(0, 5);
+    } else if (panel == 1) {
+      // If panel is "Mata Pelajaran"
+      materialList = selectedMaterials
+        .filter((material) => material.subject === subjectId)
+        .slice(0, 3);
     }
-    return result;
+    return <MaterialItem data={materialList} />;
   }
 
   function listAssessments(
@@ -937,55 +804,13 @@ function ViewClass(props) {
     return result;
   }
 
-  function listMaterials(
-    category = null,
-    subject = {},
-    tab = "pekerjaan_kelas"
-  ) {
-    let materialList = [];
-
-    if (Boolean(selectedMaterials.length)) {
-      let workCategoryAvatar = (
-        <Avatar className={classes.material}>
-          <MenuBookIcon />
-        </Avatar>
-      );
-      for (var i = selectedMaterials.length - 1; i >= 0; i--) {
-        let material = selectedMaterials[i];
-        if (
-          !category ||
-          (category === "subject" && material.subject === subject._id)
-        ) {
-          materialList.push({
-            _id: material._id,
-            name: material.name,
-            workCategoryAvatar: workCategoryAvatar,
-            subject: material.subject,
-            createdAt: material.createdAt,
-            objectType: "Material",
-          });
-        }
-        if (tab === "pekerjaan_kelas") {
-          if (!category && materialList.length === 5)
-            // Number of item to the index, so that it has to be index = selectedMaterials.length - 5.
-            break;
-          if (category === "subject" && materialList.length === 3)
-            // Number of item to the index, so that it has to be index = selectedMaterials.length - 5.
-            break;
-        }
-      }
-    }
-    return materialList;
-  }
-
   React.useEffect(() => {
     if (user.role === all_roles.STUDENT) {
       if (user.kelas && user.kelas === classId) {
         // If this student has been assigned to a class.
         // Clas id that is inserted as a parameter is the class id that is assigned to the student.
-        getMaterial(user.kelas, "by_class");
+        getMaterialByClass(user.kelas);
         getTaskByClass(user.kelas);
-        //getAllTask(user.unit); // get the tasksCollection
       } else {
         // If this student has not been assigned to any class or tried to open other class page,
         // then nothing will be loaded and will be redirected to the corresponding page (below).
@@ -1050,9 +875,9 @@ function ViewClass(props) {
     }
   }, []);
 
-  const [value, setValue] = React.useState(0);
+  const [panel, setPanel] = React.useState(0);
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setPanel(newValue);
   };
 
   function student_role(id) {
@@ -1246,7 +1071,7 @@ function ViewClass(props) {
               variant="fullWidth"
               indicatorColor="primary"
               textColor="primary"
-              value={value}
+              value={panel}
               onChange={handleChange}
             >
               <Tab icon={<DesktopWindowsIcon />} label="Pekerjaan Kelas" />
@@ -1254,7 +1079,7 @@ function ViewClass(props) {
               <Tab icon={<SupervisorAccountIcon />} label="Peserta" />
             </Tabs>
           </Paper>
-          <TabPanel value={value} index={0} style={{ paddingTop: "15px" }}>
+          <TabPanel value={panel} index={0} style={{ paddingTop: "15px" }}>
             <ExpansionPanel defaultExpanded>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Grid container justify="space-between" alignItems="center">
@@ -1277,9 +1102,7 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
               <Divider />
               <ExpansionPanelDetails className={classes.objectDetails}>
-                <div style={{ width: "100%" }}>
-                  {showMaterials(listMaterials())}
-                </div>
+                <div style={{ width: "100%" }}> {listMaterials()}</div>
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel defaultExpanded>
@@ -1304,7 +1127,7 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
               <Divider />
               <ExpansionPanelDetails className={classes.objectDetails}>
-                <div style={{ width: "100%" }}>{showTasks(listTasks())}</div>
+                <div style={{ width: "100%" }}>{listTasks()}</div>
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel defaultExpanded>
@@ -1362,7 +1185,7 @@ function ViewClass(props) {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </TabPanel>
-          <TabPanel value={value} index={1} style={{ paddingTop: "15px" }}>
+          <TabPanel value={panel} index={1} style={{ paddingTop: "15px" }}>
             {all_subjects.length === 0
               ? null
               : all_subjects.map((subject) => {
@@ -1400,36 +1223,9 @@ function ViewClass(props) {
                           className={classes.objectDetails}
                         >
                           <div style={{ width: "100%" }}>
-                            {showAllbySubject(
-                              listMaterials(
-                                "subject",
-                                subject,
-                                "mata_pelajaran"
-                              )
-                                .concat(
-                                  listTasks(
-                                    "subject",
-                                    subject,
-                                    "mata_pelajaran"
-                                  )
-                                )
-                                .concat(
-                                  listAssessments(
-                                    "subject",
-                                    subject,
-                                    "Kuis",
-                                    "mata_pelajaran"
-                                  )
-                                )
-                                .concat(
-                                  listAssessments(
-                                    "subject",
-                                    subject,
-                                    "Ujian",
-                                    "mata_pelajaran"
-                                  )
-                                )
-                            )}
+                            {listMaterials(subject._id)}
+                            {listTasks(subject._id)}
+                            {/* Assessments is still on hold */}
                           </div>
                         </ExpansionPanelDetails>
                       </ExpansionPanel>
@@ -1437,7 +1233,7 @@ function ViewClass(props) {
                   }
                 })}
           </TabPanel>
-          <TabPanel value={value} index={2} style={{ paddingTop: "15px" }}>
+          <TabPanel value={panel} index={2} style={{ paddingTop: "15px" }}>
             <Grid
               container
               direction="column"
@@ -1569,9 +1365,8 @@ ViewClass.propTypes = {
   setCurrentClass: PropTypes.func.isRequired,
   getTaskByClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
-  getAllTask: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
-  getMaterial: PropTypes.func.isRequired,
+  getMaterialByClass: PropTypes.func.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
 };
@@ -1590,9 +1385,8 @@ export default connect(mapStateToProps, {
   setCurrentClass,
   getStudentsByClass,
   getAllSubjects,
-  getAllTask,
   getTeachers,
-  getMaterial,
+  getMaterialByClass,
   getAllAssessments,
   getStudents,
   getTaskAtmpt,
