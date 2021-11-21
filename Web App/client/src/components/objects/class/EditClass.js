@@ -11,9 +11,13 @@ import UploadDialog from "../../misc/dialog/UploadDialog";
 import {
   AppBar,
   Button,
+  Divider,
   FormControl,
-  MenuItem,
   Grid,
+  Hidden,
+  IconButton,
+  MenuItem,
+  Paper,
   Select,
   TextField,
   Typography
@@ -22,6 +26,7 @@ import { Autocomplete } from "@material-ui/lab";
 import { withStyles } from "@material-ui/core/styles";
 import {
   AssignmentInd as AssignmentIndIcon,
+  Close as CloseIcon,
   Filter1 as Filter1Icon,
   Filter2 as Filter2Icon,
   Filter3 as Filter3Icon,
@@ -31,14 +36,17 @@ import { FaChalkboard } from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
     margin: "auto",
     padding: "20px",
     paddingTop: "25px",
-    maxWidth: "80%",
+    maxWidth: "85%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
+  },
+  background: {
+    backgroundColor: "#F9F9F9",
+    minHeight: "100%",
   },
   menuBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -47,20 +55,7 @@ const styles = (theme) => ({
     backgroundColor: "white",
     color: "black",
   },
-  cancelButton: {
-    width: "90px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.main,
-      color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
-    },
-  },
-  editClassButton: {
+  editButton: {
     width: "90px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -69,15 +64,19 @@ const styles = (theme) => ({
       color: "white",
       boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
-    },
+  },
+  closeButton: {
+    width: "32px",
+    height: "32px",
   },
   toolbar: theme.mixins.toolbar,
   content: {
     display: "flex",
     flexDirection: "column",
     flexGrow: "1",
+  },
+  contentDetails: {
+    padding: "20px 20px 25px 20px",
   },
   labelIcon: {
     fontSize: "18px",
@@ -158,7 +157,6 @@ class EditClass extends Component {
   };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    console.log("Class props is received");
     const { kelas, all_classes } = nextProps.classesCollection;
     const { all_teachers } = nextProps.auth;
 
@@ -169,9 +167,9 @@ class EditClass extends Component {
       // all_classes.length !== 0 &&
       // all_teachers.length !== 0
     ) {
-      console.log("Ini kelasnya : ", kelas);
       let all_walikelas = new Set(all_classes.map((cls) => cls.walikelas));
       all_walikelas.delete(kelas.walikelas);
+
       let teacher_options = [{ _id: null, name: "Kosong" }];
       teacher_options = teacher_options.concat(
         all_teachers.filter((teacher) => !all_walikelas.has(teacher._id))
@@ -201,7 +199,6 @@ class EditClass extends Component {
       ketua_kelas: this.state.ketua_kelas,
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
-
       mata_pelajaran: this.state.mata_pelajaran.map((matpel) => matpel._id),
     };
     this.props
@@ -222,8 +219,9 @@ class EditClass extends Component {
       getAllSubjects,
       setCurrentClass,
     } = this.props;
+
+    // Case when the student opens view class and not assigned to any class yet.
     if (id) {
-      // Case when the student opens view class and not assigned to any class yet.
       setCurrentClass(id);
     }
     getTeachers(user.unit);
@@ -251,7 +249,6 @@ class EditClass extends Component {
   render() {
     const { classes, success } = this.props;
     const { user, students_by_class } = this.props.auth;
-    // const { all_teachers} = this.props.auth;
     const {
       sekretaris,
       bendahara,
@@ -299,229 +296,246 @@ class EditClass extends Component {
     document.title = "Schooly | Sunting Kelas";
 
     return (
-      <div className={classes.root}>
-        <form noValidate onSubmit={this.onSubmit} style={{ width: "100%" }}>
-          <AppBar position="fixed" className={classes.menuBar}>
-            <Grid container justify="space-between" alignItems="center">
-              <Grid item xs>
-                <Typography variant="h5" color="textSecondary">
-                  Kelas
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Grid container alignItems="center" spacing={2}>
-                  <Grid item>
-                    <Link to="/daftar-kelas">
-                      <Button className={classes.cancelButton}>
-                        Batal
+      <div className={classes.background}>
+        <div className={classes.root}>
+          <form noValidate onSubmit={this.onSubmit} style={{ width: "100%" }}>
+            <AppBar position="fixed" className={classes.menuBar}>
+              <Grid container justify="space-between" alignItems="center">
+                <Grid item xs>
+                  <Typography variant="h6" color="textSecondary">
+                    Kelas
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Grid container alignItems="center" spacing={2}>
+                    <Grid item>
+                      <Button type="submit" className={classes.editButton}>
+                        Sunting
                       </Button>
-                    </Link>
-                  </Grid>
-                  <Grid item>
-                    <Button type="submit" className={classes.editClassButton}>
-                      Sunting
-                    </Button>
+                    </Grid>
+                    <Grid item>
+                      <Link to="/daftar-kelas">
+                        <IconButton className={classes.closeButton}>
+                          <CloseIcon style={{ fontSize: "24px" }} />
+                        </IconButton>
+                      </Link>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </AppBar>
-          <div className={classes.content}>
-            <div className={classes.toolbar} />
-            <Typography variant="h5">
-              Sunting Kelas
-            </Typography>
-            <Typography color="textSecondary" style={{ marginBottom: "35px" }}>
-              Tentukan ketua kelas, sekretaris, dan bendahara dari kelas ini.
-            </Typography>
-            <Grid container spacing={4}>
-              <Grid item xs={12} md>
-                <Grid container direction="column" spacing={4}>
-                  <Grid item>
-                    <div style={{ display: "flex", alignItems: "center"}}>
-                      <FaChalkboard className={classes.labelIcon} />
-                      <Typography color="primary">
-                        Nama Kelas
-                      </Typography>
-                    </div>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      id="name"
-                      type="text"
-                      onChange={this.onChange}
-                      value={this.state.name}
-                      error={errors.name}
-                      helperText={errors.name}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <div style={{ display: "flex", alignItems: "center"}}>
-                      <AssignmentIndIcon className={classes.labelIcon} />
-                      <Typography color="primary">
-                        Wali Kelas
-                      </Typography>
-                    </div>
-                    <FormControl
-                      fullWidth
-                      id="walikelas"
-                      variant="outlined"
-                      color="primary"
-                    >
-                      <Select
-                        value={walikelas}
-                        onChange={(event) => {
-                          this.onChange(event, "walikelas");
-                        }}
-                      >
-                        {this.state.teacher_options !== null
-                          ? this.state.teacher_options.map((teacherInfo) => (
-                              <MenuItem
-                                key={teacherInfo._id}
-                                value={teacherInfo._id}
-                              >
-                                {teacherInfo._id !== null ? (
-                                  teacherInfo.name
-                                ) : (
-                                  <span style={{ color: "grey" }}>{teacherInfo.name}</span>
-                                )}
-                              </MenuItem>
-                            ))
-                          : null}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item>
-                    <div style={{ display: "flex", alignItems: "center"}}>
-                      <LibraryBooksIcon className={classes.labelIcon} />
-                      <Typography color="primary">
-                        Mata Pelajaran
-                      </Typography>
-                    </div>
-                    <FormControl
-                      fullWidth
-                      color="primary"
-                      id="matapelajaran"
-                    >
-                      <Autocomplete
-                        multiple
-                        filterSelectedOptions
-                        size="small"
-                        getOptionLabel={(option) => option.name}
-                        options={
-                          this.state.allSubjectObject
-                            ? this.state.allSubjectObject
-                            : []
-                        }
-                        onChange={(event, value) => {
-                          this.onChange(value, "mata_pelajaran");
-                        }}
-                        value={
-                          this.state.mata_pelajaran
-                            ? this.state.mata_pelajaran
-                            : []
-                        }
-                        renderInput={(params) => (
-                          <TextField
-                            fullWidth
-                            variant="outlined"
+            </AppBar>
+            <div className={classes.content}>
+              <div className={classes.toolbar} />
+              <Paper>
+                <div className={classes.contentDetails}>
+                  <Typography variant="h5" gutterBottom>
+                    Sunting Kelas
+                  </Typography>
+                  <Typography color="textSecondary">
+                    Tentukan ketua kelas, sekretaris, dan bendahara dari kelas ini.
+                  </Typography>
+                </div>
+                <Divider />
+                <Grid container>
+                  <Grid item xs={12} md className={classes.contentDetails}>
+                    <Grid container direction="column" spacing={4}>
+                      <Grid item>
+                        <div style={{ display: "flex", alignItems: "center"}}>
+                          <FaChalkboard className={classes.labelIcon} />
+                          <Typography color="primary">
+                            Nama Kelas
+                          </Typography>
+                        </div>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          id="name"
+                          type="text"
+                          onChange={this.onChange}
+                          value={this.state.name}
+                          error={errors.name}
+                          helperText={errors.name}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <div style={{ display: "flex", alignItems: "center"}}>
+                          <AssignmentIndIcon className={classes.labelIcon} />
+                          <Typography color="primary">
+                            Wali Kelas
+                          </Typography>
+                        </div>
+                        <FormControl
+                          fullWidth
+                          id="walikelas"
+                          variant="outlined"
+                          color="primary"
+                        >
+                          <Select
+                            value={walikelas}
+                            onChange={(event) => {
+                              this.onChange(event, "walikelas");
+                            }}
+                          >
+                            {this.state.teacher_options !== null
+                              ? this.state.teacher_options.map((teacherInfo) => (
+                                  <MenuItem
+                                    key={teacherInfo._id}
+                                    value={teacherInfo._id}
+                                  >
+                                    {teacherInfo._id !== null ? (
+                                      teacherInfo.name
+                                    ) : (
+                                      <span style={{ color: "grey" }}>{teacherInfo.name}</span>
+                                    )}
+                                  </MenuItem>
+                                ))
+                              : null}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item>
+                        <div style={{ display: "flex", alignItems: "center"}}>
+                          <LibraryBooksIcon className={classes.labelIcon} />
+                          <Typography color="primary">
+                            Mata Pelajaran
+                          </Typography>
+                        </div>
+                        <FormControl
+                          fullWidth
+                          color="primary"
+                          id="matapelajaran"
+                        >
+                          <Autocomplete
+                            multiple
+                            filterSelectedOptions
                             size="small"
-                            error={errors.mata_pelajaran}
-                            helperText={errors.mata_pelajaran}
-                            {...params}
+                            getOptionLabel={(option) => option.name}
+                            options={
+                              this.state.allSubjectObject
+                                ? this.state.allSubjectObject
+                                : []
+                            }
+                            onChange={(event, value) => {
+                              this.onChange(value, "mata_pelajaran");
+                            }}
+                            value={
+                              this.state.mata_pelajaran
+                                ? this.state.mata_pelajaran
+                                : []
+                            }
+                            renderInput={(params) => (
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                error={errors.mata_pelajaran}
+                                helperText={errors.mata_pelajaran}
+                                {...params}
+                              />
+                            )}
                           />
-                        )}
-                      />
-                    </FormControl>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Hidden smDown>
+                    <Grid item>
+                      <Divider flexItem orientation="vertical" />
+                    </Grid>
+                  </Hidden>
+                  <Hidden mdUp>
+                    <Grid item xs={12}>
+                      <Divider flexItem orientation="horizontal" />
+                    </Grid>
+                  </Hidden>
+                  <Grid item xs={12} md className={classes.contentDetails}>
+                    <Grid container direction="column" spacing={4}>
+                      <Grid item>
+                        <div style={{ display: "flex", alignItems: "center"}}>
+                          <Filter1Icon className={classes.labelIcon} />
+                          <Typography color="primary">
+                            Ketua Kelas
+                          </Typography>
+                        </div>
+                        <FormControl
+                          fullWidth
+                          id="ketua_kelas"
+                          variant="outlined"
+                          color="primary"
+                        >
+                          <Select
+                            value={ketua_kelas}
+                            displayEmpty
+                            onChange={(event) => {
+                              this.onChange(event, "ketua_kelas");
+                            }}
+                          >
+                            {showValue(student_options, "student")}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item>
+                        <div style={{ display: "flex", alignItems: "center"}}>
+                          <Filter2Icon className={classes.labelIcon} />
+                          <Typography color="primary">
+                            Sekretaris
+                          </Typography>
+                        </div>
+                        <FormControl
+                          fullWidth
+                          id="sekretaris"
+                          variant="outlined"
+                          color="primary"
+                        >
+                          <Select
+                            value={sekretaris}
+                            displayEmpty
+                            onChange={(event) => {
+                              this.onChange(event, "sekretaris");
+                            }}
+                          >
+                            {showValue(student_options, "student")}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item>
+                        <div style={{ display: "flex", alignItems: "center"}}>
+                          <Filter3Icon className={classes.labelIcon} />
+                          <Typography color="primary">
+                            Bendahara
+                          </Typography>
+                        </div>
+                        <FormControl
+                          fullWidth
+                          id="bendahara"
+                          variant="outlined"
+                          color="primary"
+                        >
+                          <Select
+                            value={bendahara}
+                            displayEmpty
+                            onChange={(event) => {
+                              this.onChange(event, "bendahara");
+                            }}
+                          >
+                            {showValue(student_options, "student")}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              <Grid item xs={12} md>
-                <Grid container direction="column" spacing={4}>
-                  <Grid item>
-                    <div style={{ display: "flex", alignItems: "center"}}>
-                      <Filter1Icon className={classes.labelIcon} />
-                      <Typography color="primary">
-                        Ketua Kelas
-                      </Typography>
-                    </div>
-                    <FormControl
-                      fullWidth
-                      id="ketua_kelas"
-                      variant="outlined"
-                      color="primary"
-                    >
-                      <Select
-                        value={ketua_kelas}
-                        displayEmpty
-                        onChange={(event) => {
-                          this.onChange(event, "ketua_kelas");
-                        }}
-                      >
-                        {showValue(student_options, "student")}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item>
-                    <div style={{ display: "flex", alignItems: "center"}}>
-                      <Filter2Icon className={classes.labelIcon} />
-                      <Typography color="primary">
-                        Sekretaris
-                      </Typography>
-                    </div>
-                    <FormControl
-                      fullWidth
-                      id="sekretaris"
-                      variant="outlined"
-                      color="primary"
-                    >
-                      <Select
-                        value={sekretaris}
-                        displayEmpty
-                        onChange={(event) => {
-                          this.onChange(event, "sekretaris");
-                        }}
-                      >
-                        {showValue(student_options, "student")}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item>
-                    <div style={{ display: "flex", alignItems: "center"}}>
-                      <Filter3Icon className={classes.labelIcon} />
-                      <Typography color="primary">
-                        Bendahara
-                      </Typography>
-                    </div>
-                    <FormControl
-                      fullWidth
-                      id="bendahara"
-                      variant="outlined"
-                      color="primary"
-                    >
-                      <Select
-                        value={bendahara}
-                        displayEmpty
-                        onChange={(event) => {
-                          this.onChange(event, "bendahara");
-                        }}
-                      >
-                        {showValue(student_options, "student")}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </div>
-        </form>
-        <UploadDialog
-          openUploadDialog={this.state.openUploadDialog}
-          success={success}
-          messageUploading="Kelas sedang disunting"
-          messageSuccess="Kelas telah disunting"
-          redirectLink={`/kelas/${success}`}
-        />
+              </Paper>
+            </div>
+          </form>
+          <UploadDialog
+            openUploadDialog={this.state.openUploadDialog}
+            success={success}
+            messageUploading="Kelas sedang disunting"
+            messageSuccess="Kelas telah disunting"
+            redirectLink={`/kelas/${success}`}
+          />
+        </div>
       </div>
     );
   }

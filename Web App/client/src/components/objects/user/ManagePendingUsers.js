@@ -15,6 +15,7 @@ import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import ActivateDialog from "../../misc/dialog/ActivateDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { TabPanel } from "../../misc/tab-panel/TabPanel";
 import {
   Avatar,
   Button,
@@ -441,12 +442,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "25px",
   },
   headerIcon: {
-    display: "flex",
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    fontSize: "25px",
-    padding: "7.5px",
-    borderRadius: "5px",
+    fontSize: "20px",
   },
   userTabs: {
     borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
@@ -848,11 +846,6 @@ function ManagePendingUsers(props) {
     setPanel(val);
   };
 
-  function TabPanel(props) {
-    const { children, value, index } = props;
-    return <div>{value === index && <div>{children}</div>}</div>;
-  }
-
   document.title = "Schooly | Pengguna Tidak Aktif";
 
   return (
@@ -864,9 +857,9 @@ function ManagePendingUsers(props) {
         className={classes.header}
       >
         <Grid item>
-          <div className={classes.headerIcon}>
+          <Avatar variant="rounded" className={classes.headerIcon}>
             <FaUserLock />
-          </div>
+          </Avatar>
         </Grid>
         <Grid item>
           <Typography variant="h5" align="left">

@@ -21,8 +21,6 @@ import {
   Badge,
   Button,
   ButtonGroup,
-  Card,
-  CardContent,
   Checkbox,
   Chip,
   Divider,
@@ -59,7 +57,7 @@ import {
   Add as AddIcon,
   ArrowDropDown as ArrowDropDownIcon,
   CheckBox as CheckBoxIcon,
-  FiberManualRecord as FiberManualRecordIcon,
+  Close as CloseIcon,
   FormatListNumbered as FormatListNumberedIcon,
   Info as InfoIcon,
   LibraryBooks as LibraryBooksIcon,
@@ -88,6 +86,7 @@ const styles = (theme) => ({
   },
   background: {
     backgroundColor: "#F9F9F9",
+    minHeight: "100%",
   },
   menuBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -96,20 +95,7 @@ const styles = (theme) => ({
     backgroundColor: "white",
     color: "black",
   },
-  cancelButton: {
-    width: "90px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.main,
-      color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
-    },
-  },
-  editAssessmentButton: {
+  editButton: {
     width: "90px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -131,6 +117,10 @@ const styles = (theme) => ({
       boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
   },
+  closeButton: {
+    width: "32px",
+    height: "32px",
+  },
   toolbar: theme.mixins.toolbar,
   content: {
     display: "flex",
@@ -150,6 +140,9 @@ const styles = (theme) => ({
     fontSize: "15.5px",
     marginRight: "10px",
     color: "grey",
+  },
+  selectPaper: {
+    maxHeight: "250px",
   },
   chips: {
     display: "flex",
@@ -1416,7 +1409,7 @@ class EditAssessment extends Component {
                       paddingLeft: "5px",
                     },
                     startAdornment: (
-                      <Checkbox size="small" />
+                      <Checkbox color="primary" size="small" />
                     ),
                     endAdornment: (
                       <Typography color="textSecondary">{` Poin`}</Typography>
@@ -1490,20 +1483,15 @@ class EditAssessment extends Component {
               <AppBar position="fixed" className={classes.menuBar}>
                 <Grid container justify="space-between" alignItems="center">
                   <Grid item xs>
-                    <Typography variant="h5" color="textSecondary">
+                    <Typography variant="h6" color="textSecondary">
                       {this.state.type}
                     </Typography>
                   </Grid>
                   <Grid item>
                     <Grid container alignItems="center" spacing={2}>
                       <Grid item>
-                        <Button onClick={this.handleOpenDeleteDialog} className={classes.cancelButton}>
-                          Batal
-                        </Button>
-                      </Grid>
-                      <Grid item>
                         <ButtonGroup variant="text">
-                          <Button type="submit" className={classes.editAssessmentButton}>
+                          <Button type="submit" className={classes.editButton}>
                             Sunting
                           </Button>
                           <Button size="small" onClick={this.handleMenuOpen} className={classes.editDropdownButton}>
@@ -1542,6 +1530,11 @@ class EditAssessment extends Component {
                             />
                           </MenuItem>
                         </Menu>
+                      </Grid>
+                      <Grid item>
+                        <IconButton onClick={this.handleOpenDeleteDialog} className={classes.closeButton}>
+                          <CloseIcon style={{ fontSize: "24px" }} />
+                        </IconButton>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -1709,9 +1702,8 @@ class EditAssessment extends Component {
                                 <Select
                                   multiple
                                   value={class_assigned}
-                                  onChange={(event) =>
-                                    this.onChange(event, "class_assigned")
-                                  }
+                                  onChange={(event) => this.onChange(event, "class_assigned")}
+                                  MenuProps={{ classes: { paper: classes.selectPaper } }}
                                   renderValue={(selected) => (
                                     <div className={classes.chips}>
                                       {selected.map((classId) => {
@@ -1737,7 +1729,12 @@ class EditAssessment extends Component {
                                           key={classInfo._id}
                                           value={classInfo._id}
                                         >
-                                          {classInfo.name}
+                                          <Checkbox
+                                            color="primary"
+                                            size="small"
+                                            checked={class_assigned.indexOf(classInfo._id) > -1}
+                                          />
+                                          <ListItemText primary={classInfo.name} style={{ marginLeft: "10px" }} />
                                         </MenuItem>
                                       ))
                                     : null}

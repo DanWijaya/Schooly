@@ -11,11 +11,12 @@ import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
-  IconButton,
+  Avatar,
   Divider,
   Fab,
   Grid,
   Hidden,
+  IconButton,
   InputAdornment,
   Menu,
   MenuItem,
@@ -348,12 +349,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "25px",
   },
   headerIcon: {
-    display: "flex",
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    fontSize: "25px",
-    padding: "7.5px",
-    borderRadius: "5px",
+    fontSize: "20px",
   },
   toolbar: {
     padding: "16px 0px",
@@ -561,9 +559,9 @@ function TaskList(props) {
         className={classes.header}
       >
         <Grid item>
-          <div className={classes.headerIcon}>
+          <Avatar variant="rounded" className={classes.headerIcon}>
             <AssignmentIcon />
-          </div>
+          </Avatar>
         </Grid>
         <Grid item>
           <Typography variant="h5" align="left">

@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     borderRadius: "4px",
     boxShadow:
-      "0px 2px 3px 0px rgba(60,64,67,0.12), 0px 2px 8px 2px rgba(60,64,67,0.10)",
+      "0px 1px 2px 0px rgba(60,64,67,0.12), 0px 1px 4px 1px rgba(60,64,67,0.10)",
     "&:focus, &:hover": {
       boxShadow:
         "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",

@@ -11,10 +11,12 @@ import UploadDialog from "../../misc/dialog/UploadDialog";
 import {
   AppBar,
   Button,
+  Divider,
   FormControl,
   FormHelperText,
   Grid,
   MenuItem,
+  Paper,
   Select,
   TextField,
   Typography
@@ -29,14 +31,17 @@ import { FaChalkboard } from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
     margin: "auto",
     padding: "20px",
     paddingTop: "25px",
-    maxWidth: "80%",
+    maxWidth: "85%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
+  },
+  background: {
+    backgroundColor: "#F9F9F9",
+    minHeight: "100%",
   },
   menuBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -45,20 +50,7 @@ const styles = (theme) => ({
     backgroundColor: "white",
     color: "black",
   },
-  cancelButton: {
-    width: "90px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.main,
-      color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
-    },
-  },
-  createClassButton: {
+  createButton: {
     width: "90px",
     backgroundColor: theme.palette.success.main,
     color: "white",
@@ -68,7 +60,20 @@ const styles = (theme) => ({
       boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
-      width: "100%",
+      width: "75px",
+    },
+  },
+  deleteButton: {
+    width: "90px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "75px",
     },
   },
   toolbar: theme.mixins.toolbar,
@@ -76,6 +81,9 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     flexGrow: "1",
+  },
+  contentDetails: {
+    padding: "20px 20px 25px 20px",
   },
   labelIcon: {
     fontSize: "18px",
@@ -212,145 +220,154 @@ class CreateClass extends Component {
     document.title = "Schooly | Buat Kelas";
 
     return (
-      <div className={classes.root}>
-        <form noValidate onSubmit={this.onSubmit} style={{ width: "100%" }}>
-          <AppBar position="fixed" className={classes.menuBar}>
-            <Grid container justify="space-between" alignItems="center">
-              <Grid item xs>
-                <Typography variant="h5" color="textSecondary">
-                  Kelas
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Grid container alignItems="center" spacing={2}>
-                  <Grid item>
-                    <Link to="/daftar-kelas">
-                      <Button className={classes.cancelButton}>
-                        Batal
+      <div className={classes.background}>
+        <div className={classes.root}>
+          <form noValidate onSubmit={this.onSubmit} style={{ width: "100%" }}>
+            <AppBar position="fixed" className={classes.menuBar}>
+              <Grid container justify="space-between" alignItems="center">
+                <Grid item xs>
+                  <Typography variant="h6" color="textSecondary">
+                    Kelas
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Grid container alignItems="center" spacing={1}>
+                    <Grid item>
+                      <Button type="submit" className={classes.createButton}>
+                        Buat
                       </Button>
-                    </Link>
-                  </Grid>
-                  <Grid item>
-                    <Button type="submit" className={classes.createClassButton}>
-                      Buat
-                    </Button>
+                    </Grid>
+                    <Grid item>
+                      <Link to="/daftar-kelas">
+                        <Button className={classes.deleteButton}>
+                          Batal
+                        </Button>
+                      </Link>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </AppBar>
-          <div className={classes.content}>
-            <div className={classes.toolbar} />
-            <Typography variant="h5">
-              Buat Kelas
-            </Typography>
-            <Typography color="textSecondary" style={{ marginBottom: "35px" }}>
-              Setelah semua murid dimasukkan ke dalam kelas, jangan lupa untuk menyunting kelas dan
-              menentukan ketua kelas, sekretaris, dan bendahara dari kelas yang baru dibuat.
-            </Typography>
-            <Grid container direction="column" spacing={4}>
-              <Grid item>
-                <div style={{ display: "flex", alignItems: "center"}}>
-                  <FaChalkboard className={classes.labelIcon} />
-                  <Typography color="primary">
-                    Nama Kelas
+            </AppBar>
+            <div className={classes.content}>
+              <div className={classes.toolbar} />
+              <Paper>
+                <div className={classes.contentDetails}>
+                  <Typography variant="h5" gutterBottom>
+                    Buat Kelas
+                  </Typography>
+                  <Typography color="textSecondary">
+                    Setelah semua murid dimasukkan ke dalam kelas, jangan lupa untuk menyunting kelas dan
+                    menentukan ketua kelas, sekretaris, dan bendahara dari kelas yang baru dibuat.
                   </Typography>
                 </div>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  id="name"
-                  type="text"
-                  onChange={this.onChange}
-                  value={this.state.name}
-                  error={errors.name}
-                  helperText={errors.name}
-                />
-              </Grid>
-              <Grid item>
-                <div style={{ display: "flex", alignItems: "center"}}>
-                  <AssignmentIndIcon className={classes.labelIcon} />
-                  <Typography color="primary">
-                    Wali Kelas
-                  </Typography>
-                </div>
-                <FormControl
-                  fullWidth
-                  variant="outlined"
-                  color="primary"
-                  id="walikelas"
-                  error={Boolean(errors.walikelas)}
-                >
-                  <Select
-                    value={this.state.walikelas}
-                    onChange={(event) => {
-                      this.onChange(event, "walikelas");
-                    }}
-                  >
-                    {this.state.teacherOptions !== null
-                      ? this.state.teacherOptions.map((teacherInfo) => (
-                          <MenuItem
-                            key={teacherInfo._id}
-                            value={teacherInfo._id}
-                          >
-                            {teacherInfo.name}
-                          </MenuItem>
-                        ))
-                      : null}
-                  </Select>
-                  {Boolean(errors.walikelas) ? (
-                    <FormHelperText error>
-                      {errors.walikelas}
-                    </FormHelperText>
-                  ) : null}
-                </FormControl>
-              </Grid>
-              <Grid item>
-                <div style={{ display: "flex", alignItems: "center"}}>
-                  <LibraryBooksIcon className={classes.labelIcon} />
-                  <Typography color="primary">
-                    Mata Pelajaran
-                  </Typography>
-                </div>
-                <FormControl
-                  fullWidth
-                  color="primary"
-                  id="matapelajaran"
-                >
-                  <Autocomplete
-                    multiple
-                    filterSelectedOptions
-                    size="small"
-                    getOptionLabel={(option) => option.name}
-                    options={
-                      this.props.subjectsCollection
-                        ? this.props.subjectsCollection.all_subjects
-                        : null
-                    }
-                    onChange={(event, value) => {
-                      this.onChange(value, "mata_pelajaran");
-                    }}
-                    renderInput={(params) => (
+                <Divider />
+                <div className={classes.contentDetails}>
+                  <Grid container direction="column" spacing={4}>
+                    <Grid item>
+                      <div style={{ display: "flex", alignItems: "center"}}>
+                        <FaChalkboard className={classes.labelIcon} />
+                        <Typography color="primary">
+                          Nama Kelas
+                        </Typography>
+                      </div>
                       <TextField
+                        fullWidth
                         variant="outlined"
-                        error={errors.mata_pelajaran}
-                        helperText={errors.mata_pelajaran}
-                        {...params}
+                        id="name"
+                        type="text"
+                        onChange={this.onChange}
+                        value={this.state.name}
+                        error={errors.name}
+                        helperText={errors.name}
                       />
-                    )}
-                  />
-                </FormControl>
-              </Grid>
-            </Grid>
-          </div>
-        </form>
-        <UploadDialog
-          openUploadDialog={this.state.openUploadDialog}
-          success={success}
-          messageUploading="Kelas sedang dibuat"
-          messageSuccess="Kelas telah dibuat"
-          redirectLink={`/kelas/${success}`}
-        />
+                    </Grid>
+                    <Grid item>
+                      <div style={{ display: "flex", alignItems: "center"}}>
+                        <AssignmentIndIcon className={classes.labelIcon} />
+                        <Typography color="primary">
+                          Wali Kelas
+                        </Typography>
+                      </div>
+                      <FormControl
+                        fullWidth
+                        variant="outlined"
+                        color="primary"
+                        id="walikelas"
+                        error={Boolean(errors.walikelas)}
+                      >
+                        <Select
+                          value={this.state.walikelas}
+                          onChange={(event) => {
+                            this.onChange(event, "walikelas");
+                          }}
+                        >
+                          {this.state.teacherOptions !== null
+                            ? this.state.teacherOptions.map((teacherInfo) => (
+                                <MenuItem
+                                  key={teacherInfo._id}
+                                  value={teacherInfo._id}
+                                >
+                                  {teacherInfo.name}
+                                </MenuItem>
+                              ))
+                            : null}
+                        </Select>
+                        {Boolean(errors.walikelas) ? (
+                          <FormHelperText error>
+                            {errors.walikelas}
+                          </FormHelperText>
+                        ) : null}
+                      </FormControl>
+                    </Grid>
+                    <Grid item>
+                      <div style={{ display: "flex", alignItems: "center"}}>
+                        <LibraryBooksIcon className={classes.labelIcon} />
+                        <Typography color="primary">
+                          Mata Pelajaran
+                        </Typography>
+                      </div>
+                      <FormControl
+                        fullWidth
+                        color="primary"
+                        id="matapelajaran"
+                      >
+                        <Autocomplete
+                          multiple
+                          filterSelectedOptions
+                          size="small"
+                          getOptionLabel={(option) => option.name}
+                          options={
+                            this.props.subjectsCollection
+                              ? this.props.subjectsCollection.all_subjects
+                              : null
+                          }
+                          onChange={(event, value) => {
+                            this.onChange(value, "mata_pelajaran");
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              variant="outlined"
+                              error={errors.mata_pelajaran}
+                              helperText={errors.mata_pelajaran}
+                              {...params}
+                            />
+                          )}
+                        />
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                </div>
+              </Paper>
+            </div>
+          </form>
+          <UploadDialog
+            openUploadDialog={this.state.openUploadDialog}
+            success={success}
+            messageUploading="Kelas sedang dibuat"
+            messageSuccess="Kelas telah dibuat"
+            redirectLink={`/kelas/${success}`}
+          />
+        </div>
       </div>
     );
   }

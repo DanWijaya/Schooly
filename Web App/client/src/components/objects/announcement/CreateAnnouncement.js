@@ -15,10 +15,13 @@ import {
   AppBar,
   Avatar,
   Button,
+  Checkbox,
   Chip,
+  Divider,
   FormControl,
   FormHelperText,
   Grid,
+  Hidden,
   IconButton,
   ListItem,
   ListItemAvatar,
@@ -52,14 +55,17 @@ import {
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
     margin: "auto",
     padding: "20px",
     paddingTop: "25px",
-    maxWidth: "80%",
+    maxWidth: "85%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
+  },
+  background: {
+    backgroundColor: "#F9F9F9",
+    minHeight: "100%",
   },
   menuBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -68,20 +74,7 @@ const styles = (theme) => ({
     backgroundColor: "white",
     color: "black",
   },
-  cancelButton: {
-    width: "90px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.main,
-      color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
-    },
-  },
-  createAnnouncementButton: {
+  createButton: {
     width: "90px",
     backgroundColor: theme.palette.success.main,
     color: "white",
@@ -91,7 +84,20 @@ const styles = (theme) => ({
       boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
-      width: "100%",
+      width: "75px",
+    },
+  },
+  deleteButton: {
+    width: "90px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "75px",
     },
   },
   toolbar: theme.mixins.toolbar,
@@ -100,10 +106,16 @@ const styles = (theme) => ({
     flexDirection: "column",
     flexGrow: "1",
   },
+  contentDetails: {
+    padding: "20px 20px 25px 20px",
+  },
   labelIcon: {
     fontSize: "18px",
     marginRight: "10px",
     color: "grey",
+  },
+  selectPaper: {
+    maxHeight: "250px",
   },
   chips: {
     display: "flex",
@@ -113,6 +125,7 @@ const styles = (theme) => ({
     marginRight: 2,
   },
   addFileButton: {
+    margin: "20px 0px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -503,208 +516,229 @@ class CreateAnnouncement extends Component {
     document.title = "Schooly | Buat Pengumuman";
 
     return (
-      <div className={classes.root}>
-        <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)} style={{ width: "100%" }}>
-          <AppBar position="fixed" className={classes.menuBar}>
-            <Grid container justify="space-between" alignItems="center">
-              <Grid item xs>
-                <Typography variant="h5" color="textSecondary">
-                  Pengumuman
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Grid container alignItems="center" spacing={2}>
-                  <Grid item>
-                      <Button onClick={this.handleOpenDeleteDialog} className={classes.cancelButton}>
-                        Batal
+      <div className={classes.background}>
+        <div className={classes.root}>
+          <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)} style={{ width: "100%" }}>
+            <AppBar position="fixed" className={classes.menuBar}>
+              <Grid container justify="space-between" alignItems="center">
+                <Grid item xs>
+                  <Typography variant="h6" color="textSecondary">
+                    Pengumuman
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Grid container alignItems="center" spacing={1}>
+                    <Grid item>
+                      <Button type="submit" className={classes.createButton}>
+                        Buat
                       </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button type="submit" className={classes.createAnnouncementButton}>
-                      Buat
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </AppBar>
-          <div className={classes.content}>
-            <div className={classes.toolbar} />
-            <Typography variant="h5">
-              Buat Pengumuman
-            </Typography>
-            <Typography color="textSecondary" style={{ marginBottom: "35px" }}>
-              Sebarkan informasi secara satu arah, lampirkan berkas jika diperlukan.
-            </Typography>
-            <Grid container spacing={4}>
-              <Grid item xs={12} md>
-                <Grid container direction="column" spacing={4}>
-                  <Grid item>
-                    <div style={{ display: "flex", alignItems: "center"}}>
-                      <AnnouncementIcon className={classes.labelIcon} />
-                      <Typography color="primary">
-                        Judul Pengumuman
-                      </Typography>
-                    </div>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      id="title"
-                      type="text"
-                      onChange={this.onChange}
-                      value={this.state.title}
-                      error={errors.title}
-                      helperText={errors.title}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <div style={{ display: "flex", alignItems: "center"}}>
-                      <ShortTextIcon className={classes.labelIcon} />
-                      <Typography color="primary">
-                        Deskripsi
-                      </Typography>
-                    </div>
-                    <TextField
-                      fullWidth
-                      multiline
-                      variant="outlined"
-                      id="description"
-                      type="text"
-                      rows="5"
-                      rowsMax="25"
-                      onChange={(e) => this.onChange(e, "description")}
-                      value={this.state.description}
-                      error={errors.description}
-                      helperText={errors.description}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={12} md>
-                <Grid container direction="column" spacing={4}>
-                  {user.role === "Student" ? null : user.role === "Admin" ? (
-                    <Grid item>
-                      <div style={{ display: "flex", alignItems: "center"}}>
-                        <SupervisorAccountIcon className={classes.labelIcon} />
-                        <Typography color="primary">
-                          Ditujukan kepada
-                        </Typography>
-                      </div>
-                      <FormControl
-                        fullWidth
-                        variant="outlined"
-                        color="primary"
-                        error={Boolean(errors.to)}
-                      >
-                        <Select
-                          multiple
-                          id="target_role"
-                          value={target_role}
-                          onChange={(event) => {
-                            this.onChange(event, "target_role");
-                          }}
-                          renderValue={(selected) => {
-                            return (
-                              <div className={classes.chips}>
-                                {selected.map((role) => {
-                                  return (
-                                    <Chip
-                                      key={role}
-                                      label={
-                                        role === "Student"
-                                          ? "Murid"
-                                          : role === "Teacher"
-                                          ? "Guru"
-                                          : null
-                                      }
-                                      className={classes.chip}
-                                    />
-                                  );
-                                })}
-                              </div>
-                            );
-                          }}
-                        >
-                          {[
-                            ["Student", "Murid"],
-                            ["Teacher", "Guru"],
-                          ].map((peran) => {
-                            return (
-                              <MenuItem key={peran[0]} value={peran[0]}>
-                                {peran[1]}
-                              </MenuItem>
-                            );
-                          })}
-                        </Select>
-                        {Boolean(errors.to) ? (
-                          <FormHelperText error>
-                            {errors.to}
-                          </FormHelperText>
-                        ) : null}
-                      </FormControl>
                     </Grid>
-                  ) : (
                     <Grid item>
-                      <div style={{ display: "flex", alignItems: "center"}}>
-                        <FaChalkboard className={classes.labelIcon} />
-                        <Typography color="primary">
-                          Kelas yang diberikan
-                        </Typography>
-                      </div>
-                      <FormControl
-                        fullWidth
-                        variant="outlined"
-                        color="primary"
-                        id="class_assigned"
-                        error={Boolean(errors.class_assigned)}
-                      >
-                        <Select
-                          multiple
-                          value={class_assigned}
-                          onChange={(event) => {
-                            this.onChange(event, "class_assigned");
-                          }}
-                          renderValue={(selected) => (
-                            <div className={classes.chips}>
-                              {selected.map((classId) => {
+                      <Button onClick={this.handleOpenDeleteDialog} className={classes.deleteButton}>
+                        Hapus
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </AppBar>
+            <div className={classes.content}>
+              <div className={classes.toolbar} />
+              <Paper>
+                <div className={classes.contentDetails}>
+                  <Typography variant="h5" gutterBottom>
+                    Buat Pengumuman
+                  </Typography>
+                  <Typography color="textSecondary">
+                    Sebarkan informasi secara satu arah, lampirkan berkas jika diperlukan.
+                  </Typography>
+                </div>
+                <Divider />
+                <Grid container>
+                  <Grid item xs={12} md={7} className={classes.contentDetails}>
+                    <Grid container direction="column" spacing={4}>
+                      <Grid item>
+                        <div style={{ display: "flex", alignItems: "center"}}>
+                          <AnnouncementIcon className={classes.labelIcon} />
+                          <Typography color="primary">
+                            Judul Pengumuman
+                          </Typography>
+                        </div>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          id="title"
+                          type="text"
+                          onChange={this.onChange}
+                          value={this.state.title}
+                          error={errors.title}
+                          helperText={errors.title}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <div style={{ display: "flex", alignItems: "center"}}>
+                          <ShortTextIcon className={classes.labelIcon} />
+                          <Typography color="primary">
+                            Deskripsi
+                          </Typography>
+                        </div>
+                        <TextField
+                          fullWidth
+                          multiline
+                          variant="outlined"
+                          id="description"
+                          type="text"
+                          rows="5"
+                          rowsMax="25"
+                          onChange={(e) => this.onChange(e, "description")}
+                          value={this.state.description}
+                          error={errors.description}
+                          helperText={errors.description}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Hidden smDown>
+                    <Grid item>
+                      <Divider flexItem orientation="vertical" />
+                    </Grid>
+                  </Hidden>
+                  <Hidden mdUp>
+                    <Grid item xs={12}>
+                      <Divider flexItem orientation="horizontal" />
+                    </Grid>
+                  </Hidden>
+                  <Grid item xs={12} md className={classes.contentDetails}>
+                    <Grid container direction="column" spacing={4}>
+                      {user.role === "Student" ? null : user.role === "Admin" ? (
+                        <Grid item>
+                          <div style={{ display: "flex", alignItems: "center"}}>
+                            <SupervisorAccountIcon className={classes.labelIcon} />
+                            <Typography color="primary">
+                              Ditujukan kepada
+                            </Typography>
+                          </div>
+                          <FormControl
+                            fullWidth
+                            variant="outlined"
+                            color="primary"
+                            error={Boolean(errors.to)}
+                          >
+                            <Select
+                              multiple
+                              id="target_role"
+                              value={target_role}
+                              onChange={(event) => {
+                                this.onChange(event, "target_role");
+                              }}
+                              renderValue={(selected) => {
                                 return (
-                                  <Chip
-                                    key={classId}
-                                    label={
-                                      this.state.allClassObject
-                                        ? this.state.allClassObject[classId]
-                                        : null
-                                    }
-                                    className={classes.chip}
-                                  />
+                                  <div className={classes.chips}>
+                                    {selected.map((role) => {
+                                      return (
+                                        <Chip
+                                          key={role}
+                                          label={
+                                            role === "Student"
+                                              ? "Murid"
+                                              : role === "Teacher"
+                                              ? "Guru"
+                                              : null
+                                          }
+                                          className={classes.chip}
+                                        />
+                                      );
+                                    })}
+                                  </div>
+                                );
+                              }}
+                            >
+                              {[
+                                ["Student", "Murid"],
+                                ["Teacher", "Guru"],
+                              ].map((peran) => {
+                                return (
+                                  <MenuItem key={peran[0]} value={peran[0]}>
+                                    {peran[1]}
+                                  </MenuItem>
                                 );
                               })}
-                            </div>
-                          )}
-                        >
-                          {this.state.classOptions !== null
-                            ? this.state.classOptions.map((classInfo) => (
-                                <MenuItem
-                                  selected={true}
-                                  key={classInfo._id}
-                                  value={classInfo._id}
-                                >
-                                  {classInfo.name}
-                                </MenuItem>
-                              ))
-                            : null}
-                        </Select>
-                        {Boolean(errors.class_assigned) ? (
-                          <FormHelperText error>
-                            {errors.class_assigned}
-                          </FormHelperText>
-                        ) : null}
-                      </FormControl>
+                            </Select>
+                            {Boolean(errors.to) ? (
+                              <FormHelperText error>
+                                {errors.to}
+                              </FormHelperText>
+                            ) : null}
+                          </FormControl>
+                        </Grid>
+                      ) : (
+                        <Grid item>
+                          <div style={{ display: "flex", alignItems: "center"}}>
+                            <FaChalkboard className={classes.labelIcon} />
+                            <Typography color="primary">
+                              Kelas yang diberikan
+                            </Typography>
+                          </div>
+                          <FormControl
+                            fullWidth
+                            variant="outlined"
+                            color="primary"
+                            id="class_assigned"
+                            error={Boolean(errors.class_assigned)}
+                          >
+                            <Select
+                              multiple
+                              value={class_assigned}
+                              onChange={(event) => this.onChange(event, "class_assigned")}
+                              MenuProps={{ classes: { paper: classes.selectPaper } }}
+                              renderValue={(selected) => (
+                                <div className={classes.chips}>
+                                  {selected.map((classId) => {
+                                    return (
+                                      <Chip
+                                        key={classId}
+                                        label={
+                                          this.state.allClassObject
+                                            ? this.state.allClassObject[classId]
+                                            : null
+                                        }
+                                        className={classes.chip}
+                                      />
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            >
+                              {this.state.classOptions !== null
+                                ? this.state.classOptions.map((classInfo) => (
+                                    <MenuItem
+                                      selected={true}
+                                      key={classInfo._id}
+                                      value={classInfo._id}
+                                    >
+                                      <Checkbox
+                                        color="primary"
+                                        size="small"
+                                        checked={class_assigned.indexOf(classInfo._id) > -1}
+                                      />
+                                      <ListItemText primary={classInfo.name} style={{ marginLeft: "10px" }} />
+                                    </MenuItem>
+                                  ))
+                                : null}
+                            </Select>
+                            {Boolean(errors.class_assigned) ? (
+                              <FormHelperText error>
+                                {errors.class_assigned}
+                              </FormHelperText>
+                            ) : null}
+                          </FormControl>
+                        </Grid>
+                      )}
                     </Grid>
-                  )}
+                  </Grid>
                 </Grid>
-              </Grid>
-              <Grid item xs={12}>
+              </Paper>
+              <div>
                 <input
                   multiple
                   id="file_control"
@@ -723,39 +757,39 @@ class CreateAnnouncement extends Component {
                 >
                   Tambah Lampiran Berkas
                 </Button>
-                <Grid container spacing={1} style={{ marginTop: "10px" }}>
+                <Grid container spacing={1}>
                   {listFileChosen()}
                 </Grid>
-              </Grid>
-            </Grid>
-          </div>
-        </form>
-        <UploadDialog
-          openUploadDialog={this.state.openUploadDialog}
-          success={success}
-          messageUploading="Pengumuman sedang dibuat"
-          messageSuccess="Pengumuman telah dibuat"
-          redirectLink={`/pengumuman/${success}`}
-        />
-        <DeleteDialog
-          openDeleteDialog={this.state.openDeleteDialog}
-          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-          itemType={"Pengumuman"}
-          itemName={this.state.title}
-          redirectLink={`/daftar-pengumuman`}
-          isWarning={false}
-        />
-        <Snackbar
-          open={this.state.fileLimitSnackbar}
-          autoHideDuration={4000}
-          onClose={this.handleCloseErrorSnackbar}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-          <Alert elevation={6} variant="filled" severity="error">
-            {this.state.over_limit.length} file melebihi batas{" "}
-            {this.props.settingsCollection.upload_limit}MB!
-          </Alert>
-        </Snackbar>
+              </div>
+            </div>
+          </form>
+          <UploadDialog
+            openUploadDialog={this.state.openUploadDialog}
+            success={success}
+            messageUploading="Pengumuman sedang dibuat"
+            messageSuccess="Pengumuman telah dibuat"
+            redirectLink={`/pengumuman/${success}`}
+          />
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType={"Pengumuman"}
+            itemName={this.state.title}
+            redirectLink={`/daftar-pengumuman`}
+            isWarning={false}
+          />
+          <Snackbar
+            open={this.state.fileLimitSnackbar}
+            autoHideDuration={4000}
+            onClose={this.handleCloseErrorSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <Alert elevation={6} variant="filled" severity="error">
+              {this.state.over_limit.length} file melebihi batas{" "}
+              {this.props.settingsCollection.upload_limit}MB!
+            </Alert>
+          </Snackbar>
+        </div>
       </div>
     );
   }

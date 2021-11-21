@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "90px",
     width: "100%",
     fontSize: "12px",
-    color: theme.palette.text.secondary,
+    color: theme.palette.grey.A700,
   },
 }));
 

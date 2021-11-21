@@ -10,9 +10,9 @@ import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import store from "./Store";
 import { setCurrentUser, logoutUser } from "./actions/UserActions";
-import Toolbar from "@material-ui/core/Toolbar";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import Toolbar from "@material-ui/core/Toolbar";
 import GlobalStyles from "./theme/globalStyles";
 import theme from "./theme";
 // Page Components
@@ -183,500 +183,498 @@ class App extends Component {
     };
 
     return (
-      <div>
-        <Provider store={store}>
-          <ThemeProvider theme={theme}>
-            {/*CssBaseline*/}
-            <GlobalStyles />
-            <Router>
-              <ScrollToTop />
-              <div style={{ display: "flex" }}>
-                {this.state.showProgressIndicator ? (
-                  <ProgressIndicator />
-                ) : null}
-                <Navigation
-                  showNavBar={this.state.showNavBar}
-                  sideDrawerExist={this.state.sideDrawerExist}
-                />
-                <div style={{ flexGrow: "1", overflow: "hidden" }}>
-                  {this.state.showNavBar ? <Toolbar /> : null}
-                  {this.state.problemEncountered ? (
-                    <ProblemEncountered
-                      handleProblemEncountered={this.handleProblemEncountered}
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          {/*CssBaseline*/}
+          <GlobalStyles />
+          <Router>
+            <ScrollToTop />
+            <div style={{ display: "flex", minHeight: "100%" }}>
+              {this.state.showProgressIndicator ? (
+                <ProgressIndicator />
+              ) : null}
+              <Navigation
+                showNavBar={this.state.showNavBar}
+                sideDrawerExist={this.state.sideDrawerExist}
+              />
+              <div style={{ flexGrow: "1", overflowX: "hidden", minHeight: "100%" }}>
+                {this.state.showNavBar ? <Toolbar /> : null}
+                {this.state.problemEncountered ? (
+                  <ProblemEncountered
+                    handleProblemEncountered={this.handleProblemEncountered}
+                  />
+                ) : (
+                  <Switch>
+                    <Route
+                      exact
+                      path="/tester"
+                      render={(props) => <Tester {...props} />}
                     />
-                  ) : (
-                    <Switch>
-                      <Route
-                        exact
-                        path="/tester"
-                        render={(props) => <Tester {...props} />}
-                      />
-                      <Route
-                        exact
-                        path="/"
-                        render={(props) => <Landing {...props} />}
-                      />
-                      <Route
-                        exact
-                        path="/bantuan"
-                        render={(props) => <Help {...props} />}
-                      />
-                      <Route
-                        exact
-                        path="/tentang-schooly"
-                        render={(props) => <About {...props} />}
-                      />
-                      <Route
-                        exact
-                        path="/legal/ketentuan-penggunaan"
-                        render={(props) => <TermsOfService {...props} />}
-                      />
-                      <Route
-                        exact
-                        path="/legal/kebijakan-privasi"
-                        render={(props) => <PrivacyPolicy {...props} />}
-                      />
-                      <Route
-                        exact
-                        path="/daftar"
-                        render={(props) => (
-                          <Register
-                            {...props}
-                            handleNavbar={(data) => this.handleNavbar(data)}
-                          />
-                        )}
-                      />
-                      <Route
-                        exact
-                        path="/masuk"
-                        render={(props) => (
-                          <Login
-                            {...props}
-                            handleLoading={this.handleLoading}
-                            handleNavbar={(data) => this.handleNavbar(data)}
-                          />
-                        )}
-                      />
-                      <Route
-                        exact
-                        path="/akun/lupa-katasandi"
-                        render={(props) => (
-                          <ForgotPassword
-                            {...props}
-                            handleNavbar={(data) => this.handleNavbar(data)}
-                          />
-                        )}
-                      />
-                      <Route
-                        exact
-                        path="/akun/ubah-katasandi/:hash"
-                        render={(props) => (
-                          <ResetPassword
-                            {...props}
-                            handleNavbar={(data) => this.handleNavbar(data)}
-                          />
-                        )}
-                      />
-                      <PrivateRoute
-                        exact
-                        path="/beranda"
-                        component={Dashboard}
-                      />
-                      <PrivateRoute exact path="/profil" component={Profile} />
-                      <PrivateRoute
-                        exact
-                        path="/lihat-profil/:id"
-                        component={ProfileView}
-                      />
+                    <Route
+                      exact
+                      path="/"
+                      render={(props) => <Landing {...props} />}
+                    />
+                    <Route
+                      exact
+                      path="/bantuan"
+                      render={(props) => <Help {...props} />}
+                    />
+                    <Route
+                      exact
+                      path="/tentang-schooly"
+                      render={(props) => <About {...props} />}
+                    />
+                    <Route
+                      exact
+                      path="/legal/ketentuan-penggunaan"
+                      render={(props) => <TermsOfService {...props} />}
+                    />
+                    <Route
+                      exact
+                      path="/legal/kebijakan-privasi"
+                      render={(props) => <PrivacyPolicy {...props} />}
+                    />
+                    <Route
+                      exact
+                      path="/daftar"
+                      render={(props) => (
+                        <Register
+                          {...props}
+                          handleNavbar={(data) => this.handleNavbar(data)}
+                        />
+                      )}
+                    />
+                    <Route
+                      exact
+                      path="/masuk"
+                      render={(props) => (
+                        <Login
+                          {...props}
+                          handleLoading={this.handleLoading}
+                          handleNavbar={(data) => this.handleNavbar(data)}
+                        />
+                      )}
+                    />
+                    <Route
+                      exact
+                      path="/akun/lupa-katasandi"
+                      render={(props) => (
+                        <ForgotPassword
+                          {...props}
+                          handleNavbar={(data) => this.handleNavbar(data)}
+                        />
+                      )}
+                    />
+                    <Route
+                      exact
+                      path="/akun/ubah-katasandi/:hash"
+                      render={(props) => (
+                        <ResetPassword
+                          {...props}
+                          handleNavbar={(data) => this.handleNavbar(data)}
+                        />
+                      )}
+                    />
+                    <PrivateRoute
+                      exact
+                      path="/beranda"
+                      component={Dashboard}
+                    />
+                    <PrivateRoute exact path="/profil" component={Profile} />
+                    <PrivateRoute
+                      exact
+                      path="/lihat-profil/:id"
+                      component={ProfileView}
+                    />
 
-                      {/* Route Class */}
-                      <PrivateRoute
-                        exact
-                        access={[Role.ADMIN]}
-                        path="/buat-kelas"
-                        component={CreateClass}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.ADMIN]}
-                        path="/sunting-kelas/:id"
-                        component={EditClass}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.ADMIN]}
-                        path="/atur-walikelas"
-                        component={EditHomeroomTeacher}
-                      />
-                      <PrivateRoute
-                        exact
-                        path="/kelas/:id"
-                        component={ViewClass}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER, Role.ADMIN]}
-                        path="/daftar-kelas"
-                        component={ClassList}
-                      />
+                    {/* Route Class */}
+                    <PrivateRoute
+                      exact
+                      access={[Role.ADMIN]}
+                      path="/buat-kelas"
+                      component={CreateClass}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.ADMIN]}
+                      path="/sunting-kelas/:id"
+                      component={EditClass}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.ADMIN]}
+                      path="/atur-walikelas"
+                      component={EditHomeroomTeacher}
+                    />
+                    <PrivateRoute
+                      exact
+                      path="/kelas/:id"
+                      component={ViewClass}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER, Role.ADMIN]}
+                      path="/daftar-kelas"
+                      component={ClassList}
+                    />
 
-                      {/* Route Subject */}
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT]}
-                        path="/mata-pelajaran/:id"
-                        component={ViewSubject}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.ADMIN]}
-                        path="/daftar-mata-pelajaran"
-                        component={SubjectList}
-                      />
-                      {/* Route Event */}
-                      <PrivateRoute
-                        exact
-                        path="/kalender"
-                        component={Calendar}
-                      />
+                    {/* Route Subject */}
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT]}
+                      path="/mata-pelajaran/:id"
+                      component={ViewSubject}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.ADMIN]}
+                      path="/daftar-mata-pelajaran"
+                      component={SubjectList}
+                    />
+                    {/* Route Event */}
+                    <PrivateRoute
+                      exact
+                      path="/kalender"
+                      component={Calendar}
+                    />
 
-                      {/* Route Announcement */}
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
-                        path="/buat-pengumuman"
-                        component={CreateAnnouncement}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
-                        path="/sunting-pengumuman/:id"
-                        component={EditAnnouncement}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
-                        path="/pengumuman/:id"
-                        component={ViewAnnouncement}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
-                        path="/daftar-pengumuman"
-                        component={AnnouncementList}
-                      />
+                    {/* Route Announcement */}
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
+                      path="/buat-pengumuman"
+                      component={CreateAnnouncement}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
+                      path="/sunting-pengumuman/:id"
+                      component={EditAnnouncement}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
+                      path="/pengumuman/:id"
+                      component={ViewAnnouncement}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
+                      path="/daftar-pengumuman"
+                      component={AnnouncementList}
+                    />
 
-                      {/* Route Material */}
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/buat-materi"
-                        component={CreateMaterial}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/sunting-materi/:id"
-                        component={EditMaterial}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT, Role.TEACHER]}
-                        path="/materi/:id"
-                        component={ViewMaterial}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT, Role.TEACHER]}
-                        path="/daftar-materi"
-                        component={MaterialList}
-                      />
+                    {/* Route Material */}
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/buat-materi"
+                      component={CreateMaterial}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/sunting-materi/:id"
+                      component={EditMaterial}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT, Role.TEACHER]}
+                      path="/materi/:id"
+                      component={ViewMaterial}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT, Role.TEACHER]}
+                      path="/daftar-materi"
+                      component={MaterialList}
+                    />
 
-                      {/* Route Task */}
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/buat-tugas"
-                        component={CreateTask}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/sunting-tugas/:id"
-                        component={EditTask}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT]}
-                        path="/tugas-murid/:id"
-                        component={ViewTaskStudent}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/tugas-guru/:id"
-                        component={ViewTaskTeacher}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT, Role.TEACHER]}
-                        path="/daftar-tugas"
-                        component={TaskList}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/daftar-tugas-terkumpul/:id"
-                        component={SubmittedTaskList}
-                      />
+                    {/* Route Task */}
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/buat-tugas"
+                      component={CreateTask}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/sunting-tugas/:id"
+                      component={EditTask}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT]}
+                      path="/tugas-murid/:id"
+                      component={ViewTaskStudent}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/tugas-guru/:id"
+                      component={ViewTaskTeacher}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT, Role.TEACHER]}
+                      path="/daftar-tugas"
+                      component={TaskList}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/daftar-tugas-terkumpul/:id"
+                      component={SubmittedTaskList}
+                    />
 
-                      {/* Route Assessment */}
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT, Role.TEACHER]}
-                        path="/buat-ujian"
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        component={CreateAssessment}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT, Role.TEACHER]}
-                        path="/buat-kuis"
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        component={CreateAssessment}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/sunting-kuis/:id"
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        component={EditAssessment}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/sunting-ujian/:id"
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        component={EditAssessment}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT]}
-                        path="/kuis-murid/:id"
-                        component={ViewAssessmentStudent}
-                        loginRedirect={true}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT]}
-                        path="/ujian-murid/:id"
-                        component={ViewAssessmentStudent}
-                        loginRedirect={true}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/kuis-guru/:id"
-                        component={ViewAssessmentTeacher}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/ujian-guru/:id"
-                        component={ViewAssessmentTeacher}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT, Role.TEACHER]}
-                        path="/daftar-kuis"
-                        component={AssessmentList}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.STUDENT, Role.TEACHER]}
-                        path="/daftar-ujian"
-                        component={AssessmentTestList}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/daftar-kuis-terkumpul/:id"
-                        component={SubmittedAssessmentList}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/daftar-ujian-terkumpul/:id"
-                        component={SubmittedAssessmentList}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/lihat-jawaban-kuis/:id"
-                        component={ViewAssessmentAnswer}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.TEACHER]}
-                        path="/lihat-jawaban-ujian/:id"
-                        component={ViewAssessmentAnswer}
-                      />
+                    {/* Route Assessment */}
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT, Role.TEACHER]}
+                      path="/buat-ujian"
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      component={CreateAssessment}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT, Role.TEACHER]}
+                      path="/buat-kuis"
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      component={CreateAssessment}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/sunting-kuis/:id"
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      component={EditAssessment}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/sunting-ujian/:id"
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      component={EditAssessment}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT]}
+                      path="/kuis-murid/:id"
+                      component={ViewAssessmentStudent}
+                      loginRedirect={true}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT]}
+                      path="/ujian-murid/:id"
+                      component={ViewAssessmentStudent}
+                      loginRedirect={true}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/kuis-guru/:id"
+                      component={ViewAssessmentTeacher}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/ujian-guru/:id"
+                      component={ViewAssessmentTeacher}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT, Role.TEACHER]}
+                      path="/daftar-kuis"
+                      component={AssessmentList}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.STUDENT, Role.TEACHER]}
+                      path="/daftar-ujian"
+                      component={AssessmentTestList}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/daftar-kuis-terkumpul/:id"
+                      component={SubmittedAssessmentList}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/daftar-ujian-terkumpul/:id"
+                      component={SubmittedAssessmentList}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/lihat-jawaban-kuis/:id"
+                      component={ViewAssessmentAnswer}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.TEACHER]}
+                      path="/lihat-jawaban-ujian/:id"
+                      component={ViewAssessmentAnswer}
+                    />
 
-                      {/* Route Report */}
-                      <PrivateRoute
-                        exact
-                        path="/rapor/:id"
-                        component={Report}
-                      />
-                      {/* Route User */}
-                      <PrivateRoute
-                        exact
-                        access={[Role.ADMIN]}
-                        path="/pengguna-aktif"
-                        component={ManageUsers}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.ADMIN]}
-                        path="/pengguna-tidakaktif"
-                        component={ManagePendingUsers}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.ADMIN]}
-                        path="/data-ajar-guru"
-                        component={TeacherList}
-                      />
+                    {/* Route Report */}
+                    <PrivateRoute
+                      exact
+                      path="/rapor/:id"
+                      component={Report}
+                    />
+                    {/* Route User */}
+                    <PrivateRoute
+                      exact
+                      access={[Role.ADMIN]}
+                      path="/pengguna-aktif"
+                      component={ManageUsers}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.ADMIN]}
+                      path="/pengguna-tidakaktif"
+                      component={ManagePendingUsers}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.ADMIN]}
+                      path="/data-ajar-guru"
+                      component={TeacherList}
+                    />
 
-                      {/*  Route Settings */}
-                      <PrivateRoute
-                        exact
-                        access={[Role.ADMIN]}
-                        path="/pengaturan"
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                        component={Setting}
-                      />
+                    {/*  Route Settings */}
+                    <PrivateRoute
+                      exact
+                      access={[Role.ADMIN]}
+                      path="/pengaturan"
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                      component={Setting}
+                    />
 
-                      {/* Route SuperAdmin-Only */}
-                      <PrivateRoute
-                        exact
-                        access={[Role.SUPERADMIN]}
-                        path="/data-unit-pengelola"
-                        component={AdminList}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.SUPERADMIN]}
-                        path="/pengelola-aktif"
-                        component={ManageAdmins}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.SUPERADMIN]}
-                        Hello
-                        path="/pengelola-tertunda"
-                        component={ManagePendingAdmins}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.SUPERADMIN]}
-                        path="/daftar-unit"
-                        component={UnitList}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.SUPERADMIN]}
-                        path="/buat-unit"
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        component={CreateUnit}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.SUPERADMIN]}
-                        path="/sunting-unit/:id"
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        component={EditUnit}
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        handleFooter={this.handleFooter}
-                        handleNavbar={(data) => this.handleNavbar(data)}
-                      />
-                      <PrivateRoute
-                        exact
-                        access={[Role.SUPERADMIN]}
-                        path="/unit/:id"
-                        handleSideDrawerExist={this.handleSideDrawerExist}
-                        component={ViewUnit}
-                      />
+                    {/* Route SuperAdmin-Only */}
+                    <PrivateRoute
+                      exact
+                      access={[Role.SUPERADMIN]}
+                      path="/data-unit-pengelola"
+                      component={AdminList}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.SUPERADMIN]}
+                      path="/pengelola-aktif"
+                      component={ManageAdmins}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.SUPERADMIN]}
+                      Hello
+                      path="/pengelola-tertunda"
+                      component={ManagePendingAdmins}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.SUPERADMIN]}
+                      path="/daftar-unit"
+                      component={UnitList}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.SUPERADMIN]}
+                      path="/buat-unit"
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      component={CreateUnit}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.SUPERADMIN]}
+                      path="/sunting-unit/:id"
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      component={EditUnit}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
+                    />
+                    <PrivateRoute
+                      exact
+                      access={[Role.SUPERADMIN]}
+                      path="/unit/:id"
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      component={ViewUnit}
+                    />
 
-                      {/*  Route Prototypes */}
-                      <PrivateRoute
-                        exact
-                        access={[Role.ADMIN]}
-                        path="/bulk-register"
-                        component={BulkRegister}
-                      />
+                    {/*  Route Prototypes */}
+                    <PrivateRoute
+                      exact
+                      access={[Role.ADMIN]}
+                      path="/bulk-register"
+                      component={BulkRegister}
+                    />
 
-                      {/*  Route Not Found */}
-                      <Route
-                        exact
-                        path="/tidak-ditemukan"
-                        render={(props) => <NotFound {...props} />}
-                      />
-                      <Redirect to="/tidak-ditemukan" />
-                    </Switch>
-                  )}
-                  {this.state.footerExist ? (
-                    <Footer assessmentState={localStorage.getItem(`status`)} />
-                  ) : null}
-                </div>
+                    {/*  Route Not Found */}
+                    <Route
+                      exact
+                      path="/tidak-ditemukan"
+                      render={(props) => <NotFound {...props} />}
+                    />
+                    <Redirect to="/tidak-ditemukan" />
+                  </Switch>
+                )}
+                {this.state.footerExist ? (
+                  <Footer assessmentState={localStorage.getItem(`status`)} />
+                ) : null}
               </div>
-            </Router>
-          </ThemeProvider>
-        </Provider>
-      </div>
+            </div>
+          </Router>
+        </ThemeProvider>
+      </Provider>
     );
   }
 }
