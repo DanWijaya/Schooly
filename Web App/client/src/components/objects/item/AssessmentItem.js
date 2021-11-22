@@ -4,6 +4,7 @@ import {
   Avatar,
   Badge,
   Dialog,
+  Grid,
   ListItem,
   ListItemAvatar,
   ListItemText,
@@ -17,6 +18,11 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import moment from "moment";
+import "moment/locale/id";
+import OptionMenu from "../../misc/menu/OptionMenu";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,6 +59,8 @@ function AssessmentItem(props) {
     secondaryText,
     subSecondaryText,
   } = props;
+  const { user, all_roles } = props.auth;
+  const { all_subjects_map } = props.subjectsCollection;
   const { data, handleOpenDeleteDialog } = props;
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
@@ -73,109 +81,278 @@ function AssessmentItem(props) {
     });
     setOpenDialog(true);
   };
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
 
   return (
-    <div>
-      <Link to={link}>
-        <Paper variant="outlined" className={classes.root}>
-          <ListItem
-            button
-            onClick={() =>
-              handleOpenDialog(
-                props.title,
-                props.subject,
-                props.teacher,
-                props.startTime,
-                props.endtime
-              )
-            }
-          >
-            <ListItemAvatar>
-              <Badge
-                overlap="circle"
-                badgeContent={
-                  status === missing ? (
-                    <ErrorIcon className={classes.missingIcon} />
-                  ) : (
-                    <CheckCircleIcon className={classes.completedIcon} />
+    <Grid container direction="column" spacing={2}>
+      {data.map((row) => {
+        const viewpage = `/${row.type}-guru/${row._id}`;
+        if (user.role === all_roles.TEACHER) {
+          return (
+            <Grid item>
+              <Link to={viewpage}>
+                <Paper variant="outlined" className={classes.root}>
+                  <ListItem button disableRipple>
+                    <ListItemAvatar>
+                      <Badge
+                        overlap="circle"
+                        badgeContent={
+                          status === missing ? (
+                            <ErrorIcon className={classes.missingIcon} />
+                          ) : (
+                            <CheckCircleIcon
+                              className={classes.completedIcon}
+                            />
+                          )
+                        }
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                      >
+                        <Avatar className={classes.assessmentIcon}>
+                          {row.type === "Kuis" ? (
+                            <FaClipboardList />
+                          ) : (
+                            <BsClipboardData />
+                          )}
+                        </Avatar>
+                      </Badge>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={<Typography noWrap>{row.name}</Typography>}
+                      secondary={
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          noWrap
+                        >
+                          {all_subjects_map.get(row.subject)}
+                        </Typography>
+                      }
+                    />
+                    <ListItemText
+                      align="right"
+                      primary={
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          noWrap
+                        >
+                          {moment(row.start_date)
+                            .locale("id")
+                            .format("DD MMM YYYY")}
+                        </Typography>
+                      }
+                      secondary={
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          noWrap
+                        >
+                          {moment(row.start_date).locale("id").format("HH.mm")}
+                        </Typography>
+                      }
+                    />
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <OptionMenu
+                        actions={["Sunting", "Hapus"]}
+                        row={row}
+                        handleActionOnClick={[
+                          `/sunting-${row.type}/${row._id}`,
+                          handleOpenDeleteDialog,
+                        ]}
+                      />
+                    </div>
+                  </ListItem>
+                </Paper>
+              </Link>
+            </Grid>
+          );
+        } else if (user.role === all_roles.STUDENT) {
+          return (
+            <Paper variant="outlined" className={classes.root}>
+              <ListItem
+                button
+                onClick={() =>
+                  handleOpenDialog(
+                    props.title,
+                    props.subject,
+                    props.teacher,
+                    props.startTime,
+                    props.endtime
                   )
                 }
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
               >
-                <Avatar className={classes.assessmentIcon}>
-                  {type === "Kuis" ? <FaClipboardList /> : <BsClipboardData />}
-                </Avatar>
-              </Badge>
-            </ListItemAvatar>
-            <ListItemText
-              primary={<Typography noWrap>{primaryText}</Typography>}
-              secondary={
-                <Typography variant="body2" color="textSecondary" noWrap>
-                  {subPrimaryText}
-                </Typography>
-              }
-            />
-            <ListItemText
-              align="right"
-              primary={
-                <Typography variant="body2" color="textSecondary" noWrap>
-                  {secondaryText}
-                </Typography>
-              }
-              secondary={
-                <Typography variant="body2" color="textSecondary" noWrap>
-                  {subSecondaryText}
-                </Typography>
-              }
-            />
-          </ListItem>
-        </Paper>
-      </Link>
-      <Dialog
-        fullWidth
-        fullScreen={false}
-        open={openDialog}
-        onClose={handleCloseDialog}
-      >
-        <div style={{ padding: "20px" }}>
-          <Typography variant="h4" align="center">
-            {currentDialogInfo.title}
-          </Typography>
-          <Typography variant="h5" align="center" color="primary">
-            {currentDialogInfo.subject}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-            style={{ marginTop: "25px" }}
-          >
-            Guru: {currentDialogInfo.teacher_name}
-          </Typography>
-          <Typography variant="subtitle1" align="center">
-            Mulai: {currentDialogInfo.start_date}
-          </Typography>
-          <Typography variant="subtitle1" align="center">
-            Selesai: {currentDialogInfo.end_date}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            align="center"
-            color="textSecondary"
-            style={{ marginTop: "10px", textAlign: "center" }}
-          >
-            Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
-            pelajaran terkait.
-          </Typography>
-        </div>
-      </Dialog>
-    </div>
+                <ListItemAvatar>
+                  <Badge
+                    overlap="circle"
+                    badgeContent={
+                      status === missing ? (
+                        <ErrorIcon className={classes.missingIcon} />
+                      ) : (
+                        <CheckCircleIcon className={classes.completedIcon} />
+                      )
+                    }
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                  >
+                    <Avatar className={classes.assessmentIcon}>
+                      {row.type === "Kuis" ? (
+                        <FaClipboardList />
+                      ) : (
+                        <BsClipboardData />
+                      )}
+                    </Avatar>
+                  </Badge>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={<Typography noWrap>{row.name}</Typography>}
+                  secondary={
+                    <Typography variant="body2" color="textSecondary" noWrap>
+                      {all_subjects_map.get(row.subject)}
+                    </Typography>
+                  }
+                />
+                <ListItemText
+                  align="right"
+                  primary={
+                    <Typography variant="body2" color="textSecondary" noWrap>
+                      {moment(row.start_date)
+                        .locale("id")
+                        .format("DD MMM YYYY")}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography variant="body2" color="textSecondary" noWrap>
+                      {moment(row.start_date).locale("id").format("HH.mm")}
+                    </Typography>
+                  }
+                />
+              </ListItem>
+            </Paper>
+          );
+        }
+        return;
+      })}
+    </Grid>
   );
+  // return (
+  //   <div>
+  //     <Link to={link}>
+  //       <Paper variant="outlined" className={classes.root}>
+  //         <ListItem
+  //           button
+  //           onClick={() =>
+  //             handleOpenDialog(
+  //               props.title,
+  //               props.subject,
+  //               props.teacher,
+  //               props.startTime,
+  //               props.endtime
+  //             )
+  //           }
+  //         >
+  //           <ListItemAvatar>
+  //             <Badge
+  //               overlap="circle"
+  //               badgeContent={
+  //                 status === missing ? (
+  //                   <ErrorIcon className={classes.missingIcon} />
+  //                 ) : (
+  //                   <CheckCircleIcon className={classes.completedIcon} />
+  //                 )
+  //               }
+  //               anchorOrigin={{
+  //                 vertical: "bottom",
+  //                 horizontal: "right",
+  //               }}
+  //             >
+  //               <Avatar className={classes.assessmentIcon}>
+  //                 {type === "Kuis" ? <FaClipboardList /> : <BsClipboardData />}
+  //               </Avatar>
+  //             </Badge>
+  //           </ListItemAvatar>
+  //           <ListItemText
+  //             primary={<Typography noWrap>{primaryText}</Typography>}
+  //             secondary={
+  //               <Typography variant="body2" color="textSecondary" noWrap>
+  //                 {subPrimaryText}
+  //               </Typography>
+  //             }
+  //           />
+  //           <ListItemText
+  //             align="right"
+  //             primary={
+  //               <Typography variant="body2" color="textSecondary" noWrap>
+  //                 {secondaryText}
+  //               </Typography>
+  //             }
+  //             secondary={
+  //               <Typography variant="body2" color="textSecondary" noWrap>
+  //                 {subSecondaryText}
+  //               </Typography>
+  //             }
+  //           />
+  //         </ListItem>
+  //       </Paper>
+  //     </Link>
+  //     <Dialog
+  //       fullWidth
+  //       fullScreen={false}
+  //       open={openDialog}
+  //       onClose={handleCloseDialog}
+  //     >
+  //       <div style={{ padding: "20px" }}>
+  //         <Typography variant="h4" align="center">
+  //           {currentDialogInfo.title}
+  //         </Typography>
+  //         <Typography variant="h5" align="center" color="primary">
+  //           {currentDialogInfo.subject}
+  //         </Typography>
+  //         <Typography
+  //           variant="subtitle1"
+  //           align="center"
+  //           style={{ marginTop: "25px" }}
+  //         >
+  //           Guru: {currentDialogInfo.teacher_name}
+  //         </Typography>
+  //         <Typography variant="subtitle1" align="center">
+  //           Mulai: {currentDialogInfo.start_date}
+  //         </Typography>
+  //         <Typography variant="subtitle1" align="center">
+  //           Selesai: {currentDialogInfo.end_date}
+  //         </Typography>
+  //         <Typography
+  //           variant="subtitle2"
+  //           align="center"
+  //           color="textSecondary"
+  //           style={{ marginTop: "10px", textAlign: "center" }}
+  //         >
+  //           Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
+  //           pelajaran terkait.
+  //         </Typography>
+  //       </div>
+  //     </Dialog>
+  //   </div>
+  // );
 }
 
-export default AssessmentItem;
+AssessmentItem.propTypes = {
+  auth: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
+});
+
+export default connect(mapStateToProps, {})(AssessmentItem);

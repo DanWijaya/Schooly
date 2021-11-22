@@ -32,7 +32,6 @@ function MaterialItem(props) {
   const classes = useStyles();
   const { data, handleOpenDeleteDialog } = props;
   const { user } = props.auth;
-  const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
 
   return (
