@@ -90,37 +90,11 @@ router.post("/upload/:user_id", upload.single("avatar"), async (req, res) => {
       { _id: user_id },
       { $set: { avatar: newAvatar._id } },
       { new: true }
-    );
+    ).lean();
 
-    var payload = {
-      _id: user._id,
-      role: user.role,
-      avatar: user.avatar,
-
-      // Personal Information
-      name: user.name,
-      tanggal_lahir: user.tanggal_lahir,
-      jenis_kelamin: user.jenis_kelamin,
-      sekolah: user.sekolah,
-
-      // Contacts
-      email: user.email,
-      phone: user.phone,
-      emergency_phone: user.emergency_phone,
-      address: user.address,
-
-      // Career
-      hobi_minat: user.hobi_minat,
-      ket_non_teknis: user.ket_non_teknis,
-      cita_cita: user.cita_cita,
-      uni_impian: user.uni_impian,
-    };
-    if (user.role === "Student") {
-      payload.kelas = user.kelas;
-      payload.tugas = user.tugas;
-    } else if (user.role === "Teacher") {
-      payload.subject_teached = user.subject_teached;
-    }
+    var payload = user;
+    // No need to delete because default already not showing password.
+    // delete payload["password"];
 
     return res.json({
       success: "Successfully uploaded the lampiran file",

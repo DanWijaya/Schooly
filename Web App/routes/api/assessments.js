@@ -382,6 +382,7 @@ router.get("/viewall/:unitId", (req, res) => {
       if (!assessments.length) {
         throw "Assessments are not found";
       }
+      console.log("Hasil assessments: ", assessments);
       return res.json(assessments);
     })
     .catch((err) => {

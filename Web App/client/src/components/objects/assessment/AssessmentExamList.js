@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
-import "moment/locale/id";
 import {
   getAllAssessments,
   deleteAssessment,
@@ -16,23 +15,15 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
-  Badge,
   Dialog,
   Divider,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
   Fab,
   Grid,
   Hidden,
   IconButton,
   InputAdornment,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Menu,
   MenuItem,
-  Paper,
   Snackbar,
   TableSortLabel,
   TextField,
@@ -41,15 +32,9 @@ import {
 import Alert from "@material-ui/lab/Alert";
 import {
   ArrowBack as ArrowBackIcon,
-  CheckCircle as CheckCircleIcon,
   Clear as ClearIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Link as LinkIcon,
-  Pageview as PageviewIcon,
   Search as SearchIcon,
   Sort as SortIcon,
-  Warning as WarningIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
@@ -487,8 +472,6 @@ function AssessmentList(props) {
     getTeachers,
   } = props;
   const { user, all_teachers_map } = props.auth;
-  const { all_classes_map } = props.classesCollection;
-  const { all_subjects_map } = props.subjectsCollection;
   const { all_assessments } = props.assessmentsCollection;
 
   const [order, setOrder] = React.useState("asc");
@@ -503,39 +486,7 @@ function AssessmentList(props) {
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [type, setAssessmentType] = React.useState(null);
 
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
-
-  const handleOpenDialog = (data) => {
-    let { name, subject, teacher_name, start_date, end_date, grades } = data;
-
-    subject = all_subjects_map.get(subject);
-    start_date = moment(start_date).locale("id").format("DD MMM YYYY, HH.mm");
-    end_date = moment(end_date).locale("id").format("DD MMM YYYY, HH.mm");
-    if (grades) {
-      // No need to check if it is student cause only student use dialog.
-      grades = grades[user._id].total_grade;
-    }
-
-    let title = name;
-    console.log(data);
-
-    setCurrentDialogInfo({
-      title,
-      subject,
-      teacher_name,
-      start_date,
-      end_date,
-      grades,
-    });
-    setOpenDialog(true);
-    console.log(title);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
 
   var rows = [];
   const assessmentRowItem = (data) => {
@@ -609,14 +560,8 @@ function AssessmentList(props) {
             }
             return null;
           });
-      } else {
-        // For administrator?
-        all_assessments
-          .filter((item) =>
-            item.name.toLowerCase().includes(searchFilter.toLowerCase())
-          )
-          .forEach((data) => assessmentRowItem(data));
       }
+      return;
     }
   };
 
@@ -661,16 +606,16 @@ function AssessmentList(props) {
     setOpenCopySnackBar(false);
   };
 
-  const copyToClipboardButton = (e, linkToShare, type) => {
+  const handleCopyLink = (e, row) => {
     e.stopPropagation();
     let textArea = document.createElement("textarea");
-    textArea.value = linkToShare;
+    textArea.value = row.linkToShare;
     document.body.appendChild(textArea);
     textArea.select();
     document.execCommand("copy");
     e.target.focus();
     document.body.removeChild(textArea);
-    handleOpenCopySnackBar(type);
+    handleOpenCopySnackBar(row.type);
   };
 
   const handleOpenDeleteSnackbar = () => {
@@ -733,317 +678,9 @@ function AssessmentList(props) {
         <AssessmentItem
           data={stableSort(rows, getComparator(order, orderBy))}
           handleOpenDeleteDialog={handleOpenDeleteDialog}
+          handleCopyLink={handleCopyLink}
         />
-        // <Grid container direction="column" spacing={2}>
-        //   {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-        //     const labelId = `enhanced-table-checkbox-${index}`;
-        //     let viewpage = `/ujian-guru/${row._id}`;
-        //     let linkToShare = `https://${window.location.host}/ujian-murid/${row._id}`;
-
-        //     return (
-        //       <Grid item>
-        //         {user.role === "Teacher" ? (
-        //           <ExpansionPanel button variant="outlined">
-        //             <ExpansionPanelSummary
-        //               className={classes.assessmentPanelSummary}
-        //             >
-        //               <Grid
-        //                 container
-        //                 spacing={1}
-        //                 justify="space-between"
-        //                 alignItems="center"
-        //               >
-        //                 <Grid item>
-        //                   <Hidden smUp implementation="css">
-        //                     <Typography variant="subtitle1" id={labelId}>
-        //                       {row.name}
-        //                     </Typography>
-        //                     <Typography variant="caption" color="textSecondary">
-        //                       {all_subjects_map.get(row.subject)}
-        //                     </Typography>
-        //                   </Hidden>
-        //                   <Hidden xsDown implementation="css">
-        //                     <div
-        //                       style={{
-        //                         display: "flex",
-        //                         flexDirection: "row",
-        //                         justifyContent: "center",
-        //                         alignItems: "center",
-        //                       }}
-        //                     >
-        //                       <ListItemAvatar>
-        //                         <Avatar
-        //                           className={classes.assignmentLateTeacher}
-        //                         >
-        //                           <BsClipboardData />
-        //                         </Avatar>
-        //                       </ListItemAvatar>
-        //                       <div>
-        //                         <Typography variant="h6" id={labelId}>
-        //                           {row.name}
-        //                         </Typography>
-        //                         <Typography
-        //                           variant="body2"
-        //                           color="textSecondary"
-        //                         >
-        //                           {all_subjects_map.get(row.subject)}
-        //                         </Typography>
-        //                       </div>
-        //                     </div>
-        //                   </Hidden>
-        //                 </Grid>
-        //                 <Grid item xs container spacing={1} justify="flex-end">
-        //                   <Grid item>
-        //                     <LightTooltip title="Lihat Lebih Lanjut">
-        //                       <Link to={viewpage}>
-        //                         <IconButton
-        //                           size="small"
-        //                           className={classes.viewAssessmentButton}
-        //                         >
-        //                           <PageviewIcon fontSize="small" />
-        //                         </IconButton>
-        //                       </Link>
-        //                     </LightTooltip>
-        //                   </Grid>
-        //                   <Grid item>
-        //                     <LightTooltip title="Salin Tautan">
-        //                       <IconButton
-        //                         size="small"
-        //                         className={classes.copyToClipboardButton}
-        //                         onClick={(e) => {
-        //                           copyToClipboardButton(
-        //                             e,
-        //                             linkToShare,
-        //                             row.type
-        //                           );
-        //                         }}
-        //                       >
-        //                         <LinkIcon fontSize="small" />
-        //                       </IconButton>
-        //                     </LightTooltip>
-        //                   </Grid>
-        //                   {row.submissions &&
-        //                   Object.keys(row.submissions).length !== 0 ? null : (
-        //                     <Grid item>
-        //                       <LightTooltip title="Sunting">
-        //                         <Link to={`/sunting-ujian/${row._id}`}>
-        //                           <IconButton
-        //                             size="small"
-        //                             className={classes.editAssessmentButton}
-        //                           >
-        //                             <EditIcon fontSize="small" />
-        //                           </IconButton>
-        //                         </Link>
-        //                       </LightTooltip>
-        //                     </Grid>
-        //                   )}
-        //                   <Grid item>
-        //                     <LightTooltip title="Hapus">
-        //                       <IconButton
-        //                         size="small"
-        //                         className={classes.deleteAssessmentButton}
-        //                         onClick={(e) => {
-        //                           handleOpenDeleteDialog(
-        //                             e,
-        //                             row._id,
-        //                             row.name
-        //                           );
-        //                         }}
-        //                       >
-        //                         <DeleteIcon fontSize="small" />
-        //                       </IconButton>
-        //                     </LightTooltip>
-        //                   </Grid>
-        //                 </Grid>
-        //               </Grid>
-        //             </ExpansionPanelSummary>
-        //             <Divider />
-        //             <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
-        //               <Grid conntainer direction="column">
-        //                 <Grid item>
-        //                   <Typography variant="body1">
-        //                     Kelas yang Ditugaskan:{" "}
-        //                     {!all_classes_map.size
-        //                       ? null
-        //                       : row.class_assigned.map((id, i) => {
-        //                           if (all_classes_map.get(id)) {
-        //                             if (i === row.class_assigned.length - 1)
-        //                               return `${all_classes_map.get(id).name}`;
-        //                             return `${all_classes_map.get(id).name}, `;
-        //                           }
-        //                           return null;
-        //                         })}
-        //                   </Typography>
-        //                 </Grid>
-        //                 <Grid item>
-        //                   <Typography variant="body1" color="textSecondary">
-        //                     Waktu Dibuat:{" "}
-        //                     {moment(row.createdAt)
-        //                       .locale("id")
-        //                       .format("DD MMM YYYY, HH.mm")}
-        //                   </Typography>
-        //                 </Grid>
-        //                 <Grid item>
-        //                   <Typography variant="body2" color="textSecondary">
-        //                     Mulai:{" "}
-        //                     {moment(row.start_date)
-        //                       .locale("id")
-        //                       .format("DD MMM YYYY, HH.mm")}
-        //                   </Typography>
-        //                 </Grid>
-        //                 <Grid item>
-        //                   <Typography variant="body2" color="textSecondary">
-        //                     Selesai:{" "}
-        //                     {moment(row.end_date)
-        //                       .locale("id")
-        //                       .format("DD MMM YYYY, HH.mm")}
-        //                   </Typography>
-        //                 </Grid>
-        //               </Grid>
-        //             </ExpansionPanelDetails>
-        //           </ExpansionPanel>
-        //         ) : (
-        //           <Paper
-        //             button
-        //             component="a"
-        //             variant="outlined"
-        //             className={classes.assessmentPaper}
-        //             onClick={() => handleOpenDialog(row)}
-        //           >
-        //             <Badge
-        //               style={{ display: "flex", flexDirection: "row" }}
-        //               badgeContent={
-        //                 workStatus(row) === "Belum Ditempuh" ? (
-        //                   <WarningIcon className={classes.warningIcon} />
-        //                 ) : (
-        //                   <CheckCircleIcon className={classes.checkIcon} />
-        //                 )
-        //               }
-        //               anchorOrigin={{
-        //                 vertical: "bottom",
-        //                 horizontal: "right",
-        //               }}
-        //             >
-        //               <ListItem className={classes.listItem}>
-        //                 <Hidden smUp implementation="css">
-        //                   <ListItemText
-        //                     primary={
-        //                       <Typography variant="h6">
-        //                         {row.name}
-        //                       </Typography>
-        //                     }
-        //                     secondary={all_subjects_map.get(row.subject)}
-        //                   />
-        //                 </Hidden>
-        //                 <Hidden xsDown implementation="css">
-        //                   <div
-        //                     style={{
-        //                       display: "flex",
-        //                       flexDirection: "row",
-        //                       justifyContent: "center",
-        //                       alignItems: "center",
-        //                     }}
-        //                   >
-        //                     <ListItemAvatar>
-        //                       <Avatar className={classes.assignmentLate}>
-        //                         <BsClipboardData />
-        //                       </Avatar>
-        //                     </ListItemAvatar>
-        //                     <ListItemText
-        //                       primary={
-        //                         <Typography variant="h6">
-        //                           {row.name}
-        //                         </Typography>
-        //                       }
-        //                       secondary={all_subjects_map.get(row.subject)}
-        //                     />
-        //                   </div>
-        //                 </Hidden>
-        //                 {/* <ListItemText
-        //                   align="right"
-        //                   primary={
-        //                     <Typography variant="subtitle" color="textSecondary">
-        //                       {row.date}
-        //                     </Typography>
-        //                   }
-        //                   secondary={row.time}
-        //                 /> */}
-        //                 <ListItemText
-        //                   align="right"
-        //                   primary={
-        //                     <Typography variant="body2" color="textSecondary">
-        //                       {moment(row.createdAt)
-        //                         .locale("id")
-        //                         .format("DD MMM YYYY")}
-        //                     </Typography>
-        //                   }
-        //                   secondary={moment(row.createdAt)
-        //                     .locale("id")
-        //                     .format("HH.mm")}
-        //                 />
-        //               </ListItem>
-        //             </Badge>
-        //           </Paper>
-        //         )}
-        //       </Grid>
-        //     );
-        //   })}
-        // </Grid>
       )}
-      <Dialog
-        fullScreen={false}
-        open={openDialog}
-        onClose={handleCloseDialog}
-        fullWidth={true}
-        maxWidth="sm"
-      >
-        <div style={{ padding: "20px" }}>
-          <Typography variant="h4" align="center">
-            {currentDialogInfo.title}
-          </Typography>
-          <Typography variant="h6" align="center" color="primary">
-            {currentDialogInfo.subject}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-            style={{ marginTop: "25px" }}
-          >
-            Guru: {currentDialogInfo.teacher_name}
-          </Typography>
-          <Typography variant="subtitle1" align="center">
-            Mulai: {currentDialogInfo.start_date}
-          </Typography>
-          <Typography variant="subtitle1" align="center">
-            Selesai: {currentDialogInfo.end_date}
-          </Typography>
-          {currentDialogInfo.grades ? (
-            <Typography variant="subtitle1" align="center">
-              Nilai: {currentDialogInfo.grades}/100
-            </Typography>
-          ) : null}
-          {currentDialogInfo.grades ? (
-            <Typography
-              variant="subtitle2"
-              align="center"
-              color="textSecondary"
-              style={{ marginTop: "10px", textAlign: "center" }}
-            >
-              Anda telah menempuh ujian ini
-            </Typography>
-          ) : (
-            <Typography
-              variant="subtitle2"
-              align="center"
-              color="textSecondary"
-              style={{ marginTop: "10px", textAlign: "center" }}
-            >
-              Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
-              pelajaran terkait.
-            </Typography>
-          )}
-        </div>
-      </Dialog>
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}

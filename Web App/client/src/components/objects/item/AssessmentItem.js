@@ -49,47 +49,40 @@ const useStyles = makeStyles((theme) => ({
 
 function AssessmentItem(props) {
   const classes = useStyles();
-  const {
-    link,
-    type,
-    status,
-    missing,
-    primaryText,
-    subPrimaryText,
-    secondaryText,
-    subSecondaryText,
-  } = props;
+
   const { user, all_roles } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
-  const { data, handleOpenDeleteDialog } = props;
+  const {
+    data,
+    handleOpenDeleteDialog,
+    status,
+    missing,
+    handleCopyLink,
+  } = props;
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
-  const handleOpenDialog = (
-    title,
-    subject,
-    teacher_name,
-    start_date,
-    end_date
-  ) => {
-    setCurrentDialogInfo({
-      title,
-      subject,
-      teacher_name,
-      start_date,
-      end_date,
-    });
+  const handleOpenDialog = (row) => {
+    // const { name, subject, teacher_name, start_date, end_date } = row;
+    setCurrentDialogInfo(row);
     setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
 
   return (
     <Grid container direction="column" spacing={2}>
       {data.map((row) => {
-        const viewpage = `/${row.type}-guru/${row._id}`;
+        const viewPage = `/${row.type}-guru/${row._id}`;
+        const linkToShare = `/${row.type}-murid/${row._id}`;
+        row.linkToShare = linkToShare;
+
         if (user.role === all_roles.TEACHER) {
           return (
             <Grid item>
-              <Link to={viewpage}>
+              <Link to={viewPage}>
                 <Paper variant="outlined" className={classes.root}>
                   <ListItem button disableRipple>
                     <ListItemAvatar>
@@ -159,9 +152,10 @@ function AssessmentItem(props) {
                       }}
                     >
                       <OptionMenu
-                        actions={["Sunting", "Hapus"]}
+                        actions={["Salin Tautan", "Sunting", "Hapus"]}
                         row={row}
                         handleActionOnClick={[
+                          handleCopyLink,
                           `/sunting-${row.type}/${row._id}`,
                           handleOpenDeleteDialog,
                         ]}
@@ -174,19 +168,12 @@ function AssessmentItem(props) {
           );
         } else if (user.role === all_roles.STUDENT) {
           return (
-            <Paper variant="outlined" className={classes.root}>
-              <ListItem
-                button
-                onClick={() =>
-                  handleOpenDialog(
-                    props.title,
-                    props.subject,
-                    props.teacher,
-                    props.startTime,
-                    props.endtime
-                  )
-                }
-              >
+            <Paper
+              variant="outlined"
+              className={classes.root}
+              onClick={() => handleOpenDialog(row)}
+            >
+              <ListItem button>
                 <ListItemAvatar>
                   <Badge
                     overlap="circle"
@@ -240,107 +227,51 @@ function AssessmentItem(props) {
         }
         return;
       })}
+      <Dialog
+        fullWidth
+        fullScreen={false}
+        open={openDialog}
+        onClose={handleCloseDialog}
+      >
+        <div style={{ padding: "20px" }}>
+          <Typography variant="h4" align="center">
+            {currentDialogInfo.name}
+          </Typography>
+          <Typography variant="h5" align="center" color="primary">
+            {all_subjects_map.get(currentDialogInfo.subject)}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
+            style={{ marginTop: "25px" }}
+          >
+            Guru: {currentDialogInfo.teacher_name}
+          </Typography>
+          <Typography variant="subtitle1" align="center">
+            Mulai:{" "}
+            {moment(currentDialogInfo.start_date)
+              .locale("id")
+              .format("DD/MM/yyyy - HH:mm")}
+          </Typography>
+          <Typography variant="subtitle1" align="center">
+            Selesai:{" "}
+            {moment(currentDialogInfo.end_date)
+              .locale("id")
+              .format("DD/MM/yyyy - HH:mm")}
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            align="center"
+            color="textSecondary"
+            style={{ marginTop: "10px", textAlign: "center" }}
+          >
+            Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
+            pelajaran terkait.
+          </Typography>
+        </div>
+      </Dialog>
     </Grid>
   );
-  // return (
-  //   <div>
-  //     <Link to={link}>
-  //       <Paper variant="outlined" className={classes.root}>
-  //         <ListItem
-  //           button
-  //           onClick={() =>
-  //             handleOpenDialog(
-  //               props.title,
-  //               props.subject,
-  //               props.teacher,
-  //               props.startTime,
-  //               props.endtime
-  //             )
-  //           }
-  //         >
-  //           <ListItemAvatar>
-  //             <Badge
-  //               overlap="circle"
-  //               badgeContent={
-  //                 status === missing ? (
-  //                   <ErrorIcon className={classes.missingIcon} />
-  //                 ) : (
-  //                   <CheckCircleIcon className={classes.completedIcon} />
-  //                 )
-  //               }
-  //               anchorOrigin={{
-  //                 vertical: "bottom",
-  //                 horizontal: "right",
-  //               }}
-  //             >
-  //               <Avatar className={classes.assessmentIcon}>
-  //                 {type === "Kuis" ? <FaClipboardList /> : <BsClipboardData />}
-  //               </Avatar>
-  //             </Badge>
-  //           </ListItemAvatar>
-  //           <ListItemText
-  //             primary={<Typography noWrap>{primaryText}</Typography>}
-  //             secondary={
-  //               <Typography variant="body2" color="textSecondary" noWrap>
-  //                 {subPrimaryText}
-  //               </Typography>
-  //             }
-  //           />
-  //           <ListItemText
-  //             align="right"
-  //             primary={
-  //               <Typography variant="body2" color="textSecondary" noWrap>
-  //                 {secondaryText}
-  //               </Typography>
-  //             }
-  //             secondary={
-  //               <Typography variant="body2" color="textSecondary" noWrap>
-  //                 {subSecondaryText}
-  //               </Typography>
-  //             }
-  //           />
-  //         </ListItem>
-  //       </Paper>
-  //     </Link>
-  //     <Dialog
-  //       fullWidth
-  //       fullScreen={false}
-  //       open={openDialog}
-  //       onClose={handleCloseDialog}
-  //     >
-  //       <div style={{ padding: "20px" }}>
-  //         <Typography variant="h4" align="center">
-  //           {currentDialogInfo.title}
-  //         </Typography>
-  //         <Typography variant="h5" align="center" color="primary">
-  //           {currentDialogInfo.subject}
-  //         </Typography>
-  //         <Typography
-  //           variant="subtitle1"
-  //           align="center"
-  //           style={{ marginTop: "25px" }}
-  //         >
-  //           Guru: {currentDialogInfo.teacher_name}
-  //         </Typography>
-  //         <Typography variant="subtitle1" align="center">
-  //           Mulai: {currentDialogInfo.start_date}
-  //         </Typography>
-  //         <Typography variant="subtitle1" align="center">
-  //           Selesai: {currentDialogInfo.end_date}
-  //         </Typography>
-  //         <Typography
-  //           variant="subtitle2"
-  //           align="center"
-  //           color="textSecondary"
-  //           style={{ marginTop: "10px", textAlign: "center" }}
-  //         >
-  //           Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
-  //           pelajaran terkait.
-  //         </Typography>
-  //       </div>
-  //     </Dialog>
-  //   </div>
-  // );
 }
 
 AssessmentItem.propTypes = {

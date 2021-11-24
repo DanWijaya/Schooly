@@ -91,45 +91,19 @@ router.post("/login", async (req, res) => {
     const password = req.body.password;
 
     // Find user by email.
-    const user = await User.findOne({ email: email }).select(fieldToInclude);
+    const user = await User.findOne({ email: email })
+      .lean()
+      .select(fieldToInclude);
     if (!user) throw { email: "Email tidak ditemukan" };
     if (!user.active) throw { email: "Akun ini belum aktif" };
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw { password: "Kata sandi tidak benar" };
 
-    var payload = {
-      _id: user._id,
-      role: user.role,
-      avatar: user.avatar,
-
-      // Personal Information
-      name: user.name,
-      tanggal_lahir: user.tanggal_lahir,
-      jenis_kelamin: user.jenis_kelamin,
-      sekolah: user.sekolah,
-      unit: user.unit,
-
-      // Contacts
-      email: user.email,
-      phone: user.phone,
-      emergency_phone: user.emergency_phone,
-      address: user.address,
-
-      // Career
-      hobi_minat: user.hobi_minat,
-      ket_non_teknis: user.ket_non_teknis,
-      cita_cita: user.cita_cita,
-      uni_impian: user.uni_impian,
-    };
-    if (user.role === "Student") {
-      payload.kelas = user.kelas;
-      payload.tugas = user.tugas;
-    } else if (user.role === "Teacher") {
-      payload.subject_teached = user.subject_teached;
-      payload.class_teached = user.class_teached;
-      payload.class_to_subject = user.class_to_subject;
-    }
+    console.log(user);
+    var payload = user;
+    // No need to delete because default already not showing password.
+    // delete payload["password"];
 
     // Sign token.
     jwt.sign(
@@ -140,6 +114,7 @@ router.post("/login", async (req, res) => {
       },
       (err, token) => {
         if (err) {
+          console.log(err);
           return res.status(400).json(err);
         }
         console.log("User session updated");
@@ -168,7 +143,7 @@ router.put("/update/data/:id", async (req, res) => {
     }
 
     let id = req.params.id;
-    const user = await User.findById(id);
+    let user = await User.findById(id);
     if (!user) throw { usernotfound: "Pengguna tidak ditemukan" };
 
     // Personal Information
@@ -189,41 +164,12 @@ router.put("/update/data/:id", async (req, res) => {
     user.cita_cita = req.body.cita_cita;
     user.uni_impian = req.body.uni_impian;
 
-    const updatedUser = await user.save();
+    await user.save();
     console.log("Update User data completed");
+    // Have to convert it to plain objects.
 
-    var payload = {
-      _id: updatedUser._id,
-      role: updatedUser.role,
-      avatar: updatedUser.avatar,
-
-      // Personal Information
-      name: updatedUser.name,
-      tanggal_lahir: updatedUser.tanggal_lahir,
-      jenis_kelamin: updatedUser.jenis_kelamin,
-      sekolah: updatedUser.sekolah,
-
-      // Contacts
-      email: updatedUser.email,
-      phone: updatedUser.phone,
-      emergency_phone: updatedUser.emergency_phone,
-      address: updatedUser.address,
-
-      // Career
-      hobi_minat: updatedUser.hobi_minat,
-      ket_non_teknis: updatedUser.ket_non_teknis,
-      cita_cita: updatedUser.cita_cita,
-      uni_impian: updatedUser.uni_impian,
-    };
-
-    if (updatedUser.role === "Student") {
-      payload.kelas = updatedUser.kelas;
-      payload.tugas = updatedUser.tugas;
-    } else if (updatedUser.role === "Teacher") {
-      payload.subject_teached = updatedUser.subject_teached;
-      payload.class_teached = updatedUser.class_teached;
-      payload.class_to_subject = updatedUser.class_to_subject;
-    }
+    var payload = user.toObject();
+    delete payload["password"];
 
     jwt.sign(
       payload,
