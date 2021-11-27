@@ -481,7 +481,7 @@ function AssessmentList(props) {
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(
     null
   );
-  const [copySnackbarOpen, setOpenCopySnackBar] = React.useState(null);
+  const [openCopySnackbar, setOpenCopySnackBar] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [type, setAssessmentType] = React.useState(null);
@@ -606,18 +606,6 @@ function AssessmentList(props) {
     setOpenCopySnackBar(false);
   };
 
-  const handleCopyLink = (e, row) => {
-    e.stopPropagation();
-    let textArea = document.createElement("textarea");
-    textArea.value = row.linkToShare;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand("copy");
-    e.target.focus();
-    document.body.removeChild(textArea);
-    handleOpenCopySnackBar(row.type);
-  };
-
   const handleOpenDeleteSnackbar = () => {
     setOpenDeleteSnackbar(true);
   };
@@ -675,11 +663,13 @@ function AssessmentList(props) {
       {rows.length === 0 ? (
         <Empty />
       ) : (
-        <AssessmentItem
-          data={stableSort(rows, getComparator(order, orderBy))}
-          handleOpenDeleteDialog={handleOpenDeleteDialog}
-          handleCopyLink={handleCopyLink}
-        />
+        <Grid container direction="column" spacing={2}>
+          <AssessmentItem
+            data={stableSort(rows, getComparator(order, orderBy))}
+            handleOpenDeleteDialog={handleOpenDeleteDialog}
+            handleOpenCopySnackBar={handleOpenCopySnackBar}
+          />
+        </Grid>
       )}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
@@ -694,7 +684,7 @@ function AssessmentList(props) {
 
       {/* Copy Link Snackbar */}
       <Snackbar
-        open={copySnackbarOpen}
+        open={openCopySnackbar}
         autoHideDuration={3000}
         onClose={handleCloseCopySnackBar}
       >

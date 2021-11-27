@@ -554,10 +554,12 @@ function MaterialList(props) {
       {rows.length === 0 ? (
         <Empty />
       ) : (
-        <MaterialItem
-          data={stableSort(rows, getComparator(order, orderBy))}
-          handleOpenDeleteDialog={handleOpenDeleteDialog}
-        />
+        <Grid container direction="column" spacing={2}>
+          <MaterialItem
+            data={stableSort(rows, getComparator(order, orderBy))}
+            handleOpenDeleteDialog={handleOpenDeleteDialog}
+          />
+        </Grid>
       )}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}

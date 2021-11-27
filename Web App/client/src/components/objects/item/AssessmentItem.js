@@ -9,12 +9,14 @@ import {
   ListItemAvatar,
   ListItemText,
   Paper,
+  Snackbar,
   Typography,
 } from "@material-ui/core";
 import {
   CheckCircle as CheckCircleIcon,
   Error as ErrorIcon,
 } from "@material-ui/icons";
+import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
@@ -57,10 +59,30 @@ function AssessmentItem(props) {
     handleOpenDeleteDialog,
     status,
     missing,
-    handleCopyLink,
+    handleOpenCopySnackBar,
   } = props;
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
+
+  const handleCopyLink = async (e, row) => {
+    e.stopPropagation();
+    try {
+      if (!navigator.clipboard) {
+        // use old commandExec() way
+        let textArea = document.createElement("textarea");
+        textArea.value = row.linkToShare;
+        document.body.appendChild(textArea.value);
+        textArea.select();
+        document.execCommand("copy");
+      } else {
+        await navigator.clipboard.writeText(row.linkToShare);
+      }
+      handleOpenCopySnackBar(row.type);
+    } catch (err) {
+      console.error(err);
+      console.error("Error in copying link");
+    }
+  };
 
   const handleOpenDialog = (row) => {
     // const { name, subject, teacher_name, start_date, end_date } = row;
@@ -73,10 +95,11 @@ function AssessmentItem(props) {
   };
 
   return (
-    <Grid container direction="column" spacing={2}>
+    <>
       {data.map((row) => {
-        const viewPage = `/${row.type}-guru/${row._id}`;
-        const linkToShare = `/${row.type}-murid/${row._id}`;
+        const type = row.type.toLowerCase();
+        const viewPage = `/${type}-guru/${row._id}`;
+        const linkToShare = `${window.location.host}/${type}-murid/${row._id}`;
         row.linkToShare = linkToShare;
 
         if (user.role === all_roles.TEACHER) {
@@ -168,61 +191,63 @@ function AssessmentItem(props) {
           );
         } else if (user.role === all_roles.STUDENT) {
           return (
-            <Paper
-              variant="outlined"
-              className={classes.root}
-              onClick={() => handleOpenDialog(row)}
-            >
-              <ListItem button>
-                <ListItemAvatar>
-                  <Badge
-                    overlap="circle"
-                    badgeContent={
-                      status === missing ? (
-                        <ErrorIcon className={classes.missingIcon} />
-                      ) : (
-                        <CheckCircleIcon className={classes.completedIcon} />
-                      )
+            <Grid item>
+              <Paper
+                variant="outlined"
+                className={classes.root}
+                onClick={() => handleOpenDialog(row)}
+              >
+                <ListItem button>
+                  <ListItemAvatar>
+                    <Badge
+                      overlap="circle"
+                      badgeContent={
+                        status === missing ? (
+                          <ErrorIcon className={classes.missingIcon} />
+                        ) : (
+                          <CheckCircleIcon className={classes.completedIcon} />
+                        )
+                      }
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                    >
+                      <Avatar className={classes.assessmentIcon}>
+                        {row.type === "Kuis" ? (
+                          <FaClipboardList />
+                        ) : (
+                          <BsClipboardData />
+                        )}
+                      </Avatar>
+                    </Badge>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={<Typography noWrap>{row.name}</Typography>}
+                    secondary={
+                      <Typography variant="body2" color="textSecondary" noWrap>
+                        {all_subjects_map.get(row.subject)}
+                      </Typography>
                     }
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                  >
-                    <Avatar className={classes.assessmentIcon}>
-                      {row.type === "Kuis" ? (
-                        <FaClipboardList />
-                      ) : (
-                        <BsClipboardData />
-                      )}
-                    </Avatar>
-                  </Badge>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={<Typography noWrap>{row.name}</Typography>}
-                  secondary={
-                    <Typography variant="body2" color="textSecondary" noWrap>
-                      {all_subjects_map.get(row.subject)}
-                    </Typography>
-                  }
-                />
-                <ListItemText
-                  align="right"
-                  primary={
-                    <Typography variant="body2" color="textSecondary" noWrap>
-                      {moment(row.start_date)
-                        .locale("id")
-                        .format("DD MMM YYYY")}
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography variant="body2" color="textSecondary" noWrap>
-                      {moment(row.start_date).locale("id").format("HH.mm")}
-                    </Typography>
-                  }
-                />
-              </ListItem>
-            </Paper>
+                  />
+                  <ListItemText
+                    align="right"
+                    primary={
+                      <Typography variant="body2" color="textSecondary" noWrap>
+                        {moment(row.start_date)
+                          .locale("id")
+                          .format("DD MMM YYYY")}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography variant="body2" color="textSecondary" noWrap>
+                        {moment(row.start_date).locale("id").format("HH.mm")}
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </Paper>
+            </Grid>
           );
         }
         return;
@@ -270,7 +295,7 @@ function AssessmentItem(props) {
           </Typography>
         </div>
       </Dialog>
-    </Grid>
+    </>
   );
 }
 

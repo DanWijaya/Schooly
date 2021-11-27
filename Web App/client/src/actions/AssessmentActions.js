@@ -230,6 +230,22 @@ export const submitAssessment = (assessmentId, data) => (dispatch) => {
     });
 };
 
+export const getAssessmentsByClass = (classId) => (dispatch) => {
+  return axios
+    .get(`/api/assessments/viewByClass/${classId}`)
+    .then((res) => {
+      console.log("Get assessments by class completed");
+      dispatch({
+        type: GET_ASSESSMENT,
+        payload: res.data,
+      });
+      return res.data;
+    })
+    .catch((err) => {
+      console.error("Get Assessments by class failed");
+      throw new Error(err);
+    });
+};
 export const getAssessments = (type, subjectId, classId) => {
   return axios
     .get(`/api/assessments/view`, { params: { type, subjectId, classId } })

@@ -537,17 +537,6 @@ function TaskList(props) {
     setOpenDeleteDialog(false);
   };
 
-  // const workStatus = (task) => {
-  //   let workStatus = "Belum Dikumpulkan";
-  //   for (let i = 0; i < user.tugas.length; i++) {
-  //     if (user.tugas[i].for_task_object === task._id) {
-  //       workStatus = "Sudah Dikumpulkan";
-  //       break;
-  //     }
-  //   }
-  //   return workStatus;
-  // };
-
   document.title = "Schooly | Daftar Tugas";
 
   return (
@@ -586,11 +575,13 @@ function TaskList(props) {
       {rows.length === 0 ? (
         <Empty />
       ) : (
-        <TaskItem
-          data={stableSort(rows, getComparator(order, orderBy))}
-          handleOpenDeleteDialog={handleOpenDeleteDialog}
-          submittedIds={submittedTaskIds}
-        />
+        <Grid container direction="column" spacing={2}>
+          <TaskItem
+            data={stableSort(rows, getComparator(order, orderBy))}
+            handleOpenDeleteDialog={handleOpenDeleteDialog}
+            submittedIds={submittedTaskIds}
+          />
+        </Grid>
       )}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}

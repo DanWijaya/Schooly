@@ -473,6 +473,20 @@ router.get("/view", (req, res) => {
     });
 });
 
+router.get("/viewByClass/:classId", (req, res) => {
+  let { classId } = req.params;
+  Assessment.find({ class_assigned: { $elemMatch: { $eq: classId } } })
+    .lean()
+    .then((assessments) => {
+      console.log("Assessments ViewByClass completed");
+      return res.json(assessments);
+    })
+    .catch((err) => {
+      console.error("Assessments view by class failed");
+      console.error(err);
+      return res.status(400).json(err);
+    });
+});
 router.put("/suspects/:assessmentId", (req, res) => {
   Assessment.findById(req.params.assessmentId)
     .then((assessmentData) => {

@@ -55,93 +55,85 @@ function TaskItem(props) {
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
 
-  return (
-    <Grid container direction="column" spacing={2}>
-      {data.map((row, index) => {
-        let viewpage =
-          user.role === "Student"
-            ? `/tugas-murid/${row._id}`
-            : `/tugas-guru/${row._id}`;
-        return (
-          <Grid item>
-            <Link to={viewpage}>
-              <Paper variant="outlined" className={classes.root}>
-                <ListItem button>
-                  <ListItemAvatar>
-                    {user.role === "Student" ? (
-                      <Badge
-                        overlap="circle"
-                        badgeContent={
-                          submittedIds.has(row._id) || row.grades[user._id] ? (
-                            <CheckCircleIcon
-                              className={classes.completedIcon}
-                            />
-                          ) : (
-                            <ErrorIcon className={classes.missingIcon} />
-                          )
-                        }
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "right",
-                        }}
-                      >
-                        <Avatar className={classes.assignmentIcon}>
-                          <AssignmentIcon />
-                        </Avatar>
-                      </Badge>
-                    ) : (
-                      <Avatar className={classes.assignmentIcon}>
-                        <AssignmentIcon />
-                      </Avatar>
-                    )}
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={<Typography noWrap>{row.name}</Typography>}
-                    secondary={
-                      <Typography variant="body2" color="textSecondary" noWrap>
-                        {all_subjects_map.get(row.subject)}
-                      </Typography>
+  return data.map((row, index) => {
+    let viewpage =
+      user.role === "Student"
+        ? `/tugas-murid/${row._id}`
+        : `/tugas-guru/${row._id}`;
+    return (
+      <Grid item>
+        <Link to={viewpage}>
+          <Paper variant="outlined" className={classes.root}>
+            <ListItem button>
+              <ListItemAvatar>
+                {user.role === "Student" ? (
+                  <Badge
+                    overlap="circle"
+                    badgeContent={
+                      submittedIds.has(row._id) ? (
+                        <CheckCircleIcon className={classes.completedIcon} />
+                      ) : (
+                        <ErrorIcon className={classes.missingIcon} />
+                      )
                     }
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                  >
+                    <Avatar className={classes.assignmentIcon}>
+                      <AssignmentIcon />
+                    </Avatar>
+                  </Badge>
+                ) : (
+                  <Avatar className={classes.assignmentIcon}>
+                    <AssignmentIcon />
+                  </Avatar>
+                )}
+              </ListItemAvatar>
+              <ListItemText
+                primary={<Typography noWrap>{row.name}</Typography>}
+                secondary={
+                  <Typography variant="body2" color="textSecondary" noWrap>
+                    {all_subjects_map.get(row.subject)}
+                  </Typography>
+                }
+              />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="body2" color="textSecondary" noWrap>
+                    {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" color="textSecondary" noWrap>
+                    {moment(row.createdAt).locale("id").format("HH.mm")}
+                  </Typography>
+                }
+              />
+              {user.role === "Teacher" ? (
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <OptionMenu
+                    actions={["Sunting", "Hapus"]}
+                    row={row}
+                    handleActionOnClick={[
+                      `/sunting-tugas/${row._id}`,
+                      handleOpenDeleteDialog,
+                    ]}
                   />
-                  <ListItemText
-                    align="right"
-                    primary={
-                      <Typography variant="body2" color="textSecondary" noWrap>
-                        {moment(row.createdAt)
-                          .locale("id")
-                          .format("DD MMM YYYY")}
-                      </Typography>
-                    }
-                    secondary={
-                      <Typography variant="body2" color="textSecondary" noWrap>
-                        {moment(row.createdAt).locale("id").format("HH.mm")}
-                      </Typography>
-                    }
-                  />
-                  {user.role === "Teacher" ? (
-                    <div
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <OptionMenu
-                        actions={["Sunting", "Hapus"]}
-                        row={row}
-                        handleActionOnClick={[
-                          `/sunting-tugas/${row._id}`,
-                          handleOpenDeleteDialog,
-                        ]}
-                      />
-                    </div>
-                  ) : null}
-                </ListItem>
-              </Paper>
-            </Link>
-          </Grid>
-        );
-      })}
-    </Grid>
-  );
+                </div>
+              ) : null}
+            </ListItem>
+          </Paper>
+        </Link>
+      </Grid>
+    );
+  });
 }
 
 TaskItem.propTypes = {

@@ -9,7 +9,10 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import { getMaterialByClass } from "../../../actions/MaterialActions";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
-import { getAllAssessments } from "../../../actions/AssessmentActions";
+import {
+  getAllAssessments,
+  getAssessmentsByClass,
+} from "../../../actions/AssessmentActions";
 import subjectBackground from "./subject-background/SubjectBackground";
 import AssessmentItem from "../item/AssessmentItem";
 import TaskItem from "../item/TaskItem";
@@ -89,8 +92,8 @@ function ViewSubject(props) {
     tasksCollection,
     getMaterialByClass,
     getAllAssessments,
-    assessmentsCollection,
     getTeachers,
+    getAssessmentsByClass,
   } = props;
   const { user, all_teachers } = props.auth;
   const id = props.match.params.id;
@@ -98,7 +101,7 @@ function ViewSubject(props) {
   const { kelas } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
-  const all_assessments = assessmentsCollection.all_assessments;
+  const { all_assessments, selectedAssessments } = props.assessmentsCollection;
   // const {all_user_files} = props.filesCollection;
 
   const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
@@ -123,7 +126,7 @@ function ViewSubject(props) {
     }
     getAllTask(user.unit);
     getAllSubjects(user.unit, "map");
-    getAllAssessments(user.unit);
+    getAssessmentsByClass(user.unit);
     getTeachers(user.unit, "map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -158,236 +161,45 @@ function ViewSubject(props) {
   }
 
   function listMaterials(subject) {
-    if (!Boolean(selectedMaterials.length)) {
-      return <Empty />;
-    }
     let materialList = selectedMaterials
       .reverse()
       .filter((material) => material.subject == subject);
+
+    if (!Boolean(materialList.length)) {
+      return <Empty />;
+    }
 
     return <MaterialItem data={materialList} />;
   }
 
   function listTasks(subject) {
-    if (!Boolean(tasksCollection.length)) {
+    let taskList = [];
+    if (Array.isArray(tasksCollection)) {
+      taskList = tasksCollection.reverse().filter((task) => {
+        let class_assigned = task.class_assigned;
+        if (Array.isArray(class_assigned)) {
+          return (
+            class_assigned.indexOf(classId) !== -1 && task.subject === subject
+          );
+        }
+        return false;
+      });
+    }
+    if (!Boolean(taskList.length)) {
       return <Empty />;
     }
-    let taskList = tasksCollection.reverse().filter((task) => {
-      let class_assigned = task.class_assigned;
-      if (Array.isArray(class_assigned)) {
-        return (
-          class_assigned.indexOf(classId) !== -1 && task.subject === subject
-        );
-      }
-      return false;
-    });
     return <TaskItem data={taskList} submittedIds={submittedTaskIds} />;
   }
 
-  function listAssessments(
-    category = null,
-    subject = null,
-    type,
-    tab = "pekerjaan_kelas"
-  ) {
-    let AssessmentsList = [];
-    let result = [];
-    if (Boolean(all_assessments.length) && all_teachers instanceof Map) {
-      var i;
-      for (i = all_assessments.length - 1; i >= 0; i--) {
-        let assessment = all_assessments[i];
-        let class_assigned = assessment.class_assigned;
-        if (class_assigned.indexOf(classId) !== -1) {
-          AssessmentsList.push(assessment);
-        }
-        // if(i === all_assessments.length - 5){ // item terakhir harus pas index ke 4.
-        //   break;
-        // }
-      }
-
-      for (i = 0; i < AssessmentsList.length; i++) {
-        let assessment = AssessmentsList[i];
-        // console.log(all_user_files)
-        // for (var j = 0; j < all_user_files.length; j++){
-        //     if(all_user_files[j].for_task_object === task._id){
-        //     workStatus = "Telah Dikumpulkan"
-        //     workCategoryAvatar = (
-        //       <Avatar className={classes.assignmentTurnedIn}>
-        //         <AssignmentTurnedInIcon/>
-        //       </Avatar>
-        //     )
-        //     break;
-        //   }
-        // }
-        // console.log(Object.values(assessment.submissions)[0])
-
-        if (tab === "pekerjaan_kelas") {
-          let assessmentStatus = ASSESSMENT_STATUS.NOT_SUBMITTED;
-          if (type === "Kuis") {
-            if (
-              (!category ||
-                (category === "subject" && assessment.subject === subject)) &&
-              !assessment.submissions &&
-              assessment.type === "Kuis" &&
-              assessment.posted
-            ) {
-              result.push(
-                <Grid item>
-                  <AssessmentItem
-                    type="Kuis"
-                    primaryText={assessment.name}
-                    status={assessmentStatus}
-                    missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
-                    secondaryText={moment(assessment.createdAt)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
-                    subSecondaryText={moment(assessment.createdAt)
-                      .locale("id")
-                      .format("HH.mm")}
-                    title={assessment.name}
-                    subject={
-                      category === "subject"
-                        ? null
-                        : all_subjects_map.get(assessment.subject)
-                    }
-                    teacher={all_teachers.get(assessment.author_id).name}
-                    startTime={moment(assessment.start_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                    endTime={moment(assessment.end_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                  />
-                </Grid>
-              );
-            }
-          }
-          if (type === "Ujian") {
-            if (
-              (!category ||
-                (category === "subject" && assessment.subject === subject)) &&
-              !assessment.submissions &&
-              assessment.type === "Ujian" &&
-              assessment.posted
-            ) {
-              result.push(
-                <Grid item>
-                  <AssessmentItem
-                    type="Ujian"
-                    primaryText={assessment.name}
-                    status={assessmentStatus}
-                    missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
-                    secondaryText={moment(assessment.createdAt)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
-                    subSecondaryText={moment(assessment.createdAt)
-                      .locale("id")
-                      .format("HH.mm")}
-                    title={assessment.name}
-                    subject={
-                      category === "subject"
-                        ? null
-                        : all_subjects_map.get(assessment.subject)
-                    }
-                    teacher={all_teachers.get(assessment.author_id).name}
-                    startTime={moment(assessment.start_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                    endTime={moment(assessment.end_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                  />
-                </Grid>
-              );
-            }
-          }
-          if (!category && result.length === 5) break;
-          if (category === "subject" && result.length === 3) break;
-        } else if (tab === "mata_pelajaran") {
-          let assessmentStatus = !assessment.submissions
-            ? ASSESSMENT_STATUS.NOT_SUBMITTED
-            : ASSESSMENT_STATUS.SUBMITTED;
-
-          if (type === "Kuis") {
-            if (
-              (!category ||
-                (category === "subject" && assessment.subject === subject)) &&
-              assessment.type === "Kuis" &&
-              assessment.posted
-            ) {
-              result.push(
-                <Grid item>
-                  <AssessmentItem
-                    type="Kuis"
-                    primaryText={assessment.name}
-                    status={assessmentStatus}
-                    missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
-                    secondaryText={moment(assessment.createdAt)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
-                    subSecondaryText={moment(assessment.createdAt)
-                      .locale("id")
-                      .format("HH.mm")}
-                    title={assessment.name}
-                    subject={
-                      category === "subject"
-                        ? null
-                        : all_subjects_map.get(assessment.subject)
-                    }
-                    teacher={all_teachers.get(assessment.author_id).name}
-                    startTime={moment(assessment.start_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                    endTime={moment(assessment.end_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                  />
-                </Grid>
-              );
-            }
-          }
-          if (type === "Ujian") {
-            if (
-              (!category ||
-                (category === "subject" && assessment.subject === subject)) &&
-              assessment.type === "Ujian" &&
-              assessment.posted
-            ) {
-              result.push(
-                <Grid item>
-                  <AssessmentItem
-                    type="Ujian"
-                    primaryText={assessment.name}
-                    status={assessmentStatus}
-                    missing={ASSESSMENT_STATUS.NOT_SUBMITTED}
-                    secondaryText={moment(assessment.createdAt)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
-                    subSecondaryText={moment(assessment.createdAt)
-                      .locale("id")
-                      .format("HH.mm")}
-                    title={assessment.name}
-                    subject={
-                      category === "subject"
-                        ? null
-                        : all_subjects_map.get(assessment.subject)
-                    }
-                    teacher={all_teachers.get(assessment.author_id).name}
-                    startTime={moment(assessment.start_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                    endTime={moment(assessment.end_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                  />
-                </Grid>
-              );
-            }
-          }
-        }
-      }
+  function listAssessments(type = "", subjectId = "") {
+    let assessmentList = selectedAssessments.filter(
+      (assessment) =>
+        assessment.type == type && assessment.subject === subjectId
+    );
+    if (!Boolean(assessmentList.length)) {
+      return <Empty />;
     }
-    return result;
+    return <AssessmentItem data={assessmentList} />;
   }
 
   document.title = all_subjects_map.get(id)
@@ -418,7 +230,9 @@ function ViewSubject(props) {
           </ExpansionPanelSummary>
           <Divider />
           <ExpansionPanelDetails className={classes.objectDetails}>
-            {listMaterials(id)}
+            <Grid container direction="column" spacing={2}>
+              {listMaterials(id)}
+            </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
@@ -430,7 +244,9 @@ function ViewSubject(props) {
           </ExpansionPanelSummary>
           <Divider />
           <ExpansionPanelDetails className={classes.objectDetails}>
-            {listTasks(id)}
+            <Grid container direction="column" spacing={2}>
+              {listTasks(id)}
+            </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
@@ -442,16 +258,9 @@ function ViewSubject(props) {
           </ExpansionPanelSummary>
           <Divider />
           <ExpansionPanelDetails className={classes.objectDetails}>
-            {listAssessments("subject", id, "Kuis", "mata_pelajaran").length ===
-            0 ? (
-              <Empty />
-            ) : (
-              <div style={{ width: "100%" }}>
-                <Grid container direction="column" spacing={2}>
-                  {listAssessments("subject", id, "Kuis", "mata_pelajaran")}
-                </Grid>
-              </div>
-            )}
+            <Grid container direction="column" spacing={2}>
+              {listAssessments("Kuis", id)}
+            </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
@@ -463,16 +272,9 @@ function ViewSubject(props) {
           </ExpansionPanelSummary>
           <Divider />
           <ExpansionPanelDetails className={classes.objectDetails}>
-            {listAssessments("subject", id, "Ujian", "mata_pelajaran")
-              .length === 0 ? (
-              <Empty />
-            ) : (
-              <div style={{ width: "100%" }}>
-                <Grid container direction="column" spacing={2}>
-                  {listAssessments("subject", id, "Ujian", "mata_pelajaran")}
-                </Grid>
-              </div>
-            )}
+            <Grid container direction="column" spacing={2}>
+              {listAssessments("Ujian", id)}
+            </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
       </div>
@@ -494,6 +296,7 @@ ViewSubject.propTypes = {
   getTeachers: PropTypes.func.isRequired,
   getMaterialByClass: PropTypes.func.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
+  getAssessmentsByClass: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -512,5 +315,6 @@ export default connect(mapStateToProps, {
   getAllTask,
   getMaterialByClass,
   getAllAssessments,
+  getAssessmentsByClass,
   getTeachers,
 })(ViewSubject);

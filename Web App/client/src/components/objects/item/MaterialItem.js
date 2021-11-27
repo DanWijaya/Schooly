@@ -34,68 +34,62 @@ function MaterialItem(props) {
   const { user } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
 
-  return (
-    <Grid container direction="column" spacing={2}>
-      {data.map((row, index) => {
-        const labelId = `enhanced-table-checkbox-${index}`;
-        let viewpage = `/materi/${row._id}`;
-        return (
-          <Grid item>
-            <Link to={viewpage}>
-              <Paper variant="outlined" className={classes.root}>
-                <ListItem button disableRipple>
-                  <ListItemAvatar>
-                    <Avatar className={classes.materialIcon}>
-                      <MenuBookIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={<Typography noWrap>{row.name}</Typography>}
-                    secondary={
-                      <Typography variant="body2" color="textSecondary" noWrap>
-                        {all_subjects_map.get(row.subject)}
-                      </Typography>
-                    }
+  return data.map((row, index) => {
+    const labelId = `enhanced-table-checkbox-${index}`;
+    let viewpage = `/materi/${row._id}`;
+    return (
+      <Grid item>
+        <Link to={viewpage}>
+          <Paper variant="outlined" className={classes.root}>
+            <ListItem button disableRipple>
+              <ListItemAvatar>
+                <Avatar className={classes.materialIcon}>
+                  <MenuBookIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={<Typography noWrap>{row.name}</Typography>}
+                secondary={
+                  <Typography variant="body2" color="textSecondary" noWrap>
+                    {all_subjects_map.get(row.subject)}
+                  </Typography>
+                }
+              />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="body2" color="textSecondary" noWrap>
+                    {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" color="textSecondary" noWrap>
+                    {moment(row.createdAt).locale("id").format("HH.mm")}
+                  </Typography>
+                }
+              />
+              {user.role === "Teacher" ? (
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <OptionMenu
+                    actions={["Sunting", "Hapus"]}
+                    row={row}
+                    handleActionOnClick={[
+                      `/sunting-materi/${row._id}`,
+                      handleOpenDeleteDialog,
+                    ]}
                   />
-                  <ListItemText
-                    align="right"
-                    primary={
-                      <Typography variant="body2" color="textSecondary" noWrap>
-                        {moment(row.createdAt)
-                          .locale("id")
-                          .format("DD MMM YYYY")}
-                      </Typography>
-                    }
-                    secondary={
-                      <Typography variant="body2" color="textSecondary" noWrap>
-                        {moment(row.createdAt).locale("id").format("HH.mm")}
-                      </Typography>
-                    }
-                  />
-                  {user.role === "Teacher" ? (
-                    <div
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <OptionMenu
-                        actions={["Sunting", "Hapus"]}
-                        row={row}
-                        handleActionOnClick={[
-                          `/sunting-materi/${row._id}`,
-                          handleOpenDeleteDialog,
-                        ]}
-                      />
-                    </div>
-                  ) : null}
-                </ListItem>
-              </Paper>
-            </Link>
-          </Grid>
-        );
-      })}
-    </Grid>
-  );
+                </div>
+              ) : null}
+            </ListItem>
+          </Paper>
+        </Link>
+      </Grid>
+    );
+  });
 }
 
 MaterialItem.propTypes = {

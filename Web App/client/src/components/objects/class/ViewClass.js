@@ -17,7 +17,10 @@ import {
   getTaskAtmpt,
   getTaskByClass,
 } from "../../../actions/TaskActions";
-import { getAllAssessments } from "../../../actions/AssessmentActions";
+import {
+  getAllAssessments,
+  getAssessmentsByClass,
+} from "../../../actions/AssessmentActions";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
 import viewClassPicture from "./ViewClassPicture.png";
@@ -562,7 +565,7 @@ function ViewClass(props) {
     getMaterialByClass,
     getTaskAtmpt,
     getAllAssessments,
-    assessmentsCollection,
+    getAssessmentsByClass,
     getMultipleFileAvatar,
     getTaskByClass,
   } = props;
@@ -571,40 +574,12 @@ function ViewClass(props) {
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
   const classId = props.match.params.id;
+  const { all_assessments, selectedAssessments } = props.assessmentsCollection;
 
   const [walikelas, setWalikelas] = React.useState({});
   const [taskAtmpt, setTaskAtmpt] = React.useState([]);
   const [avatar, setAvatar] = React.useState({});
   const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
-
-  const all_assessments = assessmentsCollection.all_assessments;
-
-  function showAssessments(data) {
-    if (data.length === 0) {
-      return <Empty />;
-    } else {
-      return sortAscByCreatedAt(data).map((row) => (
-        <AssessmentListItem
-          work_title={row.name}
-          work_category_avatar={row.workCategoryAvatar}
-          work_subject={
-            row.category === "subject"
-              ? null
-              : all_subjects_map.get(row.subject)
-          }
-          work_status={row.workStatus}
-          work_teacher_name={row.teacher_name}
-          work_starttime={moment(row.start_date)
-            .locale("id")
-            .format("DD MMM YYYY, HH:mm")}
-          work_endtime={moment(row.end_date)
-            .locale("id")
-            .format("DD MMM YYYY, HH:mm")}
-          work_dateposted={row.createdAt}
-        />
-      ));
-    }
-  }
 
   function listTasks(subjectId) {
     if (!Boolean(tasksCollection.length)) {
@@ -617,7 +592,6 @@ function ViewClass(props) {
     } else if (panel === 1) {
       // If panel is "Mata Pelajaran"
       taskList = tasksCollection
-        .reverse()
         .filter((task) => {
           let class_assigned = task.class_assigned;
           if (Array.isArray(class_assigned)) {
@@ -650,158 +624,23 @@ function ViewClass(props) {
     return <MaterialItem data={materialList} />;
   }
 
-  function listAssessments(
-    category = null,
-    subject = {},
-    type,
-    tab = "pekerjaan_kelas"
-  ) {
-    let AssessmentsList = [];
-    let result = [];
-    console.log(all_assessments);
-    if (Boolean(all_assessments.length)) {
-      var i;
-      for (i = all_assessments.length - 1; i >= 0; i--) {
-        let assessment = all_assessments[i];
-        let class_assigned = assessment.class_assigned;
-        if (class_assigned.indexOf(classId) !== -1) {
-          AssessmentsList.push(assessment);
-        }
-      }
-
-      for (i = 0; i < AssessmentsList.length; i++) {
-        let assessment = AssessmentsList[i];
-        let workCategoryAvatar =
-          type === "Kuis" ? (
-            <Avatar className={classes.assignmentLate}>
-              <FaClipboardList />
-            </Avatar>
-          ) : (
-            <Avatar className={classes.assignmentLate}>
-              <BsClipboardData />
-            </Avatar>
-          );
-
-        if (tab === "pekerjaan_kelas") {
-          let workStatus = ASSESSMENT_STATUS.SUBMITTED;
-          if (type === "Kuis") {
-            if (
-              (!category ||
-                (category === "subject" &&
-                  assessment.subject === subject._id)) &&
-              !assessment.ended &&
-              assessment.type === "Kuis" &&
-              assessment.posted
-            ) {
-              result.push({
-                name: assessment.name,
-                workCategoryAvatar: workCategoryAvatar,
-                subject: assessment.subject,
-                workStatus: workStatus,
-                teacher_name:
-                  all_teachers_map instanceof Map &&
-                  all_teachers_map.get(assessment.author_id)
-                    ? all_teachers_map.get(assessment.author_id).name
-                    : null,
-                start_date: assessment.start_date,
-                end_date: assessment.end_date,
-                createdAt: assessment.createdAt,
-                objectType: "Kuis",
-                category: category,
-              });
-            }
-          }
-          if (type === "Ujian") {
-            if (
-              (!category ||
-                (category === "subject" &&
-                  assessment.subject === subject._id)) &&
-              !assessment.ended &&
-              assessment.type === "Ujian" &&
-              assessment.posted
-            ) {
-              result.push({
-                name: assessment.name,
-                workCategoryAvatar: workCategoryAvatar,
-                subject: assessment.subject,
-                workStatus: workStatus,
-                teacher_name:
-                  all_teachers_map instanceof Map &&
-                  all_teachers_map.get(assessment.author_id)
-                    ? all_teachers_map.get(assessment.author_id).name
-                    : null,
-                start_date: assessment.start_date,
-                end_date: assessment.end_date,
-                createdAt: assessment.createdAt,
-                objectType: "Ujian",
-                category: category,
-              });
-            }
-          }
-          if (!category && result.length === 5) break;
-          if (category === "subject" && result.length === 3) break;
-        } else if (tab === "mata_pelajaran") {
-          // Kalau di mata pelajaran, kita munculin semua assessment.
-          // Jadi, !assessment.ended nya gak dicheck.
-          let workStatus = !assessment.submissions
-            ? ASSESSMENT_STATUS.SUBMITTED
-            : ASSESSMENT_STATUS.SUBMITTED;
-          if (type === "Kuis") {
-            if (
-              (!category ||
-                (category === "subject" &&
-                  assessment.subject === subject._id)) &&
-              assessment.type === "Kuis" &&
-              assessment.posted
-            ) {
-              result.push({
-                name: assessment.name,
-                workCategoryAvatar: workCategoryAvatar,
-                subject: assessment.subject,
-                workStatus: workStatus,
-                teacher_name:
-                  all_teachers_map instanceof Map &&
-                  all_teachers_map.get(assessment.author_id)
-                    ? all_teachers_map.get(assessment.author_id).name
-                    : null,
-                start_date: assessment.start_date,
-                end_date: assessment.end_date,
-                createdAt: assessment.createdAt,
-                objectType: "Kuis",
-                category: category,
-              });
-            }
-          }
-          if (type === "Ujian") {
-            if (
-              (!category ||
-                (category === "subject" &&
-                  assessment.subject === subject._id)) &&
-              assessment.type === "Ujian" &&
-              assessment.posted
-            ) {
-              result.push({
-                name: assessment.name,
-                workCategoryAvatar: workCategoryAvatar,
-                subject: assessment.subject,
-                workStatus: workStatus,
-                teacher_name:
-                  all_teachers_map instanceof Map &&
-                  all_teachers_map.get(assessment.author_id)
-                    ? all_teachers_map.get(assessment.author_id).name
-                    : null,
-                start_date: assessment.start_date,
-                end_date: assessment.end_date,
-                createdAt: assessment.createdAt,
-                objectType: "Ujian",
-                category: category,
-              });
-            }
-          }
-        }
-      }
+  function listAssessments(type = "", subjectId = "") {
+    if (!Boolean(selectedAssessments.length)) {
+      return <Empty />;
     }
-    return result;
+    let assessmentList = [];
+    if (panel == 0) {
+      // If panel is "Pekerjaan Kelas"
+      assessmentList = selectedAssessments
+        .filter((assessment) => assessment.type == type)
+        .slice(0, 5);
+    } else if (panel == 1) {
+      // If panel is "Mata Pelajaran"
+      assessmentList = selectedAssessments
+        .filter((assessment) => assessment.subject === subjectId)
+        .slice(0, 3);
+    }
+    return <AssessmentItem data={assessmentList} />;
   }
 
   React.useEffect(() => {
@@ -811,6 +650,7 @@ function ViewClass(props) {
         // Clas id that is inserted as a parameter is the class id that is assigned to the student.
         getMaterialByClass(user.kelas);
         getTaskByClass(user.kelas);
+        getAssessmentsByClass(user.kelas);
       } else {
         // If this student has not been assigned to any class or tried to open other class page,
         // then nothing will be loaded and will be redirected to the corresponding page (below).
@@ -1102,7 +942,9 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
               <Divider />
               <ExpansionPanelDetails className={classes.objectDetails}>
-                <div style={{ width: "100%" }}> {listMaterials()}</div>
+                <Grid container direction="column" spacing={2}>
+                  {listMaterials()}
+                </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel defaultExpanded>
@@ -1127,7 +969,9 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
               <Divider />
               <ExpansionPanelDetails className={classes.objectDetails}>
-                <div style={{ width: "100%" }}>{listTasks()}</div>
+                <Grid container direction="column" spacing={2}>
+                  {listTasks()}
+                </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel defaultExpanded>
@@ -1152,9 +996,9 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
               <Divider />
               <ExpansionPanelDetails className={classes.objectDetails}>
-                <div style={{ width: "100%" }}>
-                  {showAssessments(listAssessments(null, {}, "Kuis"))}
-                </div>
+                <Grid container direction="column" spacing={2}>
+                  {listAssessments("Kuis")}
+                </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel defaultExpanded>
@@ -1179,9 +1023,9 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
               <Divider />
               <ExpansionPanelDetails className={classes.objectDetails}>
-                <div style={{ width: "100%" }}>
-                  {showAssessments(listAssessments(null, {}, "Ujian"))}
-                </div>
+                <Grid container direction="column" spacing={2}>
+                  {listAssessments("Ujian")}
+                </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </TabPanel>
@@ -1222,11 +1066,11 @@ function ViewClass(props) {
                         <ExpansionPanelDetails
                           className={classes.objectDetails}
                         >
-                          <div style={{ width: "100%" }}>
+                          <Grid container direction="column" spacing={2}>
                             {listMaterials(subject._id)}
                             {listTasks(subject._id)}
-                            {/* Assessments is still on hold */}
-                          </div>
+                            {listAssessments("", subject._id)}
+                          </Grid>
                         </ExpansionPanelDetails>
                       </ExpansionPanel>
                     );
@@ -1368,6 +1212,7 @@ ViewClass.propTypes = {
   getTeachers: PropTypes.func.isRequired,
   getMaterialByClass: PropTypes.func.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
+  getAssessmentsByClass: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
 };
 
@@ -1388,6 +1233,7 @@ export default connect(mapStateToProps, {
   getTeachers,
   getMaterialByClass,
   getAllAssessments,
+  getAssessmentsByClass,
   getStudents,
   getTaskAtmpt,
   getMultipleFileAvatar,

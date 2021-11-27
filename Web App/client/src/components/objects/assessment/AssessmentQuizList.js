@@ -595,26 +595,12 @@ function AssessmentList(props) {
   };
 
   const handleOpenCopySnackBar = (type) => {
-    console.log("Open di RUN");
     setOpenCopySnackBar(true);
     setAssessmentType(type);
   };
 
   const handleCloseCopySnackBar = () => {
-    console.log("Close di RUN");
     setOpenCopySnackBar(false);
-  };
-
-  const handleCopyLink = (e, row) => {
-    e.stopPropagation();
-    let textArea = document.createElement("textarea");
-    textArea.value = row.linkToShare;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand("copy");
-    e.target.focus();
-    document.body.removeChild(textArea);
-    handleOpenCopySnackBar(row.type);
   };
 
   const handleOpenDeleteSnackbar = () => {
@@ -673,11 +659,13 @@ function AssessmentList(props) {
       {rows.length === 0 ? (
         <Empty />
       ) : (
-        <AssessmentItem
-          data={stableSort(rows, getComparator(order, orderBy))}
-          handleOpenDeleteDialog={handleOpenDeleteDialog}
-          handleCopyLink={handleCopyLink}
-        />
+        <Grid container direction="column" spacing={2}>
+          <AssessmentItem
+            data={stableSort(rows, getComparator(order, orderBy))}
+            handleOpenDeleteDialog={handleOpenDeleteDialog}
+            handleOpenCopySnackBar={handleOpenCopySnackBar}
+          />
+        </Grid>
       )}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
