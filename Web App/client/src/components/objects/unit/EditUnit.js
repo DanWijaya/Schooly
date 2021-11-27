@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { getOneUnit, updateUnit } from "../../../actions/UnitActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import {
   AppBar,
   Button,
@@ -242,6 +243,7 @@ function EditUnit(props) {
         isWarning={false}
       />
       </div>
+      <FloatingHelp />
     </div>
   );
 }

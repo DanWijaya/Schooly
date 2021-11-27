@@ -29,7 +29,7 @@ const tutorialSteps = [
   {
     label: "Bird",
     imgPath:
-      "https://images.unsplash.com/photo-1538032746644-0212e812a9e7?auto=format&fit=crop&w=400&h=250&q=60",
+      "https://asystems.as/wp-content/uploads/2018/11/moscow-1000x400.jpg",
   },
   {
     label: "Bali, Indonesia",
@@ -50,8 +50,9 @@ const tutorialSteps = [
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 400,
+    maxWidth: '80%',
     flexGrow: 1,
+    margin: "auto"
   },
   header: {
     display: "flex",
@@ -60,12 +61,13 @@ const useStyles = makeStyles((theme) => ({
     height: 50,
     backgroundColor: theme.palette.background.default,
   },
-  avatarImg1: {
-    // If width is smaller than height
-    maxHeight: "400px",
+  avatar: {
+    height: "500px",
+    width: "500px",
   },
-  avatarImg2: {
-    //If height is smaller than width
+  avatarImg1: {
+    maxHeight: "400px",
+    minHeight: "400px",
     maxWidth: "650px",
   },
   imgContainer: {
@@ -133,15 +135,12 @@ export default function TextMobileStepper() {
       <div className={classes.imgContainer}>
         <img
           onLoad={onImgLoad}
-          className={
-            avatarDimensions.width < avatarDimensions.height
-              ? classes.avatarImg1
-              : classes.avatarImg2
-          }
+          className={classes.avatarImg1}
           src={tutorialSteps[activeStep].imgPath}
           alt={tutorialSteps[activeStep].label}
         />
       </div>
+      {avatarDimensions.width}x{avatarDimensions.height}
       <MobileStepper
         steps={maxSteps}
         position="static"
@@ -171,9 +170,6 @@ export default function TextMobileStepper() {
             Back
           </Button>
         }
-      />
-      <FormControlLabel
-        control={<Switch />}
       />
       <Typography variant="h1" gutterBottom>
         h1. Heading

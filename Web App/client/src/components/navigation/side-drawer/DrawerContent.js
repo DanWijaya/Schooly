@@ -31,8 +31,10 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   drawerListItem: {
+    borderLeft: "4px solid white",
     "&:active, &:hover": {
       backgroundColor: theme.palette.primary.fade,
+      borderLeft: `4px solid ${theme.palette.primary.main}`,
     },
   },
   drawerListItemIcon: {

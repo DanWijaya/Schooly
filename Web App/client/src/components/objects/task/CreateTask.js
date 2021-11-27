@@ -14,6 +14,7 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import {
   AppBar,
   Avatar,
@@ -643,7 +644,7 @@ class CreateTask extends Component {
                     </Grid>
                     <Grid item>
                       <Button onClick={this.handleOpenDeleteDialog} className={classes.deleteButton}>
-                        Batal
+                        Hapus
                       </Button>
                     </Grid>
                   </Grid>
@@ -912,6 +913,7 @@ class CreateTask extends Component {
             </Alert>
           </Snackbar>
         </div>
+        <FloatingHelp />
       </div>
     );
   }

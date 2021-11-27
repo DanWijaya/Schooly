@@ -1986,7 +1986,7 @@ function EventDialog(props) {
                   />
                   {errors.name ? (
                     <div className={classes.zeroHeightHelperText}>
-                      <FormHelperText variant="outlined" error>
+                      <FormHelperText error>
                         {errors.name}
                       </FormHelperText>
                     </div>
@@ -2093,11 +2093,11 @@ function EventDialog(props) {
                         style={{ flexDirection: "column" }}
                       >
                         {errors.start_date_custom ? (
-                          <FormHelperText variant="outlined" error>
+                          <FormHelperText error>
                             {errors.start_date_custom}
                           </FormHelperText>
                         ) : errors.start_date_picker ? (
-                          <FormHelperText variant="outlined" error>
+                          <FormHelperText error>
                             {errors.start_date_picker}
                           </FormHelperText>
                         ) : null}
@@ -2131,7 +2131,7 @@ function EventDialog(props) {
                           visibility: "hidden",
                         }}
                       >
-                        <FormHelperText variant="outlined">
+                        <FormHelperText>
                           {"\u200B"}
                         </FormHelperText>
                         <Checkbox size="small" disabled />
@@ -2207,11 +2207,11 @@ function EventDialog(props) {
                         style={{ flexDirection: "column" }}
                       >
                         {errors.end_date_custom ? (
-                          <FormHelperText variant="outlined" error>
+                          <FormHelperText error>
                             {errors.end_date_custom}
                           </FormHelperText>
                         ) : errors.end_date_picker ? (
-                          <FormHelperText variant="outlined" error>
+                          <FormHelperText error>
                             {errors.end_date_picker}
                           </FormHelperText>
                         ) : null}
@@ -2275,7 +2275,7 @@ function EventDialog(props) {
                     </Select>
                     {errors.to ? (
                       <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText variant="outlined" error>
+                        <FormHelperText error>
                           {errors.to}
                         </FormHelperText>
                       </div>

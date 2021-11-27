@@ -14,6 +14,7 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   AppBar,
@@ -886,6 +887,7 @@ class EditAnnouncement extends Component {
             </Alert>
           </Snackbar>
         </div>
+        <FloatingHelp />
       </div>
     );
   }

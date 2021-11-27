@@ -8,6 +8,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import {
   AppBar,
   Button,
@@ -240,7 +241,7 @@ class CreateClass extends Component {
                     <Grid item>
                       <Link to="/daftar-kelas">
                         <Button className={classes.deleteButton}>
-                          Batal
+                          Hapus
                         </Button>
                       </Link>
                     </Grid>
@@ -368,6 +369,7 @@ class CreateClass extends Component {
             redirectLink={`/kelas/${success}`}
           />
         </div>
+        <FloatingHelp />
       </div>
     );
   }

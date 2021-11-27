@@ -1356,7 +1356,7 @@ class CreateAssessment extends Component {
                     </Grid>
                     <Grid item>
                       <Button onClick={this.handleOpenDeleteDialog} className={classes.deleteButton}>
-                        Batal
+                        Hapus
                       </Button>
                     </Grid>
                   </Grid>
@@ -1427,11 +1427,9 @@ class CreateAssessment extends Component {
                                 <MenuItem value="Ujian">Ujian</MenuItem>
                               </Select>
                               {Boolean(errors.type) ? (
-                                <div className={classes.zeroHeightHelperText}>
-                                  <FormHelperText variant="outlined" error>
-                                    {errors.type}
-                                  </FormHelperText>
-                                </div>
+                                <FormHelperText error>
+                                  {errors.type}
+                                </FormHelperText>
                               ) : null}
                             </FormControl>
                           </Grid>
