@@ -15,6 +15,7 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import {
   AppBar,
   Avatar,
@@ -1045,6 +1046,7 @@ class EditTask extends Component {
             </Alert>
           </Snackbar>
         </div>
+        <FloatingHelp />
       </div>
     );
   }

@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { createUnit } from "../../../actions/UnitActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import {
   AppBar,
   Button,
@@ -176,7 +177,7 @@ class CreateUnit extends Component {
                     </Grid>
                     <Grid item>
                       <Button onClick={this.handleOpenDeleteDialog} className={classes.deleteButton}>
-                        Batal
+                        Hapus
                       </Button>
                     </Grid>
                   </Grid>
@@ -257,6 +258,7 @@ class CreateUnit extends Component {
             isWarning={false}
           />
         </div>
+        <FloatingHelp />
       </div>
     );
   }

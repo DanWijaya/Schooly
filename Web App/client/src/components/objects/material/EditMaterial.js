@@ -14,6 +14,7 @@ import { getFileMaterials } from "../../../actions/files/FileMaterialActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import {
   AppBar,
   Avatar,
@@ -1008,6 +1009,7 @@ class EditMaterial extends Component {
             </Alert>
           </Snackbar>
         </div>
+        <FloatingHelp />
       </div>
     );
   }

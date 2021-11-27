@@ -32,8 +32,8 @@ function ScrollToTopButton(props) {
 
   return (
     <Zoom in={trigger}>
-      <div onClick={handleClick} className={classes.scrollToTopButton}>
-        <Fab color="primary" size="small">
+      <div className={classes.scrollToTopButton}>
+        <Fab color="primary" size="small" onClick={handleClick}>
           <KeyboardArrowUpIcon />
         </Fab>
       </div>
