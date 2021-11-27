@@ -556,14 +556,12 @@ function ViewAssessmentTeacher(props) {
             ))}
       </Grid>
       <DeleteDialog
-        isWarning={true}
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType={selectedAssessments.type}
         itemName={selectedAssessments.name}
-        deleteItem={() => {
-          onDeleteAssessment(selectedAssessmentId);
-        }}
+        warningText={`Nilai pada ${selectedAssessments.type} yang ada juga akan dihapus.`}
+        deleteItem={() => onDeleteAssessment(selectedAssessmentId)}
       />
       <Snackbar
         open={copySnackbarOpen}

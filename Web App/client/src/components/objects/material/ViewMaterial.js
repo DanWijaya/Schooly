@@ -797,15 +797,13 @@ function ViewMaterial(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Materi"
         itemName={selectedMaterials.name}
-        deleteItem={() => {
-          onDeleteMaterial(materi_id);
-        }}
+        warningText="Lampiran dan komentar yang ada juga akan dihapus."
+        deleteItem={() => onDeleteMaterial(materi_id)}
       />
       <DeleteDialog
         openDeleteDialog={openDeleteCommentDialog}
         handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
         itemType="Komentar"
-        itemName=""
         deleteItem={deleteDialogHandler.current}
       />
       <Snackbar

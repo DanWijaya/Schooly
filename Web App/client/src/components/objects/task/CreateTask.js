@@ -891,10 +891,8 @@ class CreateTask extends Component {
           <DeleteDialog
             openDeleteDialog={this.state.openDeleteDialog}
             handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-            itemType={"Tugas"}
-            itemName={this.state.name}
-            redirectLink={`/daftar-tugas`}
-            isWarning={false}
+            itemType="Tugas"
+            redirectLink="/daftar-tugas"
           />
           <Snackbar
             open={this.state.fileLimitSnackbar}

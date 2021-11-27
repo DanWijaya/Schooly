@@ -628,11 +628,10 @@ function UnitList(props) {
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Unit "
+        itemType="Unit"
         itemName={selectedMaterialName}
-        deleteItem={() => {
-          onDeleteUnit(selectedUnitId);
-        }}
+        warningText="Pastikan Unit sudah kosong sebelum dihapus."
+        deleteItem={() => onDeleteUnit(selectedUnitId)}
       />
       <Snackbar
         open={openDeleteSnackbar}

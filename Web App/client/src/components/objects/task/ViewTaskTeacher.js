@@ -884,15 +884,13 @@ function ViewTaskTeacher(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Tugas"
         itemName={tasksCollection.name}
-        deleteItem={() => {
-          onDeleteTask(task_id);
-        }}
+        warningText="Lampiran, komentar, dan nilai yang ada juga akan dihapus."
+        deleteItem={() => onDeleteTask(task_id)}
       />
       <DeleteDialog
         openDeleteDialog={openDeleteCommentDialog}
         handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
         itemType="Komentar"
-        itemName=""
         deleteItem={deleteDialogHandler.current}
       />
       <Snackbar

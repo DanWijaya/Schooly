@@ -566,10 +566,8 @@ function MaterialList(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Materi"
         itemName={selectedMaterialName}
-        deleteItem={() => {
-          console.log("idnya:", selectedMaterialId);
-          onDeleteMaterial(selectedMaterialId);
-        }}
+        warningText="Lampiran dan komentar yang ada juga akan dihapus."
+        deleteItem={() => onDeleteMaterial(selectedMaterialId)}
       />
       <Snackbar
         open={openDeleteSnackbar}

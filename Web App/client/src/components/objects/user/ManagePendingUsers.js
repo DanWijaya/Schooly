@@ -1064,20 +1064,17 @@ function ManagePendingUsers(props) {
       <ActivateDialog
         open={openActivateDialog}
         onClose={handleCloseActivateDialog}
-        itemName={selectedUserName}
         itemType="Pengguna"
-        onAction={() => {
-          onActivateUser(selectedUserId);
-        }}
+        itemName={selectedUserName}
+        onAction={() => onActivateUser(selectedUserId)}
       />
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Pengguna"
         itemName={selectedUserName}
-        deleteItem={() => {
-          onDeleteUser(selectedUserId);
-        }}
+        warningText="Informasi pribadi yang tersimpan juga akan dihapus."
+        deleteItem={() => onDeleteUser(selectedUserId)}
       />
       <Snackbar
         open={openSnackbar}

@@ -20,14 +20,10 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   deleteButton: {
-    maxWidth: "90px",
-    width: "100%",
     fontSize: "12px",
     color: theme.palette.error.main,
   },
   cancelButton: {
-    maxWidth: "90px",
-    width: "100%",
     fontSize: "12px",
     color: theme.palette.grey.A700,
   },
@@ -42,9 +38,7 @@ function DeleteDialog(props) {
     itemName,
     deleteItem,
     redirectLink,
-    customMessage,
-    customDecline,
-    isWarning,
+    warningText,
   } = props;
 
   return (
@@ -55,20 +49,18 @@ function DeleteDialog(props) {
     >
       <DialogTitle>
         <Typography variant="h6">
-          {customMessage
-            ? `${customMessage} ${itemType}`
-            : `Hapus ${itemType} berikut?`}
+          Hapus {itemType} berikut?
         </Typography>
       </DialogTitle>
       <DialogContent>
         {itemName ? (
-          <Typography noWrap gutterBottom>
+          <Typography noWrap>
             {itemName}
           </Typography>
         ) : null}
-        {isWarning ? (
-          <Typography variant="body2" color="textSecondary" paragraph>
-            Nilai Murid pada {itemType} ini juga akan dihapus
+        {warningText ? (
+          <Typography variant="body2" color="textSecondary" gutterBottom>
+            {warningText}
           </Typography>
         ) : null}
       </DialogContent>
@@ -78,7 +70,7 @@ function DeleteDialog(props) {
           startIcon={<CancelIcon />}
           className={classes.cancelButton}
         >
-          {customDecline ? customDecline : "Batal"}
+          Batal
         </Button>
         {!redirectLink ? (
           <Button
@@ -91,7 +83,6 @@ function DeleteDialog(props) {
         ) : (
           <Link to={redirectLink}>
             <Button
-              onClick={deleteItem}
               startIcon={<DeleteOutlineIcon />}
               className={classes.deleteButton}
             >

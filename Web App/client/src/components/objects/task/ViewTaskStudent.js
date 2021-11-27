@@ -1273,22 +1273,6 @@ function ViewTaskStudent(props) {
           </Paper>
         </Grid>
       </Grid>
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Berkas"
-        itemName={selectedFileName}
-        deleteItem={() => {
-          onDeleteFileSubmitTasks(selectedFileId);
-        }}
-      />
-      <DeleteDialog
-        openDeleteDialog={openDeleteCommentDialog}
-        handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
-        itemType="Komentar"
-        itemName=""
-        deleteItem={deleteDialogHandler.current}
-      />
       <UploadDialog
         openUploadDialog={openUploadDialog}
         success={success}
@@ -1296,6 +1280,19 @@ function ViewTaskStudent(props) {
         messageSuccess="Tugas telah dikumpul"
         handleCloseUploadDialog={handleCloseUploadDialog}
         redirectLink={false}
+      />
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Berkas"
+        itemName={selectedFileName}
+        deleteItem={() => onDeleteFileSubmitTasks(selectedFileId)}
+      />
+      <DeleteDialog
+        openDeleteDialog={openDeleteCommentDialog}
+        handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
+        itemType="Komentar"
+        deleteItem={deleteDialogHandler.current}
       />
       <Snackbar
         open={fileLimitSnackbar}

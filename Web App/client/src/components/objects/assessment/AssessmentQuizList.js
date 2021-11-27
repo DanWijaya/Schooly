@@ -9,6 +9,7 @@ import {
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers } from "../../../actions/UserActions";
+import AssessmentItem from "../item/AssessmentItem";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -36,7 +37,6 @@ import {
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaClipboardList } from "react-icons/fa";
-import AssessmentItem from "../item/AssessmentItem";
 
 function createData(
   _id,
@@ -672,13 +672,9 @@ function AssessmentList(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Kuis"
         itemName={selectedAssessmentName}
-        deleteItem={() => {
-          onDeleteAssessment(selectedAssessmentId, "Kuis");
-        }}
-        isWarning={true}
+        warningText="Nilai Kuis yang ada juga akan dihapus."
+        deleteItem={() => onDeleteAssessment(selectedAssessmentId, "Kuis")}
       />
-
-      {/* Copy Link Snackbar */}
       <Snackbar
         open={copySnackbarOpen}
         autoHideDuration={3000}
@@ -688,8 +684,6 @@ function AssessmentList(props) {
           Tautan {type} berhasil disalin ke Clipboard Anda!
         </Alert>
       </Snackbar>
-
-      {/* Delete Snackbar */}
       <Snackbar
         open={openDeleteSnackbar}
         autoHideDuration={4000}

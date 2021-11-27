@@ -422,9 +422,8 @@ function ViewAnnouncement(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Pengumuman"
         itemName={selectedAnnouncements.title}
-        deleteItem={() => {
-          onDeleteAnnouncement(announcement_id);
-        }}
+        warningText="Lampiran yang ada juga akan dihapus."
+        deleteItem={() => onDeleteAnnouncement(announcement_id)}
       />
     </div>
   );

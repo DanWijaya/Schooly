@@ -673,12 +673,8 @@ function AdminList(props) {
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Pengaturan unit Pengelola"
-        deleteItem={null}
-        itemName={null}
-        isLink={true}
+        itemType="perubahan Pengaturan Unit Pengelola"
         redirectLink="/pengelola-aktif"
-        isWarning={false}
       />
     </div>
   );

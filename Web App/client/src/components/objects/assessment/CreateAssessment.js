@@ -53,7 +53,6 @@ import {
   KeyboardDateTimePicker,
 } from "@material-ui/pickers";
 import Alert from "@material-ui/lab/Alert";
-import { withStyles } from "@material-ui/core/styles";
 import {
   Add as AddIcon,
   ArrowDropDown as ArrowDropDownIcon,
@@ -71,6 +70,7 @@ import {
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon
 } from "@material-ui/icons";
+import { withStyles } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
 import { FaChalkboard, FaClipboardList } from "react-icons/fa";
 
@@ -1785,20 +1785,18 @@ class CreateAssessment extends Component {
               </AppBar>
             </div>
           </form>
-          <DeleteDialog
-            openDeleteDialog={this.state.openDeleteDialog}
-            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-            itemType={this.state.type ? this.state.type : "Penilaian"}
-            deleteItem=""
-            redirectLink={`daftar-${this.state.type.toLowerCase()}`}
-            isWarning={false}
-          />
           <UploadDialog
             openUploadDialog={this.state.openUploadDialog}
             success={success}
             messageUploading={`${this.state.type} sedang dibuat`}
             messageSuccess={`${this.state.type} telah dibuat`}
             redirectLink={`/${this.state.type.toLowerCase()}-guru/${success}`}
+          />
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType={this.state.type ? this.state.type : "Penilaian"}
+            redirectLink={`daftar-${this.state.type.toLowerCase()}`}
           />
           <Snackbar
             open={this.state.checkboxSnackbarOpen}

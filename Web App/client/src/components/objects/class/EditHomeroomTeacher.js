@@ -345,19 +345,15 @@ function EditHomeroomTeacher(props) {
       <UploadDialog
         openUploadDialog={openUploadDialog}
         success={success}
-        messageUploading={`Pengaturan wali kelas sedang disimpan`}
-        messageSuccess={`Pengaturan wali kelas berhasil disimpan`}
+        messageUploading="Pengaturan Wali Kelas sedang disimpan"
+        messageSuccess="Pengaturan Wali Kelas berhasil disimpan"
         redirectLink="/daftar-kelas"
       />
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="pengaturan wali kelas"
-        deleteItem={null}
-        itemName={null}
-        isLink={true}
+        itemType="perubahan Pengaturan Wali Kelas"
         redirectLink="/daftar-kelas"
-        isWarning={false}
       />
       <Snackbar
         open={openSnackbar}

@@ -870,10 +870,8 @@ class EditAnnouncement extends Component {
           <DeleteDialog
             openDeleteDialog={this.state.openDeleteDialog}
             handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-            itemType={"Sunting"}
-            itemName={this.state.title}
-            redirectLink={`/daftar-pengumuman`}
-            isWarning={false}
+            itemType="perubahan pada Pengumuman"
+            redirectLink="/daftar-pengumuman"
           />
           <Snackbar
             open={this.state.fileLimitSnackbar}

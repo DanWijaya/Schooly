@@ -987,10 +987,8 @@ class EditMaterial extends Component {
           <DeleteDialog
             openDeleteDialog={this.state.openDeleteDialog}
             handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-            itemType="Sunting"
-            itemName={this.state.name}
-            redirectLink={`/daftar-materi`}
-            isWarning={false}
+            itemType="perubahan pada Materi"
+            redirectLink="/daftar-materi"
           />
           <Snackbar
             open={this.state.fileLimitSnackbar}
