@@ -6,7 +6,6 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import Empty from "../../misc/empty/Empty";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Button,
@@ -23,6 +22,7 @@ import {
   Snackbar,
   TableSortLabel,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -157,11 +157,11 @@ function TeacherListToolbar(props) {
           />
         </Grid>
         <Grid item>
-          <LightTooltip title="Urutkan Guru">
+          <Tooltip title="Urutkan Guru">
             <IconButton onClick={handleOpenSortMenu}>
               <SortIcon />
             </IconButton>
-          </LightTooltip>
+          </Tooltip>
           <Menu
             keepMounted
             open={Boolean(anchorEl)}

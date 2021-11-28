@@ -106,11 +106,11 @@ function FileSubmission(props) {
           </ListItemAvatar>
           <ListItemText
             primary={
-              <LightTooltip title={file_name} placement="top">
+              <Tooltip title={file_name} placement="top">
                 <Typography noWrap>
                   {displayedName}
                 </Typography>
-              </LightTooltip>
+              </Tooltip>
             }
             secondary={file_type}
           />
@@ -182,11 +182,11 @@ function FileSubmission(props) {
           </ListItemAvatar>
           <ListItemText
             primary={
-              <LightTooltip title={file_name} placement="top">
+              <Tooltip title={file_name} placement="top">
                 <Typography noWrap>
                   {displayedName}
                 </Typography>
-              </LightTooltip>
+              </Tooltip>
             }
             secondary={file_type}
           />

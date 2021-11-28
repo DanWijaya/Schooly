@@ -17,7 +17,6 @@ import Empty from "../../misc/empty/Empty";
 import OptionMenu from "../../misc/menu/OptionMenu";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import DeactivateDialog from "../../misc/dialog/DeactivateDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { TabPanel } from "../../misc/tab-panel/TabPanel";
 import {
   Avatar,
@@ -40,6 +39,7 @@ import {
   Tabs,
   TableSortLabel,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
@@ -307,11 +307,11 @@ function ManageUsersToolbar(props) {
                   }}
                 />
               ) : (
-                <LightTooltip title="Cari Akun">
+                <Tooltip title="Cari Akun">
                   <IconButton onClick={() => setSearchBarFocus(true)}>
                     <SearchIcon />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
               )}
             </Hidden>
           </Grid>
@@ -319,20 +319,20 @@ function ManageUsersToolbar(props) {
             {role === "Teacher" ? (
               <Grid item style={{ display: searchBarFocus ? "none" : "block" }}>
                 <Link to="/data-ajar-guru">
-                  <LightTooltip title="Sunting Data Ajar Guru">
+                  <Tooltip title="Sunting Data Ajar Guru">
                     <IconButton>
                       <BiSitemap />
                     </IconButton>
-                  </LightTooltip>
+                  </Tooltip>
                 </Link>
               </Grid>
             ) : null}
             <Grid item>
-              <LightTooltip title="Urutkan Akun">
+              <Tooltip title="Urutkan Akun">
                 <IconButton onClick={handleOpenSortMenu}>
                   <SortIcon />
                 </IconButton>
-              </LightTooltip>
+              </Tooltip>
               <Menu
                 keepMounted
                 open={Boolean(anchorEl)}
@@ -382,20 +382,20 @@ function ManageUsersToolbar(props) {
                       style={{ display: searchBarFocus ? "none" : "block" }}
                     >
                       <Link to="/data-ajar-guru">
-                        <LightTooltip title="Sunting Data Ajar Guru">
+                        <Tooltip title="Sunting Data Ajar Guru">
                           <IconButton>
                             <BiSitemap />
                           </IconButton>
-                        </LightTooltip>
+                        </Tooltip>
                       </Link>
                     </Grid>
                   ) : null,
                   <Grid item>
-                    <LightTooltip title="Urutkan Akun">
+                    <Tooltip title="Urutkan Akun">
                       <IconButton onClick={handleOpenSortMenu}>
                         <SortIcon />
                       </IconButton>
-                    </LightTooltip>
+                    </Tooltip>
                     <Menu
                       keepMounted
                       open={Boolean(anchorEl)}

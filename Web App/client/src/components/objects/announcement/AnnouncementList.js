@@ -11,11 +11,10 @@ import {
   deleteAnnouncement,
 } from "../../../actions/AnnouncementActions";
 import { getUsers } from "../../../actions/UserActions";
+import AnnouncementItem from "../item/AnnouncementItem";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { TabPanel } from "../../misc/tab-panel/TabPanel";
-import AnnouncementItem from "../item/AnnouncementItem";
 import {
   Avatar,
   Fab,
@@ -30,6 +29,7 @@ import {
   Tabs,
   TableSortLabel,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
@@ -157,7 +157,7 @@ function AnnouncementListToolbar(props) {
               </Link>
             </Hidden>
             <Hidden mdUp>
-              <LightTooltip title="Buat Pengumuman">
+              <Tooltip title="Buat Pengumuman">
                 <Link to="/buat-pengumuman">
                   <Fab
                     size="medium"
@@ -168,7 +168,7 @@ function AnnouncementListToolbar(props) {
                     />
                   </Fab>
                 </Link>
-              </LightTooltip>
+              </Tooltip>
             </Hidden>
           </Grid>
         ) : null}
@@ -270,20 +270,20 @@ function AnnouncementListToolbar(props) {
                     />
                   </div>
                 ) : (
-                  <LightTooltip title="Cari Pengumuman">
+                  <Tooltip title="Cari Pengumuman">
                     <IconButton onClick={() => setSearchBarFocus(true)}>
                       <SearchIcon />
                     </IconButton>
-                  </LightTooltip>
+                  </Tooltip>
                 )}
               </Hidden>
             </Grid>
             <Grid item>
-              <LightTooltip title="Urutkan Pengumuman">
+              <Tooltip title="Urutkan Pengumuman">
                 <IconButton onClick={handleOpenSortMenu}>
                   <SortIcon />
                 </IconButton>
-              </LightTooltip>
+              </Tooltip>
               <Menu
                 keepMounted
                 open={Boolean(anchorEl)}

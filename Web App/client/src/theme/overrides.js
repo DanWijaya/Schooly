@@ -7,6 +7,7 @@ import Lists from "./overrides/Lists";
 import Pickers from "./overrides/Pickers";
 import Tabs from "./overrides/Tabs";
 import TextFields from "./overrides/TextFields";
+import Tooltip from "./overrides/Tooltip";
 
 function overrides(theme) {
   return merge(
@@ -18,6 +19,7 @@ function overrides(theme) {
     Pickers(theme),
     Tabs(theme),
     TextFields(theme),
+    Tooltip(theme),
   );
 }
 

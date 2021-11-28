@@ -9,7 +9,6 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import TaskItem from "../item/TaskItem";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Divider,
@@ -23,6 +22,7 @@ import {
   Snackbar,
   TableSortLabel,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
@@ -168,13 +168,13 @@ function TaskListToolbar(props) {
               </Link>
             </Hidden>
             <Hidden mdUp>
-              <LightTooltip title="Buat Tugas">
+              <Tooltip title="Buat Tugas">
                 <Link to="/buat-tugas">
                   <Fab size="medium" className={classes.createTaskButton}>
                     <AssignmentIcon className={classes.createTaskIconMobile} />
                   </Fab>
                 </Link>
-              </LightTooltip>
+              </Tooltip>
             </Hidden>
           </Grid>
         ) : null}
@@ -277,20 +277,20 @@ function TaskListToolbar(props) {
                     />
                   </div>
                 ) : (
-                  <LightTooltip title="Cari Tugas">
+                  <Tooltip title="Cari Tugas">
                     <IconButton onClick={() => setSearchBarFocus(true)}>
                       <SearchIcon />
                     </IconButton>
-                  </LightTooltip>
+                  </Tooltip>
                 )}
               </Hidden>
             </Grid>
             <Grid item>
-              <LightTooltip title="Urutkan Tugas">
+              <Tooltip title="Urutkan Tugas">
                 <IconButton onClick={handleOpenSortMenu}>
                   <SortIcon />
                 </IconButton>
-              </LightTooltip>
+              </Tooltip>
               <Menu
                 keepMounted
                 open={Boolean(anchorEl)}

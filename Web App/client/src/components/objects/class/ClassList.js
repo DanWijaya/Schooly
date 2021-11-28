@@ -16,26 +16,26 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import ClassItem from "../item/ClassItem";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Divider,
   Fab,
   Grid,
   Hidden,
   IconButton,
+  InputAdornment,
   Menu,
   MenuItem,
-  InputAdornment,
-  TableSortLabel,
-  Typography,
   Snackbar,
+  TableSortLabel,
   TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
+  Tooltip,
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
@@ -404,10 +404,6 @@ function ClassListToolbar(props) {
               } else {
                 // If this student have not been listed in the database yet.
                 invalidEmails.current.push(currentEmail);
-                // throw new Error(`Murid yang memiliki email "${row[i].email}" tidak terdaftar di basisdata`);
-                // console.log(
-                //   `Murid yang memiliki email "${currentEmail}" tidak terdaftar di basisdata`
-                // );
               }
             }
           }
@@ -478,13 +474,13 @@ function ClassListToolbar(props) {
               </Link>
             </Hidden>
             <Hidden mdUp>
-              <LightTooltip title="Buat Kelas">
+              <Tooltip title="Buat Kelas">
                 <Link to="/buat-kelas">
                   <Fab size="medium" className={classes.createClassButton}>
                     <FaChalkboard className={classes.createClassIconMobile} />
                   </Fab>
                 </Link>
-              </LightTooltip>
+              </Tooltip>
             </Hidden>
           </Grid>
         ) : null}
@@ -591,11 +587,11 @@ function ClassListToolbar(props) {
                   />
                 </div>
               ) : (
-                <LightTooltip title="Cari Kelas">
+                <Tooltip title="Cari Kelas">
                   <IconButton onClick={() => setSearchBarFocus(true)}>
                     <SearchIcon />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
               )}
             </Hidden>
           </Grid>
@@ -612,11 +608,11 @@ function ClassListToolbar(props) {
                   ref={fileInput}
                   style={{ display: "none" }}
                 />
-                <LightTooltip title="Atur Kelas Murid">
+                <Tooltip title="Atur Kelas Murid">
                   <IconButton onClick={handleOpenCSVMenu}>
                     <FaChalkboardTeacher />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
                 <Menu
                   keepMounted
                   open={Boolean(csvAnchor)}
@@ -644,20 +640,20 @@ function ClassListToolbar(props) {
           {user.role === "Admin" ? (
             <Grid item>
               <Link to="/atur-walikelas">
-                <LightTooltip title="Atur Wali Kelas">
+                <Tooltip title="Atur Wali Kelas">
                   <IconButton>
                     <AssignmentIndIcon />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
               </Link>
             </Grid>
           ) : null}
           <Grid item>
-            <LightTooltip title="Urutkan Kelas">
+            <Tooltip title="Urutkan Kelas">
               <IconButton onClick={handleOpenSortMenu}>
                 <SortIcon />
               </IconButton>
-            </LightTooltip>
+            </Tooltip>
             <Menu
               keepMounted
               open={Boolean(anchorEl)}

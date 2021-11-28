@@ -29,7 +29,6 @@ import TaskItem from "../item/TaskItem";
 import MaterialItem from "../item/MaterialItem";
 import UserItem from "../item/UserItem";
 import Empty from "../../misc/empty/Empty";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
 import {
   Avatar,
@@ -818,7 +817,7 @@ function ViewClass(props) {
                     {user.email === walikelas.email ? null : ( // To disable profile view for the user's own profile
                       <Grid item xs container justify="flex-end">
                         <Grid item>
-                          <LightTooltip title="Lihat Profil">
+                          <Tooltip title="Lihat Profil">
                             <Link
                               to={{
                                 pathname: `/lihat-profil/${walikelas._id}`,
@@ -831,7 +830,7 @@ function ViewClass(props) {
                                 <PageviewIcon fontSize="small" />
                               </IconButton>
                             </Link>
-                          </LightTooltip>
+                          </Tooltip>
                         </Grid>
                       </Grid>
                     )}
@@ -875,7 +874,7 @@ function ViewClass(props) {
                       </Grid>
                       <Grid item xs container justify="flex-end">
                         <Grid item>
-                          <LightTooltip title="Lihat Profil">
+                          <Tooltip title="Lihat Profil">
                             <Link
                               to={{
                                 pathname: `/lihat-profil/${student._id}`,
@@ -888,7 +887,7 @@ function ViewClass(props) {
                                 <PageviewIcon fontSize="small" />
                               </IconButton>
                             </Link>
-                          </LightTooltip>
+                          </Tooltip>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -1115,7 +1114,7 @@ function ViewClass(props) {
                       </Grid>
                       <Grid item xs container justify="flex-end">
                         <Grid item>
-                          <LightTooltip title="Lihat Profil">
+                          <Tooltip title="Lihat Profil">
                             <Link
                               to={{
                                 pathname: `/lihat-profil/${walikelas._id}`,
@@ -1128,7 +1127,7 @@ function ViewClass(props) {
                                 <PageviewIcon fontSize="small" />
                               </IconButton>
                             </Link>
-                          </LightTooltip>
+                          </Tooltip>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -1167,7 +1166,7 @@ function ViewClass(props) {
                           user.email === student.email ? null : (
                             <Grid item xs container justify="flex-end">
                               <Grid item>
-                                <LightTooltip title="Lihat Profil">
+                                <Tooltip title="Lihat Profil">
                                   <Link
                                     to={{
                                       pathname: `/lihat-profil/${student._id}`,
@@ -1180,7 +1179,7 @@ function ViewClass(props) {
                                       <PageviewIcon fontSize="small" />
                                     </IconButton>
                                   </Link>
-                                </LightTooltip>
+                                </Tooltip>
                               </Grid>
                             </Grid>
                           ),

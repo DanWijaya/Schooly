@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import { getAllUnits, deleteUnit } from "../../../actions/UnitActions";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Button,
@@ -23,6 +22,7 @@ import {
   Snackbar,
   TableSortLabel,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core/";
 import Alert from "@material-ui/lab/Alert";
@@ -166,13 +166,13 @@ function UnitListToolbar(props) {
             </Link>
           </Hidden>
           <Hidden mdUp>
-            <LightTooltip title="Buat Unit">
+            <Tooltip title="Buat Unit">
               <Link to="/buat-unit">
                 <Fab size="medium" className={classes.createUnitButton}>
                   <WebIcon className={classes.createUnitIconMobile} />
                 </Fab>
               </Link>
-            </LightTooltip>
+            </Tooltip>
           </Hidden>
         </Grid>
         <Grid item xs>
@@ -277,20 +277,20 @@ function UnitListToolbar(props) {
                     />
                   </div>
                 ) : (
-                  <LightTooltip title="Cari Unit">
+                  <Tooltip title="Cari Unit">
                     <IconButton onClick={() => setSearchBarFocus(true)}>
                       <SearchIcon />
                     </IconButton>
-                  </LightTooltip>
+                  </Tooltip>
                 )}
               </Hidden>
             </Grid>
             <Grid item>
-              <LightTooltip title="Urutkan Unit">
+              <Tooltip title="Urutkan Unit">
                 <IconButton onClick={handleOpenSortMenu}>
                   <SortIcon />
                 </IconButton>
-              </LightTooltip>
+              </Tooltip>
               <Menu
                 keepMounted
                 open={Boolean(anchorEl)}
@@ -595,7 +595,7 @@ function UnitList(props) {
                         </Link>
                       </Grid>
                       <Grid item>
-                        <LightTooltip title="Sunting">
+                        <Tooltip title="Sunting">
                           <Link to={`/sunting-unit/${row._id}`}>
                             <IconButton
                               size="small"
@@ -604,8 +604,8 @@ function UnitList(props) {
                               <EditIcon fontSize="small" />
                             </IconButton>
                           </Link>
-                        </LightTooltip>
-                        <LightTooltip title="Hapus">
+                        </Tooltip>
+                        <Tooltip title="Hapus">
                           <IconButton
                             size="small"
                             className={classes.unitButtons}
@@ -615,7 +615,7 @@ function UnitList(props) {
                           >
                             <DeleteIcon fontSize="small" />
                           </IconButton>
-                        </LightTooltip>
+                        </Tooltip>
                       </Grid>
                     </Grid>
                   </CardActions>

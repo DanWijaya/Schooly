@@ -10,7 +10,6 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Button,
@@ -29,6 +28,7 @@ import {
   Select,
   TableSortLabel,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core/";
 import {
@@ -213,14 +213,14 @@ function AdminListToolbar(props) {
               />
             </div>
           ) : (
-            <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
+            <Tooltip title="Search" style={{ marginLeft: "10px" }}>
               <IconButton
                 className={classes.SearchIconButton}
                 onClick={() => setSearchBarFocus(true)}
               >
                 <SearchIcon className={classes.SearchIconIconMobile} />
               </IconButton>
-            </LightTooltip>
+            </Tooltip>
           )}
         </Hidden>
       </div>
@@ -275,14 +275,14 @@ function AdminListToolbar(props) {
             }}
           />
         </Hidden>
-        <LightTooltip title="Urutkan Pengelola">
+        <Tooltip title="Urutkan Pengelola">
           <IconButton
             onClick={handleOpenSortMenu}
             className={classes.sortButton}
           >
             <SortIcon />
           </IconButton>
-        </LightTooltip>
+        </Tooltip>
         <Menu
           keepMounted
           anchorEl={anchorEl}
