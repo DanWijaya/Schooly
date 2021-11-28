@@ -23,6 +23,7 @@ import {
   CameraAlt as CameraAltIcon,
   Close as CloseIcon,
   CloudUpload as CloudUploadIcon,
+  Person as PersonIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -41,9 +42,13 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  avatar: {
+  profilePicture: {
     width: "200px",
     height: "200px",
+  },
+  defaultAvatarSize: {
+    width: "150px",
+    height: "150px",
   },
   avatarSizeWidth: {
     width: "200px",
@@ -156,12 +161,11 @@ function EditProfilePicture(props) {
     if (!profileImg) {
       if (avatar) {
         return (
-          <Avatar className={classes.avatar}>
+          <Avatar className={classes.profilePicture}>
             <img
               alt="Profile"
               onLoad={onImgLoad}
               src={avatar}
-              // src={`/api/upload/avatar/${user.avatar}`}
               ref={uploadedImage}
               className={avatarImgClass}
             />
@@ -169,20 +173,20 @@ function EditProfilePicture(props) {
         );
       } else {
         return (
-          <Avatar className={classes.avatar}>
+          <Avatar className={classes.profilePicture}>
             <img
               alt="Profile"
               onLoad={onImgLoad}
               src={defaultAvatar}
               ref={uploadedImage}
-              className={avatarImgClass}
+              className={classes.defaultAvatarSize}
             />
           </Avatar>
         );
       }
     } else {
       return (
-        <Avatar className={classes.avatar}>
+        <Avatar className={classes.profilePicture}>
           <img
             alt="Current Profile"
             onLoad={onImgLoad}
@@ -262,7 +266,7 @@ function EditProfilePicture(props) {
                 </Grid>
                 <Grid item>
                   <Typography
-                    variant="subtitle2"
+                    variant="body2"
                     align="center"
                     color="textSecondary"
                     paragraph

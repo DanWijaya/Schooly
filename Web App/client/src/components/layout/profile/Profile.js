@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "100%",
     },
   },
-  avatar: {
+  profilePicture: {
     width: "150px",
     height: "150px",
   },
@@ -238,7 +238,7 @@ function Profile(props) {
                 />
               }
             >
-              <Avatar src={avatar} className={classes.avatar} />
+              <Avatar src={avatar} className={classes.profilePicture} />
             </Badge>
           ) : (
             <Badge
@@ -257,7 +257,7 @@ function Profile(props) {
                 />
               }
             >
-              <Avatar className={classes.avatar} />
+              <Avatar className={classes.profilePicture} />
             </Badge>
           )}
         </Grid>

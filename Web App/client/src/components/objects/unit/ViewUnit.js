@@ -14,7 +14,6 @@ import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions"
 import ClassItem from "../item/ClassItem";
 import SubjectItem from "../item/SubjectItem";
 import UserItem from "../item/UserItem";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
 import {
@@ -90,14 +89,6 @@ function ViewUnit(props) {
     setTabValue(newValue);
   };
 
-  const onDelete = (id) => {
-    console.log(id);
-  };
-
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
-  };
-
   React.useEffect(() => {
     getOneUnit(unitId);
     getAllClass(unitId);
@@ -108,8 +99,8 @@ function ViewUnit(props) {
   }, []);
 
   React.useEffect(() => {
-    //Can only pass a normal function as argument to useEffect, and not an async function.
-    // So to use async, have to do this:
+    // Can only pass a normal function as argument to useEffect, and not an async function.
+    // So to use async, have to do this.
     const fetchAvatar = async () => {
       try {
         const users = await getAllUsers(unitId);
@@ -225,14 +216,6 @@ function ViewUnit(props) {
           </div>
         </Grid>
       </Grid>
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Unit"
-        itemName={selectedUnits.name}
-        warningText="Pastikan Unit sudah kosong sebelum dihapus."
-        deleteItem={() => onDelete(unitId)}
-      />
     </div>
   );
 }
