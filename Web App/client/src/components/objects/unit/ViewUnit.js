@@ -228,11 +228,10 @@ function ViewUnit(props) {
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Materi"
+        itemType="Unit"
         itemName={selectedUnits.name}
-        deleteItem={() => {
-          onDelete(unitId);
-        }}
+        warningText="Pastikan Unit sudah kosong sebelum dihapus."
+        deleteItem={() => onDelete(unitId)}
       />
     </div>
   );

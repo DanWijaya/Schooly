@@ -1094,20 +1094,17 @@ function ManageUsers(props) {
       <DeactivateDialog
         open={openDeactivateDialog}
         onClose={handleCloseDeactivateDialog}
-        itemName={selectedUserName}
         itemType="Pengguna"
-        onAction={() => {
-          onDeactivateUser(selectedUserId);
-        }}
+        itemName={selectedUserName}
+        onAction={() => onDeactivateUser(selectedUserId)}
       />
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Pengguna"
         itemName={selectedUserName}
-        deleteItem={() => {
-          onDeleteUser(selectedUserId);
-        }}
+        warningText="Informasi pribadi yang tersimpan juga akan dihapus."
+        deleteItem={() => onDeleteUser(selectedUserId)}
       />
       <Snackbar
         open={openSnackbar}

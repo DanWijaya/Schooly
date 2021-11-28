@@ -247,15 +247,13 @@ class CreateUnit extends Component {
             success={success}
             messageUploading="Unit sedang dibuat"
             messageSuccess="Unit telah dibuat"
-            redirectLink={`/daftar-unit`}
+            redirectLink="/daftar-unit"
           />
           <DeleteDialog
             openDeleteDialog={this.state.openDeleteDialog}
             handleCloseDeleteDialog={this.handleCloseDeleteDialog}
             itemType="Unit"
-            itemName={this.state.name}
             redirectLink="/daftar-unit"
-            isWarning={false}
           />
         </div>
         <FloatingHelp />

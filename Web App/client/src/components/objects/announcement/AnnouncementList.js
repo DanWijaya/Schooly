@@ -672,9 +672,8 @@ function AnnouncementList(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Pengumuman"
         itemName={selectedAnnouncementName}
-        deleteItem={() => {
-          onDeleteAnnouncement(selectedAnnouncementId);
-        }}
+        warningText="Lampiran yang ada juga akan dihapus."
+        deleteItem={() => onDeleteAnnouncement(selectedAnnouncementId)}
       />
       <Snackbar
         open={openDeleteSnackbar}

@@ -235,13 +235,11 @@ function EditUnit(props) {
           redirectLink="/daftar-unit"
         />
         <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Unit"
-        itemName={objData.name}
-        redirectLink="/daftar-unit"
-        isWarning={false}
-      />
+          openDeleteDialog={openDeleteDialog}
+          handleCloseDeleteDialog={handleCloseDeleteDialog}
+          itemType="perubahan pada Unit"
+          redirectLink="/daftar-unit"
+        />
       </div>
       <FloatingHelp />
     </div>

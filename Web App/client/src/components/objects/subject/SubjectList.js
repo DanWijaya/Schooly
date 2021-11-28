@@ -13,7 +13,6 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import SubjectItem from "../../objects/item/SubjectItem";
 import Empty from "../../misc/empty/Empty";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,

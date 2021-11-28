@@ -588,9 +588,8 @@ function TaskList(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Tugas"
         itemName={selectedTaskName}
-        deleteItem={() => {
-          onDeleteTask(selectedTaskId);
-        }}
+        warningText="Lampiran, komentar, dan nilai yang ada juga akan dihapus."
+        deleteItem={() => onDeleteTask(selectedTaskId)}
       />
       <Snackbar
         open={openDeleteSnackbar}

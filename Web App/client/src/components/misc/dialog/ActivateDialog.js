@@ -1,53 +1,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button, Dialog, Grid, Typography } from "@material-ui/core/";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography
+} from "@material-ui/core";
+import {
+  Cancel as CancelIcon,
+  CheckCircle as CheckCircleIcon,
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import CancelIcon from "@material-ui/icons/Cancel";
-import BlockIcon from "@material-ui/icons/Block";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "300px",
-    maxWidth: "100%",
-    minHeight: "175px",
-    padding: "15px",
+    maxWidth: "300px",
+    width: "100%",
   },
-  dialogConfirmButton: {
-    width: "125px",
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    border: `1px solid ${theme.palette.success.main}`,
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.dark,
-      color: "white",
-      border: `1px solid ${theme.palette.success.dark}`,
-    },
+  activateButton: {
+    fontSize: "12px",
+    color: theme.palette.success.main,
   },
-  dialogCancelButton: {
-    width: "125px",
-    backgroundColor: "white",
-    color: theme.palette.error.main,
-    border: `1px solid ${theme.palette.error.main}`,
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-      border: `1px solid ${theme.palette.error.dark}`,
-    },
-  },
-  warningText: {
-    color: theme.palette.error.main,
-    marginLeft: "3px",
-    fontSize: "10px",
-  },
-  warningIcon: {
-    color: theme.palette.error.main,
-    width: "15px",
-    height: "15px",
-  },
-  warning: {
-    display: "flex",
-    alignItems: "center",
+  cancelButton: {
+    fontSize: "12px",
+    color: theme.palette.grey.A700,
   },
 }));
 
@@ -56,47 +34,37 @@ function ActivateDialog(props) {
   const { open, onClose, itemName, onAction, itemId, itemType } = props;
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <Grid
-        container
-        direction="column"
-        justify="space-between"
-        alignItems="center"
-        className={classes.root}
-      >
-        <Grid item>
-          <Typography variant="h6" gutterBottom>
-            Aktifkan {itemType} berikut?
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography align="center" gutterBottom>
-            <b>{itemName}</b>
-          </Typography>
-        </Grid>
-        <Grid container spacing={2} justify="center" alignItems="center">
-          <Grid item>
-            <Button
-              onClick={() => {
-                onAction(itemId);
-              }}
-              startIcon={<CheckCircleIcon />}
-              className={classes.dialogConfirmButton}
-            >
-              Iya
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              onClick={onClose}
-              startIcon={<CancelIcon />}
-              className={classes.dialogCancelButton}
-            >
-              Tidak
-            </Button>
-          </Grid>
-        </Grid>
-      </Grid>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      PaperProps={{ className: classes.root }}
+    >
+      <DialogTitle>
+        <Typography variant="h6">
+          Aktifkan {itemType} berikut?
+        </Typography>
+      </DialogTitle>
+      <DialogContent>
+        <Typography noWrap gutterBottom>
+          {itemName}
+        </Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          onClick={onClose}
+          startIcon={<CancelIcon />}
+          className={classes.cancelButton}
+        >
+          Batal
+        </Button>
+        <Button
+          onClick={() => onAction(itemId)}
+          startIcon={<CheckCircleIcon />}
+          className={classes.activateButton}
+        >
+          Aktifkan
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 }

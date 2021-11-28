@@ -52,7 +52,6 @@ import {
   KeyboardDateTimePicker,
 } from "@material-ui/pickers";
 import Alert from "@material-ui/lab/Alert";
-import { withStyles } from "@material-ui/core/styles";
 import {
   Add as AddIcon,
   ArrowDropDown as ArrowDropDownIcon,
@@ -71,6 +70,7 @@ import {
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon
 } from "@material-ui/icons";
+import { withStyles } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
 import { FaChalkboard, FaClipboardList } from "react-icons/fa";
 
@@ -1967,31 +1967,25 @@ class EditAssessment extends Component {
                 </Paper>
               </AppBar>
             </form>
-            <DeleteDialog
-              openDeleteDialog={this.state.openDeleteDialog}
-              handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-              itemType={
-                this.state.type
-                  ? `Perubahan ${this.state.type}`
-                  : "Perubahan Penilaian"
-              }
-              itemName={this.state.name}
-              customMessage="Hapus perubahan"
-              redirectLink={
-                this.state.type === "Kuis"
-                  ? `/kuis-guru/${this.props.match.params.id}`
-                  : `/ujian-guru/${this.props.match.params.id}`
-              }
-              customDecline="Tidak"
-              deleteItem=""
-              isLink={true}
-              isWarning={false}
-            />
             <UploadDialog
               openUploadDialog={this.state.openUploadDialog}
               success={success}
               messageUploading={`${this.state.type} sedang disunting`}
               messageSuccess={`${this.state.type} telah disunting`}
+              redirectLink={
+                this.state.type === "Kuis"
+                  ? `/kuis-guru/${this.props.match.params.id}`
+                  : `/ujian-guru/${this.props.match.params.id}`
+              }
+            />
+            <DeleteDialog
+              openDeleteDialog={this.state.openDeleteDialog}
+              handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+              itemType={
+                this.state.type
+                  ? `perubahan pada ${this.state.type}`
+                  : "perubahan Penilaian"
+              }
               redirectLink={
                 this.state.type === "Kuis"
                   ? `/kuis-guru/${this.props.match.params.id}`

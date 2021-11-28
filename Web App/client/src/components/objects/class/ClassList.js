@@ -966,9 +966,8 @@ function ClassList(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Kelas"
         itemName={selectedClassName}
-        deleteItem={() => {
-          onDeleteClass(selectedClassId);
-        }}
+        warningText="Pastikan Kelas sudah kosong sebelum dihapus."
+        deleteItem={() => onDeleteClass(selectedClassId)}
       />
       <Snackbar
         open={openSnackbar}

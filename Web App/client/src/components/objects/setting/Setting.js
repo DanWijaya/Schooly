@@ -226,9 +226,8 @@ class Setting extends Component {
           <DeleteDialog
             openDeleteDialog={this.state.isBackDialogOpen}
             handleCloseDeleteDialog={() => this.setIsBackDialogOpen(false)}
+            itemType="perubahan Pengaturan"
             deleteItem={this.props.history.goBack}
-            itemType={""}
-            customMessage="Hapus perubahan?"
           />
         </div>
       </Fade>

@@ -835,20 +835,17 @@ function ManagePendingAdmins(props) {
         <ActivateDialog
           open={openActivateDialog}
           onClose={handleCloseActivateDialog}
-          itemName={selectedUserName}
           itemType="Pengelola"
-          onAction={() => {
-            onActivateUser(selectedUserId);
-          }}
+          itemName={selectedUserName}
+          onAction={() => onActivateUser(selectedUserId)}
         />
         <DeleteDialog
           openDeleteDialog={openDeleteDialog}
           handleCloseDeleteDialog={handleCloseDeleteDialog}
           itemType="Pengelola"
           itemName={selectedUserName}
-          deleteItem={() => {
-            onDeleteUser(selectedUserId);
-          }}
+          warningText="Informasi pribadi yang tersimpan juga akan dihapus."
+          deleteItem={() => onDeleteUser(selectedUserId)}
         />
         <Snackbar
           open={openSnackbar}

@@ -1024,10 +1024,8 @@ class EditTask extends Component {
           <DeleteDialog
             openDeleteDialog={this.state.openDeleteDialog}
             handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-            itemType={"Sunting"}
-            itemName={this.state.name}
-            redirectLink={`/daftar-tugas`}
-            isWarning={false}
+            itemType="perubahan pada Tugas"
+            redirectLink="/daftar-tugas"
           />
           <Snackbar
             open={this.state.fileLimitSnackbar}
