@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Fab, Menu, MenuItem, Typography } from "@material-ui/core";
+import { Fab, Menu, MenuItem } from "@material-ui/core";
 import { HelpOutline as HelpOutlineIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 

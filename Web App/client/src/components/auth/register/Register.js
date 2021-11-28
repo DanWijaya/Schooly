@@ -22,7 +22,6 @@ import {
   MenuItem,
   Paper,
   Select,
-  Snackbar,
   Stepper,
   Step,
   StepLabel,
@@ -574,14 +573,6 @@ class Register extends Component {
       document.documentElement.scrollTop = 0;
     };
 
-    // Error Snackbar
-    const handleCloseSnackbar = (event, reason) => {
-      if (reason === "clickaway") {
-        return;
-      }
-      this.setState({ snackbarOpen: false });
-    };
-
     document.title = "Daftar ke Schooly";
 
     return (
@@ -686,21 +677,6 @@ class Register extends Component {
             </Hidden>
           </Grid>
         </Paper>
-        <Snackbar
-          open={this.state.snackbarOpen}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-          <Alert
-            elevation={6}
-            variant="filled"
-            onClose={handleCloseSnackbar}
-            severity="error"
-          >
-            Terdapat kesalahan dalam pengisian!
-          </Alert>
-        </Snackbar>
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
           success={!errors}

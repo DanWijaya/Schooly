@@ -13,7 +13,6 @@ import { getTeachers } from "../../../actions/UserActions";
 import AssessmentItem from "../item/AssessmentItem";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Dialog,
@@ -28,6 +27,7 @@ import {
   Snackbar,
   TableSortLabel,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
@@ -180,13 +180,13 @@ function AssessmentListToolbar(props) {
               </Link>
             </Hidden>
             <Hidden mdUp>
-              <LightTooltip title="Buat Ujian">
+              <Tooltip title="Buat Ujian">
                 <Link to="/buat-ujian">
                   <Fab size="medium" className={classes.createExamButton}>
                     <BsClipboardData className={classes.createExamIconMobile} />
                   </Fab>
                 </Link>
-              </LightTooltip>
+              </Tooltip>
             </Hidden>
           </Grid>
         ) : null}
@@ -289,20 +289,20 @@ function AssessmentListToolbar(props) {
                     />
                   </div>
                 ) : (
-                  <LightTooltip title="Cari Ujian">
+                  <Tooltip title="Cari Ujian">
                     <IconButton onClick={() => setSearchBarFocus(true)}>
                       <SearchIcon />
                     </IconButton>
-                  </LightTooltip>
+                  </Tooltip>
                 )}
               </Hidden>
             </Grid>
             <Grid item>
-              <LightTooltip title="Urutkan Ujian">
+              <Tooltip title="Urutkan Ujian">
                 <IconButton onClick={handleOpenSortMenu}>
                   <SortIcon />
                 </IconButton>
-              </LightTooltip>
+              </Tooltip>
               <Menu
                 keepMounted
                 open={Boolean(anchorEl)}

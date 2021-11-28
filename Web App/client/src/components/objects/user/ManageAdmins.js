@@ -13,7 +13,6 @@ import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions"
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import DeactivateDialog from "../../misc/dialog/DeactivateDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Checkbox,
@@ -33,6 +32,7 @@ import {
   Snackbar,
   TableSortLabel,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
@@ -326,30 +326,30 @@ function ManageAdminsToolbar(props) {
                   }}
                 />
               ) : (
-                <LightTooltip title="Cari Akun">
+                <Tooltip title="Cari Akun">
                   <IconButton onClick={() => setSearchBarFocus(true)}>
                     <SearchIcon />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
               )}
             </Hidden>
           </Grid>
           <Hidden smDown>
             <Grid item style={{ display: searchBarFocus ? "none" : "block" }}>
               <Link to="/data-unit-pengelola">
-                <LightTooltip title="Sunting Data Unit Pengelola">
+                <Tooltip title="Sunting Data Unit Pengelola">
                   <IconButton>
                     <BiSitemap />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
               </Link>
             </Grid>
             <Grid item>
-              <LightTooltip title="Urutkan Akun">
+              <Tooltip title="Urutkan Akun">
                 <IconButton onClick={handleOpenSortMenu}>
                   <SortIcon />
                 </IconButton>
-              </LightTooltip>
+              </Tooltip>
               <Menu
                 keepMounted
                 open={Boolean(anchorEl)}
@@ -397,20 +397,20 @@ function ManageAdminsToolbar(props) {
                     style={{ display: searchBarFocus ? "none" : "block" }}
                   >
                     <Link to="/data-unit-pengelola">
-                      <LightTooltip title="Sunting Data Unit Pengelola">
+                      <Tooltip title="Sunting Data Unit Pengelola">
                         <IconButton>
                           <BiSitemap />
                         </IconButton>
-                      </LightTooltip>
+                      </Tooltip>
                     </Link>
                   </Grid>,
                   // When search bar is not on focus and searchFilter is empty
                   <Grid item>
-                    <LightTooltip title="Urutkan Akun">
+                    <Tooltip title="Urutkan Akun">
                       <IconButton onClick={handleOpenSortMenu}>
                         <SortIcon />
                       </IconButton>
-                    </LightTooltip>
+                    </Tooltip>
                     <Menu
                       keepMounted
                       open={Boolean(anchorEl)}

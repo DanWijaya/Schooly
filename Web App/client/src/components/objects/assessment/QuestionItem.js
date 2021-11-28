@@ -1,5 +1,4 @@
 import React from "react";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Button,
   Checkbox,

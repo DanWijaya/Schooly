@@ -14,7 +14,6 @@ import { getTeachers } from "../../../actions/UserActions";
 import MaterialItem from "../item/MaterialItem";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Divider,
@@ -28,6 +27,7 @@ import {
   Snackbar,
   TableSortLabel,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
@@ -162,7 +162,7 @@ function MaterialListToolbar(props) {
               </Link>
             </Hidden>
             <Hidden mdUp>
-              <LightTooltip title="Buat Materi">
+              <Tooltip title="Buat Materi">
                 <Link to="/buat-materi">
                   <Fab size="medium" className={classes.createMaterialButton}>
                     <MenuBookIcon
@@ -170,7 +170,7 @@ function MaterialListToolbar(props) {
                     />
                   </Fab>
                 </Link>
-              </LightTooltip>
+              </Tooltip>
             </Hidden>
           </Grid>
         ) : null}
@@ -273,20 +273,20 @@ function MaterialListToolbar(props) {
                     />
                   </div>
                 ) : (
-                  <LightTooltip title="Cari Materi">
+                  <Tooltip title="Cari Materi">
                     <IconButton onClick={() => setSearchBarFocus(true)}>
                       <SearchIcon />
                     </IconButton>
-                  </LightTooltip>
+                  </Tooltip>
                 )}
               </Hidden>
             </Grid>
             <Grid item>
-              <LightTooltip title="Urutkan Materi">
+              <Tooltip title="Urutkan Materi">
                 <IconButton onClick={handleOpenSortMenu}>
                   <SortIcon />
                 </IconButton>
-              </LightTooltip>
+              </Tooltip>
               <Menu
                 keepMounted
                 open={Boolean(anchorEl)}

@@ -14,7 +14,6 @@ import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions"
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import ActivateDialog from "../../misc/dialog/ActivateDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { TabPanel } from "../../misc/tab-panel/TabPanel";
 import {
   Avatar,
@@ -39,6 +38,7 @@ import {
   Tabs,
   TableSortLabel,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
@@ -321,21 +321,21 @@ function ManageUsersToolbar(props) {
                   }}
                 />
               ) : (
-                <LightTooltip title="Cari Akun">
+                <Tooltip title="Cari Akun">
                   <IconButton onClick={() => setSearchBarFocus(true)}>
                     <SearchIcon />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
               )}
             </Hidden>
           </Grid>
           <Hidden smDown>
             <Grid item>
-              <LightTooltip title="Urutkan Akun">
+              <Tooltip title="Urutkan Akun">
                 <IconButton onClick={handleOpenSortMenu}>
                   <SortIcon />
                 </IconButton>
-              </LightTooltip>
+              </Tooltip>
               <Menu
                 keepMounted
                 open={Boolean(anchorEl)}
@@ -378,11 +378,11 @@ function ManageUsersToolbar(props) {
             {searchBarFocus || searchFilter ? null : (
               // When search bar is not on focus and searchFilter is empty
               <Grid item>
-                <LightTooltip title="Urutkan Akun">
+                <Tooltip title="Urutkan Akun">
                   <IconButton onClick={handleOpenSortMenu}>
                     <SortIcon />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
                 <Menu
                   keepMounted
                   open={Boolean(anchorEl)}

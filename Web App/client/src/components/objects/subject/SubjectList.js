@@ -13,7 +13,6 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import SubjectItem from "../../objects/item/SubjectItem";
 import Empty from "../../misc/empty/Empty";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Button,
@@ -29,6 +28,7 @@ import {
   Snackbar,
   TableSortLabel,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
@@ -136,7 +136,7 @@ function SubjectListToolbar(props) {
             </Fab>
           </Hidden>
           <Hidden mdUp>
-            <LightTooltip title="Buat Mata Pelajaran">
+            <Tooltip title="Buat Mata Pelajaran">
               <Fab
                 size="medium"
                 onClick={handleOpenCreateDialog}
@@ -144,7 +144,7 @@ function SubjectListToolbar(props) {
               >
                 <LibraryBooksIcon className={classes.createSubjectIconMobile} />
               </Fab>
-            </LightTooltip>
+            </Tooltip>
           </Hidden>
         </Grid>
         <Grid item>
@@ -195,11 +195,11 @@ function SubjectListToolbar(props) {
               />
             </Grid>
             <Grid item>
-              <LightTooltip title="Urutkan Mata Pelajaran">
+              <Tooltip title="Urutkan Mata Pelajaran">
                 <IconButton onClick={handleOpenSortMenu}>
                   <SortByAlphaIcon />
                 </IconButton>
-              </LightTooltip>
+              </Tooltip>
               <Menu
                 keepMounted
                 open={Boolean(anchorEl)}
