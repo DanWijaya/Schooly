@@ -24,7 +24,7 @@ import {
   Paper,
   Tab,
   Tabs,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import {
   DesktopWindows as DesktopWindowsIcon,
@@ -185,7 +185,7 @@ function ViewUnit(props) {
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
               <Grid container spacing={2} direction="column">
-                <SubjectItem data={all_subjects} isEditable={false} />
+                <SubjectItem data={all_subjects} />
               </Grid>
             </TabPanel>
             <TabPanel value={tabValue} index={2}>

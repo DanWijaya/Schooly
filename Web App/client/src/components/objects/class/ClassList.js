@@ -88,7 +88,7 @@ function ClassListToolbar(props) {
     orderBy,
     onRequestSort,
     searchFilter,
-    updateSearchFilter,
+    setSearchFilter,
     searchBarFocus,
     setSearchBarFocus,
   } = props;
@@ -148,11 +148,11 @@ function ClassListToolbar(props) {
   };
 
   const onChange = (e) => {
-    updateSearchFilter(e.target.value);
+    setSearchFilter(e.target.value);
   };
 
   const onClear = (e, id) => {
-    updateSearchFilter("");
+    setSearchFilter("");
     // document.getElementById(id).focus();
   };
 
@@ -548,7 +548,7 @@ function ClassListToolbar(props) {
                   <IconButton
                     onClick={() => {
                       setSearchBarFocus(false);
-                      updateSearchFilter("");
+                      setSearchFilter("");
                     }}
                   >
                     <ArrowBackIcon />
@@ -792,7 +792,7 @@ function ClassList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedClassId, setSelectedClassId] = React.useState(null);
   const [selectedClassName, setSelectedClassName] = React.useState(null);
-  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchFilter, setSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
   const { classesCollection, tasksCollection } = props;
@@ -949,7 +949,7 @@ function ClassList(props) {
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
         searchFilter={searchFilter}
-        updateSearchFilter={updateSearchFilter}
+        setSearchFilter={setSearchFilter}
       />
       {rows.length === 0 ? (
         <Empty />
@@ -958,6 +958,7 @@ function ClassList(props) {
           <ClassItem
             data={stableSort(rows, getComparator(order, orderBy))}
             user={user}
+            handleOpenDeleteDialog={handleOpenDeleteDialog}
           />
         </Grid>
       )}

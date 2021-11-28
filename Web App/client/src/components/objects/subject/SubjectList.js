@@ -42,6 +42,7 @@ import {
   SortByAlpha as SortByAlphaIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 
 function createData(_id, name, all_class) {
   return { _id, name, all_class };
@@ -81,9 +82,9 @@ function SubjectListToolbar(props) {
     order,
     orderBy,
     onRequestSort,
-    handleOpenFormDialog,
+    handleOpenCreateDialog,
     searchFilter,
-    updateSearchFilter,
+    setSearchFilter,
     setSearchBarFocus,
     searchBarFocus,
   } = props;
@@ -111,11 +112,11 @@ function SubjectListToolbar(props) {
   };
 
   const onChange = (e) => {
-    updateSearchFilter(e.target.value);
+    setSearchFilter(e.target.value);
   };
 
   const onClear = (e, id) => {
-    updateSearchFilter("");
+    setSearchFilter("");
     // document.getElementById(id).focus();
   };
 
@@ -127,7 +128,7 @@ function SubjectListToolbar(props) {
             <Fab
               size="large"
               variant="extended"
-              onClick={handleOpenFormDialog}
+              onClick={handleOpenCreateDialog}
               className={classes.createSubjectButton}
             >
               <LibraryBooksIcon className={classes.createSubjectIconDesktop} />
@@ -138,7 +139,7 @@ function SubjectListToolbar(props) {
             <LightTooltip title="Buat Mata Pelajaran">
               <Fab
                 size="medium"
-                onClick={handleOpenFormDialog}
+                onClick={handleOpenCreateDialog}
                 className={classes.createSubjectButton}
               >
                 <LibraryBooksIcon className={classes.createSubjectIconMobile} />
@@ -391,7 +392,7 @@ function SubjectList(props) {
   const [errors, setErrors] = React.useState({});
 
   const [subject, setSubject] = React.useState({});
-  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchFilter, setSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [snackbarContent, setSnackbarContent] = React.useState(null);
@@ -446,11 +447,11 @@ function SubjectList(props) {
   };
 
   // Delete Dialog
-  const handleOpenDeleteDialog = (e, id, name) => {
+  const handleOpenDeleteDialog = (e, row) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
-    setSelectedSubjectId(id);
-    setSelectedSubjectName(name);
+    setSelectedSubjectId(row._id);
+    setSelectedSubjectName(row.name);
   };
 
   const handleCloseDeleteDialog = () => {
@@ -481,19 +482,30 @@ function SubjectList(props) {
     setOpenSnackbar(false);
   };
 
-  // Delete Dialog
-  const handleOpenFormDialog = (e, id, name, isEdit = false) => {
+  const handleOpenEditDialog = (
+    e,
+    row
+    // id, name, isEdit = false
+  ) => {
     e.stopPropagation();
-    if (isEdit) {
-      setSubject((prev) => ({
-        ...prev,
-        name: name,
-        id: id,
-      }));
-      setAction("Edit");
-    } else {
-      setAction("Create");
-    }
+    setSubject((prev) => ({
+      ...prev,
+      name: row.name,
+      id: row._id,
+    }));
+    setAction("Edit");
+
+    setOpenFormDialog(true);
+  };
+
+  // Delete Dialog
+  const handleOpenCreateDialog = (
+    e,
+    row
+    // id, name, isEdit = false
+  ) => {
+    e.stopPropagation();
+    setAction("Create");
     setOpenFormDialog(true);
   };
 
@@ -608,6 +620,7 @@ function SubjectList(props) {
 
   return (
     <div className={classes.root}>
+      {FormDialog()}
       <Grid
         container
         alignItems="center"
@@ -627,7 +640,7 @@ function SubjectList(props) {
       </Grid>
       <Divider />
       <SubjectListToolbar
-        handleOpenFormDialog={handleOpenFormDialog}
+        handleOpenCreateDialog={handleOpenCreateDialog}
         role={user.role}
         deleteSubject={deleteSubject}
         classes={classes}
@@ -636,7 +649,7 @@ function SubjectList(props) {
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
         searchFilter={searchFilter}
-        updateSearchFilter={updateSearchFilter}
+        setSearchFilter={setSearchFilter}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
       />
@@ -647,11 +660,19 @@ function SubjectList(props) {
           <SubjectItem
             data={stableSort(rows, getComparator(order, orderBy))}
             isEditable={true}
-            handleOpenFormDialog={handleOpenFormDialog}
+            handleOpenEditDialog={handleOpenEditDialog}
             handleOpenDeleteDialog={handleOpenDeleteDialog}
           />
         </Grid>
       )}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Mata Pelajaran"
+        itemName={selectedSubjectName}
+        warningText="Pastikan Mata Pelajaran sudah tidak digunakan."
+        deleteItem={() => onDeleteSubject(selectedSubjectId)}
+      />
       <Snackbar
         open={openSnackbar}
         autoHideDuration={4000}

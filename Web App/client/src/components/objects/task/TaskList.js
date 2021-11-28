@@ -91,7 +91,7 @@ function TaskListToolbar(props) {
     onRequestSort,
     role,
     searchFilter,
-    updateSearchFilter,
+    setSearchFilter,
     searchBarFocus,
     setSearchBarFocus,
   } = props;
@@ -142,11 +142,11 @@ function TaskListToolbar(props) {
 
   // Search Filter
   const onChange = (e) => {
-    updateSearchFilter(e.target.value);
+    setSearchFilter(e.target.value);
   };
 
   const onClear = (e, id) => {
-    updateSearchFilter("");
+    setSearchFilter("");
     // document.getElementById(id).focus();
   };
 
@@ -232,7 +232,7 @@ function TaskListToolbar(props) {
                     <IconButton
                       onClick={() => {
                         setSearchBarFocus(false);
-                        updateSearchFilter("");
+                        setSearchFilter("");
                       }}
                     >
                       <ArrowBackIcon />
@@ -407,7 +407,7 @@ function TaskList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null);
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
-  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchFilter, setSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
@@ -570,7 +570,7 @@ function TaskList(props) {
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
         searchFilter={searchFilter}
-        updateSearchFilter={updateSearchFilter}
+        setSearchFilter={setSearchFilter}
       />
       {rows.length === 0 ? (
         <Empty />

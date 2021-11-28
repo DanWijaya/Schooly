@@ -36,7 +36,7 @@ import {
   Select,
   Snackbar,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
@@ -46,7 +46,7 @@ import {
   Close as CloseIcon,
   Delete as DeleteIcon,
   ShortText as ShortTextIcon,
-  SupervisorAccount as SupervisorAccountIcon
+  SupervisorAccount as SupervisorAccountIcon,
 } from "@material-ui/icons";
 import {
   FaChalkboard,
@@ -87,7 +87,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
   },
   closeButton: {
@@ -308,7 +309,9 @@ class EditAnnouncement extends Component {
       class_assigned: Boolean(selectedAnnouncements.class_assigned)
         ? selectedAnnouncements.class_assigned
         : [],
-      target_role: selectedAnnouncements.to,
+      target_role: Array.isArray(selectedAnnouncements.to)
+        ? selectedAnnouncements.to
+        : [],
       // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
       // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
     });
@@ -601,6 +604,12 @@ class EditAnnouncement extends Component {
     ) {
       return <Redirect to="/tidak-ditemukan" />;
     }
+    console.log(target_role);
+
+    const rolesToSend = [
+      ["Student", "Murid"],
+      ["Teacher", "Guru"],
+    ];
 
     return (
       <div className={classes.background}>
@@ -621,7 +630,10 @@ class EditAnnouncement extends Component {
                       </Button>
                     </Grid>
                     <Grid item>
-                      <IconButton onClick={this.handleOpenDeleteDialog} className={classes.closeButton}>
+                      <IconButton
+                        onClick={this.handleOpenDeleteDialog}
+                        className={classes.closeButton}
+                      >
                         <CloseIcon style={{ fontSize: "24px" }} />
                       </IconButton>
                     </Grid>
@@ -637,7 +649,8 @@ class EditAnnouncement extends Component {
                     Buat Pengumuman
                   </Typography>
                   <Typography color="textSecondary">
-                    Sebarkan informasi secara satu arah, lampirkan berkas jika diperlukan.
+                    Sebarkan informasi secara satu arah, lampirkan berkas jika
+                    diperlukan.
                   </Typography>
                 </div>
                 <Divider />
@@ -645,7 +658,7 @@ class EditAnnouncement extends Component {
                   <Grid item xs={12} md={7} className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <AnnouncementIcon className={classes.labelIcon} />
                           <Typography color="primary">
                             Judul Pengumuman
@@ -663,11 +676,9 @@ class EditAnnouncement extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <ShortTextIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Deskripsi
-                          </Typography>
+                          <Typography color="primary">Deskripsi</Typography>
                         </div>
                         <TextField
                           fullWidth
@@ -697,10 +708,15 @@ class EditAnnouncement extends Component {
                   </Hidden>
                   <Grid item xs={12} md className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
-                      {user.role === "Student" ? null : user.role === "Admin" ? (
+                      {user.role === "Student" ? null : user.role ===
+                        "Admin" ? (
                         <Grid item>
-                          <div style={{ display: "flex", alignItems: "center"}}>
-                            <SupervisorAccountIcon className={classes.labelIcon} />
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <SupervisorAccountIcon
+                              className={classes.labelIcon}
+                            />
                             <Typography color="primary">
                               Ditujukan kepada
                             </Typography>
@@ -740,27 +756,34 @@ class EditAnnouncement extends Component {
                                 );
                               }}
                             >
-                              {[
-                                ["Student", "Murid"],
-                                ["Teacher", "Guru"],
-                              ].map((peran) => {
+                              {rolesToSend.map((peran, idx) => {
                                 return (
                                   <MenuItem key={peran[0]} value={peran[0]}>
-                                    {peran[1]}
+                                    <Checkbox
+                                      color="primary"
+                                      size="small"
+                                      checked={
+                                        target_role.indexOf(peran[0]) !== -1
+                                      }
+                                    />
+                                    <ListItemText
+                                      primary={peran[1]}
+                                      style={{ marginLeft: "10px" }}
+                                    />
                                   </MenuItem>
                                 );
                               })}
                             </Select>
                             {Boolean(errors.to) ? (
-                              <FormHelperText error>
-                                {errors.to}
-                              </FormHelperText>
+                              <FormHelperText error>{errors.to}</FormHelperText>
                             ) : null}
                           </FormControl>
                         </Grid>
                       ) : (
                         <Grid item>
-                          <div style={{ display: "flex", alignItems: "center"}}>
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
                             <FaChalkboard className={classes.labelIcon} />
                             <Typography color="primary">
                               Kelas yang diberikan
@@ -776,8 +799,12 @@ class EditAnnouncement extends Component {
                             <Select
                               multiple
                               value={class_assigned}
-                              onChange={(event) => this.onChange(event, "class_assigned")}
-                              MenuProps={{ classes: { paper: classes.selectPaper } }}
+                              onChange={(event) =>
+                                this.onChange(event, "class_assigned")
+                              }
+                              MenuProps={{
+                                classes: { paper: classes.selectPaper },
+                              }}
                               renderValue={(selected) => {
                                 return (
                                   <div className={classes.chips}>
@@ -787,7 +814,9 @@ class EditAnnouncement extends Component {
                                           key={classId}
                                           label={
                                             this.state.allClassObject
-                                              ? this.state.allClassObject[classId]
+                                              ? this.state.allClassObject[
+                                                  classId
+                                                ]
                                               : null
                                           }
                                           className={classes.chip}
@@ -808,9 +837,16 @@ class EditAnnouncement extends Component {
                                       <Checkbox
                                         color="primary"
                                         size="small"
-                                        checked={class_assigned.indexOf(classInfo._id) > -1}
+                                        checked={
+                                          class_assigned.indexOf(
+                                            classInfo._id
+                                          ) > -1
+                                        }
                                       />
-                                      <ListItemText primary={classInfo.name} style={{ marginLeft: "10px" }} />
+                                      <ListItemText
+                                        primary={classInfo.name}
+                                        style={{ marginLeft: "10px" }}
+                                      />
                                     </MenuItem>
                                   ))
                                 : null}

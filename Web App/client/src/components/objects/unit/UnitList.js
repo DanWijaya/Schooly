@@ -38,15 +38,8 @@ import {
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
-function createData(
-  _id,
-  unitTitle,
-  subject,
-  author,
-  class_assigned,
-  createdAt
-) {
-  return { _id, unitTitle, subject, author, class_assigned, createdAt };
+function createData(_id, name, description, author, class_assigned, createdAt) {
+  return { _id, name, description, author, class_assigned, createdAt };
 }
 
 var rows = [];
@@ -85,7 +78,7 @@ function UnitListToolbar(props) {
     onRequestSort,
     role,
     searchFilter,
-    updateSearchFilter,
+    setSearchFilter,
     searchBarFocus,
     setSearchBarFocus,
   } = props;
@@ -96,13 +89,13 @@ function UnitListToolbar(props) {
 
   const headCells = [
     {
-      id: "unitTitle",
+      id: "name",
       numeric: false,
       disablePadding: true,
       label: "Nama Materi",
     },
     {
-      id: "subject",
+      id: "description",
       numeric: false,
       disablePadding: false,
       label: "Mata Pelajaran",
@@ -141,11 +134,11 @@ function UnitListToolbar(props) {
   };
 
   const onChange = (e) => {
-    updateSearchFilter(e.target.value);
+    setSearchFilter(e.target.value);
   };
 
   const onClear = (e, id) => {
-    updateSearchFilter("");
+    setSearchFilter("");
     // document.getElementById(id).focus();
   };
 
@@ -229,7 +222,7 @@ function UnitListToolbar(props) {
                     <IconButton
                       onClick={() => {
                         setSearchBarFocus(false);
-                        updateSearchFilter("");
+                        setSearchFilter("");
                       }}
                     >
                       <ArrowBackIcon />
@@ -419,11 +412,11 @@ function UnitList(props) {
   const { all_subjects_map } = props.subjectsCollection;
 
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("subject");
+  const [orderBy, setOrderBy] = React.useState("name");
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedUnitId, setSelectedUnitId] = React.useState(null);
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
-  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchFilter, setSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
@@ -443,7 +436,7 @@ function UnitList(props) {
       createData(
         data._id,
         data.name,
-        data.subject,
+        data.description,
         !all_teachers_map.size || !all_teachers_map.get(data.author_id)
           ? {}
           : all_teachers_map.get(data.author_id),
@@ -553,7 +546,7 @@ function UnitList(props) {
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
         searchFilter={searchFilter}
-        updateSearchFilter={updateSearchFilter}
+        setSearchFilter={setSearchFilter}
       />
       {rows.length === 0 ? (
         <Empty />
@@ -569,16 +562,12 @@ function UnitList(props) {
                   <Avatar variant="square" className={classes.unitBackground}>
                     <WebIcon className={classes.unitIcon} />
                   </Avatar>
-                  <CardContent>
+                  <CardContent style={{ marginBottom: "25px" }}>
                     <Typography variant="h5" component="h2" gutterBottom>
-                      {row.unitTitle}
+                      {row.name}
                     </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      // Deskripsi disini
-                      <br />
-                      Lizards are a widespread group of squamate reptiles, with
-                      over 6,000 species, ranging across all continents except
-                      Antarctica
+                    <Typography variant="body2" color="textSecondary" noWrap>
+                      {row.description}
                     </Typography>
                   </CardContent>
                   <CardActions>
@@ -610,7 +599,7 @@ function UnitList(props) {
                             size="small"
                             className={classes.unitButtons}
                             onClick={(e) => {
-                              handleOpenDeleteDialog(e, row._id, row.unitTitle);
+                              handleOpenDeleteDialog(e, row._id, row.name);
                             }}
                           >
                             <DeleteIcon fontSize="small" />

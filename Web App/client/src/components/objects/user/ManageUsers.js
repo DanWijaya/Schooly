@@ -12,7 +12,10 @@ import {
   bulkSetUserDeactivated,
 } from "../../../actions/UserActions";
 import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
-import { removeDisabledDeletedOfficers, removeHomeroomTeachers } from "../../../actions/ClassActions";
+import {
+  removeDisabledDeletedOfficers,
+  removeHomeroomTeachers,
+} from "../../../actions/ClassActions";
 import Empty from "../../misc/empty/Empty";
 import OptionMenu from "../../misc/menu/OptionMenu";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -118,7 +121,7 @@ function ManageUsersToolbar(props) {
     searchBarFocus,
     searchFilter,
     searchFilterHint,
-    updateSearchFilter,
+    setSearchFilter,
   } = props;
 
   const disabledCheckbox = rowCount === 0;
@@ -175,11 +178,11 @@ function ManageUsersToolbar(props) {
   };
 
   const onChange = (e) => {
-    updateSearchFilter(e.target.value);
+    setSearchFilter(e.target.value);
   };
 
   const onClear = (e) => {
-    updateSearchFilter("");
+    setSearchFilter("");
   };
 
   return (
@@ -574,9 +577,9 @@ function ManageUsers(props) {
   const [openDeactivateDialog, setOpenDisableDialog] = React.useState(null);
   const [selectedUserId, setSelectedUserId] = React.useState(null);
   const [selectedUserName, setSelectedUserName] = React.useState(null);
-  const [searchFilterS, updateSearchFilterS] = React.useState("");
+  const [searchFilterS, setSearchFilterS] = React.useState("");
   const [searchBarFocusS, setSearchBarFocusS] = React.useState(false);
-  const [searchFilterT, updateSearchFilterT] = React.useState("");
+  const [searchFilterT, setSearchFilterT] = React.useState("");
   const [searchBarFocusT, setSearchBarFocusT] = React.useState(false);
 
   // List Checkbox
@@ -936,7 +939,7 @@ function ManageUsers(props) {
           setSearchBarFocus={setSearchBarFocusS}
           searchBarFocus={searchBarFocusS}
           searchFilter={searchFilterS}
-          updateSearchFilter={updateSearchFilterS}
+          setSearchFilter={setSearchFilterS}
         />
         <Divider />
         {student_rows.length === 0 ? (
@@ -1026,7 +1029,7 @@ function ManageUsers(props) {
           setSearchBarFocus={setSearchBarFocusT}
           searchBarFocus={searchBarFocusT}
           searchFilter={searchFilterT}
-          updateSearchFilter={updateSearchFilterT}
+          setSearchFilter={setSearchFilterT}
         />
         <Divider />
         {teacher_rows.length === 0 ? (

@@ -102,7 +102,7 @@ function AssessmentListToolbar(props) {
     onRequestSort,
     role,
     searchFilter,
-    updateSearchFilter,
+    setSearchFilter,
     setSearchBarFocus,
     searchBarFocus,
   } = props;
@@ -155,10 +155,10 @@ function AssessmentListToolbar(props) {
 
   // Search Filter
   const onChange = (e) => {
-    updateSearchFilter(e.target.value);
+    setSearchFilter(e.target.value);
   };
   const onClear = (e, id) => {
-    updateSearchFilter("");
+    setSearchFilter("");
     // document.getElementById(id).focus();
   };
 
@@ -244,7 +244,7 @@ function AssessmentListToolbar(props) {
                     <IconButton
                       onClick={() => {
                         setSearchBarFocus(false);
-                        updateSearchFilter("");
+                        setSearchFilter("");
                       }}
                     >
                       <ArrowBackIcon />
@@ -482,7 +482,7 @@ function AssessmentList(props) {
     null
   );
   const [openCopySnackbar, setOpenCopySnackBar] = React.useState(null);
-  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchFilter, setSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [type, setAssessmentType] = React.useState(null);
 
@@ -656,7 +656,7 @@ function AssessmentList(props) {
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
         searchFilter={searchFilter}
-        updateSearchFilter={updateSearchFilter}
+        setSearchFilter={setSearchFilter}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
       />

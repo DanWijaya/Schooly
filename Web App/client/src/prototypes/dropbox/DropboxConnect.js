@@ -162,7 +162,7 @@ function DropboxConnect(props) {
   // const [choosenFiles, updateChoosenFiles] = useState([]);
   // const [dropDown, updateDropDown] = useState(false);
   const [createFolderDialog, setCreateFolderDialog] = useState(false);
-  const [searchFilter, updateSearchFilter] = useState("");
+  const [searchFilter, setSearchFilter] = useState("");
   const [allDocs, updateAllDocs] = useState([]);
 
   const [newFileToRender, setNewFileToRender] = useState(false);
@@ -254,7 +254,7 @@ function DropboxConnect(props) {
       .then((response) => {
         console.log("resonse.entries", response.entries);
         updateAllDocs(response.entries);
-        updateSearchFilter(""); // ini untuk clear search filter tiap kali ganti directory
+        setSearchFilter(""); // ini untuk clear search filter tiap kali ganti directory
         setPage(0);
       })
       .catch((response) => {
@@ -302,7 +302,7 @@ function DropboxConnect(props) {
     switch (e.target.id) {
       case "searchFilter":
         console.log(e.target.value);
-        updateSearchFilter(e.target.value);
+        setSearchFilter(e.target.value);
         break;
 
       default:

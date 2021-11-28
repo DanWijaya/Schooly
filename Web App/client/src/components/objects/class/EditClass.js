@@ -3,7 +3,11 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getTeachers, getStudentsByClass } from "../../../actions/UserActions";
-import { getAllClass, setCurrentClass, updateClass } from "../../../actions/ClassActions";
+import {
+  getAllClass,
+  setCurrentClass,
+  updateClass,
+} from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
@@ -21,7 +25,7 @@ import {
   Paper,
   Select,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { withStyles } from "@material-ui/core/styles";
@@ -31,9 +35,10 @@ import {
   Filter1 as Filter1Icon,
   Filter2 as Filter2Icon,
   Filter3 as Filter3Icon,
-  LibraryBooks as LibraryBooksIcon
+  LibraryBooks as LibraryBooksIcon,
 } from "@material-ui/icons";
 import { FaChalkboard } from "react-icons/fa";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 
 const styles = (theme) => ({
   root: {
@@ -63,7 +68,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
   },
   closeButton: {
@@ -100,7 +106,8 @@ class EditClass extends Component {
       sekretaris: null,
       bendahara: null,
       teacher_options: [],
-      openUploadDialog: null,
+      openUploadDialog: false,
+      openDeleteDialog: false,
       mata_pelajaran: null,
       allSubjectObject: null,
     };
@@ -155,6 +162,14 @@ class EditClass extends Component {
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
+  };
+
+  handleOpenDeleteDialog = () => {
+    this.setState({ openDeleteDialog: true });
+  };
+
+  handleCloseDeleteDialog = () => {
+    this.setState({ openDeleteDialog: false });
   };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -315,11 +330,12 @@ class EditClass extends Component {
                       </Button>
                     </Grid>
                     <Grid item>
-                      <Link to="/daftar-kelas">
-                        <IconButton className={classes.closeButton}>
-                          <CloseIcon style={{ fontSize: "24px" }} />
-                        </IconButton>
-                      </Link>
+                      <IconButton
+                        className={classes.closeButton}
+                        onClick={this.handleOpenDeleteDialog}
+                      >
+                        <CloseIcon style={{ fontSize: "24px" }} />
+                      </IconButton>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -333,7 +349,8 @@ class EditClass extends Component {
                     Sunting Kelas
                   </Typography>
                   <Typography color="textSecondary">
-                    Tentukan ketua kelas, sekretaris, dan bendahara dari kelas ini.
+                    Tentukan ketua kelas, sekretaris, dan bendahara dari kelas
+                    ini.
                   </Typography>
                 </div>
                 <Divider />
@@ -341,11 +358,9 @@ class EditClass extends Component {
                   <Grid item xs={12} md className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <FaChalkboard className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Nama Kelas
-                          </Typography>
+                          <Typography color="primary">Nama Kelas</Typography>
                         </div>
                         <TextField
                           fullWidth
@@ -359,11 +374,9 @@ class EditClass extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <AssignmentIndIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Wali Kelas
-                          </Typography>
+                          <Typography color="primary">Wali Kelas</Typography>
                         </div>
                         <FormControl
                           fullWidth
@@ -378,24 +391,28 @@ class EditClass extends Component {
                             }}
                           >
                             {this.state.teacher_options !== null
-                              ? this.state.teacher_options.map((teacherInfo) => (
-                                  <MenuItem
-                                    key={teacherInfo._id}
-                                    value={teacherInfo._id}
-                                  >
-                                    {teacherInfo._id !== null ? (
-                                      teacherInfo.name
-                                    ) : (
-                                      <span style={{ color: "grey" }}>{teacherInfo.name}</span>
-                                    )}
-                                  </MenuItem>
-                                ))
+                              ? this.state.teacher_options.map(
+                                  (teacherInfo) => (
+                                    <MenuItem
+                                      key={teacherInfo._id}
+                                      value={teacherInfo._id}
+                                    >
+                                      {teacherInfo._id !== null ? (
+                                        teacherInfo.name
+                                      ) : (
+                                        <span style={{ color: "grey" }}>
+                                          {teacherInfo.name}
+                                        </span>
+                                      )}
+                                    </MenuItem>
+                                  )
+                                )
                               : null}
                           </Select>
                         </FormControl>
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <LibraryBooksIcon className={classes.labelIcon} />
                           <Typography color="primary">
                             Mata Pelajaran
@@ -452,11 +469,9 @@ class EditClass extends Component {
                   <Grid item xs={12} md className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <Filter1Icon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Ketua Kelas
-                          </Typography>
+                          <Typography color="primary">Ketua Kelas</Typography>
                         </div>
                         <FormControl
                           fullWidth
@@ -476,11 +491,9 @@ class EditClass extends Component {
                         </FormControl>
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <Filter2Icon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Sekretaris
-                          </Typography>
+                          <Typography color="primary">Sekretaris</Typography>
                         </div>
                         <FormControl
                           fullWidth
@@ -500,11 +513,9 @@ class EditClass extends Component {
                         </FormControl>
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <Filter3Icon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Bendahara
-                          </Typography>
+                          <Typography color="primary">Bendahara</Typography>
                         </div>
                         <FormControl
                           fullWidth
@@ -535,6 +546,12 @@ class EditClass extends Component {
             messageUploading="Kelas sedang disunting"
             messageSuccess="Kelas telah disunting"
             redirectLink={`/kelas/${success}`}
+          />
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType="perubahan pada Kelas"
+            redirectLink="/daftar-kelas"
           />
         </div>
         <FloatingHelp />

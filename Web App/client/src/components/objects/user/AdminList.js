@@ -79,7 +79,7 @@ function AdminListToolbar(props) {
     orderBy,
     onRequestSort,
     searchFilter,
-    updateSearchFilter,
+    setSearchFilter,
     searchBarFocus,
     setSearchBarFocus,
   } = props;
@@ -113,11 +113,11 @@ function AdminListToolbar(props) {
   };
 
   const onChange = (e) => {
-    updateSearchFilter(e.target.value);
+    setSearchFilter(e.target.value);
   };
 
   const onClear = (e, id) => {
-    updateSearchFilter("");
+    setSearchFilter("");
     // document.getElementById(id).focus();
   };
 
@@ -156,7 +156,7 @@ function AdminListToolbar(props) {
               <IconButton
                 onClick={() => {
                   setSearchBarFocus(false);
-                  updateSearchFilter("");
+                  setSearchFilter("");
                 }}
               >
                 <ArrowBackIcon />
@@ -450,7 +450,7 @@ function AdminList(props) {
   const [selectedValues, setSelectedValues] = React.useState({});
 
   // Search Filter
-  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchFilter, setSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
 
   // Sorting
@@ -565,7 +565,7 @@ function AdminList(props) {
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
         searchFilter={searchFilter}
-        updateSearchFilter={updateSearchFilter}
+        setSearchFilter={setSearchFilter}
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>

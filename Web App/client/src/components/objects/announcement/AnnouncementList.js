@@ -89,7 +89,7 @@ function AnnouncementListToolbar(props) {
     orderBy,
     onRequestSort,
     searchFilter,
-    updateSearchFilter,
+    setSearchFilter,
     setSearchBarFocus,
     searchBarFocus,
   } = props;
@@ -130,10 +130,10 @@ function AnnouncementListToolbar(props) {
 
   // Search Filter
   const onChange = (e) => {
-    updateSearchFilter(e.target.value);
+    setSearchFilter(e.target.value);
   };
   const onClear = (e, id) => {
-    updateSearchFilter("");
+    setSearchFilter("");
     // document.getElementById(id).focus();
   };
 
@@ -226,7 +226,7 @@ function AnnouncementListToolbar(props) {
                     <IconButton
                       onClick={() => {
                         setSearchBarFocus(false);
-                        updateSearchFilter("");
+                        setSearchFilter("");
                       }}
                     >
                       <ArrowBackIcon />
@@ -406,12 +406,19 @@ function AnnouncementList(props) {
     adminAnnouncements,
   } = props.announcements;
 
+  const isCreator =
+    [all_roles.TEACHER, all_roles.ADMIN].includes(user.role) ||
+    user._id == kelas.ketua_kelas;
+
+  const isReceiver = user.role !== all_roles.ADMIN;
+
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
 
-  const [panel, setPanel] = React.useState(0);
+  const [panel, setPanel] = React.useState(isReceiver ? 0 : 1);
   const handleChangeTab = (event, newValue) => {
     setPanel(newValue);
+    setSearchFilter("");
   };
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -423,7 +430,7 @@ function AnnouncementList(props) {
     setSelectedAnnouncementName,
   ] = React.useState(null);
 
-  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchFilter, setSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
@@ -486,11 +493,11 @@ function AnnouncementList(props) {
 
   retrieveAnnouncements();
   // Delete Dialog
-  const handleOpenDeleteDialog = (e, id, name) => {
+  const handleOpenDeleteDialog = (e, row) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
-    setSelectedAnnouncementId(id);
-    setSelectedAnnouncementName(name);
+    setSelectedAnnouncementId(row._id);
+    setSelectedAnnouncementName(row.name);
   };
 
   const handleCloseDeleteDialog = () => {
@@ -509,16 +516,13 @@ function AnnouncementList(props) {
   };
 
   const onDeleteAnnouncement = (id) => {
+    console.log(id);
+    console.log(selectedAnnouncementName);
     deleteAnnouncement(id).then((res) => {
-      if (user.role === "Teacher") {
-        getAnnouncementByAuthor(user._id);
-        getAdminAnnouncements(user.unit);
-      } else if (user.role === "Student") {
-        getAnnouncementByClass(user.kelas, user._id);
-        getAdminAnnouncements(user.unit);
+      getMyAnnouncement();
+      getReceivedAnnouncement();
+      if (user.role === all_roles.STUDENT) {
         setCurrentClass(user.kelas);
-      } else if (user.role === "Admin") {
-        getAnnouncementByAuthor(user._id);
       }
       handleCloseDeleteDialog();
       handleOpenDeleteSnackbar();
@@ -557,6 +561,7 @@ function AnnouncementList(props) {
       mine = announcementsByAuthor;
     } else if (user.role === "Teacher") {
       received = adminAnnouncements;
+      mine = announcementsByAuthor;
     }
 
     [...mine, ...received].forEach((ann) => {
@@ -568,10 +573,6 @@ function AnnouncementList(props) {
   }, [announcementsByAuthor, announcementsByClass, adminAnnouncements]);
 
   document.name = "Schooly | Daftar Pengumuman";
-
-  const hasCreatePermission =
-    [all_roles.TEACHER, all_roles.ADMIN].includes(user.role) ||
-    user._id == kelas.ketua_kelas;
 
   return (
     <div className={classes.root}>
@@ -605,41 +606,43 @@ function AnnouncementList(props) {
               Masuk
             </Typography>
           }
+          disabled={!isReceiver}
         />
-        {hasCreatePermission ? (
-          <Tab
-            label={
-              <Typography className={classes.announcementTabTitle}>
-                Dari Saya
-              </Typography>
-            }
-          />
-        ) : null}
+        <Tab
+          label={
+            <Typography className={classes.announcementTabTitle}>
+              Dari Saya
+            </Typography>
+          }
+          disabled={!isCreator}
+        />
       </Tabs>
-      <TabPanel value={panel} index={0}>
-        <AnnouncementListToolbar
-          classes={classes}
-          user={user}
-          order={order}
-          orderBy={orderBy}
-          onRequestSort={handleRequestSort}
-          searchFilter={searchFilter}
-          updateSearchFilter={updateSearchFilter}
-          setSearchBarFocus={setSearchBarFocus}
-          searchBarFocus={searchBarFocus}
-        />
-        {rows.length === 0 ? (
-          <Empty />
-        ) : (
-          <Grid container direction="column" spacing={2}>
-            <AnnouncementItem
-              data={stableSort(rows, getComparator(order, orderBy))}
-              handleOpenDeleteDialog={handleOpenDeleteDialog}
-            />
-          </Grid>
-        )}
-      </TabPanel>
-      {hasCreatePermission ? (
+      {isReceiver ? (
+        <TabPanel value={panel} index={0}>
+          <AnnouncementListToolbar
+            classes={classes}
+            user={user}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            searchFilter={searchFilter}
+            setSearchFilter={setSearchFilter}
+            setSearchBarFocus={setSearchBarFocus}
+            searchBarFocus={searchBarFocus}
+          />
+          {rows.length === 0 ? (
+            <Empty />
+          ) : (
+            <Grid container direction="column" spacing={2}>
+              <AnnouncementItem
+                data={stableSort(rows, getComparator(order, orderBy))}
+                handleOpenDeleteDialog={handleOpenDeleteDialog}
+              />
+            </Grid>
+          )}
+        </TabPanel>
+      ) : null}
+      {isCreator ? (
         <TabPanel value={panel} index={1}>
           <AnnouncementListToolbar
             classes={classes}
@@ -649,7 +652,7 @@ function AnnouncementList(props) {
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
             searchFilter={searchFilter}
-            updateSearchFilter={updateSearchFilter}
+            setSearchFilter={setSearchFilter}
             setSearchBarFocus={setSearchBarFocus}
             searchBarFocus={searchBarFocus}
           />

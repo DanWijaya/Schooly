@@ -20,15 +20,16 @@ import {
   Paper,
   Select,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { withStyles } from "@material-ui/core/styles";
 import {
   AssignmentInd as AssignmentIndIcon,
-  LibraryBooks as LibraryBooksIcon
+  LibraryBooks as LibraryBooksIcon,
 } from "@material-ui/icons";
 import { FaChalkboard } from "react-icons/fa";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 
 const styles = (theme) => ({
   root: {
@@ -58,7 +59,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
       width: "75px",
@@ -71,7 +73,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.error.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
       width: "75px",
@@ -101,7 +104,8 @@ class CreateClass extends Component {
       nihil: true,
       walikelas: {},
       ukuran: 0,
-      openUploadDialog: null,
+      openUploadDialog: false,
+      openDeleteDialog: false,
       teacherOptions: null,
       errors: {},
       mata_pelajaran: [],
@@ -140,6 +144,14 @@ class CreateClass extends Component {
 
   handleCloseUploadDialog = () => {
     this.setState({ openUploadDialog: false });
+  };
+
+  handleOpenDeleteDialog = () => {
+    this.setState({ openDeleteDialog: true });
+  };
+
+  handleCloseDeleteDialog = () => {
+    this.setState({ openDeleteDialog: false });
   };
 
   onChange = (e, otherfield = null) => {
@@ -239,11 +251,12 @@ class CreateClass extends Component {
                       </Button>
                     </Grid>
                     <Grid item>
-                      <Link to="/daftar-kelas">
-                        <Button className={classes.deleteButton}>
-                          Hapus
-                        </Button>
-                      </Link>
+                      <Button
+                        className={classes.deleteButton}
+                        onClick={this.handleOpenDeleteDialog}
+                      >
+                        Hapus
+                      </Button>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -257,19 +270,18 @@ class CreateClass extends Component {
                     Buat Kelas
                   </Typography>
                   <Typography color="textSecondary">
-                    Setelah semua murid dimasukkan ke dalam kelas, jangan lupa untuk menyunting kelas dan
-                    menentukan ketua kelas, sekretaris, dan bendahara dari kelas yang baru dibuat.
+                    Setelah semua murid dimasukkan ke dalam kelas, jangan lupa
+                    untuk menyunting kelas dan menentukan ketua kelas,
+                    sekretaris, dan bendahara dari kelas yang baru dibuat.
                   </Typography>
                 </div>
                 <Divider />
                 <div className={classes.contentDetails}>
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
-                      <div style={{ display: "flex", alignItems: "center"}}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
                         <FaChalkboard className={classes.labelIcon} />
-                        <Typography color="primary">
-                          Nama Kelas
-                        </Typography>
+                        <Typography color="primary">Nama Kelas</Typography>
                       </div>
                       <TextField
                         fullWidth
@@ -283,11 +295,9 @@ class CreateClass extends Component {
                       />
                     </Grid>
                     <Grid item>
-                      <div style={{ display: "flex", alignItems: "center"}}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
                         <AssignmentIndIcon className={classes.labelIcon} />
-                        <Typography color="primary">
-                          Wali Kelas
-                        </Typography>
+                        <Typography color="primary">Wali Kelas</Typography>
                       </div>
                       <FormControl
                         fullWidth
@@ -321,17 +331,11 @@ class CreateClass extends Component {
                       </FormControl>
                     </Grid>
                     <Grid item>
-                      <div style={{ display: "flex", alignItems: "center"}}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
                         <LibraryBooksIcon className={classes.labelIcon} />
-                        <Typography color="primary">
-                          Mata Pelajaran
-                        </Typography>
+                        <Typography color="primary">Mata Pelajaran</Typography>
                       </div>
-                      <FormControl
-                        fullWidth
-                        color="primary"
-                        id="matapelajaran"
-                      >
+                      <FormControl fullWidth color="primary" id="matapelajaran">
                         <Autocomplete
                           multiple
                           filterSelectedOptions
@@ -367,6 +371,12 @@ class CreateClass extends Component {
             messageUploading="Kelas sedang dibuat"
             messageSuccess="Kelas telah dibuat"
             redirectLink={`/kelas/${success}`}
+          />
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType="Kelas"
+            redirectLink="/daftar-kelas"
           />
         </div>
         <FloatingHelp />

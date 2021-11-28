@@ -10,7 +10,10 @@ import {
   LibraryBooks as LibraryBooksIcon,
   MoreVert as MoreVertIcon,
 } from "@material-ui/icons";
+import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import OptionMenu from "../../misc/menu/OptionMenu";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,23 +44,10 @@ const useStyles = makeStyles((theme) => ({
 
 function SubjectItem(props) {
   const classes = useStyles();
-  const {
-    data,
-    isEditable,
-    handleOpenDeleteDialog,
-    handleOpenFormDialog,
-  } = props;
+  const { data, handleOpenDeleteDialog, handleOpenEditDialog } = props;
+  const { user } = props.auth;
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  return data.map((subject) => (
+  return data.map((row) => (
     <Grid item>
       <Grid container alignItems="stretch" className={classes.root}>
         <Grid item className={classes.subjectIcon}>
@@ -72,46 +62,37 @@ function SubjectItem(props) {
           className={classes.subjectItemContent}
         >
           <Grid item>
-            <Typography noWrap>{subject.name}</Typography>
+            <Typography noWrap>{row.name}</Typography>
           </Grid>
-          <Grid item>
-            <IconButton onClick={handleClick}>
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
+          {user.role === "Admin" ? (
+            <Grid
+              item
+              onClick={(e) => {
+                e.stopPropagation();
               }}
             >
-              <MenuItem
-                onClick={(e) =>
-                  handleOpenFormDialog(e, subject._id, subject.name, true)
-                }
-              >
-                Sunting
-              </MenuItem>
-              <MenuItem
-                onClick={(e) => {
-                  handleOpenDeleteDialog(e, subject._id, subject.name);
-                }}
-              >
-                Hapus
-              </MenuItem>
-            </Menu>
-          </Grid>
+              <OptionMenu
+                actions={["Sunting", "Hapus"]}
+                row={row}
+                handleActionOnClick={[
+                  handleOpenEditDialog,
+                  handleOpenDeleteDialog,
+                ]}
+              />
+            </Grid>
+          ) : null}
         </Grid>
       </Grid>
     </Grid>
   ));
 }
 
-export default SubjectItem;
+SubjectItem.propTypes = {
+  auth: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, {})(SubjectItem);

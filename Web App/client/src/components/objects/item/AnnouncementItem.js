@@ -39,7 +39,6 @@ function AnnouncementItem(props) {
   return data.map((row, index) => {
     let viewpage = `/pengumuman/${row._id}`;
     const mine = row.author_id === user._id;
-    console.log(user._id, row.author_id);
     return (
       <Grid item>
         <Link to={viewpage}>

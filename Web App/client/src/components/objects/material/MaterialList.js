@@ -80,7 +80,7 @@ function MaterialListToolbar(props) {
     onRequestSort,
     role,
     searchFilter,
-    updateSearchFilter,
+    setSearchFilter,
     searchBarFocus,
     setSearchBarFocus,
   } = props;
@@ -136,11 +136,11 @@ function MaterialListToolbar(props) {
   };
 
   const onChange = (e) => {
-    updateSearchFilter(e.target.value);
+    setSearchFilter(e.target.value);
   };
 
   const onClear = (e, id) => {
-    updateSearchFilter("");
+    setSearchFilter("");
     // document.getElementById(id).focus();
   };
 
@@ -228,7 +228,7 @@ function MaterialListToolbar(props) {
                     <IconButton
                       onClick={() => {
                         setSearchBarFocus(false);
-                        updateSearchFilter("");
+                        setSearchFilter("");
                       }}
                     >
                       <ArrowBackIcon />
@@ -405,7 +405,7 @@ function MaterialList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedMaterialId, setSelectedMaterialId] = React.useState(null);
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
-  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchFilter, setSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
@@ -549,7 +549,7 @@ function MaterialList(props) {
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
         searchFilter={searchFilter}
-        updateSearchFilter={updateSearchFilter}
+        setSearchFilter={setSearchFilter}
       />
       {rows.length === 0 ? (
         <Empty />
