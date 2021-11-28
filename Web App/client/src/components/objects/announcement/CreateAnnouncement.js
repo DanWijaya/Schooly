@@ -32,7 +32,7 @@ import {
   Select,
   Snackbar,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
@@ -40,7 +40,7 @@ import {
   AttachFile as AttachFileIcon,
   Delete as DeleteIcon,
   ShortText as ShortTextIcon,
-  SupervisorAccount as SupervisorAccountIcon
+  SupervisorAccount as SupervisorAccountIcon,
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
 import {
@@ -82,7 +82,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
       width: "75px",
@@ -95,7 +96,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.error.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
       width: "75px",
@@ -506,11 +508,8 @@ class CreateAnnouncement extends Component {
     };
 
     // In the future, this need to be changed if the class president only put id only.
-    if (
-      user.role === "Student" &&
-      Boolean(kelas.ketua_kelas) &&
-      kelas.ketua_kelas !== user._id
-    ) {
+    if (user.role === "Student" && kelas.ketua_kelas !== user._id) {
+      console.log("HELLO");
       return <Redirect to="/tidak-ditemukan" />;
     }
 
@@ -519,7 +518,11 @@ class CreateAnnouncement extends Component {
     return (
       <div className={classes.background}>
         <div className={classes.root}>
-          <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)} style={{ width: "100%" }}>
+          <form
+            noValidate
+            onSubmit={(e) => this.onSubmit(e, user._id)}
+            style={{ width: "100%" }}
+          >
             <AppBar position="fixed" className={classes.menuBar}>
               <Grid container justify="space-between" alignItems="center">
                 <Grid item xs>
@@ -535,7 +538,10 @@ class CreateAnnouncement extends Component {
                       </Button>
                     </Grid>
                     <Grid item>
-                      <Button onClick={this.handleOpenDeleteDialog} className={classes.deleteButton}>
+                      <Button
+                        onClick={this.handleOpenDeleteDialog}
+                        className={classes.deleteButton}
+                      >
                         Hapus
                       </Button>
                     </Grid>
@@ -551,7 +557,8 @@ class CreateAnnouncement extends Component {
                     Buat Pengumuman
                   </Typography>
                   <Typography color="textSecondary">
-                    Sebarkan informasi secara satu arah, lampirkan berkas jika diperlukan.
+                    Sebarkan informasi secara satu arah, lampirkan berkas jika
+                    diperlukan.
                   </Typography>
                 </div>
                 <Divider />
@@ -559,7 +566,7 @@ class CreateAnnouncement extends Component {
                   <Grid item xs={12} md={7} className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <AnnouncementIcon className={classes.labelIcon} />
                           <Typography color="primary">
                             Judul Pengumuman
@@ -577,11 +584,9 @@ class CreateAnnouncement extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <ShortTextIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Deskripsi
-                          </Typography>
+                          <Typography color="primary">Deskripsi</Typography>
                         </div>
                         <TextField
                           fullWidth
@@ -611,10 +616,15 @@ class CreateAnnouncement extends Component {
                   </Hidden>
                   <Grid item xs={12} md className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
-                      {user.role === "Student" ? null : user.role === "Admin" ? (
+                      {user.role === "Student" ? null : user.role ===
+                        "Admin" ? (
                         <Grid item>
-                          <div style={{ display: "flex", alignItems: "center"}}>
-                            <SupervisorAccountIcon className={classes.labelIcon} />
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <SupervisorAccountIcon
+                              className={classes.labelIcon}
+                            />
                             <Typography color="primary">
                               Ditujukan kepada
                             </Typography>
@@ -666,15 +676,15 @@ class CreateAnnouncement extends Component {
                               })}
                             </Select>
                             {Boolean(errors.to) ? (
-                              <FormHelperText error>
-                                {errors.to}
-                              </FormHelperText>
+                              <FormHelperText error>{errors.to}</FormHelperText>
                             ) : null}
                           </FormControl>
                         </Grid>
                       ) : (
                         <Grid item>
-                          <div style={{ display: "flex", alignItems: "center"}}>
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
                             <FaChalkboard className={classes.labelIcon} />
                             <Typography color="primary">
                               Kelas yang diberikan
@@ -690,8 +700,12 @@ class CreateAnnouncement extends Component {
                             <Select
                               multiple
                               value={class_assigned}
-                              onChange={(event) => this.onChange(event, "class_assigned")}
-                              MenuProps={{ classes: { paper: classes.selectPaper } }}
+                              onChange={(event) =>
+                                this.onChange(event, "class_assigned")
+                              }
+                              MenuProps={{
+                                classes: { paper: classes.selectPaper },
+                              }}
                               renderValue={(selected) => (
                                 <div className={classes.chips}>
                                   {selected.map((classId) => {
@@ -720,9 +734,16 @@ class CreateAnnouncement extends Component {
                                       <Checkbox
                                         color="primary"
                                         size="small"
-                                        checked={class_assigned.indexOf(classInfo._id) > -1}
+                                        checked={
+                                          class_assigned.indexOf(
+                                            classInfo._id
+                                          ) > -1
+                                        }
                                       />
-                                      <ListItemText primary={classInfo.name} style={{ marginLeft: "10px" }} />
+                                      <ListItemText
+                                        primary={classInfo.name}
+                                        style={{ marginLeft: "10px" }}
+                                      />
                                     </MenuItem>
                                   ))
                                 : null}

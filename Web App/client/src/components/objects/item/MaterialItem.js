@@ -35,7 +35,6 @@ function MaterialItem(props) {
   const { all_subjects_map } = props.subjectsCollection;
 
   return data.map((row, index) => {
-    const labelId = `enhanced-table-checkbox-${index}`;
     let viewpage = `/materi/${row._id}`;
     return (
       <Grid item>

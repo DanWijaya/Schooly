@@ -161,11 +161,12 @@ router.get("/view/:id", (req, res) => {
     });
 });
 
-router.get("/viewByClass/:id", (req, res) => {
-  let id = req.params.id;
+router.get("/viewByClass/", (req, res) => {
+  // let id = req.params.id;
+  let { classId, studentId } = req.query;
   // If want to get the MongoDB object that has id element in the array.
-
-  Announcement.find({ class_assigned: id })
+  // Don't include the announcements if it is class president
+  Announcement.find({ class_assigned: classId, author_id: { $ne: studentId } })
     .then((announcements) => {
       if (!announcements.length) {
         console.log("Announcement assigned to the class is not found");

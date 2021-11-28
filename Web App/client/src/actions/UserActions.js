@@ -155,8 +155,6 @@ export const logoutUser = () => (dispatch) => {
 
 // Set logged in user.
 export const setCurrentUser = (decoded) => {
-  console.log("The role is: ", decoded.role);
-
   return {
     type: SET_CURRENT_USER,
     payload: decoded,

@@ -2,12 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
-import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import {
   getAllAnnouncements,
-  getAnnouncement,
+  getAnnouncementByAuthor,
+  getAnnouncementByClass,
   getAdminAnnouncements,
   deleteAnnouncement,
 } from "../../../actions/AnnouncementActions";
@@ -19,18 +18,13 @@ import { TabPanel } from "../../misc/tab-panel/TabPanel";
 import AnnouncementItem from "../item/AnnouncementItem";
 import {
   Avatar,
-  Divider,
   Fab,
   Grid,
   Hidden,
   InputAdornment,
   IconButton,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
   Menu,
   MenuItem,
-  Paper,
   Snackbar,
   Tab,
   Tabs,
@@ -44,29 +38,19 @@ import {
   Announcement as AnnouncementIcon,
   ArrowBack as ArrowBackIcon,
   Clear as ClearIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Pageview as PageviewIcon,
   Search as SearchIcon,
   Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
-function createData(
-  sender_icon,
-  author_name,
-  announcementtitle,
-  _id,
-  createdAt,
-  name_lowcased
-) {
+function createData(sender_icon, author_id, name, _id, createdAt, author_name) {
   return {
     sender_icon,
-    author_name,
-    announcementtitle,
+    author_id,
+    name,
     _id,
     createdAt,
-    name_lowcased,
+    author_name,
   };
 }
 
@@ -122,7 +106,7 @@ function AnnouncementListToolbar(props) {
       label: "Nama Pembuat",
     },
     {
-      id: "announcementtitle",
+      id: "name",
       numeric: false,
       disablePadding: false,
       label: "Judul Pengumuman",
@@ -344,620 +328,6 @@ function AnnouncementListToolbar(props) {
   );
 }
 
-function AnnouncementListSubToolbar(props) {
-  const {
-    kelas,
-    user,
-    classes,
-    order,
-    orderBy,
-    onRequestSort,
-    searchFilter,
-    updateSearchFilter,
-    setSearchBarFocus,
-    searchBarFocus,
-    mine,
-    author_role,
-  } = props;
-
-  let title;
-  if (mine) {
-    title = "Pengumuman dari Saya";
-  } else {
-    if (author_role === "Admin") {
-      title = "Pengumuman dari Pengelola";
-    } else if (author_role === "Teacher") {
-      title = "Pengumuman dari Guru";
-    } else if (author_role === "Student") {
-      if (Object.keys(kelas).length > 0 || user.kelas === undefined) {
-        title = "Pengumuman dari Ketua Kelas";
-      }
-      // Object.keys(kelas).length === 0 means that class is not finished loading.
-      // It is done like this so that the title doesn't change from "class president" (when it is loaded) into "mine" (after it has finished loading),
-      // The title will be empty when the class is not yet loaded.
-    }
-  }
-
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  const headCells = [
-    {
-      id: "author_name",
-      numeric: false,
-      disablePadding: true,
-      label: "Nama Pembuat",
-    },
-    {
-      id: "announcementtitle",
-      numeric: false,
-      disablePadding: false,
-      label: "Judul Pengumuman",
-    },
-    {
-      id: "createdAt",
-      numeric: false,
-      disablePadding: false,
-      label: "Waktu Dibuat",
-    },
-  ];
-
-  // Sort Menu
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const handleOpenSortMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCloseSortMenu = () => {
-    setAnchorEl(null);
-  };
-
-  // Search Filter
-  const onChange = (e) => {
-    updateSearchFilter(e.target.value);
-  };
-
-  const onClear = (e, id) => {
-    updateSearchFilter("");
-    // document.getElementById(id).focus();
-  };
-
-  return (
-    <div className={classes.toolbar}>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        {/* mobile view */}
-        <Hidden mdUp implementation="css">
-          {!searchBarFocus ? (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h5">{title}</Typography>
-            </div>
-          ) : null}
-        </Hidden>
-        {/* desktop view */}
-        <Hidden smDown implementation="css">
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h5">{title}</Typography>
-          </div>
-        </Hidden>
-        <Hidden mdUp implementation="css">
-          {searchBarFocus ? (
-            <div style={{ display: "flex" }}>
-              <IconButton
-                onClick={() => {
-                  setSearchBarFocus(false);
-                  updateSearchFilter("");
-                }}
-              >
-                <ArrowBackIcon />
-              </IconButton>
-              <TextField
-                autoFocus
-                fullWidth
-                variant="outlined"
-                id={author_role}
-                placeholder="Cari Pengumuman"
-                value={searchFilter}
-                onChange={onChange}
-                onClick={(e) => setSearchBarFocus(true)}
-                style={{
-                  maxWidth: "200px",
-                  marginLeft: "10px",
-                }}
-                InputProps={{
-                  startAdornment: searchBarFocus ? null : (
-                    <InputAdornment
-                      position="start"
-                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
-                    >
-                      <IconButton size="small">
-                        <SearchIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment
-                      position="end"
-                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                    >
-                      <IconButton
-                        size="small"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onClear(e, author_role);
-                        }}
-                        style={{
-                          opacity: 0.5,
-                          visibility: !searchFilter ? "hidden" : "visible",
-                        }}
-                      >
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  style: {
-                    borderRadius: "22.5px",
-                  },
-                }}
-              />
-            </div>
-          ) : (
-            <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
-              <IconButton
-                className={classes.goSearchButton}
-                onClick={() => setSearchBarFocus(true)}
-              >
-                <SearchIcon className={classes.goSearchIconMobile} />
-              </IconButton>
-            </LightTooltip>
-          )}
-        </Hidden>
-      </div>
-      <div style={{ display: "flex" }}>
-        <Hidden smDown implementation="css">
-          <TextField
-            variant="outlined"
-            id={author_role}
-            placeholder="Cari Pengumuman"
-            value={searchFilter}
-            onChange={onChange}
-            onClick={() => setSearchBarFocus(true)}
-            onBlur={() => setSearchBarFocus(false)}
-            style={{
-              maxWidth: "250px",
-              marginRight: "10px",
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment
-                  position="start"
-                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
-                >
-                  <IconButton size="small">
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment
-                  position="end"
-                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                >
-                  <IconButton
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onClear(e, author_role);
-                    }}
-                    style={{
-                      opacity: 0.5,
-                      visibility: !searchFilter ? "hidden" : "visible",
-                    }}
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-              style: {
-                borderRadius: "22.5px",
-              },
-            }}
-          />
-        </Hidden>
-        {mine ? (
-          <div style={{ display: "flex", alignItems: "center" }}>
-            {/* mobile view */}
-            <Hidden mdUp implementation="css">
-              <LightTooltip title="Buat Pengumuman">
-                <Link to="/buat-pengumuman">
-                  <Fab
-                    size="small"
-                    className={classes.createAnnouncementButton}
-                  >
-                    <AnnouncementIcon
-                      className={classes.createAnnouncementIconMobile}
-                    />
-                  </Fab>
-                </Link>
-              </LightTooltip>
-            </Hidden>
-            {/* desktop view */}
-            <Hidden smDown implementation="css">
-              <Link to="/buat-pengumuman">
-                <Fab
-                  variant="extended"
-                  size="medium"
-                  className={classes.createAnnouncementButton}
-                >
-                  <AnnouncementIcon
-                    className={classes.createAnnouncementIconDesktop}
-                  />
-                  Buat Pengumuman
-                </Fab>
-              </Link>
-            </Hidden>
-          </div>
-        ) : null}
-        <LightTooltip title="Urutkan Pengumuman">
-          <IconButton
-            onClick={handleOpenSortMenu}
-            className={classes.sortButton}
-          >
-            <SortIcon />
-          </IconButton>
-        </LightTooltip>
-        <Menu
-          keepMounted
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleCloseSortMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          {headCells.map((headCell, i) => (
-            <MenuItem
-              key={headCell.id}
-              sortDirection={orderBy === headCell.id ? order : false}
-              onClick={createSortHandler(headCell.id)}
-            >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-              >
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                  <span className={classes.visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </span>
-                ) : null}
-              </TableSortLabel>
-            </MenuItem>
-          ))}
-        </Menu>
-      </div>
-    </div>
-  );
-}
-
-function AnnouncementListItems(props) {
-  const { rows, classes, order, orderBy, mine, handleOpenDeleteDialog } = props;
-
-  return (
-    <Grid container direction="column" spacing={2}>
-      {rows.length === 0 ? (
-        <Empty />
-      ) : (
-        stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-          //agar bisa menambahkan elemen <Link> berdasarkan kondisi
-          let content = (
-            <ListItem className={classes.listItem}>
-              <Hidden smUp implementation="css">
-                <ListItemText
-                  primary={
-                    <Typography variant="subtitle1" color="textPrimary">
-                      {row.announcementtitle}
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography variant="caption" color="textSecondary">
-                      {row.author_name}
-                    </Typography>
-                  }
-                />
-              </Hidden>
-              <Hidden xsDown implementation="css">
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <ListItemAvatar>
-                    <Avatar className={classes.assignmentLate}>
-                      <AnnouncementIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Typography variant="h6" color="textPrimary">
-                        {row.announcementtitle}
-                      </Typography>
-                    }
-                    secondary={
-                      <Typography variant="body2" color="textSecondary">
-                        {row.author_name}
-                      </Typography>
-                    }
-                  />
-                </div>
-              </Hidden>
-              <ListItemText
-                align="right"
-                primary={
-                  mine ? (
-                    <Grid container spacing={1} justify="flex-end">
-                      <Grid item>
-                        <LightTooltip title="Lihat Lebih Lanjut">
-                          <Link to={`/pengumuman/${row._id}`}>
-                            <IconButton
-                              size="small"
-                              className={classes.viewMaterialButton}
-                            >
-                              <PageviewIcon fontSize="small" />
-                            </IconButton>
-                          </Link>
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip title="Sunting">
-                          <Link to={`/sunting-pengumuman/${row._id}`}>
-                            <IconButton
-                              size="small"
-                              className={classes.editMaterialButton}
-                            >
-                              <EditIcon fontSize="small" />
-                            </IconButton>
-                          </Link>
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip title="Hapus">
-                          <IconButton
-                            size="small"
-                            className={classes.deleteMaterialButton}
-                            onClick={(e) => {
-                              handleOpenDeleteDialog(
-                                e,
-                                row._id,
-                                row.announcementtitle
-                              );
-                              console.log(row._id);
-                            }}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
-                    </Grid>
-                  ) : (
-                    <Typography variant="body2" color="textSecondary">
-                      {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
-                    </Typography>
-                  )
-                }
-                secondary={
-                  mine
-                    ? null
-                    : moment(row.createdAt).locale("id").format("HH.mm")
-                }
-              />
-            </ListItem>
-          );
-          return (
-            <Grid key={row.createdAt} item>
-              <Paper variant="outlined">
-                {mine ? (
-                  content
-                ) : (
-                  <Link to={`/pengumuman/${row._id}`}>{content}</Link>
-                )}
-              </Paper>
-            </Grid>
-          );
-        })
-      )}
-    </Grid>
-  );
-}
-
-function AnnouncementSubList(props) {
-  const {
-    retrieved_users,
-    selectedAnnouncements,
-    adminAnnouncements,
-    kelas,
-    classes,
-    user,
-    mine,
-    author_role,
-    handleOpenDeleteDialog,
-  } = props;
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("subject");
-  const [searchFilter, updateSearchFilter] = React.useState("");
-  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
-
-  const [rows, setRows] = React.useState([]);
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
-  const announcementRowItem = (rows, data) => {
-    rows.push(
-      createData(
-        <AccountCircleIcon />,
-        !retrieved_users.get(data.author_id)
-          ? null
-          : retrieved_users.get(data.author_id).name,
-        data.title,
-        // `/pengumuman/${data._id}`,
-        data._id,
-        data.createdAt,
-        !retrieved_users.get(data.author_id)
-          ? null
-          : retrieved_users.get(data.author_id).name.toLowerCase()
-      )
-    );
-  };
-
-  React.useEffect(() => {
-    // If all_assessments is not undefined or an empty array
-    if (
-      Array.isArray(selectedAnnouncements) &&
-      retrieved_users &&
-      adminAnnouncements
-    ) {
-      let newRows = [];
-      if (mine) {
-        if (author_role === "Student") {
-          // untuk pengumuman yg dibuat oleh saya sebagai ketua kelas
-          selectedAnnouncements
-            .filter(
-              (item) =>
-                item.author_id === kelas.ketua_kelas &&
-                item.title.toLowerCase().includes(searchFilter.toLowerCase())
-            )
-            .forEach((data) => {
-              announcementRowItem(newRows, data);
-            });
-        } else if (author_role === "Teacher") {
-          // untuk pengumuman yg dibuat oleh saya sebagai guru
-          selectedAnnouncements
-            .filter(
-              (item) =>
-                item.author_id !== kelas.ketua_kelas &&
-                item.title.toLowerCase().includes(searchFilter.toLowerCase())
-            )
-            .forEach((data) => {
-              announcementRowItem(newRows, data);
-            });
-        } else if (author_role === "Admin") {
-          // untuk pengumuman yg dibuat oleh saya sebagai admin
-          selectedAnnouncements
-            .filter((item) =>
-              item.title.toLowerCase().includes(searchFilter.toLowerCase())
-            )
-            .forEach((data) => {
-              announcementRowItem(newRows, data);
-            });
-        }
-      } else {
-        if (author_role === "Student") {
-          // untuk pengumuman yg diberikan oleh ketua kelas kepada saya sebagai murid (saya bukan ketua kelas)
-          selectedAnnouncements
-            .filter(
-              (item) =>
-                item.author_id === kelas.ketua_kelas &&
-                item.title.toLowerCase().includes(searchFilter.toLowerCase())
-            )
-            .forEach((data) => {
-              announcementRowItem(newRows, data);
-            });
-        } else if (author_role === "Teacher") {
-          // untuk pengumuman yg diberikan oleh guru kepada saya sebagai murid
-          selectedAnnouncements
-            .filter(
-              (item) =>
-                item.author_id !== kelas.ketua_kelas &&
-                item.title.toLowerCase().includes(searchFilter.toLowerCase())
-            )
-            .forEach((data) => {
-              announcementRowItem(newRows, data);
-            });
-        } else if (author_role === "Admin") {
-          adminAnnouncements
-            .filter(
-              (item) =>
-                item.to.includes(user.role) &&
-                item.title.toLowerCase().includes(searchFilter.toLowerCase())
-            )
-            .forEach((data) => {
-              announcementRowItem(newRows, data);
-            });
-        }
-      }
-      setRows(newRows);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    adminAnnouncements,
-    retrieved_users,
-    selectedAnnouncements,
-    searchFilter,
-  ]);
-
-  return (
-    <>
-      <AnnouncementListSubToolbar
-        kelas={kelas}
-        user={user}
-        classes={classes}
-        order={order}
-        orderBy={orderBy}
-        onRequestSort={handleRequestSort}
-        searchFilter={searchFilter}
-        updateSearchFilter={updateSearchFilter}
-        setSearchBarFocus={setSearchBarFocus}
-        searchBarFocus={searchBarFocus}
-        mine={mine}
-        author_role={author_role}
-      />
-      <Divider variant="inset" className={classes.subTitleDivider} />
-      <AnnouncementListItems
-        order={order}
-        orderBy={orderBy}
-        rows={rows}
-        classes={classes}
-        mine={mine}
-        handleOpenDeleteDialog={handleOpenDeleteDialog}
-      />
-    </>
-  );
-}
-
-AnnouncementSubList.propTypes = {
-  classes: PropTypes.object.isRequired,
-  kelas: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
-  mine: PropTypes.bool.isRequired,
-  author_role: PropTypes.string.isRequired,
-  handleOpenDeleteDialog: PropTypes.func,
-};
-
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
@@ -1016,62 +386,32 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  listItem: {
-    padding: "6px 16px",
-  },
-  assignmentLate: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  announcementPanelSummary: {
-    "&:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
-  },
-  viewMaterialButton: {
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
-    },
-  },
-  editMaterialButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  deleteMaterialButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
 }));
 
 function AnnouncementList(props) {
   const classes = useStyles();
   const {
-    getAnnouncement,
+    getAnnouncementByClass,
+    getAnnouncementByAuthor,
     getUsers,
     setCurrentClass,
     getAdminAnnouncements,
     deleteAnnouncement,
   } = props;
-  const { user, retrieved_users } = props.auth;
+  const { user, retrieved_users, all_roles } = props.auth;
   const { kelas } = props.classesCollection;
-  const { selectedAnnouncements, adminAnnouncements } = props.announcements;
+  const {
+    announcementsByAuthor,
+    announcementsByClass,
+    adminAnnouncements,
+  } = props.announcements;
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
 
-  const [tabValue, setTabValue] = React.useState(0);
+  const [panel, setPanel] = React.useState(0);
   const handleChangeTab = (event, newValue) => {
-    setTabValue(newValue);
+    setPanel(newValue);
   };
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -1087,12 +427,64 @@ function AnnouncementList(props) {
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
+  var rows = [];
+  const announcementRowItem = (data) => {
+    rows.push(
+      createData(
+        <AccountCircleIcon />,
+        data.author_id,
+        data.title,
+        data._id,
+        data.createdAt,
+        !retrieved_users.get(data.author_id)
+          ? null
+          : retrieved_users.get(data.author_id).name
+      )
+    );
+  };
+
+  const retrieveAnnouncements = () => {
+    rows = [];
+    if (
+      Array.isArray(announcementsByAuthor) &&
+      Array.isArray(announcementsByClass) &&
+      Array.isArray(adminAnnouncements)
+    ) {
+      let received = [];
+      let mine = [];
+      if (user.role === "Admin") {
+        mine = announcementsByAuthor;
+      } else if (user.role === "Student") {
+        received = [...announcementsByClass, ...adminAnnouncements];
+        mine = announcementsByAuthor;
+      } else if (user.role === "Teacher") {
+        received = adminAnnouncements;
+        mine = announcementsByAuthor;
+      }
+
+      if (panel == 0) {
+        received
+          .filter((item) =>
+            item.title.toLowerCase().includes(searchFilter.toLowerCase())
+          )
+          .map((data) => announcementRowItem(data));
+      } else if (panel == 1) {
+        mine
+          .filter((item) =>
+            item.title.toLowerCase().includes(searchFilter.toLowerCase())
+          )
+          .map((data) => announcementRowItem(data));
+      }
+    }
+  };
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
+  retrieveAnnouncements();
   // Delete Dialog
   const handleOpenDeleteDialog = (e, id, name) => {
     e.stopPropagation();
@@ -1119,15 +511,14 @@ function AnnouncementList(props) {
   const onDeleteAnnouncement = (id) => {
     deleteAnnouncement(id).then((res) => {
       if (user.role === "Teacher") {
-        getAnnouncement(user._id, "by_author");
+        getAnnouncementByAuthor(user._id);
         getAdminAnnouncements(user.unit);
       } else if (user.role === "Student") {
-        getAnnouncement(user.kelas, "by_class");
+        getAnnouncementByClass(user.kelas, user._id);
         getAdminAnnouncements(user.unit);
         setCurrentClass(user.kelas);
       } else if (user.role === "Admin") {
-        console.log("RUN II");
-        getAnnouncement(user._id, "by_author");
+        getAnnouncementByAuthor(user._id);
       }
       handleCloseDeleteDialog();
       handleOpenDeleteSnackbar();
@@ -1135,104 +526,52 @@ function AnnouncementList(props) {
     console.log(id);
   };
 
-  const [rows, setRows] = React.useState([]);
-  // var rows = [];
-  const announcementRowItem = (rows, data) => {
-    rows.push(
-      createData(
-        <AccountCircleIcon />,
-        !retrieved_users.get(data.author_id)
-          ? null
-          : retrieved_users.get(data.author_id).name,
-        data.title,
-        // `/pengumuman/${data._id}`,
-        data._id,
-        // (moment(data.date_announced).locale("id").format("DD MMM YYYY")),
-        // (moment(data.date_announced).locale("id").format("HH.mm")),
-        // (moment(data.date_announced).locale("id")),
-        data.createdAt,
-        !retrieved_users.get(data.author_id)
-          ? null
-          : retrieved_users.get(data.author_id).name.toLowerCase()
-      )
-    );
+  const getMyAnnouncement = () => {
+    getAnnouncementByAuthor(user._id);
   };
 
-  React.useEffect(() => {
-    // ini diperlukan untuk user role admin karena pada user role admin,
-    // AnnouncementListItems akan langsung ditampilkan tanpa AnnouncementSubList,
-    // sedangkan AnnouncementListItems tidak memfilter announcement dengan searchFilter.
-    if (
-      user.role === "Admin" &&
-      Array.isArray(selectedAnnouncements) &&
-      retrieved_users
-    ) {
-      let newRows = [];
-      selectedAnnouncements
-        .filter((item) =>
-          item.title.toLowerCase().includes(searchFilter.toLowerCase())
-        )
-        .forEach((data) => {
-          announcementRowItem(newRows, data);
-        });
-      setRows(newRows);
+  const getReceivedAnnouncement = () => {
+    getAdminAnnouncements(user.unit);
+    if (user.role === "Student") {
+      getAnnouncementByClass(user.kelas, user._id);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [retrieved_users, selectedAnnouncements, searchFilter]);
-
+  };
   // retrieved users ini bulk request, dapat data user"nya satu"
   React.useEffect(() => {
-    if (user.role === "Teacher") {
-      getAnnouncement(user._id, "by_author");
-      getAdminAnnouncements(user.unit);
-      // setAnnIsRetrieved(true);
-    } else if (user.role === "Student") {
-      getAnnouncement(user.kelas, "by_class");
-      getAdminAnnouncements(user.unit);
+    getMyAnnouncement();
+    getReceivedAnnouncement();
+    if (user.role === all_roles.STUDENT) {
       setCurrentClass(user.kelas);
-      // setAnnIsRetrieved(true);
-    } else if (user.role === "Admin") {
-      getAnnouncement(user._id, "by_author");
-      // setAnnIsRetrieved(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
     let author_id_set = new Set();
+    let received = [];
+    let mine = [];
     if (user.role === "Admin") {
-      if (Array.isArray(selectedAnnouncements)) {
-        selectedAnnouncements.forEach((ann) => {
-          author_id_set.add(ann.author_id);
-        });
-        getUsers(Array.from(author_id_set));
-      }
-    } else {
-      if (Array.isArray(selectedAnnouncements)) {
-        selectedAnnouncements.forEach((ann) => {
-          author_id_set.add(ann.author_id);
-        });
-      }
-      if (Array.isArray(adminAnnouncements)) {
-        adminAnnouncements.forEach((ann) => {
-          author_id_set.add(ann.author_id);
-        });
-      }
-      getUsers(Array.from(author_id_set));
+      mine = announcementsByAuthor;
+    } else if (user.role === "Student") {
+      received = [...announcementsByClass, ...adminAnnouncements];
+      mine = announcementsByAuthor;
+    } else if (user.role === "Teacher") {
+      received = adminAnnouncements;
     }
+
+    [...mine, ...received].forEach((ann) => {
+      author_id_set.add(ann.author_id);
+    });
+    console.log(author_id_set);
+    getUsers(Array.from(author_id_set));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAnnouncements, adminAnnouncements]);
+  }, [announcementsByAuthor, announcementsByClass, adminAnnouncements]);
 
-  let propsToPass = {
-    retrieved_users,
-    selectedAnnouncements,
-    adminAnnouncements,
-    kelas,
-    classes,
-    user,
-  };
+  document.name = "Schooly | Daftar Pengumuman";
 
-  document.title = "Schooly | Daftar Pengumuman";
+  const hasCreatePermission =
+    [all_roles.TEACHER, all_roles.ADMIN].includes(user.role) ||
+    user._id == kelas.ketua_kelas;
 
   return (
     <div className={classes.root}>
@@ -1256,7 +595,7 @@ function AnnouncementList(props) {
       <Tabs
         indicatorColor="primary"
         textColor="primary"
-        value={tabValue}
+        value={panel}
         onChange={handleChangeTab}
         className={classes.announcementTabs}
       >
@@ -1267,15 +606,17 @@ function AnnouncementList(props) {
             </Typography>
           }
         />
-        <Tab
-          label={
-            <Typography className={classes.announcementTabTitle}>
-              Dari Saya
-            </Typography>
-          }
-        />
+        {hasCreatePermission ? (
+          <Tab
+            label={
+              <Typography className={classes.announcementTabTitle}>
+                Dari Saya
+              </Typography>
+            }
+          />
+        ) : null}
       </Tabs>
-      <TabPanel value={tabValue} index={0}>
+      <TabPanel value={panel} index={0}>
         <AnnouncementListToolbar
           classes={classes}
           user={user}
@@ -1290,115 +631,40 @@ function AnnouncementList(props) {
         {rows.length === 0 ? (
           <Empty />
         ) : (
-          /* - Masih belum oke, belum disesuain itemnya untuk guru bisa edit dll (konek dengan option menu),
-          belum kepisah yang mana masuk dengan yang mana dari dia (tabpanel selanjutnya)
-          - Isi subprimary textnya bakal author name buat tab yang ini, tab yang dari dia ga usah isi.
-          - Belum apply yang ketua kelas buat di toolbarnya juga
-          - Kalau murid biasa (full penerima doang) mau bikin ga pake tab
-           */
           <Grid container direction="column" spacing={2}>
-            {stableSort(rows, getComparator(order, orderBy)).map(
-              (row, index) => {
-                return (
-                  <AnnouncementItem
-                    link={`/materi/${row._id}`}
-                    primaryText={row.announcementtitle}
-                    subPrimaryText={row.author_name}
-                    secondaryText={moment(row.createdAt)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
-                    subSecondaryText={moment(row.createdAt)
-                      .locale("id")
-                      .format("HH.mm")}
-                  />
-                );
-              }
-            )}
+            <AnnouncementItem
+              data={stableSort(rows, getComparator(order, orderBy))}
+              handleOpenDeleteDialog={handleOpenDeleteDialog}
+            />
           </Grid>
         )}
       </TabPanel>
-      <TabPanel value={tabValue} index={1}>
-        <AnnouncementListToolbar
-          classes={classes}
-          user={user}
-          mine={true}
-          order={order}
-          orderBy={orderBy}
-          onRequestSort={handleRequestSort}
-          searchFilter={searchFilter}
-          updateSearchFilter={updateSearchFilter}
-          setSearchBarFocus={setSearchBarFocus}
-          searchBarFocus={searchBarFocus}
-        />
-        {rows.length === 0 ? (
-          <Empty />
-        ) : (
-          /* Masih belum oke, belum disesuain itemnya untuk guru bisa edit dll */
-          <Grid container direction="column" spacing={2}>
-            {stableSort(rows, getComparator(order, orderBy)).map(
-              (row, index) => {
-                return (
-                  <AnnouncementItem
-                    link={`/materi/${row._id}`}
-                    primaryText={row.announcementtitle}
-                    subPrimaryText={row.author_name}
-                    secondaryText={moment(row.createdAt)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
-                    subSecondaryText={moment(row.createdAt)
-                      .locale("id")
-                      .format("HH.mm")}
-                  />
-                );
-              }
-            )}
-          </Grid>
-        )}
-      </TabPanel>
-
-      {/* Mau dihapus */}
-      {user.role === "Admin" ? (
-        <AnnouncementListItems
-          order={order}
-          orderBy={orderBy}
-          rows={rows}
-          classes={classes}
-          mine={true}
-          handleOpenDeleteDialog={handleOpenDeleteDialog}
-        />
-      ) : user.role === "Teacher" ? (
-        <>
-          <AnnouncementSubList
-            {...propsToPass}
+      {hasCreatePermission ? (
+        <TabPanel value={panel} index={1}>
+          <AnnouncementListToolbar
+            classes={classes}
+            user={user}
             mine={true}
-            author_role="Teacher"
-            handleOpenDeleteDialog={handleOpenDeleteDialog}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            searchFilter={searchFilter}
+            updateSearchFilter={updateSearchFilter}
+            setSearchBarFocus={setSearchBarFocus}
+            searchBarFocus={searchBarFocus}
           />
-          <AnnouncementSubList
-            {...propsToPass}
-            mine={false}
-            author_role="Admin"
-          />
-        </>
-      ) : user.role === "Student" ? (
-        <>
-          <AnnouncementSubList
-            {...propsToPass}
-            mine={user._id === kelas.ketua_kelas}
-            author_role="Student"
-            handleOpenDeleteDialog={handleOpenDeleteDialog}
-          />
-          <AnnouncementSubList
-            {...propsToPass}
-            mine={false}
-            author_role="Teacher"
-          />
-          <AnnouncementSubList
-            {...propsToPass}
-            mine={false}
-            author_role="Admin"
-          />
-        </>
+          {rows.length === 0 ? (
+            <Empty />
+          ) : (
+            /* Masih belum oke, belum disesuain itemnya untuk guru bisa edit dll */
+            <Grid container direction="column" spacing={2}>
+              <AnnouncementItem
+                data={stableSort(rows, getComparator(order, orderBy))}
+                handleOpenDeleteDialog={handleOpenDeleteDialog}
+              />
+            </Grid>
+          )}
+        </TabPanel>
       ) : null}
 
       <DeleteDialog
@@ -1436,7 +702,8 @@ AnnouncementList.propTypes = {
   setCurrentClass: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
   announcements: PropTypes.object.isRequired,
-  getAnnouncement: PropTypes.func.isRequired,
+  getAnnouncementByClass: PropTypes.func.isRequired,
+  getAnnouncementByAuthor: PropTypes.func.isRequired,
   getAllAnnouncements: PropTypes.func.isRequired,
   getAdminAnnouncements: PropTypes.func.isRequired,
 };
@@ -1450,7 +717,8 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   setCurrentClass,
   getUsers,
-  getAnnouncement,
+  getAnnouncementByClass,
+  getAnnouncementByAuthor,
   getAllAnnouncements,
   getAdminAnnouncements,
   deleteAnnouncement,

@@ -5,6 +5,8 @@ import {
   GET_ANNOUNCEMENT,
   GET_SUCCESS_RESPONSE,
   GET_ADMIN_ANNOUNCEMENTS,
+  GET_ANNOUNCEMENT_BY_CLASS,
+  GET_ANNOUNCEMENT_BY_AUTHOR,
 } from "./Types";
 
 // Add Announcement
@@ -55,35 +57,41 @@ export const getAllAnnouncements = (userId) => (dispatch) => {
   });
 };
 
-export const getAnnouncement = (Id, category) => (dispatch) => {
-  if (category === "by_author") {
-    return axios
-      .get(`/api/announcements/view/${Id}`)
-      .then((res) => {
-        console.log("Announcement datas are received");
-        dispatch({
-          type: GET_ANNOUNCEMENT,
-          payload: res.data,
-        });
-        return res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data,
-        });
-      });
-  } else if (category === "by_class") {
-    return axios.get(`/api/announcements/viewByClass/${Id}`).then((res) => {
+export const getAnnouncementByClass = (classId, studentId) => (dispatch) => {
+  return axios
+    .get(`/api/announcements/viewByClass`, {
+      params: { classId: classId, studentId: studentId },
+    })
+    .then((res) => {
       console.log("Announcement by class is received");
       dispatch({
-        type: GET_ANNOUNCEMENT,
+        type: GET_ANNOUNCEMENT_BY_CLASS,
         payload: res.data,
       });
       return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+      throw new Error(err);
     });
-  }
+};
+
+export const getAnnouncementByAuthor = (authorId) => (dispatch) => {
+  return axios
+    .get(`/api/announcements/view/${authorId}`)
+    .then((res) => {
+      console.log("Announcement datas are received");
+      dispatch({
+        type: GET_ANNOUNCEMENT_BY_AUTHOR,
+        payload: res.data,
+      });
+      console.log(res.data);
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+      throw new Error(err);
+    });
 };
 
 export const getAdminAnnouncements = (unitId) => (dispatch) => {
@@ -98,10 +106,8 @@ export const getAdminAnnouncements = (unitId) => (dispatch) => {
       });
     })
     .catch((err) => {
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      });
+      console.error(err);
+      throw new Error(err);
     });
 };
 
@@ -149,10 +155,7 @@ export const getOneAnnouncement = (annId) => (dispatch) => {
     })
     .catch((err) => {
       console.log(err);
-      dispatch({
-        type: GET_ERRORS,
-        payload: err,
-      });
+      throw new Error(err);
     });
 };
 
