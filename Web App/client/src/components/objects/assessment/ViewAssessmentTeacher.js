@@ -563,13 +563,20 @@ function ViewAssessmentTeacher(props) {
         warningText={`Nilai pada ${selectedAssessments.type} yang ada juga akan dihapus.`}
         deleteItem={() => onDeleteAssessment(selectedAssessmentId)}
       />
+      {/* Copy Link Snackbar */}
       <Snackbar
         open={copySnackbarOpen}
-        autoHideDuration={3000}
+        autoHideDuration={4000}
         onClose={handleCloseCopySnackBar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
-        <Alert onClose={handleCloseCopySnackBar} severity="success">
-          Tautan {type} berhasil disalin ke Clipboard Anda!
+        <Alert
+          elevation={6}
+          variant="filled"
+          severity="success"
+          onClose={handleCloseCopySnackBar}
+        >
+          Tautan {type} berhasil disalin ke Clipboard Anda
         </Alert>
       </Snackbar>
     </div>

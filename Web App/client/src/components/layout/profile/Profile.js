@@ -120,6 +120,7 @@ function Profile(props) {
     }
     setOpenAlert(false);
   };
+
   // Alert control for EditProfileData
   const [openDataEditorAlert, setOpenDataEditorAlert] = React.useState(false);
   const handleOpenDataEditorAlert = () => {
@@ -159,65 +160,6 @@ function Profile(props) {
 
   return (
     <div className={classes.root}>
-      {/* EditProfilePicture Snackbar */}
-      <Snackbar
-        open={openAlert}
-        autoHideDuration={4000}
-        onClose={handleCloseAlert}
-        anchorOrigin={{ vertical: "center", horizontal: "center" }}
-      >
-        <Alert
-          elevation={6}
-          variant="filled"
-          onClose={handleCloseAlert}
-          severity="success"
-        >
-          Foto profil berhasil diganti!
-        </Alert>
-      </Snackbar>
-      {/* EditProfileData Snackbar */}
-      <Snackbar
-        open={openDataEditorAlert}
-        autoHideDuration={4000}
-        onClose={handleCloseDataEditorAlert}
-        anchorOrigin={{ vertical: "center", horizontal: "center" }}
-      >
-        <Alert
-          elevation={6}
-          variant="filled"
-          onClose={handleCloseDataEditorAlert}
-          severity="success"
-        >
-          Data profil berhasil diganti!
-        </Alert>
-      </Snackbar>
-      {/* EditPassword Snackbar */}
-      <Snackbar
-        open={openPasswordEditorAlert}
-        autoHideDuration={4000}
-        onClose={handleClosePasswordEditorAlert}
-        anchorOrigin={{ vertical: "center", horizontal: "center" }}
-      >
-        <Alert
-          elevation={6}
-          variant="filled"
-          onClose={handleClosePasswordEditorAlert}
-          severity="success"
-        >
-          Kata sandi berhasil diganti!
-        </Alert>
-      </Snackbar>
-      {/* Profile Pict Size Limit Snackbar */}
-      <Snackbar
-        open={fileLimitSnackbar}
-        autoHideDuration={2000}
-        onClose={handleCloseErrorSnackbar}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert elevation={6} variant="filled" severity="error">
-          Foto profil melebihi batas 5MB!
-        </Alert>
-      </Snackbar>
       <Grid container direction="column" alignItems="center" spacing={2}>
         <Grid item>
           {avatar ? (
@@ -484,6 +426,69 @@ function Profile(props) {
           </Grid>
         ) : null}
       </Grid>
+      {/* Edit Profile Picture Snackbar */}
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={4000}
+        onClose={handleCloseAlert}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <Alert
+          elevation={6}
+          variant="filled"
+          severity="success"
+          onClose={handleCloseAlert}
+        >
+          Foto profil berhasil diganti
+        </Alert>
+      </Snackbar>
+      {/* Edit Profile Data Snackbar */}
+      <Snackbar
+        open={openDataEditorAlert}
+        autoHideDuration={4000}
+        onClose={handleCloseDataEditorAlert}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <Alert
+          elevation={6}
+          variant="filled"
+          severity="success"
+          onClose={handleCloseDataEditorAlert}
+        >
+          Data profil berhasil diganti
+        </Alert>
+      </Snackbar>
+      {/* Edit Password Snackbar */}
+      <Snackbar
+        open={openPasswordEditorAlert}
+        autoHideDuration={4000}
+        onClose={handleClosePasswordEditorAlert}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <Alert
+          elevation={6}
+          variant="filled"
+          severity="success"
+          onClose={handleClosePasswordEditorAlert}
+        >
+          Kata sandi berhasil diganti
+        </Alert>
+      </Snackbar>
+      {/* Profile Picture Size Limit Snackbar */}
+      <Snackbar
+        open={fileLimitSnackbar}
+        autoHideDuration={2000}
+        onClose={handleCloseErrorSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <Alert
+          elevation={6}
+          variant="filled"
+          severity="error"
+        >
+          Foto profil melebihi batas 5MB
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

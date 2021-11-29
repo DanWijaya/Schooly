@@ -5309,17 +5309,14 @@ function Calendar(props) {
       <Snackbar
         open={openSnackbar}
         autoHideDuration={4000}
-        onClose={() => {
-          handleCloseSnackbar();
-        }}
+        onClose={() => handleCloseSnackbar()}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert
           elevation={6}
           variant="filled"
           severity={severity}
-          onClose={() => {
-            handleCloseSnackbar();
-          }}
+          onClose={() => handleCloseSnackbar()}
         >
           {snackbarContent}
         </Alert>

@@ -896,16 +896,14 @@ function ViewTaskTeacher(props) {
       <Snackbar
         open={openCommentSnackbar}
         autoHideDuration={3000}
-        onClose={(event, reason) => {
-          handleCloseCommentSnackbar(event, reason);
-        }}
+        onClose={(event, reason) => handleCloseCommentSnackbar(event, reason)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert
+          elevation={6}
           variant="filled"
           severity={severity}
-          onClose={(event, reason) => {
-            handleCloseCommentSnackbar(event, reason);
-          }}
+          onClose={(event, reason) => handleCloseCommentSnackbar(event, reason)}
         >
           {snackbarContent}
         </Alert>

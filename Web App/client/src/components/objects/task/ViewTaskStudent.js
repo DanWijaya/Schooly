@@ -1295,47 +1295,45 @@ function ViewTaskStudent(props) {
         deleteItem={deleteDialogHandler.current}
       />
       <Snackbar
-        open={fileLimitSnackbar}
-        autoHideDuration={4000}
-        onClose={handleCloseErrorSnackbar}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert elevation={6} variant="filled" severity="error">
-          {over_limit.length} file melebihi batas 10MB!
-        </Alert>
-      </Snackbar>
-      <Snackbar
         open={openCommentSnackbar}
-        autoHideDuration={3000}
-        onClose={(event, reason) => {
-          handleCloseCommentSnackbar(event, reason);
-        }}
+        autoHideDuration={4000}
+        onClose={(event, reason) => handleCloseCommentSnackbar(event, reason)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert
+          elevation={6}
           variant="filled"
           severity={severity}
-          onClose={(event, reason) => {
-            handleCloseCommentSnackbar(event, reason);
-          }}
+          onClose={(event, reason) => handleCloseCommentSnackbar(event, reason)}
         >
           {snackbarContent}
         </Alert>
       </Snackbar>
+      {/* File Size Limit Snackbar */}
+      <Snackbar
+        open={fileLimitSnackbar}
+        autoHideDuration={4000}
+        onClose={handleCloseErrorSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <Alert elevation={6} variant="filled" severity="error">
+          {over_limit.length} file melebihi batas 10MB
+        </Alert>
+      </Snackbar>
+      {/* Delete Snackbar */}
       <Snackbar
         open={openDeleteSnackbar}
         autoHideDuration={3000}
-        onClose={(event, reason) => {
-          handleCloseDeleteSnackbar(event, reason);
-        }}
+        onClose={(event, reason) => handleCloseDeleteSnackbar(event, reason)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert
+          elevation={6}
           variant="filled"
           severity="success"
-          onClose={(event, reason) => {
-            handleCloseDeleteSnackbar(event, reason);
-          }}
+          onClose={(event, reason) => handleCloseDeleteSnackbar(event, reason)}
         >
-          Tugas File anda berhasil dihapus
+          Berkas Tugas Anda berhasil dihapus
         </Alert>
       </Snackbar>
     </div>

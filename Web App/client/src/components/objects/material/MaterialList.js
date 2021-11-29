@@ -569,19 +569,18 @@ function MaterialList(props) {
         warningText="Lampiran dan komentar yang ada juga akan dihapus."
         deleteItem={() => onDeleteMaterial(selectedMaterialId)}
       />
+      {/* Delete Snackbar */}
       <Snackbar
         open={openDeleteSnackbar}
         autoHideDuration={4000}
-        onClose={(event, reason) => {
-          handleCloseDeleteSnackbar(event, reason);
-        }}
+        onClose={(event, reason) => handleCloseDeleteSnackbar(event, reason)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert
+          elevation={6}
           variant="filled"
           severity="success"
-          onClose={(event, reason) => {
-            handleCloseDeleteSnackbar(event, reason);
-          }}
+          onClose={(event, reason) => handleCloseDeleteSnackbar(event, reason)}
         >
           Materi berhasil dihapus
         </Alert>

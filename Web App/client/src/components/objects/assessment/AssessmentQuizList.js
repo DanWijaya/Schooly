@@ -675,28 +675,34 @@ function AssessmentList(props) {
         warningText="Nilai Kuis yang ada juga akan dihapus."
         deleteItem={() => onDeleteAssessment(selectedAssessmentId, "Kuis")}
       />
+      {/* Copy Link Snackbar */}
       <Snackbar
         open={copySnackbarOpen}
-        autoHideDuration={3000}
+        autoHideDuration={4000}
         onClose={handleCloseCopySnackBar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
-        <Alert onClose={handleCloseCopySnackBar} severity="success">
-          Tautan {type} berhasil disalin ke Clipboard Anda!
+        <Alert
+          elevation={6}
+          variant="filled"
+          severity="success"
+          onClose={handleCloseCopySnackBar}
+        >
+          Tautan {type} berhasil disalin ke Clipboard Anda
         </Alert>
       </Snackbar>
+      {/* Delete Snackbar */}
       <Snackbar
         open={openDeleteSnackbar}
         autoHideDuration={4000}
-        onClose={(event, reason) => {
-          handleCloseDeleteSnackbar(event, reason);
-        }}
+        onClose={(event, reason) => handleCloseDeleteSnackbar(event, reason)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert
+          elevation={6}
           variant="filled"
           severity="success"
-          onClose={(event, reason) => {
-            handleCloseDeleteSnackbar(event, reason);
-          }}
+          onClose={(event, reason) => handleCloseDeleteSnackbar(event, reason)}
         >
           Kuis berhasil dihapus
         </Alert>

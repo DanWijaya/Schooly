@@ -208,11 +208,17 @@ class Setting extends Component {
                 )
               }
           </div>
+          <DeleteDialog
+            openDeleteDialog={this.state.isBackDialogOpen}
+            handleCloseDeleteDialog={() => this.setIsBackDialogOpen(false)}
+            itemType="perubahan Pengaturan"
+            deleteItem={this.props.history.goBack}
+          />
           <Snackbar
             open={this.state.isSnackBarOpen}
-            autoHideDuration={6000}
+            autoHideDuration={4000}
             onClose={() => this.setIsSnackBarOpen(false)}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
           >
             <Alert
               elevation={6}
@@ -223,12 +229,6 @@ class Setting extends Component {
               Pengaturan disimpan
             </Alert>
           </Snackbar>
-          <DeleteDialog
-            openDeleteDialog={this.state.isBackDialogOpen}
-            handleCloseDeleteDialog={() => this.setIsBackDialogOpen(false)}
-            itemType="perubahan Pengaturan"
-            deleteItem={this.props.history.goBack}
-          />
         </div>
       </Fade>
     );

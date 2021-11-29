@@ -100,10 +100,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Alert(props) {
-  return <Alert elevation={6} variant="filled" {...props} />;
-}
-
 function ViewDirectory(props) {
   // Hooks only allowed to be used inside a component.
   const classes = useStyles();

@@ -1112,16 +1112,14 @@ function ManageUsers(props) {
       <Snackbar
         open={openSnackbar}
         autoHideDuration={4000}
-        onClose={(event, reason) => {
-          handleCloseSnackbar(event, reason);
-        }}
+        onClose={(event, reason) => handleCloseSnackbar(event, reason)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert
+          elevation={6}
           variant="filled"
           severity="success"
-          onClose={(event, reason) => {
-            handleCloseSnackbar(event, reason);
-          }}
+          onClose={(event, reason) => handleCloseSnackbar(event, reason)}
         >
           {snackbarMessage}
         </Alert>

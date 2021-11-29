@@ -1798,52 +1798,64 @@ class CreateAssessment extends Component {
             itemType={this.state.type ? this.state.type : "Penilaian"}
             redirectLink={`daftar-${this.state.type.toLowerCase()}`}
           />
-          <Snackbar
-            open={this.state.checkboxSnackbarOpen}
-            autoHideDuration={6000}
-            onClose={this.handleCloseCheckboxErrorSnackBar}
-          >
-            <Alert
-              onClose={this.handleCloseCheckboxErrorSnackBar}
-              severity="error"
-            >
-              Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
-            </Alert>
-          </Snackbar>
-          <Snackbar
-            open={this.state.radioSnackbarOpen}
-            autoHideDuration={6000}
-            onClose={this.handleCloseRadioErrorSnackBar}
-          >
-            <Alert onClose={this.handleCloseRadioErrorSnackBar} severity="error">
-              Soal Dalam Bentuk Pilihan Ganda Minimal Memiliki Satu Jawaban.
-            </Alert>
-          </Snackbar>
+          {/* General Error Snackbar */}
           <Snackbar
             open={this.state.snackbarOpen}
             autoHideDuration={4000}
             onClose={this.handleCloseErrorSnackbar}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
           >
             <Alert
               elevation={6}
               variant="filled"
-              onClose={this.handleCloseSnackbar}
               severity="error"
+              onClose={this.handleCloseSnackbar}
             >
-              Masih ada bagian yang belum diisi atau salah, silakan diperiksa
-              kembali!
+              Masih ada bagian yang belum diisi atau salah, periksa kembali
             </Alert>
           </Snackbar>
+          {/* Multiple Choice Question Error Snackbar */}
+          <Snackbar
+            open={this.state.radioSnackbarOpen}
+            autoHideDuration={4000}
+            onClose={this.handleCloseRadioErrorSnackBar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          >
+            <Alert
+              elevation={6}
+              variant="filled"
+              severity="error"
+              onClose={this.handleCloseRadioErrorSnackBar}
+            >
+              Soal dalam bentuk Pilihan Ganda minimal memiliki satu jawaban
+            </Alert>
+          </Snackbar>
+          {/* Checkbox Question Error Snackbar */}
+          <Snackbar
+            open={this.state.checkboxSnackbarOpen}
+            autoHideDuration={4000}
+            onClose={this.handleCloseCheckboxErrorSnackBar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          >
+            <Alert
+              elevation={6}
+              variant="filled"
+              severity="error"
+              onClose={this.handleCloseCheckboxErrorSnackBar}
+            >
+              Soal dalam bentuk Kotak Centang minimal memiliki satu jawaban
+            </Alert>
+          </Snackbar>
+          {/* File Size Limit Snackbar */}
           <Snackbar
             open={this.state.fileLimitSnackbar}
             autoHideDuration={4000}
             onClose={this.handleFileLimitSnackbar}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
           >
             <Alert elevation={6} variant="filled" severity="error">
               {this.state.over_limit.length} file melebihi batas{" "}
-              {this.props.settingsCollection.upload_limit}MB!
+              {this.props.settingsCollection.upload_limit}MB
             </Alert>
           </Snackbar>
         </div>

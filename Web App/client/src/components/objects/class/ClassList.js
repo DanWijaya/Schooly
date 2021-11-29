@@ -969,33 +969,30 @@ function ClassList(props) {
       <Snackbar
         open={openSnackbar}
         autoHideDuration={4000}
-        onClose={(event, reason) => {
-          handleCloseSnackbar(event, reason);
-        }}
+        onClose={(event, reason) => handleCloseSnackbar(event, reason)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert
+          elevation={6}
           variant="filled"
           severity={severity}
-          onClose={(event, reason) => {
-            handleCloseSnackbar(event, reason);
-          }}
+          onClose={(event, reason) => handleCloseSnackbar(event, reason)}
         >
           {snackbarContent}
         </Alert>
       </Snackbar>
+      {/* Delete Snackbar */}
       <Snackbar
         open={openDeleteSnackbar}
         autoHideDuration={4000}
-        onClose={(event, reason) => {
-          handleCloseDeleteSnackbar(event, reason);
-        }}
+        onClose={(event, reason) => handleCloseDeleteSnackbar(event, reason)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert
+          elevation={6}
           variant="filled"
           severity="success"
-          onClose={(event, reason) => {
-            handleCloseDeleteSnackbar(event, reason);
-          }}
+          onClose={(event, reason) => handleCloseDeleteSnackbar(event, reason)}
         >
           Kelas berhasil dihapus
         </Alert>
@@ -1005,26 +1002,26 @@ function ClassList(props) {
 }
 
 ClassList.propTypes = {
+  auth: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  classesCollection: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
-  deleteClass: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
   getStudents: PropTypes.func.isRequired,
+  deleteClass: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  errors: state.errors,
   auth: state.auth,
   classesCollection: state.classesCollection,
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, {
-  clearErrors,
+  getAllClass,
   getTeachers,
   getStudents,
-  getAllClass,
   deleteClass,
+  clearErrors,
 })(ClassList);

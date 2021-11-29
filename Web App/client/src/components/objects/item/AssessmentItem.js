@@ -1,5 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import moment from "moment";
+import "moment/locale/id";
+import OptionMenu from "../../misc/menu/OptionMenu";
 import {
   Avatar,
   Badge,
@@ -16,15 +21,9 @@ import {
   CheckCircle as CheckCircleIcon,
   Error as ErrorIcon,
 } from "@material-ui/icons";
-import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import moment from "moment";
-import "moment/locale/id";
-import OptionMenu from "../../misc/menu/OptionMenu";
 
 const useStyles = makeStyles((theme) => ({
   root: {

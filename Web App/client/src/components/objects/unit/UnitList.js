@@ -622,19 +622,18 @@ function UnitList(props) {
         warningText="Pastikan Unit sudah kosong sebelum dihapus."
         deleteItem={() => onDeleteUnit(selectedUnitId)}
       />
+      {/* Delete Snackbar */}
       <Snackbar
         open={openDeleteSnackbar}
         autoHideDuration={4000}
-        onClose={(event, reason) => {
-          handleCloseDeleteSnackbar(event, reason);
-        }}
+        onClose={(event, reason) => handleCloseDeleteSnackbar(event, reason)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert
+          elevation={6}
           variant="filled"
           severity="success"
-          onClose={(event, reason) => {
-            handleCloseDeleteSnackbar(event, reason);
-          }}
+          onClose={(event, reason) => handleCloseDeleteSnackbar(event, reason)}
         >
           Unit berhasil dihapus
         </Alert>

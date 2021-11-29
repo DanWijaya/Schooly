@@ -669,7 +669,6 @@ function AnnouncementList(props) {
           )}
         </TabPanel>
       ) : null}
-
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
@@ -678,12 +677,12 @@ function AnnouncementList(props) {
         warningText="Lampiran yang ada juga akan dihapus."
         deleteItem={() => onDeleteAnnouncement(selectedAnnouncementId)}
       />
+      {/* Delete Snackbar */}
       <Snackbar
         open={openDeleteSnackbar}
         autoHideDuration={4000}
-        onClose={(event, reason) => {
-          handleCloseDeleteSnackbar(event, reason);
-        }}
+        onClose={(event, reason) => handleCloseDeleteSnackbar(event, reason)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert
           variant="filled"

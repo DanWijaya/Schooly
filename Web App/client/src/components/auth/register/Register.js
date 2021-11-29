@@ -32,7 +32,6 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import Alert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({

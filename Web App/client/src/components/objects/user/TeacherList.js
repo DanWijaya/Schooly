@@ -609,17 +609,15 @@ function TeacherList(props) {
       )}
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={(event, reason) => {
-          handleCloseSnackbar(event, reason);
-        }}
+        autoHideDuration={4000}
+        onClose={(event, reason) => handleCloseSnackbar(event, reason)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert
+          elevation={6}
           variant="filled"
           severity={severity}
-          onClose={(event, reason) => {
-            handleCloseSnackbar(event, reason);
-          }}
+          onClose={(event, reason) => handleCloseSnackbar(event, reason)}
         >
           {snackbarContent}
         </Alert>
@@ -627,22 +625,6 @@ function TeacherList(props) {
     </div>
   );
 }
-
-// TeacherList.propTypes = {
-//   deleteMaterial: PropTypes.func.isRequired,
-//   getAllMaterials: PropTypes.func.isRequired,
-//   getMaterial: PropTypes.func.isRequired,
-//   getTeachers: PropTypes.func.isRequired,
-//   getAllSubjects: PropTypes.func.isRequired,
-//   getSelectedClasses: PropTypes.func.isRequired,
-//   getAllClass: PropTypes.func.isRequired,
-
-//   classesCollection: PropTypes.object.isRequired,
-//   materialsCollection: PropTypes.object.isRequired,
-//   subjectsCollection: PropTypes.object.isRequired,
-//   errors: PropTypes.object.isRequired,
-//   auth: PropTypes.object.isRequired,
-// };
 
 const mapStateToProps = (state) => ({
   errors: state.errors,

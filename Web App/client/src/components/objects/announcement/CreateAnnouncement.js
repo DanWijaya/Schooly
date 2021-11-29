@@ -798,15 +798,16 @@ class CreateAnnouncement extends Component {
             itemType="Pengumuman"
             redirectLink="/daftar-pengumuman"
           />
+          {/* File Size Limit Snackbar */}
           <Snackbar
             open={this.state.fileLimitSnackbar}
             autoHideDuration={4000}
             onClose={this.handleCloseErrorSnackbar}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
           >
             <Alert elevation={6} variant="filled" severity="error">
               {this.state.over_limit.length} file melebihi batas{" "}
-              {this.props.settingsCollection.upload_limit}MB!
+              {this.props.settingsCollection.upload_limit}MB
             </Alert>
           </Snackbar>
         </div>
