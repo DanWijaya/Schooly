@@ -112,7 +112,6 @@ function TeacherListToolbar(props) {
 
   const onClear = (e, id) => {
     setSearchFilter("");
-    // document.getElementById(id).focus();
   };
 
   return (
@@ -218,12 +217,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "25px",
   },
   headerIcon: {
-    display: "flex",
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    fontSize: "25px",
-    padding: "7.5px",
-    borderRadius: "5px",
+    fontSize: "20px",
   },
   toolbar: {
     padding: "16px 0px",
@@ -254,8 +250,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
-      color: theme.palette.primary.main,
-      backgroundColor: "white",
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
     },
   },
 }));
@@ -443,7 +439,7 @@ function TeacherList(props) {
     let tempClassToSubject = {};
 
     for (let classId of newClassTeached) {
-      // Will be changed to incoming time.
+      // Will be changed in the future.
       tempClassToSubject[classId] = newSubjectTeached;
     }
 
@@ -481,9 +477,9 @@ function TeacherList(props) {
         className={classes.header}
       >
         <Grid item>
-          <div className={classes.headerIcon}>
+          <Avatar variant="rounded" className={classes.headerIcon}>
             <BiSitemap />
-          </div>
+          </Avatar>
         </Grid>
         <Grid item>
           <Typography variant="h5" align="left">
@@ -592,9 +588,7 @@ function TeacherList(props) {
                       <Grid item container justify="flex-end">
                         <Button
                           className={classes.saveButton}
-                          onClick={() => {
-                            handleSave(row._id);
-                          }}
+                          onClick={() => handleSave(row._id)}
                         >
                           Simpan
                         </Button>
@@ -627,18 +621,18 @@ function TeacherList(props) {
 }
 
 const mapStateToProps = (state) => ({
-  errors: state.errors,
-  success: state.success,
   auth: state.auth,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
+  success: state.success,
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, {
+  getAllClass,
   getAllSubjects,
   getTeachers,
-  getAllClass,
   updateTeacher,
-  clearErrors,
   clearSuccess,
+  clearErrors,
 })(TeacherList);

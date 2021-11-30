@@ -1,15 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import { getAllUnits } from "../../../actions/UnitActions";
-import {
-  getAllAdmins,
-  updateTeacher,
-  updateUnitAdmins,
-} from "../../../actions/UserActions";
-import { clearErrors } from "../../../actions/ErrorActions";
+import { getAllAdmins, updateUnitAdmins, updateTeacher } from "../../../actions/UserActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import Empty from "../../misc/empty/Empty";
 import {
   Avatar,
   Button,
@@ -22,6 +19,7 @@ import {
   InputLabel,
   Menu,
   MenuItem,
+  List,
   ListItem,
   ListItemAvatar,
   ListItemText,
@@ -118,176 +116,60 @@ function AdminListToolbar(props) {
 
   const onClear = (e, id) => {
     setSearchFilter("");
-    // document.getElementById(id).focus();
   };
 
   return (
     <div className={classes.toolbar}>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden mdUp implementation="css">
-          {searchBarFocus ? null : (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <BiSitemap className={classes.titleIcon} fontSize="large" />
-              <Typography variant="h4">Sunting Unit Pengelola</Typography>
-            </div>
-          )}
-        </Hidden>
-        <Hidden smDown implementation="css">
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <BiSitemap className={classes.titleIcon} fontSize="large" />
-            <Typography variant="h4">Sunting Unit Pengelola</Typography>
-          </div>
-        </Hidden>
-        <Hidden mdUp implementation="css">
-          {searchBarFocus ? (
-            <div style={{ display: "flex" }}>
-              <IconButton
-                onClick={() => {
-                  setSearchBarFocus(false);
-                  setSearchFilter("");
-                }}
+    <Grid container justify="flex-end" alignItems="center" spacing={1}>
+      <Grid item>
+        <TextField
+          variant="outlined"
+          id="searchFilterDesktop"
+          placeholder="Cari Pengelola"
+          value={searchFilter}
+          onChange={onChange}
+          InputProps={{
+            style: {
+              borderRadius: "22.5px",
+              maxWidth: "450px",
+              width: "100%",
+            },
+            startAdornment: (
+              <InputAdornment
+                position="start"
+                style={{ marginRight: "-5px", color: "grey" }}
               >
-                <ArrowBackIcon />
-              </IconButton>
-              <TextField
-                autoFocus
-                fullWidth
-                variant="outlined"
-                id="searchFilterMobile"
-                placeholder="Cari Pengelola"
-                value={searchFilter}
-                onChange={onChange}
-                onClick={(e) => setSearchBarFocus(true)}
-                style={{
-                  maxWidth: "200px",
-                  marginLeft: "10px",
-                }}
-                InputProps={{
-                  startAdornment: searchBarFocus ? null : (
-                    <InputAdornment
-                      position="start"
-                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
-                    >
-                      <IconButton size="small">
-                        <SearchIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment
-                      position="end"
-                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                    >
-                      <IconButton
-                        size="small"
-                        id="searchFilterMobile"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onClear(e, "searchFilterMobile");
-                        }}
-                        style={{
-                          opacity: 0.5,
-                          visibility: !searchFilter ? "hidden" : "visible",
-                        }}
-                      >
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  style: {
-                    borderRadius: "22.5px",
-                  },
-                }}
-              />
-            </div>
-          ) : (
-            <Tooltip title="Search" style={{ marginLeft: "10px" }}>
-              <IconButton
-                className={classes.SearchIconButton}
-                onClick={() => setSearchBarFocus(true)}
-              >
-                <SearchIcon className={classes.SearchIconIconMobile} />
-              </IconButton>
-            </Tooltip>
-          )}
-        </Hidden>
-      </div>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden smDown implementation="css">
-          <TextField
-            variant="outlined"
-            id="searchFilterDesktop"
-            placeholder="Cari Pengelola"
-            value={searchFilter}
-            onChange={onChange}
-            onClick={() => setSearchBarFocus(true)}
-            onBlur={() => setSearchBarFocus(false)}
-            style={{
-              maxWidth: "250px",
-              marginRight: "10px",
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment
-                  position="start"
-                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end" style={{ marginLeft: "-10px" }}>
+                <IconButton
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClear(e, "searchFilterDesktop");
+                  }}
+                  style={{ visibility: !searchFilter ? "hidden" : "visible" }}
                 >
-                  <IconButton size="small">
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment
-                  position="end"
-                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                >
-                  <IconButton
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onClear(e, "searchFilterDesktop");
-                    }}
-                    style={{
-                      opacity: 0.5,
-                      visibility: !searchFilter ? "hidden" : "visible",
-                    }}
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-              style: {
-                borderRadius: "22.5px",
-              },
-            }}
-          />
-        </Hidden>
+                  <ClearIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Grid>
+      <Grid item>
         <Tooltip title="Urutkan Pengelola">
-          <IconButton
-            onClick={handleOpenSortMenu}
-            className={classes.sortButton}
-          >
+          <IconButton onClick={handleOpenSortMenu}>
             <SortIcon />
           </IconButton>
         </Tooltip>
         <Menu
           keepMounted
-          anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleCloseSortMenu}
+          anchorEl={anchorEl}
           anchorOrigin={{
             vertical: "bottom",
             horizontal: "right",
@@ -319,7 +201,8 @@ function AdminListToolbar(props) {
             </MenuItem>
           ))}
         </Menu>
-      </div>
+      </Grid>
+    </Grid>
     </div>
   );
 }
@@ -327,44 +210,26 @@ function AdminListToolbar(props) {
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
+    padding: "20px",
+    paddingTop: "25px",
     maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
       maxWidth: "100%",
     },
-    padding: "10px",
   },
-  actionButton: {
-    display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    padding: "20px",
+  header: {
+    marginBottom: "25px",
   },
-  cancelButton: {
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.main,
-    },
-  },
-
-  toolbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  titleDivider: {
+  headerIcon: {
     backgroundColor: theme.palette.primary.main,
-    marginTop: "15px",
-    marginBottom: "15px",
+    color: "white",
+    fontSize: "20px",
   },
-  sortButton: {
-    backgroundColor: theme.palette.action.selected,
-    color: "black",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.divider,
-      color: "black",
-    },
+  userList: {
+    padding: "0px",
+  },
+  toolbar: {
+    padding: "16px 0px",
   },
   visuallyHidden: {
     border: 0,
@@ -377,40 +242,6 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  editTeacherButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  teacherPanelSummary: {
-    "&:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
-  },
-  titleIcon: {
-    fontSize: "28px",
-    backgroundColor: "white",
-    color: theme.palette.primary.main,
-    marginRight: "10px",
-  },
-  teacherAvatar: {
-    backgroundColor: theme.palette.primary.main,
-    marginRight: "10px",
-  },
-  listItem: {
-    padding: "6px 16px",
-  },
-  saveButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      color: theme.palette.primary.main,
-      backgroundColor: "white",
-    },
-  },
   select: {
     minWidth: "150px",
     maxWidth: "150px",
@@ -420,19 +251,21 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   cancelButton: {
+    width: "90px",
     backgroundColor: theme.palette.error.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.main,
+      backgroundColor: theme.palette.error.main,
+      color: "white",
     },
   },
-  editClassButton: {
+  saveButton: {
+    width: "90px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
-      color: theme.palette.primary.main,
-      backgroundColor: "white",
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
     },
   },
 }));
@@ -457,7 +290,7 @@ function AdminList(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
 
-  // Edit Dialog
+  // Upload Dialog
   const [openUploadDialog, setOpenUploadDialog] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
@@ -477,7 +310,6 @@ function AdminList(props) {
           item.name.toLowerCase().includes(searchFilter.toLowerCase())
         )
         .map((data) => {
-          //   tempRows.push(createData(data._id, data.name, data.email));
           all_admin_obj.current[data._id] = data;
           tempSelectedValues[data._id] = data.unit;
           return createData(data);
@@ -514,29 +346,6 @@ function AdminList(props) {
     });
   }
 
-  function handleSave(adminId) {
-    let teacher = selectedValues[adminId];
-    let newSubjectTeached = teacher.subject.map(
-      (subjectInfo) => subjectInfo._id
-    );
-    let newClassTeached = teacher.class.map((classInfo) => classInfo._id);
-    let tempClassToSubject = {};
-
-    for (let classId of newClassTeached) {
-      // akan diubah di waktu mendatang
-      tempClassToSubject[classId] = newSubjectTeached;
-    }
-
-    let newTeacherData = {
-      ...all_admin_obj.current[adminId],
-      subject_teached: newSubjectTeached,
-      class_teached: newClassTeached,
-      class_to_subject: tempClassToSubject,
-    };
-
-    updateTeacher(newTeacherData, adminId);
-  }
-
   const handleOpenDeleteDialog = () => {
     setOpenDeleteDialog(true);
   };
@@ -556,6 +365,24 @@ function AdminList(props) {
 
   return (
     <div className={classes.root}>
+      <Grid
+        container
+        alignItems="center"
+        spacing={2}
+        className={classes.header}
+      >
+        <Grid item>
+          <Avatar variant="rounded" className={classes.headerIcon}>
+            <BiSitemap />
+          </Avatar>
+        </Grid>
+        <Grid item>
+          <Typography variant="h5" align="left">
+            Data Unit Pengelola
+          </Typography>
+        </Grid>
+      </Grid>
+      <Divider />
       <AdminListToolbar
         classes={classes}
         order={order}
@@ -567,19 +394,16 @@ function AdminList(props) {
         searchFilter={searchFilter}
         setSearchFilter={setSearchFilter}
       />
-      <Divider variant="inset" className={classes.titleDivider} />
-      <Grid container direction="column" spacing={2}>
-        {rows.length === 0 ? (
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            Kosong
-          </Typography>
-        ) : (
-          stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-
+      <Divider />
+      {rows.length === 0 ? (
+        <Empty />
+      ) : (
+        <List className={classes.userList}>
+          {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+            const labelId = index;
             return (
-              <Grid item>
-                <ListItem className={classes.listItem}>
+              <div>
+                <ListItem>
                   <Hidden xsDown>
                     <ListItemAvatar>
                       {!row.avatar ? (
@@ -591,60 +415,48 @@ function AdminList(props) {
                   </Hidden>
                   <ListItemText
                     primary={
-                      <Typography variant="h6" color="textPrimary">
+                      <Typography variant="h6" color="textPrimary" noWrap>
                         {row.name}
                       </Typography>
                     }
                     secondary={
-                      <Typography variant="body2" color="textSecondary">
+                      <Typography variant="body2" color="textSecondary" noWrap>
                         {row.email}
                       </Typography>
                     }
                   />
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                    }}
+                  <div>
+                  <FormControl
+                    fullWidth
+                    variant="outlined"
+                    color="primary"
+                    error={Boolean(errors.to)}
                   >
-                    <ListItemText
-                      align="left"
-                      primary={
-                        <FormControl
-                          variant="outlined"
-                          error={Boolean(errors.to)}
-                          color="primary"
-                          fullWidth
-                        >
-                          <InputLabel id="unit-label">Unit</InputLabel>
-                          <Select
-                            labelId="unit-label"
-                            label="Unit"
-                            value={selectedValues[row._id]}
-                            onChange={(event) => {
-                              onUnitChange(event, row._id);
-                            }}
-                            className={classes.select}
-                          >
-                            {all_units.map((u) => (
-                              <MenuItem key={u._id} value={u._id}>
-                                {u.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      }
-                    />
+                    <InputLabel id="unit-label">Unit</InputLabel>
+                    <Select
+                      labelId="unit-label"
+                      label="Unit"
+                      value={selectedValues[row._id]}
+                      onChange={(event) => onUnitChange(event, row._id)}
+                      className={classes.select}
+                    >
+                      {all_units.map((u) => (
+                        <MenuItem key={u._id} value={u._id}>
+                          {u.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                   </div>
                 </ListItem>
-              </Grid>
+                <Divider />
+              </div>
             );
-          })
-        )}
-      </Grid>
-      <Divider />
-      <div className={classes.actionButton}>
-        <div style={{ display: "flex", alignItems: "center", padding: "4px" }}>
+          })}
+        </List>
+      )}
+      <Grid container justify="flex-end" spacing={2} style={{ marginTop: "10px" }}>
+        <Grid item>
           <Button
             variant="contained"
             onClick={handleOpenDeleteDialog}
@@ -652,17 +464,17 @@ function AdminList(props) {
           >
             Batal
           </Button>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", padding: "4px" }}>
+        </Grid>
+        <Grid item>
           <Button
             variant="contained"
             onClick={onSubmit}
-            className={classes.editClassButton}
+            className={classes.saveButton}
           >
             Simpan
           </Button>
-        </div>
-      </div>
+        </Grid>
+      </Grid>
       <UploadDialog
         openUploadDialog={openUploadDialog}
         success={success}

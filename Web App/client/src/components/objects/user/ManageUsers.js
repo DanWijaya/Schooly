@@ -55,7 +55,6 @@ import {
   Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import { BiSitemap } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
 
 function createData(
@@ -319,17 +318,6 @@ function ManageUsersToolbar(props) {
             </Hidden>
           </Grid>
           <Hidden smDown>
-            {role === "Teacher" ? (
-              <Grid item style={{ display: searchBarFocus ? "none" : "block" }}>
-                <Link to="/data-ajar-guru">
-                  <Tooltip title="Sunting Data Ajar Guru">
-                    <IconButton>
-                      <BiSitemap />
-                    </IconButton>
-                  </Tooltip>
-                </Link>
-              </Grid>
-            ) : null}
             <Grid item>
               <Tooltip title="Urutkan Akun">
                 <IconButton onClick={handleOpenSortMenu}>
@@ -378,21 +366,7 @@ function ManageUsersToolbar(props) {
             {searchBarFocus || searchFilter
               ? null
               : [
-                  // When search bar is not on focus and searchFilter is empty
-                  role === "Teacher" ? (
-                    <Grid
-                      item
-                      style={{ display: searchBarFocus ? "none" : "block" }}
-                    >
-                      <Link to="/data-ajar-guru">
-                        <Tooltip title="Sunting Data Ajar Guru">
-                          <IconButton>
-                            <BiSitemap />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    </Grid>
-                  ) : null,
+                  // When search bar is not on focus and searchFilter is empty.
                   <Grid item>
                     <Tooltip title="Urutkan Akun">
                       <IconButton onClick={handleOpenSortMenu}>
@@ -481,57 +455,6 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       boxShadow:
         "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
-    },
-  },
-  dialogBox: {
-    width: "300px",
-    maxWidth: "100%",
-    minHeight: "175px",
-    padding: "15px",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  dialogDisableButton: {
-    width: "150px",
-    backgroundColor: theme.palette.warning.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.warning.dark,
-      color: "white",
-    },
-  },
-  dialogApproveButton: {
-    width: "125px",
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    border: `1px solid ${theme.palette.success.main}`,
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.dark,
-      color: "white",
-      border: `1px solid ${theme.palette.success.dark}`,
-    },
-  },
-  dialogDeleteButton: {
-    width: "125px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    border: `1px solid ${theme.palette.error.main}`,
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-      border: `1px solid ${theme.palette.error.dark}`,
-    },
-  },
-  dialogCancelButton: {
-    width: "125px",
-    backgroundColor: "white",
-    color: theme.palette.error.main,
-    border: `1px solid ${theme.palette.error.main}`,
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-      border: `1px solid ${theme.palette.error.dark}`,
     },
   },
   visuallyHidden: {
@@ -625,7 +548,7 @@ function ManageUsers(props) {
     currentBooleanList[index] = !currentBooleanList[index];
     setBooleanCheckboxStudent([...currentBooleanList]);
 
-    // Handle the list of chosen .
+    // Handle the list of chosen accounts.
     let currentCheckboxList = listCheckboxStudent;
     let data = row._id;
 
@@ -646,7 +569,7 @@ function ManageUsers(props) {
     currentBooleanList[index] = !currentBooleanList[index];
     setBooleanCheckboxTeacher([...currentBooleanList]);
 
-    // Handle the list of chosen.
+    // Handle the list of chosen accounts.
     let currentCheckboxList = listCheckboxTeacher;
     let data = row._id;
 
@@ -835,7 +758,7 @@ function ManageUsers(props) {
     handleCloseDeactivateDialog();
   };
 
-  // Delete Dialog box
+  // Delete Dialog
   const handleOpenDeleteDialog = (e, row) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);

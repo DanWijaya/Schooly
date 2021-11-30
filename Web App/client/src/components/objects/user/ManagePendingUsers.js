@@ -11,9 +11,14 @@ import {
   bulkSetUserActive,
 } from "../../../actions/UserActions";
 import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
-import Empty from "../../misc/empty/Empty";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import {
+  removeDisabledDeletedOfficers,
+  removeHomeroomTeachers,
+} from "../../../actions/ClassActions";
 import ActivateDialog from "../../misc/dialog/ActivateDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import OptionMenu from "../../misc/menu/OptionMenu";
+import Empty from "../../misc/empty/Empty";
 import { TabPanel } from "../../misc/tab-panel/TabPanel";
 import {
   Avatar,
@@ -57,11 +62,6 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { BiSitemap } from "react-icons/bi";
 import { FaUserLock } from "react-icons/fa";
-import OptionMenu from "../../misc/menu/OptionMenu";
-import {
-  removeDisabledDeletedOfficers,
-  removeHomeroomTeachers,
-} from "../../../actions/ClassActions";
 
 function createData(
   _id,
@@ -197,10 +197,6 @@ function ManageUsersToolbar(props) {
       <Grid container>
         <Grid item xs container alignItems="center" spacing={1}>
           <Grid item>
-            {/*
-            Perlu diubah jadi komponen checkbox biar posisinya nda aneh
-            <Checkbox color="primary" />
-            */}
             {listCheckbox.length === 0 ? (
               <IconButton
                 onClick={() => selectAllData(role)}
@@ -287,7 +283,6 @@ function ManageUsersToolbar(props) {
             </Hidden>
             <Hidden mdUp>
               {searchBarFocus || searchFilter ? (
-                //Show textfield when searchBar is onfocus or searchFilter is not empty
                 <TextField
                   autoFocus
                   variant="outlined"
@@ -376,7 +371,7 @@ function ManageUsersToolbar(props) {
           </Hidden>
           <Hidden mdUp>
             {searchBarFocus || searchFilter ? null : (
-              // When search bar is not on focus and searchFilter is empty
+              // When search bar is not on focus and searchFilter is empty.
               <Grid item>
                 <Tooltip title="Urutkan Akun">
                   <IconButton onClick={handleOpenSortMenu}>
@@ -465,57 +460,6 @@ const useStyles = makeStyles((theme) => ({
         "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
     },
   },
-  dialogBox: {
-    width: "300px",
-    maxWidth: "100%",
-    minHeight: "175px",
-    padding: "15px",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  dialogDisableButton: {
-    width: "150px",
-    backgroundColor: theme.palette.warning.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.warning.dark,
-      color: "white",
-    },
-  },
-  dialogApproveButton: {
-    width: "125px",
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    border: `1px solid ${theme.palette.success.main}`,
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.dark,
-      color: "white",
-      border: `1px solid ${theme.palette.success.dark}`,
-    },
-  },
-  dialogDeleteButton: {
-    width: "125px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    border: `1px solid ${theme.palette.error.main}`,
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-      border: `1px solid ${theme.palette.error.dark}`,
-    },
-  },
-  dialogCancelButton: {
-    width: "125px",
-    backgroundColor: "white",
-    color: theme.palette.error.main,
-    border: `1px solid ${theme.palette.error.main}`,
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-      border: `1px solid ${theme.palette.error.dark}`,
-    },
-  },
   visuallyHidden: {
     border: 0,
     clip: "rect(0 0 0 0)",
@@ -568,14 +512,14 @@ function ManagePendingUsers(props) {
     []
   );
 
-  //Snackbar
+  // Snackbar
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
   // Tabs
   const [panel, setPanel] = React.useState(0);
 
-  //Avatars
+  // Avatars
   const [avatarJSON, setAvatarJSON] = React.useState({});
   let student_rows = [];
   let teacher_rows = [];
@@ -593,14 +537,14 @@ function ManagePendingUsers(props) {
   };
 
   const handleChangeListStudent = (e, index, row) => {
-    //Handle the check of Checkboxes.
+    // Handle the check of checkboxes.
     e.stopPropagation();
     e.preventDefault();
     let currentBooleanList = booleanCheckboxStudent;
     currentBooleanList[index] = !currentBooleanList[index];
     setBooleanCheckboxStudent([...currentBooleanList]);
 
-    //Handle the list of chosen .
+    // Handle the list of chosen accounts.
     let currentCheckboxList = listCheckboxStudent;
     let data = row._id;
 
@@ -614,14 +558,14 @@ function ManagePendingUsers(props) {
   };
 
   const handleChangeListTeacher = (e, index, row) => {
-    //Handle the check of checkboxes
+    // Handle the check of checkboxes.
     e.stopPropagation();
     e.preventDefault();
     let currentBooleanList = booleanCheckboxTeacher;
     currentBooleanList[index] = !currentBooleanList[index];
     setBooleanCheckboxTeacher([...currentBooleanList]);
 
-    //Handle the list of chosen .
+    // Handle the list of chosen accounts.
     let currentCheckboxList = listCheckboxTeacher;
     let data = row._id;
 
@@ -801,7 +745,7 @@ function ManagePendingUsers(props) {
     handleCloseActivateDialog();
   };
 
-  // Delete Dialog box
+  // Delete Dialog
   const handleOpenDeleteDialog = (e, row) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
@@ -994,7 +938,6 @@ function ManagePendingUsers(props) {
           deSelectAllData={deSelectAllData}
           setSearchBarFocus={setSearchBarFocusT}
           searchBarFocus={searchBarFocusT}
-          //Two props added for search filter.
           searchFilter={searchFilterT}
           setSearchFilter={setSearchFilterT}
         />

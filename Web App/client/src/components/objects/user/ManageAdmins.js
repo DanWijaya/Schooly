@@ -10,9 +10,10 @@ import {
   getAllAdmins,
 } from "../../../actions/UserActions";
 import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
-import Empty from "../../misc/empty/Empty";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import DeactivateDialog from "../../misc/dialog/DeactivateDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import OptionMenu from "../../misc/menu/OptionMenu";
+import Empty from "../../misc/empty/Empty";
 import {
   Avatar,
   Checkbox,
@@ -51,7 +52,6 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { BiSitemap } from "react-icons/bi";
 import { FaUsersCog } from "react-icons/fa";
-import OptionMenu from "../../misc/menu/OptionMenu";
 
 function createData(
   _id,
@@ -105,24 +105,6 @@ function stableSort(array, comparator) {
 
 function ManageAdminsToolbar(props) {
   const { searchFilterHint } = props;
-  // const {
-  //   classes,
-  //   order,
-  //   orderBy,
-  //   onRequestSort,
-  //   role,
-  //   rowCount,
-  //   listCheckbox,
-  //   selectAllData,
-  //   deSelectAllData,
-  //   handleOpenDeactivateDialog,
-  //   handleOpenDeleteDialog,
-  //   setSearchBarFocus,
-  //   searchBarFocus,
-  //   searchFilter,
-  //   searchFilterHint,
-  //   setSearchFilter,
-  // } = props;
 
   const {
     classes,
@@ -208,10 +190,6 @@ function ManageAdminsToolbar(props) {
       <Grid container>
         <Grid item xs container alignItems="center" spacing={1}>
           <Grid item>
-            {/*
-            Perlu diubah jadi komponen checkbox biar posisinya nda aneh
-            <Checkbox color="primary" />
-            */}
             {listCheckbox.length === 0 ? (
               <IconButton
                 onClick={() => selectAllData(role)}
@@ -292,7 +270,6 @@ function ManageAdminsToolbar(props) {
             </Hidden>
             <Hidden mdUp>
               {searchBarFocus || searchFilter ? (
-                //Show textfield when searchBar is onfocus or searchFilter is not empty
                 <TextField
                   autoFocus
                   variant="outlined"
@@ -404,7 +381,7 @@ function ManageAdminsToolbar(props) {
                       </Tooltip>
                     </Link>
                   </Grid>,
-                  // When search bar is not on focus and searchFilter is empty
+                  // When search bar is not on focus and searchFilter is empty.
                   <Grid item>
                     <Tooltip title="Urutkan Akun">
                       <IconButton onClick={handleOpenSortMenu}>
@@ -476,12 +453,6 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     fontSize: "20px",
   },
-  userTabs: {
-    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-  },
-  userTabTitle: {
-    alignSelf: "flex-start",
-  },
   userList: {
     padding: "0px",
   },
@@ -493,57 +464,6 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       boxShadow:
         "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
-    },
-  },
-  dialogBox: {
-    width: "300px",
-    maxWidth: "100%",
-    minHeight: "175px",
-    padding: "15px",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  dialogDisableButton: {
-    width: "150px",
-    backgroundColor: theme.palette.warning.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.warning.dark,
-      color: "white",
-    },
-  },
-  dialogApproveButton: {
-    width: "125px",
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    border: `1px solid ${theme.palette.success.main}`,
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.dark,
-      color: "white",
-      border: `1px solid ${theme.palette.success.dark}`,
-    },
-  },
-  dialogDeleteButton: {
-    width: "125px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    border: `1px solid ${theme.palette.error.main}`,
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-      border: `1px solid ${theme.palette.error.dark}`,
-    },
-  },
-  dialogCancelButton: {
-    width: "125px",
-    backgroundColor: "white",
-    color: theme.palette.error.main,
-    border: `1px solid ${theme.palette.error.main}`,
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-      border: `1px solid ${theme.palette.error.dark}`,
     },
   },
   visuallyHidden: {
@@ -588,11 +508,12 @@ function ManageAdmins(props) {
   // List Checkbox
   const [listCheckbox, setListCheckbox] = React.useState([]);
   const [booleanCheckbox, setBooleanCheckbox] = React.useState([]);
-  //Snackbar
+
+  // Snackbar
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
-  //Avatars
+  // Avatars
   const [avatarJSON, setAvatarJSON] = React.useState({});
   let rows = [];
   let currentListBoolean;
@@ -610,14 +531,14 @@ function ManageAdmins(props) {
   };
 
   const handleChangeListStudent = (e, index, row) => {
-    //Handle the check of Checkboxes.
+    // Handle the check of checkboxes.
     e.stopPropagation();
     e.preventDefault();
     let currentBooleanList = booleanCheckbox;
     currentBooleanList[index] = !currentBooleanList[index];
     setBooleanCheckbox([...currentBooleanList]);
 
-    //Handle the list of chosen .
+    // Handle the list of chosen accounts.
     let currentCheckboxList = listCheckbox;
     let data = row._id;
 
@@ -738,7 +659,7 @@ function ManageAdmins(props) {
     handleCloseActivateDialog();
   };
 
-  // Delete Dialog box
+  // Delete Dialog
   const handleOpenDeleteDialog = (e, row) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
@@ -811,6 +732,7 @@ function ManageAdmins(props) {
             </Typography>
           </Grid>
         </Grid>
+        <Divider />
         <ManageAdminsToolbar searchFilterHint="Cari Pengelola" />
         <Divider />
         {rows.length === 0 ? (
@@ -927,10 +849,10 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
+  getAllAdmins,
+  getMultipleFileAvatar,
   setUserDeactivated,
   bulkSetUserDeactivated,
-  deleteUser,
   bulkDeleteUser,
-  getMultipleFileAvatar,
-  getAllAdmins,
+  deleteUser,
 })(ManageAdmins);

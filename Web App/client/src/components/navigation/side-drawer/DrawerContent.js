@@ -21,6 +21,7 @@ import {
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
+import { BiSitemap } from "react-icons/bi";
 import {
   FaChalkboard,
   FaClipboardList,
@@ -93,6 +94,11 @@ function DrawerContent(props) {
         <FaUserLock className={classes.drawerListItemIcon} />,
         "Pengelola Tertunda",
       ],
+      [
+        "/data-unit-pengelola",
+        <BiSitemap className={classes.drawerListItemIcon} />,
+        "Data Unit Pengelola",
+      ],
     ];
   } else if (user.role === "Admin")
     ListItemContents = [
@@ -110,6 +116,11 @@ function DrawerContent(props) {
         "/pengguna-tidakaktif",
         <FaUserLock className={classes.drawerListItemIcon} />,
         "Pengguna Tidak Aktif",
+      ],
+      [
+        "/data-ajar-guru",
+        <BiSitemap className={classes.drawerListItemIcon} />,
+        "Data Ajar Guru",
       ],
       [
         "/kalender",
