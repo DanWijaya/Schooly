@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "22.5px 0px",
     backgroundColor: theme.palette.primary.light,
   },
-  seeResultsButton: {
+  gradeButton: {
     boxShadow:
       "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
@@ -745,7 +745,7 @@ function ViewTaskTeacher(props) {
                 <Fab
                   size="large"
                   variant="extended"
-                  className={classes.seeResultsButton}
+                  className={classes.gradeButton}
                   disabled={disableButton}
                 >
                   <PlaylistAddCheckIcon style={{ marginRight: "8px" }} />
@@ -756,7 +756,7 @@ function ViewTaskTeacher(props) {
                 <Tooltip title="Periksa">
                   <Fab
                     size="medium"
-                    className={classes.seeResultsButton}
+                    className={classes.gradeButton}
                     disabled={disableButton}
                   >
                     <PlaylistAddCheckIcon />

@@ -449,9 +449,9 @@ function SubmittedTaskList(props) {
       return;
     } else {
       let { class_assigned } = tasksCollection;
-      // let student_task_files_id; // To handle the download all, this is needed.
       let students_in_class = [];
       let isClassSubmissionEmpty = true;
+
       // For every class that was given this task.
       all_students
         .filter((s) => tasksCollection.class_assigned[value] === s.kelas)

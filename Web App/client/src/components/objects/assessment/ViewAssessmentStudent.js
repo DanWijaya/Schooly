@@ -442,7 +442,6 @@ function QuestionImage(props) {
             onClick={handleNext}
             disabled={activeStep === maxSteps - 1}
           >
-            Next
             {theme.direction === "rtl" ? (
               <KeyboardArrowLeft />
             ) : (
@@ -461,7 +460,6 @@ function QuestionImage(props) {
             ) : (
               <KeyboardArrowLeft />
             )}
-            Back
           </Button>
         }
       />

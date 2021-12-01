@@ -67,6 +67,7 @@ import {
   TextFormat as TextFormatIcon,
   Timer as TimerIcon,
   TimerOff as TimerOffIcon,
+  ViewList as ViewListIcon,
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon
 } from "@material-ui/icons";
@@ -1343,7 +1344,7 @@ class EditAssessment extends Component {
   };
 
   weightInput = (classes) => {
-    const columnTemplate = {
+    const questionType = {
       radio: {
         text: "Pilihan Ganda",
         icon: <RadioButtonCheckedIcon />,
@@ -1385,12 +1386,12 @@ class EditAssessment extends Component {
         uniformMaxScore.push(
           <ListItem>
             <ListItemIcon>
-              {columnTemplate[type].icon}
+              {questionType[type].icon}
             </ListItemIcon>
             <ListItemText
               primary={
                 <Typography noWrap>
-                  {columnTemplate[type].text}
+                  {questionType[type].text}
                 </Typography>
               }
             />
@@ -1581,14 +1582,12 @@ class EditAssessment extends Component {
                               />
                             </Grid>
                             <Grid item>
-                            {/* Mau dibuang tipe penilaiannya*/}
-                              <Typography
-                                component="label"
-                                for="class_assigned"
-                                color="primary"
-                              >
-                                Tipe Penilaian
-                              </Typography>
+                              <div style={{ display: "flex", alignItems: "center"}}>
+                                <ViewListIcon className={classes.labelIcon} />
+                                <Typography color="primary">
+                                  Tipe Penilaian
+                                </Typography>
+                              </div>
                               <FormControl
                                 fullWidth
                                 variant="outlined"
@@ -1825,7 +1824,7 @@ class EditAssessment extends Component {
                               <FormControlLabel
                                 label={
                                   <Typography color="primary">
-                                    Jadwalkan Pemberian
+                                    Jadwalkan Publikasi
                                   </Typography>
                                 }
                                 control={

@@ -10,20 +10,24 @@ import {
   getOneAssessment,
   updateAssessmentSuspects,
 } from "../../../actions/AssessmentActions";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
+import Empty from "../../misc/empty/Empty";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import {
   Avatar,
   Button,
   Divider,
   ExpansionPanel,
+  ExpansionPanelDetails,
   ExpansionPanelSummary,
   Fab,
   Grid,
   Hidden,
   IconButton,
+  List,
   ListItem,
   ListItemAvatar,
+  ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
@@ -31,6 +35,7 @@ import {
   Tab,
   Tabs,
   TableSortLabel,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import {
@@ -38,6 +43,7 @@ import {
   Edit as EditIcon,
   ExpandMore as ExpandMoreIcon,
   GetApp as GetAppIcon,
+  PlaylistAddCheck as PlaylistAddCheckIcon,
   RadioButtonChecked as RadioButtonCheckedIcon,
   Sort as SortIcon,
   Subject as SubjectIcon,
@@ -56,21 +62,45 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "100%",
     },
   },
-  personListContainer: {
-    display: "flex",
-    alignItems: "center",
-    padding: "5px",
+  submittedAssessmentPaper: {
+    padding: "20px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "15px",
+    },
   },
-  listItemPaper: {
-    marginBottom: "10px",
+  submittedAssessmentDivider: {
+    margin: "22.5px 0px",
+    backgroundColor: theme.palette.primary.light,
   },
-  listItem: {
+  gradeButton: {
+    boxShadow:
+      "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    backgroundColor: theme.palette.success.main,
+    color: "white",
     "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+    },
+  },
+  downloadScoreButton: {
+    textTransform: "none",
+    color: theme.palette.primary.main,
+    "&:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  paperbox: {
-    padding: "20px 20px 0 20px",
+  sortButton: {
+    textTransform: "none",
+    color: theme.palette.grey.A700,
+    "&:hover": {
+      backgroundColor: theme.palette.grey[100],
+    },
+  },
+  resultsPaper: {
+    padding: "20px 20px 0px 20px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "15px 15px 0px 15px",
+    },
   },
   visuallyHidden: {
     border: 0,
@@ -83,110 +113,18 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  sortButton: {
-    backgroundColor: theme.palette.action.selected,
-    color: "black",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.divider,
-      color: "black",
-    },
-  },
-  RadioQst: {
-    "&$disabled": {
-      boxShadow: theme.shadows[2],
-      color: "white",
-    },
-  },
-  CheckboxQst: {
-    "&$disabled": {
-      boxShadow: theme.shadows[2],
-      color: "white",
-    },
-  },
-  ShorttextQst: {
-    "&$disabled": {
-      boxShadow: theme.shadows[2],
-      color: "white",
-    },
-  },
-  LongtextQst: {
-    "&$disabled": {
-      boxShadow: theme.shadows[2],
-      color: "white",
-    },
-  },
-  disabled: {
-    //(meskipun kosong, ini harus ditambahkan)
-  },
-  editFab: {
-    marginRight: "10px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  editIconFab: {
-    width: theme.spacing(2.5),
-    height: theme.spacing(2.5),
-    marginRight: "7.5px",
-  },
-  editIconButton: {
-    // marginRight: "10px",
-    marginRight: "0px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
+  flagIcon: {
+    color: theme.palette.grey.A700,
+    fontSize: "1.2em",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "1em",
     },
   },
   redFlagIcon: {
-    color: theme.palette.error.dark,
+    color: theme.palette.error.main,
     fontSize: "1.2em",
     [theme.breakpoints.down("xs")]: {
       fontSize: "1em",
-    },
-    stroke: theme.palette.text.secondary,
-    strokeWidth: "0.6px",
-    strokeLinejoin: "round",
-  },
-  flagIcon: {
-    color: theme.palette.text.secondary,
-    fontSize: "1.2em",
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "1em",
-    },
-  },
-  hide400Down: {
-    [theme.breakpoints.down(400)]: {
-      display: "none!important",
-    },
-  },
-  hide401Up: {
-    [theme.breakpoints.up(401)]: {
-      display: "none!important",
-    },
-  },
-  mobileCustomFontSize400Down: {
-    [theme.breakpoints.down(400)]: {
-      fontSize: "0.8rem",
-    },
-  },
-  questionIconMargin: {
-    margin: "8px 20px 8px 0",
-    [theme.breakpoints.down(400)]: {
-      margin: "8px 8px 8px 0",
-    },
-  },
-  dividerColor: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  emptyDescription: {
-    padding: "8px 0",
-    [theme.breakpoints.down("xs")]: {
-      margin: "20px",
     },
   },
 }));
@@ -211,8 +149,8 @@ function GradeButton(props) {
       <Hidden xsDown>
         <Button
           variant="contained"
-          startIcon={<EditIcon />}
-          className={classes.editIconButton}
+          startIcon={<PlaylistAddCheckIcon />}
+          className={classes.gradeButton}
         >
           Periksa
         </Button>
@@ -221,8 +159,8 @@ function GradeButton(props) {
         <Button
           size="small"
           variant="contained"
-          startIcon={<EditIcon />}
-          className={classes.editIconButton}
+          startIcon={<PlaylistAddCheckIcon />}
+          className={classes.gradeButton}
         >
           Periksa
         </Button>
@@ -492,25 +430,21 @@ function SubmittedAssessmentList(props) {
         },
       };
 
-      const columnTemplate = {
+      const questionType = {
         radio: {
-          root: classes.RadioQst,
-          text: <b>Pilihan Ganda</b>,
+          text: "Pilihan Ganda",
           icon: <RadioButtonCheckedIcon />,
         },
         checkbox: {
-          root: classes.CheckboxQst,
-          text: <b>Kotak Centang</b>,
+          text: "Kotak Centang",
           icon: <CheckBoxIcon />,
         },
         shorttext: {
-          root: classes.ShorttextQst,
-          text: <b>Isian Pendek</b>,
+          text: "Isian Pendek",
           icon: <TextFormatIcon />,
         },
         longtext: {
-          root: classes.LongtextQst,
-          text: <b>Uraian</b>,
+          text: "Uraian",
           icon: <SubjectIcon />,
         },
       };
@@ -646,161 +580,72 @@ function SubmittedAssessmentList(props) {
             }
           } // If student didn't do this assessment, his/her score will be null.
 
-          // layar desktop
-          let columns1 = [];
-          // layar mobile
-          let columns2 = [];
+          let questionTypeScore = [];
 
           if (scores) {
-            // jika murid mengerjakan assessment ini, scores akan berisi nilai murid
-            let c = 0; // digunakan untuk menambahkan divider di antara elemen tipe soal
             for (let typeArray of types.entries()) {
-              let type = typeArray[0]; //isi array ini ada 2, dua-duanya nilainya sama, yaitu tipe soal
-              // layar desktop
-              columns1.push(
-                <Grid
-                  container
-                  item
-                  xs={3}
-                  spacing="1"
-                  wrap="nowrap"
-                  direction="column"
-                  justify="space-between"
-                  alignItems="center"
-                >
-                  <Grid item>
-                    <IconButton
-                      disabled
-                      classes={{
-                        root: columnTemplate[type].root,
-                        disabled: classes.disabled,
-                      }}
-                    >
-                      {columnTemplate[type].icon}
-                    </IconButton>
-                  </Grid>
-                  <Grid item>
-                    <Typography align="center">
-                      {columnTemplate[type].text}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography>
-                      {type === "longtext"
-                        ? isAllEssayGraded
-                          ? `${scores[type].totalpoint}/${scores[type].totalweight}`
-                          : "Belum dinilai"
-                        : `${Number(scores[type].totalpoint.toFixed(1))}/${
-                            scores[type].totalweight
-                          }`}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              );
+              let type = typeArray[0];
 
-              // layar mobile
-              columns2.push(
-                <Grid container style={{ padding: "0 20px" }}>
-                  <Grid item className={classes.questionIconMargin}>
-                    <IconButton
-                      size="small"
-                      disabled
-                      classes={{
-                        root: columnTemplate[type].root,
-                        disabled: classes.disabled,
-                      }}
-                    >
-                      {columnTemplate[type].icon}
-                    </IconButton>
-                  </Grid>
-                  <Grid
-                    item
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      flexGrow: "1",
-                    }}
-                    justify="center"
-                  >
-                    <Typography
-                      align="left"
-                      className={classes.mobileCustomFontSize400Down}
-                    >
-                      {/* {columnTemplate[type].text2} */}
-                      {columnTemplate[type].text}
-                    </Typography>
-                  </Grid>
-                  <Grid
-                    item
-                    style={{ display: "flex", flexDirection: "column" }}
-                    justify="center"
-                  >
-                    <Typography className={classes.mobileCustomFontSize400Down}>
-                      {type === "longtext"
-                        ? isAllEssayGraded
-                          ? `${scores[type].totalpoint}/${scores[type].totalweight}`
-                          : "Belum dinilai"
-                        : `${Number(scores[type].totalpoint.toFixed(1))}/${
-                            scores[type].totalweight
-                          }`}
-                    </Typography>
-                  </Grid>
-                </Grid>
+              questionTypeScore.push(
+                <ListItem>
+                  <ListItemIcon>
+                    {questionType[type].icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography noWrap>
+                        {questionType[type].text}
+                      </Typography>
+                    }
+                  />
+                  <ListItemText
+                    align="right"
+                    primary={
+                      <Typography>
+                        {type === "longtext"
+                          ? isAllEssayGraded
+                            ? `${scores[type].totalpoint}/${scores[type].totalweight}`
+                            : "Belum dinilai"
+                          : `${Number(scores[type].totalpoint.toFixed(1))}/${
+                              scores[type].totalweight
+                            }`}
+                      </Typography>
+                    }
+                  />
+                </ListItem>
               );
-              // jika elemen ini bukan elemen terakhir pada set type, tambahkan divider
-              if (c + 1 < types.size) {
-                columns1.push(<Divider orientation="vertical" flexItem />);
-                columns2.push(<Divider />);
-              }
-              c++;
             }
-
             isClassSubmissionEmpty = false;
           } else {
             let content = (
-              <Typography
-                variant="subtitle1"
-                color="textSecondary"
-                align="center"
-                className={classes.emptyDescription}
-              >
+              <Typography color="textSecondary" align="center">
                 Belum mengerjakan
               </Typography>
             );
-            columns1.push(content);
-            columns2.push(content);
+            questionTypeScore.push(content);
           }
 
           students_in_class.push(
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <ListItem className={classes.personListContainer}>
-                  <ListItemAvatar>
-                    {!student.avatar ? (
-                      <Avatar style={{ marginRight: "10px" }} />
-                    ) : (
-                      <Avatar
-                        src={`/api/upload/avatar/${student.avatar}`}
-                        style={{ marginRight: "10px" }}
-                      />
-                    )}
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Typography variant="h6">{student.name}</Typography>
-                    }
-                    secondary={
-                      selectedAssessments.grades &&
+                <Grid container alignItems="center" spacing={2}>
+                  <Hidden xsDown>
+                    <Grid item>
+                      {!student.avatar ? (
+                        <Avatar />
+                      ) : (
+                        <Avatar src={`/api/upload/avatar/${student.avatar}`} />
+                      )}
+                    </Grid>
+                  </Hidden>
+                  <Grid item>
+                    <Typography noWrap>{student.name}</Typography>
+                    <Typography variant="body2" color="textSecondary" noWrap>
+                    {selectedAssessments.grades &&
                       selectedAssessments.grades[student._id] &&
                       selectedAssessments.grades[student._id].total_grade ? (
                         <>
-                          Telah Dinilai
-                          <br />
-                          Waktu Pengumpulan:&nbsp;
-                          <Hidden smUp>
-                            <br />
-                          </Hidden>
-                          {moment(
+                          Telah Dinilai - {moment(
                             selectedAssessments.submissions_timestamp[
                               student._id
                             ]
@@ -810,87 +655,59 @@ function SubmittedAssessmentList(props) {
                         </>
                       ) : (
                         <>
-                          Belum Dinilai
-                          {scores ? (
-                            <>
-                              <br />
-                              Waktu Pengumpulan:&nbsp;
-                              <Hidden smUp>
-                                <br />
-                              </Hidden>
-                              {moment(
-                                selectedAssessments.submissions_timestamp[
-                                  student._id
-                                ]
-                              )
-                                .locale("id")
-                                .format("DD MMM YYYY, HH:mm")}
-                            </>
-                          ) : null}
+                          Belum Dinilai - {scores ? moment(
+                            selectedAssessments.submissions_timestamp[
+                              student._id
+                            ]
+                          )
+                            .locale("id")
+                            .format("DD MMM YYYY, HH:mm")
+                          : null}
                         </>
                       )
                     }
-                  />
-                  {selectedAssessments.grades &&
-                  selectedAssessments.grades[student._id] ? (
-                    <div style={{ display: "flex" }}>
-                      {hasLongtextQuestion ? (
-                        isAllEssayGraded ? (
+                    </Typography>
+                  </Grid>
+                  <Grid item xs container justify="flex-end">
+                    {selectedAssessments.grades &&
+                    selectedAssessments.grades[student._id] ? (
+                      <>
+                        {hasLongtextQuestion ? (
+                          isAllEssayGraded ? (
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography noWrap style={{ fontSize: "0.8em" }}>
+                                Total Nilai
+                              </Typography>
+                              <Typography variant="h5" align="right">
+                                {selectedAssessments.grades[student._id].total_grade}
+                              </Typography>
+                            </div>
+                          ) : null
+                        ) : (
+                          // If there is no long text question, final score can be generated instantly.
                           <div
                             style={{
                               display: "flex",
                               flexDirection: "column",
                               justifyContent: "center",
                             }}
-                            class={classes.hide400Down}
                           >
-                            <Grid item>
-                              <Typography noWrap style={{ fontSize: "0.8em" }}>
-                                <b>Total Nilai</b>
-                              </Typography>
-                            </Grid>
-                            <Grid item>
-                              <Typography variant="h5" align="right">
-                                {
-                                  selectedAssessments.grades[student._id]
-                                    .total_grade
-                                }
-                              </Typography>
-                            </Grid>
-                          </div>
-                        ) : null
-                      ) : (
-                        // jika tidak ada soal uraian, total nilai pasti sudah ada
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                          }}
-                          class={classes.hide400Down}
-                        >
-                          <Grid item>
                             <Typography noWrap style={{ fontSize: "0.8em" }}>
-                              <b>Total Nilai</b>
+                              Total Nilai
                             </Typography>
-                          </Grid>
-                          <Grid item>
                             <Typography variant="h5" align="right">
-                              {
-                                selectedAssessments.grades[student._id]
-                                  .total_grade
-                              }
+                              {selectedAssessments.grades[student._id].total_grade}
                             </Typography>
-                          </Grid>
-                        </div>
-                      )}
-                      <Grid item alignItem="center">
+                          </div>
+                        )}
                         <Grid item>
-                          <IconButton
-                            onClick={(e) => {
-                              handleFlag(e, student._id);
-                            }}
-                          >
+                          <IconButton onClick={(e) => handleFlag(e, student._id)}>
                             {suspects.includes(student._id) ? (
                               <BsFlagFill className={classes.redFlagIcon} />
                             ) : (
@@ -898,142 +715,48 @@ function SubmittedAssessmentList(props) {
                             )}
                           </IconButton>
                         </Grid>
+                      </>
+                    ) : // If the student has submitted the assessment, then show suspect flag.
+                    selectedAssessments.submissions &&
+                      selectedAssessments.submissions[student._id] ? (
+                      <Grid item>
+                        <IconButton onClick={(e) => handleFlag(e, student._id)}>
+                          {suspects.includes(student._id) ? (
+                            <BsFlagFill className={classes.redFlagIcon} />
+                          ) : (
+                            <BsFlag className={classes.flagIcon} />
+                          )}
+                        </IconButton>
                       </Grid>
-                    </div>
-                  ) : // jika murid belum dinilai tapi sudah mengumpulkan jawaban assessment, tampilkan flag
-                  selectedAssessments.submissions &&
-                    selectedAssessments.submissions[student._id] ? (
-                    <div style={{ display: "flex" }}>
-                      <Grid item alignItem="center">
-                        <Grid item>
-                          <IconButton
-                            onClick={(e) => {
-                              handleFlag(e, student._id);
-                            }}
-                          >
-                            {suspects.includes(student._id) ? (
-                              <BsFlagFill className={classes.redFlagIcon} />
-                            ) : (
-                              <BsFlag className={classes.flagIcon} />
-                            )}
-                          </IconButton>
-                        </Grid>
-                      </Grid>
-                    </div>
-                  ) : null}
-                </ListItem>
+                    ) : null}
+                  </Grid>
+                </Grid>
               </ExpansionPanelSummary>
               <Divider />
-
-              <Hidden xsDown>
-                <Grid container style={{ padding: "20px" }} justify="center">
-                  {columns1}
-                </Grid>
-              </Hidden>
-              <Hidden smUp>{columns2}</Hidden>
-
-              <Divider />
-              {selectedAssessments.submissions &&
-              selectedAssessments.submissions[student._id] ? (
-                <div>
-                  <Grid
-                    container
-                    style={{ padding: "20px" }}
-                    justify="flex-end"
-                    alignItems="center"
-                  >
-                    {hasLongtextQuestion ? (
-                      isAllEssayGraded ? (
-                        <div
-                          style={{ display: "flex" }}
-                          class={classes.hide401Up}
-                        >
-                          <Grid
-                            item
-                            style={{ display: "flex" }}
-                            alignItems="center"
-                          >
-                            <Typography noWrap style={{ marginRight: "8px" }}>
-                              <b>Total Nilai</b>
-                            </Typography>
-                          </Grid>
-                          <Grid
-                            item
-                            style={{ display: "flex" }}
-                            alignItems="center"
-                          >
-                            <Typography
-                              align="right"
-                              style={{ marginRight: "16px" }}
-                            >
-                              {
-                                selectedAssessments.grades[student._id]
-                                  .total_grade
-                              }
-                            </Typography>
-                          </Grid>
-                        </div>
-                      ) : null
-                    ) : (
-                      <div
-                        style={{ display: "flex" }}
-                        class={classes.hide401Up}
-                      >
-                        <Grid
-                          item
-                          style={{ display: "flex" }}
-                          alignItems="center"
-                        >
-                          <Typography noWrap style={{ marginRight: "8px" }}>
-                            <b>Total Nilai</b>
-                          </Typography>
-                        </Grid>
-                        <Grid
-                          item
-                          style={{ display: "flex" }}
-                          alignItems="center"
-                        >
-                          <Typography
-                            align="right"
-                            style={{ marginRight: "16px" }}
-                          >
-                            {
-                              selectedAssessments.grades[student._id]
-                                .total_grade
-                            }
-                          </Typography>
-                        </Grid>
-                      </div>
-                    )}
+              <ExpansionPanelDetails style={{ display: "flex", flexDirection: "column", padding: "0px" }}>
+                <List style={{ padding: "20px 15px" }}>
+                  {questionTypeScore}
+                </List>
+                <Divider />
+                {selectedAssessments.submissions &&
+                selectedAssessments.submissions[student._id] ? (
+                  <div style={{ display: "flex", justifyContent: "flex-end", padding: "20px"}}>
                     <GradeButton
                       assessmentId={selectedAssessments._id}
                       assessmentType={selectedAssessments.type}
                       studentId={student._id}
                       classId={selectedAssessments.class_assigned[i]}
                     />
-                  </Grid>
-                </div>
-              ) : null}
+                  </div>
+                ) : null}
+              </ExpansionPanelDetails>
             </ExpansionPanel>
           );
         }
 
         TabPanelList.push(
           <TabPanel value={value} index={i}>
-            {isClassSubmissionEmpty ? (
-              <Grid
-                container
-                alignItems="center"
-                justify="center"
-                style={{ height: "20vh" }}
-              >
-                <Typography variant="h5" color="textSecondary" align="center">
-                  {`Belum ada murid yang mengerjakan ${selectedAssessments.type.toLowerCase()}`}
-                </Typography>
-              </Grid>
-            ) : (
-              students_in_class
-            )}
+            {isClassSubmissionEmpty ? <Empty /> : students_in_class}
           </TabPanel>
         );
       }
@@ -1045,67 +768,48 @@ function SubmittedAssessmentList(props) {
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paperbox}>
-        <Grid container spacing={2}>
-          <Hidden smDown>
-            <Grid item xs={12} style={{ paddingBottom: "0" }}>
-              <Typography variant="h4">{selectedAssessments.name}</Typography>
-            </Grid>
-
-            <Grid item xs={12} md={7} spacing={8} style={{ paddingTop: "0" }}>
-              <Typography variant="caption" color="textSecondary">
-                <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
-              </Typography>
-            </Grid>
-
-            <Grid item xs={12} md={5} spacing={8} style={{ paddingTop: "0" }}>
-              {/* h6 ditambahkan agar teks ini rata atas dengan teks nama mata pelajaran*/}
-              <h6 style={{ marginBottom: "0" }}>
-                <Typography align="right" variant="body2" color="textSecondary">
-                  Mulai:{" "}
-                  {moment(selectedAssessments.start_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
+      <Grid container direction="column" spacing={2}>
+        <Grid item>
+          <Paper className={classes.submittedAssessmentPaper}>
+            <Typography variant="h4" style={{ marginBottom: "5px" }}>
+              {selectedAssessments.name}
+            </Typography>
+            <Typography color="primary" paragraph>
+              {selectedAssessments.type} {all_subjects_map.get(selectedAssessments.subject)}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Oleh: {user.name}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Waktu Dibuat:{" "}
+              {moment(selectedAssessments.createdAt)
+                .locale("id")
+                .format("DD MMM YYYY, HH.mm")}
+            </Typography>
+            <Divider className={classes.submittedAssessmentDivider} />
+            {!selectedAssessments.description ? null : (
+              <div>
+                <Typography color="textSecondary" gutterBottom>
+                  Deskripsi {selectedAssessments.type}:
                 </Typography>
-              </h6>
-              <Typography align="right" variant="body2" color="textSecondary">
-                Selesai:{" "}
-                {moment(selectedAssessments.end_date)
-                  .locale("id")
-                  .format("DD MMM YYYY, HH:mm")}
-              </Typography>
-            </Grid>
-          </Hidden>
-
-          <Hidden mdUp>
-            <Grid item xs={12}>
-              <Typography variant="h4">{selectedAssessments.name}</Typography>
-              <Typography variant="caption" color="textSecondary">
-                <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
-              </Typography>
-            </Grid>
-
-            <Grid item xs={12} md={7} spacing={8}>
-              <Typography variant="body2" color="textSecondary">
-                Mulai:{" "}
-                {moment(selectedAssessments.start_date)
-                  .locale("id")
-                  .format("DD MMM YYYY, HH:mm")}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Selesai:{" "}
-                {moment(selectedAssessments.end_date)
-                  .locale("id")
-                  .format("DD MMM YYYY, HH:mm")}
-              </Typography>
-            </Grid>
-          </Hidden>
-
-          <Grid item xs={12}>
-            <Divider className={classes.dividerColor} />
-          </Grid>
-
-          <Grid container item justify="flex-end" alignItems="center">
+                <Typography
+                  align="justify"
+                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                >
+                  <CustomLinkify text={selectedAssessments.description} />
+                </Typography>
+              </div>
+            )}
+          </Paper>
+        </Grid>
+        <Grid
+          item
+          container
+          justify="space-between"
+          alignItems="center"
+          spacing={1}
+        >
+          <Grid item>
             <Link
               to={
                 selectedAssessments.type === "Kuis"
@@ -1113,73 +817,119 @@ function SubmittedAssessmentList(props) {
                   : `/lihat-jawaban-ujian/${selectedAssessments._id}`
               }
             >
-              <Fab size="medium" variant="extended" className={classes.editFab}>
-                <EditIcon className={classes.editIconFab} />
-                Periksa
-              </Fab>
-            </Link>
-
-            <LightTooltip title={`Urutkan ${selectedAssessments.type}`}>
-              <IconButton
-                onClick={handleOpenSortMenu}
-                className={classes.sortButton}
-                style={{ marginRight: "3px" }}
-              >
-                <SortIcon />
-              </IconButton>
-            </LightTooltip>
-            <Menu
-              keepMounted
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleCloseSortMenu}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              {headCells.map((headCell, i) => (
-                <MenuItem
-                  key={headCell.id}
-                  sortDirection={orderBy === headCell.id ? order : false}
-                  onClick={createSortHandler(headCell.id)}
+              <Hidden smDown>
+                <Fab
+                  size="large"
+                  variant="extended"
+                  className={classes.gradeButton}
                 >
-                  <TableSortLabel
-                    active={orderBy === headCell.id}
-                    direction={orderBy === headCell.id ? order : "asc"}
-                  >
-                    {headCell.label}
-                    {orderBy === headCell.id ? (
-                      <span className={classes.visuallyHidden}>
-                        {order === "desc"
-                          ? "sorted descending"
-                          : "sorted ascending"}
-                      </span>
-                    ) : null}
-                  </TableSortLabel>
-                </MenuItem>
-              ))}
-            </Menu>
-            <LightTooltip title={`Export Hasil ${selectedAssessments.type}`}>
-              <IconButton
-                onClick={handleExportAssessment}
-                className={classes.sortButton}
-              >
-                <GetAppIcon />
-              </IconButton>
-            </LightTooltip>
+                  <PlaylistAddCheckIcon style={{ marginRight: "8px" }} />
+                  Periksa
+                </Fab>
+              </Hidden>
+              <Hidden mdUp>
+                <Tooltip title="Periksa">
+                  <Fab size="medium" className={classes.gradeButton}>
+                    <PlaylistAddCheckIcon />
+                  </Fab>
+                </Tooltip>
+              </Hidden>
+            </Link>
           </Grid>
-          <Grid item style={{ width: "100%", paddingBottom: "0" }}>
-            {listClassTab()}
+          <Grid
+            item
+            xs
+            container
+            justify="flex-end"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item>
+              <Tooltip title="Unduh Nilai">
+                <Button
+                  variant="outlined"
+                  onClick={handleExportAssessment}
+                  className={classes.downloadScoreButton}
+                >
+                  <GetAppIcon />
+                </Button>
+              </Tooltip>
+            </Grid>
+            <Grid item>
+              <Tooltip title={`Urutkan ${selectedAssessments.type}`}>
+                <Button
+                  variant="outlined"
+                  onClick={handleOpenSortMenu}
+                  className={classes.sortButton}
+                >
+                  <SortIcon />
+                </Button>
+              </Tooltip>
+              <Menu
+                keepMounted
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleCloseSortMenu}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                {headCells.map((headCell, i) => (
+                  <MenuItem
+                    key={headCell.id}
+                    sortDirection={orderBy === headCell.id ? order : false}
+                    onClick={createSortHandler(headCell.id)}
+                  >
+                    <TableSortLabel
+                      active={orderBy === headCell.id}
+                      direction={orderBy === headCell.id ? order : "asc"}
+                    >
+                      {headCell.label}
+                      {orderBy === headCell.id ? (
+                        <span className={classes.visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </span>
+                      ) : null}
+                    </TableSortLabel>
+                  </MenuItem>
+                ))}
+              </Menu>
+
+            </Grid>
           </Grid>
         </Grid>
-      </Paper>
-      {/* jika selectedAssessment belum selesai diload, suspects akan bernilai null. Array kosong bernilai true*/}
-      {suspects ? listClassTabPanel() : null}
+        <Grid item>
+          <Paper className={classes.resultsPaper}>
+            <Typography variant="h6" gutterBottom>
+              Hasil Pekerjaan
+            </Typography>
+            <Divider />
+            <div style={{ padding: "16px 0px 25px 0px" }}>
+              <Typography gutterBottom>
+                Mulai - {moment(selectedAssessments.start_date)
+                  .locale("id")
+                  .format("DD MMM YYYY, HH:mm")}
+              </Typography>
+              <Typography gutterBottom>
+                Selesai - {moment(selectedAssessments.end_date)
+                  .locale("id")
+                  .format("DD MMM YYYY, HH:mm")}
+              </Typography>
+            </div>
+            {listClassTab()}
+          </Paper>
+        </Grid>
+        <Grid item>
+          {suspects ? listClassTabPanel() : null}
+        </Grid>
+      </Grid>
     </div>
   );
 }

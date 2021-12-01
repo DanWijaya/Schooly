@@ -34,7 +34,7 @@ import {
   Edit as EditIcon,
   FiberManualRecord as FiberManualRecordIcon,
   Link as LinkIcon,
-  PlaylistAddCheck as PlaylistAddCheckIcon,
+  List as ListIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -240,7 +240,7 @@ function ViewAssessmentTeacher(props) {
               {type} {all_subjects_map.get(selectedAssessments.subject)}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Oleh:
+              Oleh: {user.name}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Waktu Dibuat:{" "}
@@ -324,18 +324,18 @@ function ViewAssessmentTeacher(props) {
                   className={classes.seeResultsButton}
                   disabled={!checkSubmissionExist()}
                 >
-                  <PlaylistAddCheckIcon style={{ marginRight: "8px" }} />
-                  Periksa
+                  <ListIcon style={{ marginRight: "8px" }} />
+                  Lihat Hasil
                 </Fab>
               </Hidden>
               <Hidden mdUp>
-                <Tooltip title="Periksa">
+                <Tooltip title="Lihat Hasil">
                   <Fab
                     size="medium"
                     className={classes.seeResultsButton}
                     disabled={!checkSubmissionExist()}
                   >
-                    <PlaylistAddCheckIcon />
+                    <ListIcon />
                   </Fab>
                 </Tooltip>
               </Hidden>
