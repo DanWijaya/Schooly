@@ -12,6 +12,7 @@ import {
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import SubjectItem from "../../objects/item/SubjectItem";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import Empty from "../../misc/empty/Empty";
 import {
   Avatar,
@@ -42,7 +43,6 @@ import {
   SortByAlpha as SortByAlphaIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
 
 function createData(_id, name, all_class) {
   return { _id, name, all_class };
@@ -117,7 +117,6 @@ function SubjectListToolbar(props) {
 
   const onClear = (e, id) => {
     setSearchFilter("");
-    // document.getElementById(id).focus();
   };
 
   return (
@@ -295,46 +294,6 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: 20,
     width: 1,
-  },
-  subjectItem: {
-    borderRadius: "4px",
-    boxShadow:
-      "0px 2px 3px 0px rgba(60,64,67,0.12), 0px 2px 8px 2px rgba(60,64,67,0.10)",
-    "&:focus, &:hover": {
-      boxShadow:
-        "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
-    },
-  },
-  subjectIcon: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: "3px 0px 0px 3px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    width: "100px",
-    [theme.breakpoints.down("md")]: {
-      width: "60px",
-    },
-  },
-  subjectItemContent: {
-    padding: "10px 10px 10px 20px",
-  },
-  editSubjectButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  deleteSubjectlButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
   },
   dialogBox: {
     width: "300px",
@@ -533,16 +492,16 @@ function SubjectList(props) {
     if (action === "Edit") {
       editSubject(subjectData)
         .then(() => {
-          handleOpenSnackbar(action);
           getAllSubjects(unit);
+          handleOpenSnackbar(action);
           handleCloseFormDialog();
         })
         .catch((err) => setErrors(err));
     } else if (action === "Create") {
       createSubject(subjectData)
         .then(() => {
-          handleOpenSnackbar(action);
           getAllSubjects(unit);
+          handleOpenSnackbar(action);
           handleCloseFormDialog();
         })
         .catch((err) => setErrors(err));
@@ -620,7 +579,6 @@ function SubjectList(props) {
 
   return (
     <div className={classes.root}>
-      {FormDialog()}
       <Grid
         container
         alignItems="center"
@@ -665,6 +623,7 @@ function SubjectList(props) {
           />
         </Grid>
       )}
+      {FormDialog()}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}

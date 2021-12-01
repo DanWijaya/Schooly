@@ -604,7 +604,6 @@ class EditAnnouncement extends Component {
     ) {
       return <Redirect to="/tidak-ditemukan" />;
     }
-    console.log(target_role);
 
     const rolesToSend = [
       ["Student", "Murid"],

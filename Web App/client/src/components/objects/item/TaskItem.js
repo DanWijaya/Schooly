@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import "moment/locale/id";
 import PropTypes from "prop-types";
+import OptionMenu from "../../misc/menu/OptionMenu";
 import {
   Avatar,
   Badge,
@@ -20,7 +21,6 @@ import {
 } from "@material-ui/icons";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import OptionMenu from "../../misc/menu/OptionMenu";
 
 const useStyles = makeStyles((theme) => ({
   root: {

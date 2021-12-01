@@ -16,7 +16,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "300px",
+    maxWidth: "350px",
     width: "100%",
   },
   deleteButton: {

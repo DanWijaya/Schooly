@@ -312,6 +312,9 @@ class App extends Component {
                       access={[Role.ADMIN]}
                       path="/atur-walikelas"
                       component={EditHomeroomTeacher}
+                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleFooter={this.handleFooter}
+                      handleNavbar={(data) => this.handleNavbar(data)}
                     />
                     <PrivateRoute
                       exact
@@ -458,7 +461,6 @@ class App extends Component {
                       exact
                       access={[Role.STUDENT, Role.TEACHER]}
                       path="/buat-ujian"
-                      handleSideDrawerExist={this.handleSideDrawerExist}
                       component={CreateAssessment}
                       handleSideDrawerExist={this.handleSideDrawerExist}
                       handleFooter={this.handleFooter}
@@ -468,7 +470,6 @@ class App extends Component {
                       exact
                       access={[Role.STUDENT, Role.TEACHER]}
                       path="/buat-kuis"
-                      handleSideDrawerExist={this.handleSideDrawerExist}
                       component={CreateAssessment}
                       handleSideDrawerExist={this.handleSideDrawerExist}
                       handleFooter={this.handleFooter}
@@ -478,7 +479,6 @@ class App extends Component {
                       exact
                       access={[Role.TEACHER]}
                       path="/sunting-kuis/:id"
-                      handleSideDrawerExist={this.handleSideDrawerExist}
                       component={EditAssessment}
                       handleSideDrawerExist={this.handleSideDrawerExist}
                       handleFooter={this.handleFooter}
@@ -488,7 +488,6 @@ class App extends Component {
                       exact
                       access={[Role.TEACHER]}
                       path="/sunting-ujian/:id"
-                      handleSideDrawerExist={this.handleSideDrawerExist}
                       component={EditAssessment}
                       handleSideDrawerExist={this.handleSideDrawerExist}
                       handleFooter={this.handleFooter}
@@ -626,7 +625,6 @@ class App extends Component {
                       exact
                       access={[Role.SUPERADMIN]}
                       path="/buat-unit"
-                      handleSideDrawerExist={this.handleSideDrawerExist}
                       component={CreateUnit}
                       handleSideDrawerExist={this.handleSideDrawerExist}
                       handleFooter={this.handleFooter}
@@ -636,7 +634,6 @@ class App extends Component {
                       exact
                       access={[Role.SUPERADMIN]}
                       path="/sunting-unit/:id"
-                      handleSideDrawerExist={this.handleSideDrawerExist}
                       component={EditUnit}
                       handleSideDrawerExist={this.handleSideDrawerExist}
                       handleFooter={this.handleFooter}

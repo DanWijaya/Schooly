@@ -9,6 +9,7 @@ import {
   Avatar,
   Badge,
   Dialog,
+  DialogContent,
   Grid,
   ListItem,
   ListItemAvatar,
@@ -51,8 +52,6 @@ const useStyles = makeStyles((theme) => ({
 function AssessmentItem(props) {
   const classes = useStyles();
 
-  const { user, all_roles } = props.auth;
-  const { all_subjects_map } = props.subjectsCollection;
   const {
     data,
     handleOpenDeleteDialog,
@@ -60,6 +59,8 @@ function AssessmentItem(props) {
     missing,
     handleOpenCopySnackBar,
   } = props;
+  const { user, all_roles } = props.auth;
+  const { all_subjects_map } = props.subjectsCollection;
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
@@ -67,7 +68,7 @@ function AssessmentItem(props) {
     e.stopPropagation();
     try {
       if (!navigator.clipboard) {
-        // use old commandExec() way
+        // use old commandExec() way.
         let textArea = document.createElement("textarea");
         textArea.value = row.linkToShare;
         document.body.appendChild(textArea.value);
@@ -84,7 +85,6 @@ function AssessmentItem(props) {
   };
 
   const handleOpenDialog = (row) => {
-    // const { name, subject, teacher_name, start_date, end_date } = row;
     setCurrentDialogInfo(row);
     setOpenDialog(true);
   };
@@ -134,7 +134,11 @@ function AssessmentItem(props) {
                       </Badge>
                     </ListItemAvatar>
                     <ListItemText
-                      primary={<Typography noWrap>{row.name}</Typography>}
+                      primary={
+                        <Typography noWrap>
+                          {row.name}
+                        </Typography>
+                      }
                       secondary={
                         <Typography
                           variant="body2"
@@ -196,7 +200,7 @@ function AssessmentItem(props) {
                 className={classes.root}
                 onClick={() => handleOpenDialog(row)}
               >
-                <ListItem button>
+                <ListItem button disableRipple>
                   <ListItemAvatar>
                     <Badge
                       overlap="circle"
@@ -222,7 +226,11 @@ function AssessmentItem(props) {
                     </Badge>
                   </ListItemAvatar>
                   <ListItemText
-                    primary={<Typography noWrap>{row.name}</Typography>}
+                    primary={
+                      <Typography noWrap>
+                        {row.name}
+                      </Typography>
+                    }
                     secondary={
                       <Typography variant="body2" color="textSecondary" noWrap>
                         {all_subjects_map.get(row.subject)}
@@ -253,46 +261,51 @@ function AssessmentItem(props) {
       })}
       <Dialog
         fullWidth
-        fullScreen={false}
         open={openDialog}
         onClose={handleCloseDialog}
       >
-        <div style={{ padding: "20px" }}>
-          <Typography variant="h4" align="center">
+        <DialogContent>
+          <Typography variant="h4" align="center" style={{ marginBottom: "5px" }}>
             {currentDialogInfo.name}
           </Typography>
-          <Typography variant="h5" align="center" color="primary">
-            {all_subjects_map.get(currentDialogInfo.subject)}
+          <Typography color="primary" align="center">
+            {currentDialogInfo.type} {all_subjects_map.get(currentDialogInfo.subject)}
           </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-            style={{ marginTop: "25px" }}
-          >
-            Guru: {currentDialogInfo.teacher_name}
+          <Typography variant="body2" color="textSecondary" align="center">
+            Oleh: {currentDialogInfo.teacher_name}
           </Typography>
-          <Typography variant="subtitle1" align="center">
-            Mulai:{" "}
-            {moment(currentDialogInfo.start_date)
-              .locale("id")
-              .format("DD/MM/yyyy - HH:mm")}
-          </Typography>
-          <Typography variant="subtitle1" align="center">
-            Selesai:{" "}
-            {moment(currentDialogInfo.end_date)
-              .locale("id")
-              .format("DD/MM/yyyy - HH:mm")}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            align="center"
-            color="textSecondary"
-            style={{ marginTop: "10px", textAlign: "center" }}
-          >
-            Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
-            pelajaran terkait.
-          </Typography>
-        </div>
+          <div style={{ marginTop: "25px" }}>
+            <Typography align="center">
+              Mulai - {" "}
+              {moment(currentDialogInfo.start_date)
+                .locale("id")
+                .format("DD/MM/yyyy, HH:mm")}
+            </Typography>
+            <Typography align="center">
+              Selesai - {" "}
+              {moment(currentDialogInfo.end_date)
+                .locale("id")
+                .format("DD/MM/yyyy, HH:mm")}
+            </Typography>
+          </div>
+          <div style={{ marginTop: "10px" }}>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              align="center"
+            >
+              Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru terkait.
+            </Typography>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              align="center"
+              paragraph
+            >
+              Hasil Kuis atau Ujian akan keluar setelah hasil semua peserta sudah diperiksa.
+            </Typography>
+          </div>
+        </DialogContent>
       </Dialog>
     </>
   );

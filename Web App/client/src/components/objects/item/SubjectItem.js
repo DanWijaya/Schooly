@@ -1,7 +1,11 @@
 import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import OptionMenu from "../../misc/menu/OptionMenu";
 import {
   Grid,
   IconButton,
+  ListItem,
   Menu,
   MenuItem,
   Typography,
@@ -10,10 +14,7 @@ import {
   LibraryBooks as LibraryBooksIcon,
   MoreVert as MoreVertIcon,
 } from "@material-ui/icons";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
-import OptionMenu from "../../misc/menu/OptionMenu";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   subjectItemContent: {
+    minHeight: "65px",
     padding: "10px 10px 10px 20px",
   },
 }));
@@ -53,9 +55,7 @@ function SubjectItem(props) {
         <Grid item className={classes.subjectIcon}>
           <LibraryBooksIcon />
         </Grid>
-        <Grid
-          item
-          xs
+        <Grid item xs
           container
           justify="space-between"
           alignItems="center"
@@ -65,11 +65,8 @@ function SubjectItem(props) {
             <Typography noWrap>{row.name}</Typography>
           </Grid>
           {user.role === "Admin" ? (
-            <Grid
-              item
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
+            <Grid item
+              onClick={(e) => e.stopPropagation()}
             >
               <OptionMenu
                 actions={["Sunting", "Hapus"]}

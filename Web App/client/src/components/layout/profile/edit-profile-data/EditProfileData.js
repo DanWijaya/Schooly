@@ -118,13 +118,13 @@ function EditProfileData(props) {
     jenis_kelamin: user.jenis_kelamin,
     sekolah: user.sekolah,
 
-    //Kontak
+    // Contacts
     email: user.email,
     no_telp: user.phone,
     no_telp_darurat: user.emergency_phone,
     alamat: user.address,
 
-    //Karir
+    // Career
     hobi_minat: user.hobi_minat,
     ket_non_teknis: user.ket_non_teknis,
     cita_cita: user.cita_cita,
@@ -133,13 +133,11 @@ function EditProfileData(props) {
 
   const [dataProfil, setDataProfil] = React.useState(defaultUserData);
 
-  //Pass the submit form
+  // Pass the submit form.
   const onSubmit = (e) => {
     e.preventDefault();
     let userId = user._id;
     handleOpenAlert();
-    // if (isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
-    //   handleOpenAlert();
 
     updateUserData(dataProfil, userId, props.history).then((res) =>
       props.handleOpenAlert()
@@ -296,15 +294,6 @@ function EditProfileData(props) {
                       </FormControl>
                     }
                   />
-                  {/*<DataField
-                    icon={<SchoolIcon />}
-                    iconStyle={classes.dataIcon}
-                    type="Sekolah"
-                    isTextField
-                    value={dataProfil.sekolah}
-                    id="sekolah"
-                    onChange={handleChangeDataProfil}
-                  />*/}
                 </List>
               </TabPanel>
               <TabPanel value={value} index={1}>

@@ -242,12 +242,10 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  select: {
-    minWidth: "150px",
-    maxWidth: "150px",
+  unitSelect: {
+    width: "150px",
     [theme.breakpoints.down("xs")]: {
-      minWidth: "100px",
-      maxWidth: "100px",
+      width: "100px",
     },
   },
   cancelButton: {
@@ -426,27 +424,26 @@ function AdminList(props) {
                     }
                   />
                   <div>
-                  <FormControl
-                    fullWidth
-                    variant="outlined"
-                    color="primary"
-                    error={Boolean(errors.to)}
-                  >
-                    <InputLabel id="unit-label">Unit</InputLabel>
-                    <Select
-                      labelId="unit-label"
-                      label="Unit"
-                      value={selectedValues[row._id]}
-                      onChange={(event) => onUnitChange(event, row._id)}
-                      className={classes.select}
+                    <FormControl
+                      fullWidth
+                      variant="outlined"
+                      color="primary"
+                      error={Boolean(errors.to)}
                     >
-                      {all_units.map((u) => (
-                        <MenuItem key={u._id} value={u._id}>
-                          {u.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                      <InputLabel>Unit</InputLabel>
+                      <Select
+                        label="Unit"
+                        value={selectedValues[row._id]}
+                        onChange={(event) => onUnitChange(event, row._id)}
+                        className={classes.unitSelect}
+                      >
+                        {all_units.map((u) => (
+                          <MenuItem key={u._id} value={u._id}>
+                            {u.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </div>
                 </ListItem>
                 <Divider />

@@ -91,7 +91,7 @@ function EditUnit(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [anchorEl, setanchorEl] = React.useState(false);
 
-  //Handlers
+  // Handlers
   const handleCloseMenu = () => {
     setanchorEl(null);
   };
