@@ -21,28 +21,12 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   submitButton: {
-    maxWidth: "110px",
-    width: "100%",
-    border: `1px solid ${theme.palette.success.main}`,
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      border: `1px solid ${theme.palette.success.dark}`,
-      backgroundColor: theme.palette.success.dark,
-      color: "white",
-    },
+    fontSize: "12px",
+    color: theme.palette.success.main,
   },
   cancelButton: {
-    maxWidth: "110px",
-    width: "100%",
-    border: `1px solid ${theme.palette.error.main}`,
-    backgroundColor: theme.palette.error.main,
-    color: "white",
-    "&:focus, &:hover": {
-      border: `1px solid ${theme.palette.error.dark}`,
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-    },
+    fontSize: "12px",
+    color: theme.palette.grey.A700,
   },
 }));
 
@@ -71,7 +55,7 @@ function SubmitDialog(props) {
       PaperProps={{ className: classes.root }}
     >
       {loading ? (
-        <div>
+        <>
           <DialogTitle>
             <Typography variant="h6" align="center">
               {messageLoading}
@@ -89,39 +73,34 @@ function SubmitDialog(props) {
               </Grid>
             </Grid>
           </DialogContent>
-        </div>
+        </>
       ) : (
-        <div>
+        <>
           <DialogTitle>
             <Typography variant="h6">
               Kumpul {itemType} berikut?
             </Typography>
           </DialogTitle>
           <DialogContent>
-            <Typography noWrap gutterBottom>
-              {itemName}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" paragraph>
+            <Typography color="textSecondary" paragraph>
               Pastikan semua nomor sudah terjawab.
             </Typography>
           </DialogContent>
           <DialogActions>
             <Button
               onClick={handleCloseSubmitDialog}
-              startIcon={<CancelIcon />}
               className={classes.cancelButton}
             >
               Batal
             </Button>
             <Button
               onClick={handleClick}
-              startIcon={<PublishIcon />}
               className={classes.submitButton}
             >
               Kumpul
             </Button>
           </DialogActions>
-        </div>
+        </>
       )}
     </Dialog>
   );

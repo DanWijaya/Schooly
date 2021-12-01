@@ -10,8 +10,8 @@ import {
   getOneAssessment,
   updateAssessmentSuspects,
 } from "../../../actions/AssessmentActions";
-import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
 import {
   Avatar,
   Button,
@@ -95,28 +95,24 @@ const useStyles = makeStyles((theme) => ({
     "&$disabled": {
       boxShadow: theme.shadows[2],
       color: "white",
-      backgroundColor: theme.palette.radio.main,
     },
   },
   CheckboxQst: {
     "&$disabled": {
       boxShadow: theme.shadows[2],
       color: "white",
-      backgroundColor: theme.palette.checkbox.main,
     },
   },
   ShorttextQst: {
     "&$disabled": {
       boxShadow: theme.shadows[2],
       color: "white",
-      backgroundColor: theme.palette.shorttext.main,
     },
   },
   LongtextQst: {
     "&$disabled": {
       boxShadow: theme.shadows[2],
       color: "white",
-      backgroundColor: theme.palette.longtext.main,
     },
   },
   disabled: {

@@ -269,7 +269,7 @@ function Timer(props) {
   }, [time]);
 
   return (
-    <div className={classes.root}>
+    <div style={{ margin: "10px 0px" }}>
       <Box position="relative" display="inline-flex">
         <CircularProgress
           variant="static"
@@ -327,7 +327,7 @@ function StartTimer(props) {
   }, [time]);
 
   return (
-    <div className={classes.root}>
+    <div style={{ margin: "10px 0px" }}>
       <Box position="relative" display="inline-flex">
         <CircularProgress
           variant="static"
@@ -695,21 +695,25 @@ function ViewAssessmentStudent(props) {
     if (!start) {
       if (submissions && submissions[user._id]) {
         return (
-          <Paper className={classes.submittedStatus}>
-            <CheckCircleIcon />
-            <Typography variant="button" style={{ marginLeft: "5px" }}>
-              Telah dikumpulkan
-            </Typography>
-          </Paper>
+          <Grid item>
+            <Paper className={classes.submittedStatus}>
+              <CheckCircleIcon />
+              <Typography variant="button" style={{ marginLeft: "5px" }}>
+                Telah dikumpulkan
+              </Typography>
+            </Paper>
+          </Grid>
         );
       } else if (showClosedMessage) {
         return (
-          <Paper className={classes.lateStatus}>
-            <ErrorIcon />
-            <Typography variant="button" style={{ marginLeft: "5px" }}>
-              Telah Selesai
-            </Typography>
-          </Paper>
+          <Grid item>
+            <Paper className={classes.lateStatus}>
+              <ErrorIcon />
+              <Typography variant="button" style={{ marginLeft: "5px" }}>
+                Telah Selesai
+              </Typography>
+            </Paper>
+          </Grid>
         );
       } else if (showStartButton) {
         return (
