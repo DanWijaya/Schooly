@@ -276,14 +276,12 @@ function AssessmentItem(props) {
           </Typography>
           <div style={{ marginTop: "25px" }}>
             <Typography align="center">
-              Mulai - {" "}
-              {moment(currentDialogInfo.start_date)
+              Mulai - {moment(currentDialogInfo.start_date)
                 .locale("id")
                 .format("DD/MM/yyyy, HH:mm")}
             </Typography>
             <Typography align="center">
-              Selesai - {" "}
-              {moment(currentDialogInfo.end_date)
+              Selesai - {moment(currentDialogInfo.end_date)
                 .locale("id")
                 .format("DD/MM/yyyy, HH:mm")}
             </Typography>
