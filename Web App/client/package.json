@@ -8,6 +8,9 @@
     "@material-ui/icons": "4.5.1",
     "@material-ui/lab": "4.0.0-alpha.47",
     "@material-ui/pickers": "^3.2.10",
+    "@testing-library/jest-dom": "^5.15.1",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
     "axios": "^0.21.4",
     "chart.js": "^2.9.4",
     "csvtojson": "^2.0.10",
@@ -37,6 +40,7 @@
     "redux-thunk": "^2.3.0",
     "remark-math": "^2.0.1",
     "styled-components": "^4.3.2",
+    "web-vitals": "^2.1.2",
     "xlsx": "^0.17.1"
   },
   "scripts": {
