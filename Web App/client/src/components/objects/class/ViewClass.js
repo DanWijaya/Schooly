@@ -770,9 +770,7 @@ function ViewClass(props) {
     }
   }
 
-  document.title = !kelas.name
-    ? "Schooly | Lihat Kelas"
-    : `Schooly | ${kelas.name}`;
+  document.title = `Schooly | ${kelas.name}`;
 
   return (
     <div className={classes.root}>

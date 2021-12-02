@@ -572,7 +572,7 @@ function AnnouncementList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [announcementsByAuthor, announcementsByClass, adminAnnouncements]);
 
-  document.name = "Schooly | Daftar Pengumuman";
+  document.title = "Schooly | Pengumuman";
 
   return (
     <div className={classes.root}>

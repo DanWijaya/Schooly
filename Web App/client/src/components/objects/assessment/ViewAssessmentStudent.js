@@ -977,7 +977,7 @@ function ViewAssessmentStudent(props) {
     }
   }
 
-  document.title = "Schooly | Buat Kuis";
+  document.title = `Schooly | ${selectedAssessments.name}`;
 
   return (
     <div className={classes.root}>

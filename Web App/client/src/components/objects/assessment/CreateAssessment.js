@@ -1308,10 +1308,7 @@ class CreateAssessment extends Component {
     const { pathname } = this.props.location;
     const { class_assigned, errors, success } = this.state;
 
-    document.title =
-      this.state.type === "Kuis"
-        ? "Schooly | Buat Kuis"
-        : "Schooly | Buat Ujian";
+    document.title = `Schooly | Buat ${this.state.type}`;
 
     return (
       <div className={classes.background}>

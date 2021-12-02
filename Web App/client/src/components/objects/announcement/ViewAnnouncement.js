@@ -264,9 +264,7 @@ function ViewAnnouncement(props) {
     setOpenDeleteDialog(false);
   };
 
-  document.title = !selectedAnnouncements.title
-    ? "Schooly | Lihat Pengumuman"
-    : `Schooly | ${selectedAnnouncements.title}`;
+  document.title = `Schooly | ${selectedAnnouncements.title}`;
 
   return (
     <div className={classes.root}>

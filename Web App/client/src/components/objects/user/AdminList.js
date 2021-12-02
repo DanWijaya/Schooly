@@ -359,7 +359,7 @@ function AdminList(props) {
     });
   };
 
-  document.title = "Schooly | Sunting Unit Pengelola";
+  document.title = "Schooly | Data Unit Pengelola";
 
   return (
     <div className={classes.root}>

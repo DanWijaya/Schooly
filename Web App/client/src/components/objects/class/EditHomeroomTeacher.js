@@ -255,6 +255,8 @@ function EditHomeroomTeacher(props) {
     setOpenDeleteDialog(false);
   }
 
+  document.title = "Schooly | Sunting Data Wali Kelas";
+
   return (
     <div className={classes.background}>
         <div className={classes.root}>

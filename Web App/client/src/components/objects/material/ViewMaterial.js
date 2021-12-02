@@ -594,9 +594,7 @@ function ViewMaterial(props) {
     );
   };
 
-  document.title = !selectedMaterials.name
-    ? "Schooly | Lihat Materi"
-    : `Schooly | ${selectedMaterials.name}`;
+  document.title = `Schooly | ${selectedMaterials.name}`;
 
   return (
     <div className={classes.root}>

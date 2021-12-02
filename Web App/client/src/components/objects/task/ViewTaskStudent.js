@@ -1051,9 +1051,7 @@ function ViewTaskStudent(props) {
     });
   };
 
-  document.title = !tasksCollection.name
-    ? "Schooly | Lihat Tugas"
-    : `Schooly | ${tasksCollection.name}`;
+  document.title = `Schooly | ${tasksCollection.name}`;
 
   return (
     <div className={classes.root}>

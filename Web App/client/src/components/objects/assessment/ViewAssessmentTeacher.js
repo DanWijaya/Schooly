@@ -226,7 +226,7 @@ function ViewAssessmentTeacher(props) {
       ? `https://${window.location.host}/kuis-murid/${assessment_id}`
       : `https://${window.location.host}/ujian-murid/${assessment_id}`;
 
-  document.title = "Schooly | Buat Kuis";
+  document.title = `Schooly | ${selectedAssessments.name}`;
 
   return (
     <div className={classes.root}>

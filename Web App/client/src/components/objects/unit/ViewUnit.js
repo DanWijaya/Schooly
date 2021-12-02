@@ -115,9 +115,7 @@ function ViewUnit(props) {
     fetchAvatar();
   }, []);
 
-  document.title = !selectedUnits.name
-    ? "Schooly | Lihat Unit"
-    : `Schooly | ${selectedUnits.name}`;
+  document.title = `Schooly | ${selectedUnits.name}`;
 
   return (
     <div className={classes.root}>

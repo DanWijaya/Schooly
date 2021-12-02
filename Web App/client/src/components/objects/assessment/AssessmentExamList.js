@@ -625,8 +625,8 @@ function AssessmentList(props) {
     return workStatus;
   };
 
-  document.title = "Schooly | Daftar Ujian";
-  console.log(rows);
+  document.title = "Schooly | Ujian";
+
   return (
     <div className={classes.root}>
       <Grid

@@ -516,7 +516,7 @@ function MaterialList(props) {
     setOpenDeleteDialog(false);
   };
 
-  document.title = "Schooly | Daftar Materi";
+  document.title = "Schooly | Materi";
 
   return (
     <div className={classes.root}>

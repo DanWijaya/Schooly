@@ -585,7 +585,7 @@ function SubmittedTaskList(props) {
     }
   };
 
-  document.title = "Schooly | Daftar Tugas Terkumpul";
+  document.title = `Schooly | Daftar Tugas Terkumpul - ${tasksCollection.name}`;
 
   return (
     <div className={classes.root}>

@@ -142,6 +142,8 @@ function EditUnit(props) {
     setObjData(selectedUnits);
   }, [selectedUnits]);
 
+  document.title = "Schooly | Sunting Unit";
+
   return (
     <div className={classes.background}>
       <div className={classes.root}>

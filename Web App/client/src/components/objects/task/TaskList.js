@@ -537,7 +537,7 @@ function TaskList(props) {
     setOpenDeleteDialog(false);
   };
 
-  document.title = "Schooly | Daftar Tugas";
+  document.title = "Schooly | Tugas";
 
   return (
     <div className={classes.root}>

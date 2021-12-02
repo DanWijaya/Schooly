@@ -1382,7 +1382,7 @@ function ViewAssessmentTeacher(props) {
     );
   }
 
-  document.title = "Schooly | Buat Kuis";
+  document.title = `Schooly | Hasil ${selectedAssessments.type} - ${selectedAssessments.name}`;
 
   return (
     <div className={classes.root}>

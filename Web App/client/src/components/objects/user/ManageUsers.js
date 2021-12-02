@@ -805,7 +805,7 @@ function ManageUsers(props) {
     setPanel(val);
   };
 
-  document.title = "Schooly | Daftar Pengguna";
+  document.title = "Schooly | Pengguna Aktif";
 
   return (
     <div className={classes.root}>

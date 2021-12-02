@@ -906,7 +906,7 @@ function ClassList(props) {
     setOpenSnackbar(false);
   }
 
-  document.title = "Schooly | Daftar Kelas";
+  document.title = "Schooly | Kelas";
 
   return (
     <div className={classes.root}>

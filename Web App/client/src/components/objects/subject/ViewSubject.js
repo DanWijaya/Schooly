@@ -202,9 +202,7 @@ function ViewSubject(props) {
     return <AssessmentItem data={assessmentList} />;
   }
 
-  document.title = all_subjects_map.get(id)
-    ? `Schooly | ${all_subjects_map.get(id)}`
-    : "Schooly";
+  document.title = `Schooly | ${all_subjects_map.get(id)}`;
 
   return (
     <div className={classes.root}>

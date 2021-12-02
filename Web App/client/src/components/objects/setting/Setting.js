@@ -144,6 +144,8 @@ class Setting extends Component {
   render(){
     const { classes } = this.props;
 
+    document.title = "Schooly | Pengaturan";
+
     return (
       <Fade in={true} timeout={200}>
         <div className={classes.root}>

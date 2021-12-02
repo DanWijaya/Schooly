@@ -1355,6 +1355,8 @@ function Report(props) {
     role = user.role;
   }
 
+  document.title = "Schooly | Rapor";
+
   return (
     <div className={classes.root}>
       {role === "Student" ? (

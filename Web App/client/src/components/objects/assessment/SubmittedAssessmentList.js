@@ -764,7 +764,7 @@ function SubmittedAssessmentList(props) {
     return selectedAssessments.class_assigned.length > 0 ? TabPanelList : null;
   };
 
-  document.title = `Schooly | Daftar ${selectedAssessments.type === "Kuis" ? "Kuis" : "Ujian"} Terkumpul`;
+  document.title = `Schooly | Daftar ${selectedAssessments.type} Terkumpul - ${selectedAssessments.name}`;
 
   return (
     <div className={classes.root}>

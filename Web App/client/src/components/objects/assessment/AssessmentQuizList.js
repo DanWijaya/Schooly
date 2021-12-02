@@ -621,7 +621,7 @@ function AssessmentList(props) {
     return workStatus;
   };
 
-  document.title = "Schooly | Daftar Kuis";
+  document.title = "Schooly | Kuis";
 
   return (
     <div className={classes.root}>
