@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import Draggable from "react-draggable";
 import { Calendar as ReactCalendar } from "react-calendar";
+import Draggable from "react-draggable";
+import { connect } from "react-redux";
 import Path from "path";
 import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
@@ -436,7 +436,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AgendaToolbar(props) {
+function CalendarToolbar(props) {
   const {
     classes,
     mode,
@@ -652,9 +652,6 @@ function AgendaToolbar(props) {
             <AddIcon fontSize="small" />
           </Fab>
         ) : null}
-        {/*<IconButton disabled>
-          <SearchIcon />
-        </IconButton>*/}
         <FormControl variant="outlined">
           <Select
             defaultValue="Day"
@@ -663,9 +660,7 @@ function AgendaToolbar(props) {
             classes={{ root: classes.selectRoot }}
           >
             <MenuItem value="Day">Hari</MenuItem>
-            {/*<MenuItem value="Week" disabled>Minggu (Coming soon)</MenuItem>*/}
             <MenuItem value="Month">Bulan</MenuItem>
-            {/*<MenuItem value="Year" disabled>Tahun (Coming soon)</MenuItem>*/}
           </Select>
         </FormControl>
       </div>
@@ -4965,25 +4960,8 @@ function Calendar(props) {
 
   return (
     <div className={classes.root}>
-      {unmountEventDialog ? null : (
-        <EventDialog
-          downloadFileEvent={downloadFileEvent}
-          selectedEventInfo={selectedEventInfo}
-          getAllEvents={getAllEvents}
-          uploadLimit={uploadLimit}
-          eventDialogMode={eventDialogMode}
-          openEventDialog={openEventDialog}
-          handleCloseEventDialog={handleCloseEventDialog}
-          handleOpenEditDialog={handleOpenEditDialog}
-          handleSetUnmountEventDialog={handleSetUnmountEventDialog}
-          viewFileEvent={viewFileEvent}
-          showSnackbar={showSnackbar}
-          user={user}
-        />
-      )}
-
       <div className={classes.agendaContainer}>
-        <AgendaToolbar
+        <CalendarToolbar
           role={role}
           classes={classes}
           mode={mode}
@@ -4999,8 +4977,6 @@ function Calendar(props) {
           <>
             <Hidden xsDown>
               <Divider style={{ marginTop: "10px" }} />
-            </Hidden>
-            <Hidden xsDown>
               <div
                 className={
                   showShadow(currentDate, allDayItems)
@@ -5306,6 +5282,22 @@ function Calendar(props) {
           ) : null}
         </div>
       </Hidden>
+      {unmountEventDialog ? null : (
+        <EventDialog
+          downloadFileEvent={downloadFileEvent}
+          selectedEventInfo={selectedEventInfo}
+          getAllEvents={getAllEvents}
+          uploadLimit={uploadLimit}
+          eventDialogMode={eventDialogMode}
+          openEventDialog={openEventDialog}
+          handleCloseEventDialog={handleCloseEventDialog}
+          handleOpenEditDialog={handleOpenEditDialog}
+          handleSetUnmountEventDialog={handleSetUnmountEventDialog}
+          viewFileEvent={viewFileEvent}
+          showSnackbar={showSnackbar}
+          user={user}
+        />
+      )}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={4000}
