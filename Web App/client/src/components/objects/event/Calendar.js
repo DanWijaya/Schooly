@@ -68,6 +68,7 @@ import {
   TableContainer,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
   useMediaQuery,
 } from "@material-ui/core";
@@ -95,6 +96,7 @@ import {
   SupervisorAccount as SupervisorAccountIcon,
   Timer as TimerIcon,
   TimerOff as TimerOffIcon,
+  Today as TodayIcon,
 } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
@@ -111,7 +113,6 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
     margin: "auto",
     padding: "20px",
     paddingTop: "25px",
@@ -120,8 +121,20 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "100%",
     },
   },
-  newEventButton: {
-    marginRight: "10px",
+  header: {
+    marginBottom: "25px",
+  },
+  headerIcon: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    fontSize: "20px",
+  },
+  toolbar: {
+    padding: "10px 0px",
+  },
+  createEventButton: {
+    boxShadow:
+      "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -129,31 +142,10 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  newEventIconDesktop: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-    marginRight: "7.5px",
+  calendarModeSelect: {
+    width: "40px",
   },
-  newEventIconMobile: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
-  viewEventButton: {
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
-    },
-  },
-  deleteEventButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
+
   agendaContainer: {
     width: "80%",
     marginRight: "15px",
@@ -324,33 +316,8 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer",
     },
   },
-  toolbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  titleDivider: {
-    backgroundColor: theme.palette.primary.main,
-    marginTop: "15px",
-    marginBottom: "15px",
-  },
-  titleIcon: {
-    fontSize: "28px",
-    backgroundColor: "white",
-    color: theme.palette.primary.main,
-    marginRight: "10px",
-  },
   listItem: {
     padding: "6px 16px",
-  },
-  errorIcon: {
-    color: theme.palette.error.main,
-  },
-  warningIcon: {
-    color: theme.palette.warning.main,
-  },
-  checkIcon: {
-    color: theme.palette.success.main,
   },
   listIcon: {
     backgroundColor: theme.palette.primary.main,
@@ -402,37 +369,15 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "10px",
     overflow: "none",
   },
-  greenFab: {
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.dark,
-    },
-  },
   table: {
     tableLayout: "fixed",
     overflow: "hidden",
   },
-  chevronButton: {
-    "&:focus, &:hover": {
-      cursor: "pointer",
-    },
-  },
-  selectRoot: {
-    display: "flex",
-    alignItems: "center",
-    height: "40px",
-    paddingTop: "0!important",
-    paddingBottom: "0!important",
-  },
   mobileDayModeDateCircle: {
-    borderRadius: "50%",
     width: "3rem",
     height: "3rem",
-    backgroundColor: "#195DE5",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
   },
 }));
 
@@ -448,6 +393,7 @@ function CalendarToolbar(props) {
     setSelectedDateReactCalendar,
     activeStartDate,
     setActiveStartDate,
+    showShadow,
   } = props;
 
   let monthNames = [
@@ -465,15 +411,17 @@ function CalendarToolbar(props) {
     "Desember",
   ];
 
-  let stringDateDayMode =
+  let stringDateDay =
+    currentDate.getDate() +
+    " " +
     monthNames[currentDate.getMonth()] +
     " " +
-    currentDate.getDate() +
-    ", " +
     currentDate.getFullYear();
-  let stringDateMonthMode =
-    monthNames[currentDate.getMonth()] + " " + currentDate.getFullYear();
-  let stringDateDayModeMobile =
+  let stringDateMonth =
+    monthNames[currentDate.getMonth()] +
+    " " +
+    currentDate.getFullYear();
+  let stringDateMobile =
     monthNames[currentDate.getMonth()].slice(0, 3) +
     " " +
     currentDate.getFullYear();
@@ -539,131 +487,122 @@ function CalendarToolbar(props) {
 
   return (
     <div className={classes.toolbar}>
-      <div
-        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-      >
-        <Hidden xsDown>
-          {mode === "Day" ? (
-            <Button
-              style={{ height: "40px" }}
-              variant="outlined"
-              onClick={() => handleChangeDay("now")}
-            >
-              Hari ini
-            </Button>
-          ) : (
-            <Button
-              style={{ height: "40px" }}
-              variant="outlined"
-              onClick={() => handleChangeMonth("now")}
-            >
-              Hari ini
-            </Button>
-          )}
-          {mode === "Day" ? (
-            <>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  margin: "0 5px",
-                }}
-              >
-                <ChevronLeftIcon
-                  onClick={() => handleChangeDay("prev")}
-                  className={classes.chevronButton}
-                />
-                <ChevronRightIcon
-                  onClick={() => handleChangeDay("next")}
-                  className={classes.chevronButton}
-                />
-              </div>
-              <Typography>{stringDateDayMode}</Typography>
-            </>
-          ) : (
-            <>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  margin: "0 5px",
-                }}
-              >
-                <ChevronLeftIcon
-                  onClick={() => handleChangeMonth("prev")}
-                  className={classes.chevronButton}
-                />
-                <ChevronRightIcon
-                  onClick={() => handleChangeMonth("next")}
-                  className={classes.chevronButton}
-                />
-              </div>
-              <Typography>{stringDateMonthMode}</Typography>
-            </>
-          )}
-        </Hidden>
-        <Hidden smUp>
-          {mode === "Day" ? (
-            <Typography variant="h5">{stringDateDayModeMobile}</Typography>
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Typography>{stringDateMonthMode}</Typography>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  margin: "0 5px",
-                }}
-              >
-                <ChevronLeftIcon
-                  onClick={() => handleChangeMonth("prev")}
-                  className={classes.chevronButton}
-                />
-                <ChevronRightIcon
-                  onClick={() => handleChangeMonth("next")}
-                  className={classes.chevronButton}
-                />
-              </div>
-            </div>
-          )}
-        </Hidden>
-      </div>
-      <div
-        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-      >
-        {role === "Admin" ? (
-          <Fab
-            className={classes.greenFab}
-            aria-label="add"
-            size="small"
-            onClick={() => {
-              handleOpenCreateDialog();
-            }}
-          >
-            <AddIcon fontSize="small" />
-          </Fab>
-        ) : null}
-        <FormControl variant="outlined">
-          <Select
-            defaultValue="Day"
-            value={mode}
-            onChange={handleChangeMode}
-            classes={{ root: classes.selectRoot }}
-          >
-            <MenuItem value="Day">Hari</MenuItem>
-            <MenuItem value="Month">Bulan</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
+      <Grid container justify="space-between" alignItems="center">
+        <Grid item>
+          <Grid container alignItems="center" spacing={1}>
+            {mode === "Day" ? (
+              <>
+                <Grid item>
+                  <IconButton size="small" onClick={() => handleChangeDay("prev")}>
+                    <ChevronLeftIcon />
+                  </IconButton>
+                  <IconButton size="small" onClick={() => handleChangeDay("next")}>
+                    <ChevronRightIcon />
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <Hidden xsDown>
+                    <Typography>{stringDateDay}</Typography>
+                  </Hidden>
+                  <Hidden smUp>
+                    <Typography variant="h5">{stringDateMobile}</Typography>
+                  </Hidden>
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Grid item>
+                  <IconButton size="small" onClick={() => handleChangeMonth("prev")}>
+                    <ChevronLeftIcon />
+                  </IconButton>
+                  <IconButton size="small" onClick={() => handleChangeMonth("next")}>
+                    <ChevronRightIcon />
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <Hidden xsDown>
+                    <Typography>{stringDateMonth}</Typography>
+                  </Hidden>
+                  <Hidden smUp>
+                    <Typography variant="h5">{stringDateMobile}</Typography>
+                  </Hidden>
+                </Grid>
+              </>
+            )}
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container alignItems="center" spacing={2}>
+            <Grid item>
+              {role === "Admin" ? (
+                <Tooltip title="Buat Kegiatan">
+                  <Fab
+                    size="small"
+                    className={classes.createEventButton}
+                    onClick={() => handleOpenCreateDialog()}
+                  >
+                    <AddIcon fontSize="small" />
+                  </Fab>
+                </Tooltip>
+              ) : null}
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+        <div className={showShadow ? undefined : classes.shadow}>
+          <Grid container justify="space-between" alignItems="center">
+            <Grid item>
+              <Grid container direction="column" alignItems="center">
+                <Grid item>
+                  <Typography variant="body2" color="primary">
+                    {moment(currentDate)
+                      .locale("id")
+                      .format("dddd")
+                      .slice(0, 3)
+                      .toUpperCase()}
+                  </Typography>
+                </Grid>
+                <Grid>
+                  <Avatar className={classes.mobileDayModeDateCircle}>
+                    <Typography variant="h5">
+                      {moment(currentDate).locale("id").format("DD")}
+                    </Typography>
+                  </Avatar>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Grid container alignItems="center" spacing={2}>
+                <Grid item>
+                  <Tooltip title="Hari ini">
+                    {mode === "Day" ? (
+                      <IconButton onClick={() => handleChangeDay("now")}>
+                        <TodayIcon />
+                      </IconButton>
+                    ) :  (
+                      <IconButton onClick={() => handleChangeMonth("now")}>
+                        <TodayIcon />
+                      </IconButton>
+                    )}
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <FormControl variant="outlined">
+                    <Select
+                      defaultValue="Day"
+                      value={mode}
+                      onChange={handleChangeMode}
+                      classes={{ root: classes.calendarModeSelect }}
+                    >
+                      <MenuItem value="Day">Hari</MenuItem>
+                      <MenuItem value="Month">Bulan</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </div>
     </div>
   );
 }
@@ -2697,13 +2636,13 @@ function Calendar(props) {
     new Date(new Date().getFullYear(), new Date().getMonth())
   ); // set ke awal bulan sekarang
 
-  // EVENT DIALOG
+  // Event Dialog
   const [selectedEventInfo, setSelectedEventInfo] = React.useState({});
   const [openEventDialog, setOpenEventDialog] = React.useState(false);
   const [eventDialogMode, setEventDialogMode] = React.useState("");
   const [unmountEventDialog, setUnmountEventDialog] = React.useState(false);
 
-  // SNACKBAR
+  // Snackbar
   const [snackbarContent, setSnackbarContent] = React.useState("");
   const [severity, setSeverity] = React.useState("info");
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
@@ -4960,307 +4899,168 @@ function Calendar(props) {
 
   return (
     <div className={classes.root}>
-      <div className={classes.agendaContainer}>
-        <CalendarToolbar
-          role={role}
-          classes={classes}
-          mode={mode}
-          handleChangeMode={handleChangeMode}
-          handleOpenCreateDialog={handleOpenCreateDialog}
-          currentDate={currentDate}
-          setCurrentDate={setCurrentDate}
-          setSelectedDateReactCalendar={setSelectedDateReactCalendar}
-          activeStartDate={activeStartDate}
-          setActiveStartDate={setActiveStartDate}
-        />
-        {mode === "Day" ? (
-          <>
-            <Hidden xsDown>
-              <Divider style={{ marginTop: "10px" }} />
+      <Grid
+        container
+        alignItems="center"
+        spacing={2}
+        className={classes.header}
+      >
+        <Grid item>
+          <Avatar variant="rounded" className={classes.headerIcon}>
+            <EventNoteIcon />
+          </Avatar>
+        </Grid>
+        <Grid item>
+          <Typography variant="h5" align="left">
+            Kalender
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid container spacing={5}>
+        <Grid item xs>
+          <CalendarToolbar
+            role={role}
+            classes={classes}
+            mode={mode}
+            handleChangeMode={handleChangeMode}
+            handleOpenCreateDialog={handleOpenCreateDialog}
+            currentDate={currentDate}
+            setCurrentDate={setCurrentDate}
+            setSelectedDateReactCalendar={setSelectedDateReactCalendar}
+            activeStartDate={activeStartDate}
+            setActiveStartDate={setActiveStartDate}
+            showShadow={showShadow(currentDate, allDayItems)}
+          />
+          {mode === "Day"
+            ? generateDayModeCalendar()
+            : generateMonthModeCalendar()
+          }
+        </Grid>
+        <Hidden smDown>
+          <Grid item style={{ maxWidth: "300px" }}>
+            <Grid container alignItems="center" justify="space-between">
+              <Grid item style={{ paddingLeft: "0.6em" }}>
+                <Typography>
+                  {moment(activeStartDate).locale("id").format("MMMM YYYY")}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    handlePreviousMonth();
+                  }}
+                >
+                  <ChevronLeftIcon />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    handleNextMonth();
+                  }}
+                >
+                  <ChevronRightIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+            <ReactCalendar
+              locale="id-ID"
+              showFixedNumberOfWeeks
+              onChange={(value) => {
+                handleClickReactCalendar(value);
+              }}
+              value={selectedDateReactCalendar}
+              className={classes.calendar}
+              showNavigation={false}
+              activeStartDate={activeStartDate}
+              tileContent={handleTileContent(selectedDateReactCalendar)}
+              formatShortWeekday={(locale, date) => {
+                // mengubah nama hari dalam satu minggu jadi satu huruf
+                return new Date(date).toLocaleDateString(locale, {
+                  weekday: "long",
+                })[0];
+              }}
+              view="month"
+            />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <Typography style={{ marginTop: "15px" }}>Agenda</Typography>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={agendaCheckboxState.checkedTask}
+                      onChange={handleChange}
+                      name="checkedTask"
+                      color="primary"
+                    />
+                  }
+                  label={`Tugas (${itemCount.task})`}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={agendaCheckboxState.checkedQuiz}
+                      onChange={handleChange}
+                      name="checkedQuiz"
+                      color="primary"
+                    />
+                  }
+                  label={`Kuis (${itemCount.kuis})`}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={agendaCheckboxState.checkedExam}
+                      onChange={handleChange}
+                      name="checkedExam"
+                      color="primary"
+                    />
+                  }
+                  label={`Ujian (${itemCount.ujian})`}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={agendaCheckboxState.checkedEvent}
+                      onChange={handleChange}
+                      name="checkedEvent"
+                      color="primary"
+                    />
+                  }
+                  label={`Kegiatan (${itemCount.event})`}
+                />
+              </FormGroup>
+            </div>
+            {role === "Teacher" && selectedClasses !== null ? (
               <div
-                className={
-                  showShadow(currentDate, allDayItems)
-                    ? undefined
-                    : classes.shadow
-                }
                 style={{
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "flex-start",
                 }}
               >
+                <Typography style={{ marginTop: "15px" }}>Kelas</Typography>
                 <div
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "center",
-                    margin: "16px 0 0 72px",
+                    height: "190px",
+                    overflow: "auto",
                   }}
                 >
-                  <Typography variant="body2">
-                    {moment(currentDate)
-                      .locale("id")
-                      .format("dddd")
-                      .slice(0, 3)
-                      .toUpperCase()}
-                  </Typography>
-                  <Typography variant="h5">
-                    {moment(currentDate).locale("id").format("DD")}
-                  </Typography>
-                </div>
-                <div style={{ height: "16px" }} />
-              </div>
-            </Hidden>
-            <Hidden smUp>
-              <div
-                className={
-                  showShadow(currentDate, allDayItems)
-                    ? undefined
-                    : classes.shadow
-                }
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      margin: "16px 0 0 12px",
-                    }}
-                  >
-                    <Typography variant="body2" style={{ color: "#195DE5" }}>
-                      {moment(currentDate)
-                        .locale("id")
-                        .format("dddd")
-                        .slice(0, 3)
-                        .toUpperCase()}
-                    </Typography>
-                    <div className={classes.mobileDayModeDateCircle}>
-                      <Typography variant="h5" style={{ color: "white" }}>
-                        {moment(currentDate).locale("id").format("DD")}
-                      </Typography>
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Typography variant="body2">{"\u200B"}</Typography>
-                    <div
-                      style={{
-                        height: "3rem",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Button
-                        style={{ height: "32px", marginLeft: "24px" }}
-                        variant="outlined"
-                        onClick={() => handleChangeDay("now")}
-                      >
-                        Hari ini
-                      </Button>
-                      <div style={{ marginLeft: "24px" }}>
-                        <ChevronLeftIcon
-                          onClick={() => handleChangeDay("prev")}
-                          className={classes.chevronButton}
-                        />
-                        <ChevronRightIcon
-                          onClick={() => handleChangeDay("next")}
-                          className={classes.chevronButton}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div style={{ height: "16px" }} />
-              </div>
-            </Hidden>
-          </>
-        ) : (
-          <Divider style={{ marginTop: "10px" }} />
-        )}
-        {mode === "Day"
-          ? generateDayModeCalendar()
-          : generateMonthModeCalendar()}
-      </div>
-      <Hidden smDown>
-        <div className={classes.calendarContainer}>
-          <Grid container alignItems="center" justify="space-between">
-            <Grid item style={{ paddingLeft: "0.6em" }}>
-              <Typography>
-                {moment(activeStartDate).locale("id").format("MMMM YYYY")}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <IconButton
-                size="small"
-                onClick={() => {
-                  handlePreviousMonth();
-                }}
-              >
-                <ChevronLeftIcon />
-              </IconButton>
-              <IconButton
-                size="small"
-                onClick={() => {
-                  handleNextMonth();
-                }}
-              >
-                <ChevronRightIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
-          <ReactCalendar
-            locale="id-ID"
-            showFixedNumberOfWeeks
-            onChange={(value) => {
-              handleClickReactCalendar(value);
-            }}
-            value={selectedDateReactCalendar}
-            className={classes.calendar}
-            showNavigation={false}
-            activeStartDate={activeStartDate}
-            tileContent={handleTileContent(selectedDateReactCalendar)}
-            formatShortWeekday={(locale, date) => {
-              // mengubah nama hari dalam satu minggu jadi satu huruf
-              return new Date(date).toLocaleDateString(locale, {
-                weekday: "long",
-              })[0];
-            }}
-            view="month"
-          />
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-            }}
-          >
-            <Typography style={{ marginTop: "15px" }}>Agenda</Typography>
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={agendaCheckboxState.checkedTask}
-                    onChange={handleChange}
-                    name="checkedTask"
-                    color="primary"
-                  />
-                }
-                label={`Tugas (${itemCount.task})`}
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={agendaCheckboxState.checkedQuiz}
-                    onChange={handleChange}
-                    name="checkedQuiz"
-                    color="primary"
-                  />
-                }
-                label={`Kuis (${itemCount.kuis})`}
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={agendaCheckboxState.checkedExam}
-                    onChange={handleChange}
-                    name="checkedExam"
-                    color="primary"
-                  />
-                }
-                label={`Ujian (${itemCount.ujian})`}
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={agendaCheckboxState.checkedEvent}
-                    onChange={handleChange}
-                    name="checkedEvent"
-                    color="primary"
-                  />
-                }
-                label={`Kegiatan (${itemCount.event})`}
-              />
-            </FormGroup>
-          </div>
-          {role === "Teacher" && selectedClasses !== null ? (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-              }}
-            >
-              <Typography style={{ marginTop: "15px" }}>Kelas</Typography>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  height: "190px",
-                  overflow: "auto",
-                }}
-              >
-                {user.class_teached.map((class_id) => {
-                  let temp = new Map(selectedClasses);
-                  let kelas = temp.get(class_id);
-                  let class_name = "";
-                  if (kelas) {
-                    class_name = kelas.name;
-                  }
-                  return (
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={classCheckboxState[class_id]}
-                          onChange={handleChangeClassStates}
-                          name={class_id}
-                          color="primary"
-                        />
-                      }
-                      label={class_name}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          ) : null}
-          {role === "Admin" && all_classes !== null ? (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-              }}
-            >
-              <Typography style={{ marginTop: "15px" }}>Kelas</Typography>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  height: "190px",
-                  overflow: "auto",
-                }}
-              >
-                {all_classes.map((kelas) => {
-                  let class_id = kelas._id;
-                  let class_name = kelas.name;
-                  if (Object.keys(classCheckboxState).length !== 0) {
+                  {user.class_teached.map((class_id) => {
+                    let temp = new Map(selectedClasses);
+                    let kelas = temp.get(class_id);
+                    let class_name = "";
+                    if (kelas) {
+                      class_name = kelas.name;
+                    }
                     return (
                       <FormControlLabel
                         control={
@@ -5274,14 +5074,53 @@ function Calendar(props) {
                         label={class_name}
                       />
                     );
-                  }
-                  return null;
-                })}
+                  })}
+                </div>
               </div>
-            </div>
-          ) : null}
-        </div>
-      </Hidden>
+            ) : null}
+            {role === "Admin" && all_classes !== null ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+              >
+                <Typography style={{ marginTop: "15px" }}>Kelas</Typography>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "190px",
+                    overflow: "auto",
+                  }}
+                >
+                  {all_classes.map((kelas) => {
+                    let class_id = kelas._id;
+                    let class_name = kelas.name;
+                    if (Object.keys(classCheckboxState).length !== 0) {
+                      return (
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={classCheckboxState[class_id]}
+                              onChange={handleChangeClassStates}
+                              name={class_id}
+                              color="primary"
+                            />
+                          }
+                          label={class_name}
+                        />
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
+              </div>
+            ) : null}
+          </Grid>
+        </Hidden>
+      </Grid>
       {unmountEventDialog ? null : (
         <EventDialog
           downloadFileEvent={downloadFileEvent}
