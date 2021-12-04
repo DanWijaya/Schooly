@@ -99,6 +99,8 @@ function AssessmentItem(props) {
         const type = row.type.toLowerCase();
         const viewPage = `/${type}-guru/${row._id}`;
         const linkToShare = `${window.location.host}/${type}-murid/${row._id}`;
+        // Will be editable if no student submit yet.
+        const isEditable = !Boolean(row.submissions);
         row.linkToShare = linkToShare;
 
         if (user.role === all_roles.TEACHER) {
@@ -134,11 +136,7 @@ function AssessmentItem(props) {
                       </Badge>
                     </ListItemAvatar>
                     <ListItemText
-                      primary={
-                        <Typography noWrap>
-                          {row.name}
-                        </Typography>
-                      }
+                      primary={<Typography noWrap>{row.name}</Typography>}
                       secondary={
                         <Typography
                           variant="body2"
@@ -182,7 +180,7 @@ function AssessmentItem(props) {
                         row={row}
                         handleActionOnClick={[
                           handleCopyLink,
-                          `/sunting-${row.type}/${row._id}`,
+                          isEditable ? `/sunting-${row.type}/${row._id}` : null,
                           handleOpenDeleteDialog,
                         ]}
                       />
@@ -226,11 +224,7 @@ function AssessmentItem(props) {
                     </Badge>
                   </ListItemAvatar>
                   <ListItemText
-                    primary={
-                      <Typography noWrap>
-                        {row.name}
-                      </Typography>
-                    }
+                    primary={<Typography noWrap>{row.name}</Typography>}
                     secondary={
                       <Typography variant="body2" color="textSecondary" noWrap>
                         {all_subjects_map.get(row.subject)}
@@ -259,40 +253,40 @@ function AssessmentItem(props) {
         }
         return;
       })}
-      <Dialog
-        fullWidth
-        open={openDialog}
-        onClose={handleCloseDialog}
-      >
+      <Dialog fullWidth open={openDialog} onClose={handleCloseDialog}>
         <DialogContent>
-          <Typography variant="h4" align="center" style={{ marginBottom: "5px" }}>
+          <Typography
+            variant="h4"
+            align="center"
+            style={{ marginBottom: "5px" }}
+          >
             {currentDialogInfo.name}
           </Typography>
           <Typography color="primary" align="center">
-            {currentDialogInfo.type} {all_subjects_map.get(currentDialogInfo.subject)}
+            {currentDialogInfo.type}{" "}
+            {all_subjects_map.get(currentDialogInfo.subject)}
           </Typography>
           <Typography variant="body2" color="textSecondary" align="center">
             Oleh: {currentDialogInfo.teacher_name}
           </Typography>
           <div style={{ marginTop: "25px" }}>
             <Typography align="center">
-              Mulai - {moment(currentDialogInfo.start_date)
+              Mulai -{" "}
+              {moment(currentDialogInfo.start_date)
                 .locale("id")
                 .format("DD/MM/yyyy, HH:mm")}
             </Typography>
             <Typography align="center">
-              Selesai - {moment(currentDialogInfo.end_date)
+              Selesai -{" "}
+              {moment(currentDialogInfo.end_date)
                 .locale("id")
                 .format("DD/MM/yyyy, HH:mm")}
             </Typography>
           </div>
           <div style={{ marginTop: "10px" }}>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              align="center"
-            >
-              Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru terkait.
+            <Typography variant="body2" color="textSecondary" align="center">
+              Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru
+              terkait.
             </Typography>
             <Typography
               variant="body2"
@@ -300,7 +294,8 @@ function AssessmentItem(props) {
               align="center"
               paragraph
             >
-              Hasil Kuis atau Ujian akan keluar setelah hasil semua peserta sudah diperiksa.
+              Hasil Kuis atau Ujian akan keluar setelah hasil semua peserta
+              sudah diperiksa.
             </Typography>
           </div>
         </DialogContent>

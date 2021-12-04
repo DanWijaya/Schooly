@@ -21,17 +21,14 @@ import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import {
   AppBar,
-  Avatar,
   Badge,
   Button,
   ButtonGroup,
   Checkbox,
   Chip,
   Divider,
-  Drawer,
   FormControl,
   FormControlLabel,
-  FormGroup,
   FormHelperText,
   Grid,
   Hidden,
@@ -39,7 +36,6 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemSecondaryAction,
   ListItemText,
   Menu,
   MenuItem,
@@ -1817,7 +1813,6 @@ class EditAssessment extends Component {
                               </FormControl>
                             </Grid>
                             <Grid item>
-                              {/*FIXME Start Date*/}
                               <div
                                 style={{
                                   display: "flex",

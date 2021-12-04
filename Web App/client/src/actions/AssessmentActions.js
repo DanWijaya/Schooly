@@ -140,8 +140,8 @@ export const getAllAssessments = (unitId) => (dispatch) => {
 };
 
 // View One Task
-export const getOneAssessment = (id, rslv = null) => (dispatch) => {
-  axios
+export const getOneAssessment = (id) => (dispatch) => {
+  return axios
     .get(`/api/assessments/view/${id}`)
     .then((res) => {
       console.log("Assessment to be received: ", res.data);
@@ -149,9 +149,7 @@ export const getOneAssessment = (id, rslv = null) => (dispatch) => {
         type: GET_ASSESSMENT,
         payload: res.data,
       });
-      if (rslv) {
-        rslv(res);
-      }
+      return res.data;
     })
     .catch((err) => {
       console.log("Error");

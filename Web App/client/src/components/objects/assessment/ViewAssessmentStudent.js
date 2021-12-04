@@ -513,11 +513,8 @@ function ViewAssessmentStudent(props) {
     getAllSubjects(user.unit, "map");
     getAllClass(user.unit, "map");
     getFileAssessment(id).then((result) => setLampiranUrls(result));
-
-    new Promise((resolve, reject) => {
-      getOneAssessment(id, resolve);
-    }).then((res) => {
-      setPosted(res.data.posted);
+    getOneAssessment(id).then((assessment) => {
+      setPosted(assessment.posted);
       if (localStorage.getItem(`answers_${id}`)) {
         setAnswer(JSON.parse(localStorage.getItem(`answers_${id}`)));
       }

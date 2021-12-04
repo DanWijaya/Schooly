@@ -44,6 +44,8 @@ function OptionMenu(props) {
         }}
       >
         {actions.map((option, idx) => {
+          // Pass the handler value as null if it is disabled.
+          const isDisabled = handleActionOnClick[idx] == null;
           if (typeof handleActionOnClick[idx] === "string") {
             return (
               <Link to={handleActionOnClick[idx]} style={{ color: "black" }}>
@@ -61,8 +63,8 @@ function OptionMenu(props) {
                   e.preventDefault();
                   actionOnClick(e, idx);
                   handleClose();
-                  // handleActionOnClick[idx](e, row._id, row.name);
                 }}
+                disabled={isDisabled}
               >
                 {option}
               </MenuItem>
