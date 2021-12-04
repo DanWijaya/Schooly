@@ -37,6 +37,7 @@ import {
   Web as WebIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import UnitItem from "../item/UnitItem";
 
 function createData(_id, name, description, author, class_assigned, createdAt) {
   return { _id, name, description, author, class_assigned, createdAt };
@@ -552,66 +553,10 @@ function UnitList(props) {
         <Empty />
       ) : (
         <Grid container spacing={2}>
-          {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-            let viewpage = `/unit/${row._id}`;
-
-            return (
-              <Grid item xs={12} sm={6} md={4}>
-                <Card>
-                  <Avatar variant="square" className={classes.unitBackground}>
-                    <WebIcon className={classes.unitIcon} />
-                  </Avatar>
-                  <CardContent style={{ marginBottom: "25px" }}>
-                    <Typography variant="h5" component="h2" gutterBottom>
-                      {row.name}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" noWrap>
-                      {row.description}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Grid container justify="space-between">
-                      <Grid item>
-                        <Link to={viewpage}>
-                          <Button
-                            size="small"
-                            color="primary"
-                            endIcon={<ArrowRightAltIcon />}
-                          >
-                            Lihat
-                          </Button>
-                        </Link>
-                      </Grid>
-                      <Grid item>
-                        <Tooltip title="Sunting">
-                          <Link to={`/sunting-unit/${row._id}`}>
-                            <IconButton
-                              size="small"
-                              className={classes.unitButtons}
-                            >
-                              <EditIcon fontSize="small" />
-                            </IconButton>
-                          </Link>
-                        </Tooltip>
-                        <Tooltip title="Hapus">
-                          <IconButton
-                            size="small"
-                            className={classes.unitButtons}
-                            onClick={(e) => {
-                              handleOpenDeleteDialog(e, row._id, row.name);
-                            }}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </Grid>
-                    </Grid>
-                  </CardActions>
-                </Card>
-              </Grid>
-            );
-          })}
+          <UnitItem
+            data={stableSort(rows, getComparator(order, orderBy))}
+            handleOpenDeleteDialog={handleOpenDeleteDialog}
+          />
         </Grid>
       )}
       <DeleteDialog
