@@ -1,4 +1,35 @@
 import React from "react";
+import {
+  Avatar,
+  Badge,
+  Grid,
+  IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Tooltip,
+  Typography,
+} from "@material-ui/core";
+import {
+  FaFile,
+  FaFileAlt,
+  FaFileExcel,
+  FaFileImage,
+  FaFilePdf,
+  FaFilePowerpoint,
+  FaFileWord,
+} from "react-icons/fa";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  Add as AddIcon,
+  Cancel as CancelIcon,
+  CheckCircle as CheckCircleIcon,
+  Create as CreateIcon,
+  Delete as DeleteIcon,
+  Publish as PublishIcon,
+  Send as SendIcon,
+} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   chosen: {
@@ -51,159 +82,155 @@ const useStyles = makeStyles((theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
+  deleteIconButton: {
+    marginLeft: "7.5px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
+  },
 }));
+
+const path = require("path");
 
 function FileSubmission(props) {
   const classes = useStyles();
   const {
-    file_id,
-    file_name,
-    file_type,
-    onDownloadFile,
+    data,
     onPreviewFile,
-    handleOpenDeleteDialog,
-    type,
     handleLampiranDelete,
-    i
+    handleOpenDeleteDialog,
   } = props;
 
-  let displayedName = file_name;
+  const isPreviewable = Boolean(onPreviewFile);
 
-  return (
-    type === "chosen" ? (
-      <Paper variant="outlined" className={classes.chosen}>
-        <ListItem button>
-          <ListItemAvatar>
-            {file_type === "Word" ? (
-              <Avatar className={classes.wordFileTypeIcon}>
-                <FaFileWord />
-              </Avatar>
-            ) : file_type === "Excel" ? (
-              <Avatar className={classes.excelFileTypeIcon}>
-                <FaFileExcel />
-              </Avatar>
-            ) : file_type === "Gambar" ? (
-              <Avatar className={classes.imageFileTypeIcon}>
-                <FaFileImage />
-              </Avatar>
-            ) : file_type === "PDF" ? (
-              <Avatar className={classes.pdfFileTypeIcon}>
-                <FaFilePdf />
-              </Avatar>
-            ) : file_type === "Teks" ? (
-              <Avatar className={classes.textFileTypeIcon}>
-                <FaFileAlt />
-              </Avatar>
-            ) : file_type === "Presentasi" ? (
-              <Avatar className={classes.presentationFileTypeIcon}>
-                <FaFilePowerpoint />
-              </Avatar>
-            ) : file_type === "File Lainnya" ? (
-              <Avatar className={classes.otherFileTypeIcon}>
-                <FaFile />
-              </Avatar>
-            ) : null}
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <Tooltip title={file_name} placement="top">
-                <Typography noWrap>
-                  {displayedName}
-                </Typography>
-              </Tooltip>
-            }
-            secondary={file_type}
-          />
-          <IconButton
-            size="small"
-            className={classes.deleteTaskButton}
-            onClick={(e) => {
-              handleLampiranDelete(e, i);
-            }}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
-        </ListItem>
-      </Paper>
-    ) : (
-      <Paper variant="outlined" className={classes.uploaded}>
-        <ListItem
-          button
-          onClick={() => {
-            onPreviewFile(file_id, "tugas");
-          }}
-        >
-          <ListItemAvatar>
-            <Tooltip title={late ? "Terkumpul Telat" : "Telat"}>
-              <Badge
-                overlap="circle"
-                badgeContent={
-                  <PublishIcon
-                    className={late ? classes.submittedLateBadge : classes.submittedBadge}
-                    fontSize="small"
-                  />
+  const fileType = (filename) => {
+    let ext_file = path.extname(filename);
+    switch (ext_file) {
+      case ".docx":
+        return ["Word", <FaFileWord />, classes.wordFileTypeIcon];
+      case ".xlsx":
+      case ".csv":
+        return ["Excel", <FaFileExcel />, classes.excelFileTypeIcon];
+
+      case ".png":
+      case ".jpg":
+      case ".jpeg":
+        return ["Gambar", <FaFileImage />, classes.imageFileTypeIcon];
+
+      case ".pdf":
+        return ["PDF", <FaFilePdf />, classes.pdfFileTypeIcon];
+
+      case ".txt":
+      case ".rtf":
+        return ["Teks", <FaFileAlt />, classes.textFileTypeIcon];
+
+      case ".ppt":
+      case ".pptx":
+        return [
+          "Presentasi",
+          <FaFilePowerpoint />,
+          classes.presentationFileTypeIcon,
+        ];
+
+      default:
+        return ["File Lainnya", <FaFile />, classes.otherFileTypeIcon];
+    }
+  };
+
+  return data.map((row, idx) => {
+    if (row.filename) {
+      row.name = row.filename;
+    }
+    console.log(row);
+    const [fileCategory, fileIcon, iconStyle] = fileType(row.name);
+    if (isPreviewable) {
+      return (
+        <Grid item>
+          <Paper variant="outlined" className={classes.uploaded}>
+            <ListItem
+              button
+              onClick={() => {
+                onPreviewFile(row._id, "tugas");
+              }}
+            >
+              <ListItemAvatar>
+                <Tooltip title={row.on_time ? "Terkumpul" : "Terkumpul Telat"}>
+                  <Badge
+                    overlap="circle"
+                    badgeContent={
+                      <PublishIcon
+                        className={
+                          row.on_time
+                            ? classes.submittedBadge
+                            : classes.submittedLateBadge
+                        }
+                        fontSize="small"
+                      />
+                    }
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                  >
+                    <Avatar className={iconStyle}>{fileIcon}</Avatar>
+                  </Badge>
+                </Tooltip>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Tooltip title={row.name} placement="top">
+                    <Typography noWrap>{row.name}</Typography>
+                  </Tooltip>
                 }
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
+                secondary={fileCategory}
+              />
+              <IconButton
+                size="small"
+                className={classes.deleteTaskButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenDeleteDialog(row._id, row.name);
                 }}
               >
-                {file_type === "Word" ? (
-                  <Avatar className={classes.wordFileTypeIcon}>
-                    <FaFileWord />
-                  </Avatar>
-                ) : file_type === "Excel" ? (
-                  <Avatar className={classes.excelFileTypeIcon}>
-                    <FaFileExcel />
-                  </Avatar>
-                ) : file_type === "Gambar" ? (
-                  <Avatar className={classes.imageFileTypeIcon}>
-                    <FaFileImage />
-                  </Avatar>
-                ) : file_type === "PDF" ? (
-                  <Avatar className={classes.pdfFileTypeIcon}>
-                    <FaFilePdf />
-                  </Avatar>
-                ) : file_type === "Teks" ? (
-                  <Avatar className={classes.textFileTypeIcon}>
-                    <FaFileAlt />
-                  </Avatar>
-                ) : file_type === "Presentasi" ? (
-                  <Avatar className={classes.presentationFileTypeIcon}>
-                    <FaFilePowerpoint />
-                  </Avatar>
-                ) : file_type === "File Lainnya" ? (
-                  <Avatar className={classes.otherFileTypeIcon}>
-                    <FaFile />
-                  </Avatar>
-                ) : null}
-              </Badge>
-            </Tooltip>
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <Tooltip title={file_name} placement="top">
-                <Typography noWrap>
-                  {displayedName}
-                </Typography>
-              </Tooltip>
-            }
-            secondary={file_type}
-          />
-          <IconButton
-            size="small"
-            className={classes.deleteTaskButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleOpenDeleteDialog(props.file_id, props.file_name);
-            }}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
-        </ListItem>
-      </Paper>
-    )
-  );
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </ListItem>
+          </Paper>
+        </Grid>
+      );
+    }
+    return (
+      <Grid item>
+        <Paper variant="outlined" className={classes.chosen}>
+          <ListItem button>
+            <ListItemAvatar>
+              <Avatar className={iconStyle}>{fileIcon}</Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Tooltip title={row.name} placement="top">
+                  <Typography noWrap>{row.name}</Typography>
+                </Tooltip>
+              }
+              secondary={fileCategory}
+            />
+            <IconButton
+              size="small"
+              className={classes.deleteTaskButton}
+              onClick={(e) => {
+                handleLampiranDelete(e, idx);
+              }}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </ListItem>
+        </Paper>
+      </Grid>
+    );
+  });
 }
 
 export default FileSubmission;
