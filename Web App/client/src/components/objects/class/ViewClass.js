@@ -89,6 +89,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "contain",
   },
   classMembersDivider: {
+    marginTop: "5px",
     backgroundColor: theme.palette.primary.main,
   },
   objectPanel: {
@@ -797,44 +798,7 @@ function ViewClass(props) {
                 Wali Kelas
               </Typography>
               <Divider className={classes.classMembersDivider} />
-              {!isObjEmpty(walikelas) ? (
-                <div style={{ padding: "8px 0px" }}>
-                  {/* satu grid ini mau diganti dengan useritem gak cuma personlist aja */}
-                  <Grid container justify="space-between" alignItems="center">
-                    <Grid item>
-                      <PersonListItem
-                        person_avatar={avatar[walikelas._id]}
-                        person_name={walikelas.name}
-                        person_role={
-                          all_subjects_map
-                            ? all_subjects_map.get(walikelas.subject_teached)
-                            : null
-                        }
-                      />
-                    </Grid>
-                    {user.email === walikelas.email ? null : ( // To disable profile view for the user's own profile
-                      <Grid item xs container justify="flex-end">
-                        <Grid item>
-                          <Tooltip title="Lihat Profil">
-                            <Link
-                              to={{
-                                pathname: `/lihat-profil/${walikelas._id}`,
-                              }}
-                            >
-                              <IconButton
-                                size="small"
-                                className={classes.viewUserButton}
-                              >
-                                <PageviewIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </Tooltip>
-                        </Grid>
-                      </Grid>
-                    )}
-                  </Grid>
-                </div>
-              ) : (
+              {isObjEmpty(walikelas) ? (
                 <Typography
                   color="textSecondary"
                   align="center"
@@ -842,12 +806,48 @@ function ViewClass(props) {
                 >
                   Kosong
                 </Typography>
+              ) : (
+                <UserItem data={[walikelas]} avatar_map={avatar} />
+                // <div style={{ padding: "8px 0px" }}>
+                //   {/* satu grid ini mau diganti dengan useritem gak cuma personlist aja */}
+                //   <Grid container justify="space-between" alignItems="center">
+                //     <Grid item>
+                //       <PersonListItem
+                //         person_avatar={avatar[walikelas._id]}
+                //         person_name={walikelas.name}
+                //         person_role={
+                //           all_subjects_map
+                //             ? all_subjects_map.get(walikelas.subject_teached)
+                //             : null
+                //         }
+                //       />
+                //     </Grid>
+                //     {user.email === walikelas.email ? null : ( // To disable profile view for the user's own profile
+                //       <Grid item xs container justify="flex-end">
+                //         <Grid item>
+                //           <Tooltip title="Lihat Profil">
+                //             <Link
+                //               to={{
+                //                 pathname: `/lihat-profil/${walikelas._id}`,
+                //               }}
+                //             >
+                //               <IconButton
+                //                 size="small"
+                //                 className={classes.viewUserButton}
+                //               >
+                //                 <PageviewIcon fontSize="small" />
+                //               </IconButton>
+                //             </Link>
+                //           </Tooltip>
+                //         </Grid>
+                //       </Grid>
+                //     )}
+                //   </Grid>
+                // </div>
               )}
             </Grid>
             <Grid item>
-              <Typography variant="h4" gutterBottom>
-                Murid
-              </Typography>
+              <Typography variant="h4">Murid</Typography>
               <Divider className={classes.classMembersDivider} />
               {students_by_class.length === 0 ? (
                 <Typography
@@ -858,39 +858,7 @@ function ViewClass(props) {
                   Kosong
                 </Typography>
               ) : (
-                <List>
-                  {students_by_class.map((student) => (
-                    /* satu grid ini mau diganti dengan useritem gak cuma personlist aja */
-                    <Grid container justify="space-between" alignItems="center">
-                      <Grid item>
-                        <PersonListItem
-                          person_avatar={avatar[student._id]}
-                          person_name={student.name}
-                          person_id={student._id}
-                          person_role={student_role(student._id)}
-                        />
-                      </Grid>
-                      <Grid item xs container justify="flex-end">
-                        <Grid item>
-                          <Tooltip title="Lihat Profil">
-                            <Link
-                              to={{
-                                pathname: `/lihat-profil/${student._id}`,
-                              }}
-                            >
-                              <IconButton
-                                size="small"
-                                className={classes.viewUserButton}
-                              >
-                                <PageviewIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </Tooltip>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  ))}
-                </List>
+                <UserItem data={students_by_class} avatar_map={avatar} />
               )}
             </Grid>
           </Grid>
@@ -1095,47 +1063,11 @@ function ViewClass(props) {
                     Kosong
                   </Typography>
                 ) : (
-                  <div style={{ padding: "8px 0px" }}>
-                    <Grid container justify="space-between" alignItems="center">
-                      <Grid item>
-                        <PersonListItem
-                          person_avatar={
-                            isObjEmpty(walikelas) ? null : avatar[walikelas._id]
-                          }
-                          person_name={walikelas.name}
-                          person_role={
-                            all_subjects_map
-                              ? all_subjects_map.get(walikelas.subject_teached)
-                              : null
-                          }
-                        />
-                      </Grid>
-                      <Grid item xs container justify="flex-end">
-                        <Grid item>
-                          <Tooltip title="Lihat Profil">
-                            <Link
-                              to={{
-                                pathname: `/lihat-profil/${walikelas._id}`,
-                              }}
-                            >
-                              <IconButton
-                                size="small"
-                                className={classes.viewUserButton}
-                              >
-                                <PageviewIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </Tooltip>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </div>
+                  <UserItem data={[walikelas]} avatar_map={avatar} />
                 )}
               </Grid>
               <Grid item>
-                <Typography variant="h4" gutterBottom>
-                  Murid
-                </Typography>
+                <Typography variant="h4">Murid</Typography>
                 <Divider className={classes.classMembersDivider} />
                 {students_by_class.length === 0 ? (
                   <Typography
@@ -1146,45 +1078,7 @@ function ViewClass(props) {
                     Kosong
                   </Typography>
                 ) : (
-                  <List>
-                    {students_by_class.map((student) => (
-                      <Grid
-                        container
-                        justify="space-between"
-                        alignItems="center"
-                      >
-                        {[
-                          <Grid item>
-                            <PersonListItem
-                              person_avatar={avatar[student._id]}
-                              person_name={student.name}
-                              person_role={student_role(student._id)}
-                            />
-                          </Grid>,
-                          user.email === student.email ? null : (
-                            <Grid item xs container justify="flex-end">
-                              <Grid item>
-                                <Tooltip title="Lihat Profil">
-                                  <Link
-                                    to={{
-                                      pathname: `/lihat-profil/${student._id}`,
-                                    }}
-                                  >
-                                    <IconButton
-                                      size="small"
-                                      className={classes.viewUserButton}
-                                    >
-                                      <PageviewIcon fontSize="small" />
-                                    </IconButton>
-                                  </Link>
-                                </Tooltip>
-                              </Grid>
-                            </Grid>
-                          ),
-                        ]}
-                      </Grid>
-                    ))}
-                  </List>
+                  <UserItem data={students_by_class} avatar_map={avatar} />
                 )}
               </Grid>
             </Grid>

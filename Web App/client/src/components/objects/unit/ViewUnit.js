@@ -186,7 +186,17 @@ function ViewUnit(props) {
                       component="li"
                       className={classes.unitMembersDivider}
                     />
-                    <UserItem data={all_admins} avatar_map={avatar} />
+                    {all_admins.length === 0 ? (
+                      <Typography
+                        color="textSecondary"
+                        align="center"
+                        style={{ padding: "15px" }}
+                      >
+                        Kosong
+                      </Typography>
+                    ) : (
+                      <UserItem data={all_admins} avatar_map={avatar} />
+                    )}
                   </List>
                 </Grid>
                 <Grid item>
@@ -196,7 +206,17 @@ function ViewUnit(props) {
                       component="li"
                       className={classes.unitMembersDivider}
                     />
-                    <UserItem data={all_teachers} avatar_map={avatar} />
+                    {all_teachers.length === 0 ? (
+                      <Typography
+                        color="textSecondary"
+                        align="center"
+                        style={{ padding: "15px" }}
+                      >
+                        Kosong
+                      </Typography>
+                    ) : (
+                      <UserItem data={all_teachers} avatar_map={avatar} />
+                    )}
                   </List>
                 </Grid>
                 <Grid item>
@@ -206,7 +226,17 @@ function ViewUnit(props) {
                       component="li"
                       className={classes.unitMembersDivider}
                     />
-                    <UserItem data={all_students} avatar_map={avatar} />
+                    {all_students.length === 0 ? (
+                      <Typography
+                        color="textSecondary"
+                        align="center"
+                        style={{ padding: "15px" }}
+                      >
+                        Kosong
+                      </Typography>
+                    ) : (
+                      <UserItem data={all_students} avatar_map={avatar} />
+                    )}
                   </List>
                 </Grid>
               </Grid>
