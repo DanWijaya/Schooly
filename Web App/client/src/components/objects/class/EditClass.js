@@ -245,9 +245,9 @@ class EditClass extends Component {
     getAllClass(user.unit);
     getAllSubjects(this.props.auth.user.unit);
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(false);
-    handleSideDrawerExist(false);
+    handleSideDrawer(false);
     handleFooter(false);
   }
 
@@ -256,9 +256,9 @@ class EditClass extends Component {
     clearErrors();
     clearSuccess();
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(true);
-    handleSideDrawerExist(true);
+    handleSideDrawer(true);
     handleFooter(true);
   }
 

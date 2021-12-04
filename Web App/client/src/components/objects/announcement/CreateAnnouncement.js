@@ -324,18 +324,18 @@ class CreateAnnouncement extends Component {
       refreshTeacher(user._id);
     }
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(false);
-    handleSideDrawerExist(false);
+    handleSideDrawer(false);
     handleFooter(false);
   }
 
   componentWillUnmount() {
     //   this.props.clearErrors();
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(true);
-    handleSideDrawerExist(true);
+    handleSideDrawer(true);
     handleFooter(true);
   }
 

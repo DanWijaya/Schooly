@@ -35,7 +35,7 @@ import {
   Select,
   Snackbar,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import Alert from "@material-ui/lab/Alert";
@@ -45,7 +45,7 @@ import {
   Delete as DeleteIcon,
   LibraryBooks as LibraryBooksIcon,
   MenuBook as MenuBookIcon,
-  ShortText as ShortTextIcon
+  ShortText as ShortTextIcon,
 } from "@material-ui/icons";
 import {
   FaChalkboard,
@@ -86,7 +86,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
   },
   closeButton: {
@@ -278,9 +279,9 @@ class EditMaterial extends Component {
     refreshTeacher(this.props.auth.user._id);
     getSetting();
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(false);
-    handleSideDrawerExist(false);
+    handleSideDrawer(false);
     handleFooter(false);
   }
 
@@ -288,9 +289,9 @@ class EditMaterial extends Component {
     this.props.clearErrors();
     this.props.clearSuccess();
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(true);
-    handleSideDrawerExist(true);
+    handleSideDrawer(true);
     handleFooter(true);
   }
 
@@ -752,7 +753,11 @@ class EditMaterial extends Component {
     return (
       <div className={classes.background}>
         <div className={classes.root}>
-          <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)} style={{ width: "100%" }}>
+          <form
+            noValidate
+            onSubmit={(e) => this.onSubmit(e, user._id)}
+            style={{ width: "100%" }}
+          >
             <AppBar position="fixed" className={classes.menuBar}>
               <Grid container justify="space-between" alignItems="center">
                 <Grid item xs>
@@ -768,7 +773,10 @@ class EditMaterial extends Component {
                       </Button>
                     </Grid>
                     <Grid item>
-                      <IconButton onClick={this.handleOpenDeleteDialog} className={classes.closeButton}>
+                      <IconButton
+                        onClick={this.handleOpenDeleteDialog}
+                        className={classes.closeButton}
+                      >
                         <CloseIcon style={{ fontSize: "24px" }} />
                       </IconButton>
                     </Grid>
@@ -784,7 +792,8 @@ class EditMaterial extends Component {
                     Sunting Materi
                   </Typography>
                   <Typography color="textSecondary">
-                    Satu berkas atau lebih harus dilampirkan untuk membuat sebuah materi.
+                    Satu berkas atau lebih harus dilampirkan untuk membuat
+                    sebuah materi.
                   </Typography>
                 </div>
                 <Divider />
@@ -792,11 +801,9 @@ class EditMaterial extends Component {
                   <Grid item xs={12} md={7} className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <MenuBookIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Judul Materi
-                          </Typography>
+                          <Typography color="primary">Judul Materi</Typography>
                         </div>
                         <TextField
                           fullWidth
@@ -810,11 +817,9 @@ class EditMaterial extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <ShortTextIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Deskripsi
-                          </Typography>
+                          <Typography color="primary">Deskripsi</Typography>
                         </div>
                         <TextField
                           fullWidth
@@ -845,7 +850,7 @@ class EditMaterial extends Component {
                   <Grid item xs={12} md className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <LibraryBooksIcon className={classes.labelIcon} />
                           <Typography color="primary">
                             Mata Pelajaran
@@ -866,7 +871,10 @@ class EditMaterial extends Component {
                           >
                             {this.state.subjectOptions !== null
                               ? this.state.subjectOptions.map((subject) => (
-                                  <MenuItem key={subject._id} value={subject._id}>
+                                  <MenuItem
+                                    key={subject._id}
+                                    value={subject._id}
+                                  >
                                     {subject.name}
                                   </MenuItem>
                                 ))
@@ -880,7 +888,7 @@ class EditMaterial extends Component {
                         </FormControl>
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <FaChalkboard className={classes.labelIcon} />
                           <Typography color="primary">
                             Kelas yang diberikan
@@ -896,8 +904,12 @@ class EditMaterial extends Component {
                           <Select
                             multiple
                             value={class_assigned}
-                            onChange={(event) => this.onChange(event, "class_assigned")}
-                            MenuProps={{ classes: { paper: classes.selectPaper } }}
+                            onChange={(event) =>
+                              this.onChange(event, "class_assigned")
+                            }
+                            MenuProps={{
+                              classes: { paper: classes.selectPaper },
+                            }}
                             renderValue={(selected) => {
                               return (
                                 <div className={classes.chips}>
@@ -928,9 +940,15 @@ class EditMaterial extends Component {
                                     <Checkbox
                                       color="primary"
                                       size="small"
-                                      checked={class_assigned.indexOf(classInfo._id) > -1}
+                                      checked={
+                                        class_assigned.indexOf(classInfo._id) >
+                                        -1
+                                      }
                                     />
-                                    <ListItemText primary={classInfo.name} style={{ marginLeft: "10px" }} />
+                                    <ListItemText
+                                      primary={classInfo.name}
+                                      style={{ marginLeft: "10px" }}
+                                    />
                                   </MenuItem>
                                 ))
                               : null}
@@ -960,16 +978,18 @@ class EditMaterial extends Component {
                 <Button
                   variant="contained"
                   startIcon={<AttachFileIcon />}
-                  onClick={() => {this.lampiranUploader.current.click()}}
+                  onClick={() => {
+                    this.lampiranUploader.current.click();
+                  }}
                   className={classes.addFileButton}
                 >
                   Tambah Lampiran Berkas
                 </Button>
-                {errors.lampiran_materi ?
+                {errors.lampiran_materi ? (
                   <FormHelperText error>
                     {errors.lampiran_materi}
                   </FormHelperText>
-                : null }
+                ) : null}
                 <Grid container spacing={1} style={{ marginTop: "20px" }}>
                   {listFileChosen()}
                 </Grid>

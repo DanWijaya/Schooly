@@ -58,7 +58,8 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
   },
   closeButton: {
@@ -86,11 +87,26 @@ function EditHomeroomTeacher(props) {
   const classes = useStyles();
   const { all_teachers, user } = props.auth;
   const { all_classes } = props.classesCollection;
-  const { getTeachers, getAllClass } = props;
+  const {
+    getTeachers,
+    getAllClass,
+    handleSideDrawer,
+    handleFooter,
+    handleNavbar,
+  } = props;
 
+  // Side Effects
   React.useEffect(() => {
     getTeachers(user.unit);
     getAllClass(user.unit);
+    handleNavbar(false);
+    handleSideDrawer(false);
+    handleFooter(false);
+    return () => {
+      handleNavbar(true);
+      handleSideDrawer(true);
+      handleFooter(true);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -259,7 +275,7 @@ function EditHomeroomTeacher(props) {
 
   return (
     <div className={classes.background}>
-        <div className={classes.root}>
+      <div className={classes.root}>
         <AppBar position="fixed" className={classes.menuBar}>
           <Grid container justify="space-between" alignItems="center">
             <Grid item xs>
@@ -305,7 +321,8 @@ function EditHomeroomTeacher(props) {
                     let teacherInfo = entry[1];
                     let showError = false;
                     if (teacherInfo["classId"]) {
-                      showError = statusKelas[teacherInfo["classId"]].length > 1;
+                      showError =
+                        statusKelas[teacherInfo["classId"]].length > 1;
                     }
 
                     return (
@@ -338,7 +355,9 @@ function EditHomeroomTeacher(props) {
                           label="Kelas"
                           key={teacherId}
                           value={statusWali[teacherId].classId}
-                          onChange={(event) => handleKelasWaliChange(event, teacherId)}
+                          onChange={(event) =>
+                            handleKelasWaliChange(event, teacherId)
+                          }
                           error={showError}
                           helperText={showError ? "Periksa Kembali!" : null}
                           className={classes.classSelect}

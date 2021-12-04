@@ -12,13 +12,10 @@ import {
   Grid,
   Paper,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import {
-  ShortText as ShortTextIcon,
-  Web as WebIcon
-} from "@material-ui/icons";
+import { ShortText as ShortTextIcon, Web as WebIcon } from "@material-ui/icons";
 
 const styles = (theme) => ({
   root: {
@@ -48,7 +45,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
       width: "75px",
@@ -61,7 +59,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.error.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
       width: "75px",
@@ -137,16 +136,16 @@ class CreateUnit extends Component {
   };
 
   componentDidMount() {
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(false);
-    handleSideDrawerExist(false);
+    handleSideDrawer(false);
     handleFooter(false);
   }
 
   componentWillUnmount() {
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(true);
-    handleSideDrawerExist(true);
+    handleSideDrawer(true);
     handleFooter(true);
   }
 
@@ -160,7 +159,11 @@ class CreateUnit extends Component {
     return (
       <div className={classes.background}>
         <div className={classes.root}>
-          <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)} style={{ width: "100%" }}>
+          <form
+            noValidate
+            onSubmit={(e) => this.onSubmit(e, user._id)}
+            style={{ width: "100%" }}
+          >
             <AppBar position="fixed" className={classes.menuBar}>
               <Grid container justify="space-between" alignItems="center">
                 <Grid item xs>
@@ -176,7 +179,10 @@ class CreateUnit extends Component {
                       </Button>
                     </Grid>
                     <Grid item>
-                      <Button onClick={this.handleOpenDeleteDialog} className={classes.deleteButton}>
+                      <Button
+                        onClick={this.handleOpenDeleteDialog}
+                        className={classes.deleteButton}
+                      >
                         Hapus
                       </Button>
                     </Grid>
@@ -192,18 +198,17 @@ class CreateUnit extends Component {
                     Buat Unit
                   </Typography>
                   <Typography color="textSecondary">
-                    Setelah sebuah Unit dibuat, masukkan pengelola aktif ke dalam unit untuk mengatur guru dan murid di Unit tersebut.
+                    Setelah sebuah Unit dibuat, masukkan pengelola aktif ke
+                    dalam unit untuk mengatur guru dan murid di Unit tersebut.
                   </Typography>
                 </div>
                 <Divider />
                 <div className={classes.contentDetails}>
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
-                      <div style={{ display: "flex", alignItems: "center"}}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
                         <WebIcon className={classes.labelIcon} />
-                        <Typography color="primary">
-                          Nama Unit
-                        </Typography>
+                        <Typography color="primary">Nama Unit</Typography>
                       </div>
                       <TextField
                         fullWidth
@@ -217,11 +222,9 @@ class CreateUnit extends Component {
                       />
                     </Grid>
                     <Grid item>
-                      <div style={{ display: "flex", alignItems: "center"}}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
                         <ShortTextIcon className={classes.labelIcon} />
-                        <Typography color="primary">
-                          Keterangan
-                        </Typography>
+                        <Typography color="primary">Keterangan</Typography>
                       </div>
                       <TextField
                         fullWidth

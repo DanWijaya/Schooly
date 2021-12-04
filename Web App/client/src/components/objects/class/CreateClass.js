@@ -209,9 +209,9 @@ class CreateClass extends Component {
     this.props.getAllSubjects(user.unit);
     this.props.getAllClass(user.unit);
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(false);
-    handleSideDrawerExist(false);
+    handleSideDrawer(false);
     handleFooter(false);
   }
 
@@ -219,9 +219,9 @@ class CreateClass extends Component {
     this.props.clearErrors();
     this.props.clearSuccess();
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(true);
-    handleSideDrawerExist(true);
+    handleSideDrawer(true);
     handleFooter(true);
   }
 

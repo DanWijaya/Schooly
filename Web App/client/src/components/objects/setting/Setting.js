@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { getSetting, createSetting, editSetting } from "../../../actions/SettingActions";
+import {
+  getSetting,
+  createSetting,
+  editSetting,
+} from "../../../actions/SettingActions";
 import FileSetting from "./FileSetting";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import {
@@ -17,7 +21,7 @@ import {
   ListItemText,
   Snackbar,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { ArrowBack as ArrowBackIcon } from "@material-ui/icons";
@@ -74,13 +78,13 @@ const styles = (theme) => ({
   },
 });
 
-const withMediaQuery = (...args) => Component => props => {
+const withMediaQuery = (...args) => (Component) => (props) => {
   const mediaQuery = useMediaQuery(...args);
   return <Component isMobileView={mediaQuery} {...props} />;
-}
+};
 
 class Setting extends Component {
-  constructor(){
+  constructor() {
     super();
     this.state = {
       isChanged: false,
@@ -93,36 +97,41 @@ class Setting extends Component {
 
   setIsChanged = (newState) => {
     this.setState({ isChanged: newState });
-  }
+  };
   setIsSnackBarOpen = (newState) => {
     this.setState({ isSnackBarOpen: newState });
-  }
+  };
   setIsBackDialogOpen = (newState) => {
     this.setState({ isBackDialogOpen: newState });
-  }
+  };
   setSettingView = (newState) => {
     this.setState({ settingView: newState });
-  }
+  };
   setWindowWidth = (newState) => {
     this.setState({ WindowWidth: newState });
-  }
+  };
   setfileUploadLimit = (newState) => {
     this.setState({ fileUploadLimit: newState });
-  }
+  };
 
   componentDidMount() {
-    const { getSetting, handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const {
+      getSetting,
+      handleNavbar,
+      handleSideDrawer,
+      handleFooter,
+    } = this.props;
     getSetting().then(() => {
       this.setfileUploadLimit(this.props.settingsCollection.upload_limit);
     });
     handleNavbar(false);
-    handleSideDrawerExist(false);
+    handleSideDrawer(false);
     handleFooter(false);
   }
-  componentWillUnmount(){
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+  componentWillUnmount() {
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(true);
-    handleSideDrawerExist(true);
+    handleSideDrawer(true);
     handleFooter(true);
   }
 
@@ -133,15 +142,15 @@ class Setting extends Component {
       this.setIsSnackBarOpen(true)
     );
     this.setIsChanged(false);
-  }
+  };
 
   // Back button
   goBack = () => {
     if (this.state.isChanged) this.setIsBackDialogOpen(true);
     else this.props.history.goBack();
-  }
+  };
 
-  render(){
+  render() {
     const { classes } = this.props;
 
     document.title = "Schooly | Pengaturan";
@@ -154,7 +163,7 @@ class Setting extends Component {
               <Grid item xs container alignItems="center" spacing={2}>
                 <Grid item>
                   <IconButton onClick={this.goBack}>
-                    <ArrowBackIcon/>
+                    <ArrowBackIcon />
                   </IconButton>
                 </Grid>
                 <Grid item>
@@ -164,7 +173,10 @@ class Setting extends Component {
                 </Grid>
               </Grid>
               <Grid item>
-                <Button className={classes.saveButton} onClick={this.commitSave}>
+                <Button
+                  className={classes.saveButton}
+                  onClick={this.commitSave}
+                >
                   Simpan
                 </Button>
               </Grid>
@@ -178,37 +190,38 @@ class Setting extends Component {
             >
               <div className={classes.toolbar} />
               <List>
-                <ListItem button key="File" className={classes.drawerItem} onClick={() => this.setSettingView("file")}>
+                <ListItem
+                  button
+                  key="File"
+                  className={classes.drawerItem}
+                  onClick={() => this.setSettingView("file")}
+                >
                   <ListItemText primary="Berkas" />
                 </ListItem>
               </List>
             </Drawer>
           </Hidden>
           <div className={classes.content}>
-            <div className={classes.toolbar}/>
-              {!this.props.isMobileView ?
-                (
-                  (this.state.settingView === "file") ?
-                    <FileSetting
-                      classes={classes}
-                      fileUploadLimit={this.state.fileUploadLimit}
-                      setIsChanged={this.setIsChanged}
-                      setfileUploadLimit={this.setfileUploadLimit}
-                    />
-                  : null
-                )
-              :
-                (
-                  <div>
-                    <FileSetting
-                      classes={classes}
-                      fileUploadLimit={this.state.fileUploadLimit}
-                      setIsChanged={this.setIsChanged}
-                      setfileUploadLimit={this.setfileUploadLimit}
-                    />
-                  </div>
-                )
-              }
+            <div className={classes.toolbar} />
+            {!this.props.isMobileView ? (
+              this.state.settingView === "file" ? (
+                <FileSetting
+                  classes={classes}
+                  fileUploadLimit={this.state.fileUploadLimit}
+                  setIsChanged={this.setIsChanged}
+                  setfileUploadLimit={this.setfileUploadLimit}
+                />
+              ) : null
+            ) : (
+              <div>
+                <FileSetting
+                  classes={classes}
+                  fileUploadLimit={this.state.fileUploadLimit}
+                  setIsChanged={this.setIsChanged}
+                  setfileUploadLimit={this.setfileUploadLimit}
+                />
+              </div>
+            )}
           </div>
           <DeleteDialog
             openDeleteDialog={this.state.isBackDialogOpen}
@@ -244,9 +257,10 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
 });
 
-
-export default withRouter(connect(mapStateToProps, {
-  getSetting,
-  createSetting,
-  editSetting,
-})(withStyles(styles)(withMediaQuery("(max-width:960px)")(Setting))));
+export default withRouter(
+  connect(mapStateToProps, {
+    getSetting,
+    createSetting,
+    editSetting,
+  })(withStyles(styles)(withMediaQuery("(max-width:960px)")(Setting)))
+);

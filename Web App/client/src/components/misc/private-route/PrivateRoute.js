@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 const PrivateRoute = ({
   component: Component,
-  handleSideDrawerExist,
+  handleSideDrawer,
   handleNavbar,
   handleFooter,
   auth,
@@ -21,7 +21,7 @@ const PrivateRoute = ({
           !access || access.indexOf(auth.user.role) !== -1 ? (
             <Component
               {...props}
-              handleSideDrawerExist={handleSideDrawerExist}
+              handleSideDrawer={handleSideDrawer}
               handleNavbar={handleNavbar}
               handleFooter={handleFooter}
             />

@@ -13,13 +13,13 @@ import {
   IconButton,
   Paper,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Close as CloseIcon,
   ShortText as ShortTextIcon,
-  Web as WebIcon
+  Web as WebIcon,
 } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,7 +50,8 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
   },
   closeButton: {
@@ -69,13 +70,19 @@ const useStyles = makeStyles((theme) => ({
   labelIcon: {
     fontSize: "18px",
     marginRight: "10px",
-    color: "grey",
   },
+  color: "grey",
 }));
 
 function EditUnit(props) {
   const classes = useStyles();
-  const { getOneUnit, updateUnit } = props;
+  const {
+    getOneUnit,
+    updateUnit,
+    handleSideDrawer,
+    handleNavbar,
+    handleFooter,
+  } = props;
   const { user } = props.auth;
   const { id } = props.match.params;
   const { selectedUnits } = props.unitsCollection;
@@ -98,10 +105,6 @@ function EditUnit(props) {
 
   const handleOpenUploadDialog = () => {
     setOpenUploadDialog(true);
-  };
-
-  const handleCloseUploadDialog = () => {
-    setOpenUploadDialog(false);
   };
 
   const handleOpenDeleteDialog = () => {
@@ -136,10 +139,20 @@ function EditUnit(props) {
   // Side Effects
   React.useEffect(() => {
     getOneUnit(id);
+    handleNavbar(false);
+    handleSideDrawer(false);
+    handleFooter(false);
+    return () => {
+      handleNavbar(true);
+      handleSideDrawer(true);
+      handleFooter(true);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
     setObjData(selectedUnits);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUnits]);
 
   document.title = "Schooly | Sunting Unit";
@@ -163,7 +176,10 @@ function EditUnit(props) {
                     </Button>
                   </Grid>
                   <Grid item>
-                    <IconButton onClick={handleOpenDeleteDialog} className={classes.closeButton}>
+                    <IconButton
+                      onClick={handleOpenDeleteDialog}
+                      className={classes.closeButton}
+                    >
                       <CloseIcon style={{ fontSize: "24px" }} />
                     </IconButton>
                   </Grid>
@@ -186,11 +202,9 @@ function EditUnit(props) {
               <div className={classes.contentDetails}>
                 <Grid container direction="column" spacing={4}>
                   <Grid item>
-                    <div style={{ display: "flex", alignItems: "center"}}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
                       <WebIcon className={classes.labelIcon} />
-                      <Typography color="primary">
-                        Nama Unit
-                      </Typography>
+                      <Typography color="primary">Nama Unit</Typography>
                     </div>
                     <TextField
                       fullWidth
@@ -204,11 +218,9 @@ function EditUnit(props) {
                     />
                   </Grid>
                   <Grid item>
-                    <div style={{ display: "flex", alignItems: "center"}}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
                       <ShortTextIcon className={classes.labelIcon} />
-                      <Typography color="primary">
-                        Keterangan
-                      </Typography>
+                      <Typography color="primary">Keterangan</Typography>
                     </div>
                     <TextField
                       fullWidth

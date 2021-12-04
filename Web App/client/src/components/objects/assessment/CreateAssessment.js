@@ -4,7 +4,10 @@ import PropTypes from "prop-types";
 import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import "date-fns";
-import { createAssessment, validateAssessment } from "../../../actions/AssessmentActions";
+import {
+  createAssessment,
+  validateAssessment,
+} from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { refreshTeacher } from "../../../actions/UserActions";
@@ -69,7 +72,7 @@ import {
   TimerOff as TimerOffIcon,
   ViewList as ViewListIcon,
   Visibility as VisibilityIcon,
-  VisibilityOff as VisibilityOffIcon
+  VisibilityOff as VisibilityOffIcon,
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
@@ -103,7 +106,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
       width: "75px",
@@ -115,7 +119,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
   },
   deleteButton: {
@@ -125,7 +130,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.error.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
       width: "75px",
@@ -258,9 +264,9 @@ class CreateAssessment extends Component {
     this.props.clearSuccess();
     this.props.clearErrors();
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(true);
-    handleSideDrawerExist(true);
+    handleSideDrawer(true);
     handleFooter(true);
   }
 
@@ -1131,9 +1137,9 @@ class CreateAssessment extends Component {
     refreshTeacher(unit._id);
     getSetting();
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(false);
-    handleSideDrawerExist(false);
+    handleSideDrawer(false);
     handleFooter(false);
   }
 
@@ -1229,14 +1235,10 @@ class CreateAssessment extends Component {
 
         uniformMaxScore.push(
           <ListItem>
-            <ListItemIcon>
-              {questionType[type].icon}
-            </ListItemIcon>
+            <ListItemIcon>{questionType[type].icon}</ListItemIcon>
             <ListItemText
               primary={
-                <Typography noWrap>
-                  {questionType[type].text}
-                </Typography>
+                <Typography noWrap>{questionType[type].text}</Typography>
               }
             />
             <div>
@@ -1246,16 +1248,16 @@ class CreateAssessment extends Component {
                   variant="outlined"
                   value={this.state.weights[type]}
                   key={type}
-                  onChange={(e) => {this.handleWeight(e, type)}}
+                  onChange={(e) => {
+                    this.handleWeight(e, type);
+                  }}
                   error={showError}
                   InputProps={{
                     style: {
                       maxWidth: "125px",
                       paddingLeft: "5px",
                     },
-                    startAdornment: (
-                      <Checkbox color="primary" size="small" />
-                    ),
+                    startAdornment: <Checkbox color="primary" size="small" />,
                     endAdornment: (
                       <Typography color="textSecondary">{` Poin`}</Typography>
                     ),
@@ -1286,13 +1288,12 @@ class CreateAssessment extends Component {
               Bobot Per Soal
             </Typography>
             <Typography color="textSecondary" paragraph>
-              Seragamkan bobot untuk masing-masing jenis soal dengan mencentang kotak yang tersedia.
+              Seragamkan bobot untuk masing-masing jenis soal dengan mencentang
+              kotak yang tersedia.
             </Typography>
             <Divider />
           </div>
-          <List style={{ padding: "8px 4px 20px 4px" }}>
-            {uniformMaxScore}
-          </List>
+          <List style={{ padding: "8px 4px 20px 4px" }}>{uniformMaxScore}</List>
         </Paper>
       );
     } else {
@@ -1313,7 +1314,11 @@ class CreateAssessment extends Component {
     return (
       <div className={classes.background}>
         <div className={classes.root}>
-          <form id="submitForm" onSubmit={(e) => this.onSubmit(e, user._id)} style={{ width: "100%" }}>
+          <form
+            id="submitForm"
+            onSubmit={(e) => this.onSubmit(e, user._id)}
+            style={{ width: "100%" }}
+          >
             <AppBar position="fixed" className={classes.menuBar}>
               <Grid container justify="space-between" alignItems="center">
                 <Grid item xs>
@@ -1328,7 +1333,11 @@ class CreateAssessment extends Component {
                         <Button type="submit" className={classes.createButton}>
                           Buat
                         </Button>
-                        <Button size="small" onClick={this.handleMenuOpen} className={classes.createDropdownButton}>
+                        <Button
+                          size="small"
+                          onClick={this.handleMenuOpen}
+                          className={classes.createDropdownButton}
+                        >
                           <ArrowDropDownIcon />
                         </Button>
                       </ButtonGroup>
@@ -1338,22 +1347,32 @@ class CreateAssessment extends Component {
                         open={Boolean(this.state.anchorEl)}
                         onClose={this.handleMenuClose}
                       >
-                        <MenuItem onClick={this.handlePostToggle} disabled={this.state.isScheduled}>
+                        <MenuItem
+                          onClick={this.handlePostToggle}
+                          disabled={this.state.isScheduled}
+                        >
                           <ListItemIcon>
-                            {this.state.posted ?
+                            {this.state.posted ? (
                               <VisibilityIcon />
-                            :
+                            ) : (
                               <VisibilityOffIcon />
-                            }
+                            )}
                           </ListItemIcon>
                           <ListItemText
-                            primary={this.state.posted ? "Akses Murid (Hidup)" : "Akses Murid (Mati)"}
+                            primary={
+                              this.state.posted
+                                ? "Akses Murid (Hidup)"
+                                : "Akses Murid (Mati)"
+                            }
                           />
                         </MenuItem>
                       </Menu>
                     </Grid>
                     <Grid item>
-                      <Button onClick={this.handleOpenDeleteDialog} className={classes.deleteButton}>
+                      <Button
+                        onClick={this.handleOpenDeleteDialog}
+                        className={classes.deleteButton}
+                      >
                         Hapus
                       </Button>
                     </Grid>
@@ -1371,20 +1390,32 @@ class CreateAssessment extends Component {
                         Buat {this.state.type}
                       </Typography>
                       <Typography color="textSecondary">
-                        Disarankan untuk lengkapi data yang ada dan klik buat terlebih dahulu agar {this.state.type} tersimpan.
+                        Disarankan untuk lengkapi data yang ada dan klik buat
+                        terlebih dahulu agar {this.state.type} tersimpan.
                       </Typography>
                     </div>
                     <Divider />
                     <Grid container>
-                      <Grid item xs={12} md={7} className={classes.contentDetails}>
+                      <Grid
+                        item
+                        xs={12}
+                        md={7}
+                        className={classes.contentDetails}
+                      >
                         <Grid container direction="column" spacing={4}>
                           <Grid item>
-                            <div style={{ display: "flex", alignItems: "center"}}>
-                              {this.state.type === "Ujian" ?
-                                <BsClipboardData className={classes.assessmentLabelIcon} />
-                              :
-                                <FaClipboardList className={classes.assessmentLabelIcon} />
-                              }
+                            <div
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
+                              {this.state.type === "Ujian" ? (
+                                <BsClipboardData
+                                  className={classes.assessmentLabelIcon}
+                                />
+                              ) : (
+                                <FaClipboardList
+                                  className={classes.assessmentLabelIcon}
+                                />
+                              )}
                               <Typography color="primary">
                                 Judul {this.state.type}
                               </Typography>
@@ -1400,7 +1431,9 @@ class CreateAssessment extends Component {
                             />
                           </Grid>
                           <Grid item>
-                            <div style={{ display: "flex", alignItems: "center"}}>
+                            <div
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
                               <ViewListIcon className={classes.labelIcon} />
                               <Typography color="primary">
                                 Tipe Penilaian
@@ -1430,11 +1463,11 @@ class CreateAssessment extends Component {
                             </FormControl>
                           </Grid>
                           <Grid item>
-                            <div style={{ display: "flex", alignItems: "center"}}>
+                            <div
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
                               <ShortTextIcon className={classes.labelIcon} />
-                              <Typography color="primary">
-                                Deskripsi
-                              </Typography>
+                              <Typography color="primary">Deskripsi</Typography>
                             </div>
                             <TextField
                               fullWidth
@@ -1464,7 +1497,9 @@ class CreateAssessment extends Component {
                       <Grid item xs={12} md className={classes.contentDetails}>
                         <Grid container direction="column" spacing={4}>
                           <Grid item>
-                            <div style={{ display: "flex", alignItems: "center"}}>
+                            <div
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
                               <LibraryBooksIcon className={classes.labelIcon} />
                               <Typography color="primary">
                                 Mata Pelajaran
@@ -1502,7 +1537,9 @@ class CreateAssessment extends Component {
                             </FormControl>
                           </Grid>
                           <Grid item>
-                            <div style={{ display: "flex", alignItems: "center"}}>
+                            <div
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
                               <FaChalkboard className={classes.labelIcon} />
                               <Typography color="primary">
                                 Kelas yang diberikan
@@ -1518,8 +1555,12 @@ class CreateAssessment extends Component {
                               <Select
                                 multiple
                                 value={class_assigned}
-                                onChange={(event) => this.onChange(event, "class_assigned")}
-                                MenuProps={{ classes: { paper: classes.selectPaper } }}
+                                onChange={(event) =>
+                                  this.onChange(event, "class_assigned")
+                                }
+                                MenuProps={{
+                                  classes: { paper: classes.selectPaper },
+                                }}
                                 renderValue={(selected) => (
                                   <div className={classes.chips}>
                                     {selected.map((classId) => {
@@ -1528,7 +1569,9 @@ class CreateAssessment extends Component {
                                           key={classId}
                                           label={
                                             this.state.allClassObject
-                                              ? this.state.allClassObject[classId]
+                                              ? this.state.allClassObject[
+                                                  classId
+                                                ]
                                               : null
                                           }
                                           className={classes.chip}
@@ -1548,9 +1591,16 @@ class CreateAssessment extends Component {
                                         <Checkbox
                                           color="primary"
                                           size="small"
-                                          checked={class_assigned.indexOf(classInfo._id) > -1}
+                                          checked={
+                                            class_assigned.indexOf(
+                                              classInfo._id
+                                            ) > -1
+                                          }
                                         />
-                                        <ListItemText primary={classInfo.name} style={{ marginLeft: "10px" }} />
+                                        <ListItemText
+                                          primary={classInfo.name}
+                                          style={{ marginLeft: "10px" }}
+                                        />
                                       </MenuItem>
                                     ))
                                   : null}
@@ -1564,7 +1614,9 @@ class CreateAssessment extends Component {
                           </Grid>
                           <Grid item>
                             {/*FIXME Start Date*/}
-                            <div style={{ display: "flex", alignItems: "center"}}>
+                            <div
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
                               <TimerIcon className={classes.labelIcon} />
                               <Typography color="primary">
                                 Waktu Mulai
@@ -1585,21 +1637,29 @@ class CreateAssessment extends Component {
                                 cancelLabel="Batal"
                                 minDateMessage="Harus waktu yang akan datang"
                                 invalidDateMessage="Format tanggal tidak benar"
-                                onChange={(date) => this.onChange(date, "start_date")}
+                                onChange={(date) =>
+                                  this.onChange(date, "start_date")
+                                }
                                 value={this.state.start_date}
                                 // onError={(err) => {
                                 //   if (errors.start_date !== err) {
                                 //     this.setState({ errors: { ...errors, start_date: err } });
                                 //   }
                                 // }}
-                                error={errors.start_date_custom || errors.start_date}
-                                helperText={errors.start_date || errors.start_date_custom}
+                                error={
+                                  errors.start_date_custom || errors.start_date
+                                }
+                                helperText={
+                                  errors.start_date || errors.start_date_custom
+                                }
                               />
                             </MuiPickersUtilsProvider>
                           </Grid>
                           <Grid item>
                             {/*FIXME End Date*/}
-                            <div style={{ display: "flex", alignItems: "center"}}>
+                            <div
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
                               <TimerOffIcon className={classes.labelIcon} />
                               <Typography color="primary">
                                 Waktu Selesai
@@ -1621,7 +1681,9 @@ class CreateAssessment extends Component {
                                 minDate={this.state.start_date}
                                 minDateMessage="Harus setelah Waktu Mulai Pengerjaan"
                                 invalidDateMessage="Format tanggal tidak benar"
-                                onChange={(date) => this.onChange(date, "end_date")}
+                                onChange={(date) =>
+                                  this.onChange(date, "end_date")
+                                }
                                 value={this.state.end_date}
                                 onError={(err) => {
                                   if (errors.end_date !== err) {
@@ -1630,8 +1692,12 @@ class CreateAssessment extends Component {
                                     });
                                   }
                                 }}
-                                error={errors.end_date_custom || errors.end_date}
-                                helperText={errors.end_date || errors.end_date_custom}
+                                error={
+                                  errors.end_date_custom || errors.end_date
+                                }
+                                helperText={
+                                  errors.end_date || errors.end_date_custom
+                                }
                               />
                             </MuiPickersUtilsProvider>
                           </Grid>
@@ -1667,7 +1733,9 @@ class CreateAssessment extends Component {
                                 okLabel="Simpan"
                                 cancelLabel="Batal"
                                 invalidDateMessage="Format tanggal tidak benar"
-                                onChange={(date) => this.onChange(date, "post_date")}
+                                onChange={(date) =>
+                                  this.onChange(date, "post_date")
+                                }
                                 value={this.state.post_date}
                                 onError={(err) => {
                                   if (errors.post_date !== err) {
@@ -1685,9 +1753,7 @@ class CreateAssessment extends Component {
                     </Grid>
                   </Paper>
                 </Grid>
-                <Grid item>
-                  {this.weightInput(classes)}
-                </Grid>
+                <Grid item>{this.weightInput(classes)}</Grid>
                 {this.listQuestion()}
                 <Grid item container justify="center">
                   <Grid item>
@@ -1741,8 +1807,13 @@ class CreateAssessment extends Component {
                       </Tooltip>
                     </Grid>
                     <Grid item>
-                      <Tooltip title="Tambah soal pilihan ganda" placement="top">
-                        <IconButton onClick={() => this.handleCloseMenuTambah("radio")}>
+                      <Tooltip
+                        title="Tambah soal pilihan ganda"
+                        placement="top"
+                      >
+                        <IconButton
+                          onClick={() => this.handleCloseMenuTambah("radio")}
+                        >
                           <Badge badgeContent={<AddIcon fontSize="small" />}>
                             <RadioButtonCheckedIcon />
                           </Badge>
@@ -1750,8 +1821,13 @@ class CreateAssessment extends Component {
                       </Tooltip>
                     </Grid>
                     <Grid item>
-                      <Tooltip title="Tambah soal kotak centang" placement="top">
-                        <IconButton onClick={() => this.handleCloseMenuTambah("checkbox")}>
+                      <Tooltip
+                        title="Tambah soal kotak centang"
+                        placement="top"
+                      >
+                        <IconButton
+                          onClick={() => this.handleCloseMenuTambah("checkbox")}
+                        >
                           <Badge badgeContent={<AddIcon fontSize="small" />}>
                             <CheckBoxIcon />
                           </Badge>
@@ -1760,7 +1836,11 @@ class CreateAssessment extends Component {
                     </Grid>
                     <Grid item>
                       <Tooltip title="Tambah soal isian pendek" placement="top">
-                        <IconButton onClick={() => this.handleCloseMenuTambah("shorttext")}>
+                        <IconButton
+                          onClick={() =>
+                            this.handleCloseMenuTambah("shorttext")
+                          }
+                        >
                           <Badge badgeContent={<AddIcon fontSize="small" />}>
                             <TextFormatIcon />
                           </Badge>
@@ -1769,7 +1849,9 @@ class CreateAssessment extends Component {
                     </Grid>
                     <Grid item>
                       <Tooltip title="Tambah soal uraian" placement="top">
-                        <IconButton onClick={() => this.handleCloseMenuTambah("longtext")}>
+                        <IconButton
+                          onClick={() => this.handleCloseMenuTambah("longtext")}
+                        >
                           <Badge badgeContent={<AddIcon fontSize="small" />}>
                             <SubjectIcon />
                           </Badge>

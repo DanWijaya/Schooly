@@ -92,7 +92,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
       width: "100%",
@@ -283,9 +284,9 @@ class EditTask extends Component {
     this.props.refreshTeacher(this.props.auth.user._id);
     this.props.getSetting();
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(false);
-    handleSideDrawerExist(false);
+    handleSideDrawer(false);
     handleFooter(false);
   }
 
@@ -293,9 +294,9 @@ class EditTask extends Component {
     this.props.clearErrors();
     this.props.clearSuccess();
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(true);
-    handleSideDrawerExist(true);
+    handleSideDrawer(true);
     handleFooter(true);
   }
 
@@ -758,7 +759,13 @@ class EditTask extends Component {
     return (
       <div className={classes.background}>
         <div className={classes.root}>
-          <form noValidate onSubmit={(e) => {this.onSubmit(e, all_classes)}} style={{ width: "100%" }}>
+          <form
+            noValidate
+            onSubmit={(e) => {
+              this.onSubmit(e, all_classes);
+            }}
+            style={{ width: "100%" }}
+          >
             <AppBar position="fixed" className={classes.menuBar}>
               <Grid container justify="space-between" alignItems="center">
                 <Grid item xs>
@@ -774,7 +781,10 @@ class EditTask extends Component {
                       </Button>
                     </Grid>
                     <Grid item>
-                      <IconButton onClick={this.handleOpenDeleteDialog} className={classes.closeButton}>
+                      <IconButton
+                        onClick={this.handleOpenDeleteDialog}
+                        className={classes.closeButton}
+                      >
                         <CloseIcon style={{ fontSize: "24px" }} />
                       </IconButton>
                     </Grid>
@@ -790,7 +800,8 @@ class EditTask extends Component {
                     Sunting Tugas
                   </Typography>
                   <Typography color="textSecondary">
-                    Ganti keterangan tugas beserta lampiran berkas yang diberikan.
+                    Ganti keterangan tugas beserta lampiran berkas yang
+                    diberikan.
                   </Typography>
                 </div>
                 <Divider />
@@ -798,11 +809,9 @@ class EditTask extends Component {
                   <Grid item xs={12} md={7} className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <AssignmentIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Judul Tugas
-                          </Typography>
+                          <Typography color="primary">Judul Tugas</Typography>
                         </div>
                         <TextField
                           fullWidth
@@ -816,11 +825,9 @@ class EditTask extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <ShortTextIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Deskripsi
-                          </Typography>
+                          <Typography color="primary">Deskripsi</Typography>
                         </div>
                         <TextField
                           fullWidth
@@ -851,7 +858,7 @@ class EditTask extends Component {
                   <Grid item xs={12} md className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <LibraryBooksIcon className={classes.labelIcon} />
                           <Typography color="primary">
                             Mata Pelajaran
@@ -889,7 +896,7 @@ class EditTask extends Component {
                         </FormControl>
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <FaChalkboard className={classes.labelIcon} />
                           <Typography color="primary">
                             Kelas yang diberikan
@@ -905,8 +912,12 @@ class EditTask extends Component {
                           <Select
                             multiple
                             value={class_assigned}
-                            onChange={(event) => this.onChange(event, "class_assigned")}
-                            MenuProps={{ classes: { paper: classes.selectPaper } }}
+                            onChange={(event) =>
+                              this.onChange(event, "class_assigned")
+                            }
+                            MenuProps={{
+                              classes: { paper: classes.selectPaper },
+                            }}
                             renderValue={(selected) => (
                               <div className={classes.chips}>
                                 {selected.map((classId) => {
@@ -935,9 +946,15 @@ class EditTask extends Component {
                                     <Checkbox
                                       color="primary"
                                       size="small"
-                                      checked={class_assigned.indexOf(classInfo._id) > -1}
+                                      checked={
+                                        class_assigned.indexOf(classInfo._id) >
+                                        -1
+                                      }
                                     />
-                                    <ListItemText primary={classInfo.name} style={{ marginLeft: "10px" }} />
+                                    <ListItemText
+                                      primary={classInfo.name}
+                                      style={{ marginLeft: "10px" }}
+                                    />
                                   </MenuItem>
                                 ))
                               : null}
@@ -950,11 +967,9 @@ class EditTask extends Component {
                         </FormControl>
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <TimerOffIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Batas Waktu
-                          </Typography>
+                          <Typography color="primary">Batas Waktu</Typography>
                         </div>
                         <MuiPickersUtilsProvider
                           locale={lokal}
@@ -1003,7 +1018,9 @@ class EditTask extends Component {
                 <Button
                   variant="contained"
                   startIcon={<AttachFileIcon />}
-                  onClick={() => {this.tugasUploader.current.click()}}
+                  onClick={() => {
+                    this.tugasUploader.current.click();
+                  }}
                   className={classes.addFileButton}
                 >
                   Tambah Lampiran Berkas

@@ -149,7 +149,7 @@ class App extends Component {
     this.setState({ showProgressIndicator: value });
   };
 
-  handleSideDrawerExist = (dataFromChild) => {
+  handleSideDrawer = (dataFromChild) => {
     this.setState({ sideDrawerExist: dataFromChild });
   };
 
@@ -190,14 +190,18 @@ class App extends Component {
           <Router>
             <ScrollToTop />
             <div style={{ display: "flex", minHeight: "100%" }}>
-              {this.state.showProgressIndicator ? (
-                <ProgressIndicator />
-              ) : null}
+              {this.state.showProgressIndicator ? <ProgressIndicator /> : null}
               <Navigation
                 showNavBar={this.state.showNavBar}
                 sideDrawerExist={this.state.sideDrawerExist}
               />
-              <div style={{ flexGrow: "1", overflowX: "hidden", minHeight: "100%" }}>
+              <div
+                style={{
+                  flexGrow: "1",
+                  overflowX: "hidden",
+                  minHeight: "100%",
+                }}
+              >
                 {this.state.showNavBar ? <Toolbar /> : null}
                 {this.state.problemEncountered ? (
                   <ProblemEncountered
@@ -276,11 +280,7 @@ class App extends Component {
                         />
                       )}
                     />
-                    <PrivateRoute
-                      exact
-                      path="/beranda"
-                      component={Dashboard}
-                    />
+                    <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
                     <PrivateRoute
                       exact
@@ -294,7 +294,7 @@ class App extends Component {
                       access={[Role.ADMIN]}
                       path="/buat-kelas"
                       component={CreateClass}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -303,7 +303,7 @@ class App extends Component {
                       access={[Role.ADMIN]}
                       path="/sunting-kelas/:id"
                       component={EditClass}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -312,7 +312,7 @@ class App extends Component {
                       access={[Role.ADMIN]}
                       path="/atur-walikelas"
                       component={EditHomeroomTeacher}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -342,11 +342,7 @@ class App extends Component {
                       component={SubjectList}
                     />
                     {/* Route Event */}
-                    <PrivateRoute
-                      exact
-                      path="/kalender"
-                      component={Calendar}
-                    />
+                    <PrivateRoute exact path="/kalender" component={Calendar} />
 
                     {/* Route Announcement */}
                     <PrivateRoute
@@ -354,7 +350,7 @@ class App extends Component {
                       access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
                       path="/buat-pengumuman"
                       component={CreateAnnouncement}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -363,7 +359,7 @@ class App extends Component {
                       access={[Role.STUDENT, Role.TEACHER, Role.ADMIN]}
                       path="/sunting-pengumuman/:id"
                       component={EditAnnouncement}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -386,7 +382,7 @@ class App extends Component {
                       access={[Role.TEACHER]}
                       path="/buat-materi"
                       component={CreateMaterial}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -395,7 +391,7 @@ class App extends Component {
                       access={[Role.TEACHER]}
                       path="/sunting-materi/:id"
                       component={EditMaterial}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -418,7 +414,7 @@ class App extends Component {
                       access={[Role.TEACHER]}
                       path="/buat-tugas"
                       component={CreateTask}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -427,7 +423,7 @@ class App extends Component {
                       access={[Role.TEACHER]}
                       path="/sunting-tugas/:id"
                       component={EditTask}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -462,7 +458,7 @@ class App extends Component {
                       access={[Role.STUDENT, Role.TEACHER]}
                       path="/buat-ujian"
                       component={CreateAssessment}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -471,7 +467,7 @@ class App extends Component {
                       access={[Role.STUDENT, Role.TEACHER]}
                       path="/buat-kuis"
                       component={CreateAssessment}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -480,7 +476,7 @@ class App extends Component {
                       access={[Role.TEACHER]}
                       path="/sunting-kuis/:id"
                       component={EditAssessment}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -489,7 +485,7 @@ class App extends Component {
                       access={[Role.TEACHER]}
                       path="/sunting-ujian/:id"
                       component={EditAssessment}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -499,7 +495,7 @@ class App extends Component {
                       path="/kuis-murid/:id"
                       component={ViewAssessmentStudent}
                       loginRedirect={true}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                     />
                     <PrivateRoute
                       exact
@@ -507,7 +503,7 @@ class App extends Component {
                       path="/ujian-murid/:id"
                       component={ViewAssessmentStudent}
                       loginRedirect={true}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                     />
                     <PrivateRoute
                       exact
@@ -559,11 +555,7 @@ class App extends Component {
                     />
 
                     {/* Route Report */}
-                    <PrivateRoute
-                      exact
-                      path="/rapor/:id"
-                      component={Report}
-                    />
+                    <PrivateRoute exact path="/rapor/:id" component={Report} />
                     {/* Route User */}
                     <PrivateRoute
                       exact
@@ -589,7 +581,7 @@ class App extends Component {
                       exact
                       access={[Role.ADMIN]}
                       path="/pengaturan"
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                       component={Setting}
@@ -626,7 +618,7 @@ class App extends Component {
                       access={[Role.SUPERADMIN]}
                       path="/buat-unit"
                       component={CreateUnit}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -635,7 +627,7 @@ class App extends Component {
                       access={[Role.SUPERADMIN]}
                       path="/sunting-unit/:id"
                       component={EditUnit}
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}
                       handleNavbar={(data) => this.handleNavbar(data)}
                     />
@@ -643,7 +635,7 @@ class App extends Component {
                       exact
                       access={[Role.SUPERADMIN]}
                       path="/unit/:id"
-                      handleSideDrawerExist={this.handleSideDrawerExist}
+                      handleSideDrawer={this.handleSideDrawer}
                       component={ViewUnit}
                     />
 

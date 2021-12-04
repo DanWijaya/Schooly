@@ -37,7 +37,10 @@ import {
   Typography,
   Snackbar,
 } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDateTimePicker,
+} from "@material-ui/pickers";
 import Alert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
 import {
@@ -87,7 +90,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
       width: "75px",
@@ -100,7 +104,8 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.error.main,
       color: "white",
-      boxShadow: "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
     [theme.breakpoints.down("sm")]: {
       width: "75px",
@@ -446,9 +451,9 @@ class CreateTask extends Component {
     refreshTeacher(user._id);
     getSetting();
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(false);
-    handleSideDrawerExist(false);
+    handleSideDrawer(false);
     handleFooter(false);
   }
 
@@ -456,9 +461,9 @@ class CreateTask extends Component {
     this.props.clearErrors();
     this.props.clearSuccess();
 
-    const { handleNavbar, handleSideDrawerExist, handleFooter } = this.props;
+    const { handleNavbar, handleSideDrawer, handleFooter } = this.props;
     handleNavbar(true);
-    handleSideDrawerExist(true);
+    handleSideDrawer(true);
     handleFooter(true);
   }
 
@@ -627,7 +632,11 @@ class CreateTask extends Component {
     return (
       <div className={classes.background}>
         <div className={classes.root}>
-          <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)} style={{ width: "100%" }}>
+          <form
+            noValidate
+            onSubmit={(e) => this.onSubmit(e, user._id)}
+            style={{ width: "100%" }}
+          >
             <AppBar position="fixed" className={classes.menuBar}>
               <Grid container justify="space-between" alignItems="center">
                 <Grid item xs>
@@ -643,7 +652,10 @@ class CreateTask extends Component {
                       </Button>
                     </Grid>
                     <Grid item>
-                      <Button onClick={this.handleOpenDeleteDialog} className={classes.deleteButton}>
+                      <Button
+                        onClick={this.handleOpenDeleteDialog}
+                        className={classes.deleteButton}
+                      >
                         Hapus
                       </Button>
                     </Grid>
@@ -659,7 +671,8 @@ class CreateTask extends Component {
                     Buat Tugas
                   </Typography>
                   <Typography color="textSecondary">
-                    Berikan tugas dengan banyak kelas sekaligus, tambahkan lampiran berkas jika diperlukan.
+                    Berikan tugas dengan banyak kelas sekaligus, tambahkan
+                    lampiran berkas jika diperlukan.
                   </Typography>
                 </div>
                 <Divider />
@@ -667,11 +680,9 @@ class CreateTask extends Component {
                   <Grid item xs={12} md={7} className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <AssignmentIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Judul Tugas
-                          </Typography>
+                          <Typography color="primary">Judul Tugas</Typography>
                         </div>
                         <TextField
                           fullWidth
@@ -685,11 +696,9 @@ class CreateTask extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <ShortTextIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Deskripsi
-                          </Typography>
+                          <Typography color="primary">Deskripsi</Typography>
                         </div>
                         <TextField
                           fullWidth
@@ -720,7 +729,7 @@ class CreateTask extends Component {
                   <Grid item xs={12} md className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <LibraryBooksIcon className={classes.labelIcon} />
                           <Typography color="primary">
                             Mata Pelajaran
@@ -758,7 +767,7 @@ class CreateTask extends Component {
                         </FormControl>
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <FaChalkboard className={classes.labelIcon} />
                           <Typography color="primary">
                             Kelas yang diberikan
@@ -774,8 +783,12 @@ class CreateTask extends Component {
                           <Select
                             multiple
                             value={class_assigned}
-                            onChange={(event) => this.onChange(event, "class_assigned")}
-                            MenuProps={{ classes: { paper: classes.selectPaper } }}
+                            onChange={(event) =>
+                              this.onChange(event, "class_assigned")
+                            }
+                            MenuProps={{
+                              classes: { paper: classes.selectPaper },
+                            }}
                             renderValue={(selected) => (
                               <div className={classes.chips}>
                                 {selected.map((classId) => {
@@ -804,9 +817,15 @@ class CreateTask extends Component {
                                     <Checkbox
                                       color="primary"
                                       size="small"
-                                      checked={class_assigned.indexOf(classInfo._id) > -1}
+                                      checked={
+                                        class_assigned.indexOf(classInfo._id) >
+                                        -1
+                                      }
                                     />
-                                    <ListItemText primary={classInfo.name} style={{ marginLeft: "10px" }} />
+                                    <ListItemText
+                                      primary={classInfo.name}
+                                      style={{ marginLeft: "10px" }}
+                                    />
                                   </MenuItem>
                                 ))
                               : null}
@@ -819,11 +838,9 @@ class CreateTask extends Component {
                         </FormControl>
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center"}}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <TimerOffIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Batas Waktu
-                          </Typography>
+                          <Typography color="primary">Batas Waktu</Typography>
                         </div>
                         <MuiPickersUtilsProvider
                           locale={lokal}
@@ -844,7 +861,9 @@ class CreateTask extends Component {
                             value={this.state.deadline}
                             onError={(err) => {
                               if (errors.deadline !== err) {
-                                this.setState({errors: { ...errors, deadline: err }});
+                                this.setState({
+                                  errors: { ...errors, deadline: err },
+                                });
                               }
                             }}
                             error={Boolean(errors.deadline)}
@@ -870,7 +889,9 @@ class CreateTask extends Component {
                 <Button
                   variant="contained"
                   startIcon={<AttachFileIcon />}
-                  onClick={() => {this.lampiranUploader.current.click()}}
+                  onClick={() => {
+                    this.lampiranUploader.current.click();
+                  }}
                   className={classes.addFileButton}
                 >
                   Tambah Lampiran Berkas

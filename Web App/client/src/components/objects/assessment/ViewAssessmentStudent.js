@@ -6,7 +6,11 @@ import moment from "moment";
 import "moment/locale/id";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getOneAssessment, submitAssessment, getStatus } from "../../../actions/AssessmentActions";
+import {
+  getOneAssessment,
+  submitAssessment,
+  getStatus,
+} from "../../../actions/AssessmentActions";
 import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
 import SubmitDialog from "../../misc/dialog/SubmitDialog";
 import CustomLinkify from "../../misc/linkify/Linkify";
@@ -175,10 +179,10 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    width: "100%"
+    width: "100%",
   },
   imageLabel: {
-    padding: "10px 0px"
+    padding: "10px 0px",
   },
   imageAttachment: {
     maxWidth: "100%",
@@ -362,7 +366,6 @@ function QuestionNumber(
   question_number,
   answer
 ) {
-
   return (
     <ToggleButton
       value={question_number - 1}
@@ -450,11 +453,7 @@ function QuestionImage(props) {
           </Button>
         }
         backButton={
-          <Button
-            size="small"
-            onClick={handleBack}
-            disabled={activeStep === 0}
-          >
+          <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
             {theme.direction === "rtl" ? (
               <KeyboardArrowRight />
             ) : (
@@ -475,7 +474,7 @@ function ViewAssessmentStudent(props) {
     getAllClass,
     submitAssessment,
     getFileAssessment,
-    handleSideDrawerExist,
+    handleSideDrawer,
   } = props;
   const { user } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
@@ -632,7 +631,7 @@ function ViewAssessmentStudent(props) {
       } else if (res.data.status === 0) {
         setCurrentTime(res.data.now);
         localStorage.setItem(`status`, "ujian");
-        props.handleSideDrawerExist(false);
+        props.handleSideDrawer(false);
         startTest();
       } else {
         setShowClosedMessage(true);
@@ -663,7 +662,7 @@ function ViewAssessmentStudent(props) {
     };
     submitAssessment(id, data).then(() => {
       handleCloseSubmitDialog();
-      props.handleSideDrawerExist(false);
+      props.handleSideDrawer(false);
     });
   };
 
@@ -769,7 +768,7 @@ function ViewAssessmentStudent(props) {
               onChange={(e, newIndex) => handleQuestionIndex(e, newIndex)}
               classes={{
                 root: classes.questionNumberGroup,
-                grouped: classes.questionNumberGroupChildren
+                grouped: classes.questionNumberGroupChildren,
               }}
             >
               {!questions
@@ -787,23 +786,23 @@ function ViewAssessmentStudent(props) {
           </Paper>
         </Grid>,
         <>
-        {!questions || questions[qnsIndex].lampiran.length === 0 ? null : (
-          <Grid item>
-            <Paper>
-              <QuestionImage
-                label={`Gambar ${qnsIndex + 1}`}
-                qnsIndex={qnsIndex}
-                maxSteps={questions[qnsIndex].lampiran.length}
-                lampiranUrls={lampiranUrls}
-                image={
-                  !questions[qnsIndex].lampiran
-                    ? []
-                    : questions[qnsIndex].lampiran
-                }
-              />
-            </Paper>
-          </Grid>
-        )}
+          {!questions || questions[qnsIndex].lampiran.length === 0 ? null : (
+            <Grid item>
+              <Paper>
+                <QuestionImage
+                  label={`Gambar ${qnsIndex + 1}`}
+                  qnsIndex={qnsIndex}
+                  maxSteps={questions[qnsIndex].lampiran.length}
+                  lampiranUrls={lampiranUrls}
+                  image={
+                    !questions[qnsIndex].lampiran
+                      ? []
+                      : questions[qnsIndex].lampiran
+                  }
+                />
+              </Paper>
+            </Grid>
+          )}
         </>,
         <Grid item>
           <Paper>
@@ -985,23 +984,35 @@ function ViewAssessmentStudent(props) {
         <Grid container direction="column" spacing={3}>
           <Grid item>
             <Paper className={classes.content}>
-              <Grid container direction="column" alignItems="center" spacing={4}>
+              <Grid
+                container
+                direction="column"
+                alignItems="center"
+                spacing={4}
+              >
                 <Grid item>
-                  <Typography variant="h4" align="center" style={{ marginBottom: "5px" }}>
+                  <Typography
+                    variant="h4"
+                    align="center"
+                    style={{ marginBottom: "5px" }}
+                  >
                     {selectedAssessments.name}
                   </Typography>
                   <Typography color="primary" align="center">
-                    {selectedAssessments.type} {all_subjects_map.get(selectedAssessments.subject)}
+                    {selectedAssessments.type}{" "}
+                    {all_subjects_map.get(selectedAssessments.subject)}
                   </Typography>
                 </Grid>
                 <Grid item>
                   <Typography align="center">
-                    Mulai - {`${moment(selectedAssessments.start_date)
+                    Mulai -{" "}
+                    {`${moment(selectedAssessments.start_date)
                       .locale("id")
                       .format("DD MMM YYYY, HH.mm")}`}
                   </Typography>
                   <Typography align="center">
-                    Selesai - {`${moment(selectedAssessments.end_date)
+                    Selesai -{" "}
+                    {`${moment(selectedAssessments.end_date)
                       .locale("id")
                       .format("DD MMM YYYY, HH.mm")}`}
                   </Typography>
