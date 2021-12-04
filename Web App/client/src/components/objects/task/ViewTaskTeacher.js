@@ -67,6 +67,7 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import FileAttachment from "../file/FileAttachment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -176,82 +177,6 @@ const useStyles = makeStyles((theme) => ({
 
 const path = require("path");
 
-function LampiranFile(props) {
-  const classes = useStyles();
-
-  const { file_id, filename, filetype, onDownloadFile, onPreviewFile } = props;
-
-  let displayedName = "";
-  filename.length >= 31
-    ? (displayedName = `${filename.slice(0, 30)}..${path.extname(filename)}`)
-    : (displayedName = filename);
-
-  return (
-    <Grid item xs={12} md={6}>
-      <Paper variant="outlined" className={classes.listItemPaper}>
-        <ListItem
-          button
-          disableRipple
-          className={classes.listItem}
-          onClick={() => {
-            onPreviewFile(file_id);
-          }}
-        >
-          <ListItemAvatar>
-            {filetype === "Word" ? (
-              <Avatar className={classes.wordFileTypeIcon}>
-                <FaFileWord />
-              </Avatar>
-            ) : filetype === "Excel" ? (
-              <Avatar className={classes.excelFileTypeIcon}>
-                <FaFileExcel />
-              </Avatar>
-            ) : filetype === "Gambar" ? (
-              <Avatar className={classes.imageFileTypeIcon}>
-                <FaFileImage />
-              </Avatar>
-            ) : filetype === "PDF" ? (
-              <Avatar className={classes.pdfFileTypeIcon}>
-                <FaFilePdf />
-              </Avatar>
-            ) : filetype === "Teks" ? (
-              <Avatar className={classes.textFileTypeIcon}>
-                <FaFileAlt />
-              </Avatar>
-            ) : filetype === "Presentasi" ? (
-              <Avatar className={classes.presentationFileTypeIcon}>
-                <FaFilePowerpoint />
-              </Avatar>
-            ) : filetype === "File Lainnya" ? (
-              <Avatar className={classes.otherFileTypeIcon}>
-                <FaFile />
-              </Avatar>
-            ) : null}
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <LightTooltip title={filename} placement="top">
-                <Typography>{displayedName}</Typography>
-              </LightTooltip>
-            }
-            secondary={filetype}
-          />
-          {/* <IconButton
-            size="small"
-            className={classes.downloadIconButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              onDownloadFile(file_id);
-            }}
-          >
-            <CloudDownloadIcon fontSize="small" />
-          </IconButton> */}
-        </ListItem>
-      </Paper>
-    </Grid>
-  );
-}
-
 function ViewTaskTeacher(props) {
   const classes = useStyles();
   const history = useHistory();
@@ -264,9 +189,6 @@ function ViewTaskTeacher(props) {
     getAllSubjects,
     getFileTasks,
     viewFileTasks,
-    downloadFileTasks,
-    errors,
-    success,
     clearErrors,
     clearSuccess,
     getTeachers,
@@ -712,15 +634,10 @@ function ViewTaskTeacher(props) {
                     Lampiran:
                   </Typography>
                   <Grid container spacing={1}>
-                    {fileLampiran.map((lampiran) => (
-                      <LampiranFile
-                        file_id={lampiran._id}
-                        onPreviewFile={viewFileTasks}
-                        onDownloadFile={downloadFileTasks}
-                        filename={lampiran.filename}
-                        filetype={fileType(lampiran.filename)}
-                      />
-                    ))}
+                    <FileAttachment
+                      data={fileLampiran}
+                      onPreviewFile={viewFileTasks}
+                    />
                   </Grid>
                 </Grid>
               )}
