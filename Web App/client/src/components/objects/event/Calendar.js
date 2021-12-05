@@ -142,23 +142,21 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
+  dateCircleHighlight: {
+    width: "3rem",
+    height: "3rem",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+  },
   calendarModeSelect: {
     width: "40px",
   },
+  shadow: {
+    boxShadow:
+      "0 14px 18px -28px rgba(0,0,0,0.8), 0 10px 10px -10px rgba(0,0,0,0.15)",
+  },
 
-  agendaContainer: {
-    width: "80%",
-    marginRight: "15px",
-    overflow: "none",
-    [theme.breakpoints.down("xs")]: {
-      width: "100%",
-      marginRight: 0,
-    },
-  },
-  calendarContainer: {
-    marginLeft: "15px",
-    width: "200px",
-  },
+
   calendar: {
     border: "none",
   },
@@ -327,10 +325,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     flexWrap: "nowrap",
   },
-  shadow: {
-    boxShadow:
-      "0 14px 18px -28px rgba(0,0,0,0.8), 0 10px 10px -10px rgba(0,0,0,0.15)",
-  },
   staticBlueChip: {
     backgroundColor: theme.palette.primary.main,
     borderRadius: "3px",
@@ -373,12 +367,6 @@ const useStyles = makeStyles((theme) => ({
     tableLayout: "fixed",
     overflow: "hidden",
   },
-  mobileDayModeDateCircle: {
-    width: "3rem",
-    height: "3rem",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-  },
 }));
 
 function CalendarToolbar(props) {
@@ -393,38 +381,7 @@ function CalendarToolbar(props) {
     setSelectedDateReactCalendar,
     activeStartDate,
     setActiveStartDate,
-    showShadow,
   } = props;
-
-  let monthNames = [
-    "Januari",
-    "Februari",
-    "Maret",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
-  ];
-
-  let stringDateDay =
-    currentDate.getDate() +
-    " " +
-    monthNames[currentDate.getMonth()] +
-    " " +
-    currentDate.getFullYear();
-  let stringDateMonth =
-    monthNames[currentDate.getMonth()] +
-    " " +
-    currentDate.getFullYear();
-  let stringDateMobile =
-    monthNames[currentDate.getMonth()].slice(0, 3) +
-    " " +
-    currentDate.getFullYear();
 
   const handleChangeMonth = (direction) => {
     if (direction === "now") {
@@ -488,49 +445,43 @@ function CalendarToolbar(props) {
   return (
     <div className={classes.toolbar}>
       <Grid container justify="space-between" alignItems="center">
-        <Grid item>
-          <Grid container alignItems="center" spacing={1}>
-            {mode === "Day" ? (
-              <>
-                <Grid item>
-                  <IconButton size="small" onClick={() => handleChangeDay("prev")}>
-                    <ChevronLeftIcon />
-                  </IconButton>
-                  <IconButton size="small" onClick={() => handleChangeDay("next")}>
-                    <ChevronRightIcon />
-                  </IconButton>
-                </Grid>
-                <Grid item>
-                  <Hidden xsDown>
-                    <Typography>{stringDateDay}</Typography>
-                  </Hidden>
-                  <Hidden smUp>
-                    <Typography variant="h5">{stringDateMobile}</Typography>
-                  </Hidden>
-                </Grid>
-              </>
-            ) : (
-              <>
-                <Grid item>
-                  <IconButton size="small" onClick={() => handleChangeMonth("prev")}>
-                    <ChevronLeftIcon />
-                  </IconButton>
-                  <IconButton size="small" onClick={() => handleChangeMonth("next")}>
-                    <ChevronRightIcon />
-                  </IconButton>
-                </Grid>
-                <Grid item>
-                  <Hidden xsDown>
-                    <Typography>{stringDateMonth}</Typography>
-                  </Hidden>
-                  <Hidden smUp>
-                    <Typography variant="h5">{stringDateMobile}</Typography>
-                  </Hidden>
-                </Grid>
-              </>
-            )}
+        {mode === "Day" ? (
+          <Grid item>
+            <Tooltip title="Hari Sebelumnya">
+              <IconButton size="small" onClick={() => handleChangeDay("prev")}>
+                <ChevronLeftIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Hari ini">
+              <IconButton onClick={() => handleChangeDay("now")}>
+                <TodayIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Hari Selanjutnya">
+              <IconButton size="small" onClick={() => handleChangeDay("next")}>
+                <ChevronRightIcon />
+              </IconButton>
+            </Tooltip>
           </Grid>
-        </Grid>
+        ) : (
+          <Grid item>
+            <Tooltip title="Hari Sebelumnya">
+              <IconButton size="small" onClick={() => handleChangeMonth("prev")}>
+                <ChevronLeftIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Hari ini">
+              <IconButton onClick={() => handleChangeMonth("now")}>
+                <TodayIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Hari Selanjutnya">
+              <IconButton size="small" onClick={() => handleChangeMonth("next")}>
+                <ChevronRightIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        )}
         <Grid item>
           <Grid container alignItems="center" spacing={2}>
             <Grid item>
@@ -546,63 +497,21 @@ function CalendarToolbar(props) {
                 </Tooltip>
               ) : null}
             </Grid>
+            <Grid item>
+              <Select
+                variant="outlined"
+                defaultValue="Day"
+                value={mode}
+                onChange={handleChangeMode}
+                classes={{ root: classes.calendarModeSelect }}
+              >
+                <MenuItem value="Day">Hari</MenuItem>
+                <MenuItem value="Month">Bulan</MenuItem>
+              </Select>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
-        <div className={showShadow ? undefined : classes.shadow}>
-          <Grid container justify="space-between" alignItems="center">
-            <Grid item>
-              <Grid container direction="column" alignItems="center">
-                <Grid item>
-                  <Typography variant="body2" color="primary">
-                    {moment(currentDate)
-                      .locale("id")
-                      .format("dddd")
-                      .slice(0, 3)
-                      .toUpperCase()}
-                  </Typography>
-                </Grid>
-                <Grid>
-                  <Avatar className={classes.mobileDayModeDateCircle}>
-                    <Typography variant="h5">
-                      {moment(currentDate).locale("id").format("DD")}
-                    </Typography>
-                  </Avatar>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Grid container alignItems="center" spacing={2}>
-                <Grid item>
-                  <Tooltip title="Hari ini">
-                    {mode === "Day" ? (
-                      <IconButton onClick={() => handleChangeDay("now")}>
-                        <TodayIcon />
-                      </IconButton>
-                    ) :  (
-                      <IconButton onClick={() => handleChangeMonth("now")}>
-                        <TodayIcon />
-                      </IconButton>
-                    )}
-                  </Tooltip>
-                </Grid>
-                <Grid item>
-                  <FormControl variant="outlined">
-                    <Select
-                      defaultValue="Day"
-                      value={mode}
-                      onChange={handleChangeMode}
-                      classes={{ root: classes.calendarModeSelect }}
-                    >
-                      <MenuItem value="Day">Hari</MenuItem>
-                      <MenuItem value="Month">Bulan</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </div>
     </div>
   );
 }
@@ -4286,6 +4195,36 @@ function Calendar(props) {
     return hasHoliday(currentDate) || allDayItems.length !== 0;
   };
 
+  let monthNames = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+
+  let stringDateDay =
+    currentDate.getDate() +
+    " " +
+    monthNames[currentDate.getMonth()] +
+    " " +
+    currentDate.getFullYear();
+  let stringDateMonth =
+    monthNames[currentDate.getMonth()] +
+    " " +
+    currentDate.getFullYear();
+  let stringDateMobile =
+    monthNames[currentDate.getMonth()].slice(0, 3) +
+    " " +
+    currentDate.getFullYear();
+
   const generateDayModeCalendar = () => {
     return (
       <div className={classes.dayAgendaContainer}>
@@ -4929,8 +4868,43 @@ function Calendar(props) {
             setSelectedDateReactCalendar={setSelectedDateReactCalendar}
             activeStartDate={activeStartDate}
             setActiveStartDate={setActiveStartDate}
-            showShadow={showShadow(currentDate, allDayItems)}
           />
+          <Grid container justify="space-between" alignItems="center" className={classes.shadow}>
+            <Grid item>
+              <Grid container alignItems="center" spacing={2}>
+                <Grid item>
+                  <Grid container direction="column" alignItems="center">
+                    <Grid item>
+                      <Typography variant="body2" color="primary">
+                        {moment(currentDate)
+                          .locale("id")
+                          .format("dddd")
+                          .slice(0, 3)
+                          .toUpperCase()}
+                      </Typography>
+                    </Grid>
+                    <Grid>
+                      <Avatar className={classes.dateCircleHighlight}>
+                        <Typography variant="h5">
+                          {moment(currentDate).locale("id").format("DD")}
+                        </Typography>
+                      </Avatar>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h6">
+                    <Hidden xsDown>
+                      {mode === "Day" ? stringDateDay : stringDateMonth}
+                    </Hidden>
+                    <Hidden smUp>
+                      {stringDateMobile}
+                    </Hidden>
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
           {mode === "Day"
             ? generateDayModeCalendar()
             : generateMonthModeCalendar()
