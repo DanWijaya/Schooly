@@ -211,7 +211,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function EventDialog(props) {
+function Event(props) {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -1467,4 +1467,4 @@ function EventDialog(props) {
   );
 }
 
-export default EventDialog;
+export default Event;

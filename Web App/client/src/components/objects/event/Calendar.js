@@ -7,6 +7,7 @@ import Path from "path";
 import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import moment from "moment";
+import { isNull } from "util";
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import {
   createEvent,
@@ -32,6 +33,7 @@ import {
 } from "../../../actions/AssessmentActions";
 import { getSetting } from "../../../actions/SettingActions";
 import "./Calendar.css";
+import FileAttachment from "../file/FileAttachment";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -110,8 +112,6 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import FileAttachment from "../file/FileAttachment";
-import { isNull } from "util";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -370,6 +370,30 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
   },
 }));
+
+function getMillisecondDiff(past, future) {
+  return future.getTime() - past.getTime();
+}
+
+function getDayStart(date) {
+  let temp = new Date(date.getTime());
+  temp.setHours(0, 0, 0, 0);
+  return temp;
+}
+
+function getDayEnd(date) {
+  let temp = new Date(date.getTime());
+  temp.setHours(23, 59, 59, 999);
+  return temp;
+}
+
+function addTime(date, millisecond) {
+  return new Date(date.getTime() + millisecond);
+}
+
+function substractTime(date, millisecond) {
+  return new Date(date.getTime() - millisecond);
+}
 
 function CalendarToolbar(props) {
   const {
@@ -5020,30 +5044,6 @@ function Calendar(props) {
       </Snackbar>
     </div>
   );
-}
-
-function getMillisecondDiff(past, future) {
-  return future.getTime() - past.getTime();
-}
-
-function getDayEnd(date) {
-  let temp = new Date(date.getTime());
-  temp.setHours(23, 59, 59, 999);
-  return temp;
-}
-
-function getDayStart(date) {
-  let temp = new Date(date.getTime());
-  temp.setHours(0, 0, 0, 0);
-  return temp;
-}
-
-function addTime(date, millisecond) {
-  return new Date(date.getTime() + millisecond);
-}
-
-function substractTime(date, millisecond) {
-  return new Date(date.getTime() - millisecond);
 }
 
 const mapStateToProps = (state) => ({
