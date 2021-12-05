@@ -1,7 +1,7 @@
 import React from "react";
+import Draggable from "react-draggable";
 import { Link } from "react-router-dom";
 import { Calendar as ReactCalendar } from "react-calendar";
-import Draggable from "react-draggable";
 import { connect } from "react-redux";
 import Path from "path";
 import DateFnsUtils from "@date-io/date-fns";
@@ -538,7 +538,6 @@ function ListAssessments(props) {
   let localCounter = mainCounter;
 
   function AssessmentListItem(props) {
-    // Dialog Kuis dan Ujian
     const [openDialog, setOpenDialog] = React.useState(false);
     const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
@@ -2404,10 +2403,9 @@ const BOTTOM_PADDING = 2;
 const TILE_HORIZONTAL_MARGIN = 10;
 
 function Calendar(props) {
-  document.title = "Schooly | Kalender";
-
   const classes = useStyles();
   const theme = useTheme();
+
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 
   const {
@@ -4728,6 +4726,8 @@ function Calendar(props) {
       );
     }
   };
+
+  document.title = "Schooly | Kalender";
 
   return (
     <div className={classes.root}>
