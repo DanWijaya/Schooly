@@ -42,6 +42,7 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import FileAttachment from "../file/FileAttachment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,71 +115,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const path = require("path");
-
-function LampiranFile(props) {
-  const classes = useStyles();
-  const { file_id, filename, filetype, onDownloadFile, onPreviewFile } = props;
-
-  let displayedName = "";
-  filename.length >= 26
-    ? (displayedName = `${filename.slice(0, 25)}..${path.extname(filename)}`)
-    : (displayedName = filename);
-
-  return (
-    <Paper variant="outlined">
-      <ListItem
-        button
-        disableRipple
-        className={classes.listItem}
-        onClick={() => {
-          onPreviewFile(file_id, "lampiran_announcement");
-        }}
-      >
-        <ListItemAvatar>
-          {filetype === "Word" ? (
-            <Avatar className={classes.wordFileTypeIcon}>
-              <FaFileWord />
-            </Avatar>
-          ) : filetype === "Excel" ? (
-            <Avatar className={classes.excelFileTypeIcon}>
-              <FaFileExcel />
-            </Avatar>
-          ) : filetype === "Gambar" ? (
-            <Avatar className={classes.imageFileTypeIcon}>
-              <FaFileImage />
-            </Avatar>
-          ) : filetype === "PDF" ? (
-            <Avatar className={classes.pdfFileTypeIcon}>
-              <FaFilePdf />
-            </Avatar>
-          ) : filetype === "Teks" ? (
-            <Avatar className={classes.textFileTypeIcon}>
-              <FaFileAlt />
-            </Avatar>
-          ) : filetype === "Presentasi" ? (
-            <Avatar className={classes.presentationFileTypeIcon}>
-              <FaFilePowerpoint />
-            </Avatar>
-          ) : filetype === "File Lainnya" ? (
-            <Avatar className={classes.otherFileTypeIcon}>
-              <FaFile />
-            </Avatar>
-          ) : null}
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            <LightTooltip title={filename} placement="top">
-              <Typography variant="subtitle2" noWrap>
-                {displayedName}
-              </Typography>
-            </LightTooltip>
-          }
-          secondary={filetype}
-        />
-      </ListItem>
-    </Paper>
-  );
-}
 
 function ViewAnnouncement(props) {
   const classes = useStyles();
@@ -343,17 +279,10 @@ function ViewAnnouncement(props) {
                     Lampiran:
                   </Typography>
                   <Grid container spacing={1}>
-                    {fileLampiran.map((lampiran) => (
-                      <Grid item xs={12} sm={6}>
-                        <LampiranFile
-                          file_id={lampiran._id}
-                          onPreviewFile={viewFileAnnouncement}
-                          onDownloadFile={downloadFileAnnouncements}
-                          filename={lampiran.filename}
-                          filetype={fileType(lampiran.filename)}
-                        />
-                      </Grid>
-                    ))}
+                    <FileAttachment
+                      data={fileLampiran}
+                      onPreviewFile={viewFileAnnouncement}
+                    />
                   </Grid>
                 </Grid>
               )}

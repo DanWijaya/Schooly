@@ -1,11 +1,13 @@
 import React from "react";
 import {
   Avatar,
+  Grid,
   ListItem,
   ListItemAvatar,
   ListItemText,
+  IconButton,
   Paper,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import {
   FaFile,
@@ -16,6 +18,9 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import { makeStyles } from "@material-ui/core/styles";
+import { Delete as DeleteIcon } from "@material-ui/icons";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,98 +49,124 @@ const useStyles = makeStyles((theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
+  deleteIconButton: {
+    marginLeft: "7.5px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
+  },
 }));
 
 const path = require("path");
 
 function FileAttachment(props) {
   const classes = useStyles();
-  const { file_id, fileCategory, filename, filetype, onDownloadFile, onPreviewFile } = props;
+  const { data, onPreviewFile, handleLampiranDelete } = props;
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
     switch (ext_file) {
       case ".docx":
-        return "Word";
+        return ["Word", <FaFileWord />, classes.wordFileTypeIcon];
       case ".xlsx":
       case ".csv":
-        return "Excel";
+        return ["Excel", <FaFileExcel />, classes.excelFileTypeIcon];
 
       case ".png":
       case ".jpg":
       case ".jpeg":
-        return "Gambar";
+        return ["Gambar", <FaFileImage />, classes.imageFileTypeIcon];
 
       case ".pdf":
-        return "PDF";
+        return ["PDF", <FaFilePdf />, classes.pdfFileTypeIcon];
 
       case ".txt":
       case ".rtf":
-        return "Teks";
+        return ["Teks", <FaFileAlt />, classes.textFileTypeIcon];
 
       case ".ppt":
       case ".pptx":
-        return "Presentasi";
+        return [
+          "Presentasi",
+          <FaFilePowerpoint />,
+          classes.presentationFileTypeIcon,
+        ];
 
       default:
-        return "File Lainnya";
+        return ["File Lainnya", <FaFile />, classes.otherFileTypeIcon];
     }
   };
 
-  return (
-    <Paper variant="outlined" className={classes.root}>
-      <ListItem
-        button
-        onClick={() => {
-          onPreviewFile(file_id, fileCategory);
-        }}
-      >
-        <ListItemAvatar>
-          {filetype === "Word" ? (
-            <Avatar className={classes.wordFileTypeIcon}>
-              <FaFileWord />
-            </Avatar>
-          ) : filetype === "Excel" ? (
-            <Avatar className={classes.excelFileTypeIcon}>
-              <FaFileExcel />
-            </Avatar>
-          ) : filetype === "Gambar" ? (
-            <Avatar className={classes.imageFileTypeIcon}>
-              <FaFileImage />
-            </Avatar>
-          ) : filetype === "PDF" ? (
-            <Avatar className={classes.pdfFileTypeIcon}>
-              <FaFilePdf />
-            </Avatar>
-          ) : filetype === "Teks" ? (
-            <Avatar className={classes.textFileTypeIcon}>
-              <FaFileAlt />
-            </Avatar>
-          ) : filetype === "Presentasi" ? (
-            <Avatar className={classes.presentationFileTypeIcon}>
-              <FaFilePowerpoint />
-            </Avatar>
-          ) : filetype === "File Lainnya" ? (
-            <Avatar className={classes.otherFileTypeIcon}>
-              <FaFile />
-            </Avatar>
-          ) : null}
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            <Typography noWrap>
-              {filename}
-            </Typography>
-          }
-          secondary={
-            <Typography color="textSecondary" noWrap>
-              {filetype}
-            </Typography>
-          }
-        />
-      </ListItem>
-    </Paper>
-  );
+  const isPreviewable = Boolean(onPreviewFile);
+
+  return data.map((row, idx) => {
+    if (row.filename) {
+      // This code is needed DB Schema is filename not name (Change to name in the future)
+      row.name = row.filename;
+    }
+    const [fileCategory, fileIcon, iconStyle] = fileType(row.name);
+    if (isPreviewable) {
+      return (
+        <Grid item xs={12} md={6}>
+          <Paper variant="outlined" className={classes.root}>
+            <ListItem
+              button
+              onClick={() => {
+                onPreviewFile(row._id, fileCategory);
+              }}
+              disableRipple
+            >
+              <ListItemAvatar>
+                <Avatar className={iconStyle}>{fileIcon}</Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={<Typography noWrap>{row.name}</Typography>}
+                secondary={
+                  <Typography color="textSecondary" noWrap>
+                    {fileCategory}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          </Paper>
+        </Grid>
+      );
+    }
+
+    return (
+      <Grid item xs={12}>
+        <Paper variant="outlined" className={classes.root}>
+          <ListItem disableRipple>
+            <ListItemAvatar>
+              <Avatar className={iconStyle}>{fileIcon}</Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={<Typography noWrap>{row.name}</Typography>}
+              secondary={
+                <Typography color="textSecondary" noWrap>
+                  {fileCategory}
+                </Typography>
+              }
+            />
+            <LightTooltip title="Hapus Lampiran">
+              <IconButton
+                size="small"
+                className={classes.deleteIconButton}
+                onClick={(e) => {
+                  handleLampiranDelete(e, idx);
+                }}
+              >
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </LightTooltip>
+          </ListItem>
+        </Paper>
+      </Grid>
+    );
+  });
 }
 
 export default FileAttachment;

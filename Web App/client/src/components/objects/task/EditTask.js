@@ -63,6 +63,7 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import FileAttachment from "../file/FileAttachment";
 
 const styles = (theme) => ({
   root: {
@@ -169,73 +170,6 @@ const styles = (theme) => ({
 });
 
 const path = require("path");
-
-function LampiranFile(props) {
-  const { classes, name, filetype, i, handleLampiranDelete } = props;
-
-  return (
-    <Grid item xs={12}>
-      <Paper variant="outlined">
-        <ListItem disableRipple>
-          <ListItemAvatar>
-            {filetype === "Word" ? (
-              <Avatar className={classes.wordFileTypeIcon}>
-                <FaFileWord />
-              </Avatar>
-            ) : filetype === "Excel" ? (
-              <Avatar className={classes.excelFileTypeIcon}>
-                <FaFileExcel />
-              </Avatar>
-            ) : filetype === "Gambar" ? (
-              <Avatar className={classes.imageFileTypeIcon}>
-                <FaFileImage />
-              </Avatar>
-            ) : filetype === "PDF" ? (
-              <Avatar className={classes.pdfFileTypeIcon}>
-                <FaFilePdf />
-              </Avatar>
-            ) : filetype === "Teks" ? (
-              <Avatar className={classes.textFileTypeIcon}>
-                <FaFileAlt />
-              </Avatar>
-            ) : filetype === "Presentasi" ? (
-              <Avatar className={classes.presentationFileTypeIcon}>
-                <FaFilePowerpoint />
-              </Avatar>
-            ) : filetype === "File Lainnya" ? (
-              <Avatar className={classes.otherFileTypeIcon}>
-                <FaFile />
-              </Avatar>
-            ) : null}
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <LightTooltip title={name} placement="top">
-                <Typography>
-                  {name.length < 21
-                    ? name
-                    : `${name.slice(0, 15)}..${path.extname(name)}`}
-                </Typography>
-              </LightTooltip>
-            }
-            secondary={filetype}
-          />
-          <LightTooltip title="Hapus Lampiran">
-            <IconButton
-              size="small"
-              className={classes.deleteIconButton}
-              onClick={(e) => {
-                handleLampiranDelete(e, i);
-              }}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </LightTooltip>
-        </ListItem>
-      </Paper>
-    </Grid>
-  );
-}
 
 class EditTask extends Component {
   constructor(props) {
@@ -691,62 +625,6 @@ class EditTask extends Component {
 
     let classIds = [];
 
-    const fileType = (filename) => {
-      let ext_file = path.extname(filename);
-      switch (ext_file) {
-        case ".docx":
-          return "Word";
-        case ".xlsx":
-        case ".csv":
-          return "Excel";
-
-        case ".png":
-        case ".jpg":
-        case ".jpeg":
-          return "Gambar";
-
-        case ".pdf":
-          return "PDF";
-
-        case ".txt":
-        case ".rtf":
-          return "Teks";
-
-        case ".ppt":
-        case ".pptx":
-          return "Presentasi";
-
-        default:
-          return "File Lainnya";
-      }
-    };
-
-    const listFileChosen = () => {
-      let temp = [];
-      if (fileLampiran.length > 0) {
-        for (var i = 0; i < fileLampiran.length; i++) {
-          temp.push(
-            <LampiranFile // The one that is being displayed is in DB (filename) and the one that has just been uploaded (name)
-              classes={classes}
-              name={
-                !fileLampiran[i].filename
-                  ? fileLampiran[i].name
-                  : fileLampiran[i].filename
-              }
-              filetype={
-                !fileLampiran[i].filename
-                  ? fileType(fileLampiran[i].name)
-                  : fileType(fileLampiran[i].filename)
-              }
-              handleLampiranDelete={this.handleLampiranDelete}
-              i={i}
-            />
-          );
-        }
-      }
-      return temp;
-    };
-
     if (class_assigned !== null)
       // When firstly received.
       class_assigned.map((kelas) => {
@@ -1026,7 +904,10 @@ class EditTask extends Component {
                   Tambah Lampiran Berkas
                 </Button>
                 <Grid container spacing={1}>
-                  {listFileChosen()}
+                  <FileAttachment
+                    data={fileLampiran}
+                    handleLampiranDelete={this.handleLampiranDelete}
+                  />
                 </Grid>
               </div>
             </div>

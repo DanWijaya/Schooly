@@ -37,22 +37,14 @@ import CustomLinkify from "../../misc/linkify/Linkify";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
-  Badge,
   Button,
   Box,
   Divider,
   Grid,
   Hidden,
-  IconButton,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  ListItemSecondaryAction,
-  Link,
   Paper,
   Snackbar,
   TextField,
-  Tooltip,
   Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
@@ -66,15 +58,8 @@ import {
   Send as SendIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  FaFile,
-  FaFileAlt,
-  FaFileExcel,
-  FaFileImage,
-  FaFilePdf,
-  FaFilePowerpoint,
-  FaFileWord,
-} from "react-icons/fa";
+import FileAttachment from "../file/FileAttachment";
+import FileSubmission from "../file/FileSubmission";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -143,359 +128,15 @@ const useStyles = makeStyles((theme) => ({
 
 const path = require("path");
 
-function LampiranFile(props) {
-  const classes = useStyles();
-
-  const { file_id, filename, filetype, onDownloadFile, onPreviewFile } = props;
-
-  let displayedName = "";
-  filename.length >= 16
-    ? (displayedName = `${filename.slice(0, 15)}..${path.extname(filename)}`)
-    : (displayedName = filename);
-
-  return (
-    <Grid item xs={12} md={6}>
-      <Paper variant="outlined" className={classes.listItemPaper}>
-        <ListItem
-          button
-          disableRipple
-          className={classes.listItem}
-          onClick={() => {
-            onPreviewFile(file_id);
-          }}
-        >
-          <ListItemAvatar>
-            {filetype === "Word" ? (
-              <Avatar className={classes.wordFileTypeIcon}>
-                <FaFileWord />
-              </Avatar>
-            ) : filetype === "Excel" ? (
-              <Avatar className={classes.excelFileTypeIcon}>
-                <FaFileExcel />
-              </Avatar>
-            ) : filetype === "Gambar" ? (
-              <Avatar className={classes.imageFileTypeIcon}>
-                <FaFileImage />
-              </Avatar>
-            ) : filetype === "PDF" ? (
-              <Avatar className={classes.pdfFileTypeIcon}>
-                <FaFilePdf />
-              </Avatar>
-            ) : filetype === "Teks" ? (
-              <Avatar className={classes.textFileTypeIcon}>
-                <FaFileAlt />
-              </Avatar>
-            ) : filetype === "Presentasi" ? (
-              <Avatar className={classes.presentationFileTypeIcon}>
-                <FaFilePowerpoint />
-              </Avatar>
-            ) : filetype === "File Lainnya" ? (
-              <Avatar className={classes.otherFileTypeIcon}>
-                <FaFile />
-              </Avatar>
-            ) : null}
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <LightTooltip title={filename} placement="top">
-                <Typography className={classes.fileNameTrim}>
-                  {displayedName}
-                </Typography>
-              </LightTooltip>
-            }
-            secondary={filetype}
-          />
-          {/* <IconButton
-            size="small"
-            className={classes.downloadIconButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              onDownloadFile(file_id);
-            }}
-          >
-            <CloudDownloadIcon fontSize="small" />
-          </IconButton> */}
-        </ListItem>
-      </Paper>
-    </Grid>
-  );
-}
-
-function WorkFile(props) {
-  const classes = useStyles();
-
-  const {
-    file_id,
-    file_name,
-    file_type,
-    onDownloadFile,
-    onPreviewFile,
-    handleOpenDeleteDialog,
-    type,
-    handleLampiranDelete,
-    i,
-  } = props;
-
-  let displayedName = file_name;
-
-  return (
-    <>
-      {type === "chosen" ? (
-        <Paper variant="outlined" className={classes.listItemPaper}>
-          <ListItem disableRipple className={classes.listItem}>
-            <ListItemAvatar>
-              {file_type === "Word" ? (
-                <Avatar className={classes.wordFileTypeIcon}>
-                  <FaFileWord />
-                </Avatar>
-              ) : file_type === "Excel" ? (
-                <Avatar className={classes.excelFileTypeIcon}>
-                  <FaFileExcel />
-                </Avatar>
-              ) : file_type === "Gambar" ? (
-                <Avatar className={classes.imageFileTypeIcon}>
-                  <FaFileImage />
-                </Avatar>
-              ) : file_type === "PDF" ? (
-                <Avatar className={classes.pdfFileTypeIcon}>
-                  <FaFilePdf />
-                </Avatar>
-              ) : file_type === "Teks" ? (
-                <Avatar className={classes.textFileTypeIcon}>
-                  <FaFileAlt />
-                </Avatar>
-              ) : file_type === "Presentasi" ? (
-                <Avatar className={classes.presentationFileTypeIcon}>
-                  <FaFilePowerpoint />
-                </Avatar>
-              ) : file_type === "File Lainnya" ? (
-                <Avatar className={classes.otherFileTypeIcon}>
-                  <FaFile />
-                </Avatar>
-              ) : null}
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                <LightTooltip title={file_name} placement="top">
-                  <Typography
-                    variant="subtitle2"
-                    className={classes.fileNameTrim}
-                  >
-                    {displayedName}
-                  </Typography>
-                </LightTooltip>
-              }
-              secondary={file_type}
-            />
-            <IconButton
-              size="small"
-              className={classes.deleteIconButton}
-              onClick={(e) => {
-                handleLampiranDelete(e, i);
-              }}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </ListItem>
-        </Paper>
-      ) : (
-        <Paper variant="outlined" className={classes.listItemPaperSubmitted}>
-          <ListItem
-            button
-            disableRipple
-            className={classes.listItem}
-            onClick={() => {
-              onPreviewFile(file_id, "tugas");
-            }}
-          >
-            <ListItemAvatar>
-              {file_type === "Word" ? (
-                <LightTooltip title="Terkumpul">
-                  <Badge
-                    badgeContent={
-                      <PublishIcon
-                        className={classes.checkButton}
-                        fontSize="small"
-                      />
-                    }
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                  >
-                    <Avatar className={classes.wordFileTypeIcon}>
-                      <FaFileWord />
-                    </Avatar>
-                  </Badge>
-                </LightTooltip>
-              ) : file_type === "Excel" ? (
-                <LightTooltip title="Terkumpul">
-                  <Badge
-                    badgeContent={
-                      <PublishIcon
-                        className={classes.checkButton}
-                        fontSize="small"
-                      />
-                    }
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                  >
-                    <Avatar className={classes.excelFileTypeIcon}>
-                      <FaFileExcel />
-                    </Avatar>
-                  </Badge>
-                </LightTooltip>
-              ) : file_type === "Gambar" ? (
-                <LightTooltip title="Terkumpul">
-                  <Badge
-                    badgeContent={
-                      <PublishIcon
-                        className={classes.checkButton}
-                        fontSize="small"
-                      />
-                    }
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                  >
-                    <Avatar className={classes.imageFileTypeIcon}>
-                      <FaFileImage />
-                    </Avatar>
-                  </Badge>
-                </LightTooltip>
-              ) : file_type === "PDF" ? (
-                <LightTooltip title="Terkumpul">
-                  <Badge
-                    badgeContent={
-                      <PublishIcon
-                        className={classes.checkButton}
-                        fontSize="small"
-                      />
-                    }
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                  >
-                    <Avatar className={classes.pdfFileTypeIcon}>
-                      <FaFilePdf />
-                    </Avatar>
-                  </Badge>
-                </LightTooltip>
-              ) : file_type === "Teks" ? (
-                <LightTooltip title="Terkumpul">
-                  <Badge
-                    badgeContent={
-                      <PublishIcon
-                        className={classes.checkButton}
-                        fontSize="small"
-                      />
-                    }
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                  >
-                    <Avatar className={classes.textFileTypeIcon}>
-                      <FaFileAlt />
-                    </Avatar>
-                  </Badge>
-                </LightTooltip>
-              ) : file_type === "Presentasi" ? (
-                <LightTooltip title="Terkumpul">
-                  <Badge
-                    badgeContent={
-                      <PublishIcon
-                        className={classes.checkButton}
-                        fontSize="small"
-                      />
-                    }
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                  >
-                    <Avatar className={classes.presentationFileTypeIcon}>
-                      <FaFilePowerpoint />
-                    </Avatar>
-                  </Badge>
-                </LightTooltip>
-              ) : file_type === "File Lainnya" ? (
-                <LightTooltip title="Terkumpul">
-                  <Badge
-                    badgeContent={
-                      <PublishIcon
-                        className={classes.checkButton}
-                        fontSize="small"
-                      />
-                    }
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                  >
-                    <Avatar className={classes.otherFileTypeIcon}>
-                      <FaFile />
-                    </Avatar>
-                  </Badge>
-                </LightTooltip>
-              ) : null}
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                <LightTooltip title={file_name} placement="top">
-                  <Typography
-                    variant="subtitle2"
-                    className={classes.fileNameTrim}
-                  >
-                    {displayedName}
-                  </Typography>
-                </LightTooltip>
-              }
-              secondary={file_type}
-            />
-            {/* <IconButton
-              size="small"
-              className={classes.downloadIconButton}
-              onClick={(e) => {
-                e.stopPropagation();
-                onDownloadFile(file_id, "tugas");
-              }}
-            >
-              <CloudDownloadIcon fontSize="small" />
-            </IconButton> */}
-            <IconButton
-              size="small"
-              className={classes.deleteIconButton}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleOpenDeleteDialog(props.file_id, props.file_name);
-              }}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </ListItem>
-        </Paper>
-      )}
-    </>
-  );
-}
-
 function ViewTaskStudent(props) {
   const classes = useStyles();
   const {
     uploadFileSubmitTasks,
     viewFileSubmitTasks,
-    downloadFileSubmitTasks,
     getFileSubmitTasks_AT,
     deleteFileSubmitTasks,
     success,
-    errors,
     tasksCollection,
-    filesCollection,
     clearSuccess,
     clearErrors,
     getOneTask,
@@ -503,7 +144,6 @@ function ViewTaskStudent(props) {
     getAllSubjects,
     getFileTasks,
     viewFileTasks,
-    downloadFileTasks,
     getTeachers,
     getStudents,
     getMultipleFileAvatar,
@@ -522,7 +162,6 @@ function ViewTaskStudent(props) {
   // const [success, setSuccess] = React.useState(null);
   const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
 
-  // setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
@@ -711,78 +350,6 @@ function ViewTaskStudent(props) {
     setOpenCommentSnackbar(false);
   };
 
-  const fileType = (filename) => {
-    let ext_file = path.extname(filename);
-    switch (ext_file) {
-      case ".docx":
-        return "Word";
-      case ".xlsx":
-      case ".csv":
-        return "Excel";
-
-      case ".png":
-      case ".jpg":
-      case ".jpeg":
-        return "Gambar";
-
-      case ".pdf":
-        return "PDF";
-
-      case ".txt":
-      case ".rtf":
-        return "Teks";
-
-      case ".ppt":
-      case ".pptx":
-        return "Presentasi";
-
-      default:
-        return "File Lainnya";
-    }
-  };
-
-  const listWorkFile = () => {
-    // Task that has already been uplaoded.
-    return fileTugas.map((item) => (
-      <WorkFile
-        handleOpenDeleteDialog={handleOpenDeleteDialog}
-        onDownloadFile={downloadFileSubmitTasks}
-        onPreviewFile={viewFileSubmitTasks}
-        file_name={item.filename}
-        file_id={item._id}
-        file_type={fileType(item.filename)}
-        type="work"
-      />
-    ));
-  };
-
-  const listFileChosen = () => {
-    // Task that has not been uplaoded.
-    if (fileTugas.length === 0 && fileToSubmit.length === 0) {
-      return (
-        <Typography color="textSecondary" align="center">
-          Kosong
-        </Typography>
-      );
-    } else {
-      let temp = [];
-      for (var i = 0; i < fileToSubmit.length; i++) {
-        temp.push(
-          <WorkFile
-            handleOpenDeleteDialog={handleOpenDeleteDialog}
-            handleLampiranDelete={handleLampiranDelete}
-            i={i}
-            file_name={fileToSubmit[i].name}
-            file_id={fileToSubmit[i].id}
-            file_type={fileType(fileToSubmit[i].name)}
-            type="chosen"
-          />
-        );
-      }
-      return temp;
-    }
-  };
-
   const handleTugasUpload = (e) => {
     const files = Array.from(e.target.files);
 
@@ -846,7 +413,6 @@ function ViewTaskStudent(props) {
     setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
     setSelectedFileId(fileid);
     setSelectedFileName(filename);
-    // getFileSubmitTasks_AT(tugasId, user._id).then((items) => setTaskContents(items))
   };
 
   const handleCloseDeleteDialog = () => {
@@ -1107,15 +673,10 @@ function ViewTaskStudent(props) {
                     Lampiran:
                   </Typography>
                   <Grid container spacing={1}>
-                    {fileLampiran.map((lampiran) => (
-                      <LampiranFile
-                        file_id={lampiran._id}
-                        onPreviewFile={viewFileTasks}
-                        onDownloadFile={downloadFileTasks}
-                        filename={lampiran.filename}
-                        filetype={fileType(lampiran.filename)}
-                      />
-                    ))}
+                    <FileAttachment
+                      data={fileLampiran}
+                      onPreviewFile={viewFileTasks}
+                    />
                   </Grid>
                 </Grid>
               )}
@@ -1145,13 +706,6 @@ function ViewTaskStudent(props) {
                   </Grid>
                 </>
               ) : null}
-              {/* {
-                (commentList.length === 0) ?
-                  <Grid item xs={12}>
-                    <Typography color="textSecondary" align="center">Belum ada komentar</Typography>
-                  </Grid>
-                : null
-              } */}
               <Grid container item direction="row" alignItems="center">
                 <div className={classes.smAvatar}>
                   <Avatar src={commentAvatar[user._id]} />
@@ -1188,12 +742,23 @@ function ViewTaskStudent(props) {
             <Divider style={{ margin: "10px 0px" }} />
             {fileTugas.length === 0 ? (
               <Grid container wrap="nowrap" direction="column" spacing={1}>
-                {listFileChosen()}
+                <FileSubmission
+                  data={fileToSubmit}
+                  handleLampiranDelete={handleLampiranDelete}
+                />
               </Grid>
             ) : (
               <Grid container wrap="nowrap" direction="column" spacing={1}>
-                {listWorkFile()}
-                {listFileChosen()}
+                <FileSubmission
+                  data={fileTugas}
+                  handleOpenDeleteDialog={handleOpenDeleteDialog}
+                  onPreviewFile={viewFileSubmitTasks}
+                />
+                <FileSubmission
+                  data={fileToSubmit}
+                  handleLampiranDelete={handleLampiranDelete}
+                />
+                {/* {listFileChosen()} */}
               </Grid>
             )}
             <Divider style={{ margin: "10px 0px" }} />

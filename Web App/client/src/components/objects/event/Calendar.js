@@ -110,6 +110,8 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
+import FileAttachment from "../file/FileAttachment";
+import { isNull } from "util";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -1726,17 +1728,10 @@ function EventDialog(props) {
                 ) : null}
                 {fileLampiran && fileLampiran.length > 0 ? (
                   <Grid item container spacing={1}>
-                    {fileLampiran.map((lampiran) => (
-                      <LampiranFile
-                        classes={classes}
-                        file_id={lampiran._id}
-                        onPreviewFile={viewFileEvent}
-                        onDownloadFile={downloadFileEvent}
-                        filename={lampiran.filename}
-                        filetype={fileType(lampiran.filename)}
-                        eventDialogMode={eventDialogMode}
-                      />
-                    ))}
+                    <FileAttachment
+                      data={fileLampiran}
+                      onPreviewFile={viewFileEvent}
+                    />
                   </Grid>
                 ) : null}
               </Grid>
@@ -1829,9 +1824,7 @@ function EventDialog(props) {
                   />
                   {errors.name ? (
                     <div className={classes.zeroHeightHelperText}>
-                      <FormHelperText error>
-                        {errors.name}
-                      </FormHelperText>
+                      <FormHelperText error>{errors.name}</FormHelperText>
                     </div>
                   ) : null}
                 </Grid>
@@ -1974,9 +1967,7 @@ function EventDialog(props) {
                           visibility: "hidden",
                         }}
                       >
-                        <FormHelperText>
-                          {"\u200B"}
-                        </FormHelperText>
+                        <FormHelperText>{"\u200B"}</FormHelperText>
                         <Checkbox size="small" disabled />
                       </Grid>
                     </MuiPickersUtilsProvider>
@@ -2118,9 +2109,7 @@ function EventDialog(props) {
                     </Select>
                     {errors.to ? (
                       <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText error>
-                          {errors.to}
-                        </FormHelperText>
+                        <FormHelperText error>{errors.to}</FormHelperText>
                       </div>
                     ) : null}
                   </FormControl>
@@ -2172,20 +2161,12 @@ function EventDialog(props) {
                     Tambah Lampiran Berkas
                   </Button>
                   <Grid container spacing={1} style={{ marginTop: "10px" }}>
-                    {fileLampiran.length === 0
-                      ? null
-                      : fileLampiran.map((lampiran, index) => (
-                          <LampiranFile
-                            classes={classes}
-                            filename={lampiran.name ?? lampiran.filename}
-                            filetype={fileType(
-                              lampiran.name ?? lampiran.filename
-                            )}
-                            handleLampiranDelete={handleLampiranDelete}
-                            i={index}
-                            eventDialogMode={eventDialogMode}
-                          />
-                        ))}
+                    {fileLampiran && fileLampiran.length > 0 ? (
+                      <FileAttachment
+                        data={fileLampiran}
+                        handleLampiranDelete={handleLampiranDelete}
+                      />
+                    ) : null}
                   </Grid>
                 </Grid>
               </Grid>
@@ -2413,94 +2394,6 @@ function PaperComponent(props) {
     >
       <Paper {...props} />
     </Draggable>
-  );
-}
-
-function LampiranFile(props) {
-  const {
-    file_id,
-    filename,
-    filetype,
-    i,
-    handleLampiranDelete,
-    onPreviewFile,
-    classes,
-    eventDialogMode,
-  } = props;
-
-  return (
-    <Grid item xs={12}>
-      <Paper variant="outlined">
-        <ListItem
-          button={eventDialogMode === "view"}
-          disableRipple
-          className={classes.listItem}
-          onClick={() => {
-            if (eventDialogMode === "view") {
-              onPreviewFile(file_id);
-            }
-          }}
-        >
-          <ListItemAvatar>
-            {filetype === "Word" ? (
-              <Avatar className={classes.wordFileTypeIcon}>
-                <FaFileWord />
-              </Avatar>
-            ) : filetype === "Excel" ? (
-              <Avatar className={classes.excelFileTypeIcon}>
-                <FaFileExcel />
-              </Avatar>
-            ) : filetype === "Gambar" ? (
-              <Avatar className={classes.imageFileTypeIcon}>
-                <FaFileImage />
-              </Avatar>
-            ) : filetype === "PDF" ? (
-              <Avatar className={classes.pdfFileTypeIcon}>
-                <FaFilePdf />
-              </Avatar>
-            ) : filetype === "Teks" ? (
-              <Avatar className={classes.textFileTypeIcon}>
-                <FaFileAlt />
-              </Avatar>
-            ) : filetype === "Presentasi" ? (
-              <Avatar className={classes.presentationFileTypeIcon}>
-                <FaFilePowerpoint />
-              </Avatar>
-            ) : filetype === "File Lainnya" ? (
-              <Avatar className={classes.otherFileTypeIcon}>
-                <FaFile />
-              </Avatar>
-            ) : null}
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <LightTooltip title={filename} placement="top">
-                <div style={{ display: "flex" }}>
-                  <Typography noWrap>
-                    {filename.replace(Path.extname(filename), "")}
-                  </Typography>
-                  <Typography>{Path.extname(filename)}</Typography>
-                </div>
-              </LightTooltip>
-            }
-            secondary={filetype}
-          />
-          {eventDialogMode === "view" ? null : (
-            <LightTooltip title="Hapus Lampiran">
-              <IconButton
-                size="small"
-                className={classes.deleteIconButton}
-                onClick={(e) => {
-                  handleLampiranDelete(e, i);
-                }}
-              >
-                <DeleteIcon fontSize="small" />
-              </IconButton>
-            </LightTooltip>
-          )}
-        </ListItem>
-      </Paper>
-    </Grid>
   );
 }
 
@@ -4907,8 +4800,7 @@ function Calendar(props) {
           </Grid>
           {mode === "Day"
             ? generateDayModeCalendar()
-            : generateMonthModeCalendar()
-          }
+            : generateMonthModeCalendar()}
         </Grid>
         <Hidden smDown>
           <Grid item style={{ maxWidth: "300px" }}>

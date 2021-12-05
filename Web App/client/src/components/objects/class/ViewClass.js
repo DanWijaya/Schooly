@@ -12,11 +12,7 @@ import {
   getTeachers,
 } from "../../../actions/UserActions";
 import { getMaterialByClass } from "../../../actions/MaterialActions";
-import {
-  getSubmittedTasks,
-  getTaskAtmpt,
-  getTaskByClass,
-} from "../../../actions/TaskActions";
+import { getTaskAtmpt, getTaskByClass } from "../../../actions/TaskActions";
 import {
   getAllAssessments,
   getAssessmentsByClass,
@@ -808,42 +804,6 @@ function ViewClass(props) {
                 </Typography>
               ) : (
                 <UserItem data={[walikelas]} avatar_map={avatar} />
-                // <div style={{ padding: "8px 0px" }}>
-                //   {/* satu grid ini mau diganti dengan useritem gak cuma personlist aja */}
-                //   <Grid container justify="space-between" alignItems="center">
-                //     <Grid item>
-                //       <PersonListItem
-                //         person_avatar={avatar[walikelas._id]}
-                //         person_name={walikelas.name}
-                //         person_role={
-                //           all_subjects_map
-                //             ? all_subjects_map.get(walikelas.subject_teached)
-                //             : null
-                //         }
-                //       />
-                //     </Grid>
-                //     {user.email === walikelas.email ? null : ( // To disable profile view for the user's own profile
-                //       <Grid item xs container justify="flex-end">
-                //         <Grid item>
-                //           <Tooltip title="Lihat Profil">
-                //             <Link
-                //               to={{
-                //                 pathname: `/lihat-profil/${walikelas._id}`,
-                //               }}
-                //             >
-                //               <IconButton
-                //                 size="small"
-                //                 className={classes.viewUserButton}
-                //               >
-                //                 <PageviewIcon fontSize="small" />
-                //               </IconButton>
-                //             </Link>
-                //           </Tooltip>
-                //         </Grid>
-                //       </Grid>
-                //     )}
-                //   </Grid>
-                // </div>
               )}
             </Grid>
             <Grid item>
