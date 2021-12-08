@@ -10,12 +10,12 @@ import {
   IconButton,
   Paper,
   Tooltip,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import {
   Delete as DeleteIcon,
   Edit as EditIcon,
-  SupervisorAccount as SupervisorAccountIcon
+  SupervisorAccount as SupervisorAccountIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaChalkboard } from "react-icons/fa";

@@ -103,27 +103,6 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  wordFileTypeIcon: {
-    backgroundColor: "#16B0DD",
-  },
-  excelFileTypeIcon: {
-    backgroundColor: "#68C74F",
-  },
-  imageFileTypeIcon: {
-    backgroundColor: "#974994",
-  },
-  pdfFileTypeIcon: {
-    backgroundColor: "#E43B37",
-  },
-  textFileTypeIcon: {
-    backgroundColor: "#F7BC24",
-  },
-  presentationFileTypeIcon: {
-    backgroundColor: "#FD931D",
-  },
-  otherFileTypeIcon: {
-    backgroundColor: "#808080",
-  },
 }));
 
 const path = require("path");
@@ -185,8 +164,6 @@ function ViewTaskStudent(props) {
   const [openCommentSnackbar, setOpenCommentSnackbar] = React.useState(false);
 
   let tugasId = props.match.params.id;
-  // If an empty array is inserted to the second parameter, it will acts like compomnentDidMount().
-  // useEffect(() => {getAllSubjects("map")}, [])
 
   useEffect(() => {
     getStudents(user.unit);
@@ -758,7 +735,6 @@ function ViewTaskStudent(props) {
                   data={fileToSubmit}
                   handleLampiranDelete={handleLampiranDelete}
                 />
-                {/* {listFileChosen()} */}
               </Grid>
             )}
             <Divider style={{ margin: "10px 0px" }} />
@@ -809,7 +785,6 @@ function ViewTaskStudent(props) {
                     className={classes.submitTaskButton}
                     type="submit"
                     disabled={fileToSubmit.length === 0}
-                    // onClick={handleOpenUploadDialog}
                   >
                     Kumpul Tugas
                   </Button>

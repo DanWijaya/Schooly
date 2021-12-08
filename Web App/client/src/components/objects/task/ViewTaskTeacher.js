@@ -38,9 +38,6 @@ import {
   Fab,
   Grid,
   Hidden,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Paper,
   Snackbar,
   TextField,
@@ -58,15 +55,6 @@ import {
   PlaylistAddCheck as PlaylistAddCheckIcon,
   Send as SendIcon,
 } from "@material-ui/icons";
-import {
-  FaFile,
-  FaFileAlt,
-  FaFileExcel,
-  FaFileImage,
-  FaFilePdf,
-  FaFilePowerpoint,
-  FaFileWord,
-} from "react-icons/fa";
 import FileAttachment from "../file/FileAttachment";
 
 const useStyles = makeStyles((theme) => ({
@@ -125,27 +113,6 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
-  },
-  wordFileTypeIcon: {
-    backgroundColor: "#16B0DD",
-  },
-  excelFileTypeIcon: {
-    backgroundColor: "#68C74F",
-  },
-  imageFileTypeIcon: {
-    backgroundColor: "#974994",
-  },
-  pdfFileTypeIcon: {
-    backgroundColor: "#E43B37",
-  },
-  textFileTypeIcon: {
-    backgroundColor: "#F7BC24",
-  },
-  presentationFileTypeIcon: {
-    backgroundColor: "#FD931D",
-  },
-  otherFileTypeIcon: {
-    backgroundColor: "#808080",
   },
   commentPaper: {
     padding: "20px",
@@ -245,34 +212,6 @@ function ViewTaskTeacher(props) {
       }
     });
   });
-  // React.useEffect(() => {
-  // if (
-  //   tasksCollection &&
-  //   Object.keys(tasksCollection).length !== 0 &&
-  //   all_students &&
-  //   all_students.length !== 0
-  // ) {
-  //   // untuk setiap murid yang ada,
-  //   for (let j = 0; j < all_students.length; j++) {
-  //     console.log(all_students[j].kelas)
-  //     // jika murid ini mendapatkan tugas ini
-  //     if (
-  //       tasksCollection.class_assigned &&
-  //       tasksCollection.class_assigned.includes(all_students[j].kelas)
-  //     ) {
-  //       // untuk setiap file yang pernah dikumpulkan murid ini,
-  //       for (const studentTask of all_students[j].tugas) {
-  //         // jika file ditujukan untuk tugas ini,
-  //         if (studentTask.for_task_object === task_id) {
-  //           // setDisableButton(false);
-  //           return;
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []); //[tasksCollection, all_students]
 
   React.useEffect(() => {
     if (

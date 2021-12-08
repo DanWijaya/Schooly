@@ -17,31 +17,17 @@ import {
 } from "../../../actions/AnnouncementActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import CustomLinkify from "../../misc/linkify/Linkify";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
-  Avatar,
   Button,
   Divider,
   Grid,
   Hidden,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Paper,
   Tooltip,
   Typography,
 } from "@material-ui/core";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  FaFile,
-  FaFileAlt,
-  FaFileExcel,
-  FaFileImage,
-  FaFilePdf,
-  FaFilePowerpoint,
-  FaFileWord,
-} from "react-icons/fa";
 import FileAttachment from "../file/FileAttachment";
 
 const useStyles = makeStyles((theme) => ({
@@ -91,27 +77,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  wordFileTypeIcon: {
-    backgroundColor: "#16B0DD",
-  },
-  excelFileTypeIcon: {
-    backgroundColor: "#68C74F",
-  },
-  imageFileTypeIcon: {
-    backgroundColor: "#974994",
-  },
-  pdfFileTypeIcon: {
-    backgroundColor: "#E43B37",
-  },
-  textFileTypeIcon: {
-    backgroundColor: "#F7BC24",
-  },
-  presentationFileTypeIcon: {
-    backgroundColor: "#FD931D",
-  },
-  otherFileTypeIcon: {
-    backgroundColor: "#808080",
-  },
 }));
 
 const path = require("path");
@@ -121,14 +86,12 @@ function ViewAnnouncement(props) {
   const history = useHistory();
   const {
     getUsers,
-    classesCollection,
     getOneAnnouncement,
     deleteAnnouncement,
     getSelectedClasses,
     getAllClass,
     getFileAnnouncements,
     viewFileAnnouncement,
-    downloadFileAnnouncements,
   } = props;
   const { selectedAnnouncements } = props.announcements;
   const { all_classes_map } = props.classesCollection;
@@ -150,43 +113,6 @@ function ViewAnnouncement(props) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAnnouncements._id]); // Because only receive one announcement.
-
-  const fileType = (filename) => {
-    let ext_file = path.extname(filename);
-    switch (ext_file) {
-      case ".docx":
-        return "Word";
-      case ".xlsx":
-      case ".csv":
-        return "Excel";
-
-      case ".png":
-      case ".jpg":
-      case ".jpeg":
-        return "Gambar";
-
-      case ".pdf":
-        return "PDF";
-
-      case ".txt":
-      case ".rtf":
-        return "Teks";
-
-      case ".ppt":
-      case ".pptx":
-        return "Presentasi";
-
-      default:
-        return "File Lainnya";
-    }
-  };
-
-  const onDownloadFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran_announcement");
-  };
-  const onPreviewFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran_announcement");
-  };
 
   const onDeleteAnnouncement = (announcement_id) => {
     deleteAnnouncement(announcement_id, history).then((res) => {});

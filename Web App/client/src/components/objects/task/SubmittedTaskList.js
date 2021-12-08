@@ -24,10 +24,6 @@ import {
   Fab,
   Grid,
   Hidden,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Paper,
   Snackbar,
   Tab,
@@ -44,15 +40,7 @@ import {
   GetApp as GetAppIcon,
   QuestionAnswer as QuestionAnswerIcon,
 } from "@material-ui/icons";
-import {
-  FaFile,
-  FaFileAlt,
-  FaFileExcel,
-  FaFileImage,
-  FaFilePdf,
-  FaFilePowerpoint,
-  FaFileWord,
-} from "react-icons/fa";
+import FileSubmission from "../file/FileSubmission";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -117,104 +105,9 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  wordFileTypeIcon: {
-    backgroundColor: "#16B0DD",
-  },
-  excelFileTypeIcon: {
-    backgroundColor: "#68C74F",
-  },
-  imageFileTypeIcon: {
-    backgroundColor: "#974994",
-  },
-  pdfFileTypeIcon: {
-    backgroundColor: "#E43B37",
-  },
-  textFileTypeIcon: {
-    backgroundColor: "#F7BC24",
-  },
-  presentationFileTypeIcon: {
-    backgroundColor: "#FD931D",
-  },
-  otherFileTypeIcon: {
-    backgroundColor: "#808080",
-  },
 }));
 
 const path = require("path");
-
-function WorkFile(props) {
-  const classes = useStyles();
-  const {
-    file_id,
-    file_name,
-    file_type,
-    onDownloadFile,
-    onPreviewFile,
-    isLate,
-  } = props;
-
-  let name_to_show;
-  if (isLate) {
-    name_to_show = (
-      <Typography color="error"> {`${file_name} (Telat)`}</Typography>
-    );
-  } else {
-    name_to_show = <Typography color="textPrimary">{file_name}</Typography>;
-  }
-
-  return (
-    <Paper variant="outlined">
-      <ListItem
-        button
-        disableRipple
-        className={classes.listItem}
-        onClick={() => {
-          onPreviewFile(file_id);
-        }}
-      >
-        <ListItemAvatar>
-          {file_type === "Word" ? (
-            <Avatar className={classes.wordFileTypeIcon}>
-              <FaFileWord />
-            </Avatar>
-          ) : file_type === "Excel" ? (
-            <Avatar className={classes.excelFileTypeIcon}>
-              <FaFileExcel />
-            </Avatar>
-          ) : file_type === "Gambar" ? (
-            <Avatar className={classes.imageFileTypeIcon}>
-              <FaFileImage />
-            </Avatar>
-          ) : file_type === "PDF" ? (
-            <Avatar className={classes.pdfFileTypeIcon}>
-              <FaFilePdf />
-            </Avatar>
-          ) : file_type === "Teks" ? (
-            <Avatar className={classes.textFileTypeIcon}>
-              <FaFileAlt />
-            </Avatar>
-          ) : file_type === "Presentasi" ? (
-            <Avatar className={classes.presentationFileTypeIcon}>
-              <FaFilePowerpoint />
-            </Avatar>
-          ) : file_type === "File Lainnya" ? (
-            <Avatar className={classes.otherFileTypeIcon}>
-              <FaFile />
-            </Avatar>
-          ) : null}
-        </ListItemAvatar>
-        <ListItemText
-          primary={name_to_show}
-          secondary={
-            <Typography variant="body2" color="textSecondary">
-              {file_type}
-            </Typography>
-          }
-        />
-      </ListItem>
-    </Paper>
-  );
-}
 
 function SubmittedTaskList(props) {
   const classes = useStyles();
@@ -464,25 +357,19 @@ function SubmittedTaskList(props) {
 
           if (students_files.length > 0) {
             isClassSubmissionEmpty = false;
-            let isLate = false;
-            task_list_on_panel = students_files.map((file) => {
-              if (file.createdAt > tasksCollection.deadline) {
-                isLate = true;
-              }
-              return (
-                <WorkFile
-                  isLate={isLate}
-                  file_id={file._id}
-                  file_name={file.filename}
-                  file_type={fileType(file.filename)}
-                  onPreviewFile={viewFileSubmitTasks}
-                  // onDownloadFile={onDownloadFile}
-                />
-              );
-            });
+            task_list_on_panel = (
+              <FileSubmission
+                data={students_files}
+                onPreviewFile={viewFileSubmitTasks}
+              />
+            );
           } else {
             task_list_on_panel = [
-              <Typography align="center" color="textSecondary">
+              <Typography
+                align="center"
+                color="textSecondary"
+                style={{ padding: "20px 0px" }}
+              >
                 Kosong
               </Typography>,
             ];
@@ -517,9 +404,7 @@ function SubmittedTaskList(props) {
               <Divider />
               <ExpansionPanelDetails className={classes.studentResultDetails}>
                 <Grid container direction="column" spacing={2}>
-                  <Grid item>
-                    <List>{task_list_on_panel}</List>
-                  </Grid>
+                  {task_list_on_panel}
                   {students_files.length > 0 ? (
                     <Grid
                       item
@@ -559,7 +444,6 @@ function SubmittedTaskList(props) {
                           onClick={() =>
                             onGradeTugas(
                               task_id,
-                              // student_task_files_id,
                               student._id,
                               student.name,
                               grade

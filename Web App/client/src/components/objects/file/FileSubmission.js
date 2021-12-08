@@ -22,13 +22,8 @@ import {
 } from "react-icons/fa";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  Add as AddIcon,
-  Cancel as CancelIcon,
-  CheckCircle as CheckCircleIcon,
-  Create as CreateIcon,
   Delete as DeleteIcon,
   Publish as PublishIcon,
-  Send as SendIcon,
 } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
@@ -61,6 +56,15 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.dark,
     },
   },
+  deleteIconButton: {
+    marginLeft: "7.5px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
+  },
   wordFileTypeIcon: {
     backgroundColor: "#16B0DD",
   },
@@ -82,15 +86,6 @@ const useStyles = makeStyles((theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
-  deleteIconButton: {
-    marginLeft: "7.5px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
 }));
 
 const path = require("path");
@@ -105,6 +100,8 @@ function FileSubmission(props) {
   } = props;
 
   const isPreviewable = Boolean(onPreviewFile);
+  const isDeletable =
+    Boolean(handleOpenDeleteDialog) || Boolean(handleOpenDeleteDialog);
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
@@ -187,16 +184,18 @@ function FileSubmission(props) {
                 }
                 secondary={fileCategory}
               />
-              <IconButton
-                size="small"
-                className={classes.deleteTaskButton}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleOpenDeleteDialog(row._id, row.name);
-                }}
-              >
-                <DeleteIcon fontSize="small" />
-              </IconButton>
+              {isDeletable ? (
+                <IconButton
+                  size="small"
+                  className={classes.deleteTaskButton}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenDeleteDialog(row._id, row.name);
+                  }}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              ) : null}
             </ListItem>
           </Paper>
         </Grid>
@@ -217,15 +216,17 @@ function FileSubmission(props) {
               }
               secondary={fileCategory}
             />
-            <IconButton
-              size="small"
-              className={classes.deleteTaskButton}
-              onClick={(e) => {
-                handleLampiranDelete(e, idx);
-              }}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
+            {isDeletable ? (
+              <IconButton
+                size="small"
+                className={classes.deleteTaskButton}
+                onClick={(e) => {
+                  handleLampiranDelete(e, idx);
+                }}
+              >
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            ) : null}
           </ListItem>
         </Paper>
       </Grid>

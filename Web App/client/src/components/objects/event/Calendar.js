@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Calendar as ReactCalendar } from "react-calendar";
 import Draggable from "react-draggable";
 import { connect } from "react-redux";
-import Path from "path";
 import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import moment from "moment";
@@ -44,7 +43,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Divider,
   Fab,
   Fade,
   FormControl,
@@ -55,9 +53,7 @@ import {
   Hidden,
   IconButton,
   Input,
-  ListItem,
   ListItemText,
-  ListItemAvatar,
   MenuItem,
   Paper,
   Select,
@@ -91,7 +87,6 @@ import {
   Edit as EditIcon,
   EventNote as EventNoteIcon,
   LocationOn as LocationOnIcon,
-  Search as SearchIcon,
   Subject as SubjectIcon,
   SupervisorAccount as SupervisorAccountIcon,
   Timer as TimerIcon,
@@ -100,18 +95,8 @@ import {
 } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
-import {
-  FaClipboardList,
-  FaFile,
-  FaFileAlt,
-  FaFileExcel,
-  FaFileImage,
-  FaFilePdf,
-  FaFilePowerpoint,
-  FaFileWord,
-} from "react-icons/fa";
+import { FaClipboardList } from "react-icons/fa";
 import FileAttachment from "../file/FileAttachment";
-import { isNull } from "util";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -921,27 +906,6 @@ function EventDialog(props) {
         color: "white",
       },
     },
-    wordFileTypeIcon: {
-      backgroundColor: "#16B0DD",
-    },
-    excelFileTypeIcon: {
-      backgroundColor: "#68C74F",
-    },
-    imageFileTypeIcon: {
-      backgroundColor: "#974994",
-    },
-    pdfFileTypeIcon: {
-      backgroundColor: "#E43B37",
-    },
-    textFileTypeIcon: {
-      backgroundColor: "#F7BC24",
-    },
-    presentationFileTypeIcon: {
-      backgroundColor: "#FD931D",
-    },
-    otherFileTypeIcon: {
-      backgroundColor: "#808080",
-    },
     deleteIconButton: {
       marginLeft: "7.5px",
       backgroundColor: theme.palette.error.dark,
@@ -1517,36 +1481,6 @@ function EventDialog(props) {
   const handleChangeDescription = (e) => {
     setErrors({ ...errors, description: undefined });
     setDescription(e.target.value);
-  };
-
-  const fileType = (filename) => {
-    let ext_file = Path.extname(filename);
-    switch (ext_file) {
-      case ".docx":
-        return "Word";
-      case ".xlsx":
-      case ".csv":
-        return "Excel";
-
-      case ".png":
-      case ".jpg":
-      case ".jpeg":
-        return "Gambar";
-
-      case ".pdf":
-        return "PDF";
-
-      case ".txt":
-      case ".rtf":
-        return "Teks";
-
-      case ".ppt":
-      case ".pptx":
-        return "Presentasi";
-
-      default:
-        return "File Lainnya";
-    }
   };
 
   // LAMPIRAN

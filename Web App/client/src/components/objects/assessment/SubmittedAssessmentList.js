@@ -588,14 +588,10 @@ function SubmittedAssessmentList(props) {
 
               questionTypeScore.push(
                 <ListItem>
-                  <ListItemIcon>
-                    {questionType[type].icon}
-                  </ListItemIcon>
+                  <ListItemIcon>{questionType[type].icon}</ListItemIcon>
                   <ListItemText
                     primary={
-                      <Typography noWrap>
-                        {questionType[type].text}
-                      </Typography>
+                      <Typography noWrap>{questionType[type].text}</Typography>
                     }
                   />
                   <ListItemText
@@ -641,31 +637,13 @@ function SubmittedAssessmentList(props) {
                   <Grid item>
                     <Typography noWrap>{student.name}</Typography>
                     <Typography variant="body2" color="textSecondary" noWrap>
-                    {selectedAssessments.grades &&
+                      {selectedAssessments.grades &&
                       selectedAssessments.grades[student._id] &&
                       selectedAssessments.grades[student._id].total_grade ? (
-                        <>
-                          Telah Dinilai - {moment(
-                            selectedAssessments.submissions_timestamp[
-                              student._id
-                            ]
-                          )
-                            .locale("id")
-                            .format("DD MMM YYYY, HH:mm")}
-                        </>
+                        <Typography noWrap>Telah Dinilai</Typography>
                       ) : (
-                        <>
-                          Belum Dinilai - {scores ? moment(
-                            selectedAssessments.submissions_timestamp[
-                              student._id
-                            ]
-                          )
-                            .locale("id")
-                            .format("DD MMM YYYY, HH:mm")
-                          : null}
-                        </>
-                      )
-                    }
+                        <Typography noWrap>Belum Dinilai</Typography>
+                      )}
                     </Typography>
                   </Grid>
                   <Grid item xs container justify="flex-end">
@@ -685,7 +663,10 @@ function SubmittedAssessmentList(props) {
                                 Total Nilai
                               </Typography>
                               <Typography variant="h5" align="right">
-                                {selectedAssessments.grades[student._id].total_grade}
+                                {
+                                  selectedAssessments.grades[student._id]
+                                    .total_grade
+                                }
                               </Typography>
                             </div>
                           ) : null
@@ -702,12 +683,17 @@ function SubmittedAssessmentList(props) {
                               Total Nilai
                             </Typography>
                             <Typography variant="h5" align="right">
-                              {selectedAssessments.grades[student._id].total_grade}
+                              {
+                                selectedAssessments.grades[student._id]
+                                  .total_grade
+                              }
                             </Typography>
                           </div>
                         )}
                         <Grid item>
-                          <IconButton onClick={(e) => handleFlag(e, student._id)}>
+                          <IconButton
+                            onClick={(e) => handleFlag(e, student._id)}
+                          >
                             {suspects.includes(student._id) ? (
                               <BsFlagFill className={classes.redFlagIcon} />
                             ) : (
@@ -733,14 +719,36 @@ function SubmittedAssessmentList(props) {
                 </Grid>
               </ExpansionPanelSummary>
               <Divider />
-              <ExpansionPanelDetails style={{ display: "flex", flexDirection: "column", padding: "0px" }}>
-                <List style={{ padding: "20px 15px" }}>
-                  {questionTypeScore}
-                </List>
+              <ExpansionPanelDetails
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  padding: "0px",
+                }}
+              >
+                <div style={{ padding: "20px 15px" }}>
+                  {scores ? (
+                    <Typography style={{ padding: "0px 16px 12px 16px" }}>
+                      Waktu Kumpul:{" "}
+                      {moment(
+                        selectedAssessments.submissions_timestamp[student._id]
+                      )
+                        .locale("id")
+                        .format("DD MMM YYYY, HH:mm")}
+                    </Typography>
+                  ) : null}
+                  <List>{questionTypeScore}</List>
+                </div>
                 <Divider />
                 {selectedAssessments.submissions &&
                 selectedAssessments.submissions[student._id] ? (
-                  <div style={{ display: "flex", justifyContent: "flex-end", padding: "20px"}}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      padding: "20px",
+                    }}
+                  >
                     <GradeButton
                       assessmentId={selectedAssessments._id}
                       assessmentType={selectedAssessments.type}
@@ -775,7 +783,8 @@ function SubmittedAssessmentList(props) {
               {selectedAssessments.name}
             </Typography>
             <Typography color="primary" paragraph>
-              {selectedAssessments.type} {all_subjects_map.get(selectedAssessments.subject)}
+              {selectedAssessments.type}{" "}
+              {all_subjects_map.get(selectedAssessments.subject)}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Oleh: {user.name}
@@ -901,7 +910,6 @@ function SubmittedAssessmentList(props) {
                   </MenuItem>
                 ))}
               </Menu>
-
             </Grid>
           </Grid>
         </Grid>
@@ -913,12 +921,14 @@ function SubmittedAssessmentList(props) {
             <Divider />
             <div style={{ padding: "16px 0px 25px 0px" }}>
               <Typography gutterBottom>
-                Mulai - {moment(selectedAssessments.start_date)
+                Mulai -{" "}
+                {moment(selectedAssessments.start_date)
                   .locale("id")
                   .format("DD MMM YYYY, HH:mm")}
               </Typography>
               <Typography gutterBottom>
-                Selesai - {moment(selectedAssessments.end_date)
+                Selesai -{" "}
+                {moment(selectedAssessments.end_date)
                   .locale("id")
                   .format("DD MMM YYYY, HH:mm")}
               </Typography>
@@ -926,9 +936,7 @@ function SubmittedAssessmentList(props) {
             {listClassTab()}
           </Paper>
         </Grid>
-        <Grid item>
-          {suspects ? listClassTabPanel() : null}
-        </Grid>
+        <Grid item>{suspects ? listClassTabPanel() : null}</Grid>
       </Grid>
     </div>
   );

@@ -28,6 +28,15 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
     },
   },
+  deleteIconButton: {
+    marginLeft: "7.5px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
+  },
   wordFileTypeIcon: {
     backgroundColor: "#16B0DD",
   },
@@ -48,15 +57,6 @@ const useStyles = makeStyles((theme) => ({
   },
   otherFileTypeIcon: {
     backgroundColor: "#808080",
-  },
-  deleteIconButton: {
-    marginLeft: "7.5px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
   },
 }));
 

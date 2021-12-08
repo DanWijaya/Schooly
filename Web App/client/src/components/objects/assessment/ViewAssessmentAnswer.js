@@ -6,7 +6,11 @@ import moment from "moment";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getStudents } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getOneAssessment, updateAssessmentGrades, getQuestionAnalytics } from "../../../actions/AssessmentActions";
+import {
+  getOneAssessment,
+  updateAssessmentGrades,
+  getQuestionAnalytics,
+} from "../../../actions/AssessmentActions";
 import Latex from "../../misc/latex/Latex";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -650,17 +654,16 @@ function AnswerPerStudent(props) {
   );
 }
 
-
 function ViewAssessmentTeacher(props) {
   const classes = useStyles();
   const location = useLocation();
   const { getOneAssessment, getAllClass, getAllSubjects, getStudents } = props;
-  const { type } = selectedAssessments;
 
   const { all_students, user } = props.auth;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
+  const { type } = selectedAssessments;
   const assessment_id = props.match.params.id;
 
   const [all_student_object, setAllStudentObj] = React.useState(null);
@@ -739,10 +742,11 @@ function ViewAssessmentTeacher(props) {
   // Tabs
   const [value, setValue] = React.useState(0);
 
-  React.useEffect(async () => {
-    const result = await getQuestionAnalytics(assessment_id);
-  }, []);
+  // React.useEffect(async () => {
+  //   const result = await getQuestionAnalytics(assessment_id);
+  // }, []);
   React.useEffect(() => {
+    console.log(assessment_id);
     getOneAssessment(assessment_id);
     getAllClass(user.unit, "map");
     getAllSubjects(user.unit, "map");
@@ -882,7 +886,7 @@ function ViewAssessmentTeacher(props) {
       id: "name",
       numeric: false,
       disablePadding: true,
-      label: "Nama Murid"
+      label: "Nama Murid",
     },
     {
       id: "classname",
