@@ -1,6 +1,13 @@
 import React from "react";
+import Draggable from "react-draggable";
+import DateFnsUtils from "@date-io/date-fns";
+import moment from "moment";
+import lokal from "date-fns/locale/id";
+import { createEvent, updateEvent, deleteEvent } from "../../../actions/EventActions";
+import { getFileEvents } from "../../../actions/files/FileEventActions";
+import FileAttachment from "../file/FileAttachment";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import {
-  Avatar,
   Button,
   Checkbox,
   Chip,
@@ -9,8 +16,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Divider,
-  Fab,
   Fade,
   FormControl,
   FormControlLabel,
@@ -20,18 +25,10 @@ import {
   Hidden,
   IconButton,
   Input,
-  ListItem,
   ListItemText,
-  ListItemAvatar,
   MenuItem,
   Paper,
   Select,
-  Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
   TextField,
   Tooltip,
   Typography,
@@ -42,6 +39,22 @@ import {
   KeyboardDateTimePicker,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+import {
+  AttachFile as AttachFileIcon,
+  Cancel as CancelIcon,
+  CheckCircle as CheckCircleIcon,
+  Close as CloseIcon,
+  Delete as DeleteIcon,
+  DragHandle as DragHandleIcon,
+  Edit as EditIcon,
+  EventNote as EventNoteIcon,
+  LocationOn as LocationOnIcon,
+  Subject as SubjectIcon,
+  SupervisorAccount as SupervisorAccountIcon,
+  Timer as TimerIcon,
+  TimerOff as TimerOffIcon,
+} from "@material-ui/icons";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   formIcons: {
@@ -104,27 +117,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
-  },
-  wordFileTypeIcon: {
-    backgroundColor: "#16B0DD",
-  },
-  excelFileTypeIcon: {
-    backgroundColor: "#68C74F",
-  },
-  imageFileTypeIcon: {
-    backgroundColor: "#974994",
-  },
-  pdfFileTypeIcon: {
-    backgroundColor: "#E43B37",
-  },
-  textFileTypeIcon: {
-    backgroundColor: "#F7BC24",
-  },
-  presentationFileTypeIcon: {
-    backgroundColor: "#FD931D",
-  },
-  otherFileTypeIcon: {
-    backgroundColor: "#808080",
   },
   deleteIconButton: {
     marginLeft: "7.5px",
@@ -211,6 +203,207 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function CustomUploadDialog(props) {
+  const useStyles = makeStyles((theme) => ({
+    paper: {
+      width: "300px",
+      maxWidth: "100%",
+      minHeight: "175px",
+      padding: "15px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    backdrop: {
+      backgroundColor: "rgba(0,0,0,0.5)",
+      position: "absolute",
+      zIndex: "1",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      overflow: "hidden",
+      width: "100%",
+      height: "100%",
+    },
+    uploadSuccessIcon: {
+      color: "green",
+      height: "45px",
+      width: "45px",
+    },
+    uploadFinishButton: {
+      width: "100%",
+      marginTop: "10px",
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+      "&:focus, &:hover": {
+        backgroundColor: theme.palette.success.dark,
+        color: "white",
+      },
+    },
+  }));
+  const classes = useStyles();
+  const {
+    // handleWheel,
+    openUploadDialog,
+    messageUploading,
+    messageSuccess,
+    uploadSuccess,
+    handleUploadSuccess,
+  } = props;
+
+  return (
+    <Fade
+      in={
+        openUploadDialog
+      } /* ini sebenarnya ga terpakai karena upload dialog dibuat tutup bersamaan dengan parent dialognya */
+    >
+      <div className={classes.backdrop}>
+        <Paper className={`${classes.paper} MuiPaper-elevation24`}>
+          <Grid item>
+            <Typography variant="h6" align="center" gutterBottom>
+              {!uploadSuccess ? messageUploading : messageSuccess}
+            </Typography>
+          </Grid>
+          <Grid item>
+            {!uploadSuccess ? (
+              <CircularProgress />
+            ) : (
+              <CheckCircleIcon className={classes.uploadSuccessIcon} />
+            )}
+          </Grid>
+          <Grid item>
+            {!uploadSuccess ? (
+              <Typography variant="body2" align="center" gutterBottom>
+                <b>Mohon tunggu sebentar</b>
+              </Typography>
+            ) : (
+              <Button
+                variant="contained"
+                className={classes.uploadFinishButton}
+                onClick={() => {
+                  handleUploadSuccess();
+                }}
+              >
+                Selesai
+              </Button>
+            )}
+          </Grid>
+        </Paper>
+      </div>
+    </Fade>
+  );
+}
+
+function CustomDeleteDialog(props) {
+  const useStyles = makeStyles((theme) => ({
+    paper: {
+      width: "300px",
+      maxWidth: "100%",
+      minHeight: "175px",
+      padding: "15px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    backdrop: {
+      backgroundColor: "rgba(0,0,0,0.5)",
+      position: "absolute",
+      zIndex: "1",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      overflow: "hidden",
+      width: "100%",
+      height: "100%",
+    },
+    dialogDeleteButton: {
+      width: "125px",
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+      border: `1px solid ${theme.palette.error.main}`,
+      "&:focus, &:hover": {
+        backgroundColor: theme.palette.error.dark,
+        color: "white",
+        border: `1px solid ${theme.palette.error.dark}`,
+      },
+    },
+    dialogCancelButton: {
+      width: "125px",
+      backgroundColor: "white",
+      color: theme.palette.error.main,
+      border: `1px solid ${theme.palette.error.main}`,
+      "&:focus, &:hover": {
+        backgroundColor: "white",
+        color: theme.palette.error.dark,
+        border: `1px solid ${theme.palette.error.dark}`,
+      },
+    },
+  }));
+  const classes = useStyles();
+  const {
+    openDeleteDialog,
+    handleCloseDeleteDialog,
+    handleDelete,
+    eventName,
+  } = props;
+
+  return (
+    <Fade in={openDeleteDialog}>
+      <div className={classes.backdrop}>
+        <Paper className={`${classes.paper} MuiPaper-elevation24`}>
+          <Grid item>
+            <Typography variant="h6" align="center" gutterBottom>
+              Hapus Kegiatan berikut?
+            </Typography>
+          </Grid>
+          <Grid item container direction="column" alignItems="center">
+            <Typography align="center" gutterBottom>
+              <b>{eventName}</b>
+            </Typography>
+          </Grid>
+          <Grid container spacing={2} justify="center" alignItems="center">
+            <Grid item>
+              <Button
+                onClick={() => {
+                  handleDelete();
+                }}
+                startIcon={<DeleteIcon />}
+                className={classes.dialogDeleteButton}
+              >
+                Iya
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                onClick={() => {
+                  handleCloseDeleteDialog();
+                }}
+                startIcon={<CancelIcon />}
+                className={classes.dialogCancelButton}
+              >
+                Tidak
+              </Button>
+            </Grid>
+          </Grid>
+        </Paper>
+      </div>
+    </Fade>
+  );
+}
+
+function PaperComponent(props) {
+  return (
+    <Draggable
+      handle="#drag-handle"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
+      <Paper {...props} />
+    </Draggable>
+  );
+}
+
 function Event(props) {
   const classes = useStyles();
   const theme = useTheme();
@@ -229,6 +422,8 @@ function Event(props) {
     viewFileEvent,
     user,
     uploadLimit,
+    getDayStart,
+    getDayEnd,
   } = props;
 
   const roleConverter = {
@@ -236,6 +431,7 @@ function Event(props) {
     Teacher: "Guru",
     Student: "Murid",
   };
+
   const [errors, setErrors] = React.useState({});
 
   // Event Form
@@ -310,7 +506,6 @@ function Event(props) {
 
         // In datetime picker, user can't set seconds.
         // So that the time 23:59:59 can only be set with ticking all day checkbox.
-
         if (
           end_date.getHours() === 23 &&
           end_date.getMinutes() === 59 &&
@@ -693,36 +888,6 @@ function Event(props) {
     setDescription(e.target.value);
   };
 
-  const fileType = (filename) => {
-    let ext_file = Path.extname(filename);
-    switch (ext_file) {
-      case ".docx":
-        return "Word";
-      case ".xlsx":
-      case ".csv":
-        return "Excel";
-
-      case ".png":
-      case ".jpg":
-      case ".jpeg":
-        return "Gambar";
-
-      case ".pdf":
-        return "PDF";
-
-      case ".txt":
-      case ".rtf":
-        return "Teks";
-
-      case ".ppt":
-      case ".pptx":
-        return "Presentasi";
-
-      default:
-        return "File Lainnya";
-    }
-  };
-
   // Attachment
   const handleLampiranUpload = (e) => {
     if (eventDialogMode === "create") {
@@ -860,9 +1025,11 @@ function Event(props) {
 
   return (
     <Dialog
+      maxWidth="sm"
       fullWidth
       fullScreen={fullScreen}
-      maxWidth="sm"
+      PaperComponent={fullScreen ? undefined : PaperComponent}
+      BackdropProps={{ style: { backgroundColor: "transparent" } }}
       open={openEventDialog}
       onClose={() => handleClosingCheck()}
       onExited={() => {
@@ -871,59 +1038,43 @@ function Event(props) {
           setChangeDialog(false);
           handleOpenEditDialog();
         } else {
-          // So that the states in this component is reset when the dialog is closed.
+          // Reset the states in this component when the dialog is closed.
           handleSetUnmountEventDialog();
         }
       }}
-      PaperComponent={fullScreen ? undefined : PaperComponent}
-      BackdropProps={{ style: { backgroundColor: "transparent" } }}
     >
       {eventDialogMode === "view" ? (
         <>
           <div className={classes.view_dialogTopDiv}>
             {user._id === author_id ? (
               <>
-                <LightTooltip title="Sunting">
+                <Tooltip title="Sunting">
                   <IconButton
                     className={classes.dialogTopIconButtons}
-                    onClick={() => {
-                      handleClickEdit();
-                    }}
+                    onClick={() => handleClickEdit()}
                   >
                     <EditIcon className={classes.dialogTopIcons} />
                   </IconButton>
-                </LightTooltip>
-                <LightTooltip title="Hapus" style={{ marginRight: "24px" }}>
+                </Tooltip>
+                <Tooltip title="Hapus" style={{ marginRight: "24px" }}>
                   <IconButton
                     className={classes.dialogTopIconButtons}
-                    onClick={() => {
-                      handleOpenDeleteDialog();
-                    }}
+                    onClick={() => handleOpenDeleteDialog()}
                   >
                     <DeleteIcon className={classes.dialogTopIcons} />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
               </>
             ) : null}
             <IconButton
               edge="end"
               className={classes.dialogTopIconButtons}
-              onClick={() => {
-                handleCloseEventDialog();
-              }}
+              onClick={() => handleCloseEventDialog()}
             >
               <CloseIcon className={classes.dialogTopIcons} />
             </IconButton>
           </div>
           <div className={classes.viewDialogBottomDiv}>
-            <CustomDeleteDialog
-              openDeleteDialog={openDeleteDialog}
-              handleCloseDeleteDialog={handleCloseDeleteDialog}
-              eventName={name}
-              handleDelete={() => {
-                handleDelete(selectedEventInfo._id);
-              }}
-            />
             <div className={classes.viewDialogScrollableDiv}>
               <Grid
                 container
@@ -1007,6 +1158,14 @@ function Event(props) {
                 ) : null}
               </Grid>
             </div>
+            <CustomDeleteDialog
+              openDeleteDialog={openDeleteDialog}
+              handleCloseDeleteDialog={handleCloseDeleteDialog}
+              eventName={name}
+              handleDelete={() => {
+                handleDelete(selectedEventInfo._id);
+              }}
+            />
           </div>
         </>
       ) : (
