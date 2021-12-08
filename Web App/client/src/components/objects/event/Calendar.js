@@ -1,23 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Calendar as ReactCalendar } from "react-calendar";
-import Draggable from "react-draggable";
 import { connect } from "react-redux";
-import DateFnsUtils from "@date-io/date-fns";
-import lokal from "date-fns/locale/id";
 import moment from "moment";
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
-import {
-  createEvent,
-  updateEvent,
-  getAllEvents,
-  getOneEvent,
-  deleteEvent,
-} from "../../../actions/EventActions";
+import { getAllEvents, getOneEvent } from "../../../actions/EventActions";
 import {
   downloadFileEvent,
   viewFileEvent,
-  getFileEvents,
 } from "../../../actions/files/FileEventActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getStudents, getTeachers } from "../../../actions/UserActions";
@@ -31,31 +21,18 @@ import {
 } from "../../../actions/AssessmentActions";
 import { getSetting } from "../../../actions/SettingActions";
 import "./Calendar.css";
-import CustomLinkify from "../../misc/linkify/Linkify";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import Event from "./Event";
 import {
   Avatar,
-  Button,
   Checkbox,
-  Chip,
-  CircularProgress,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Fab,
-  Fade,
-  FormControl,
   FormControlLabel,
   FormGroup,
-  FormHelperText,
   Grid,
   Hidden,
   IconButton,
-  Input,
-  ListItemText,
   MenuItem,
-  Paper,
   Select,
   Snackbar,
   Table,
@@ -63,40 +40,21 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  TextField,
   Tooltip,
   Typography,
   useMediaQuery,
 } from "@material-ui/core";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDateTimePicker,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
 import Alert from "@material-ui/lab/Alert";
 import {
   Add as AddIcon,
-  AttachFile as AttachFileIcon,
-  Cancel as CancelIcon,
-  CheckCircle as CheckCircleIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
-  Close as CloseIcon,
-  Delete as DeleteIcon,
-  DragHandle as DragHandleIcon,
-  Edit as EditIcon,
   EventNote as EventNoteIcon,
-  LocationOn as LocationOnIcon,
-  Subject as SubjectIcon,
-  SupervisorAccount as SupervisorAccountIcon,
-  Timer as TimerIcon,
-  TimerOff as TimerOffIcon,
   Today as TodayIcon,
 } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
 import { FaClipboardList } from "react-icons/fa";
-import FileAttachment from "../file/FileAttachment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -129,23 +87,20 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
+  dateCircleHighlight: {
+    width: "3rem",
+    height: "3rem",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+  },
   calendarModeSelect: {
     width: "40px",
   },
+  shadow: {
+    boxShadow:
+      "0 14px 18px -28px rgba(0,0,0,0.8), 0 10px 10px -10px rgba(0,0,0,0.15)",
+  },
 
-  agendaContainer: {
-    width: "80%",
-    marginRight: "15px",
-    overflow: "none",
-    [theme.breakpoints.down("xs")]: {
-      width: "100%",
-      marginRight: 0,
-    },
-  },
-  calendarContainer: {
-    marginLeft: "15px",
-    width: "200px",
-  },
   calendar: {
     border: "none",
   },
@@ -314,10 +269,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     flexWrap: "nowrap",
   },
-  shadow: {
-    boxShadow:
-      "0 14px 18px -28px rgba(0,0,0,0.8), 0 10px 10px -10px rgba(0,0,0,0.15)",
-  },
   staticBlueChip: {
     backgroundColor: theme.palette.primary.main,
     borderRadius: "3px",
@@ -360,248 +311,30 @@ const useStyles = makeStyles((theme) => ({
     tableLayout: "fixed",
     overflow: "hidden",
   },
-  mobileDayModeDateCircle: {
-    width: "3rem",
-    height: "3rem",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-  },
 }));
 
-function CalendarToolbar(props) {
-  const {
-    classes,
-    mode,
-    handleChangeMode,
-    handleOpenCreateDialog,
-    currentDate,
-    setCurrentDate,
-    role,
-    setSelectedDateReactCalendar,
-    activeStartDate,
-    setActiveStartDate,
-    showShadow,
-  } = props;
+function getMillisecondDiff(past, future) {
+  return future.getTime() - past.getTime();
+}
 
-  let monthNames = [
-    "Januari",
-    "Februari",
-    "Maret",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
-  ];
+function getDayStart(date) {
+  let temp = new Date(date.getTime());
+  temp.setHours(0, 0, 0, 0);
+  return temp;
+}
 
-  let stringDateDay =
-    currentDate.getDate() +
-    " " +
-    monthNames[currentDate.getMonth()] +
-    " " +
-    currentDate.getFullYear();
-  let stringDateMonth =
-    monthNames[currentDate.getMonth()] + " " + currentDate.getFullYear();
-  let stringDateMobile =
-    monthNames[currentDate.getMonth()].slice(0, 3) +
-    " " +
-    currentDate.getFullYear();
+function getDayEnd(date) {
+  let temp = new Date(date.getTime());
+  temp.setHours(23, 59, 59, 999);
+  return temp;
+}
 
-  const handleChangeMonth = (direction) => {
-    if (direction === "now") {
-      setCurrentDate(new Date());
-    } else if (direction === "next") {
-      let nextMonthDate;
-      if (currentDate.getMonth() === 11) {
-        nextMonthDate = new Date(
-          currentDate.getFullYear() + 1,
-          0,
-          currentDate.getDate()
-        );
-      } else {
-        nextMonthDate = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth() + 1,
-          currentDate.getDate()
-        );
-      }
-      setCurrentDate(nextMonthDate);
-    } else {
-      let prevMonthDate;
-      if (currentDate.getMonth() === 0) {
-        prevMonthDate = new Date(
-          currentDate.getFullYear() - 1,
-          11,
-          currentDate.getDate()
-        );
-      } else {
-        prevMonthDate = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth() - 1,
-          currentDate.getDate()
-        );
-      }
-      setCurrentDate(prevMonthDate);
-    }
-  };
+function addTime(date, millisecond) {
+  return new Date(date.getTime() + millisecond);
+}
 
-  const handleChangeDay = (direction) => {
-    let time;
-    if (direction === "now") {
-      time = new Date();
-    } else if (direction === "next") {
-      time = new Date(currentDate.getTime() + 1000 * 60 * 60 * 24);
-    } else {
-      time = new Date(currentDate.getTime() - 1000 * 60 * 60 * 24);
-    }
-    setCurrentDate(time);
-    setSelectedDateReactCalendar(time);
-    if (
-      time.getMonth() !== activeStartDate.getMonth() ||
-      time.getFullYear() !== activeStartDate.getFullYear()
-    ) {
-      setActiveStartDate(
-        new Date(time.getFullYear(), time.getMonth(), 1, 0, 0, 0, 0)
-      );
-    }
-  };
-
-  return (
-    <div className={classes.toolbar}>
-      <Grid container justify="space-between" alignItems="center">
-        <Grid item>
-          <Grid container alignItems="center" spacing={1}>
-            {mode === "Day" ? (
-              <>
-                <Grid item>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleChangeDay("prev")}
-                  >
-                    <ChevronLeftIcon />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleChangeDay("next")}
-                  >
-                    <ChevronRightIcon />
-                  </IconButton>
-                </Grid>
-                <Grid item>
-                  <Hidden xsDown>
-                    <Typography>{stringDateDay}</Typography>
-                  </Hidden>
-                  <Hidden smUp>
-                    <Typography variant="h5">{stringDateMobile}</Typography>
-                  </Hidden>
-                </Grid>
-              </>
-            ) : (
-              <>
-                <Grid item>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleChangeMonth("prev")}
-                  >
-                    <ChevronLeftIcon />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleChangeMonth("next")}
-                  >
-                    <ChevronRightIcon />
-                  </IconButton>
-                </Grid>
-                <Grid item>
-                  <Hidden xsDown>
-                    <Typography>{stringDateMonth}</Typography>
-                  </Hidden>
-                  <Hidden smUp>
-                    <Typography variant="h5">{stringDateMobile}</Typography>
-                  </Hidden>
-                </Grid>
-              </>
-            )}
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Grid container alignItems="center" spacing={2}>
-            <Grid item>
-              {role === "Admin" ? (
-                <Tooltip title="Buat Kegiatan">
-                  <Fab
-                    size="small"
-                    className={classes.createEventButton}
-                    onClick={() => handleOpenCreateDialog()}
-                  >
-                    <AddIcon fontSize="small" />
-                  </Fab>
-                </Tooltip>
-              ) : null}
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-      <div className={showShadow ? undefined : classes.shadow}>
-        <Grid container justify="space-between" alignItems="center">
-          <Grid item>
-            <Grid container direction="column" alignItems="center">
-              <Grid item>
-                <Typography variant="body2" color="primary">
-                  {moment(currentDate)
-                    .locale("id")
-                    .format("dddd")
-                    .slice(0, 3)
-                    .toUpperCase()}
-                </Typography>
-              </Grid>
-              <Grid>
-                <Avatar className={classes.mobileDayModeDateCircle}>
-                  <Typography variant="h5">
-                    {moment(currentDate).locale("id").format("DD")}
-                  </Typography>
-                </Avatar>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Grid container alignItems="center" spacing={2}>
-              <Grid item>
-                <Tooltip title="Hari ini">
-                  {mode === "Day" ? (
-                    <IconButton onClick={() => handleChangeDay("now")}>
-                      <TodayIcon />
-                    </IconButton>
-                  ) : (
-                    <IconButton onClick={() => handleChangeMonth("now")}>
-                      <TodayIcon />
-                    </IconButton>
-                  )}
-                </Tooltip>
-              </Grid>
-              <Grid item>
-                <FormControl variant="outlined">
-                  <Select
-                    defaultValue="Day"
-                    value={mode}
-                    onChange={handleChangeMode}
-                    classes={{ root: classes.calendarModeSelect }}
-                  >
-                    <MenuItem value="Day">Hari</MenuItem>
-                    <MenuItem value="Month">Bulan</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </div>
-    </div>
-  );
+function substractTime(date, millisecond) {
+  return new Date(date.getTime() - millisecond);
 }
 
 function ListAssessments(props) {
@@ -624,7 +357,6 @@ function ListAssessments(props) {
   let localCounter = mainCounter;
 
   function AssessmentListItem(props) {
-    // Dialog Kuis dan Ujian
     const [openDialog, setOpenDialog] = React.useState(false);
     const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
 
@@ -843,1606 +575,169 @@ function ListAssessments(props) {
   }
 }
 
-function EventDialog(props) {
-  const useStyles = makeStyles((theme) => ({
-    formIcons: {
-      width: "1rem",
-      height: "1rem",
-      marginRight: "7.5px",
-      color: theme.palette.text.secondary,
-    },
-    formLabels: {
-      display: "flex",
-      alignItems: "center",
-    },
-    zeroHeightHelperText: {
-      height: "0",
-      display: "flex", // untuk men-disable "collapsing margin"
-    },
-    chips: {
-      display: "flex",
-      flexWrap: "wrap",
-    },
-    chip: {
-      marginRight: 2,
-    },
-    viewDialogChip: {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-    dummyInput: {
-      height: "fit-content!important",
-    },
-    create_edit_dialogTopDiv: {
-      backgroundColor: theme.palette.action.selected,
-      display: "flex",
-      justifyContent: "space-between",
-      padding: "0 24px",
-      [theme.breakpoints.up("md")]: {
-        "&:hover": {
-          cursor: "move",
-        },
-      },
-      [theme.breakpoints.down("sm")]: {
-        justifyContent: "flex-end",
-        backgroundColor: "transparent",
-      },
-    },
-    view_dialogTopDiv: {
-      display: "flex",
-      justifyContent: "flex-end",
-      padding: "0 24px",
-    },
-    dialogTopIcons: {
-      width: "20px",
-      height: "20px",
-      color: theme.palette.text.secondary,
-    },
-    addFileButton: {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-      "&:focus, &:hover": {
-        backgroundColor: theme.palette.primary.main,
-        color: "white",
-      },
-    },
-    deleteIconButton: {
-      marginLeft: "7.5px",
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-      "&:focus, &:hover": {
-        backgroundColor: "white",
-        color: theme.palette.error.dark,
-      },
-    },
-    mdUpZeroTopPadding: {
-      [theme.breakpoints.up("md")]: {
-        paddingTop: "0!important",
-      },
-    },
-    mdUpZeroBottomPadding: {
-      [theme.breakpoints.up("md")]: {
-        paddingBottom: "0!important",
-      },
-    },
-    smDownZeroTopPadding: {
-      [theme.breakpoints.down("sm")]: {
-        paddingTop: "0!important",
-      },
-    },
-    smDownZeroBottomPadding: {
-      [theme.breakpoints.down("sm")]: {
-        paddingBottom: "0!important",
-      },
-    },
-    dialogTopIconButtons: {
-      padding: "8px",
-      "&focus, &:hover": {
-        backgroundColor: theme.palette.action.hover,
-      },
-    },
-    dialogContent: {
-      display: "flex",
-      padding: "0",
-      flexDirection: "column",
-      position: "relative",
-    },
-    createEditDialogScrollableDiv: {
-      display: "flex",
-      flexGrow: "1",
-      overflowY: "auto",
-      overflowX: "hidden",
-      padding: "16px 24px",
-      flexDirection: "column",
-    },
-    viewDialogScrollableDiv: {
-      flexGrow: "1",
-      overflowY: "auto",
-      overflowX: "hidden",
-      padding: "16px 24px",
-    },
-    viewDialogBottomDiv: {
-      flex: "1 1 auto",
-      overflowY: "hidden",
-      position: "relative",
-      display: "flex",
-      flexDirection: "column",
-    },
-    createEventButton: {
-      backgroundColor: theme.palette.success.main,
-      color: "white",
-      "&:focus, &:hover": {
-        backgroundColor: theme.palette.success.main,
-        color: "white",
-      },
-    },
-    editEventButton: {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-      "&:focus, &:hover": {
-        backgroundColor: "white",
-        color: theme.palette.primary.main,
-      },
-    },
-    listItem: {
-      "&:focus, &:hover": {
-        backgroundColor: theme.palette.primary.fade,
-      },
-    },
-  }));
-  const classes = useStyles();
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const {
-    selectedEventInfo,
-    openEventDialog,
-    handleCloseEventDialog,
-    handleOpenEditDialog,
-    showSnackbar,
-    handleSetUnmountEventDialog,
-    eventDialogMode,
-    getAllEvents,
-    downloadFileEvent,
-    viewFileEvent,
-    user,
-    uploadLimit,
-  } = props;
-  const roleConverter = {
-    Admin: "Pengelola",
-    Teacher: "Guru",
-    Student: "Murid",
-  };
-  const [errors, setErrors] = React.useState({});
-
-  // FORM
-  const [name, setName] = React.useState("");
-  const [location, setLocation] = React.useState("");
-  const [start_date, setStartDate] = React.useState(null);
-  const [end_date, setEndDate] = React.useState(null);
-  const [target_role, setTargetRole] = React.useState([]);
-  const [description, setDescription] = React.useState("");
-  const [author_id, setAuthorId] = React.useState("");
-  const [isAllDay, setAllDay] = React.useState(false);
-
-  // LAMPIRAN
-  const [fileLampiran, setFileLampiran] = React.useState([]);
-  const [fileLampiranToAdd, setFileLampiranToAdd] = React.useState([]);
-  const [fileLampiranToDelete, setFileLampiranToDelete] = React.useState([]);
-  const [originalFileLampiran, setOriginalFileLampiran] = React.useState([]);
-  const lampiranUploader = React.useRef(null);
-
-  // DATETIME PICKER
-  const [openStartDatePicker, setOpenStartDatePicker] = React.useState(false);
-  const [openStartDateTimePicker, setOpenStartDateTimePicker] = React.useState(
-    false
-  );
-  const [openEndDatePicker, setOpenEndDatePicker] = React.useState(false);
-  const [openEndDateTimePicker, setOpenEndDateTimePicker] = React.useState(
-    false
-  );
-  const startDatePicker = React.useRef(null);
-  const endDatePicker = React.useRef(null);
-
-  // ref ini berfungsi untuk menyimpan waktu agar ketika pengguna mencentang kembali checkbox (mengubah jadi tidak sepanjang hari),
-  // waktu yang pernah dimasukkan sebelumnya bisa ditampilkan kembali
-  const lastSelectedTime = React.useRef(null);
-
-  // UPLOAD DIALOG
-  const [openUploadDialog, setOpenUploadDialog] = React.useState(false);
-  const [uploadSuccess, setUploadSuccess] = React.useState(false);
-
-  // DELETE DIALOG
-  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-
-  // OTHER
-  const [changeDialog, setChangeDialog] = React.useState(false);
-
-  React.useEffect(() => {
-    if (eventDialogMode === "view") {
-      if (Object.keys(selectedEventInfo).length !== 0) {
-        let {
-          _id,
-          name,
-          location,
-          start_date,
-          end_date,
-          to,
-          description,
-          author_id,
-        } = selectedEventInfo;
-        start_date = new Date(start_date);
-        end_date = new Date(end_date);
-        setName(name);
-        setLocation(location);
-        setStartDate(start_date);
-        setEndDate(end_date);
-        setTargetRole(to);
-        setDescription(description);
-        setAuthorId(author_id);
-        getFileEvents(_id).then((result) => {
-          setFileLampiran(result);
-          setOriginalFileLampiran(result);
-        });
-
-        // pada datetime picker, pengguna tidak bisa menset detik. jadi, pukul 23:59:59 hanya dapat
-        // diset dengan menyentang checkbox sepanjang hari
-        if (
-          end_date.getHours() === 23 &&
-          end_date.getMinutes() === 59 &&
-          end_date.getSeconds() === 59
-        ) {
-          setAllDay(true);
-        }
-      }
-    }
-  }, [selectedEventInfo]);
-
-  // FORM
-  const handleCreateEvent = () => {
-    let formData = new FormData();
-    if (fileLampiran) {
-      for (let i = 0; i < fileLampiran.length; i++) {
-        formData.append("lampiran_event", fileLampiran[i]);
-      }
-    }
-
-    let invert = {
-      Pengelola: "Admin",
-      Guru: "Teacher",
-      Murid: "Student",
-    };
-    let temp = target_role.map((elm) => roleConverter[elm]);
-    temp.sort();
-    let to = temp.map((elm) => invert[elm]);
-
-    let eventData = {
-      name,
-      location,
-      start_date,
-      end_date,
-      to,
-      description,
-      author_id: user._id,
-      unit: user.unit,
-    };
-    if (Object.values(errors).every((error) => !error)) {
-      setOpenUploadDialog(true);
-      createEvent(formData, eventData)
-        .then(() => {
-          setUploadSuccess(true);
-          getAllEvents(user.unit);
-        })
-        .catch((err) => {
-          setOpenUploadDialog(false);
-          setErrors(err);
-        });
-    }
-  };
-
-  const handleUpdateEvent = () => {
-    let formData = new FormData();
-    if (fileLampiranToAdd) {
-      for (let i = 0; i < fileLampiranToAdd.length; i++) {
-        formData.append("lampiran_event", fileLampiranToAdd[i]);
-      }
-    }
-
-    let invert = {
-      Pengelola: "Admin",
-      Guru: "Teacher",
-      Murid: "Student",
-    };
-    let temp = target_role.map((elm) => roleConverter[elm]);
-    temp.sort();
-    let to = temp.map((elm) => invert[elm]);
-
-    let eventData = {
-      name,
-      location,
-      start_date,
-      end_date,
-      to,
-      description,
-    };
-    if (Object.values(errors).every((error) => !error)) {
-      setOpenUploadDialog(true);
-      updateEvent(
-        formData,
-        fileLampiranToDelete,
-        eventData,
-        selectedEventInfo._id
-      )
-        .then(() => {
-          setUploadSuccess(true);
-          getAllEvents(user.unit);
-        })
-        .catch((err) => {
-          setOpenUploadDialog(false);
-          setFileLampiran([...originalFileLampiran, ...fileLampiranToAdd]);
-          setFileLampiranToDelete([]);
-          setErrors(err);
-        });
-    }
-  };
-
-  // DATETIME PICKER
-  const isValidDateTime = (d) => {
-    return d instanceof Date && !isNaN(d);
-  };
-
-  const handleCheckAllDay = () => {
-    let newStatus = !isAllDay;
-    if (newStatus) {
-      // jika diset ke sepanjang hari, ...
-
-      setErrors({
-        ...errors,
-        start_date_custom: undefined,
-        end_date_custom: undefined,
-      });
-
-      // di mode sepanjang hari, hanya tanggal yang ditampilkan di datetime picker.
-      // waktu tidak ditampilkan dan akan diset menjadi 00:00 (untuk start date) - 23:59 (untuk end date)
-
-      lastSelectedTime.current = {};
-      if (isValidDateTime(start_date)) {
-        // jika tanggal dan waktu valid
-
-        // set waktu mulai ke 00:00:00. tanggal tidak diubah
-        setStartDate(getDayStart(start_date));
-
-        // simpan waktu
-        lastSelectedTime.current.start_date = {
-          hour: start_date.getHours(),
-          minute: start_date.getMinutes(),
-        };
-      } else {
-        // jika tanggal atau waktu tidak valid,
-
-        if (startDatePicker.current.getAttribute("value")) {
-          // jika isi textfield picker ada,
-
-          // dapatkan string yang ditampilkan di textfield datetime picker.
-          // string ini akan memiliki format yang sama seperti format yang sedang digunakan pada datetime picker: "dd/MM/yyyy - HH:mm"
-          let parsedStr = startDatePicker.current
-            .getAttribute("value")
-            .split(" ");
-          let dateStr = parsedStr[0];
-          let timeStr = parsedStr[2];
-
-          // mencoba mem-parse tanggal
-          let [day, month, year] = dateStr.split("/");
-
-          // menyusun ulang tanggal karena parser js akan memparse tanggal dalam format "dd/MM/yyyy" menjadi "MM/dd/yyyy".
-          // ga pakai new Date(int year, int month, int day) karena nilai month > 11, month < 0, day < 1, dan day > 31 atau 30 masih
-          // diterima dan menghasilkan Date yang valid
-          let parsedDate = new Date(`${year}-${month}-${day}`);
-          // let parsedDate = new Date(Number(year), Number(month) - 1, Number(day));
-
-          // jika tanggal tidak valid, set tanggal mulai menjadi tanggal sekarang
-          setStartDate(isValidDateTime(parsedDate) ? parsedDate : new Date());
-
-          // mencoba mem-parse waktu
-          let [hour, minute] = timeStr.split(":");
-          let parsedTime = new Date(0, 0, 0, Number(hour), Number(minute), 0);
-
-          if (isValidDateTime(parsedTime)) {
-            // simpan waktu
-            lastSelectedTime.current.start_date = {
-              hour: parsedTime.getHours(),
-              minute: parsedTime.getMinutes(),
-            };
-          } else {
-            // simpan nilai null (saat waktu simpanan ini digunakan, nilai null ini akan dikonversi menjadi 00:00)
-            lastSelectedTime.current.start_date = null;
-          }
-        } else {
-          // jika isi textfield picker kosong,
-          setStartDate(getDayStart(new Date()));
-
-          lastSelectedTime.current.start_date = null;
-        }
-      }
-
-      if (isValidDateTime(end_date)) {
-        // jika tanggal dan waktu valid
-
-        // set waktu selesai ke 23:59:59. tanggal tidak diubah
-        setEndDate(getDayEnd(end_date));
-
-        // simpan waktu
-        lastSelectedTime.current.end_date = {
-          hour: end_date.getHours(),
-          minute: end_date.getMinutes(),
-        };
-      } else {
-        // jika tanggal atau waktu tidak valid,
-
-        if (endDatePicker.current.getAttribute("value")) {
-          // jika isi textfield picker ada,
-
-          // dapatkan string yang ditampilkan di textfield datetime picker.
-          // string ini akan memiliki format yang sama seperti format yang sedang digunakan pada datetime picker: "dd/MM/yyyy - HH:mm"
-          let parsedStr = endDatePicker.current
-            .getAttribute("value")
-            .split(" ");
-          let dateStr = parsedStr[0];
-          let timeStr = parsedStr[2];
-
-          // mencoba mem-parse tanggal
-          let [day, month, year] = dateStr.split("/");
-
-          // menyusun ulang tanggal karena parser js akan memparse tanggal dalam format "dd/MM/yyyy" menjadi "MM/dd/yyyy".
-          // ga pakai new Date(int year, int month, int day) karena nilai month > 11, month < 0, day < 1, dan day > 31 atau 30 masih
-          // diterima dan menghasilkan Date yang valid
-          let parsedDate = new Date(`${year}-${month}-${day}`);
-
-          // jika tanggal tidak valid, set tanggal mulai menjadi tanggal sekarang
-          setEndDate(isValidDateTime(parsedDate) ? parsedDate : new Date());
-
-          // mencoba mem-parse waktu
-          let [hour, minute] = timeStr.split(":");
-          let parsedTime = new Date(0, 0, 0, Number(hour), Number(minute), 0);
-
-          if (isValidDateTime(parsedTime)) {
-            // simpan waktu
-            lastSelectedTime.current.end_date = {
-              hour: parsedTime.getHours(),
-              minute: parsedTime.getMinutes(),
-            };
-          } else {
-            // simpan nilai null (saat waktu simpanan ini digunakan, nilai null ini akan dikonversi menjadi 00:00)
-            lastSelectedTime.current.end_date = null;
-          }
-        } else {
-          // jika isi textfield picker kosong,
-
-          setEndDate(getDayEnd(new Date()));
-
-          lastSelectedTime.current.end_date = null;
-        }
-      }
-    } else {
-      // jika diset ke tidak sepanjang hari
-
-      if (isValidDateTime(start_date)) {
-        // pada mode sepanjang hari, waktu mulai sudah dibuat agar tetap berisi 00:00:00 sehingga nilai waktu mulai pasti valid.
-        // jika tanggal mulai juga valid,
-
-        let start = new Date(start_date.getTime()); // membuat salinan
-
-        if (lastSelectedTime.current !== null) {
-          // lastSelectedTime.current === null ketika form ini dimuat untuk mode edit
-
-          let startDate = lastSelectedTime.current.start_date;
-          if (startDate === null) {
-            // jika waktu simpanan null, berarti waktu yang sebelumnya akan disimpan itu tidak valid.
-            // reset waktu jadi 00:00:00
-            start.setHours(0, 0, 0, 0);
-          } else {
-            // jika waktu simpanan ada, set waktu mulai jadi sesuai dengan waktu yang disimpan tersebut
-            start.setHours(startDate.hour, startDate.minute);
-          }
-        }
-        setStartDate(start);
-      } else {
-        // jika tanggal mulai tidak valid, set tanggal dan waktu mulai jadi tanggal dan waktu sekarang
-        // (belum ada alasan khusus kenapa waktunya tidak diset menjadi 00:00:00)
-        setStartDate(new Date());
-      }
-
-      if (isValidDateTime(end_date)) {
-        // pada mode sepanjang hari, waktu selesai sudah dibuat agar tetap berisi 23:59:59 sehingga nilai waktu selesai pasti valid.
-        // jika tanggal selesai juga valid,
-
-        let end = new Date(end_date.getTime()); // membuat salinan
-
-        if (lastSelectedTime.current !== null) {
-          // lastSelectedTime.current === null ketika form ini dimuat untuk mode edit
-
-          let endDate = lastSelectedTime.current.end_date;
-          if (endDate === null) {
-            // jika waktu simpanan null, berarti waktu yang sebelumnya akan disimpan itu tidak valid.
-            // reset waktu jadi 23:59:00
-            // (tidak diset jadi 23:59:59 karena 23:59:59 digunakan sebagai kriteria untuk menentukan apakah event yang diretrieve dari db itu
-            // all day apa tidak / ada kode ky gini saat load form edit: if (time === 23:59:59) {all_day = true})
-            end.setHours(23, 59, 0);
-          } else {
-            // jika waktu simpanan ada, set waktu selesai jadi sesuai dengan waktu yang disimpan tersebut
-            end.setHours(endDate.hour, endDate.minute);
-          }
-        }
-        setEndDate(end);
-      } else {
-        // jika tanggal selesai tidak valid, set tanggal dan waktu selesai jadi tanggal dan waktu sekarang
-        // (belum ada alasan khusus kenapa waktunya tidak diset menjadi 23:59:59)
-        setEndDate(new Date());
-      }
-    }
-
-    setAllDay(newStatus);
-  };
-
-  const handleStartDateChange = (date) => {
-    setErrors({ ...errors, start_date_submission: undefined });
-
-    let startDate = date;
-    if (isValidDateTime(startDate) && isValidDateTime(end_date)) {
-      if (end_date.getTime() < startDate.getTime()) {
-        setErrors({
-          ...errors,
-          start_date_custom: "Harus sebelum Waktu Selesai",
-        });
-      } else {
-        setErrors({
-          ...errors,
-          start_date_custom: undefined,
-          end_date_custom: undefined,
-        });
-      }
-    } else {
-      setErrors({ ...errors, start_date_custom: undefined });
-    }
-
-    if (isAllDay) {
-      // ini perlu ditambahkan karena onchange pada date picker dapat mengubah nilai waktu (ga ngerti kenapa)
-      startDate.setHours(0, 0, 0, 0);
-    }
-    setStartDate(startDate);
-  };
-
-  const handleEndDateChange = (date) => {
-    let endDate = date;
-    if (isValidDateTime(start_date) && isValidDateTime(endDate)) {
-      if (endDate.getTime() < start_date.getTime()) {
-        setErrors({ ...errors, end_date_custom: "Harus setelah Waktu Mulai" });
-      } else {
-        setErrors({
-          ...errors,
-          start_date_custom: undefined,
-          end_date_custom: undefined,
-        });
-      }
-    } else {
-      setErrors({ ...errors, end_date_custom: undefined });
-    }
-
-    if (isAllDay) {
-      // ini perlu ditambahkan karena onchange pada date picker dapat mengubah nilai waktu (ga ngerti kenapa)
-      endDate.setHours(23, 59, 59, 999);
-    }
-    setEndDate(endDate);
-  };
-
-  const handleOpenStartPicker = (isAllDay) => {
-    if (isAllDay) {
-      setOpenStartDatePicker(true);
-    } else {
-      setOpenStartDateTimePicker(true);
-    }
-  };
-
-  const handleCloseStartPicker = (isAllDay) => {
-    if (isAllDay) {
-      setOpenStartDatePicker(false);
-    } else {
-      setOpenStartDateTimePicker(false);
-    }
-  };
-
-  const handleOpenEndPicker = (isAllDay) => {
-    if (isAllDay) {
-      setOpenEndDatePicker(true);
-    } else {
-      setOpenEndDateTimePicker(true);
-    }
-  };
-
-  const handleCloseEndPicker = (isAllDay) => {
-    if (isAllDay) {
-      setOpenEndDatePicker(false);
-    } else {
-      setOpenEndDateTimePicker(false);
-    }
-  };
-
-  // FORM
-  const handleChangeName = (e) => {
-    setErrors({ ...errors, name: undefined });
-    setName(e.target.value);
-  };
-
-  const handleChangeTargetRole = (e) => {
-    setErrors({ ...errors, to: undefined });
-    setTargetRole(e.target.value);
-  };
-
-  const handleChangeDescription = (e) => {
-    setErrors({ ...errors, description: undefined });
-    setDescription(e.target.value);
-  };
-
-  // LAMPIRAN
-  const handleLampiranUpload = (e) => {
-    if (eventDialogMode === "create") {
-      console.log("handleLampiranUpload uploadLimit:" + uploadLimit);
-      const files = e.target.files;
-      let temp = [...Array.from(fileLampiran), ...Array.from(files)];
-      let over_limit = temp.filter(
-        (file) => file.size / Math.pow(10, 6) > uploadLimit
-      );
-      let file_to_upload = temp.filter(
-        (file) => file.size / Math.pow(10, 6) <= uploadLimit
-      );
-
-      if (errors.lampiran_materi) {
-        // karena errornya ini berupa lampiran_materi
-        setErrors({ ...errors, lampiran_materi: null });
-      }
-      setFileLampiran(file_to_upload);
-
-      if (over_limit.length > 0) {
-        showSnackbar(
-          "error",
-          over_limit.length + " file melebihi batas " + uploadLimit + "MB!"
-        );
-      }
-
-      document.getElementById("file_control").value = null;
-    } else if (eventDialogMode === "edit") {
-      const files = Array.from(e.target.files);
-      if (fileLampiran.length === 0) {
-        let over_limit = files.filter(
-          (file) => file.size / Math.pow(10, 6) > uploadLimit
-        );
-        let allowed_file = files.filter(
-          (file) => file.size / Math.pow(10, 6) <= uploadLimit
-        );
-        setFileLampiran(allowed_file);
-        setFileLampiranToAdd(allowed_file);
-
-        if (over_limit.length > 0) {
-          showSnackbar(
-            "error",
-            over_limit.length + " file melebihi batas " + uploadLimit + "MB!"
-          );
-        }
-
-        document.getElementById("file_control").value = null;
-      } else {
-        if (files.length !== 0) {
-          let allowed_file = files.filter(
-            (file) => file.size / Math.pow(10, 6) <= uploadLimit
-          );
-          let over_limit = files.filter(
-            (file) => file.size / Math.pow(10, 6) > uploadLimit
-          );
-
-          let temp = [...fileLampiran, ...allowed_file];
-          let file_to_upload = [...fileLampiranToAdd, ...allowed_file];
-          allowed_file = temp;
-
-          setFileLampiran(allowed_file);
-          setFileLampiranToAdd(file_to_upload);
-
-          if (over_limit.length > 0) {
-            showSnackbar(
-              "error",
-              over_limit.length + " file melebihi batas " + uploadLimit + "MB!"
-            );
-          }
-        }
-        document.getElementById("file_control").value = null;
-      }
-    }
-  };
-
-  const handleLampiranDelete = (e, i) => {
-    e.preventDefault();
-    if (eventDialogMode === "create") {
-      let temp = Array.from(fileLampiran);
-      temp.splice(i, 1);
-      setFileLampiran(temp);
-    } else if (eventDialogMode === "edit") {
-      let temp = Array.from(fileLampiran);
-      let tempToDelete = fileLampiranToDelete;
-      let tempToAdd = fileLampiranToAdd;
-      // For the one that has already been uploaded, there will be a filename field (yang belum adanya name)
-      // For the one that has already in DB
-      if (fileLampiran[i].filename !== undefined) {
-        // Remove the file in fileLampiranToDelete
-        tempToDelete.push(temp[i]);
-      } else {
-        // For the one that"s not yet in DB
-        // Remove the file in fileLampiranToAdd
-        for (var j = 0; j < tempToAdd.length; j++) {
-          if (tempToAdd[j].name === temp[i].name) {
-            tempToAdd.splice(j, 1);
-          }
-        }
-      }
-      temp.splice(i, 1);
-
-      setFileLampiran(temp);
-      setFileLampiranToAdd(tempToAdd);
-      setFileLampiranToDelete(tempToDelete);
-    }
-  };
-
-  const handleDelete = (eventId) => {
-    deleteEvent(eventId).then(() => {
-      getAllEvents(user.unit);
-      handleCloseEventDialog();
-      showSnackbar("success", "Kegiatan berhasil dihapus");
-    });
-  };
-
-  const handleOpenDeleteDialog = () => {
-    setOpenDeleteDialog(true);
-  };
-
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
-  };
-
-  // OTHER
-  const handleClickEdit = () => {
-    handleCloseEventDialog();
-    setChangeDialog(true);
-  };
-
-  const handleClosingCheck = () => {
-    if (!(openUploadDialog && !uploadSuccess)) {
-      handleCloseEventDialog();
-    }
-  };
-
-  return (
-    <Dialog
-      onExited={() => {
-        if (changeDialog) {
-          // open edit dialog
-          setChangeDialog(false);
-          handleOpenEditDialog();
-        } else {
-          // agar state komponen ini di-reset saat dialog ditutup
-          handleSetUnmountEventDialog();
-        }
-      }}
-      open={openEventDialog}
-      onClose={() => {
-        handleClosingCheck();
-      }}
-      PaperComponent={fullScreen ? undefined : PaperComponent}
-      maxWidth="sm"
-      fullScreen={fullScreen}
-      fullWidth
-      BackdropProps={{
-        style: { backgroundColor: "transparent" },
-      }}
-    >
-      {eventDialogMode === "view" ? (
-        <>
-          <div className={classes.view_dialogTopDiv}>
-            {user._id === author_id ? (
-              <>
-                <LightTooltip title="Sunting">
-                  <IconButton
-                    className={classes.dialogTopIconButtons}
-                    onClick={() => {
-                      handleClickEdit();
-                    }}
-                  >
-                    <EditIcon className={classes.dialogTopIcons} />
-                  </IconButton>
-                </LightTooltip>
-                <LightTooltip title="Hapus" style={{ marginRight: "24px" }}>
-                  <IconButton
-                    className={classes.dialogTopIconButtons}
-                    onClick={() => {
-                      handleOpenDeleteDialog();
-                    }}
-                  >
-                    <DeleteIcon className={classes.dialogTopIcons} />
-                  </IconButton>
-                </LightTooltip>
-              </>
-            ) : null}
-            <IconButton
-              edge="end"
-              className={classes.dialogTopIconButtons}
-              onClick={() => {
-                handleCloseEventDialog();
-              }}
-            >
-              <CloseIcon className={classes.dialogTopIcons} />
-            </IconButton>
-          </div>
-          <div className={classes.viewDialogBottomDiv}>
-            <CustomDeleteDialog
-              openDeleteDialog={openDeleteDialog}
-              handleCloseDeleteDialog={handleCloseDeleteDialog}
-              eventName={name}
-              handleDelete={() => {
-                handleDelete(selectedEventInfo._id);
-              }}
-            />
-            <div className={classes.viewDialogScrollableDiv}>
-              <Grid
-                container
-                direction="column"
-                spacing="4"
-                style={{ marginTop: "0", marginBottom: "0" }}
-              >
-                <Grid
-                  item
-                  xs={12}
-                  style={{ paddingTop: "0", paddingBottom: "0" }}
-                >
-                  <Typography
-                    variant="h5"
-                    gutterBottom
-                    style={{ wordBreak: "break-word" }}
-                  >
-                    <b>{name}</b>
-                  </Typography>
-                </Grid>
-                {location && location.length > 0 ? (
-                  <Grid item xs={12} style={{ paddingTop: "0" }}>
-                    <Typography
-                      className={classes.formLabels}
-                      style={{ wordBreak: "break-word" }}
-                    >
-                      <LocationOnIcon className={classes.formIcons} />
-                      {location}
-                    </Typography>
-                  </Grid>
-                ) : null}
-                <Grid item>
-                  <Typography className={classes.formLabels}>
-                    <TimerIcon className={classes.formIcons} />
-                    {moment(start_date)
-                      .locale("id")
-                      .format("dddd, DD MMMM YYYY  ∙  HH:mm")}
-                  </Typography>
-                  <Typography
-                    className={classes.formLabels}
-                    style={{ marginTop: "8px" }}
-                  >
-                    <TimerOffIcon className={classes.formIcons} />
-                    {moment(end_date)
-                      .locale("id")
-                      .format("dddd, DD MMMM YYYY  ∙  HH:mm")}
-                  </Typography>
-                </Grid>
-                <Grid container item direction="row" alignItems="center">
-                  <SupervisorAccountIcon className={classes.formIcons} />
-                  <div className={classes.chips}>
-                    {target_role.map((role) => (
-                      <Chip
-                        key={role}
-                        className={`${classes.chip} ${classes.viewDialogChip}`}
-                        label={roleConverter[role]}
-                      />
-                    ))}
-                  </div>
-                </Grid>
-                {description && description.length > 0 ? (
-                  <Grid item>
-                    <Typography
-                      align="justify"
-                      style={{
-                        wordBreak: "break-word",
-                        whiteSpace: "pre-wrap",
-                      }}
-                    >
-                      <CustomLinkify text={description} />
-                    </Typography>
-                  </Grid>
-                ) : null}
-                {fileLampiran && fileLampiran.length > 0 ? (
-                  <Grid item container spacing={1}>
-                    <FileAttachment
-                      data={fileLampiran}
-                      onPreviewFile={viewFileEvent}
-                    />
-                  </Grid>
-                ) : null}
-              </Grid>
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className={classes.create_edit_dialogTopDiv} id="drag-handle">
-            <Hidden smDown>
-              <IconButton edge="start" className={classes.dialogTopIconButtons}>
-                <DragHandleIcon className={classes.dialogTopIcons} />
-              </IconButton>
-            </Hidden>
-            <IconButton
-              edge="end"
-              className={classes.dialogTopIconButtons}
-              style={
-                openUploadDialog && !uploadSuccess
-                  ? { visibility: "hidden" }
-                  : undefined
-              }
-              onClick={() => {
-                if (!(openUploadDialog && !uploadSuccess)) {
-                  handleCloseEventDialog();
-                }
-              }}
-            >
-              <CloseIcon className={classes.dialogTopIcons} />
-            </IconButton>
-          </div>
-          <DialogTitle disableTypography>
-            <Typography variant="h5" gutterBottom>
-              <b>
-                {eventDialogMode === "create"
-                  ? "Buat Kegiatan"
-                  : "Sunting Kegiatan"}
-              </b>
-            </Typography>
-            <Typography color="textSecondary">
-              {eventDialogMode === "create"
-                ? "Tambahkan keterangan untuk membuat kegiatan."
-                : "Ganti keterangan untuk menyunting kegiatan."}
-            </Typography>
-          </DialogTitle>
-          <DialogContent dividers className={classes.dialogContent}>
-            <CustomUploadDialog
-              // handleWheel={handleUploadDialogWheel}
-              openUploadDialog={openUploadDialog}
-              handleUploadSuccess={handleCloseEventDialog}
-              uploadSuccess={uploadSuccess}
-              messageUploading={
-                eventDialogMode === "create"
-                  ? "Kegiatan sedang dibuat"
-                  : "Kegiatan sedang disunting"
-              }
-              messageSuccess={
-                eventDialogMode === "create"
-                  ? "Kegiatan telah dibuat"
-                  : "Kegiatan telah disunting"
-              }
-            />
-            <div
-              /* ref={uploadDialogScrollRef} */ className={
-                classes.createEditDialogScrollableDiv
-              }
-            >
-              <Grid container direction="column" spacing={4}>
-                <Grid item>
-                  <Typography
-                    component="label"
-                    for="name"
-                    color="primary"
-                    className={classes.formLabels}
-                  >
-                    <EventNoteIcon className={classes.formIcons} />
-                    Judul
-                  </Typography>
-                  <TextField
-                    id="name"
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    placeholder="Isi Judul"
-                    value={name}
-                    error={errors.name}
-                    onChange={(e) => {
-                      handleChangeName(e);
-                    }}
-                  />
-                  {errors.name ? (
-                    <div className={classes.zeroHeightHelperText}>
-                      <FormHelperText error>{errors.name}</FormHelperText>
-                    </div>
-                  ) : null}
-                </Grid>
-
-                <Grid item>
-                  <Typography
-                    component="label"
-                    for="location"
-                    color="primary"
-                    className={classes.formLabels}
-                  >
-                    <LocationOnIcon className={classes.formIcons} />
-                    Lokasi
-                  </Typography>
-                  <TextField
-                    id="location"
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    placeholder="Isi Lokasi"
-                    value={location}
-                    onChange={(e) => {
-                      setLocation(e.target.value);
-                    }}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  container
-                  spacing={2}
-                  className={classes.mdUpZeroBottomPadding}
-                >
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                    className={classes.smDownZeroBottomPadding}
-                  >
-                    <Typography
-                      component="label"
-                      for="eventStart"
-                      color="primary"
-                      className={classes.formLabels}
-                    >
-                      <TimerIcon className={classes.formIcons} />
-                      Waktu Mulai
-                    </Typography>
-                    <MuiPickersUtilsProvider
-                      locale={lokal}
-                      utils={DateFnsUtils}
-                    >
-                      <KeyboardDatePicker
-                        okLabel="Simpan"
-                        cancelLabel="Batal"
-                        disablePast
-                        onChange={(date) => {
-                          handleStartDateChange(date);
-                        }}
-                        open={openStartDatePicker}
-                        onClose={() => {
-                          setOpenStartDatePicker(false);
-                        }}
-                        style={{ display: "none" }}
-                      />
-                      <KeyboardDateTimePicker
-                        id="eventStart"
-                        inputRef={startDatePicker}
-                        fullWidth
-                        disablePast
-                        inputVariant="outlined"
-                        format={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy - HH:mm"}
-                        ampm={false}
-                        okLabel="Simpan"
-                        cancelLabel="Batal"
-                        minDateMessage="Harus waktu yang akan datang"
-                        invalidDateMessage="Format tanggal tidak benar"
-                        value={start_date}
-                        placeholder="Isi Waktu Mulai"
-                        onChange={(date) => {
-                          handleStartDateChange(date);
-                        }}
-                        helperText={null}
-                        onError={(err) => {
-                          if (errors.start_date_picker !== err) {
-                            setErrors({ ...errors, start_date_picker: err });
-                          }
-                        }}
-                        error={
-                          errors.start_date_custom || errors.start_date_picker
-                        }
-                        open={openStartDateTimePicker}
-                        onOpen={() => {
-                          handleOpenStartPicker(isAllDay);
-                        }}
-                        onClose={() => {
-                          handleCloseStartPicker(isAllDay);
-                        }}
-                      />
-                      <div
-                        className={classes.zeroHeightHelperText}
-                        style={{ flexDirection: "column" }}
-                      >
-                        {errors.start_date_custom ? (
-                          <FormHelperText error>
-                            {errors.start_date_custom}
-                          </FormHelperText>
-                        ) : errors.start_date_picker ? (
-                          <FormHelperText error>
-                            {errors.start_date_picker}
-                          </FormHelperText>
-                        ) : null}
-                        {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang
-                          untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
-                        <FormGroup style={{ width: "fit-content" }}>
-                          <FormControlLabel
-                            label={
-                              <Typography color="textSecondary">
-                                Sepanjang Hari
-                              </Typography>
-                            }
-                            control={
-                              <Checkbox
-                                onChange={() => {
-                                  handleCheckAllDay();
-                                }}
-                                color="primary"
-                                size="small"
-                                checked={isAllDay}
-                              />
-                            }
-                          />
-                        </FormGroup>
-                      </div>
-                      <Grid
-                        item
-                        style={{
-                          padding: "0",
-                          width: "0",
-                          visibility: "hidden",
-                        }}
-                      >
-                        <FormHelperText>{"\u200B"}</FormHelperText>
-                        <Checkbox size="small" disabled />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                    className={classes.smDownZeroTopPadding}
-                  >
-                    <Typography
-                      component="label"
-                      for="eventEnd"
-                      color="primary"
-                      className={classes.formLabels}
-                    >
-                      <TimerOffIcon className={classes.formIcons} />
-                      Waktu Selesai
-                    </Typography>
-                    <MuiPickersUtilsProvider
-                      locale={lokal}
-                      utils={DateFnsUtils}
-                    >
-                      <KeyboardDatePicker
-                        okLabel="Simpan"
-                        cancelLabel="Batal"
-                        disablePast
-                        minDate={start_date}
-                        onChange={(date) => {
-                          handleEndDateChange(date);
-                        }}
-                        open={openEndDatePicker}
-                        onClose={() => setOpenEndDatePicker(false)}
-                        style={{ display: "none" }}
-                      />
-                      <KeyboardDateTimePicker
-                        id="eventEnd"
-                        inputRef={endDatePicker}
-                        fullWidth
-                        disablePast
-                        inputVariant="outlined"
-                        format={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy - HH:mm"}
-                        ampm={false}
-                        okLabel="Simpan"
-                        cancelLabel="Batal"
-                        minDate={start_date}
-                        minDateMessage="Harus setelah Waktu Mulai"
-                        invalidDateMessage="Format tanggal tidak benar"
-                        value={end_date}
-                        placeholder="Isi Waktu Selesai"
-                        onChange={(date) => {
-                          handleEndDateChange(date);
-                        }}
-                        helperText={null}
-                        onError={(err) => {
-                          if (errors.end_date_picker !== err) {
-                            setErrors({ ...errors, end_date_picker: err });
-                          }
-                        }}
-                        error={errors.end_date_custom || errors.end_date_picker}
-                        open={openEndDateTimePicker}
-                        onOpen={() => {
-                          handleOpenEndPicker(isAllDay);
-                        }}
-                        onClose={() => {
-                          handleCloseEndPicker(isAllDay);
-                        }}
-                      />
-                      <div
-                        className={classes.zeroHeightHelperText}
-                        style={{ flexDirection: "column" }}
-                      >
-                        {errors.end_date_custom ? (
-                          <FormHelperText error>
-                            {errors.end_date_custom}
-                          </FormHelperText>
-                        ) : errors.end_date_picker ? (
-                          <FormHelperText error>
-                            {errors.end_date_picker}
-                          </FormHelperText>
-                        ) : null}
-                      </div>
-                    </MuiPickersUtilsProvider>
-                  </Grid>
-                </Grid>
-
-                <Grid item className={classes.mdUpZeroTopPadding}>
-                  <Typography
-                    component="label"
-                    for="target_role"
-                    color="primary"
-                    className={classes.formLabels}
-                  >
-                    <SupervisorAccountIcon className={classes.formIcons} />
-                    Pihak Penerima
-                  </Typography>
-                  <FormControl variant="outlined" fullWidth error={errors.to}>
-                    <Select
-                      id="target_role"
-                      multiple
-                      displayEmpty
-                      value={target_role}
-                      onChange={(e) => {
-                        handleChangeTargetRole(e);
-                      }}
-                      renderValue={(selected) => (
-                        <div className={classes.chips}>
-                          {selected.length === 0 ? (
-                            // input ini hanya digunakan sebagai placeholder
-                            <Input
-                              disableUnderline
-                              placeholder="Pilih Pihak Penerima"
-                              readOnly
-                              classes={{ input: classes.dummyInput }}
-                            />
-                          ) : (
-                            selected.map((role) => {
-                              return (
-                                <Chip
-                                  key={role}
-                                  className={classes.chip}
-                                  label={roleConverter[role]}
-                                />
-                              );
-                            })
-                          )}
-                        </div>
-                      )}
-                    >
-                      {["Student", "Teacher", "Admin"].map((role) => (
-                        <MenuItem key={role} value={role}>
-                          <Checkbox
-                            checked={target_role.includes(role)}
-                            color="primary"
-                          />
-                          <ListItemText primary={roleConverter[role]} />
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {errors.to ? (
-                      <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText error>{errors.to}</FormHelperText>
-                      </div>
-                    ) : null}
-                  </FormControl>
-                </Grid>
-
-                <Grid item>
-                  <Typography
-                    component="label"
-                    for="description"
-                    color="primary"
-                    className={classes.formLabels}
-                  >
-                    <SubjectIcon className={classes.formIcons} />
-                    Deskripsi
-                  </Typography>
-                  <TextField
-                    id="description"
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    placeholder="Isi Deskripsi"
-                    multiline
-                    value={description}
-                    onChange={(e) => {
-                      handleChangeDescription(e);
-                    }}
-                  />
-                </Grid>
-
-                <Grid item>
-                  <input
-                    id="file_control"
-                    name="lampiran"
-                    type="file"
-                    accept="file/*"
-                    multiple={true}
-                    ref={lampiranUploader}
-                    onChange={handleLampiranUpload}
-                    style={{ display: "none" }}
-                  />
-                  <Button
-                    variant="contained"
-                    startIcon={<AttachFileIcon />}
-                    onClick={() => {
-                      lampiranUploader.current.click();
-                    }}
-                    className={classes.addFileButton}
-                  >
-                    Tambah Lampiran Berkas
-                  </Button>
-                  <Grid container spacing={1} style={{ marginTop: "10px" }}>
-                    {fileLampiran && fileLampiran.length > 0 ? (
-                      <FileAttachment
-                        data={fileLampiran}
-                        handleLampiranDelete={handleLampiranDelete}
-                      />
-                    ) : null}
-                  </Grid>
-                </Grid>
-              </Grid>
-            </div>
-          </DialogContent>
-          <DialogActions style={{ padding: "16px 24px" }}>
-            <Button
-              variant="contained"
-              className={
-                eventDialogMode === "create"
-                  ? classes.createEventButton
-                  : classes.editEventButton
-              }
-              disabled={openUploadDialog}
-              onClick={() => {
-                eventDialogMode === "create"
-                  ? handleCreateEvent()
-                  : handleUpdateEvent();
-              }}
-            >
-              {eventDialogMode === "create" ? "Buat" : "Sunting"}
-            </Button>
-          </DialogActions>
-        </>
-      )}
-    </Dialog>
-  );
-}
-
-function CustomUploadDialog(props) {
-  const useStyles = makeStyles((theme) => ({
-    paper: {
-      width: "300px",
-      maxWidth: "100%",
-      minHeight: "175px",
-      padding: "15px",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    backdrop: {
-      backgroundColor: "rgba(0,0,0,0.5)",
-      position: "absolute",
-      zIndex: "1",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      overflow: "hidden",
-      width: "100%",
-      height: "100%",
-    },
-    uploadSuccessIcon: {
-      color: "green",
-      height: "45px",
-      width: "45px",
-    },
-    uploadFinishButton: {
-      width: "100%",
-      marginTop: "10px",
-      backgroundColor: theme.palette.success.main,
-      color: "white",
-      "&:focus, &:hover": {
-        backgroundColor: theme.palette.success.dark,
-        color: "white",
-      },
-    },
-  }));
-  const classes = useStyles();
-  const {
-    // handleWheel,
-    openUploadDialog,
-    messageUploading,
-    messageSuccess,
-    uploadSuccess,
-    handleUploadSuccess,
-  } = props;
-
-  return (
-    <Fade
-      in={
-        openUploadDialog
-      } /* ini sebenarnya ga terpakai karena upload dialog dibuat tutup bersamaan dengan parent dialognya */
-    >
-      <div className={classes.backdrop}>
-        <Paper className={`${classes.paper} MuiPaper-elevation24`}>
-          <Grid item>
-            <Typography variant="h6" align="center" gutterBottom>
-              {!uploadSuccess ? messageUploading : messageSuccess}
-            </Typography>
-          </Grid>
-          <Grid item>
-            {!uploadSuccess ? (
-              <CircularProgress />
-            ) : (
-              <CheckCircleIcon className={classes.uploadSuccessIcon} />
-            )}
-          </Grid>
-          <Grid item>
-            {!uploadSuccess ? (
-              <Typography variant="body2" align="center" gutterBottom>
-                <b>Mohon tunggu sebentar</b>
-              </Typography>
-            ) : (
-              <Button
-                variant="contained"
-                className={classes.uploadFinishButton}
-                onClick={() => {
-                  handleUploadSuccess();
-                }}
-              >
-                Selesai
-              </Button>
-            )}
-          </Grid>
-        </Paper>
-      </div>
-    </Fade>
-  );
-}
-
-function CustomDeleteDialog(props) {
-  const useStyles = makeStyles((theme) => ({
-    paper: {
-      width: "300px",
-      maxWidth: "100%",
-      minHeight: "175px",
-      padding: "15px",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    backdrop: {
-      backgroundColor: "rgba(0,0,0,0.5)",
-      position: "absolute",
-      zIndex: "1",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      overflow: "hidden",
-      width: "100%",
-      height: "100%",
-    },
-    dialogDeleteButton: {
-      width: "125px",
-      backgroundColor: theme.palette.error.main,
-      color: "white",
-      border: `1px solid ${theme.palette.error.main}`,
-      "&:focus, &:hover": {
-        backgroundColor: theme.palette.error.dark,
-        color: "white",
-        border: `1px solid ${theme.palette.error.dark}`,
-      },
-    },
-    dialogCancelButton: {
-      width: "125px",
-      backgroundColor: "white",
-      color: theme.palette.error.main,
-      border: `1px solid ${theme.palette.error.main}`,
-      "&:focus, &:hover": {
-        backgroundColor: "white",
-        color: theme.palette.error.dark,
-        border: `1px solid ${theme.palette.error.dark}`,
-      },
-    },
-  }));
-  const classes = useStyles();
-  const {
-    openDeleteDialog,
-    handleCloseDeleteDialog,
-    handleDelete,
-    eventName,
-  } = props;
-
-  return (
-    <Fade in={openDeleteDialog}>
-      <div className={classes.backdrop}>
-        <Paper className={`${classes.paper} MuiPaper-elevation24`}>
-          <Grid item>
-            <Typography variant="h6" align="center" gutterBottom>
-              Hapus Kegiatan berikut?
-            </Typography>
-          </Grid>
-          <Grid item container direction="column" alignItems="center">
-            <Typography align="center" gutterBottom>
-              <b>{eventName}</b>
-            </Typography>
-          </Grid>
-          <Grid container spacing={2} justify="center" alignItems="center">
-            <Grid item>
-              <Button
-                onClick={() => {
-                  handleDelete();
-                }}
-                startIcon={<DeleteIcon />}
-                className={classes.dialogDeleteButton}
-              >
-                Iya
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={() => {
-                  handleCloseDeleteDialog();
-                }}
-                startIcon={<CancelIcon />}
-                className={classes.dialogCancelButton}
-              >
-                Tidak
-              </Button>
-            </Grid>
-          </Grid>
-        </Paper>
-      </div>
-    </Fade>
-  );
-}
-
-function PaperComponent(props) {
-  return (
-    <Draggable
-      handle="#drag-handle"
-      cancel={'[class*="MuiDialogContent-root"]'}
-    >
-      <Paper {...props} />
-    </Draggable>
-  );
-}
-
 const MINIMUM_DURATION_MILLISECOND = 30 * 60 * 1000;
 const TASK_DURATION_MILLISECOND = 30 * 60 * 1000;
 const ROW_HEIGHT = 90;
 const BOTTOM_PADDING = 2;
 const TILE_HORIZONTAL_MARGIN = 10;
 
-function Calendar(props) {
-  document.title = "Schooly | Kalender";
+function CalendarToolbar(props) {
+  const {
+    classes,
+    mode,
+    handleChangeMode,
+    handleOpenCreateDialog,
+    currentDate,
+    setCurrentDate,
+    role,
+    setSelectedDateReactCalendar,
+    activeStartDate,
+    setActiveStartDate,
+  } = props;
 
+  const handleChangeMonth = (direction) => {
+    if (direction === "now") {
+      setCurrentDate(new Date());
+    } else if (direction === "next") {
+      let nextMonthDate;
+      if (currentDate.getMonth() === 11) {
+        nextMonthDate = new Date(
+          currentDate.getFullYear() + 1,
+          0,
+          currentDate.getDate()
+        );
+      } else {
+        nextMonthDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1,
+          currentDate.getDate()
+        );
+      }
+      setCurrentDate(nextMonthDate);
+    } else {
+      let prevMonthDate;
+      if (currentDate.getMonth() === 0) {
+        prevMonthDate = new Date(
+          currentDate.getFullYear() - 1,
+          11,
+          currentDate.getDate()
+        );
+      } else {
+        prevMonthDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - 1,
+          currentDate.getDate()
+        );
+      }
+      setCurrentDate(prevMonthDate);
+    }
+  };
+
+  const handleChangeDay = (direction) => {
+    let time;
+    if (direction === "now") {
+      time = new Date();
+    } else if (direction === "next") {
+      time = new Date(currentDate.getTime() + 1000 * 60 * 60 * 24);
+    } else {
+      time = new Date(currentDate.getTime() - 1000 * 60 * 60 * 24);
+    }
+    setCurrentDate(time);
+    setSelectedDateReactCalendar(time);
+    if (
+      time.getMonth() !== activeStartDate.getMonth() ||
+      time.getFullYear() !== activeStartDate.getFullYear()
+    ) {
+      setActiveStartDate(
+        new Date(time.getFullYear(), time.getMonth(), 1, 0, 0, 0, 0)
+      );
+    }
+  };
+
+  return (
+    <div className={classes.toolbar}>
+      <Grid container justify="space-between" alignItems="center">
+        {mode === "Day" ? (
+          <Grid item>
+            <Tooltip title="Hari Sebelumnya">
+              <IconButton size="small" onClick={() => handleChangeDay("prev")}>
+                <ChevronLeftIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Hari ini">
+              <IconButton onClick={() => handleChangeDay("now")}>
+                <TodayIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Hari Selanjutnya">
+              <IconButton size="small" onClick={() => handleChangeDay("next")}>
+                <ChevronRightIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        ) : (
+          <Grid item>
+            <Tooltip title="Hari Sebelumnya">
+              <IconButton
+                size="small"
+                onClick={() => handleChangeMonth("prev")}
+              >
+                <ChevronLeftIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Hari ini">
+              <IconButton onClick={() => handleChangeMonth("now")}>
+                <TodayIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Hari Selanjutnya">
+              <IconButton
+                size="small"
+                onClick={() => handleChangeMonth("next")}
+              >
+                <ChevronRightIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        )}
+        <Grid item>
+          <Grid container alignItems="center" spacing={2}>
+            <Grid item>
+              {role === "Admin" ? (
+                <Tooltip title="Buat Kegiatan">
+                  <Fab
+                    size="small"
+                    className={classes.createEventButton}
+                    onClick={() => handleOpenCreateDialog()}
+                  >
+                    <AddIcon fontSize="small" />
+                  </Fab>
+                </Tooltip>
+              ) : null}
+            </Grid>
+            <Grid item>
+              <Select
+                variant="outlined"
+                defaultValue="Day"
+                value={mode}
+                onChange={handleChangeMode}
+                classes={{ root: classes.calendarModeSelect }}
+              >
+                <MenuItem value="Day">Hari</MenuItem>
+                <MenuItem value="Month">Bulan</MenuItem>
+              </Select>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </div>
+  );
+}
+
+function Calendar(props) {
   const classes = useStyles();
   const theme = useTheme();
+
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 
   const {
@@ -4123,6 +2418,34 @@ function Calendar(props) {
     return hasHoliday(currentDate) || allDayItems.length !== 0;
   };
 
+  let monthNames = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+
+  let stringDateDay =
+    currentDate.getDate() +
+    " " +
+    monthNames[currentDate.getMonth()] +
+    " " +
+    currentDate.getFullYear();
+  let stringDateMonth =
+    monthNames[currentDate.getMonth()] + " " + currentDate.getFullYear();
+  let stringDateMobile =
+    monthNames[currentDate.getMonth()].slice(0, 3) +
+    " " +
+    currentDate.getFullYear();
+
   const generateDayModeCalendar = () => {
     return (
       <div className={classes.dayAgendaContainer}>
@@ -4734,6 +3057,8 @@ function Calendar(props) {
     }
   };
 
+  document.title = "Schooly | Kalender";
+
   return (
     <div className={classes.root}>
       <Grid
@@ -4766,8 +3091,46 @@ function Calendar(props) {
             setSelectedDateReactCalendar={setSelectedDateReactCalendar}
             activeStartDate={activeStartDate}
             setActiveStartDate={setActiveStartDate}
-            showShadow={showShadow(currentDate, allDayItems)}
           />
+          <Grid
+            container
+            justify="space-between"
+            alignItems="center"
+            className={classes.shadow}
+          >
+            <Grid item>
+              <Grid container alignItems="center" spacing={2}>
+                <Grid item>
+                  <Grid container direction="column" alignItems="center">
+                    <Grid item>
+                      <Typography variant="body2" color="primary">
+                        {moment(currentDate)
+                          .locale("id")
+                          .format("dddd")
+                          .slice(0, 3)
+                          .toUpperCase()}
+                      </Typography>
+                    </Grid>
+                    <Grid>
+                      <Avatar className={classes.dateCircleHighlight}>
+                        <Typography variant="h5">
+                          {moment(currentDate).locale("id").format("DD")}
+                        </Typography>
+                      </Avatar>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h6">
+                    <Hidden xsDown>
+                      {mode === "Day" ? stringDateDay : stringDateMonth}
+                    </Hidden>
+                    <Hidden smUp>{stringDateMobile}</Hidden>
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
           {mode === "Day"
             ? generateDayModeCalendar()
             : generateMonthModeCalendar()}
@@ -4958,7 +3321,7 @@ function Calendar(props) {
         </Hidden>
       </Grid>
       {unmountEventDialog ? null : (
-        <EventDialog
+        <Event
           downloadFileEvent={downloadFileEvent}
           selectedEventInfo={selectedEventInfo}
           getAllEvents={getAllEvents}
@@ -4971,6 +3334,8 @@ function Calendar(props) {
           viewFileEvent={viewFileEvent}
           showSnackbar={showSnackbar}
           user={user}
+          getDayStart={getDayStart}
+          getDayEnd={getDayEnd}
         />
       )}
       <Snackbar
@@ -4990,30 +3355,6 @@ function Calendar(props) {
       </Snackbar>
     </div>
   );
-}
-
-function getMillisecondDiff(past, future) {
-  return future.getTime() - past.getTime();
-}
-
-function getDayEnd(date) {
-  let temp = new Date(date.getTime());
-  temp.setHours(23, 59, 59, 999);
-  return temp;
-}
-
-function getDayStart(date) {
-  let temp = new Date(date.getTime());
-  temp.setHours(0, 0, 0, 0);
-  return temp;
-}
-
-function addTime(date, millisecond) {
-  return new Date(date.getTime() + millisecond);
-}
-
-function substractTime(date, millisecond) {
-  return new Date(date.getTime() - millisecond);
 }
 
 const mapStateToProps = (state) => ({
