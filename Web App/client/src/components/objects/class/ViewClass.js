@@ -138,7 +138,6 @@ function ViewClass(props) {
     setCurrentClass,
     getStudentsByClass,
     getAllSubjects,
-    tasksCollection,
     getTeachers,
     getMaterialByClass,
     getTaskAtmpt,
@@ -153,23 +152,23 @@ function ViewClass(props) {
   const { selectedMaterials } = props.materialsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
   const classId = props.match.params.id;
-
+  const { selectedTasks } = props.tasksCollection;
   const [walikelas, setWalikelas] = React.useState({});
   const [taskAtmpt, setTaskAtmpt] = React.useState([]);
   const [avatar, setAvatar] = React.useState({});
   const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
 
   function listTasks(subjectId) {
-    if (!Boolean(tasksCollection.length)) {
+    if (!Boolean(selectedTasks.length)) {
       return <Empty />;
     }
     let taskList = [];
     if (panel === 0) {
       // If panel is "Pekerjaan Kelas"
-      taskList = tasksCollection.slice(0, 5);
+      taskList = selectedTasks.slice(0, 5);
     } else if (panel === 1) {
       // If panel is "Mata Pelajaran"
-      taskList = tasksCollection
+      taskList = selectedTasks
         .filter((task) => {
           let class_assigned = task.class_assigned;
           if (Array.isArray(class_assigned)) {

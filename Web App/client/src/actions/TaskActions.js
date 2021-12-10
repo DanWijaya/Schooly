@@ -4,7 +4,7 @@ import {
   GET_ALL_TASKS,
   GET_ERRORS,
   GET_SUCCESS_RESPONSE,
-  GET_TASKS_BY_CLASS,
+  GET_TASK,
 } from "./Types";
 
 // Add Task
@@ -81,7 +81,7 @@ export const getOneTask = (taskId) => (dispatch) => {
     .then((res) => {
       console.log("Task to be received: ", res.data);
       dispatch({
-        type: GET_ALL_TASKS,
+        type: GET_TASK,
         payload: res.data,
       });
       return res.data;
@@ -125,7 +125,7 @@ export const updateTask = (
     .then((res) => {
       if (formData.has("lampiran_tugas"))
         return axios.post(`/api/files/tasks/upload/${taskId}`, formData);
-        // Must return something, if not it will continue to the next "then".
+      // Must return something, if not it will continue to the next "then".
       else return "Successfully updated task with no lampiran";
     })
     .then((res) => {
@@ -207,7 +207,7 @@ export const getTaskByClass = (classId) => (dispatch) => {
     .get(`/api/tasks/view`, { params: { classId } })
     .then((res) => {
       dispatch({
-        type: GET_ALL_TASKS,
+        type: GET_TASK,
         payload: res.data,
       });
       console.log("getTaskByClass completed");
@@ -224,23 +224,13 @@ export const getTaskAtmpt = (user_id) => (dispatch) => {
     .then((res) => {
       console.log("getTaskAtmpt completed");
       console.log(res.data);
+      //Does not dispatch anything.
       return res.data;
     })
     .catch(() => {
       throw new Error("getTaskAtmpt error has occured");
     });
 };
-
-/* export const getTaskByClass = (classId) => (dispatch) => {
-  axios.get(`/api/tasks/byclass/${classId}`).then((res) => {
-    console.log(res.data);
-    dispatch({
-      type: GET_TASKS_BY_CLASS,
-      payload: res.data,
-    });
-    return res.data;
-  });
-}; */
 
 export const createTaskComment = (taskId, comment) => {
   return axios.post(`/api/tasks/comment/${taskId}`, comment).catch(() => {

@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Calendar as ReactCalendar } from "react-calendar";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import moment from "moment";
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { getAllEvents, getOneEvent } from "../../../actions/EventActions";
@@ -749,10 +750,10 @@ function Calendar(props) {
     getAllAssessments,
     getStudents,
     getTeachers,
-    tasksCollection,
     getSetting,
   } = props;
 
+  const { all_tasks } = props.tasksCollection;
   const { user, all_students, all_teachers } = props.auth;
   const role = props.auth.user.role;
   const classId = user.kelas;
@@ -891,12 +892,7 @@ function Calendar(props) {
   }, [currentDate, mode]);
 
   React.useEffect(() => {
-    if (
-      tasksCollection &&
-      Array.isArray(tasksCollection) &&
-      all_assessments &&
-      allEvents
-    ) {
+    if (all_tasks && Array.isArray(all_tasks) && all_assessments && allEvents) {
       generateTiles(currentDate);
 
       if (mode === "Day") {
@@ -939,7 +935,7 @@ function Calendar(props) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasksCollection, all_assessments, allEvents]);
+  }, [all_tasks, all_assessments, allEvents]);
 
   React.useEffect(() => {
     if (scrollbarNode !== null && !mdDown && scrollbarWidth === 0) {
@@ -1425,9 +1421,9 @@ function Calendar(props) {
     let result = [];
     let localCounter = mainCounter;
     let tasksByClass = [];
-    if (Boolean(tasksCollection.length)) {
+    if (Boolean(all_tasks.length)) {
       if (user.role === "Student") {
-        tasksCollection.map((task) => {
+        all_tasks.map((task) => {
           if (localCounter < 3) {
             let class_assigned = task.class_assigned;
             for (var i = 0; i < class_assigned.length; i++) {
@@ -1533,19 +1529,19 @@ function Calendar(props) {
           selectedClassCheckList.push(classItem[0]);
         }
       }
-      for (let i = 0; i < tasksCollection.length; i++) {
+      for (let i = 0; i < all_tasks.length; i++) {
         let tempDeadlineDate = new Date(
-          moment(tasksCollection[i].deadline).locale("id")
+          moment(all_tasks[i].deadline).locale("id")
         );
         let classFound = false;
-        for (let classId of tasksCollection[i].class_assigned) {
+        for (let classId of all_tasks[i].class_assigned) {
           if (selectedClassCheckList.includes(classId)) {
             classFound = true;
             break;
           }
         }
         if (
-          tasksCollection[i].person_in_charge_id === user._id &&
+          all_tasks[i].person_in_charge_id === user._id &&
           tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
           tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
           tempSelectedDate.getYear() === tempDeadlineDate.getYear() &&
@@ -1553,19 +1549,17 @@ function Calendar(props) {
         ) {
           let number_students_assigned = 0;
           for (let j = 0; j < all_students.length; j++) {
-            if (
-              tasksCollection[i].class_assigned.includes(all_students[j].kelas)
-            ) {
+            if (all_tasks[i].class_assigned.includes(all_students[j].kelas)) {
               number_students_assigned = number_students_assigned + 1;
             }
           }
           if (
-            Object.values(tasksCollection[i].grades).length !==
+            Object.values(all_tasks[i].grades).length !==
             number_students_assigned
           ) {
             if (mode === "Month") {
               if (localCounter < 3) {
-                let task = tasksCollection[i];
+                let task = all_tasks[i];
                 result.push({
                   _id: task._id,
                   name: task.name,
@@ -1576,7 +1570,7 @@ function Calendar(props) {
               }
               localCounter++;
             } else {
-              let task = tasksCollection[i];
+              let task = all_tasks[i];
               result.push({
                 _id: task._id,
                 deadline: task.deadline,
@@ -1610,12 +1604,12 @@ function Calendar(props) {
           selectedClassCheckList.push(classItem[0]);
         }
       }
-      for (let i = 0; i < tasksCollection.length; i++) {
+      for (let i = 0; i < all_tasks.length; i++) {
         let tempDeadlineDate = new Date(
-          moment(tasksCollection[i].deadline).locale("id")
+          moment(all_tasks[i].deadline).locale("id")
         );
         let classFound = false;
-        for (let classId of tasksCollection[i].class_assigned) {
+        for (let classId of all_tasks[i].class_assigned) {
           if (selectedClassCheckList.includes(classId)) {
             classFound = true;
             break;
@@ -1629,19 +1623,17 @@ function Calendar(props) {
         ) {
           let number_students_assigned = 0;
           for (let j = 0; j < all_students.length; j++) {
-            if (
-              tasksCollection[i].class_assigned.includes(all_students[j].kelas)
-            ) {
+            if (all_tasks[i].class_assigned.includes(all_students[j].kelas)) {
               number_students_assigned = number_students_assigned + 1;
             }
           }
           if (
-            Object.values(tasksCollection[i].grades).length !==
+            Object.values(all_tasks[i].grades).length !==
             number_students_assigned
           ) {
             if (mode === "Month") {
               if (localCounter < 3) {
-                let task = tasksCollection[i];
+                let task = all_tasks[i];
                 result.push({
                   _id: task._id,
                   name: task.name,
@@ -1652,7 +1644,7 @@ function Calendar(props) {
               }
               localCounter++;
             } else {
-              let task = tasksCollection[i];
+              let task = all_tasks[i];
               result.push({
                 _id: task._id,
                 deadline: task.deadline,
@@ -2133,19 +2125,19 @@ function Calendar(props) {
 
   const countTask = (start, end) => {
     let count = 0;
-    if (tasksCollection && Array.isArray(tasksCollection)) {
+    if (all_tasks && Array.isArray(all_tasks)) {
       let startEpoch = start.getTime();
       let endEpoch = end.getTime();
 
       if (role === "Student") {
-        count = tasksCollection.filter(
+        count = all_tasks.filter(
           (taskInfo) =>
             taskInfo.class_assigned.includes(user.kelas) &&
             new Date(taskInfo.deadline).getTime() >= startEpoch &&
             new Date(taskInfo.deadline).getTime() <= endEpoch
         ).length;
       } else if (role === "Teacher") {
-        count = tasksCollection.filter(
+        count = all_tasks.filter(
           (taskInfo) =>
             taskInfo.person_in_charge_id === user._id &&
             Object.keys(taskInfo.grades).length !==
@@ -2160,7 +2152,7 @@ function Calendar(props) {
         ).length;
       } else {
         // admin
-        count = tasksCollection.filter(
+        count = all_tasks.filter(
           (taskInfo) =>
             Object.keys(taskInfo.grades).length !==
               all_students.reduce(
@@ -2338,12 +2330,7 @@ function Calendar(props) {
   };
 
   React.useEffect(() => {
-    if (
-      tasksCollection &&
-      Array.isArray(tasksCollection) &&
-      all_assessments &&
-      allEvents
-    ) {
+    if (all_tasks && Array.isArray(all_tasks) && all_assessments && allEvents) {
       generateTiles(currentDate);
     }
   }, [agendaCheckboxState, classCheckboxState]);
@@ -2351,7 +2338,7 @@ function Calendar(props) {
   const generateDayModeList = (date) => {
     let result = [];
     if (mode === "Day") {
-      if (tasksCollection && all_assessments && allEvents) {
+      if (all_tasks && all_assessments && allEvents) {
         let taskList = [];
         let quizList = [];
         let examList = [];
@@ -2709,7 +2696,7 @@ function Calendar(props) {
       "Nov",
       "Des",
     ];
-    if (all_assessments && tasksCollection && allEvents) {
+    if (all_assessments && all_tasks && allEvents) {
       return (
         <TableRow style={{ height: "150px" }}>
           {date.map((column, columnIndex) => {
@@ -3356,6 +3343,17 @@ function Calendar(props) {
     </div>
   );
 }
+
+Calendar.propTypes = {
+  auth: PropTypes.object.isRequired,
+  eventsCollection: PropTypes.object.isRequired,
+  filesCollection: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
+  tasksCollection: PropTypes.object.isRequired,
+  assessmentsCollection: PropTypes.object.isRequired,
+  settingsCollection: PropTypes.object.isRequired,
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,

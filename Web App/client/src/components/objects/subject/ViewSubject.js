@@ -78,11 +78,11 @@ function ViewSubject(props) {
     setCurrentClass,
     getAllTask,
     getAllSubjects,
-    tasksCollection,
     getMaterialByClass,
     getTeachers,
     getAssessmentsByClass,
   } = props;
+  const { all_tasks } = props.tasksCollection;
   const { user } = props.auth;
   const id = props.match.params.id;
   const classId = user.kelas;
@@ -137,8 +137,8 @@ function ViewSubject(props) {
   let tasksByClass = []; // Tasks on specific class.
 
   // All actions to retrive datas from Database...
-  if (tasksCollection.length !== undefined) {
-    tasksCollection.map((task) => {
+  if (all_tasks.length !== undefined) {
+    all_tasks.map((task) => {
       let class_assigned = task.class_assigned;
       for (var i = 0; i < class_assigned.length; i++) {
         if (class_assigned[i] === user.kelas) tasksByClass.push(task);
@@ -161,8 +161,8 @@ function ViewSubject(props) {
 
   function listTasks(subject) {
     let taskList = [];
-    if (Array.isArray(tasksCollection)) {
-      taskList = tasksCollection.reverse().filter((task) => {
+    if (Array.isArray(all_tasks)) {
+      taskList = all_tasks.reverse().filter((task) => {
         let class_assigned = task.class_assigned;
         if (Array.isArray(class_assigned)) {
           return (

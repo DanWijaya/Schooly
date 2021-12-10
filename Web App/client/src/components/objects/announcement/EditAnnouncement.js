@@ -3,7 +3,10 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getFileAnnouncements } from "../../../actions/files/FileAnnouncementActions";
-import { getOneAnnouncement, updateAnnouncement } from "../../../actions/AnnouncementActions";
+import {
+  getOneAnnouncement,
+  updateAnnouncement,
+} from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { refreshTeacher } from "../../../actions/UserActions";
 import { getSetting } from "../../../actions/SettingActions";
@@ -211,8 +214,6 @@ class EditAnnouncement extends Component {
       target_role: Array.isArray(selectedAnnouncements.to)
         ? selectedAnnouncements.to
         : [],
-      // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
-      // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
     });
   }
 
@@ -437,7 +438,13 @@ class EditAnnouncement extends Component {
     const { classes } = this.props;
     const { user } = this.props.auth;
     const { kelas } = this.props.classesCollection;
-    const { fileLampiran, class_assigned, target_role, success, errors } = this.state;
+    const {
+      fileLampiran,
+      class_assigned,
+      target_role,
+      success,
+      errors,
+    } = this.state;
 
     if (
       user.role === "Student" &&
@@ -551,7 +558,9 @@ class EditAnnouncement extends Component {
                         "Admin" ? (
                         <Grid item>
                           <Typography color="primary" className={classes.label}>
-                            <SupervisorAccountIcon className={classes.labelIcon} />
+                            <SupervisorAccountIcon
+                              className={classes.labelIcon}
+                            />
                             Ditujukan kepada
                           </Typography>
                           <FormControl

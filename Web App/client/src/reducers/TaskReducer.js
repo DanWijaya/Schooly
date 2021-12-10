@@ -1,22 +1,23 @@
-import {
-  GET_ALL_TASKS,
-  GET_TASKS_BY_CLASS,
-  GET_TASKS_BY_SUBJECTS,
-} from "../actions/Types";
+import { GET_ALL_TASKS, GET_TASK } from "../actions/Types";
 
-// GET_TASKS will make this initial state referring array of task.
-const initialState = {};
+const initialState = {
+  selectedTasks: [],
+  all_tasks: [],
+};
 
 export default function (state = initialState, action) {
   switch (action.type) {
     case GET_ALL_TASKS: {
-      return action.payload;
+      return {
+        ...state,
+        all_tasks: action.payload,
+      };
     }
-    // case GET_TASKS_BY_CLASS: {
-    //   return action.payload;
-    // }
-    case GET_TASKS_BY_SUBJECTS: {
-      return action.payload;
+    case GET_TASK: {
+      return {
+        ...state,
+        selectedTasks: action.payload,
+      };
     }
     default:
       return state;

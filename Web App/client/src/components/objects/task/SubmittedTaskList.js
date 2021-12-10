@@ -112,13 +112,13 @@ function SubmittedTaskList(props) {
   const {
     getOneTask,
     getAllClass,
-    tasksCollection,
     getStudents,
     gradeTask,
     success,
     getFileSubmitTasks_T,
     viewFileSubmitTasks,
   } = props;
+  const { selectedTasks } = props.tasksCollection;
   const { all_students, user } = props.auth;
   const { all_classes } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
@@ -156,7 +156,7 @@ function SubmittedTaskList(props) {
       if (success.length === 3) handleOpenAlert();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasksCollection._id, success]);
+  }, [selectedTasks._id, success]);
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -169,12 +169,7 @@ function SubmittedTaskList(props) {
     setGrade(gradeMap);
   };
 
-  const onGradeTugas = (
-    taskId,
-    studentId,
-    student_name,
-    grade
-  ) => {
+  const onGradeTugas = (taskId, studentId, student_name, grade) => {
     let gradingData = {
       grade: parseInt(grade.get(studentId)),
       studentId: studentId,
@@ -201,20 +196,20 @@ function SubmittedTaskList(props) {
   const handleExportTask = () => {
     let result = "";
     let classArray = [];
-    tasksCollection.class_assigned.forEach((kelas, i) => {
+    selectedTasks.class_assigned.forEach((kelas, i) => {
       let className = all_classes.find((cls) => cls._id === kelas).name;
       if (i !== 0) {
         result = result + ",";
       }
       result = result + className;
-      if (i !== tasksCollection.class_assigned.length - 1) {
+      if (i !== selectedTasks.class_assigned.length - 1) {
         result = result + ",";
       }
       classArray.push([kelas]);
     });
 
-    let gradeKeys = Object.keys(tasksCollection.grades);
-    let gradeValues = Object.values(tasksCollection.grades);
+    let gradeKeys = Object.keys(selectedTasks.grades);
+    let gradeValues = Object.values(selectedTasks.grades);
     gradeKeys.forEach((student_id, i) => {
       let studentData = all_students.find((std) => std._id === student_id);
       if (studentData) {
@@ -259,24 +254,24 @@ function SubmittedTaskList(props) {
     const a = document.createElement("a");
     a.setAttribute("hidden", "");
     a.setAttribute("href", url);
-    a.setAttribute("download", `Hasil ${tasksCollection.name}.csv`);
+    a.setAttribute("download", `Hasil ${selectedTasks.name}.csv`);
     a.click();
   };
 
   const listClassTab = () => {
     let class_assigned = [];
-    if (!tasksCollection.class_assigned) {
+    if (!selectedTasks.class_assigned) {
       return null;
     } else {
       if (temp.size) {
         // Temp = all class
-        for (var i = 0; i < tasksCollection.class_assigned.length; i++) {
+        for (var i = 0; i < selectedTasks.class_assigned.length; i++) {
           class_assigned.push(
             <Tab
               label={
-                !temp.get(tasksCollection.class_assigned[i])
+                !temp.get(selectedTasks.class_assigned[i])
                   ? null
-                  : temp.get(tasksCollection.class_assigned[i]).name
+                  : temp.get(selectedTasks.class_assigned[i]).name
               }
               {...TabIndex(i)}
             />
@@ -300,7 +295,7 @@ function SubmittedTaskList(props) {
 
   const listClassTabPanel = () => {
     let TabPanelList = [];
-    if (!tasksCollection.class_assigned || !all_students) {
+    if (!selectedTasks.class_assigned || !all_students) {
       return;
     } else {
       let students_in_class = [];
@@ -308,7 +303,7 @@ function SubmittedTaskList(props) {
 
       // For every class that was given this task.
       all_students
-        .filter((s) => tasksCollection.class_assigned[value] === s.kelas)
+        .filter((s) => selectedTasks.class_assigned[value] === s.kelas)
         .map((student, idx) => {
           // For every file that the student has submitted.
           let students_files = submittedFiles.filter((f) => {
@@ -352,10 +347,10 @@ function SubmittedTaskList(props) {
                   <Grid item>
                     <Typography noWrap>{student.name}</Typography>
                     <Typography variant="body2" color="textSecondary" noWrap>
-                      {!tasksCollection.grades
+                      {!selectedTasks.grades
                         ? "Not graded"
                         : !gradeStatus.has(student._id) &&
-                          !tasksCollection.grades[student._id]
+                          !selectedTasks.grades[student._id]
                         ? "Belum Dinilai"
                         : "Telah Dinilai"}
                     </Typography>
@@ -378,9 +373,9 @@ function SubmittedTaskList(props) {
                         <TextField
                           defaultValue={
                             grade.has(student._id) ||
-                            tasksCollection.grades === null
+                            selectedTasks.grades === null
                               ? grade.get(student._id)
-                              : tasksCollection.grades[student._id]
+                              : selectedTasks.grades[student._id]
                           }
                           onChange={(e) => {
                             handleChangeGrade(e, student._id);
@@ -430,7 +425,7 @@ function SubmittedTaskList(props) {
     }
   };
 
-  document.title = `Schooly | Daftar Tugas Terkumpul - ${tasksCollection.name}`;
+  document.title = `Schooly | Daftar Tugas Terkumpul - ${selectedTasks.name}`;
 
   return (
     <div className={classes.root}>
@@ -438,22 +433,22 @@ function SubmittedTaskList(props) {
         <Grid item>
           <Paper className={classes.submittedTaskPaper}>
             <Typography variant="h4" style={{ marginBottom: "5px" }}>
-              {tasksCollection.name}
+              {selectedTasks.name}
             </Typography>
             <Typography color="primary" paragraph>
-              Tugas {all_subjects_map.get(tasksCollection.subject)}
+              Tugas {all_subjects_map.get(selectedTasks.subject)}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Oleh: {user.name}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Waktu Dibuat:{" "}
-              {moment(tasksCollection.createdAt)
+              {moment(selectedTasks.createdAt)
                 .locale("id")
                 .format("DD MMM YYYY, HH.mm")}
             </Typography>
             <Divider className={classes.submittedTaskDivider} />
-            {!tasksCollection.description ? null : (
+            {!selectedTasks.description ? null : (
               <div>
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi Tugas:
@@ -462,7 +457,7 @@ function SubmittedTaskList(props) {
                   align="justify"
                   style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
                 >
-                  <CustomLinkify text={tasksCollection.description} />
+                  <CustomLinkify text={selectedTasks.description} />
                 </Typography>
               </div>
             )}
@@ -537,7 +532,7 @@ function SubmittedTaskList(props) {
             <div style={{ padding: "16px 0px 25px 0px" }}>
               <Typography gutterBottom>
                 Tenggat:{" "}
-                {moment(tasksCollection.deadline)
+                {moment(selectedTasks.deadline)
                   .locale("id")
                   .format("DD MMM YYYY, HH.mm")}
               </Typography>

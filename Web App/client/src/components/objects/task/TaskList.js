@@ -395,15 +395,9 @@ const useStyles = makeStyles((theme) => ({
 
 function TaskList(props) {
   const classes = useStyles();
-  const {
-    tasksCollection,
-    getAllTask,
-    deleteTask,
-    getAllClass,
-    getAllSubjects,
-  } = props;
+  const { getAllTask, deleteTask, getAllClass, getAllSubjects } = props;
   const { user } = props.auth;
-
+  const { all_tasks } = props.tasksCollection;
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -459,10 +453,10 @@ function TaskList(props) {
 
   const retrieveTasks = () => {
     rows = [];
-    // If tasksCollection is not undefined or an empty array
-    if (tasksCollection.length > 0) {
+    // If all_tasks is not undefined or an empty array
+    if (all_tasks.length > 0) {
       if (user.role === "Teacher") {
-        tasksCollection
+        all_tasks
           .filter((item) =>
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )
@@ -473,7 +467,7 @@ function TaskList(props) {
           });
       } else if (user.role === "Student") {
         if (submittedTaskIds) {
-          tasksCollection
+          all_tasks
             .filter((item) =>
               item.name.toLowerCase().includes(searchFilter.toLowerCase())
             )
@@ -489,7 +483,7 @@ function TaskList(props) {
         }
       } else {
         // For administrator?
-        tasksCollection
+        all_tasks
           .filter((item) =>
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )

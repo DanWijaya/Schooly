@@ -271,8 +271,8 @@ function ClassListToolbar(props) {
   const invalidEmails = React.useRef([]);
   const handleImportCSV = (event) => {
     event.preventDefault();
-    invalidEmails.current = []; // This is used to show every student's email that is not found in the database.
-    // if (!all_students || !all_teachers_map || !all_classes_map || !tasksCollection || !all_assessments) {
+    // This is used to show every student's email that is not found in the database.
+    invalidEmails.current = [];
     if (!all_students || !all_teachers_map || !all_classes_map) {
       return;
     }
@@ -795,8 +795,7 @@ function ClassList(props) {
   const [searchFilter, setSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
-  const { classesCollection, tasksCollection } = props;
-
+  const { classesCollection } = props;
   // const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"];
   // const colorMap = new Map();
 
@@ -945,7 +944,6 @@ function ClassList(props) {
         all_students={all_students}
         getStudents={getStudents}
         handleOpenSnackbar={handleOpenSnackbar}
-        tasksCollection={tasksCollection}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
         searchFilter={searchFilter}
