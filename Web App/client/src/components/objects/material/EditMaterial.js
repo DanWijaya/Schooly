@@ -13,11 +13,9 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import { getFileMaterials } from "../../../actions/files/FileMaterialActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import {
   AppBar,
-  Avatar,
   Button,
   Checkbox,
   Chip,
@@ -28,8 +26,6 @@ import {
   Hidden,
   IconButton,
   MenuItem,
-  ListItem,
-  ListItemAvatar,
   ListItemText,
   Paper,
   Select,
@@ -42,21 +38,11 @@ import Alert from "@material-ui/lab/Alert";
 import {
   AttachFile as AttachFileIcon,
   Close as CloseIcon,
-  Delete as DeleteIcon,
   LibraryBooks as LibraryBooksIcon,
   MenuBook as MenuBookIcon,
   ShortText as ShortTextIcon,
 } from "@material-ui/icons";
-import {
-  FaChalkboard,
-  FaFile,
-  FaFileAlt,
-  FaFileExcel,
-  FaFileImage,
-  FaFilePdf,
-  FaFilePowerpoint,
-  FaFileWord,
-} from "react-icons/fa";
+import { FaChalkboard } from "react-icons/fa";
 import FileAttachment from "../file/FileAttachment";
 
 const styles = (theme) => ({
@@ -139,14 +125,11 @@ const styles = (theme) => ({
   },
 });
 
-const path = require("path");
-
 class EditMaterial extends Component {
   constructor(props) {
     super(props);
     this.state = {
       name: "",
-      // name1: "",
       subject: "",
       focused: false,
       class_assigned: [],
@@ -330,11 +313,7 @@ class EditMaterial extends Component {
     e.preventDefault();
 
     const { id } = this.props.match.params;
-    const {
-      class_assigned,
-      fileLampiranToAdd,
-      fileLampiranToDelete,
-    } = this.state;
+    const { fileLampiranToAdd, fileLampiranToDelete } = this.state;
     const materialObject = {
       name: this.state.name,
       deadline: this.state.deadline,
@@ -343,11 +322,6 @@ class EditMaterial extends Component {
       class_assigned: this.state.class_assigned,
       lampiran: Array.from(this.state.fileLampiran),
     };
-
-    // if (classChanged)
-    //   materialObject.class_assigned = classesSelected // When the classes is changed
-    // else
-    //   materialObject.class_assigned = class_assigned // When it has no change
 
     let formData = new FormData();
     for (var i = 0; i < fileLampiranToAdd.length; i++) {
@@ -568,13 +542,6 @@ class EditMaterial extends Component {
     } else {
       this.setState({ [e.target.id]: e.target.value });
     }
-
-    // dari merge_fitur_4_cdn
-    // let field = e.target.id ? e.target.id : otherfield;
-    // if (this.state.errors[field]) {
-    //   this.setState({ errors: { ...this.state.errors, [field]: null } });
-    // }
-    // this.setState({ [field]: e.target.value });
   };
 
   onDateChange = (date) => {
@@ -591,42 +558,9 @@ class EditMaterial extends Component {
   render() {
     const { classes } = this.props;
     const { user } = this.props.auth;
-    const { all_classes } = this.props.classesCollection;
-    const { all_subjects } = this.props.subjectsCollection;
-    const { selectedMaterials } = this.props.materialsCollection;
-    const { class_assigned, fileLampiran, errors, success } = this.state;
+    const { class_assigned, fileLampiran, success, errors } = this.state;
 
     let classIds = [];
-
-    const fileType = (filename) => {
-      let ext_file = path.extname(filename);
-      switch (ext_file) {
-        case ".docx":
-          return "Word";
-        case ".xlsx":
-        case ".csv":
-          return "Excel";
-
-        case ".png":
-        case ".jpg":
-        case ".jpeg":
-          return "Gambar";
-
-        case ".pdf":
-          return "PDF";
-
-        case ".txt":
-        case ".rtf":
-          return "Teks";
-
-        case ".ppt":
-        case ".pptx":
-          return "Presentasi";
-
-        default:
-          return "File Lainnya";
-      }
-    };
 
     if (this.state.class_assigned !== null)
       // When firstly received.

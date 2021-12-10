@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import moment from "moment";
 import "moment/locale/id";
 import { getTeachers } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
@@ -74,16 +73,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TASK_STATUS = {
-  SUBMITTED: "Sudah Dikumpulkan",
-  NOT_SUBMITTED: "Belum Dikumpulkan",
-};
-
-const ASSESSMENT_STATUS = {
-  SUBMITTED: "Sudah Ditempuh",
-  NOT_SUBMITTED: "Belum Ditempuh",
-};
-
 function ViewSubject(props) {
   const {
     setCurrentClass,
@@ -91,18 +80,16 @@ function ViewSubject(props) {
     getAllSubjects,
     tasksCollection,
     getMaterialByClass,
-    getAllAssessments,
     getTeachers,
     getAssessmentsByClass,
   } = props;
-  const { user, all_teachers } = props.auth;
+  const { user } = props.auth;
   const id = props.match.params.id;
   const classId = user.kelas;
   const { kelas } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
-  const { all_assessments, selectedAssessments } = props.assessmentsCollection;
-  // const {all_user_files} = props.filesCollection;
+  const { selectedAssessments } = props.assessmentsCollection;
 
   const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
 
@@ -141,7 +128,7 @@ function ViewSubject(props) {
           }
         })
         .finally(() => {
-          // kalau dapat error 404 (files.length === 0), submittedTaskIds akan diisi Set kosong
+          // If error 404 is triggered (files.length === 0), submittedTaskIds will be filled with an empty Set.
           setSubmittedTaskIds(submittedTaskIdSet);
         });
     }
@@ -163,7 +150,7 @@ function ViewSubject(props) {
   function listMaterials(subject) {
     let materialList = selectedMaterials
       .reverse()
-      .filter((material) => material.subject == subject);
+      .filter((material) => material.subject === subject);
 
     if (!Boolean(materialList.length)) {
       return <Empty />;
@@ -194,7 +181,7 @@ function ViewSubject(props) {
   function listAssessments(type = "", subjectId = "") {
     let assessmentList = selectedAssessments.filter(
       (assessment) =>
-        assessment.type == type && assessment.subject === subjectId
+        assessment.type === type && assessment.subject === subjectId
     );
     if (!Boolean(assessmentList.length)) {
       return <Empty />;

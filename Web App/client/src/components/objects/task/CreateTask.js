@@ -11,13 +11,11 @@ import { createTask } from "../../../actions/TaskActions";
 import { getSetting } from "../../../actions/SettingActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import {
   AppBar,
-  Avatar,
   Button,
   Checkbox,
   Chip,
@@ -26,9 +24,6 @@ import {
   FormHelperText,
   Grid,
   Hidden,
-  IconButton,
-  ListItem,
-  ListItemAvatar,
   ListItemText,
   MenuItem,
   Paper,
@@ -46,21 +41,11 @@ import { withStyles } from "@material-ui/core/styles";
 import {
   AssignmentOutlined as AssignmentIcon,
   AttachFile as AttachFileIcon,
-  Delete as DeleteIcon,
   LibraryBooks as LibraryBooksIcon,
   ShortText as ShortTextIcon,
   TimerOff as TimerOffIcon,
 } from "@material-ui/icons";
-import {
-  FaChalkboard,
-  FaFile,
-  FaFileAlt,
-  FaFileExcel,
-  FaFileImage,
-  FaFilePdf,
-  FaFilePowerpoint,
-  FaFileWord,
-} from "react-icons/fa";
+import { FaChalkboard } from "react-icons/fa";
 import FileAttachment from "../file/FileAttachment";
 
 const styles = (theme) => ({
@@ -155,8 +140,6 @@ const styles = (theme) => ({
     },
   },
 });
-
-const path = require("path");
 
 class CreateTask extends Component {
   constructor() {
@@ -488,9 +471,7 @@ class CreateTask extends Component {
   render() {
     const { classes } = this.props;
     const { user } = this.props.auth;
-    const { all_classes } = this.props.classesCollection;
-    const { all_subjects } = this.props.subjectsCollection;
-    const { class_assigned, fileLampiran, errors, success } = this.state;
+    const { class_assigned, fileLampiran, success, errors } = this.state;
 
     document.title = "Schooly | Buat Tugas";
 

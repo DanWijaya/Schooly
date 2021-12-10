@@ -86,10 +86,8 @@ function Profile(props) {
   const classes = useStyles();
   const { user } = props.auth;
   const {
-    updateAvatar,
     setCurrentClass,
     classesCollection,
-    uploadFileAvatar,
     getMyFileAvatar,
   } = props;
 

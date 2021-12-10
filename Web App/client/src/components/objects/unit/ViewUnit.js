@@ -80,10 +80,8 @@ function ViewUnit(props) {
   const { all_subjects } = props.subjectsCollection;
   const unitId = props.match.params.id;
 
-  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [tabValue, setTabValue] = React.useState(0);
   const [avatar, setAvatar] = React.useState({});
-  const unitAuthorName = React.useRef(null);
 
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);

@@ -6,11 +6,7 @@ import moment from "moment";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getStudents } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import {
-  getOneAssessment,
-  updateAssessmentGrades,
-  getQuestionAnalytics,
-} from "../../../actions/AssessmentActions";
+import { getOneAssessment, updateAssessmentGrades, getQuestionAnalytics } from "../../../actions/AssessmentActions";
 import Latex from "../../misc/latex/Latex";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -214,7 +210,6 @@ function AnswerPerQuestion(props) {
     questionNumber,
     questionWeight,
     questionInfo,
-    questionAnswer,
   } = props;
   const { handleGradeChange, handleSaveGrade } = props;
   let questionType = questionInfo.type;
@@ -973,7 +968,7 @@ function ViewAssessmentTeacher(props) {
       let splitQnsResult = questionName.split("`");
       let iterator = 0;
       for (let i = 0; i <= splitQnsResult.length - 2; i += 1) {
-        if (i % 2 == 1) {
+        if (i % 2 === 1) {
           splitQnsResult[i] = (
             <Typography display="inline" color="textSecondary" align="justify">
               <span
@@ -1303,9 +1298,6 @@ function ViewAssessmentTeacher(props) {
   }
 
   const [openDialog, setOpenDialog] = React.useState(false);
-  function handleOpenNavDialog() {
-    setOpenDialog(true);
-  }
   function handleCloseNavDialog() {
     setOpenDialog(false);
   }

@@ -16,13 +16,11 @@ import SubmitDialog from "../../misc/dialog/SubmitDialog";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import Latex from "../../misc/latex/Latex";
 import {
-  Avatar,
   Badge,
   Button,
   Box,
   Checkbox,
   CircularProgress,
-  Divider,
   Dialog,
   DialogContent,
   FormControl,
@@ -44,13 +42,10 @@ import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   Error as ErrorIcon,
-  KeyboardArrowLeft as KeyboardArrowLeft,
-  KeyboardArrowRight as KeyboardArrowRight,
+  KeyboardArrowLeft as KeyboardArrowLeftIcon,
+  KeyboardArrowRight as KeyboardArrowRightIcon,
 } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-
-const imgMaxHeight = 400;
-const imgMaxWidth = 650;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -239,9 +234,8 @@ function TimeoutDialog(props) {
 }
 
 function Timer(props) {
-  const classes = useStyles();
-
   let { start_date, end_date, id, onSubmit, setOpenTimeoutDialog } = props;
+
   let startTime = new Date(start_date);
   let finishTime = new Date(end_date);
 
@@ -302,7 +296,6 @@ function Timer(props) {
 }
 
 function StartTimer(props) {
-  const classes = useStyles();
   let { start_date, end_date, setShowStartButton } = props;
 
   let startTime = new Date(start_date);
@@ -446,18 +439,18 @@ function QuestionImage(props) {
             disabled={activeStep === maxSteps - 1}
           >
             {theme.direction === "rtl" ? (
-              <KeyboardArrowLeft />
+              <KeyboardArrowLeftIcon />
             ) : (
-              <KeyboardArrowRight />
+              <KeyboardArrowRightIcon />
             )}
           </Button>
         }
         backButton={
           <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
             {theme.direction === "rtl" ? (
-              <KeyboardArrowRight />
+              <KeyboardArrowRightIcon />
             ) : (
-              <KeyboardArrowLeft />
+              <KeyboardArrowLeftIcon />
             )}
           </Button>
         }
@@ -628,7 +621,7 @@ function ViewAssessmentStudent(props) {
       } else if (res.data.status === 0) {
         setCurrentTime(res.data.now);
         localStorage.setItem(`status`, "ujian");
-        props.handleSideDrawer(false);
+        handleSideDrawer(false);
         startTest();
       } else {
         setShowClosedMessage(true);
@@ -659,7 +652,7 @@ function ViewAssessmentStudent(props) {
     };
     submitAssessment(id, data).then(() => {
       handleCloseSubmitDialog();
-      props.handleSideDrawer(false);
+      handleSideDrawer(false);
     });
   };
 

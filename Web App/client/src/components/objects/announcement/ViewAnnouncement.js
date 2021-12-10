@@ -79,8 +79,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const path = require("path");
-
 function ViewAnnouncement(props) {
   const classes = useStyles();
   const history = useHistory();

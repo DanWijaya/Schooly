@@ -105,8 +105,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const path = require("path");
-
 function ViewTaskStudent(props) {
   const classes = useStyles();
   const {

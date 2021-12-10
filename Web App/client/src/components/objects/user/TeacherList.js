@@ -74,8 +74,6 @@ function TeacherListToolbar(props) {
     onRequestSort,
     searchFilter,
     setSearchFilter,
-    searchBarFocus,
-    setSearchBarFocus,
   } = props;
 
   const createSortHandler = (property) => (event) => {
@@ -288,7 +286,6 @@ function TeacherList(props) {
 
   // Search Filter
   const [searchFilter, setSearchFilter] = React.useState("");
-  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
 
   // Sort
   const [order, setOrder] = React.useState("asc");
@@ -452,19 +449,6 @@ function TeacherList(props) {
 
     updateTeacher(newTeacherData, teacherId);
   }
-
-  // Edit Dialog
-  const [openSuntingDialog, setOpenSuntingDialog] = React.useState(false);
-  const [dialogData, setDialogData] = React.useState(null);
-
-  const handleClickOpenSuntingDialog = (data) => {
-    setDialogData(data);
-    setOpenSuntingDialog(true);
-  };
-
-  const handleCloseSuntingDialog = () => {
-    setOpenSuntingDialog(false);
-  };
 
   document.title = "Schooly | Data Ajar Guru";
 

@@ -20,11 +20,11 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import { makeStyles } from "@material-ui/core/styles";
 import {
   Delete as DeleteIcon,
   Publish as PublishIcon,
 } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   chosen: {

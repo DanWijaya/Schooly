@@ -3,22 +3,18 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getFileAnnouncements } from "../../../actions/files/FileAnnouncementActions";
-import {
-  getOneAnnouncement,
-  updateAnnouncement,
-} from "../../../actions/AnnouncementActions";
+import { getOneAnnouncement, updateAnnouncement } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { refreshTeacher } from "../../../actions/UserActions";
 import { getSetting } from "../../../actions/SettingActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
+import FileAttachment from "../file/FileAttachment";
+import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import FloatingHelp from "../../misc/floating-help/FloatingHelp";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   AppBar,
-  Avatar,
   Button,
   Checkbox,
   Chip,
@@ -28,8 +24,6 @@ import {
   Grid,
   Hidden,
   IconButton,
-  ListItem,
-  ListItemAvatar,
   ListItemText,
   MenuItem,
   Paper,
@@ -44,21 +38,10 @@ import {
   Announcement as AnnouncementIcon,
   AttachFile as AttachFileIcon,
   Close as CloseIcon,
-  Delete as DeleteIcon,
   ShortText as ShortTextIcon,
   SupervisorAccount as SupervisorAccountIcon,
 } from "@material-ui/icons";
-import {
-  FaChalkboard,
-  FaFile,
-  FaFileAlt,
-  FaFileExcel,
-  FaFileImage,
-  FaFilePdf,
-  FaFilePowerpoint,
-  FaFileWord,
-} from "react-icons/fa";
-import FileAttachment from "../file/FileAttachment";
+import { FaChalkboard } from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {
@@ -139,8 +122,6 @@ const styles = (theme) => ({
     },
   },
 });
-
-const path = require("path");
 
 class EditAnnouncement extends Component {
   constructor() {
@@ -449,11 +430,9 @@ class EditAnnouncement extends Component {
     document.title = "Schooly | Sunting Pengumuman";
 
     const { classes } = this.props;
-    const { fileLampiran, class_assigned, target_role, errors } = this.state;
-    // const { success } = this.props;
-    const { success } = this.state;
     const { user } = this.props.auth;
-    const { all_classes, kelas } = this.props.classesCollection;
+    const { kelas } = this.props.classesCollection;
+    const { fileLampiran, class_assigned, target_role, success, errors } = this.state;
 
     if (
       user.role === "Student" &&

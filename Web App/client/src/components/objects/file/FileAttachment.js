@@ -1,4 +1,5 @@
 import React from "react";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
   Grid,
@@ -18,9 +19,8 @@ import {
   FaFilePowerpoint,
   FaFileWord,
 } from "react-icons/fa";
-import { makeStyles } from "@material-ui/core/styles";
 import { Delete as DeleteIcon } from "@material-ui/icons";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {

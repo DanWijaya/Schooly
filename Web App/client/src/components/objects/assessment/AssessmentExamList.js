@@ -2,11 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
-import {
-  getAllAssessments,
-  deleteAssessment,
-} from "../../../actions/AssessmentActions";
+import { getAllAssessments, deleteAssessment } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers } from "../../../actions/UserActions";
@@ -15,7 +11,6 @@ import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import {
   Avatar,
-  Dialog,
   Divider,
   Fab,
   Grid,
@@ -614,14 +609,6 @@ function AssessmentList(props) {
       return;
     }
     setOpenDeleteSnackbar(false);
-  };
-
-  const workStatus = (assessment) => {
-    console.log(assessment);
-    let workStatus = !assessment.submissions
-      ? "Belum Ditempuh"
-      : "Sudah Ditempuh";
-    return workStatus;
   };
 
   document.title = "Schooly | Ujian";

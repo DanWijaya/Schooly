@@ -23,6 +23,7 @@ import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions"
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
+import FileAttachment from "../file/FileAttachment";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -33,9 +34,6 @@ import {
   Hidden,
   IconButton,
   InputAdornment,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Paper,
   Snackbar,
   TextField,
@@ -46,23 +44,12 @@ import Alert from "@material-ui/lab/Alert";
 import {
   Cancel as CancelIcon,
   CheckCircle as CheckCircleIcon,
-  Create as CreateIcon,
   Delete as DeleteIcon,
   Edit as EditIcon,
   MoreVert as MoreVertIcon,
   Send as SendIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  FaFile,
-  FaFileAlt,
-  FaFileExcel,
-  FaFileImage,
-  FaFilePdf,
-  FaFilePowerpoint,
-  FaFileWord,
-} from "react-icons/fa";
-import FileAttachment from "../file/FileAttachment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -149,17 +136,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const path = require("path");
-
 function ViewMaterial(props) {
   const classes = useStyles();
   const history = useHistory();
   const {
-    deleteMaterial,
-    // getOneUser,
     getAllSubjects,
     viewFileMaterial,
-    downloadFileMaterial,
+    deleteMaterial,
     getOneMaterial,
     getAllClass,
     getFileMaterials,
@@ -172,7 +155,7 @@ function ViewMaterial(props) {
   const { user, all_students, all_teachers } = props.auth;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
-  const { selectedMaterials, all_materials } = props.materialsCollection;
+  const { selectedMaterials } = props.materialsCollection;
   const materi_id = props.match.params.id;
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -273,6 +256,7 @@ function ViewMaterial(props) {
   const handleCommentInputChange = (e) => {
     setCommentValue(e.target.value);
   };
+
   const handleCommentEditorChange = (e) => {
     setCommentEditorValue(e.target.value);
   };
@@ -280,10 +264,6 @@ function ViewMaterial(props) {
   const closeEditMode = () => {
     setCommentEditorValue("");
     setSelectedCommentIdx(null);
-  };
-  const handleClickEdit = (idx) => {
-    setCommentEditorValue(commentList[idx].content);
-    setSelectedCommentIdx(idx);
   };
 
   const handleCreateComment = () => {
@@ -349,36 +329,6 @@ function ViewMaterial(props) {
       return;
     }
     setOpenCommentSnackbar(false);
-  };
-
-  const fileType = (filename) => {
-    let ext_file = path.extname(filename);
-    switch (ext_file) {
-      case ".docx":
-        return "Word";
-      case ".xlsx":
-      case ".csv":
-        return "Excel";
-
-      case ".png":
-      case ".jpg":
-      case ".jpeg":
-        return "Gambar";
-
-      case ".pdf":
-        return "PDF";
-
-      case ".txt":
-      case ".rtf":
-        return "Teks";
-
-      case ".ppt":
-      case ".pptx":
-        return "Presentasi";
-
-      default:
-        return "File Lainnya";
-    }
   };
 
   const onDeleteMaterial = (id) => {

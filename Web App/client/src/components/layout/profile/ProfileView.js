@@ -33,7 +33,6 @@ import {
   Work as WorkIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import getUnixTime from "date-fns/getUnixTime";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,9 +98,9 @@ function ProfileView(props) {
   }, []);
 
   const {
+    _id,
     name,
     role,
-    viewable_section,
     jenis_kelamin,
     email,
     phone,
@@ -111,10 +110,6 @@ function ProfileView(props) {
     ket_non_teknis,
     cita_cita,
     uni_impian,
-    kelas,
-    admin,
-    _id,
-    tanggal_lahir,
   } = selectedUser;
 
   document.title = selectedUser.name

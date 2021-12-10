@@ -399,8 +399,6 @@ function TaskList(props) {
     getAllSubjects,
   } = props;
   const { user } = props.auth;
-  const { all_classes_map } = props.classesCollection;
-  const { all_subjects_map } = props.subjectsCollection;
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");

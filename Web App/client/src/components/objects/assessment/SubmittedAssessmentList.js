@@ -26,7 +26,6 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemIcon,
   ListItemText,
   Menu,
@@ -40,7 +39,6 @@ import {
 } from "@material-ui/core";
 import {
   CheckBox as CheckBoxIcon,
-  Edit as EditIcon,
   ExpandMore as ExpandMoreIcon,
   GetApp as GetAppIcon,
   PlaylistAddCheck as PlaylistAddCheckIcon,

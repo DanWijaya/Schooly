@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getTeachers } from "../../../actions/UserActions";
@@ -227,7 +226,6 @@ class CreateClass extends Component {
 
   render() {
     const { classes, success } = this.props;
-    const { all_teachers, user } = this.props.auth;
     const { errors } = this.state;
 
     document.title = "Schooly | Buat Kelas";

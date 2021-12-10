@@ -100,16 +100,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "transparent",
     },
   },
-  view_dialogTopDiv: {
-    display: "flex",
-    justifyContent: "flex-end",
-    padding: "0 24px",
-  },
-  dialogTopIcons: {
-    width: "20px",
-    height: "20px",
-    color: theme.palette.text.secondary,
-  },
   addFileButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -145,12 +135,6 @@ const useStyles = makeStyles((theme) => ({
   smDownZeroBottomPadding: {
     [theme.breakpoints.down("sm")]: {
       paddingBottom: "0!important",
-    },
-  },
-  dialogTopIconButtons: {
-    padding: "8px",
-    "&focus, &:hover": {
-      backgroundColor: theme.palette.action.hover,
     },
   },
   dialogContent: {
@@ -1045,35 +1029,25 @@ function Event(props) {
     >
       {eventDialogMode === "view" ? (
         <>
-          <div className={classes.view_dialogTopDiv}>
+          <DialogActions>
             {user._id === author_id ? (
-              <>
+              <div style={{ marginRight: "15px" }}>
                 <Tooltip title="Sunting">
-                  <IconButton
-                    className={classes.dialogTopIconButtons}
-                    onClick={() => handleClickEdit()}
-                  >
-                    <EditIcon className={classes.dialogTopIcons} />
+                  <IconButton size="small" onClick={() => handleClickEdit()}>
+                    <EditIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
-                <Tooltip title="Hapus" style={{ marginRight: "24px" }}>
-                  <IconButton
-                    className={classes.dialogTopIconButtons}
-                    onClick={() => handleOpenDeleteDialog()}
-                  >
-                    <DeleteIcon className={classes.dialogTopIcons} />
+                <Tooltip title="Hapus">
+                  <IconButton size="small" onClick={() => handleOpenDeleteDialog()}>
+                    <DeleteIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
-              </>
+              </div>
             ) : null}
-            <IconButton
-              edge="end"
-              className={classes.dialogTopIconButtons}
-              onClick={() => handleCloseEventDialog()}
-            >
-              <CloseIcon className={classes.dialogTopIcons} />
+            <IconButton size="small" onClick={() => handleCloseEventDialog()}>
+              <CloseIcon />
             </IconButton>
-          </div>
+          </DialogActions>
           <div className={classes.viewDialogBottomDiv}>
             <div className={classes.viewDialogScrollableDiv}>
               <Grid
@@ -1172,13 +1146,12 @@ function Event(props) {
         <>
           <div className={classes.create_edit_dialogTopDiv} id="drag-handle">
             <Hidden smDown>
-              <IconButton edge="start" className={classes.dialogTopIconButtons}>
-                <DragHandleIcon className={classes.dialogTopIcons} />
+              <IconButton edge="start">
+                <DragHandleIcon />
               </IconButton>
             </Hidden>
             <IconButton
               edge="end"
-              className={classes.dialogTopIconButtons}
               style={
                 openUploadDialog && !uploadSuccess
                   ? { visibility: "hidden" }
@@ -1190,7 +1163,7 @@ function Event(props) {
                 }
               }}
             >
-              <CloseIcon className={classes.dialogTopIcons} />
+              <CloseIcon />
             </IconButton>
           </div>
           <DialogTitle disableTypography>

@@ -38,19 +38,14 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
-  Block as BlockIcon,
-  Cancel as CancelIcon,
   CheckBox as CheckBoxIcon,
   CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
-  CheckCircle as CheckCircleIcon,
   Clear as ClearIcon,
-  DataUsageRounded,
   IndeterminateCheckBox as IndeterminateCheckBoxIcon,
   Search as SearchIcon,
   Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import { BiSitemap } from "react-icons/bi";
 import { FaUserLock } from "react-icons/fa";
 
 function createData(

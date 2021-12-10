@@ -83,7 +83,6 @@ function EditUnit(props) {
     handleNavbar,
     handleFooter,
   } = props;
-  const { user } = props.auth;
   const { id } = props.match.params;
   const { selectedUnits } = props.unitsCollection;
 
@@ -91,17 +90,10 @@ function EditUnit(props) {
     name: "",
     description: "",
   });
-  const [focused, setFocused] = React.useState(false);
   const [errors, setErrors] = React.useState({});
   const [success, setSuccess] = React.useState(false);
   const [openUploadDialog, setOpenUploadDialog] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-  const [anchorEl, setanchorEl] = React.useState(false);
-
-  // Handlers
-  const handleCloseMenu = () => {
-    setanchorEl(null);
-  };
 
   const handleOpenUploadDialog = () => {
     setOpenUploadDialog(true);

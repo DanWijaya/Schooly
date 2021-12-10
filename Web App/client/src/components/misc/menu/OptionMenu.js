@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { IconButton, Menu, MenuItem, Typography } from "@material-ui/core";
+import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import { MoreVert as MoreVertIcon } from "@material-ui/icons";
 
 function OptionMenu(props) {

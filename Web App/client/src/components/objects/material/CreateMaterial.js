@@ -8,13 +8,12 @@ import { refreshTeacher } from "../../../actions/UserActions";
 import { getSetting } from "../../../actions/SettingActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import FileAttachment from "../file/FileAttachment";
+import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import {
   AppBar,
-  Avatar,
   Button,
   Checkbox,
   Chip,
@@ -23,9 +22,6 @@ import {
   FormHelperText,
   Grid,
   Hidden,
-  IconButton,
-  ListItem,
-  ListItemAvatar,
   ListItemText,
   MenuItem,
   Paper,
@@ -38,22 +34,11 @@ import Alert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
 import {
   AttachFile as AttachFileIcon,
-  Delete as DeleteIcon,
   LibraryBooks as LibraryBooksIcon,
   MenuBook as MenuBookIcon,
   ShortText as ShortTextIcon,
 } from "@material-ui/icons";
-import {
-  FaChalkboard,
-  FaFile,
-  FaFileAlt,
-  FaFileExcel,
-  FaFileImage,
-  FaFilePdf,
-  FaFilePowerpoint,
-  FaFileWord,
-} from "react-icons/fa";
-import FileAttachment from "../file/FileAttachment";
+import { FaChalkboard } from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {
@@ -147,8 +132,6 @@ const styles = (theme) => ({
     },
   },
 });
-
-const path = require("path");
 
 class CreateMaterial extends Component {
   constructor() {
@@ -482,8 +465,6 @@ class CreateMaterial extends Component {
   render() {
     const { classes } = this.props;
     const { user } = this.props.auth;
-    const { all_classes } = this.props.classesCollection;
-    const { all_subjects } = this.props.subjectsCollection;
     const { class_assigned, fileLampiran, errors, success } = this.state;
 
     document.title = "Schooly | Buat Materi";

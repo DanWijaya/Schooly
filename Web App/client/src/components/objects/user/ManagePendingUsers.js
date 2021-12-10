@@ -22,9 +22,7 @@ import Empty from "../../misc/empty/Empty";
 import { TabPanel } from "../../misc/tab-panel/TabPanel";
 import {
   Avatar,
-  Button,
   Checkbox,
-  Dialog,
   Divider,
   Grid,
   Hidden,
@@ -48,19 +46,14 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
-  Block as BlockIcon,
-  Cancel as CancelIcon,
   CheckBox as CheckBoxIcon,
   CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
-  CheckCircle as CheckCircleIcon,
   Clear as ClearIcon,
-  DataUsageRounded,
   IndeterminateCheckBox as IndeterminateCheckBoxIcon,
   Search as SearchIcon,
   Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import { BiSitemap } from "react-icons/bi";
 import { FaUserLock } from "react-icons/fa";
 
 function createData(
@@ -117,11 +110,9 @@ function ManageUsersToolbar(props) {
   const { classes, order, orderBy, onRequestSort, role } = props;
   const {
     rowCount,
-    user,
     listCheckbox,
     selectAllData,
     deSelectAllData,
-    lengthListCheckbox,
     handleOpenDisableDialog,
     handleOpenDeleteDialog,
     setSearchBarFocus,
@@ -709,12 +700,12 @@ function ManagePendingUsers(props) {
       await deleteUser(id);
     }
 
-    if (panel == 0) {
+    if (panel === 0) {
       await removeDisabledDeletedOfficers(id);
       const students = await getPendingStudents(user.unit);
       setListCheckboxStudent([]);
       setBooleanCheckboxStudent(students.map(() => false));
-    } else if (panel == 1) {
+    } else if (panel === 1) {
       await removeHomeroomTeachers(id);
       const teachers = await getPendingTeachers(user.unit);
       setListCheckboxTeacher([]);
@@ -732,11 +723,11 @@ function ManagePendingUsers(props) {
     } else {
       await setUserActive(id);
     }
-    if (panel == 0) {
+    if (panel === 0) {
       const students = await getPendingStudents(user.unit);
       setListCheckboxStudent([]);
       setBooleanCheckboxStudent(students.map(() => false));
-    } else if (panel == 1) {
+    } else if (panel === 1) {
       const teachers = await getPendingTeachers(user.unit);
       setListCheckboxTeacher([]);
       setBooleanCheckboxTeacher(teachers.map(() => false));
@@ -753,9 +744,9 @@ function ManagePendingUsers(props) {
       setSelectedUserId(row._id);
       setSelectedUserName(row.name);
     } else {
-      if (panel == 0) {
+      if (panel === 0) {
         setSelectedUserId(listCheckboxStudent);
-      } else if (panel == 1) {
+      } else if (panel === 1) {
         setSelectedUserId(listCheckboxTeacher);
       }
     }
@@ -768,9 +759,9 @@ function ManagePendingUsers(props) {
       setSelectedUserId(row._id);
       setSelectedUserName(row.name);
     } else {
-      if (panel == 0) {
+      if (panel === 0) {
         setSelectedUserId(listCheckboxStudent);
-      } else if (panel == 1) {
+      } else if (panel === 1) {
         setSelectedUserId(listCheckboxTeacher);
       }
     }

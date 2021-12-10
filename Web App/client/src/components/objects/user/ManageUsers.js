@@ -487,7 +487,6 @@ function ManageUsers(props) {
   const {
     all_students,
     all_teachers,
-    pending_users,
     user,
     all_roles,
   } = props.auth;

@@ -10,7 +10,6 @@ import DataField from "../DataField";
 import { TabPanel, TabIndex } from "../../../misc/tab-panel/TabPanel";
 import {
   Button,
-  Box,
   Dialog,
   DialogActions,
   DialogContent,

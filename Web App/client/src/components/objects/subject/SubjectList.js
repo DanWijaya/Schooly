@@ -37,7 +37,6 @@ import {
   Cancel as CancelIcon,
   Clear as ClearIcon,
   Edit as EditIcon,
-  MoreVert as MoreVertIcon,
   LibraryBooks as LibraryBooksIcon,
   Search as SearchIcon,
   SortByAlpha as SortByAlphaIcon,
@@ -85,8 +84,8 @@ function SubjectListToolbar(props) {
     handleOpenCreateDialog,
     searchFilter,
     setSearchFilter,
-    setSearchBarFocus,
     searchBarFocus,
+    setSearchBarFocus,
   } = props;
 
   const createSortHandler = (property) => (event) => {
@@ -339,6 +338,16 @@ const useStyles = makeStyles((theme) => ({
 function SubjectList(props) {
   const classes = useStyles();
 
+  const {
+    getAllSubjects,
+    editSubject,
+    createSubject,
+    deleteSubject,
+  } = props;
+  const { all_subjects } = props.subjectsCollection;
+  const { user } = props.auth;
+  const { unit } = user;
+
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
 
@@ -355,18 +364,6 @@ function SubjectList(props) {
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [snackbarContent, setSnackbarContent] = React.useState(null);
-
-  const {
-    subjectsCollection,
-    getAllSubjects,
-    editSubject,
-    clearErrors,
-    createSubject,
-    deleteSubject,
-  } = props;
-  const { all_subjects } = props.subjectsCollection;
-  const { user, retrieved_users } = props.auth;
-  const { unit } = user;
 
   const subjectRowItem = (data) => {
     rows.push(createData(data._id, data.name, data.all_class));

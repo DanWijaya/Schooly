@@ -2,18 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import OptionMenu from "../../misc/menu/OptionMenu";
-import {
-  Grid,
-  IconButton,
-  ListItem,
-  Menu,
-  MenuItem,
-  Typography,
-} from "@material-ui/core";
-import {
-  LibraryBooks as LibraryBooksIcon,
-  MoreVert as MoreVertIcon,
-} from "@material-ui/icons";
+import { Grid, Typography } from "@material-ui/core";
+import { LibraryBooks as LibraryBooksIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({

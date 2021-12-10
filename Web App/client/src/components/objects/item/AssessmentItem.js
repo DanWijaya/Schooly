@@ -15,7 +15,6 @@ import {
   ListItemAvatar,
   ListItemText,
   Paper,
-  Snackbar,
   Typography,
 } from "@material-ui/core";
 import {

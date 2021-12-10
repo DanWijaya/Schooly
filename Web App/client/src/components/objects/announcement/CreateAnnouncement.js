@@ -8,13 +8,12 @@ import { createAnnouncement } from "../../../actions/AnnouncementActions";
 import { getSetting } from "../../../actions/SettingActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
+import FileAttachment from "../file/FileAttachment";
+import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import FloatingHelp from "../../misc/floating-help/FloatingHelp";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   AppBar,
-  Avatar,
   Button,
   Checkbox,
   Chip,
@@ -23,9 +22,6 @@ import {
   FormHelperText,
   Grid,
   Hidden,
-  IconButton,
-  ListItem,
-  ListItemAvatar,
   ListItemText,
   MenuItem,
   Paper,
@@ -38,22 +34,11 @@ import Alert from "@material-ui/lab/Alert";
 import {
   Announcement as AnnouncementIcon,
   AttachFile as AttachFileIcon,
-  Delete as DeleteIcon,
   ShortText as ShortTextIcon,
   SupervisorAccount as SupervisorAccountIcon,
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
-import {
-  FaChalkboard,
-  FaFile,
-  FaFileAlt,
-  FaFileExcel,
-  FaFileImage,
-  FaFilePdf,
-  FaFilePowerpoint,
-  FaFileWord,
-} from "react-icons/fa";
-import FileAttachment from "../file/FileAttachment";
+import { FaChalkboard } from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {
@@ -147,8 +132,6 @@ const styles = (theme) => ({
     },
   },
 });
-
-const path = require("path");
 
 class CreateAnnouncement extends Component {
   constructor() {
@@ -363,7 +346,7 @@ class CreateAnnouncement extends Component {
   render() {
     const { classes } = this.props;
     const { user } = this.props.auth;
-    const { all_classes, kelas } = this.props.classesCollection;
+    const { kelas } = this.props.classesCollection;
     const {
       class_assigned,
       fileLampiran,

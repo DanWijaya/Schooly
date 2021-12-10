@@ -142,8 +142,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const path = require("path");
-
 function ViewTaskTeacher(props) {
   const classes = useStyles();
   const history = useHistory();
@@ -347,36 +345,6 @@ function ViewTaskTeacher(props) {
       return;
     }
     setOpenCommentSnackbar(false);
-  };
-
-  const fileType = (filename) => {
-    let ext_file = path.extname(filename);
-    switch (ext_file) {
-      case ".docx":
-        return "Word";
-      case ".xlsx":
-      case ".csv":
-        return "Excel";
-
-      case ".png":
-      case ".jpg":
-      case ".jpeg":
-        return "Gambar";
-
-      case ".pdf":
-        return "PDF";
-
-      case ".txt":
-      case ".rtf":
-        return "Teks";
-
-      case ".ppt":
-      case ".pptx":
-        return "Presentasi";
-
-      default:
-        return "File Lainnya";
-    }
   };
 
   const onDeleteTask = (id) => {
@@ -801,6 +769,5 @@ export default connect(mapStateToProps, {
   getTeachers,
   getStudents,
   getMultipleFileAvatar,
-  getStudents,
   getFileSubmitTasks_T,
 })(ViewTaskTeacher);

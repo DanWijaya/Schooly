@@ -12,13 +12,12 @@ import { refreshTeacher } from "../../../actions/UserActions";
 import { getSetting } from "../../../actions/SettingActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import FileAttachment from "../file/FileAttachment";
+import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import FloatingHelp from "../../misc/floating-help/FloatingHelp";
 import {
   AppBar,
-  Avatar,
   Button,
   Checkbox,
   Chip,
@@ -28,8 +27,6 @@ import {
   Grid,
   Hidden,
   IconButton,
-  ListItem,
-  ListItemAvatar,
   ListItemText,
   MenuItem,
   Paper,
@@ -47,23 +44,12 @@ import {
   AssignmentOutlined as AssignmentIcon,
   AttachFile as AttachFileIcon,
   Close as CloseIcon,
-  Delete as DeleteIcon,
   LibraryBooks as LibraryBooksIcon,
   ShortText as ShortTextIcon,
   TimerOff as TimerOffIcon,
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
-import {
-  FaChalkboard,
-  FaFile,
-  FaFileAlt,
-  FaFileExcel,
-  FaFileImage,
-  FaFilePdf,
-  FaFilePowerpoint,
-  FaFileWord,
-} from "react-icons/fa";
-import FileAttachment from "../file/FileAttachment";
+import { FaChalkboard } from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {
@@ -147,8 +133,6 @@ const styles = (theme) => ({
     },
   },
 });
-
-const path = require("path");
 
 class EditTask extends Component {
   constructor(props) {
@@ -343,7 +327,6 @@ class EditTask extends Component {
     const { id } = this.props.match.params;
     const {
       class_assigned,
-      classChanged,
       fileLampiranToAdd,
       fileLampiranToDelete,
     } = this.state;
@@ -597,10 +580,8 @@ class EditTask extends Component {
 
   render() {
     const { classes } = this.props;
-    const { user } = this.props.auth;
     const { all_classes } = this.props.classesCollection;
-    const { all_subjects } = this.props.subjectsCollection;
-    const { fileLampiran, class_assigned, errors, success } = this.state;
+    const { fileLampiran, class_assigned, success, errors } = this.state;
 
     let classIds = [];
 

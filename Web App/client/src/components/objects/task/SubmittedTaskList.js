@@ -107,8 +107,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const path = require("path");
-
 function SubmittedTaskList(props) {
   const classes = useStyles();
   const {
@@ -171,13 +169,8 @@ function SubmittedTaskList(props) {
     setGrade(gradeMap);
   };
 
-  const onPreviewFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran") viewFileSubmitTasks(id);
-  };
-
   const onGradeTugas = (
     taskId,
-    // student_task_files_id,
     studentId,
     student_name,
     grade
@@ -191,38 +184,7 @@ function SubmittedTaskList(props) {
     if (grade.has(studentId)) {
       gradeStatusMap.set(studentId, "Graded");
       setGradeStatus(gradeStatusMap);
-      // getOneTask(task_id);
       gradeTask(taskId, gradingData, student_name);
-    }
-  };
-
-  const fileType = (filename) => {
-    let ext_file = path.extname(filename);
-    switch (ext_file) {
-      case ".docx":
-        return "Word";
-      case ".xlsx":
-      case ".csv":
-        return "Excel";
-
-      case ".png":
-      case ".jpg":
-      case ".jpeg":
-        return "Gambar";
-
-      case ".pdf":
-        return "PDF";
-
-      case ".txt":
-      case ".rtf":
-        return "Teks";
-
-      case ".ppt":
-      case ".pptx":
-        return "Presentasi";
-
-      default:
-        return "File Lainnya";
     }
   };
 
@@ -341,7 +303,6 @@ function SubmittedTaskList(props) {
     if (!tasksCollection.class_assigned || !all_students) {
       return;
     } else {
-      let { class_assigned } = tasksCollection;
       let students_in_class = [];
       let isClassSubmissionEmpty = true;
 
@@ -351,7 +312,7 @@ function SubmittedTaskList(props) {
         .map((student, idx) => {
           // For every file that the student has submitted.
           let students_files = submittedFiles.filter((f) => {
-            return f.author_id == student._id;
+            return f.author_id === student._id;
           });
           let task_list_on_panel;
 

@@ -207,7 +207,6 @@ class EditAssessment extends Component {
       type: "",
       openDeleteDialog: false,
       openUploadDialog: false,
-      success: false,
       page: 0,
       rowsPerPage: 10,
       qnsListitem: [],
@@ -460,7 +459,7 @@ class EditAssessment extends Component {
       if (filteredtypeCount.length === 0) {
         completeWeight = false;
       } else {
-        for (let [type, count] of filteredtypeCount) {
+        for (let [type] of filteredtypeCount) {
           if (type === "longtext") {
             for (let weight of this.state.longtextWeight) {
               // So that assessment data won't be submitted whene there are long answer questions' maximum score point that is not valid.
@@ -1455,10 +1454,8 @@ class EditAssessment extends Component {
 
   render() {
     const { classes } = this.props;
-    const { all_classes } = this.props.classesCollection;
-    const { all_subjects } = this.props.subjectsCollection;
     const { selectedAssessments } = this.props.assessmentsCollection;
-    const { class_assigned, errors, success } = this.state;
+    const { class_assigned, success, errors } = this.state;
 
     const linkToShare =
       this.state.type === "Kuis"

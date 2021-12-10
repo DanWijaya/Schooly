@@ -23,7 +23,6 @@ import {
   CameraAlt as CameraAltIcon,
   Close as CloseIcon,
   CloudUpload as CloudUploadIcon,
-  Person as PersonIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 

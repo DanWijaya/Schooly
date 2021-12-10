@@ -52,7 +52,6 @@ function TaskItem(props) {
   const classes = useStyles();
   const { data, handleOpenDeleteDialog, submittedIds } = props;
   const { user } = props.auth;
-  const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
 
   return data.map((row, index) => {
@@ -60,6 +59,7 @@ function TaskItem(props) {
       user.role === "Student"
         ? `/tugas-murid/${row._id}`
         : `/tugas-guru/${row._id}`;
+
     return (
       <Grid item>
         <Link to={viewpage}>

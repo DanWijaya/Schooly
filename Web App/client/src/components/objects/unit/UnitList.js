@@ -7,10 +7,6 @@ import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import {
   Avatar,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
   Divider,
   Fab,
   Grid,
@@ -28,10 +24,7 @@ import {
 import Alert from "@material-ui/lab/Alert";
 import {
   ArrowBack as ArrowBackIcon,
-  ArrowRightAlt as ArrowRightAltIcon,
   Clear as ClearIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
   Search as SearchIcon,
   Sort as SortIcon,
   Web as WebIcon,
@@ -400,17 +393,9 @@ const useStyles = makeStyles((theme) => ({
 
 function UnitList(props) {
   const classes = useStyles();
-  const {
-    getMaterial,
-    deleteUnit,
-    getAllClass,
-    getTeachers,
-    getAllUnits,
-  } = props;
+  const { getAllUnits, deleteUnit } = props;
   const { user, all_teachers_map } = props.auth;
-  const { all_classes_map } = props.classesCollection;
   const { all_units, selectedUnits } = props.unitsCollection;
-  const { all_subjects_map } = props.subjectsCollection;
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
@@ -460,11 +445,9 @@ function UnitList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(all_teachers_map);
   const retrieveUnits = () => {
     // If all_units is not undefined or an empty array.
     rows = [];
-    console.log(all_units);
     if (user.role === "SuperAdmin") {
       all_units
         .filter((item) =>

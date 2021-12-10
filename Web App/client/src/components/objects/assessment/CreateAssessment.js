@@ -20,17 +20,14 @@ import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import {
   AppBar,
-  Avatar,
   Badge,
   Button,
   ButtonGroup,
   Checkbox,
   Chip,
   Divider,
-  Drawer,
   FormControl,
   FormControlLabel,
-  FormGroup,
   FormHelperText,
   Grid,
   Hidden,
@@ -38,14 +35,12 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemSecondaryAction,
   ListItemText,
   Menu,
   MenuItem,
   Paper,
   Select,
   Snackbar,
-  Switch,
   TextField,
   TablePagination,
   Tooltip,
@@ -63,7 +58,6 @@ import {
   FormatListNumbered as FormatListNumberedIcon,
   Info as InfoIcon,
   LibraryBooks as LibraryBooksIcon,
-  Link as LinkIcon,
   RadioButtonChecked as RadioButtonCheckedIcon,
   ShortText as ShortTextIcon,
   Subject as SubjectIcon,
@@ -219,7 +213,6 @@ class CreateAssessment extends Component {
       type: "",
       openDeleteDialog: false,
       openUploadDialog: false,
-      success: false,
       page: 0,
       rowsPerPage: 10,
       qnsListitem: [],
@@ -361,7 +354,7 @@ class CreateAssessment extends Component {
         (pair) => pair[1] > 0
       );
       if (filteredtypeCount.length !== 0) {
-        for (let [type, count] of filteredtypeCount) {
+        for (let [type] of filteredtypeCount) {
           if (type === "longtext") {
             for (let weight of this.state.longtextWeight) {
               // So that assessment data won't be submitted whene there are long answer questions' maximum score point that is not valid.
@@ -1304,9 +1297,6 @@ class CreateAssessment extends Component {
   render() {
     const { classes } = this.props;
     const { user } = this.props.auth;
-    const { all_classes } = this.props.classesCollection;
-    const { all_subjects } = this.props.subjectsCollection;
-    const { pathname } = this.props.location;
     const { class_assigned, errors, success } = this.state;
 
     document.title = `Schooly | Buat ${this.state.type}`;

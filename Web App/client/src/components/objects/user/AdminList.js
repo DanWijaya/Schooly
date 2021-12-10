@@ -30,9 +30,7 @@ import {
   Typography,
 } from "@material-ui/core/";
 import {
-  ArrowBack as ArrowBackIcon,
   Clear as ClearIcon,
-  ExpandMore as ExpandMoreIcon,
   Search as SearchIcon,
   Sort as SortIcon,
 } from "@material-ui/icons";
@@ -78,8 +76,6 @@ function AdminListToolbar(props) {
     onRequestSort,
     searchFilter,
     setSearchFilter,
-    searchBarFocus,
-    setSearchBarFocus,
   } = props;
 
   const createSortHandler = (property) => (event) => {
@@ -271,8 +267,8 @@ const useStyles = makeStyles((theme) => ({
 function AdminList(props) {
   const classes = useStyles();
 
-  const { getAllAdmins, updateTeacher, getAllUnits, updateUnitAdmins } = props;
-  const { user, all_admins } = props.auth;
+  const { getAllAdmins, getAllUnits, updateUnitAdmins } = props;
+  const { all_admins } = props.auth;
   const { all_units } = props.unitsCollection;
   const errors = props.errors;
 
@@ -398,7 +394,6 @@ function AdminList(props) {
       ) : (
         <List className={classes.userList}>
           {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            const labelId = index;
             return (
               <div>
                 <ListItem>

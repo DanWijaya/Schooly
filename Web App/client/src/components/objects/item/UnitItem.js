@@ -42,11 +42,10 @@ const useStyles = makeStyles((theme) => ({
 function UnitItem(props) {
   const classes = useStyles();
   const { data, handleOpenDeleteDialog } = props;
-  const { user } = props.auth;
 
   return data.map((row, index) => {
-    const labelId = `enhanced-table-checkbox-${index}`;
     let viewpage = `/unit/${row._id}`;
+
     return (
       <Grid item xs={12} sm={6} md={4}>
         <Card>

@@ -9,10 +9,6 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
-import {
-  Cancel as CancelIcon,
-  Publish as PublishIcon
-} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -38,7 +34,6 @@ function SubmitDialog(props) {
     openSubmitDialog,
     handleCloseSubmitDialog,
     itemType,
-    itemName,
     onSubmit,
     messageLoading,
   } = props;

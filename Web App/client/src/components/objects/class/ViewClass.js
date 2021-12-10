@@ -2,8 +2,6 @@ import React from "react";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
-import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import {
@@ -25,24 +23,15 @@ import TaskItem from "../item/TaskItem";
 import MaterialItem from "../item/MaterialItem";
 import UserItem from "../item/UserItem";
 import Empty from "../../misc/empty/Empty";
-import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
+import { TabPanel } from "../../misc/tab-panel/TabPanel";
 import {
-  Avatar,
-  Badge,
-  Box,
-  Dialog,
   Divider,
   ExpansionPanel,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
   Grid,
-  Hidden,
   IconButton,
   Paper,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Tab,
   Tabs,
   Tooltip,
@@ -50,15 +39,12 @@ import {
 } from "@material-ui/core";
 import {
   AssignmentOutlined as AssignmentIcon,
-  CheckCircle as CheckCircleIcon,
   DesktopWindows as DesktopWindowsIcon,
-  Error as ErrorIcon,
   ExpandMore as ExpandMoreIcon,
   LibraryBooks as LibraryBooksIcon,
   MenuBook as MenuBookIcon,
   Pageview as PageviewIcon,
   SupervisorAccount as SupervisorAccountIcon,
-  Warning as WarningIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
@@ -146,410 +132,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TASK_STATUS = {
-  SUBMITTED: "Sudah Dikumpulkan",
-  NOT_SUBMITTED: "Belum Dikumpulkan",
-};
-
-const ASSESSMENT_STATUS = {
-  SUBMITTED: "Sudah Ditempuh",
-  NOT_SUBMITTED: "Belum Ditempuh",
-};
-
-function sortAscByCreatedAt(rows) {
-  const stabilizedThis = rows.map((el, index) => [el, index]);
-  const descendingComparator = (a, b, orderBy) => {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  };
-  const comparator = (a, b) => descendingComparator(a, b, "createdAt");
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-function AssignmentListItem(props) {
-  const classes = useStyles();
-
-  return (
-    <div>
-      <Hidden smUp implementation="css">
-        <Link to={props.work_link}>
-          <Paper variant="outlined" className={classes.listItemPaper}>
-            <Badge
-              style={{ display: "flex", flexDirection: "row" }}
-              badgeContent={
-                props.work_status === TASK_STATUS.NOT_SUBMITTED ? (
-                  <ErrorIcon className={classes.errorIcon} />
-                ) : (
-                  <CheckCircleIcon className={classes.checkIcon} />
-                )
-              }
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-            >
-              <ListItem button className={classes.listItem}>
-                <Grid container alignItems="center">
-                  <Grid item xs={7}>
-                    <ListItemText
-                      primary={
-                        <Typography variant="body1">
-                          {props.work_title}
-                        </Typography>
-                      }
-                      secondary={props.work_subject}
-                    />
-                  </Grid>
-                  <Grid item xs={5}>
-                    <ListItemText
-                      align="right"
-                      primary={
-                        <Typography variant="subtitle" color="textSecondary">
-                          {moment(props.work_dateposted)
-                            .locale("id")
-                            .format("DD MMM YYYY")}
-                        </Typography>
-                      }
-                      secondary={moment(props.work_dateposted)
-                        .locale("id")
-                        .format("HH.mm")}
-                    />
-                  </Grid>
-                </Grid>
-              </ListItem>
-            </Badge>
-          </Paper>
-        </Link>
-      </Hidden>
-      <Hidden xsDown implementation="css">
-        <Link to={props.work_link}>
-          <Paper variant="outlined" className={classes.listItemPaper}>
-            <Badge
-              style={{ display: "flex", flexDirection: "row" }}
-              badgeContent={
-                props.work_status === TASK_STATUS.NOT_SUBMITTED ? (
-                  <ErrorIcon className={classes.errorIcon} />
-                ) : (
-                  <CheckCircleIcon className={classes.checkIcon} />
-                )
-              }
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-            >
-              <ListItem button className={classes.listItem}>
-                <ListItemAvatar>{props.work_category_avatar}</ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <Typography variant="body1">{props.work_title}</Typography>
-                  }
-                  secondary={props.work_subject}
-                />
-                <ListItemText
-                  align="right"
-                  primary={
-                    <Typography variant="subtitle" color="textSecondary">
-                      {moment(props.work_dateposted)
-                        .locale("id")
-                        .format("DD MMM YYYY")}
-                    </Typography>
-                  }
-                  secondary={moment(props.work_dateposted)
-                    .locale("id")
-                    .format("HH.mm")}
-                />
-              </ListItem>
-            </Badge>
-          </Paper>
-        </Link>
-      </Hidden>
-    </div>
-  );
-}
-
-function AssessmentListItem(props) {
-  const classes = useStyles();
-
-  // Dialog Kuis dan Ujian
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const [currentDialogInfo, setCurrentDialogInfo] = React.useState({});
-
-  const handleOpenDialog = (
-    title,
-    subject,
-    teacher_name,
-    start_date,
-    end_date
-  ) => {
-    setCurrentDialogInfo({
-      title,
-      subject,
-      teacher_name,
-      start_date,
-      end_date,
-    });
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
-  return (
-    <div>
-      <Hidden smUp implementation="css">
-        <Paper
-          variant="outlined"
-          className={classes.listItemPaper}
-          onClick={() =>
-            handleOpenDialog(
-              props.work_title,
-              props.work_subject,
-              props.work_teacher_name,
-              props.work_starttime,
-              props.work_endtime
-            )
-          }
-        >
-          <Badge
-            style={{ display: "flex", flexDirection: "row" }}
-            badgeContent={
-              props.work_status === ASSESSMENT_STATUS.SUBMITTED ? (
-                <WarningIcon className={classes.warningIcon} />
-              ) : (
-                <CheckCircleIcon className={classes.checkIcon} />
-              )
-            }
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-          >
-            <ListItem button className={classes.listItem}>
-              <ListItemText
-                primary={
-                  <Typography variant="body1">{props.work_title}</Typography>
-                }
-                secondary={props.work_subject}
-              />
-
-              {/* <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="body2" color="textSecondary">
-                    Mulai: <br /> {props.work_starttime}
-                  </Typography>
-                }
-              /> */}
-              <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="subtitle" color="textSecondary">
-                    {moment(props.work_dateposted)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
-                  </Typography>
-                }
-                secondary={moment(props.work_dateposted)
-                  .locale("id")
-                  .format("HH.mm")}
-              />
-            </ListItem>
-          </Badge>
-        </Paper>
-      </Hidden>
-      <Hidden xsDown implementation="css">
-        <Paper
-          variant="outlined"
-          className={classes.listItemPaper}
-          onClick={() =>
-            handleOpenDialog(
-              props.work_title,
-              props.work_subject,
-              props.work_teacher_name,
-              props.work_starttime,
-              props.work_endtime
-            )
-          }
-        >
-          <Badge
-            badgeContent={
-              props.work_status === ASSESSMENT_STATUS.SUBMITTED ? (
-                <WarningIcon className={classes.warningIcon} />
-              ) : (
-                <CheckCircleIcon className={classes.checkIcon} />
-              )
-            }
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-          >
-            <ListItem button className={classes.listItem}>
-              <ListItemAvatar>{props.work_category_avatar}</ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography variant="body1">{props.work_title}</Typography>
-                }
-                secondary={props.work_subject}
-              />
-              <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="subtitle" color="textSecondary">
-                    {moment(props.work_dateposted)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
-                  </Typography>
-                }
-                secondary={moment(props.work_dateposted)
-                  .locale("id")
-                  .format("HH.mm")}
-              />
-            </ListItem>
-          </Badge>
-        </Paper>
-      </Hidden>
-      <Dialog
-        fullScreen={false}
-        open={openDialog}
-        onClose={handleCloseDialog}
-        fullWidth={true}
-        maxWidth="sm"
-      >
-        <div style={{ padding: "20px" }}>
-          <Typography variant="h4" align="center">
-            {currentDialogInfo.title}
-          </Typography>
-          <Typography variant="h5" align="center" color="primary">
-            {currentDialogInfo.subject}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-            style={{ marginTop: "25px" }}
-          >
-            Guru: {currentDialogInfo.teacher_name}
-          </Typography>
-          <Typography variant="subtitle1" align="center">
-            Mulai: {currentDialogInfo.start_date}
-          </Typography>
-          <Typography variant="subtitle1" align="center">
-            Selesai: {currentDialogInfo.end_date}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            align="center"
-            color="textSecondary"
-            style={{ marginTop: "10px", textAlign: "center" }}
-          >
-            Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
-            pelajaran terkait.
-          </Typography>
-        </div>
-      </Dialog>
-    </div>
-  );
-}
-
-function MaterialListitem(props) {
-  const classes = useStyles();
-
-  return (
-    <div>
-      <Hidden smUp implementation="css">
-        <Link to={props.work_link}>
-          <Paper variant="outlined" className={classes.listItemPaper}>
-            <ListItem button className={classes.listItem}>
-              <ListItemText
-                primary={
-                  <Typography variant="body1">{props.work_title}</Typography>
-                }
-                secondary={!props.work_subject ? " " : props.work_subject}
-              />
-            </ListItem>
-          </Paper>
-        </Link>
-      </Hidden>
-      <Hidden xsDown implementation="css">
-        <Link to={props.work_link}>
-          <Paper
-            variant="outlined"
-            className={classes.listItemPaper}
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            <ListItem button className={classes.listItem}>
-              <ListItemAvatar>{props.work_category_avatar}</ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography variant="body1">{props.work_title}</Typography>
-                }
-                secondary={!props.work_subject ? " " : props.work_subject}
-              />
-              <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="subtitle" color="textSecondary">
-                    {moment(props.work_dateposted)
-                      .locale("id")
-                      .format("DD MMM YYYY")}
-                  </Typography>
-                }
-                secondary={moment(props.work_dateposted)
-                  .locale("id")
-                  .format("HH.mm")}
-              />
-            </ListItem>
-          </Paper>
-        </Link>
-      </Hidden>
-    </div>
-  );
-}
-
-function PersonListItem(props) {
-  return (
-    <ListItem>
-      <ListItemAvatar>
-        <Avatar src={props.person_avatar ? props.person_avatar : null} />
-      </ListItemAvatar>
-      <Hidden smUp implementation="css">
-        <ListItemText
-          primary={
-            <Typography variant="subtitle1">{props.person_name}</Typography>
-          }
-          secondary={
-            <Typography variant="caption" color="textSecondary">
-              {props.person_role}
-            </Typography>
-          }
-        />
-      </Hidden>
-      <Hidden xsDown implementation="css">
-        <ListItemText
-          primary={<Typography variant="h6">{props.person_name}</Typography>}
-          secondary={
-            <Typography variant="body2" color="textSecondary">
-              {props.person_role}
-            </Typography>
-          }
-        />
-      </Hidden>
-    </ListItem>
-  );
-}
-
 function ViewClass(props) {
   const classes = useStyles();
   const {
@@ -565,12 +147,12 @@ function ViewClass(props) {
     getMultipleFileAvatar,
     getTaskByClass,
   } = props;
-  const { students_by_class, all_teachers_map, user, all_roles } = props.auth;
+  const { students_by_class, user, all_roles } = props.auth;
   const { kelas } = props.classesCollection;
-  const { all_subjects, all_subjects_map } = props.subjectsCollection;
+  const { all_subjects } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
+  const { selectedAssessments } = props.assessmentsCollection;
   const classId = props.match.params.id;
-  const { all_assessments, selectedAssessments } = props.assessmentsCollection;
 
   const [walikelas, setWalikelas] = React.useState({});
   const [taskAtmpt, setTaskAtmpt] = React.useState([]);
@@ -608,10 +190,10 @@ function ViewClass(props) {
       return <Empty />;
     }
     let materialList = [];
-    if (panel == 0) {
+    if (panel === 0) {
       // If panel is "Pekerjaan Kelas"
       materialList = selectedMaterials.slice(0, 5);
-    } else if (panel == 1) {
+    } else if (panel === 1) {
       // If panel is "Mata Pelajaran"
       materialList = selectedMaterials
         .filter((material) => material.subject === subjectId)
@@ -625,12 +207,12 @@ function ViewClass(props) {
       return <Empty />;
     }
     let assessmentList = [];
-    if (panel == 0) {
+    if (panel === 0) {
       // If panel is "Pekerjaan Kelas"
       assessmentList = selectedAssessments
-        .filter((assessment) => assessment.type == type)
+        .filter((assessment) => assessment.type === type)
         .slice(0, 5);
-    } else if (panel == 1) {
+    } else if (panel === 1) {
       // If panel is "Mata Pelajaran"
       assessmentList = selectedAssessments
         .filter((assessment) => assessment.subject === subjectId)
@@ -715,22 +297,6 @@ function ViewClass(props) {
   const handleChange = (event, newValue) => {
     setPanel(newValue);
   };
-
-  function student_role(id) {
-    switch (id) {
-      case kelas.ketua_kelas:
-        return "Ketua Kelas";
-
-      case kelas.bendahara:
-        return "Bendahara";
-
-      case kelas.sekretaris:
-        return "Sekretaris";
-
-      default:
-        return null;
-    }
-  }
 
   function isObjEmpty(obj) {
     // return false if obj !== undefined dan object's content is not empty.

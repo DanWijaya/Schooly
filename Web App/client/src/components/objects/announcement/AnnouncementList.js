@@ -408,7 +408,7 @@ function AnnouncementList(props) {
 
   const isCreator =
     [all_roles.TEACHER, all_roles.ADMIN].includes(user.role) ||
-    user._id == kelas.ketua_kelas;
+    user._id === kelas.ketua_kelas;
 
   const isReceiver = user.role !== all_roles.ADMIN;
 
@@ -469,13 +469,13 @@ function AnnouncementList(props) {
         mine = announcementsByAuthor;
       }
 
-      if (panel == 0) {
+      if (panel === 0) {
         received
           .filter((item) =>
             item.title.toLowerCase().includes(searchFilter.toLowerCase())
           )
           .map((data) => announcementRowItem(data));
-      } else if (panel == 1) {
+      } else if (panel === 1) {
         mine
           .filter((item) =>
             item.title.toLowerCase().includes(searchFilter.toLowerCase())

@@ -614,13 +614,6 @@ function AssessmentList(props) {
     setOpenDeleteSnackbar(false);
   };
 
-  const workStatus = (assessment) => {
-    let workStatus = !assessment.submissions
-      ? "Belum Ditempuh"
-      : "Sudah Ditempuh";
-    return workStatus;
-  };
-
   document.title = "Schooly | Kuis";
 
   return (

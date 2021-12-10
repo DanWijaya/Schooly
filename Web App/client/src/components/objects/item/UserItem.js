@@ -27,7 +27,6 @@ function UserItem(props) {
   const classes = useStyles();
   const { data, avatar_map } = props;
   const { kelas } = props.classesCollection;
-  const { user } = props.auth;
 
   const student_role = (id) => {
     switch (id) {
@@ -46,7 +45,7 @@ function UserItem(props) {
   };
 
   return data.map((row) => {
-    let { name, role, email, _id } = row;
+    let { name, email, _id } = row;
 
     return (
       <Link to={`/lihat-profil/${row._id}`}>

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getTeachers, getStudentsByClass } from "../../../actions/UserActions";
@@ -11,8 +10,9 @@ import {
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import UploadDialog from "../../misc/dialog/UploadDialog";
 import FloatingHelp from "../../misc/floating-help/FloatingHelp";
+import UploadDialog from "../../misc/dialog/UploadDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import {
   AppBar,
   Button,
@@ -38,7 +38,6 @@ import {
   LibraryBooks as LibraryBooksIcon,
 } from "@material-ui/icons";
 import { FaChalkboard } from "react-icons/fa";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
 
 const styles = (theme) => ({
   root: {
@@ -264,7 +263,7 @@ class EditClass extends Component {
 
   render() {
     const { classes, success } = this.props;
-    const { user, students_by_class } = this.props.auth;
+    const { students_by_class } = this.props.auth;
     const {
       sekretaris,
       bendahara,
