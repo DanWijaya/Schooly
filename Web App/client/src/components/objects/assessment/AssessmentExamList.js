@@ -27,6 +27,7 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
+  Add as AddIcon,
   ArrowBack as ArrowBackIcon,
   Clear as ClearIcon,
   Search as SearchIcon,
@@ -168,7 +169,7 @@ function AssessmentListToolbar(props) {
                   variant="extended"
                   className={classes.createExamButton}
                 >
-                  <BsClipboardData className={classes.createExamIconDesktop} />
+                  <AddIcon className={classes.addIconDesktop} />
                   Buat Ujian
                 </Fab>
               </Link>
@@ -177,7 +178,7 @@ function AssessmentListToolbar(props) {
               <Tooltip title="Buat Ujian">
                 <Link to="/buat-ujian">
                   <Fab size="medium" className={classes.createExamButton}>
-                    <BsClipboardData className={classes.createExamIconMobile} />
+                    <AddIcon className={classes.addIconMobile} />
                   </Fab>
                 </Link>
               </Tooltip>
@@ -372,13 +373,16 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.success.main,
       color: "white",
     },
+    [theme.breakpoints.up("md")]: {
+      paddingRight: "24px",
+    },
   },
-  createExamIconDesktop: {
+  addIconDesktop: {
     width: "25px",
     height: "25px",
     marginRight: "8px",
   },
-  createExamIconMobile: {
+  addIconMobile: {
     width: "25px",
     height: "25px",
   },

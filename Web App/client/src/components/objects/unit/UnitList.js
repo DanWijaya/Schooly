@@ -23,6 +23,7 @@ import {
 } from "@material-ui/core/";
 import Alert from "@material-ui/lab/Alert";
 import {
+  Add as AddIcon,
   ArrowBack as ArrowBackIcon,
   Clear as ClearIcon,
   Search as SearchIcon,
@@ -133,7 +134,6 @@ function UnitListToolbar(props) {
 
   const onClear = (e, id) => {
     setSearchFilter("");
-    // document.getElementById(id).focus();
   };
 
   return (
@@ -147,7 +147,7 @@ function UnitListToolbar(props) {
                 variant="extended"
                 className={classes.createUnitButton}
               >
-                <WebIcon className={classes.createUnitIconDesktop} />
+                <AddIcon className={classes.addIconDesktop} />
                 Buat Unit
               </Fab>
             </Link>
@@ -156,7 +156,7 @@ function UnitListToolbar(props) {
             <Tooltip title="Buat Unit">
               <Link to="/buat-unit">
                 <Fab size="medium" className={classes.createUnitButton}>
-                  <WebIcon className={classes.createUnitIconMobile} />
+                  <AddIcon className={classes.addIconMobile} />
                 </Fab>
               </Link>
             </Tooltip>
@@ -353,13 +353,16 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.success.main,
       color: "white",
     },
+    [theme.breakpoints.up("md")]: {
+      paddingRight: "24px",
+    },
   },
-  createUnitIconDesktop: {
+  addIconDesktop: {
     width: "25px",
     height: "25px",
     marginRight: "8px",
   },
-  createUnitIconMobile: {
+  addIconMobile: {
     width: "25px",
     height: "25px",
   },

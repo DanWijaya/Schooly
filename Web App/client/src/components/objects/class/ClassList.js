@@ -39,6 +39,7 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
+  Add as AddIcon,
   ArrowBack as ArrowBackIcon,
   AssignmentInd as AssignmentIndIcon,
   Clear as ClearIcon,
@@ -468,7 +469,7 @@ function ClassListToolbar(props) {
                   variant="extended"
                   className={classes.createClassButton}
                 >
-                  <FaChalkboard className={classes.createClassIconDesktop} />
+                  <AddIcon className={classes.addIconDesktop} />
                   Buat Kelas
                 </Fab>
               </Link>
@@ -477,7 +478,7 @@ function ClassListToolbar(props) {
               <Tooltip title="Buat Kelas">
                 <Link to="/buat-kelas">
                   <Fab size="medium" className={classes.createClassButton}>
-                    <FaChalkboard className={classes.createClassIconMobile} />
+                    <AddIcon className={classes.addIconMobile} />
                   </Fab>
                 </Link>
               </Tooltip>
@@ -749,13 +750,16 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.success.main,
       color: "white",
     },
+    [theme.breakpoints.up("md")]: {
+      paddingRight: "24px",
+    },
   },
-  createClassIconDesktop: {
+  addIconDesktop: {
     width: "25px",
     height: "25px",
     marginRight: "8px",
   },
-  createClassIconMobile: {
+  addIconMobile: {
     width: "25px",
     height: "25px",
   },

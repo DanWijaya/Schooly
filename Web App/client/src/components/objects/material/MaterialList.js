@@ -32,6 +32,7 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
+  Add as AddIcon,
   ArrowBack as ArrowBackIcon,
   Clear as ClearIcon,
   MenuBook as MenuBookIcon,
@@ -156,7 +157,7 @@ function MaterialListToolbar(props) {
                   variant="extended"
                   className={classes.createMaterialButton}
                 >
-                  <MenuBookIcon className={classes.createMaterialIconDesktop} />
+                  <AddIcon className={classes.addIconDesktop} />
                   Buat Materi
                 </Fab>
               </Link>
@@ -165,8 +166,8 @@ function MaterialListToolbar(props) {
               <Tooltip title="Buat Materi">
                 <Link to="/buat-materi">
                   <Fab size="medium" className={classes.createMaterialButton}>
-                    <MenuBookIcon
-                      className={classes.createMaterialIconMobile}
+                    <AddIcon
+                      className={classes.addIconMobile}
                     />
                   </Fab>
                 </Link>
@@ -362,13 +363,16 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.success.main,
       color: "white",
     },
+    [theme.breakpoints.up("md")]: {
+      paddingRight: "24px",
+    },
   },
-  createMaterialIconDesktop: {
+  addIconDesktop: {
     width: "25px",
     height: "25px",
     marginRight: "8px",
   },
-  createMaterialIconMobile: {
+  addIconMobile: {
     width: "25px",
     height: "25px",
   },

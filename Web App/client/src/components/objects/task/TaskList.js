@@ -27,6 +27,7 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
+  Add as AddIcon,
   ArrowBack as ArrowBackIcon,
   Assignment as AssignmentIcon,
   Clear as ClearIcon,
@@ -162,7 +163,7 @@ function TaskListToolbar(props) {
                   variant="extended"
                   className={classes.createTaskButton}
                 >
-                  <AssignmentIcon className={classes.createTaskIconDesktop} />
+                  <AddIcon className={classes.addIconDesktop} />
                   Buat Tugas
                 </Fab>
               </Link>
@@ -171,7 +172,7 @@ function TaskListToolbar(props) {
               <Tooltip title="Buat Tugas">
                 <Link to="/buat-tugas">
                   <Fab size="medium" className={classes.createTaskButton}>
-                    <AssignmentIcon className={classes.createTaskIconMobile} />
+                    <AddIcon className={classes.addIconMobile} />
                   </Fab>
                 </Link>
               </Tooltip>
@@ -366,13 +367,16 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.success.main,
       color: "white",
     },
+    [theme.breakpoints.up("md")]: {
+      paddingRight: "24px",
+    },
   },
-  createTaskIconDesktop: {
+  addIconDesktop: {
     width: "25px",
     height: "25px",
     marginRight: "8px",
   },
-  createTaskIconMobile: {
+  addIconMobile: {
     width: "25px",
     height: "25px",
   },

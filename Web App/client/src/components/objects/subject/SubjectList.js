@@ -34,6 +34,7 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
+  Add as AddIcon,
   Cancel as CancelIcon,
   Clear as ClearIcon,
   Edit as EditIcon,
@@ -129,7 +130,7 @@ function SubjectListToolbar(props) {
               onClick={handleOpenCreateDialog}
               className={classes.createSubjectButton}
             >
-              <LibraryBooksIcon className={classes.createSubjectIconDesktop} />
+              <AddIcon className={classes.addIconDesktop} />
               Buat Mata Pelajaran
             </Fab>
           </Hidden>
@@ -140,7 +141,7 @@ function SubjectListToolbar(props) {
                 onClick={handleOpenCreateDialog}
                 className={classes.createSubjectButton}
               >
-                <LibraryBooksIcon className={classes.createSubjectIconMobile} />
+                <AddIcon className={classes.addIconMobile} />
               </Fab>
             </Tooltip>
           </Hidden>
@@ -273,13 +274,16 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.success.main,
       color: "white",
     },
+    [theme.breakpoints.up("md")]: {
+      paddingRight: "24px",
+    },
   },
-  createSubjectIconDesktop: {
+  addIconDesktop: {
     width: "25px",
     height: "25px",
     marginRight: "8px",
   },
-  createSubjectIconMobile: {
+  addIconMobile: {
     width: "25px",
     height: "25px",
   },

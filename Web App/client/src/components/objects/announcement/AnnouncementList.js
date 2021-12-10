@@ -35,6 +35,7 @@ import {
 import Alert from "@material-ui/lab/Alert";
 import {
   AccountCircle as AccountCircleIcon,
+  Add as AddIcon,
   Announcement as AnnouncementIcon,
   ArrowBack as ArrowBackIcon,
   Clear as ClearIcon,
@@ -145,12 +146,12 @@ function AnnouncementListToolbar(props) {
             <Hidden smDown>
               <Link to="/buat-pengumuman">
                 <Fab
-                  variant="extended"
                   size="large"
+                  variant="extended"
                   className={classes.createAnnouncementButton}
                 >
-                  <AnnouncementIcon
-                    className={classes.createAnnouncementIconDesktop}
+                  <AddIcon
+                    className={classes.addIconDesktop}
                   />
                   Buat Pengumuman
                 </Fab>
@@ -163,8 +164,8 @@ function AnnouncementListToolbar(props) {
                     size="medium"
                     className={classes.createAnnouncementButton}
                   >
-                    <AnnouncementIcon
-                      className={classes.createAnnouncementIconMobile}
+                    <AddIcon
+                      className={classes.addIconMobile}
                     />
                   </Fab>
                 </Link>
@@ -365,13 +366,16 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.success.main,
       color: "white",
     },
+    [theme.breakpoints.up("md")]: {
+      paddingRight: "24px",
+    },
   },
-  createAnnouncementIconDesktop: {
+  addIconDesktop: {
     width: "25px",
     height: "25px",
     marginRight: "8px",
   },
-  createAnnouncementIconMobile: {
+  addIconMobile: {
     width: "25px",
     height: "25px",
   },
