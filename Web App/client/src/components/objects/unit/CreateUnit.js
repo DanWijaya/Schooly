@@ -75,8 +75,13 @@ const styles = (theme) => ({
   contentDetails: {
     padding: "20px 20px 25px 20px",
   },
+  label: {
+    display: "flex",
+    alignItems: "center",
+  },
   labelIcon: {
-    fontSize: "18px",
+    width: "1rem",
+    height: "1rem",
     marginRight: "10px",
     color: "grey",
   },
@@ -206,10 +211,10 @@ class CreateUnit extends Component {
                 <div className={classes.contentDetails}>
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
-                      <div style={{ display: "flex", alignItems: "center" }}>
+                      <Typography color="primary" className={classes.label}>
                         <WebIcon className={classes.labelIcon} />
-                        <Typography color="primary">Nama Unit</Typography>
-                      </div>
+                        Nama Unit
+                      </Typography>
                       <TextField
                         fullWidth
                         variant="outlined"
@@ -222,10 +227,10 @@ class CreateUnit extends Component {
                       />
                     </Grid>
                     <Grid item>
-                      <div style={{ display: "flex", alignItems: "center" }}>
+                      <Typography color="primary" className={classes.label}>
                         <ShortTextIcon className={classes.labelIcon} />
-                        <Typography color="primary">Keterangan</Typography>
-                      </div>
+                        Keterangan
+                      </Typography>
                       <TextField
                         fullWidth
                         multiline

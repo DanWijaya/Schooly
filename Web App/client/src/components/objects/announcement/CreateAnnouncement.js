@@ -98,8 +98,13 @@ const styles = (theme) => ({
   contentDetails: {
     padding: "20px 20px 25px 20px",
   },
+  label: {
+    display: "flex",
+    alignItems: "center",
+  },
   labelIcon: {
-    fontSize: "18px",
+    width: "1rem",
+    height: "1rem",
     marginRight: "10px",
     color: "grey",
   },
@@ -414,12 +419,10 @@ class CreateAnnouncement extends Component {
                   <Grid item xs={12} md={7} className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography color="primary" className={classes.label}>
                           <AnnouncementIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Judul Pengumuman
-                          </Typography>
-                        </div>
+                          Judul Pengumuman
+                        </Typography>
                         <TextField
                           fullWidth
                           variant="outlined"
@@ -432,10 +435,10 @@ class CreateAnnouncement extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography color="primary" className={classes.label}>
                           <ShortTextIcon className={classes.labelIcon} />
-                          <Typography color="primary">Deskripsi</Typography>
-                        </div>
+                          Deskripsi
+                        </Typography>
                         <TextField
                           fullWidth
                           multiline
@@ -467,16 +470,10 @@ class CreateAnnouncement extends Component {
                       {user.role === "Student" ? null : user.role ===
                         "Admin" ? (
                         <Grid item>
-                          <div
-                            style={{ display: "flex", alignItems: "center" }}
-                          >
-                            <SupervisorAccountIcon
-                              className={classes.labelIcon}
-                            />
-                            <Typography color="primary">
-                              Ditujukan kepada
-                            </Typography>
-                          </div>
+                          <Typography color="primary" className={classes.label}>
+                            <SupervisorAccountIcon className={classes.labelIcon} />
+                            Ditujukan kepada
+                          </Typography>
                           <FormControl
                             fullWidth
                             variant="outlined"
@@ -530,14 +527,10 @@ class CreateAnnouncement extends Component {
                         </Grid>
                       ) : (
                         <Grid item>
-                          <div
-                            style={{ display: "flex", alignItems: "center" }}
-                          >
+                          <Typography color="primary" className={classes.label}>
                             <FaChalkboard className={classes.labelIcon} />
-                            <Typography color="primary">
-                              Kelas yang diberikan
-                            </Typography>
-                          </div>
+                            Kelas yang diberikan
+                          </Typography>
                           <FormControl
                             fullWidth
                             variant="outlined"

@@ -134,13 +134,13 @@ const styles = (theme) => ({
   contentDetails: {
     padding: "20px 20px 30px 20px",
   },
-  labelIcon: {
-    fontSize: "18px",
-    marginRight: "10px",
-    color: "grey",
+  label: {
+    display: "flex",
+    alignItems: "center",
   },
-  assessmentLabelIcon: {
-    fontSize: "15.5px",
+  labelIcon: {
+    width: "1rem",
+    height: "1rem",
     marginRight: "10px",
     color: "grey",
   },
@@ -1571,25 +1571,18 @@ class EditAssessment extends Component {
                         >
                           <Grid container direction="column" spacing={4}>
                             <Grid item>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
+                              <Typography color="primary" className={classes.label}>
                                 {this.state.type === "Ujian" ? (
                                   <BsClipboardData
-                                    className={classes.assessmentLabelIcon}
+                                    className={classes.labelIcon}
                                   />
                                 ) : (
                                   <FaClipboardList
-                                    className={classes.assessmentLabelIcon}
+                                    className={classes.labelIcon}
                                   />
                                 )}
-                                <Typography color="primary">
                                   Judul {this.state.type}
-                                </Typography>
-                              </div>
+                              </Typography>
                               <TextField
                                 fullWidth
                                 type="text"
@@ -1602,17 +1595,10 @@ class EditAssessment extends Component {
                               />
                             </Grid>
                             <Grid item>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
+                              <Typography color="primary" className={classes.label}>
                                 <ViewListIcon className={classes.labelIcon} />
-                                <Typography color="primary">
-                                  Tipe Penilaian
-                                </Typography>
-                              </div>
+                                Tipe Penilaian
+                              </Typography>
                               <FormControl
                                 fullWidth
                                 variant="outlined"
@@ -1637,17 +1623,10 @@ class EditAssessment extends Component {
                               </FormControl>
                             </Grid>
                             <Grid item>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
+                              <Typography color="primary" className={classes.label}>
                                 <ShortTextIcon className={classes.labelIcon} />
-                                <Typography color="primary">
-                                  Deskripsi
-                                </Typography>
-                              </div>
+                                Deskripsi
+                              </Typography>
                               <TextField
                                 fullWidth
                                 multiline
@@ -1682,19 +1661,12 @@ class EditAssessment extends Component {
                         >
                           <Grid container direction="column" spacing={4}>
                             <Grid item>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
+                              <Typography color="primary" className={classes.label}>
                                 <LibraryBooksIcon
                                   className={classes.labelIcon}
                                 />
-                                <Typography color="primary">
-                                  Mata Pelajaran
-                                </Typography>
-                              </div>
+                                Mata Pelajaran
+                              </Typography>
                               <FormControl
                                 fullWidth
                                 variant="outlined"
@@ -1729,17 +1701,10 @@ class EditAssessment extends Component {
                               </FormControl>
                             </Grid>
                             <Grid item>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
+                              <Typography color="primary" className={classes.label}>
                                 <FaChalkboard className={classes.labelIcon} />
-                                <Typography color="primary">
-                                  Kelas yang diberikan
-                                </Typography>
-                              </div>
+                                Kelas yang diberikan
+                              </Typography>
                               <FormControl
                                 fullWidth
                                 variant="outlined"
@@ -1810,17 +1775,10 @@ class EditAssessment extends Component {
                               </FormControl>
                             </Grid>
                             <Grid item>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
+                              <Typography color="primary" className={classes.label}>
                                 <TimerIcon className={classes.labelIcon} />
-                                <Typography color="primary">
-                                  Waktu Mulai
-                                </Typography>
-                              </div>
+                                Waktu Mulai
+                              </Typography>
                               <MuiPickersUtilsProvider
                                 locale={lokal}
                                 utils={DateFnsUtils}
@@ -1859,17 +1817,10 @@ class EditAssessment extends Component {
                               </MuiPickersUtilsProvider>
                             </Grid>
                             <Grid item>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
+                              <Typography color="primary" className={classes.label}>
                                 <TimerOffIcon className={classes.labelIcon} />
-                                <Typography color="primary">
-                                  Waktu Selesai
-                                </Typography>
-                              </div>
+                                Waktu Selesai
+                              </Typography>
                               <MuiPickersUtilsProvider
                                 locale={lokal}
                                 utils={DateFnsUtils}

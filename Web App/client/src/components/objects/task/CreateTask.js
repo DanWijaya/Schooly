@@ -106,8 +106,13 @@ const styles = (theme) => ({
   contentDetails: {
     padding: "20px 20px 25px 20px",
   },
+  label: {
+    display: "flex",
+    alignItems: "center",
+  },
   labelIcon: {
-    fontSize: "18px",
+    width: "1rem",
+    height: "1rem",
     marginRight: "10px",
     color: "grey",
   },
@@ -128,15 +133,6 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
-    },
-  },
-  deleteIconButton: {
-    marginLeft: "7.5px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
     },
   },
 });
@@ -526,10 +522,10 @@ class CreateTask extends Component {
                   <Grid item xs={12} md={7} className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography color="primary" className={classes.label}>
                           <AssignmentIcon className={classes.labelIcon} />
-                          <Typography color="primary">Judul Tugas</Typography>
-                        </div>
+                          Judul Tugas
+                        </Typography>
                         <TextField
                           fullWidth
                           variant="outlined"
@@ -542,10 +538,10 @@ class CreateTask extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography color="primary" className={classes.label}>
                           <ShortTextIcon className={classes.labelIcon} />
-                          <Typography color="primary">Deskripsi</Typography>
-                        </div>
+                          Deskripsi
+                        </Typography>
                         <TextField
                           fullWidth
                           multiline
@@ -575,12 +571,10 @@ class CreateTask extends Component {
                   <Grid item xs={12} md className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography color="primary" className={classes.label}>
                           <LibraryBooksIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Mata Pelajaran
-                          </Typography>
-                        </div>
+                          Mata Pelajaran
+                        </Typography>
                         <FormControl
                           fullWidth
                           variant="outlined"
@@ -613,12 +607,10 @@ class CreateTask extends Component {
                         </FormControl>
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography color="primary" className={classes.label}>
                           <FaChalkboard className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Kelas yang diberikan
-                          </Typography>
-                        </div>
+                          Kelas yang diberikan
+                        </Typography>
                         <FormControl
                           fullWidth
                           variant="outlined"
@@ -684,10 +676,10 @@ class CreateTask extends Component {
                         </FormControl>
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography color="primary" className={classes.label}>
                           <TimerOffIcon className={classes.labelIcon} />
-                          <Typography color="primary">Batas Waktu</Typography>
-                        </div>
+                          Batas Waktu
+                        </Typography>
                         <MuiPickersUtilsProvider
                           locale={lokal}
                           utils={DateFnsUtils}
@@ -735,9 +727,7 @@ class CreateTask extends Component {
                 <Button
                   variant="contained"
                   startIcon={<AttachFileIcon />}
-                  onClick={() => {
-                    this.lampiranUploader.current.click();
-                  }}
+                  onClick={() => this.lampiranUploader.current.click()}
                   className={classes.addFileButton}
                 >
                   Tambah Lampiran Berkas

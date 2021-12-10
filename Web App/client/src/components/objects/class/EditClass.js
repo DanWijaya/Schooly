@@ -84,8 +84,13 @@ const styles = (theme) => ({
   contentDetails: {
     padding: "20px 20px 25px 20px",
   },
+  label: {
+    display: "flex",
+    alignItems: "center",
+  },
   labelIcon: {
-    fontSize: "18px",
+    width: "1rem",
+    height: "1rem",
     marginRight: "10px",
     color: "grey",
   },
@@ -357,10 +362,10 @@ class EditClass extends Component {
                   <Grid item xs={12} md className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography color="primary" className={classes.label}>
                           <FaChalkboard className={classes.labelIcon} />
-                          <Typography color="primary">Nama Kelas</Typography>
-                        </div>
+                          Nama Kelas
+                        </Typography>
                         <TextField
                           fullWidth
                           variant="outlined"
@@ -373,10 +378,10 @@ class EditClass extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography color="primary" className={classes.label}>
                           <AssignmentIndIcon className={classes.labelIcon} />
-                          <Typography color="primary">Wali Kelas</Typography>
-                        </div>
+                          Wali Kelas
+                        </Typography>
                         <FormControl
                           fullWidth
                           id="walikelas"
@@ -411,12 +416,10 @@ class EditClass extends Component {
                         </FormControl>
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography color="primary" className={classes.label}>
                           <LibraryBooksIcon className={classes.labelIcon} />
-                          <Typography color="primary">
-                            Mata Pelajaran
-                          </Typography>
-                        </div>
+                          Mata Pelajaran
+                        </Typography>
                         <FormControl
                           fullWidth
                           color="primary"
@@ -468,10 +471,10 @@ class EditClass extends Component {
                   <Grid item xs={12} md className={classes.contentDetails}>
                     <Grid container direction="column" spacing={4}>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography color="primary" className={classes.label}>
                           <Filter1Icon className={classes.labelIcon} />
-                          <Typography color="primary">Ketua Kelas</Typography>
-                        </div>
+                          Ketua Kelas
+                        </Typography>
                         <FormControl
                           fullWidth
                           id="ketua_kelas"
@@ -490,10 +493,10 @@ class EditClass extends Component {
                         </FormControl>
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography color="primary" className={classes.label}>
                           <Filter2Icon className={classes.labelIcon} />
-                          <Typography color="primary">Sekretaris</Typography>
-                        </div>
+                          Sekretaris
+                        </Typography>
                         <FormControl
                           fullWidth
                           id="sekretaris"
@@ -512,10 +515,10 @@ class EditClass extends Component {
                         </FormControl>
                       </Grid>
                       <Grid item>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography color="primary" className={classes.label}>
                           <Filter3Icon className={classes.labelIcon} />
-                          <Typography color="primary">Bendahara</Typography>
-                        </div>
+                          Bendahara
+                        </Typography>
                         <FormControl
                           fullWidth
                           id="bendahara"

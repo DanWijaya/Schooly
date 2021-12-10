@@ -6,6 +6,8 @@ import lokal from "date-fns/locale/id";
 import { createEvent, updateEvent, deleteEvent } from "../../../actions/EventActions";
 import { getFileEvents } from "../../../actions/files/FileEventActions";
 import FileAttachment from "../file/FileAttachment";
+import UploadDialog from "../../misc/dialog/UploadDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import {
   Button,
@@ -57,39 +59,11 @@ import {
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
-  formIcons: {
-    width: "1rem",
-    height: "1rem",
-    marginRight: "7.5px",
-    color: theme.palette.text.secondary,
-  },
-  formLabels: {
-    display: "flex",
-    alignItems: "center",
-  },
-  zeroHeightHelperText: {
-    height: "0",
-    display: "flex", // untuk men-disable "collapsing margin"
-  },
-  chips: {
-    display: "flex",
-    flexWrap: "wrap",
-  },
-  chip: {
-    marginRight: 2,
-  },
-  viewDialogChip: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-  },
-  dummyInput: {
-    height: "fit-content!important",
-  },
-  create_edit_dialogTopDiv: {
-    backgroundColor: theme.palette.action.selected,
+  headerActionBar: {
     display: "flex",
     justifyContent: "space-between",
     padding: "0 24px",
+    backgroundColor: theme.palette.grey[200],
     [theme.breakpoints.up("md")]: {
       "&:hover": {
         cursor: "move",
@@ -100,7 +74,25 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "transparent",
     },
   },
+  label: {
+    display: "flex",
+    alignItems: "center",
+  },
+  labelIcon: {
+    width: "1rem",
+    height: "1rem",
+    marginRight: "10px",
+    color: "grey",
+  },
+  chips: {
+    display: "flex",
+    flexWrap: "wrap",
+  },
+  chip: {
+    margin: "0px 1px",
+  },
   addFileButton: {
+    marginBottom: "20px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -108,274 +100,35 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  deleteIconButton: {
-    marginLeft: "7.5px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
-  mdUpZeroTopPadding: {
-    [theme.breakpoints.up("md")]: {
-      paddingTop: "0!important",
-    },
-  },
-  mdUpZeroBottomPadding: {
-    [theme.breakpoints.up("md")]: {
-      paddingBottom: "0!important",
-    },
-  },
-  smDownZeroTopPadding: {
-    [theme.breakpoints.down("sm")]: {
-      paddingTop: "0!important",
-    },
-  },
-  smDownZeroBottomPadding: {
-    [theme.breakpoints.down("sm")]: {
-      paddingBottom: "0!important",
-    },
-  },
-  dialogContent: {
-    display: "flex",
-    padding: "0",
-    flexDirection: "column",
-    position: "relative",
-  },
-  createEditDialogScrollableDiv: {
-    display: "flex",
-    flexGrow: "1",
-    overflowY: "auto",
-    overflowX: "hidden",
-    padding: "16px 24px",
-    flexDirection: "column",
-  },
-  viewDialogScrollableDiv: {
-    flexGrow: "1",
-    overflowY: "auto",
-    overflowX: "hidden",
-    padding: "16px 24px",
-  },
-  viewDialogBottomDiv: {
-    flex: "1 1 auto",
-    overflowY: "hidden",
-    position: "relative",
-    display: "flex",
-    flexDirection: "column",
-  },
-  createEventButton: {
+  createButton: {
+    width: "90px",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
       color: "white",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "75px",
     },
   },
-  editEventButton: {
+  editButton: {
+    width: "90px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+      boxShadow:
+        "0px 1px 2px 0px rgba(194,100,1,0.3), 0px 2px 6px 2px rgba(194,100,1,0.15)",
     },
-  },
-  listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
     },
   },
 }));
-
-function CustomUploadDialog(props) {
-  const useStyles = makeStyles((theme) => ({
-    paper: {
-      width: "300px",
-      maxWidth: "100%",
-      minHeight: "175px",
-      padding: "15px",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    backdrop: {
-      backgroundColor: "rgba(0,0,0,0.5)",
-      position: "absolute",
-      zIndex: "1",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      overflow: "hidden",
-      width: "100%",
-      height: "100%",
-    },
-    uploadSuccessIcon: {
-      color: "green",
-      height: "45px",
-      width: "45px",
-    },
-    uploadFinishButton: {
-      width: "100%",
-      marginTop: "10px",
-      backgroundColor: theme.palette.success.main,
-      color: "white",
-      "&:focus, &:hover": {
-        backgroundColor: theme.palette.success.dark,
-        color: "white",
-      },
-    },
-  }));
-  const classes = useStyles();
-  const {
-    // handleWheel,
-    openUploadDialog,
-    messageUploading,
-    messageSuccess,
-    uploadSuccess,
-    handleUploadSuccess,
-  } = props;
-
-  return (
-    <Fade
-      in={
-        openUploadDialog
-      } /* ini sebenarnya ga terpakai karena upload dialog dibuat tutup bersamaan dengan parent dialognya */
-    >
-      <div className={classes.backdrop}>
-        <Paper className={`${classes.paper} MuiPaper-elevation24`}>
-          <Grid item>
-            <Typography variant="h6" align="center" gutterBottom>
-              {!uploadSuccess ? messageUploading : messageSuccess}
-            </Typography>
-          </Grid>
-          <Grid item>
-            {!uploadSuccess ? (
-              <CircularProgress />
-            ) : (
-              <CheckCircleIcon className={classes.uploadSuccessIcon} />
-            )}
-          </Grid>
-          <Grid item>
-            {!uploadSuccess ? (
-              <Typography variant="body2" align="center" gutterBottom>
-                <b>Mohon tunggu sebentar</b>
-              </Typography>
-            ) : (
-              <Button
-                variant="contained"
-                className={classes.uploadFinishButton}
-                onClick={() => {
-                  handleUploadSuccess();
-                }}
-              >
-                Selesai
-              </Button>
-            )}
-          </Grid>
-        </Paper>
-      </div>
-    </Fade>
-  );
-}
-
-function CustomDeleteDialog(props) {
-  const useStyles = makeStyles((theme) => ({
-    paper: {
-      width: "300px",
-      maxWidth: "100%",
-      minHeight: "175px",
-      padding: "15px",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    backdrop: {
-      backgroundColor: "rgba(0,0,0,0.5)",
-      position: "absolute",
-      zIndex: "1",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      overflow: "hidden",
-      width: "100%",
-      height: "100%",
-    },
-    dialogDeleteButton: {
-      width: "125px",
-      backgroundColor: theme.palette.error.main,
-      color: "white",
-      border: `1px solid ${theme.palette.error.main}`,
-      "&:focus, &:hover": {
-        backgroundColor: theme.palette.error.dark,
-        color: "white",
-        border: `1px solid ${theme.palette.error.dark}`,
-      },
-    },
-    dialogCancelButton: {
-      width: "125px",
-      backgroundColor: "white",
-      color: theme.palette.error.main,
-      border: `1px solid ${theme.palette.error.main}`,
-      "&:focus, &:hover": {
-        backgroundColor: "white",
-        color: theme.palette.error.dark,
-        border: `1px solid ${theme.palette.error.dark}`,
-      },
-    },
-  }));
-  const classes = useStyles();
-  const {
-    openDeleteDialog,
-    handleCloseDeleteDialog,
-    handleDelete,
-    eventName,
-  } = props;
-
-  return (
-    <Fade in={openDeleteDialog}>
-      <div className={classes.backdrop}>
-        <Paper className={`${classes.paper} MuiPaper-elevation24`}>
-          <Grid item>
-            <Typography variant="h6" align="center" gutterBottom>
-              Hapus Kegiatan berikut?
-            </Typography>
-          </Grid>
-          <Grid item container direction="column" alignItems="center">
-            <Typography align="center" gutterBottom>
-              <b>{eventName}</b>
-            </Typography>
-          </Grid>
-          <Grid container spacing={2} justify="center" alignItems="center">
-            <Grid item>
-              <Button
-                onClick={() => {
-                  handleDelete();
-                }}
-                startIcon={<DeleteIcon />}
-                className={classes.dialogDeleteButton}
-              >
-                Iya
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={() => {
-                  handleCloseDeleteDialog();
-                }}
-                startIcon={<CancelIcon />}
-                className={classes.dialogCancelButton}
-              >
-                Tidak
-              </Button>
-            </Grid>
-          </Grid>
-        </Paper>
-      </div>
-    </Fade>
-  );
-}
 
 function PaperComponent(props) {
   return (
@@ -1009,9 +762,10 @@ function Event(props) {
 
   return (
     <Dialog
-      maxWidth="sm"
       fullWidth
       fullScreen={fullScreen}
+      maxWidth="sm"
+      scroll="paper"
       PaperComponent={fullScreen ? undefined : PaperComponent}
       BackdropProps={{ style: { backgroundColor: "transparent" } }}
       open={openEventDialog}
@@ -1048,103 +802,88 @@ function Event(props) {
               <CloseIcon />
             </IconButton>
           </DialogActions>
-          <div className={classes.viewDialogBottomDiv}>
-            <div className={classes.viewDialogScrollableDiv}>
-              <Grid
-                container
-                direction="column"
-                spacing="4"
-                style={{ marginTop: "0", marginBottom: "0" }}
-              >
-                <Grid
-                  item
-                  xs={12}
-                  style={{ paddingTop: "0", paddingBottom: "0" }}
-                >
+          <DialogContent>
+            <Grid container direction="column" spacing={2}>
+              <Grid item>
+                <Typography variant="h5" style={{ wordBreak: "break-word" }}>
+                  {name}
+                </Typography>
+              </Grid>
+              {location && location.length > 0 ? (
+                <Grid item>
                   <Typography
-                    variant="h5"
                     gutterBottom
+                    className={classes.label}
                     style={{ wordBreak: "break-word" }}
                   >
-                    <b>{name}</b>
+                    <LocationOnIcon className={classes.labelIcon} />
+                    {location}
                   </Typography>
                 </Grid>
-                {location && location.length > 0 ? (
-                  <Grid item xs={12} style={{ paddingTop: "0" }}>
-                    <Typography
-                      className={classes.formLabels}
-                      style={{ wordBreak: "break-word" }}
-                    >
-                      <LocationOnIcon className={classes.formIcons} />
-                      {location}
-                    </Typography>
-                  </Grid>
-                ) : null}
-                <Grid item>
-                  <Typography className={classes.formLabels}>
-                    <TimerIcon className={classes.formIcons} />
-                    {moment(start_date)
-                      .locale("id")
-                      .format("dddd, DD MMMM YYYY  ∙  HH:mm")}
-                  </Typography>
-                  <Typography
-                    className={classes.formLabels}
-                    style={{ marginTop: "8px" }}
-                  >
-                    <TimerOffIcon className={classes.formIcons} />
-                    {moment(end_date)
-                      .locale("id")
-                      .format("dddd, DD MMMM YYYY  ∙  HH:mm")}
-                  </Typography>
-                </Grid>
-                <Grid container item direction="row" alignItems="center">
-                  <SupervisorAccountIcon className={classes.formIcons} />
+              ) : null}
+              <Grid item>
+                <Typography className={classes.label}>
+                  <TimerIcon className={classes.labelIcon} />
+                  {moment(start_date)
+                    .locale("id")
+                    .format("dddd, DD MMMM YYYY - HH:mm")}
+                </Typography>
+                <Typography className={classes.label}>
+                  <TimerOffIcon className={classes.labelIcon} />
+                  {moment(end_date)
+                    .locale("id")
+                    .format("dddd, DD MMMM YYYY - HH:mm")}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <div className={classes.label}>
+                  <SupervisorAccountIcon className={classes.labelIcon} />
                   <div className={classes.chips}>
                     {target_role.map((role) => (
                       <Chip
                         key={role}
-                        className={`${classes.chip} ${classes.viewDialogChip}`}
                         label={roleConverter[role]}
+                        className={classes.chip}
                       />
                     ))}
                   </div>
-                </Grid>
-                {description && description.length > 0 ? (
-                  <Grid item>
-                    <Typography
-                      align="justify"
-                      style={{
-                        wordBreak: "break-word",
-                        whiteSpace: "pre-wrap",
-                      }}
-                    >
-                      <CustomLinkify text={description} />
-                    </Typography>
-                  </Grid>
-                ) : null}
-                {fileLampiran && fileLampiran.length > 0 ? (
-                  <Grid item container spacing={1}>
-                    <FileAttachment
-                      data={fileLampiran}
-                      onPreviewFile={viewFileEvent}
-                    />
-                  </Grid>
-                ) : null}
+                </div>
               </Grid>
-            </div>
-            <CustomDeleteDialog
-              openDeleteDialog={openDeleteDialog}
-              handleCloseDeleteDialog={handleCloseDeleteDialog}
-              eventName={name}
-              handleDelete={() => {
-                handleDelete(selectedEventInfo._id);
-              }}
-            />
-          </div>
+              {description && description.length > 0 ? (
+                <Grid item>
+                  <Typography
+                    align="justify"
+                    style={{
+                      wordBreak: "break-word",
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    <CustomLinkify text={description} />
+                  </Typography>
+                </Grid>
+              ) : null}
+              {fileLampiran && fileLampiran.length > 0 ? (
+                <Grid item container spacing={1}>
+                  <FileAttachment
+                    data={fileLampiran}
+                    onPreviewFile={viewFileEvent}
+                  />
+                </Grid>
+              ) : null}
+            </Grid>
+          </DialogContent>
+          <DeleteDialog
+            openDeleteDialog={openDeleteDialog}
+            handleCloseDeleteDialog={handleCloseDeleteDialog}
+            itemType="Kegiatan"
+            itemName={name}
+            warningText="Lampiran yang ada juga akan dihapus."
+            deleteItem={() => handleDelete(selectedEventInfo._id)}
+          />
         </>
       ) : (
         <>
-          <div className={classes.create_edit_dialogTopDiv} id="drag-handle">
+          <DialogActions id="drag-handle" className={classes.headerActionBar}>
             <Hidden smDown>
               <IconButton edge="start">
                 <DragHandleIcon />
@@ -1152,11 +891,7 @@ function Event(props) {
             </Hidden>
             <IconButton
               edge="end"
-              style={
-                openUploadDialog && !uploadSuccess
-                  ? { visibility: "hidden" }
-                  : undefined
-              }
+              disabled={openUploadDialog && !uploadSuccess}
               onClick={() => {
                 if (!(openUploadDialog && !uploadSuccess)) {
                   handleCloseEventDialog();
@@ -1165,14 +900,12 @@ function Event(props) {
             >
               <CloseIcon />
             </IconButton>
-          </div>
-          <DialogTitle disableTypography>
+          </DialogActions>
+          <DialogTitle>
             <Typography variant="h5" gutterBottom>
-              <b>
-                {eventDialogMode === "create"
-                  ? "Buat Kegiatan"
-                  : "Sunting Kegiatan"}
-              </b>
+              {eventDialogMode === "create"
+                ? "Buat Kegiatan"
+                : "Sunting Kegiatan"}
             </Typography>
             <Typography color="textSecondary">
               {eventDialogMode === "create"
@@ -1180,100 +913,43 @@ function Event(props) {
                 : "Ganti keterangan untuk menyunting kegiatan."}
             </Typography>
           </DialogTitle>
-          <DialogContent dividers className={classes.dialogContent}>
-            <CustomUploadDialog
-              // handleWheel={handleUploadDialogWheel}
-              openUploadDialog={openUploadDialog}
-              handleUploadSuccess={handleCloseEventDialog}
-              uploadSuccess={uploadSuccess}
-              messageUploading={
-                eventDialogMode === "create"
-                  ? "Kegiatan sedang dibuat"
-                  : "Kegiatan sedang disunting"
-              }
-              messageSuccess={
-                eventDialogMode === "create"
-                  ? "Kegiatan telah dibuat"
-                  : "Kegiatan telah disunting"
-              }
-            />
-            <div
-              /* ref={uploadDialogScrollRef} */ className={
-                classes.createEditDialogScrollableDiv
-              }
-            >
-              <Grid container direction="column" spacing={4}>
-                <Grid item>
-                  <Typography
-                    component="label"
-                    for="name"
-                    color="primary"
-                    className={classes.formLabels}
-                  >
-                    <EventNoteIcon className={classes.formIcons} />
-                    Judul
-                  </Typography>
-                  <TextField
-                    id="name"
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    placeholder="Isi Judul"
-                    value={name}
-                    error={errors.name}
-                    onChange={(e) => {
-                      handleChangeName(e);
-                    }}
-                  />
-                  {errors.name ? (
-                    <div className={classes.zeroHeightHelperText}>
-                      <FormHelperText error>{errors.name}</FormHelperText>
-                    </div>
-                  ) : null}
-                </Grid>
-
-                <Grid item>
-                  <Typography
-                    component="label"
-                    for="location"
-                    color="primary"
-                    className={classes.formLabels}
-                  >
-                    <LocationOnIcon className={classes.formIcons} />
-                    Lokasi
-                  </Typography>
-                  <TextField
-                    id="location"
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    placeholder="Isi Lokasi"
-                    value={location}
-                    onChange={(e) => {
-                      setLocation(e.target.value);
-                    }}
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  container
-                  spacing={2}
-                  className={classes.mdUpZeroBottomPadding}
-                >
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                    className={classes.smDownZeroBottomPadding}
-                  >
-                    <Typography
-                      component="label"
-                      for="eventStart"
-                      color="primary"
-                      className={classes.formLabels}
-                    >
-                      <TimerIcon className={classes.formIcons} />
+          <DialogContent dividers>
+            <Grid container direction="column" spacing={4}>
+              <Grid item>
+                <Typography color="primary" className={classes.label}>
+                  <EventNoteIcon className={classes.labelIcon} />
+                  Judul Kegiatan
+                </Typography>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="name"
+                  type="text"
+                  onChange={(e) => handleChangeName(e)}
+                  value={name}
+                  error={errors.name}
+                  helperText={errors.name}
+                />
+              </Grid>
+              <Grid item>
+                <Typography color="primary" className={classes.label}>
+                  <LocationOnIcon className={classes.labelIcon} />
+                  Lokasi
+                </Typography>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="location"
+                  type="text"
+                  onChange={(e) => setLocation(e.target.value)}
+                  value={location}
+                />
+              </Grid>
+              <Grid item>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <Typography color="primary" className={classes.label}>
+                      <TimerIcon className={classes.labelIcon} />
                       Waktu Mulai
                     </Typography>
                     <MuiPickersUtilsProvider
@@ -1281,113 +957,43 @@ function Event(props) {
                       utils={DateFnsUtils}
                     >
                       <KeyboardDatePicker
+                        disablePast
                         okLabel="Simpan"
                         cancelLabel="Batal"
-                        disablePast
-                        onChange={(date) => {
-                          handleStartDateChange(date);
-                        }}
                         open={openStartDatePicker}
-                        onClose={() => {
-                          setOpenStartDatePicker(false);
-                        }}
+                        onClose={() => setOpenStartDatePicker(false)}
+                        onChange={(date) => handleStartDateChange(date)}
                         style={{ display: "none" }}
                       />
                       <KeyboardDateTimePicker
-                        id="eventStart"
-                        inputRef={startDatePicker}
                         fullWidth
                         disablePast
                         inputVariant="outlined"
+                        id="eventStart"
                         format={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy - HH:mm"}
                         ampm={false}
+                        inputRef={startDatePicker}
                         okLabel="Simpan"
                         cancelLabel="Batal"
                         minDateMessage="Harus waktu yang akan datang"
                         invalidDateMessage="Format tanggal tidak benar"
+                        open={openStartDateTimePicker}
+                        onOpen={() => handleOpenStartPicker(isAllDay)}
+                        onClose={() => handleCloseStartPicker(isAllDay)}
+                        onChange={(date) => handleStartDateChange(date)}
                         value={start_date}
-                        placeholder="Isi Waktu Mulai"
-                        onChange={(date) => {
-                          handleStartDateChange(date);
-                        }}
-                        helperText={null}
                         onError={(err) => {
                           if (errors.start_date_picker !== err) {
                             setErrors({ ...errors, start_date_picker: err });
                           }
                         }}
-                        error={
-                          errors.start_date_custom || errors.start_date_picker
-                        }
-                        open={openStartDateTimePicker}
-                        onOpen={() => {
-                          handleOpenStartPicker(isAllDay);
-                        }}
-                        onClose={() => {
-                          handleCloseStartPicker(isAllDay);
-                        }}
+                        error={errors.start_date_custom || errors.start_date_picker}
                       />
-                      <div
-                        className={classes.zeroHeightHelperText}
-                        style={{ flexDirection: "column" }}
-                      >
-                        {errors.start_date_custom ? (
-                          <FormHelperText error>
-                            {errors.start_date_custom}
-                          </FormHelperText>
-                        ) : errors.start_date_picker ? (
-                          <FormHelperText error>
-                            {errors.start_date_picker}
-                          </FormHelperText>
-                        ) : null}
-                        {/* checkbox ini dimasukkan ke div zero height ini agar dapat berpindah ke bawah (untuk memberikan ruang
-                          untuk menampilkan helper text error) tanpa memindahkan dua item-item di bawahnya*/}
-                        <FormGroup style={{ width: "fit-content" }}>
-                          <FormControlLabel
-                            label={
-                              <Typography color="textSecondary">
-                                Sepanjang Hari
-                              </Typography>
-                            }
-                            control={
-                              <Checkbox
-                                onChange={() => {
-                                  handleCheckAllDay();
-                                }}
-                                color="primary"
-                                size="small"
-                                checked={isAllDay}
-                              />
-                            }
-                          />
-                        </FormGroup>
-                      </div>
-                      <Grid
-                        item
-                        style={{
-                          padding: "0",
-                          width: "0",
-                          visibility: "hidden",
-                        }}
-                      >
-                        <FormHelperText>{"\u200B"}</FormHelperText>
-                        <Checkbox size="small" disabled />
-                      </Grid>
                     </MuiPickersUtilsProvider>
                   </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                    className={classes.smDownZeroTopPadding}
-                  >
-                    <Typography
-                      component="label"
-                      for="eventEnd"
-                      color="primary"
-                      className={classes.formLabels}
-                    >
-                      <TimerOffIcon className={classes.formIcons} />
+                  <Grid item xs={12} md={6}>
+                    <Typography color="primary" className={classes.label}>
+                      <TimerOffIcon className={classes.labelIcon} />
                       Waktu Selesai
                     </Typography>
                     <MuiPickersUtilsProvider
@@ -1395,23 +1001,21 @@ function Event(props) {
                       utils={DateFnsUtils}
                     >
                       <KeyboardDatePicker
+                        disablePast
                         okLabel="Simpan"
                         cancelLabel="Batal"
-                        disablePast
                         minDate={start_date}
-                        onChange={(date) => {
-                          handleEndDateChange(date);
-                        }}
                         open={openEndDatePicker}
                         onClose={() => setOpenEndDatePicker(false)}
+                        onChange={(date) => handleEndDateChange(date)}
                         style={{ display: "none" }}
                       />
                       <KeyboardDateTimePicker
-                        id="eventEnd"
-                        inputRef={endDatePicker}
                         fullWidth
                         disablePast
                         inputVariant="outlined"
+                        id="eventEnd"
+                        inputRef={endDatePicker}
                         format={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy - HH:mm"}
                         ampm={false}
                         okLabel="Simpan"
@@ -1420,179 +1024,170 @@ function Event(props) {
                         minDateMessage="Harus setelah Waktu Mulai"
                         invalidDateMessage="Format tanggal tidak benar"
                         value={end_date}
-                        placeholder="Isi Waktu Selesai"
-                        onChange={(date) => {
-                          handleEndDateChange(date);
-                        }}
-                        helperText={null}
+                        open={openEndDateTimePicker}
+                        onOpen={() => handleOpenEndPicker(isAllDay)}
+                        onClose={() =>  handleCloseEndPicker(isAllDay)}
+                        onChange={(date) => handleEndDateChange(date)}
                         onError={(err) => {
                           if (errors.end_date_picker !== err) {
                             setErrors({ ...errors, end_date_picker: err });
                           }
                         }}
                         error={errors.end_date_custom || errors.end_date_picker}
-                        open={openEndDateTimePicker}
-                        onOpen={() => {
-                          handleOpenEndPicker(isAllDay);
-                        }}
-                        onClose={() => {
-                          handleCloseEndPicker(isAllDay);
-                        }}
                       />
-                      <div
-                        className={classes.zeroHeightHelperText}
-                        style={{ flexDirection: "column" }}
-                      >
-                        {errors.end_date_custom ? (
-                          <FormHelperText error>
-                            {errors.end_date_custom}
-                          </FormHelperText>
-                        ) : errors.end_date_picker ? (
-                          <FormHelperText error>
-                            {errors.end_date_picker}
-                          </FormHelperText>
-                        ) : null}
-                      </div>
                     </MuiPickersUtilsProvider>
                   </Grid>
                 </Grid>
-
-                <Grid item className={classes.mdUpZeroTopPadding}>
-                  <Typography
-                    component="label"
-                    for="target_role"
-                    color="primary"
-                    className={classes.formLabels}
-                  >
-                    <SupervisorAccountIcon className={classes.formIcons} />
-                    Pihak Penerima
-                  </Typography>
-                  <FormControl variant="outlined" fullWidth error={errors.to}>
-                    <Select
-                      id="target_role"
-                      multiple
-                      displayEmpty
-                      value={target_role}
-                      onChange={(e) => {
-                        handleChangeTargetRole(e);
-                      }}
-                      renderValue={(selected) => (
-                        <div className={classes.chips}>
-                          {selected.length === 0 ? (
-                            // input ini hanya digunakan sebagai placeholder
-                            <Input
-                              disableUnderline
-                              placeholder="Pilih Pihak Penerima"
-                              readOnly
-                              classes={{ input: classes.dummyInput }}
-                            />
-                          ) : (
-                            selected.map((role) => {
-                              return (
-                                <Chip
-                                  key={role}
-                                  className={classes.chip}
-                                  label={roleConverter[role]}
-                                />
-                              );
-                            })
-                          )}
-                        </div>
-                      )}
-                    >
-                      {["Student", "Teacher", "Admin"].map((role) => (
-                        <MenuItem key={role} value={role}>
-                          <Checkbox
-                            checked={target_role.includes(role)}
-                            color="primary"
-                          />
-                          <ListItemText primary={roleConverter[role]} />
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {errors.to ? (
-                      <div className={classes.zeroHeightHelperText}>
-                        <FormHelperText error>{errors.to}</FormHelperText>
-                      </div>
-                    ) : null}
-                  </FormControl>
-                </Grid>
-
-                <Grid item>
-                  <Typography
-                    component="label"
-                    for="description"
-                    color="primary"
-                    className={classes.formLabels}
-                  >
-                    <SubjectIcon className={classes.formIcons} />
-                    Deskripsi
-                  </Typography>
-                  <TextField
-                    id="description"
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    placeholder="Isi Deskripsi"
-                    multiline
-                    value={description}
-                    onChange={(e) => {
-                      handleChangeDescription(e);
-                    }}
-                  />
-                </Grid>
-
-                <Grid item>
-                  <input
-                    id="file_control"
-                    name="lampiran"
-                    type="file"
-                    accept="file/*"
-                    multiple={true}
-                    ref={lampiranUploader}
-                    onChange={handleLampiranUpload}
-                    style={{ display: "none" }}
-                  />
-                  <Button
-                    variant="contained"
-                    startIcon={<AttachFileIcon />}
-                    onClick={() => {
-                      lampiranUploader.current.click();
-                    }}
-                    className={classes.addFileButton}
-                  >
-                    Tambah Lampiran Berkas
-                  </Button>
-                  <Grid container spacing={1} style={{ marginTop: "10px" }}>
-                    {fileLampiran && fileLampiran.length > 0 ? (
-                      <FileAttachment
-                        data={fileLampiran}
-                        handleLampiranDelete={handleLampiranDelete}
+                <FormControlLabel
+                    label={
+                      <Typography color="textSecondary">
+                        Sepanjang Hari
+                      </Typography>
+                    }
+                    control={
+                      <Checkbox
+                        color="primary"
+                        size="small"
+                        checked={isAllDay}
+                        onChange={() => handleCheckAllDay()}
                       />
-                    ) : null}
-                  </Grid>
+                    }
+                  />
+                {errors.start_date_custom || errors.start_date_picker ?
+                  <FormHelperText error>
+                    {errors.start_date_custom || errors.start_date_picker}
+                  </FormHelperText>
+                : null}
+                {errors.end_date_custom || errors.end_date_picker ?
+                  <FormHelperText error>
+                    {errors.end_date_custom || errors.end_date_picker}
+                  </FormHelperText>
+                : null}
+              </Grid>
+              <Grid item>
+                <Typography color="primary" className={classes.label}>
+                  <SupervisorAccountIcon className={classes.labelIcon} />
+                  Pihak Penerima
+                </Typography>
+                <FormControl
+                  fullWidth
+                  variant="outlined"
+                  color="primary"
+                  id="target_role"
+                  error={errors.to}
+                >
+                  <Select
+                    multiple
+                    value={target_role}
+                    onChange={(e) => handleChangeTargetRole(e)}
+                    renderValue={(selected) => (
+                      <div className={classes.chips}>
+                        {selected.map((role) => {
+                          return (
+                            <Chip
+                              key={role}
+                              className={classes.chip}
+                              label={roleConverter[role]}
+                            />
+                          );
+                        })}
+                      </div>
+                    )}
+                  >
+                    {["Student", "Teacher", "Admin"].map((role) => (
+                      <MenuItem key={role} value={role}>
+                        <Checkbox
+                          color="primary"
+                          checked={target_role.includes(role)}
+                        />
+                        <ListItemText primary={roleConverter[role]} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.to ? (
+                    <FormHelperText error>
+                      {errors.to}
+                    </FormHelperText>
+                  ) : null}
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <Typography color="primary" className={classes.label}>
+                  <SubjectIcon className={classes.labelIcon} />
+                  Deskripsi
+                </Typography>
+                <TextField
+                  fullWidth
+                  multiline
+                  variant="outlined"
+                  id="description"
+                  type="text"
+                  value={description}
+                  onChange={(e) => handleChangeDescription(e)}
+                />
+              </Grid>
+              <Grid item>
+                <input
+                  multiple
+                  id="file_control"
+                  type="file"
+                  name="lampiran"
+                  accept="file/*"
+                  onChange={handleLampiranUpload}
+                  ref={lampiranUploader}
+                  style={{ display: "none" }}
+                />
+                <Button
+                  variant="contained"
+                  startIcon={<AttachFileIcon />}
+                  onClick={() => lampiranUploader.current.click()}
+                  className={classes.addFileButton}
+                >
+                  Tambah Lampiran Berkas
+                </Button>
+                <Grid container spacing={1}>
+                  {fileLampiran && fileLampiran.length > 0 ? (
+                    <FileAttachment
+                      data={fileLampiran}
+                      handleLampiranDelete={handleLampiranDelete}
+                    />
+                  ) : null}
                 </Grid>
               </Grid>
-            </div>
+            </Grid>
           </DialogContent>
           <DialogActions style={{ padding: "16px 24px" }}>
             <Button
-              variant="contained"
-              className={
-                eventDialogMode === "create"
-                  ? classes.createEventButton
-                  : classes.editEventButton
-              }
               disabled={openUploadDialog}
               onClick={() => {
                 eventDialogMode === "create"
                   ? handleCreateEvent()
                   : handleUpdateEvent();
               }}
+              className={
+                eventDialogMode === "create"
+                  ? classes.createButton
+                  : classes.editButton
+              }
             >
               {eventDialogMode === "create" ? "Buat" : "Sunting"}
             </Button>
           </DialogActions>
+          <UploadDialog
+            openUploadDialog={openUploadDialog}
+            handleCloseUploadDialog={handleCloseEventDialog}
+            success={uploadSuccess}
+            messageUploading={
+              eventDialogMode === "create"
+                ? "Kegiatan sedang dibuat"
+                : "Kegiatan sedang disunting"
+            }
+            messageSuccess={
+              eventDialogMode === "create"
+                ? "Kegiatan telah dibuat"
+                : "Kegiatan telah disunting"
+            }
+          />
         </>
       )}
     </Dialog>

@@ -67,11 +67,16 @@ const useStyles = makeStyles((theme) => ({
   contentDetails: {
     padding: "20px 20px 25px 20px",
   },
-  labelIcon: {
-    fontSize: "18px",
-    marginRight: "10px",
+  label: {
+    display: "flex",
+    alignItems: "center",
   },
-  color: "grey",
+  labelIcon: {
+    width: "1rem",
+    height: "1rem",
+    marginRight: "10px",
+    color: "grey",
+  },
 }));
 
 function EditUnit(props) {
@@ -194,10 +199,10 @@ function EditUnit(props) {
               <div className={classes.contentDetails}>
                 <Grid container direction="column" spacing={4}>
                   <Grid item>
-                    <div style={{ display: "flex", alignItems: "center" }}>
+                    <Typography color="primary" className={classes.label}>
                       <WebIcon className={classes.labelIcon} />
-                      <Typography color="primary">Nama Unit</Typography>
-                    </div>
+                      Nama Unit
+                    </Typography>
                     <TextField
                       fullWidth
                       variant="outlined"
@@ -210,10 +215,10 @@ function EditUnit(props) {
                     />
                   </Grid>
                   <Grid item>
-                    <div style={{ display: "flex", alignItems: "center" }}>
+                    <Typography color="primary" className={classes.label}>
                       <ShortTextIcon className={classes.labelIcon} />
-                      <Typography color="primary">Keterangan</Typography>
-                    </div>
+                      Keterangan
+                    </Typography>
                     <TextField
                       fullWidth
                       multiline

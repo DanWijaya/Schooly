@@ -88,8 +88,13 @@ const styles = (theme) => ({
   contentDetails: {
     padding: "20px 20px 25px 20px",
   },
+  label: {
+    display: "flex",
+    alignItems: "center",
+  },
   labelIcon: {
-    fontSize: "18px",
+    width: "1rem",
+    height: "1rem",
     marginRight: "10px",
     color: "grey",
   },
@@ -277,10 +282,10 @@ class CreateClass extends Component {
                 <div className={classes.contentDetails}>
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
-                      <div style={{ display: "flex", alignItems: "center" }}>
+                      <Typography color="primary" className={classes.label}>
                         <FaChalkboard className={classes.labelIcon} />
-                        <Typography color="primary">Nama Kelas</Typography>
-                      </div>
+                        Nama Kelas
+                      </Typography>
                       <TextField
                         fullWidth
                         variant="outlined"
@@ -293,10 +298,10 @@ class CreateClass extends Component {
                       />
                     </Grid>
                     <Grid item>
-                      <div style={{ display: "flex", alignItems: "center" }}>
+                      <Typography color="primary" className={classes.label}>
                         <AssignmentIndIcon className={classes.labelIcon} />
-                        <Typography color="primary">Wali Kelas</Typography>
-                      </div>
+                        Wali Kelas
+                      </Typography>
                       <FormControl
                         fullWidth
                         variant="outlined"
@@ -329,10 +334,10 @@ class CreateClass extends Component {
                       </FormControl>
                     </Grid>
                     <Grid item>
-                      <div style={{ display: "flex", alignItems: "center" }}>
+                      <Typography color="primary" className={classes.label}>
                         <LibraryBooksIcon className={classes.labelIcon} />
-                        <Typography color="primary">Mata Pelajaran</Typography>
-                      </div>
+                        Mata Pelajaran
+                      </Typography>
                       <FormControl fullWidth color="primary" id="matapelajaran">
                         <Autocomplete
                           multiple
