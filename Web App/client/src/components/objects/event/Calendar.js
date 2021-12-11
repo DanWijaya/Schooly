@@ -34,6 +34,7 @@ import {
   Hidden,
   IconButton,
   MenuItem,
+  Paper,
   Select,
   Snackbar,
   Table,
@@ -76,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "20px",
   },
   toolbar: {
-    padding: "10px 0px",
+    padding: "10px 0px 15px 0px",
   },
   createEventButton: {
     boxShadow:
@@ -97,14 +98,30 @@ const useStyles = makeStyles((theme) => ({
   calendarModeSelect: {
     width: "40px",
   },
-  shadow: {
+  calendarHeader: {
+    padding: "10px 5px",
     boxShadow:
       "0 14px 18px -28px rgba(0,0,0,0.8), 0 10px 10px -10px rgba(0,0,0,0.15)",
   },
-
-  calendar: {
-    border: "none",
+  allDayItemList: {
+    display: "flex",
+    flexDirection: "column",
+    flexWrap: "nowrap",
+    paddingLeft: "60px",
   },
+  holidayItem: {
+    margin: "2px 0px",
+    padding: "2px 4px",
+    backgroundColor: theme.palette.grey[300],
+    color: "black",
+  },
+  allDayItem: {
+    margin: "2px 0px",
+    padding: "2px 4px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+  },
+
   dayAgendaContainer: {
     display: "flex",
     flexDirection: "column",
@@ -265,18 +282,6 @@ const useStyles = makeStyles((theme) => ({
   listIcon: {
     backgroundColor: theme.palette.primary.main,
   },
-  holidayContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "nowrap",
-  },
-  staticBlueChip: {
-    backgroundColor: theme.palette.primary.main,
-    borderRadius: "3px",
-    overflow: "hidden",
-    marginBottom: "2px",
-    padding: "2px",
-  },
   blueChip: {
     backgroundColor: theme.palette.primary.main,
     borderRadius: "3px",
@@ -284,11 +289,6 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     color: "white",
     zIndex: 2,
-  },
-  hoverPointerCursor: {
-    "&:focus, &:hover": {
-      cursor: "pointer",
-    },
   },
   horizontalLine: {
     position: "relative",
@@ -2418,80 +2418,20 @@ function Calendar(props) {
     "Desember",
   ];
 
-  let stringDateDay =
-    currentDate.getDate() +
-    " " +
+  let stringDateDayDesktop =
     monthNames[currentDate.getMonth()] +
     " " +
     currentDate.getFullYear();
-  let stringDateMonth =
-    monthNames[currentDate.getMonth()] + " " + currentDate.getFullYear();
-  let stringDateMobile =
+  let stringDateDayMobile =
     monthNames[currentDate.getMonth()].slice(0, 3) +
     " " +
+    currentDate.getFullYear();
+  let stringDateMonth =
     currentDate.getFullYear();
 
   const generateDayModeCalendar = () => {
     return (
       <div className={classes.dayAgendaContainer}>
-        <div
-          className={
-            showShadow(currentDate, allDayItems)
-              ? `${classes.shadow} ${classes.holidayContainer}`
-              : classes.holidayContainer
-          }
-          style={
-            showShadow(currentDate, allDayItems)
-              ? mdDown
-                ? { padding: `0 16px 10px 26px` }
-                : { padding: `0 ${16 + scrollbarWidth ?? 0}px 10px 26px` }
-              : undefined
-          }
-        >
-          <Typography variant="body2" style={{ visibility: "hidden" }}>
-            00:00
-          </Typography>
-          <div
-            style={{ display: "flex", flexDirection: "column", flexGrow: "1" }}
-          >
-            {hasHoliday(currentDate)
-              ? holiday[
-                  new Date(
-                    currentDate.getFullYear(),
-                    currentDate.getMonth(),
-                    currentDate.getDate()
-                  )
-                ].map((holiday) => (
-                  <div key={holiday} className={classes.staticBlueChip}>
-                    <Typography style={{ color: "white" }} variant="body2">
-                      {holiday}
-                    </Typography>
-                  </div>
-                ))
-              : null}
-            {allDayItems.map((item) => (
-              <div
-                key={item._id}
-                className={
-                  item.type === "Event"
-                    ? `${classes.hoverPointerCursor} ${classes.staticBlueChip}`
-                    : classes.staticBlueChip
-                }
-                onClick={
-                  item.type === "Event"
-                    ? () => {
-                        handleOpenViewDialog(item.data);
-                      }
-                    : undefined
-                }
-              >
-                <Typography style={{ color: "white" }} variant="body2">
-                  {item.data.name}
-                </Typography>
-              </div>
-            ))}
-          </div>
-        </div>
         <TableContainer ref={scrollRef}>
           <Table>
             <TableBody>
@@ -3077,16 +3017,11 @@ function Calendar(props) {
             activeStartDate={activeStartDate}
             setActiveStartDate={setActiveStartDate}
           />
-          <Grid
-            container
-            justify="space-between"
-            alignItems="center"
-            className={classes.shadow}
-          >
-            <Grid item>
-              <Grid container alignItems="center" spacing={2}>
-                <Grid item>
-                  <Grid container direction="column" alignItems="center">
+          <div className={classes.calendarHeader}>
+            <Grid container alignItems="center" spacing={2}>
+              <Grid item>
+                <Grid container direction="column" alignItems="center">
+                  {mode === "Day" ?
                     <Grid item>
                       <Typography variant="body2" color="primary">
                         {moment(currentDate)
@@ -3096,193 +3031,183 @@ function Calendar(props) {
                           .toUpperCase()}
                       </Typography>
                     </Grid>
-                    <Grid>
-                      <Avatar className={classes.dateCircleHighlight}>
+                  : null}
+                  <Grid item>
+                    <Avatar className={classes.dateCircleHighlight}>
+                      {mode === "Day" ? (
                         <Typography variant="h5">
                           {moment(currentDate).locale("id").format("DD")}
                         </Typography>
-                      </Avatar>
-                    </Grid>
+                      ) : (
+                        <Typography>
+                          {moment(currentDate).locale("id").format("MMM")}
+                        </Typography>
+                      )}
+                    </Avatar>
                   </Grid>
                 </Grid>
-                <Grid item>
-                  <Typography variant="h6">
-                    <Hidden xsDown>
-                      {mode === "Day" ? stringDateDay : stringDateMonth}
-                    </Hidden>
-                    <Hidden smUp>{stringDateMobile}</Hidden>
-                  </Typography>
-                </Grid>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6">
+                  <Hidden xsDown>
+                    {mode === "Day" ? stringDateDayDesktop : stringDateMonth}
+                  </Hidden>
+                  <Hidden smUp>
+                    {mode === "Day" ? stringDateDayMobile : stringDateMonth}
+                  </Hidden>
+                </Typography>
               </Grid>
             </Grid>
-          </Grid>
+            {mode === "Day" ?
+              <div className={classes.allDayItemList}>
+                {hasHoliday(currentDate)
+                  ? holiday[
+                      new Date(
+                        currentDate.getFullYear(),
+                        currentDate.getMonth(),
+                        currentDate.getDate()
+                      )
+                    ].map((holiday) => (
+                      <Paper elevation={0} key={holiday} className={classes.holidayItem}>
+                        <Typography variant="body2">
+                          {holiday}
+                        </Typography>
+                      </Paper>
+                    ))
+                  : null}
+                {allDayItems.map((item) => (
+                  <Paper
+                    elevation={0}
+                    key={item._id}
+                    className={classes.allDayItem}
+                    style={item.type === "Event" ? { cursor: "pointer" } : null}
+                    onClick={
+                      item.type === "Event"
+                        ? () => handleOpenViewDialog(item.data)
+                        : undefined
+                    }
+                  >
+                    <Typography variant="body2">
+                      {item.data.name}
+                    </Typography>
+                  </Paper>
+                ))}
+              </div>
+            : null}
+          </div>
           {mode === "Day"
             ? generateDayModeCalendar()
             : generateMonthModeCalendar()}
         </Grid>
         <Hidden smDown>
           <Grid item style={{ maxWidth: "300px" }}>
-            <Grid container alignItems="center" justify="space-between">
-              <Grid item style={{ paddingLeft: "0.6em" }}>
-                <Typography>
+            <Grid container justify="space-between" alignItems="center">
+              <Grid item>
+                <Typography style={{ paddingLeft: "0.6em" }}>
                   {moment(activeStartDate).locale("id").format("MMMM YYYY")}
                 </Typography>
               </Grid>
               <Grid item>
                 <IconButton
                   size="small"
-                  onClick={() => {
-                    handlePreviousMonth();
-                  }}
+                  onClick={() => handlePreviousMonth()}
                 >
                   <ChevronLeftIcon />
                 </IconButton>
                 <IconButton
                   size="small"
-                  onClick={() => {
-                    handleNextMonth();
-                  }}
+                  onClick={() => handleNextMonth()}
                 >
                   <ChevronRightIcon />
                 </IconButton>
               </Grid>
             </Grid>
             <ReactCalendar
+              view="month"
               locale="id-ID"
               showFixedNumberOfWeeks
-              onChange={(value) => {
-                handleClickReactCalendar(value);
-              }}
-              value={selectedDateReactCalendar}
-              className={classes.calendar}
               showNavigation={false}
-              activeStartDate={activeStartDate}
               tileContent={handleTileContent(selectedDateReactCalendar)}
+              value={selectedDateReactCalendar}
+              onChange={(value) => handleClickReactCalendar(value)}
+              activeStartDate={activeStartDate}
               formatShortWeekday={(locale, date) => {
-                // mengubah nama hari dalam satu minggu jadi satu huruf
                 return new Date(date).toLocaleDateString(locale, {
                   weekday: "long",
                 })[0];
               }}
-              view="month"
             />
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-              }}
-            >
-              <Typography style={{ marginTop: "15px" }}>Agenda</Typography>
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={agendaCheckboxState.checkedTask}
-                      onChange={handleChange}
-                      name="checkedTask"
-                      color="primary"
-                    />
-                  }
-                  label={`Tugas (${itemCount.task})`}
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={agendaCheckboxState.checkedQuiz}
-                      onChange={handleChange}
-                      name="checkedQuiz"
-                      color="primary"
-                    />
-                  }
-                  label={`Kuis (${itemCount.kuis})`}
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={agendaCheckboxState.checkedExam}
-                      onChange={handleChange}
-                      name="checkedExam"
-                      color="primary"
-                    />
-                  }
-                  label={`Ujian (${itemCount.ujian})`}
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={agendaCheckboxState.checkedEvent}
-                      onChange={handleChange}
-                      name="checkedEvent"
-                      color="primary"
-                    />
-                  }
-                  label={`Kegiatan (${itemCount.event})`}
-                />
-              </FormGroup>
-            </div>
-            {role === "Teacher" && selectedClasses !== null ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                }}
-              >
-                <Typography style={{ marginTop: "15px" }}>Kelas</Typography>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    height: "190px",
-                    overflow: "auto",
-                  }}
-                >
-                  {user.class_teached.map((class_id) => {
-                    let temp = new Map(selectedClasses);
-                    let kelas = temp.get(class_id);
-                    let class_name = "";
-                    if (kelas) {
-                      class_name = kelas.name;
-                    }
-                    return (
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={classCheckboxState[class_id]}
-                            onChange={handleChangeClassStates}
-                            name={class_id}
-                            color="primary"
-                          />
-                        }
-                        label={class_name}
+            <Grid container direction="column" spacing={4} style={{ marginTop: "16px" }}>
+              <Grid item>
+                <Typography gutterBottom>
+                  Agenda
+                </Typography>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        name="checkedTask"
+                        checked={agendaCheckboxState.checkedTask}
+                        onChange={handleChange}
                       />
-                    );
-                  })}
-                </div>
-              </div>
-            ) : null}
-            {role === "Admin" && all_classes !== null ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                }}
-              >
-                <Typography style={{ marginTop: "15px" }}>Kelas</Typography>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    height: "190px",
-                    overflow: "auto",
-                  }}
-                >
-                  {all_classes.map((kelas) => {
-                    let class_id = kelas._id;
-                    let class_name = kelas.name;
-                    if (Object.keys(classCheckboxState).length !== 0) {
+                    }
+                    label={`Tugas (${itemCount.task})`}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        name="checkedQuiz"
+                        checked={agendaCheckboxState.checkedQuiz}
+                        onChange={handleChange}
+                      />
+                    }
+                    label={`Kuis (${itemCount.kuis})`}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        name="checkedExam"
+                        checked={agendaCheckboxState.checkedExam}
+                        onChange={handleChange}
+                      />
+                    }
+                    label={`Ujian (${itemCount.ujian})`}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        name="checkedEvent"
+                        checked={agendaCheckboxState.checkedEvent}
+                        onChange={handleChange}
+                      />
+                    }
+                    label={`Kegiatan (${itemCount.event})`}
+                  />
+                </FormGroup>
+              </Grid>
+              {role === "Teacher" && selectedClasses !== null ? (
+                <Grid item>
+                  <Typography gutterBottom>
+                    Kelas
+                  </Typography>
+                  <FormGroup
+                    style={{
+                      maxHeight: "250px",
+                      flexWrap: "noWrap",
+                      overflow: "auto"
+                    }}
+                  >
+                    {user.class_teached.map((class_id) => {
+                      let temp = new Map(selectedClasses);
+                      let kelas = temp.get(class_id);
+                      let class_name = "";
+                      if (kelas) {
+                        class_name = kelas.name;
+                      }
                       return (
                         <FormControlLabel
                           control={
@@ -3296,12 +3221,46 @@ function Calendar(props) {
                           label={class_name}
                         />
                       );
-                    }
-                    return null;
-                  })}
-                </div>
-              </div>
-            ) : null}
+                    })}
+                  </FormGroup>
+                </Grid>
+              ) : null}
+              {role === "Admin" && all_classes !== null ? (
+                <Grid item>
+                  <Typography gutterBottom>
+                    Kelas
+                  </Typography>
+                  <FormGroup
+                    style={{
+                      maxHeight: "250px",
+                      flexWrap: "noWrap",
+                      overflow: "auto"
+                    }}
+                  >
+                    {all_classes.map((kelas) => {
+                      let class_id = kelas._id;
+                      let class_name = kelas.name;
+                      if (Object.keys(classCheckboxState).length !== 0) {
+                        return (
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={classCheckboxState[class_id]}
+                                onChange={handleChangeClassStates}
+                                name={class_id}
+                                color="primary"
+                              />
+                            }
+                            label={class_name}
+                          />
+                        );
+                      }
+                      return null;
+                    })}
+                  </FormGroup>
+                </Grid>
+              ) : null}
+            </Grid>
           </Grid>
         </Hidden>
       </Grid>
