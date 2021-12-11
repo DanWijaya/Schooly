@@ -919,13 +919,13 @@ function SubmittedAssessmentList(props) {
             <Divider />
             <div style={{ padding: "16px 0px 25px 0px" }}>
               <Typography gutterBottom>
-                Mulai -{" "}
+                Mulai:{" "}
                 {moment(selectedAssessments.start_date)
                   .locale("id")
                   .format("DD MMM YYYY, HH:mm")}
               </Typography>
               <Typography gutterBottom>
-                Selesai -{" "}
+                Selesai:{" "}
                 {moment(selectedAssessments.end_date)
                   .locale("id")
                   .format("DD MMM YYYY, HH:mm")}

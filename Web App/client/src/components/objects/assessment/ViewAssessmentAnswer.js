@@ -9,20 +9,14 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneAssessment, updateAssessmentGrades, getQuestionAnalytics } from "../../../actions/AssessmentActions";
 import Latex from "../../misc/latex/Latex";
 import CustomLinkify from "../../misc/linkify/Linkify";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
-  Avatar,
   Badge,
   Button,
   Checkbox,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   Divider,
   FormGroup,
   FormControlLabel,
   Grid,
-  Hidden,
   IconButton,
   Menu,
   MenuItem,
@@ -35,6 +29,7 @@ import {
   Tabs,
   TableSortLabel,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import { Alert, ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
@@ -42,7 +37,6 @@ import {
   Ballot as BallotIcon,
   CheckCircle as CheckCircleIcon,
   Error as ErrorIcon,
-  HelpOutline as HelpOutlineIcon,
   Sort as SortIcon,
   SupervisorAccount as SupervisorAccountIcon,
 } from "@material-ui/icons";
@@ -58,81 +52,21 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "100%",
     },
   },
-  content: {
+  assessmentPaper: {
     padding: "20px",
-  },
-  answerText: {
-    color: theme.palette.success.dark,
-  },
-  optionText: {
-    color: "black",
-  },
-  sortButton: {
-    backgroundColor: theme.palette.action.selected,
-    marginTop: "auto",
-    marginBottom: "auto",
-    color: "black",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.divider,
-      color: "black",
-    },
-  },
-  perStudentSelect: {
-    paddingTop: "10px",
-    paddingBottom: "10px",
-    marginBottom: "30px",
-  },
-  navigationHelpIcon: {
-    fontSize: "10px",
-    color: theme.palette.text.secondary,
-    marginLeft: "5px",
-  },
-  selectDiv: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  select: {
-    marginLeft: "10px",
-    minWidth: "180px",
-    maxWidth: "180px",
     [theme.breakpoints.down("xs")]: {
-      minWidth: "100px",
-      maxWidth: "100px",
+      padding: "15px",
     },
   },
-  selectDescription: {
-    display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "center",
+  assessmentDivider: {
+    margin: "22.5px 0px",
+    backgroundColor: theme.palette.primary.light,
   },
-  contentItem: {
-    padding: "20px",
-    marginBottom: "30px",
-  },
-  checkBadge: {
-    color: theme.palette.success.dark,
-  },
-  warningBadge: {
-    color: theme.palette.error.dark,
-  },
-  saveButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    marginLeft: "15px",
-    height: "80%",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.dark,
+  modePaper: {
+    padding: "20px 20px 0px 20px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "15px 15px 0px 15px",
     },
-  },
-  mobileNav: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  mobileNavButton: {
-    color: theme.palette.text.secondary,
   },
   visuallyHidden: {
     border: 0,
@@ -145,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  toggleGroupRoot: {
+  questionNumberGroup: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -155,36 +89,54 @@ const useStyles = makeStyles((theme) => ({
       flexGrow: "1",
     },
   },
-  toggleGroupChildren: {
+  questionNumberGroupChildren: {
     padding: "0px",
     width: "35px",
     height: "35px",
     "&:not(:first-child)": {
-      margin: theme.spacing(1),
+      margin: "8px",
       borderRadius: theme.shape.borderRadius,
       borderLeft: "1px solid rgba(0,0,0,0.12)",
     },
     "&:first-child": {
-      margin: theme.spacing(1),
+      margin: "8px",
       borderRadius: theme.shape.borderRadius,
     },
   },
-  toggleButtonRoot: {
+  questionNumberRoot: {
     color: "unset",
-    "&$toggleButtonSelected": {
+    "&$questionNumberSelected": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
-      cursor: "pointer",
       "&:focus, &:hover": {
         backgroundColor: theme.palette.primary.main,
+        color: "white",
       },
     },
   },
-  toggleButtonSelected: {
-    //harus ada meskipun kosong
-  },
-  dividerColor: {
+  questionNumberSelected: {
     backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
+  answeredquestionNumber: {
+    width: "20px",
+    height: "20px",
+    borderRadius: "10px",
+    fontSize: "15px",
+    backgroundColor: "white",
+    color: theme.palette.success.main,
+  },
+  unansweredquestionNumber: {
+    width: "20px",
+    height: "20px",
+    borderRadius: "10px",
+    fontSize: "15px",
+    backgroundColor: "white",
+    color: theme.palette.error.main,
   },
   shortAnswerText: {
     color: theme.palette.text.secondary,
@@ -196,6 +148,15 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.success.dark,
     fontSize: "1rem",
     verticalAlign: "middle",
+  },
+  saveButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    marginLeft: "15px",
+    height: "80%",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.dark,
+    },
   },
 }));
 
@@ -218,101 +179,84 @@ function AnswerPerQuestion(props) {
 
   if (questionType === "longtext") {
     return (
-      <Paper style={{ width: "100%", marginBottom: "30px" }}>
-        <Badge
-          variant="standard"
-          style={{ marginLeft: "4px", width: "100%" }}
-          badgeContent={
-            studentMark === null ? (
-              <ErrorIcon className={classes.warningBadge} fontSize="large" />
-            ) : (
-              <CheckCircleIcon
-                className={classes.checkBadge}
-                fontSize="large"
-              />
-            )
-          }
-        >
-          <Grid
-            container
-            direction="column"
-            spacing={2}
-            style={{ padding: "20px" }}
-          >
-            <Grid item>
-              <Grid container direction="column">
-                <Grid item>
-                  <Typography variant="h6">
-                    <b>{`${studentName}`}</b>
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="subtitle-1" color="textSecondary">
-                    {`${studentClass}`}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Divider style={{ marginTop: "5px" }} />
+      <Grid item>
+        <Paper className={classes.assessmentPaper}>
+            <Grid container direction="column" spacing={2}>
+              <Grid item>
+                <Grid container direction="column">
+                  <Grid item>
+                    <Typography variant="h6">
+                      <b>{`${studentName}`}</b>
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="subtitle-1" color="textSecondary">
+                      {`${studentClass}`}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Divider style={{ marginTop: "5px" }} />
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item>
-              <Typography
-                style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-                align="justify"
-                color="textSecondary"
-              >
-                {studentAnswer[0] ? `${studentAnswer[0]}` : "Tidak menjawab"}
-              </Typography>
-            </Grid>
-            <Grid item container justify="flex-end" alignItems="center">
-              <Typography
-                style={{ marginTop: "5px", marginRight: "10px" }}
-                color="textSecondary"
-              >
-                Poin:
-              </Typography>
-              <TextField
-                value={studentMark}
-                key={`${studentId}-${questionNumber}`}
-                inputProps={{
-                  style: {
-                    borderBottom: "none",
-                    boxShadow: "none",
-                    margin: "0px",
-                    width: "30px",
-                  },
-                }}
-                InputProps={{
-                  endAdornment: `/ ${questionWeight}`,
-                }}
-                onChange={(e) => {
-                  handleGradeChange(e, studentId, questionNumber - 1);
-                }}
-              />
-              <div>
-                <Button
-                  className={classes.saveButton}
-                  size="small"
-                  variant="contained"
-                  onClick={() => {
-                    handleSaveGrade(
-                      studentId,
-                      questionNumber - 1,
-                      questionWeight
-                    );
-                  }}
+              <Grid item>
+                <Typography
+                  color="textSecondary"
+                  align="justify"
+                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
                 >
-                  SIMPAN
-                </Button>
-              </div>
+                  {studentAnswer[0] ? `${studentAnswer[0]}` : "Tidak menjawab"}
+                </Typography>
+              </Grid>
+              <Grid item container justify="flex-end" alignItems="center">
+                <Typography
+                  color="textSecondary"
+                  style={{ marginTop: "5px", marginRight: "10px" }}
+                >
+                  Poin:
+                </Typography>
+                <TextField
+                  value={studentMark}
+                  key={`${studentId}-${questionNumber}`}
+                  inputProps={{
+                    style: {
+                      borderBottom: "none",
+                      boxShadow: "none",
+                      margin: "0px",
+                      width: "30px",
+                    },
+                  }}
+                  InputProps={{
+                    endAdornment: `/ ${questionWeight}`,
+                  }}
+                  onChange={(e) => {
+                    handleGradeChange(e, studentId, questionNumber - 1);
+                  }}
+                />
+                <div>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    className={classes.saveButton}
+                    onClick={() => {
+                      handleSaveGrade(
+                        studentId,
+                        questionNumber - 1,
+                        questionWeight
+                      );
+                    }}
+                  >
+                    Simpan
+                  </Button>
+                </div>
+              </Grid>
             </Grid>
-          </Grid>
-        </Badge>
-      </Paper>
+        </Paper>
+      </Grid>
     );
   } else {
     let answer;
+
     if (questionType === "radio") {
       answer = (
         <RadioGroup value={studentAnswer[0]}>
@@ -373,41 +317,38 @@ function AnswerPerQuestion(props) {
     }
 
     return (
-      <Paper style={{ width: "100%", marginBottom: "30px" }}>
-        <Grid
-          container
-          direction="column"
-          spacing={2}
-          style={{ padding: "20px" }}
-        >
-          <Grid item>
-            <Grid container direction="column">
-              <Grid item>
-                <Typography variant="h6">
-                  <b>{`${studentName}`}</b>
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="subtitle-1" color="textSecondary">
-                  {`${studentClass}`}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Divider style={{ marginTop: "5px" }} />
+      <Grid item>
+        <Paper className={classes.assessmentPaper}>
+          <Grid container direction="column" spacing={2}>
+            <Grid item>
+              <Grid container direction="column">
+                <Grid item>
+                  <Typography variant="h6">
+                    <b>{`${studentName}`}</b>
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle-1" color="textSecondary">
+                    {`${studentClass}`}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Divider style={{ marginTop: "5px" }} />
+                </Grid>
               </Grid>
             </Grid>
+            <Grid item>{answer}</Grid>
+            <Grid item container justify="flex-end" alignItems="center">
+              <Typography
+                key={`${studentId}-${questionNumber}`}
+                color="textSecondary"
+              >
+                Poin: {studentMark} / {questionWeight}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item>{answer}</Grid>
-          <Grid item container justify="flex-end" alignItems="center">
-            <Typography
-              key={`${studentId}-${questionNumber}`}
-              color="textSecondary"
-            >
-              Poin: {studentMark} / {questionWeight}
-            </Typography>
-          </Grid>
-        </Grid>
-      </Paper>
+        </Paper>
+      </Grid>
     );
   }
 }
@@ -428,96 +369,83 @@ function AnswerPerStudent(props) {
   let questionOptions = questionInfo.options;
 
   const { handleGradeChange, handleSaveGrade } = props;
-  let content;
+
   if (questionType === "longtext") {
-    content = (
-      <Badge
-        variant="standard"
-        style={{ marginLeft: "4px", width: "100%" }}
-        badgeContent={
-          studentMark === null ? (
-            <ErrorIcon className={classes.warningBadge} fontSize="large" />
-          ) : (
-            <CheckCircleIcon className={classes.checkBadge} fontSize="large" />
-          )
-        }
-      >
-        <Grid
-          container
-          direction="column"
-          spacing={2}
-          style={{ padding: "20px" }}
-        >
-          <Grid item>
-            <Typography variant="h6" color="primary" align="left">
-              {`Soal ${questionNumber}`}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography align="justify">{`${questionName}`}</Typography>
-          </Grid>
-          <Grid item>
-            <Typography
-              color="textSecondary"
-              align="justify"
-              style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-            >
-              {studentAnswer[0] ? `${studentAnswer[0]}` : "Tidak menjawab"}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography
-              align="justify"
-              style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-              className={classes.shortTextKeyAnswer}
-            >
-              {questionAnswer}
-            </Typography>
-          </Grid>
-          <Grid item container justify="flex-end" alignItems="center">
-            <Typography
-              style={{ marginTop: "5px", marginRight: "10px" }}
-              color="textSecondary"
-            >
-              Poin:
-            </Typography>
-            <TextField
-              key={`${studentId}-${questionNumber}`}
-              value={studentMark}
-              inputProps={{
-                style: {
-                  borderBottom: "none",
-                  boxShadow: "none",
-                  margin: "0px",
-                  width: "30px",
-                },
-              }}
-              InputProps={{
-                endAdornment: `/ ${questionWeight}`,
-              }}
-              onChange={(e) => {
-                handleGradeChange(e, studentId, questionNumber - 1);
-              }}
-            />
-            <div>
-              <Button
-                className={classes.saveButton}
-                size="small"
-                variant="contained"
-                onClick={() => {
-                  handleSaveGrade(
-                    studentId,
-                    questionNumber - 1,
-                    questionWeight
-                  );
-                }}
+    return (
+      <Grid item>
+        <Paper className={classes.assessmentPaper}>
+          <Grid container direction="column" spacing={2}>
+            <Grid item>
+              <Typography variant="h6" color="primary" align="left">
+                {`Soal ${questionNumber}`}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography align="justify">{`${questionName}`}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography
+                color="textSecondary"
+                align="justify"
+                style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
               >
-                SIMPAN
-              </Button>
-            </div>
+                {studentAnswer[0] ? `${studentAnswer[0]}` : "Tidak menjawab"}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography
+                align="justify"
+                style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                className={classes.shortTextKeyAnswer}
+              >
+                {questionAnswer}
+              </Typography>
+            </Grid>
+            <Grid item container justify="flex-end" alignItems="center">
+              <Typography
+                style={{ marginTop: "5px", marginRight: "10px" }}
+                color="textSecondary"
+              >
+                Poin:
+              </Typography>
+              <TextField
+                key={`${studentId}-${questionNumber}`}
+                value={studentMark}
+                inputProps={{
+                  style: {
+                    borderBottom: "none",
+                    boxShadow: "none",
+                    margin: "0px",
+                    width: "30px",
+                  },
+                }}
+                InputProps={{
+                  endAdornment: `/ ${questionWeight}`,
+                }}
+                onChange={(e) => {
+                  handleGradeChange(e, studentId, questionNumber - 1);
+                }}
+              />
+              <div>
+                <Button
+                  size="small"
+                  variant="contained"
+                  className={classes.saveButton}
+                  onClick={() => {
+                    handleSaveGrade(
+                      studentId,
+                      questionNumber - 1,
+                      questionWeight
+                    );
+                  }}
+                >
+                  Simpan
+                </Button>
+              </div>
+            </Grid>
           </Grid>
-        </Grid>
-      </Badge>
+        </Paper>
+      </Grid>
     );
   } else {
     let answer;
@@ -625,28 +553,26 @@ function AnswerPerStudent(props) {
       );
     }
 
-    content = (
-      <div style={{ padding: "20px" }}>
-        <Grid container direction="column" spacing={2}>
-          <Grid item>
-            <Typography variant="h6" color="primary" align="left">
-              {`Soal ${questionNumber}`}
-            </Typography>
+    return (
+      <Grid item>
+        <Paper className={classes.assessmentPaper}>
+          <Grid container direction="column" spacing={2}>
+            <Grid item>
+              <Typography variant="h6" color="primary" align="left">
+                {`Soal ${questionNumber}`}
+              </Typography>
+            </Grid>
+            <Grid item>{answer}</Grid>
+            <Grid item container justify="flex-end">
+              <Typography key={questionNumber} color="textSecondary">
+                Poin: {studentMark} / {questionWeight}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item>{answer}</Grid>
-          <Grid item container justify="flex-end">
-            <Typography key={questionNumber} color="textSecondary">
-              Poin: {studentMark} / {questionWeight}
-            </Typography>
-          </Grid>
-        </Grid>
-      </div>
+        </Paper>
+      </Grid>
     );
   }
-
-  return (
-    <Paper style={{ width: "100%", marginBottom: "30px" }}>{content}</Paper>
-  );
 }
 
 function ViewAssessmentTeacher(props) {
@@ -737,9 +663,6 @@ function ViewAssessmentTeacher(props) {
   // Tabs
   const [value, setValue] = React.useState(0);
 
-  // React.useEffect(async () => {
-  //   const result = await getQuestionAnalytics(assessment_id);
-  // }, []);
   React.useEffect(() => {
     console.log(assessment_id);
     getOneAssessment(assessment_id);
@@ -846,20 +769,6 @@ function ViewAssessmentTeacher(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("name");
-  // const rows = React.useRef([]);
-
-  // React.useEffect(() => {
-  //   if (isAssessmentLoaded() && all_student_object) {
-  //     if (selectedAssessments.submissions) {
-  //       rows.current = Object.keys(selectedAssessments.submissions).map((studentId) => {
-  //         return { id: studentId, name: all_student_object[studentId].name, classname: all_student_object[studentId].kelas }
-  //       });
-  //     } else {
-  //       rows.current = [];
-  //     }
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [selectedAssessments, all_student_object])
 
   function handleOpenSortMenu(event) {
     setAnchorEl(event.currentTarget);
@@ -890,6 +799,7 @@ function ViewAssessmentTeacher(props) {
       label: "Nama Kelas",
     },
   ];
+
   function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
@@ -899,6 +809,7 @@ function ViewAssessmentTeacher(props) {
     });
     return stabilizedThis.map((el) => el[0]);
   }
+
   function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
       return -1;
@@ -908,6 +819,7 @@ function ViewAssessmentTeacher(props) {
     }
     return 0;
   }
+
   function getComparator(order, orderBy) {
     return order === "desc"
       ? (a, b) => descendingComparator(a, b, orderBy)
@@ -1026,10 +938,10 @@ function ViewAssessmentTeacher(props) {
                     label={option}
                     control={
                       <Checkbox
+                        color="primary"
                         checked={questionAnswer.includes(
                           String.fromCharCode(97 + i).toUpperCase()
                         )}
-                        color="primary"
                       />
                     }
                   />
@@ -1042,21 +954,23 @@ function ViewAssessmentTeacher(props) {
     }
 
     return (
-      <Paper className={classes.contentItem}>
-        <Grid container direction="column" spacing={2}>
-          <Grid item>
-            <Typography variant="h6" color="primary" align="left">
-              {`Soal ${questionNumber}`}
-            </Typography>
+      <Grid item>
+        <Paper className={classes.assessmentPaper}>
+          <Grid container direction="column" spacing={2}>
+            <Grid item>
+              <Typography variant="h6" color="primary" align="left">
+                {`Soal ${questionNumber}`}
+              </Typography>
+            </Grid>
+            <Grid item>{content}</Grid>
+            <Grid item container justify="flex-end">
+              <Typography color="textSecondary">
+                {`Bobot: ${questionWeight}`}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item>{content}</Grid>
-          <Grid item container justify="flex-end">
-            <Typography color="textSecondary">
-              {`Bobot: ${questionWeight}`}
-            </Typography>
-          </Grid>
-        </Grid>
-      </Paper>
+        </Paper>
+      </Grid>
     );
   }
 
@@ -1105,10 +1019,7 @@ function ViewAssessmentTeacher(props) {
 
     let sortedRows = stableSort(rows.current, getComparator(order, orderBy));
     // Traverse all students that have already done this assessment.
-    // return Object.entries(submissions).map((student) => {
     return sortedRows.map((student) => {
-      // let studentId = student[0];
-      // let studentAnswer = student[1][qnsIndex];
       let studentId = student.id;
       let studentAnswer = submissions[studentId][qnsIndex];
 
@@ -1120,7 +1031,6 @@ function ViewAssessmentTeacher(props) {
       let mark = 0;
       if (question.type === "longtext") {
         questionWeight = weights[question.type][qnsIndex];
-        // let longtextGrade = longtextGrades[studentId][qnsIndex]; // object
         if (longtextGrades[studentId] && longtextGrades[studentId][qnsIndex]) {
           // If it has ever been graded.
           mark = longtextGrades[studentId][qnsIndex];
@@ -1154,7 +1064,6 @@ function ViewAssessmentTeacher(props) {
               mark = (weights.checkbox * temp_correct) / questionAnswer.length;
             }
           } else {
-            // type === "shorttext"
             let temp_correct = 0;
             for (
               let answerIdx = 0;
@@ -1297,10 +1206,6 @@ function ViewAssessmentTeacher(props) {
     }
   }
 
-  const [openDialog, setOpenDialog] = React.useState(false);
-  function handleCloseNavDialog() {
-    setOpenDialog(false);
-  }
   function handleChangeToggleButton(event, newIndex) {
     if (newIndex !== null) {
       handleChangeQuestion(newIndex);
@@ -1327,44 +1232,29 @@ function ViewAssessmentTeacher(props) {
     return (
       <ToggleButton
         value={question_number - 1}
-        aria-label={question_number - 1}
-        classes={{
-          root: classes.toggleButtonRoot,
-          selected: classes.toggleButtonSelected,
-        }}
         selected={qnsIndex === question_number - 1}
+        classes={{
+          root: classes.questionNumberRoot,
+          selected: classes.questionNumberSelected,
+        }}
       >
         <Badge
           style={{
-            width: "35px",
-            height: "35px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            width: "35px",
+            height: "35px",
           }}
           badgeContent={
             fullyGraded ? (
-              <Avatar
-                style={{
-                  backgroundColor: "green",
-                  color: "white",
-                  width: "20px",
-                  height: "20px",
-                }}
-              >
-                <CheckCircleIcon style={{ width: "15px", height: "15px" }} />
-              </Avatar>
+              <Tooltip title="Sudah diperiksa">
+                <CheckCircleIcon className={classes.answeredquestionNumber} />
+              </Tooltip>
             ) : (
-              <Avatar
-                style={{
-                  backgroundColor: "red",
-                  color: "white",
-                  width: "20px",
-                  height: "20px",
-                }}
-              >
-                <ErrorIcon style={{ width: "15px", height: "15px" }} />
-              </Avatar>
+              <Tooltip title="Belum diperiksa">
+                <ErrorIcon className={classes.unansweredquestionNumber} />
+              </Tooltip>
             )
           }
           anchorOrigin={{
@@ -1382,91 +1272,27 @@ function ViewAssessmentTeacher(props) {
 
   return (
     <div className={classes.root}>
-      <Grid container direction="column" spacing={3}>
+      <Grid container direction="column" spacing={2}>
         <Grid item>
-          <Paper className={classes.content}>
-            <Grid container spacing={2}>
-              <Hidden smDown>
-                <Grid item xs={12} style={{ paddingBottom: "0" }}>
-                  <Typography variant="h4">
-                    {selectedAssessments.name}
-                  </Typography>
-                </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  md={7}
-                  spacing={8}
-                  style={{ paddingTop: "0" }}
-                >
-                  <Typography variant="caption" color="textSecondary">
-                    <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
-                  </Typography>
-                </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  md={5}
-                  spacing={8}
-                  style={{ paddingTop: "0" }}
-                >
-                  {/* h6 ditambahkan agar teks ini rata atas dengan teks mata pelajaran*/}
-                  <h6 style={{ marginBottom: "0" }}>
-                    <Typography
-                      align="right"
-                      variant="body2"
-                      color="textSecondary"
-                    >
-                      Mulai:{" "}
-                      {moment(selectedAssessments.start_date)
-                        .locale("id")
-                        .format("DD MMM YYYY, HH:mm")}
-                    </Typography>
-                  </h6>
-                  <Typography
-                    align="right"
-                    variant="body2"
-                    color="textSecondary"
-                  >
-                    Selesai:{" "}
-                    {moment(selectedAssessments.end_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                  </Typography>
-                </Grid>
-              </Hidden>
-
-              <Hidden mdUp>
-                <Grid item xs={12}>
-                  <Typography variant="h4">
-                    {selectedAssessments.name}
-                  </Typography>
-                  <Typography variant="caption" color="textSecondary">
-                    <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={12} md={7} spacing={8}>
-                  <Typography variant="body2" color="textSecondary">
-                    Mulai:{" "}
-                    {moment(selectedAssessments.start_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    Selesai:{" "}
-                    {moment(selectedAssessments.end_date)
-                      .locale("id")
-                      .format("DD MMM YYYY, HH:mm")}
-                  </Typography>
-                </Grid>
-              </Hidden>
-
+          <Paper className={classes.assessmentPaper}>
+            <Typography variant="h4" style={{ marginBottom: "5px" }}>
+              {selectedAssessments.name}
+            </Typography>
+            <Typography color="primary" paragraph>
+              {type} {all_subjects_map.get(selectedAssessments.subject)}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Oleh: {user.name}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Waktu Dibuat:{" "}
+              {moment(selectedAssessments.createdAt)
+                .locale("id")
+                .format("DD MMM YYYY, HH.mm")}
+            </Typography>
+            <Divider className={classes.assessmentDivider} />
+            <Grid container spacing={4}>
               <Grid item xs={12}>
-                <Divider className={classes.dividerColor} />
-              </Grid>
-
-              <Grid item xs={12} style={{ marginTop: "5px" }}>
                 <Typography color="textSecondary" gutterBottom>
                   Kelas yang Diberikan:
                 </Typography>
@@ -1486,13 +1312,11 @@ function ViewAssessmentTeacher(props) {
                       })}
                 </Typography>
               </Grid>
-
-              <Grid item xs={12} style={{ marginTop: "15px" }}>
+              <Grid item xs={12}>
                 <Typography color="textSecondary" gutterBottom>
                   Deskripsi {type}:
                 </Typography>
                 <Typography
-                  variant="body1"
                   align="justify"
                   style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
                 >
@@ -1501,55 +1325,26 @@ function ViewAssessmentTeacher(props) {
               </Grid>
             </Grid>
           </Paper>
-          <Paper className={classes.content} style={{ marginTop: "15px" }}>
-            <Grid container spacing={2}>
-              <Grid item xs={1} md={2}>
-                {null}
+        </Grid>
+        <Grid item>
+          <Paper className={classes.modePaper}>
+            <Grid container justify="space-between" alignItems="center">
+              <Grid>
+                <Typography variant="h6" gutterBottom>
+                  Hasil Pekerjaan
+                </Typography>
               </Grid>
-              <Grid item xs={9} md={8}>
-                <Tabs
-                  variant="fullWidth"
-                  indicatorColor="primary"
-                  textColor="primary"
-                  value={value}
-                  onChange={handleChange}
-                >
-                  <Tab
-                    icon={<BallotIcon />}
-                    label="Per Soal"
-                    {...TabIndex(0)}
-                  />
-                  <Tab
-                    icon={<SupervisorAccountIcon />}
-                    label="Per Murid"
-                    {...TabIndex(1)}
-                  />
-                </Tabs>
-              </Grid>
-              <Grid
-                item
-                xs={2}
-                md={2}
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "flex-end",
-                  position: "relative",
-                }}
-              >
-                <LightTooltip title="Urutkan Tugas">
-                  <IconButton
-                    onClick={handleOpenSortMenu}
-                    className={classes.sortButton}
-                  >
+              <Grid item>
+                <Tooltip title={`Urutkan ${type}`}>
+                  <IconButton onClick={handleOpenSortMenu}>
                     <SortIcon />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
                 <Menu
                   keepMounted
-                  anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
                   onClose={handleCloseSortMenu}
+                  anchorEl={anchorEl}
                   anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "right",
@@ -1583,65 +1378,73 @@ function ViewAssessmentTeacher(props) {
                 </Menu>
               </Grid>
             </Grid>
+            <Divider />
+            <div style={{ padding: "16px 0px 25px 0px" }}>
+              <Typography gutterBottom>
+                Mulai:{" "}
+                {moment(selectedAssessments.start_date)
+                  .locale("id")
+                  .format("DD MMM YYYY, HH:mm")}
+              </Typography>
+              <Typography gutterBottom>
+                Selesai:{" "}
+                {moment(selectedAssessments.end_date)
+                  .locale("id")
+                  .format("DD MMM YYYY, HH:mm")}
+              </Typography>
+            </div>
+            <Tabs
+              variant="fullWidth"
+              indicatorColor="primary"
+              textColor="primary"
+              value={value}
+              onChange={handleChange}
+            >
+              <Tab
+                icon={<BallotIcon />}
+                label="Per Soal"
+                {...TabIndex(0)}
+              />
+              <Tab
+                icon={<SupervisorAccountIcon />}
+                label="Per Murid"
+                {...TabIndex(1)}
+              />
+            </Tabs>
           </Paper>
-
-          {/* Tab Panel Per Soal */}
-          <div hidden={value === 1} style={{ padding: "24px" }}>
-            <Paper style={{ padding: "15px", marginBottom: "20px" }}>
-              <Grid
-                item
-                xs={12}
-                md={2}
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  marginTop: "10px",
-                }}
-              >
-                <Typography>Navigasi Soal:</Typography>
-                <LightTooltip title="Soal yang sudah diberi bobot dan nilai untuk semua murid akan diberi badge hijau. Soal akan diberi badge merah jika bobot atau nilai belum lengkap.">
-                  <Badge
-                    badgeContent={
-                      <HelpOutlineIcon className={classes.navigationHelpIcon} />
-                    }
-                    variant="standard"
-                    style={{ marginLeft: "4px" }}
+        </Grid>
+        <Grid item>
+          <div hidden={value === 1}>
+            <Grid container direction="column" spacing={2}>
+              <Grid item>
+                <Paper className={classes.assessmentPaper}>
+                  <Typography>Navigasi Soal:</Typography>
+                  <ToggleButtonGroup
+                    exclusive
+                    value={qnsIndex}
+                    onChange={(e, newIndex) => handleChangeToggleButton(e, newIndex)}
+                    classes={{
+                      root: classes.questionNumberGroup,
+                      grouped: classes.questionNumberGroupChildren,
+                    }}
                   >
-                    {/* Hanya Sebagai Anchor */}
-                    <Typography style={{ display: "none" }}>:</Typography>
-                  </Badge>
-                </LightTooltip>
+                    {hasLongtextQst.current === true
+                      ? isAssessmentLoaded() && longtextGrades
+                        ? selectedAssessments.questions.map((qns, i) => {
+                            return questionPage(classes, i + 1, qns.type);
+                          })
+                        : null
+                      : hasLongtextQst.current === false
+                      ? isAssessmentLoaded()
+                        ? selectedAssessments.questions.map((qns, i) => {
+                            return questionPage(classes, i + 1, qns.type);
+                          })
+                        : null
+                      : null}
+                  </ToggleButtonGroup>
+                </Paper>
               </Grid>
-              <Grid container item>
-                <ToggleButtonGroup
-                  value={qnsIndex}
-                  exclusive
-                  onChange={(e, newIndex) => {
-                    handleChangeToggleButton(e, newIndex);
-                  }}
-                  aria-label="question index"
-                  classes={{
-                    root: classes.toggleGroupRoot,
-                    grouped: classes.toggleGroupChildren,
-                  }}
-                >
-                  {hasLongtextQst.current === true
-                    ? isAssessmentLoaded() && longtextGrades
-                      ? selectedAssessments.questions.map((qns, i) => {
-                          return questionPage(classes, i + 1, qns.type);
-                        })
-                      : null
-                    : hasLongtextQst.current === false
-                    ? isAssessmentLoaded()
-                      ? selectedAssessments.questions.map((qns, i) => {
-                          return questionPage(classes, i + 1, qns.type);
-                        })
-                      : null
-                    : null}
-                </ToggleButtonGroup>
-              </Grid>
-            </Paper>
-            {isAssessmentLoaded()
+              {isAssessmentLoaded()
               ? selectedAssessments.questions[qnsIndex].type === "longtext"
                 ? generateQuestion(
                     qnsIndex + 1,
@@ -1656,8 +1459,7 @@ function ViewAssessmentTeacher(props) {
                     selectedAssessments.questions[qnsIndex]
                   )
               : null}
-
-            {isAssessmentLoaded() && selectedAssessments.submissions
+              {isAssessmentLoaded() && selectedAssessments.submissions
               ? hasLongtextQst.current === true
                 ? longtextGrades && isAllClassMapEmpty()
                   ? generateAllStudentAnswer()
@@ -1671,159 +1473,126 @@ function ViewAssessmentTeacher(props) {
                 : // hasLongtextQst.current === null
                   null
               : null}
+            </Grid>
           </div>
-
-          {/* Tab Panel Per Murid */}
-          <div hidden={value === 0} style={{ padding: "24px" }}>
-            <Paper className={classes.perStudentSelect}>
-              <div className={classes.selectDiv}>
-                <Grid container>
-                  <Grid item xs={1} sm={3}></Grid>
-                  <Grid
-                    item
-                    xs={5}
-                    sm={2}
-                    className={classes.selectDescription}
-                  >
-                    <Typography>Nama Murid :</Typography>
-                  </Grid>
-                  <Grid item xs={5} sm={2}>
-                    <Select
-                      disabled={
-                        !menuOption ||
-                        menuOption.studentOptions.combined.length === 0
-                      }
-                      id="murid"
-                      className={classes.select}
-                      variant="outlined"
-                      value={selectedStudent}
-                      onChange={(e) => {
-                        setSelectedStudent(e.target.value);
-                      }}
-                    >
-                      {menuOption &&
-                      menuOption.studentOptions.combined.length !== 0
-                        ? selectedClass
-                          ? menuOption.studentOptions[selectedClass].map(
-                              (student) => {
-                                return (
-                                  <MenuItem key={student.id} value={student.id}>
-                                    {student.name}
-                                  </MenuItem>
-                                );
-                              }
-                            )
-                          : menuOption.studentOptions.combined.map(
-                              (student) => {
-                                return (
-                                  <MenuItem key={student.id} value={student.id}>
-                                    {student.name}
-                                  </MenuItem>
-                                );
-                              }
-                            )
-                        : null}
-                    </Select>
-                  </Grid>
-                  <Grid item xs={1} sm={5}></Grid>
-                </Grid>
-              </div>
-              <div className={classes.selectDiv} style={{ marginTop: "10px" }}>
-                <Grid container>
-                  <Grid item xs={1} sm={3}></Grid>
-                  <Grid
-                    item
-                    xs={5}
-                    sm={2}
-                    className={classes.selectDescription}
-                  >
-                    <Typography>Kelas :</Typography>
-                  </Grid>
-                  <Grid item xs={5} sm={2}>
-                    <Select
-                      disabled={
-                        !menuOption ||
-                        menuOption.studentOptions.combined.length === 0
-                      }
-                      id="kelas"
-                      className={classes.select}
-                      variant="outlined"
-                      value={
-                        selectedStudent
-                          ? all_student_object &&
-                            Object.keys(all_student_object).length !== 0
-                            ? all_student_object[selectedStudent].kelas
+          <div hidden={value === 0}>
+            <Grid container direction="column" spacing={2}>
+              <Grid item>
+                <Paper className={classes.assessmentPaper}>
+                  <Grid container alignItems="center" spacing={2}>
+                    <Grid item xs={3}>
+                      <Typography>Nama Murid:</Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <Select
+                        fullWidth
+                        variant="outlined"
+                        id="murid"
+                        value={selectedStudent}
+                        onChange={(e) => setSelectedStudent(e.target.value)}
+                        disabled={
+                          !menuOption ||
+                          menuOption.studentOptions.combined.length === 0
+                        }
+                      >
+                        {menuOption &&
+                        menuOption.studentOptions.combined.length !== 0
+                          ? selectedClass
+                            ? menuOption.studentOptions[selectedClass].map(
+                                (student) => {
+                                  return (
+                                    <MenuItem key={student.id} value={student.id}>
+                                      {student.name}
+                                    </MenuItem>
+                                  );
+                                }
+                              )
+                            : menuOption.studentOptions.combined.map(
+                                (student) => {
+                                  return (
+                                    <MenuItem key={student.id} value={student.id}>
+                                      {student.name}
+                                    </MenuItem>
+                                  );
+                                }
+                              )
+                          : null}
+                      </Select>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Typography>Kelas:</Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <Select
+                        fullWidth
+                        variant="outlined"
+                        id="kelas"
+                        value={
+                          selectedStudent
+                            ? all_student_object &&
+                              Object.keys(all_student_object).length !== 0
+                              ? all_student_object[selectedStudent].kelas
+                              : selectedClass
                             : selectedClass
-                          : selectedClass
-                      }
-                      onChange={(e) => {
-                        setSelectedClass(e.target.value);
-                        setSelectedStudent(null);
-                      }}
-                    >
-                      {menuOption &&
-                      menuOption.studentOptions.combined.length !== 0
-                        ? menuOption.classOptions.map((kelas) => {
-                            return (
-                              <MenuItem key={kelas.id} value={kelas.id}>
-                                {kelas.name}
-                              </MenuItem>
-                            );
-                          })
-                        : null}
-                    </Select>
-                  </Grid>
-                  <Grid item xs={1} sm={5}></Grid>
-                </Grid>
-              </div>
-              {isAssessmentLoaded() &&
-              selectedAssessments.submissions_timestamp &&
-              selectedStudent ? (
-                <div
-                  className={classes.selectDiv}
-                  style={{ marginTop: "10px" }}
-                >
-                  <Grid container>
-                    <Grid item xs={1} sm={3}></Grid>
-                    <Grid
-                      item
-                      xs={5}
-                      sm={2}
-                      className={classes.selectDescription}
-                    >
-                      <Typography>Waktu Pengumpulan:</Typography>
+                        }
+                        onChange={(e) => {
+                          setSelectedClass(e.target.value);
+                          setSelectedStudent(null);
+                        }}
+                        disabled={
+                          !menuOption ||
+                          menuOption.studentOptions.combined.length === 0
+                        }
+                      >
+                        {menuOption &&
+                        menuOption.studentOptions.combined.length !== 0
+                          ? menuOption.classOptions.map((kelas) => {
+                              return (
+                                <MenuItem key={kelas.id} value={kelas.id}>
+                                  {kelas.name}
+                                </MenuItem>
+                              );
+                            })
+                          : null}
+                      </Select>
                     </Grid>
-                    <Grid item xs={5} sm={2}>
-                      <Typography style={{ marginLeft: "10px" }}>
-                        {moment(
-                          selectedAssessments.submissions_timestamp[
-                            selectedStudent
-                          ]
-                        )
-                          .locale("id")
-                          .format("DD MMM YYYY, HH:mm")}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={1} sm={5}></Grid>
+                    {isAssessmentLoaded() &&
+                    selectedAssessments.submissions_timestamp &&
+                    selectedStudent ? (
+                      <>
+                        <Grid item xs={3}>
+                          <Typography>Waktu Pengumpulan:</Typography>
+                        </Grid>
+                        <Grid item xs={9}>
+                          <Typography>
+                            {moment(
+                              selectedAssessments.submissions_timestamp[
+                                selectedStudent
+                              ]
+                            )
+                              .locale("id")
+                              .format("DD MMM YYYY, HH:mm")}
+                          </Typography>
+                        </Grid>
+                      </>
+                    ) : null}
                   </Grid>
-                </div>
-              ) : null}
-            </Paper>
-
-            {isAssessmentLoaded() && selectedAssessments.submissions
-              ? hasLongtextQst.current === true
-                ? longtextGrades !== undefined &&
-                  isAllClassMapEmpty() &&
-                  selectedStudent
-                  ? generateQstStdAnswer()
+                </Paper>
+              </Grid>
+              {isAssessmentLoaded() && selectedAssessments.submissions
+                ? hasLongtextQst.current === true
+                  ? longtextGrades !== undefined &&
+                    isAllClassMapEmpty() &&
+                    selectedStudent
+                    ? generateQstStdAnswer()
+                    : null
+                  : hasLongtextQst.current === false
+                  ? isAllClassMapEmpty() && selectedStudent
+                    ? generateQstStdAnswer()
+                    : null
                   : null
-                : hasLongtextQst.current === false
-                ? isAllClassMapEmpty() && selectedStudent
-                  ? generateQstStdAnswer()
-                  : null
-                : // hasLongtextQst.current === null
-                  null
-              : null}
+                : null}
+            </Grid>
           </div>
         </Grid>
       </Grid>
@@ -1842,41 +1611,6 @@ function ViewAssessmentTeacher(props) {
           {snackbarContent}
         </Alert>
       </Snackbar>
-      <Dialog open={openDialog} onClose={handleCloseNavDialog} fullWidth>
-        <DialogTitle style={{ textAlign: "center", padding: "16px 24px 8px" }}>
-          Navigasi Soal
-        </DialogTitle>
-        <DialogContent style={{ padding: "8px 24px 16px" }}>
-          <Grid container item>
-            <ToggleButtonGroup
-              value={qnsIndex}
-              exclusive
-              onChange={(e, newIndex) => {
-                handleChangeToggleButton(e, newIndex);
-              }}
-              aria-label="question index"
-              classes={{
-                root: classes.toggleGroupRoot,
-                grouped: classes.toggleGroupChildren,
-              }}
-            >
-              {hasLongtextQst.current === true
-                ? isAssessmentLoaded() && longtextGrades
-                  ? selectedAssessments.questions.map((qns, i) => {
-                      return questionPage(classes, i + 1, qns.type);
-                    })
-                  : null
-                : hasLongtextQst.current === false
-                ? isAssessmentLoaded()
-                  ? selectedAssessments.questions.map((qns, i) => {
-                      return questionPage(classes, i + 1, qns.type);
-                    })
-                  : null
-                : null}
-            </ToggleButtonGroup>
-          </Grid>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
