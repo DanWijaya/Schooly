@@ -280,8 +280,8 @@ function ViewClass(props) {
     if (user.role === all_roles.STUDENT) {
       let submittedTaskIdSet = new Set();
       getFileSubmitTasksByAuthor(user._id)
-        .then((response) => {
-          for (let file of response.data) {
+        .then((data) => {
+          for (let file of data) {
             submittedTaskIdSet.add(file.task_id);
           }
         })

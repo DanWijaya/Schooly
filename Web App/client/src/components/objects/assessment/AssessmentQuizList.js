@@ -173,9 +173,7 @@ function AssessmentListToolbar(props) {
                   variant="extended"
                   className={classes.createQuizButton}
                 >
-                  <AddIcon
-                    className={classes.addIconDesktop}
-                  />
+                  <AddIcon className={classes.addIconDesktop} />
                   Buat Kuis
                 </Fab>
               </Link>
@@ -548,7 +546,6 @@ function AssessmentList(props) {
             if (data.author_id === user._id) {
               assessmentRowItem(data);
             }
-            return null;
           });
       } else if (user.role === "Student") {
         all_assessments
@@ -560,7 +557,6 @@ function AssessmentList(props) {
             if (class_assigned.indexOf(user.kelas) !== -1 && data.posted) {
               assessmentRowItem(data);
             }
-            return null;
           });
       }
       return;

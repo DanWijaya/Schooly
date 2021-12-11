@@ -122,8 +122,8 @@ function ViewSubject(props) {
     if (user.role === "Student") {
       let submittedTaskIdSet = new Set();
       getFileSubmitTasksByAuthor(user._id)
-        .then((response) => {
-          for (let file of response.data) {
+        .then((data) => {
+          for (let file of data) {
             submittedTaskIdSet.add(file.task_id);
           }
         })

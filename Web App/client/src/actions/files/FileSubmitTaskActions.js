@@ -55,7 +55,9 @@ export const getFileSubmitTasks_AT = (task_id, author_id) => (dispatch) => {
 };
 
 export const getFileSubmitTasksByAuthor = (author_id) => {
-  return axios.get(`/api/files/submit_tasks/by_author/${author_id}`);
+  return axios
+    .get(`/api/files/submit_tasks/by_author/${author_id}`)
+    .then((res) => res.data);
 };
 
 export const downloadFileSubmitTasks = (id) => (dispatch) => {

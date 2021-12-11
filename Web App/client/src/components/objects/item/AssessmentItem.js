@@ -57,6 +57,7 @@ function AssessmentItem(props) {
     status,
     missing,
     handleOpenCopySnackBar,
+    isHideOptionMenu,
   } = props;
   const { user, all_roles } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
@@ -169,21 +170,25 @@ function AssessmentItem(props) {
                         </Typography>
                       }
                     />
-                    <div
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <OptionMenu
-                        actions={["Salin Tautan", "Sunting", "Hapus"]}
-                        row={row}
-                        handleActionOnClick={[
-                          handleCopyLink,
-                          isEditable ? `/sunting-${row.type}/${row._id}` : null,
-                          handleOpenDeleteDialog,
-                        ]}
-                      />
-                    </div>
+                    {isHideOptionMenu ? null : (
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        <OptionMenu
+                          actions={["Salin Tautan", "Sunting", "Hapus"]}
+                          row={row}
+                          handleActionOnClick={[
+                            handleCopyLink,
+                            isEditable
+                              ? `/sunting-${row.type}/${row._id}`
+                              : null,
+                            handleOpenDeleteDialog,
+                          ]}
+                        />
+                      </div>
+                    )}
                   </ListItem>
                 </Paper>
               </Link>

@@ -50,7 +50,12 @@ const useStyles = makeStyles((theme) => ({
 
 function TaskItem(props) {
   const classes = useStyles();
-  const { data, handleOpenDeleteDialog, submittedIds } = props;
+  const {
+    data,
+    handleOpenDeleteDialog,
+    submittedIds,
+    isHideOptionMenu,
+  } = props;
   const { user } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
 
@@ -112,7 +117,7 @@ function TaskItem(props) {
                   </Typography>
                 }
               />
-              {user.role === "Teacher" ? (
+              {user.role !== "Teacher" || isHideOptionMenu ? null : (
                 <div
                   onClick={(e) => {
                     e.stopPropagation();
@@ -127,7 +132,7 @@ function TaskItem(props) {
                     ]}
                   />
                 </div>
-              ) : null}
+              )}
             </ListItem>
           </Paper>
         </Link>
