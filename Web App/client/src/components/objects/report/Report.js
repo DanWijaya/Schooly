@@ -217,7 +217,6 @@ function Report(props) {
     getAllSubjects,
     getStudentsByClass,
     getAllTask,
-    tasksCollection,
     getOneUser,
     setCurrentClass,
     refreshTeacher,
@@ -225,7 +224,7 @@ function Report(props) {
   const { user, students_by_class, selectedUser, all_roles } = props.auth;
   const { all_classes, all_classes_map } = props.classesCollection;
   const { all_subjects_map, all_subjects } = props.subjectsCollection;
-  const allTaskArray = props.tasksCollection;
+  const { all_tasks } = props.tasksCollection;
   const { all_assessments } = props.assessmentsCollection;
 
   const [rows, setRows] = React.useState([]); // This array element is an Object or Map which each contains the cell's value.
@@ -349,17 +348,14 @@ function Report(props) {
       let subject = all_subjects[subjectIndex]._id;
       let subjectScores = [];
       let subjectNames = [];
-      for (let i = 0; i < tasksCollection.length; i++) {
-        if (
-          tasksCollection[i].grades &&
-          tasksCollection[i].subject === subject
-        ) {
-          let keysArray = Object.keys(tasksCollection[i].grades);
-          let valuesArray = Object.values(tasksCollection[i].grades);
+      for (let i = 0; i < all_tasks.length; i++) {
+        if (all_tasks[i].grades && all_tasks[i].subject === subject) {
+          let keysArray = Object.keys(all_tasks[i].grades);
+          let valuesArray = Object.values(all_tasks[i].grades);
           for (let j = 0; j < keysArray.length; j++) {
             if (keysArray[j] === user._id) {
               subjectScores.push(valuesArray[j]);
-              subjectNames.push(tasksCollection[i].name);
+              subjectNames.push(all_tasks[i].name);
               break;
             }
           }
@@ -1044,7 +1040,7 @@ function Report(props) {
         };
       });
 
-      for (let task of allTaskArray) {
+      for (let task of all_tasks) {
         // id is the student's id.
         // task.grades is ensured not empty when there a new task is made so no need to check null or not anymore.
         if (
@@ -1181,7 +1177,7 @@ function Report(props) {
       setRows(handleIndividualReport());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allTaskArray, all_subjects_map, kelasWali, all_assessments]);
+  }, [all_tasks, all_subjects_map, kelasWali, all_assessments]);
 
   // Generate table content for report page that is opened from sidedrawer.
   // After all the datas needed is already obtained.

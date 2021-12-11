@@ -161,6 +161,7 @@ function ViewTaskTeacher(props) {
     getMultipleFileAvatar,
     getFileSubmitTasks_T,
   } = props;
+  const { selectedTasks } = tasksCollection;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const task_id = props.match.params.id;
@@ -201,7 +202,6 @@ function ViewTaskTeacher(props) {
     clearSuccess();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  // [tasksCollection._id, all_classes_map.size, all_subjects_map.size]
 
   React.useEffect(() => {
     getFileSubmitTasks_T(task_id).then((res) => {
@@ -217,8 +217,8 @@ function ViewTaskTeacher(props) {
       Array.isArray(all_students) &&
       all_teachers &&
       Array.isArray(all_teachers) &&
-      tasksCollection &&
-      tasksCollection.comments
+      selectedTasks &&
+      selectedTasks.comments
     ) {
       let usernames = {};
       for (let studentInfo of all_students) {
@@ -228,7 +228,7 @@ function ViewTaskTeacher(props) {
         usernames[teacherInfo._id] = teacherInfo.name;
       }
       setCommentList(
-        tasksCollection.comments.map((comment) => ({
+        selectedTasks.comments.map((comment) => ({
           ...comment,
           name: usernames[comment.author_id],
         }))
@@ -245,7 +245,7 @@ function ViewTaskTeacher(props) {
       setDeleteCommentIdx(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasksCollection, all_teachers, all_students]);
+  }, [selectedTasks, all_teachers, all_students]);
 
   React.useEffect(() => {
     let listId = [];
@@ -471,7 +471,7 @@ function ViewTaskTeacher(props) {
     );
   };
 
-  document.title = `Schooly | ${tasksCollection.name}`;
+  document.title = `Schooly | ${selectedTasks.name}`;
 
   return (
     <div className={classes.root}>
@@ -479,17 +479,17 @@ function ViewTaskTeacher(props) {
         <Grid item>
           <Paper className={classes.taskPaper}>
             <Typography variant="h4" style={{ marginBottom: "5px" }}>
-              {tasksCollection.name}
+              {selectedTasks.name}
             </Typography>
             <Typography color="primary" paragraph>
-              Tugas {all_subjects_map.get(tasksCollection.subject)}
+              Tugas {all_subjects_map.get(selectedTasks.subject)}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Oleh: {user.name}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Waktu Dibuat:{" "}
-              {moment(tasksCollection.createdAt)
+              {moment(selectedTasks.createdAt)
                 .locale("id")
                 .format("DD MMM YYYY, HH.mm")}
             </Typography>
@@ -500,11 +500,11 @@ function ViewTaskTeacher(props) {
                   Diberikan kepada:
                 </Typography>
                 <Typography>
-                  {!tasksCollection.class_assigned || !all_classes_map.size
+                  {!selectedTasks.class_assigned || !all_classes_map.size
                     ? null
-                    : tasksCollection.class_assigned.map((kelas, i) => {
+                    : selectedTasks.class_assigned.map((kelas, i) => {
                         if (all_classes_map.get(kelas)) {
-                          if (i === tasksCollection.class_assigned.length - 1)
+                          if (i === selectedTasks.class_assigned.length - 1)
                             return `${all_classes_map.get(kelas).name}`;
                           return `${all_classes_map.get(kelas).name}, `;
                         }
@@ -517,12 +517,12 @@ function ViewTaskTeacher(props) {
                   Tenggat:
                 </Typography>
                 <Typography>
-                  {moment(tasksCollection.deadline)
+                  {moment(selectedTasks.deadline)
                     .locale("id")
                     .format("DD MMM YYYY, HH.mm")}
                 </Typography>
               </Grid>
-              {!tasksCollection.description ? null : (
+              {!selectedTasks.description ? null : (
                 <Grid item xs={12}>
                   <Typography color="textSecondary" gutterBottom>
                     Deskripsi Tugas:
@@ -531,7 +531,7 @@ function ViewTaskTeacher(props) {
                     align="justify"
                     style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
                   >
-                    <CustomLinkify text={tasksCollection.description} />
+                    <CustomLinkify text={selectedTasks.description} />
                   </Typography>
                 </Grid>
               )}
@@ -705,7 +705,7 @@ function ViewTaskTeacher(props) {
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Tugas"
-        itemName={tasksCollection.name}
+        itemName={selectedTasks.name}
         warningText="Lampiran, komentar, dan nilai yang ada juga akan dihapus."
         deleteItem={() => onDeleteTask(task_id)}
       />

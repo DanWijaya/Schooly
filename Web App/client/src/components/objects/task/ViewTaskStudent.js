@@ -113,7 +113,6 @@ function ViewTaskStudent(props) {
     getFileSubmitTasks_AT,
     deleteFileSubmitTasks,
     success,
-    tasksCollection,
     clearSuccess,
     clearErrors,
     getOneTask,
@@ -128,7 +127,7 @@ function ViewTaskStudent(props) {
   } = props;
   const { user, selectedUser, all_students, all_teachers } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
-
+  const { selectedTasks } = props.tasksCollection;
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
   const [fileTugas, setFileTugas] = React.useState([]);
@@ -180,13 +179,13 @@ function ViewTaskStudent(props) {
     );
     getOneTask(tugasId);
     getAllSubjects(user.unit, "map");
-    // Will run getOneUser again once the tasksCollection is retrieved
+    // Will run getOneUser again once the selectedTasks is retrieved
     getFileTasks(tugasId).then((results) => setFileLampiran(results));
-    if (tasksCollection.person_in_charge_id) {
-      getOneUser(tasksCollection.person_in_charge_id);
+    if (selectedTasks.person_in_charge_id) {
+      getOneUser(selectedTasks.person_in_charge_id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success, tasksCollection.person_in_charge_id]);
+  }, [success, selectedTasks.person_in_charge_id]);
 
   useEffect(() => {
     if (
@@ -194,8 +193,8 @@ function ViewTaskStudent(props) {
       Array.isArray(all_students) &&
       all_teachers &&
       Array.isArray(all_teachers) &&
-      tasksCollection &&
-      tasksCollection.comments
+      selectedTasks &&
+      selectedTasks.comments
     ) {
       let usernames = {};
       for (let studentInfo of all_students) {
@@ -205,7 +204,7 @@ function ViewTaskStudent(props) {
         usernames[teacherInfo._id] = teacherInfo.name;
       }
       setCommentList(
-        tasksCollection.comments.map((comment) => ({
+        selectedTasks.comments.map((comment) => ({
           ...comment,
           name: usernames[comment.author_id],
         }))
@@ -222,7 +221,7 @@ function ViewTaskStudent(props) {
       setDeleteCommentIdx(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasksCollection, all_teachers, all_students]);
+  }, [selectedTasks, all_teachers, all_students]);
 
   useEffect(() => {
     let listId = [];
@@ -356,12 +355,7 @@ function ViewTaskStudent(props) {
       formData.append("tugas", fileToSubmit[i]);
     }
     handleOpenUploadDialog();
-    uploadFileSubmitTasks(
-      formData,
-      tugasId,
-      user._id,
-      tasksCollection.deadline
-    );
+    uploadFileSubmitTasks(formData, tugasId, user._id, selectedTasks.deadline);
     setFileToSubmit([]);
   };
 
@@ -592,7 +586,7 @@ function ViewTaskStudent(props) {
     });
   };
 
-  document.title = `Schooly | ${tasksCollection.name}`;
+  document.title = `Schooly | ${selectedTasks.name}`;
 
   return (
     <div className={classes.root}>
@@ -600,20 +594,20 @@ function ViewTaskStudent(props) {
         <Grid item xs={12} md={8}>
           <Paper className={classes.taskPaper}>
             <Typography variant="h4" style={{ marginBottom: "5px" }}>
-              {tasksCollection.name}
+              {selectedTasks.name}
             </Typography>
             <Typography color="primary" paragraph>
-              Tugas {all_subjects_map.get(tasksCollection.subject)}
+              Tugas {all_subjects_map.get(selectedTasks.subject)}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Oleh:{" "}
-              {selectedUser._id !== tasksCollection.person_in_charge_id
+              {selectedUser._id !== selectedTasks.person_in_charge_id
                 ? null
                 : selectedUser.name}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Waktu Dibuat:{" "}
-              {moment(tasksCollection.createdAt)
+              {moment(selectedTasks.createdAt)
                 .locale("id")
                 .format("DD MMM YYYY, HH.mm")}
             </Typography>
@@ -624,12 +618,12 @@ function ViewTaskStudent(props) {
                   Tenggat:
                 </Typography>
                 <Typography>
-                  {moment(tasksCollection.deadline)
+                  {moment(selectedTasks.deadline)
                     .locale("id")
                     .format("DD MMM YYYY, HH.mm")}
                 </Typography>
               </Grid>
-              {!tasksCollection.description ? null : (
+              {!selectedTasks.description ? null : (
                 <Grid item xs={12}>
                   <Typography color="textSecondary" gutterBottom>
                     Deskripsi Tugas:
@@ -638,7 +632,7 @@ function ViewTaskStudent(props) {
                     align="justify"
                     style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
                   >
-                    <CustomLinkify text={tasksCollection.description} />
+                    <CustomLinkify text={selectedTasks.description} />
                   </Typography>
                 </Grid>
               )}
@@ -791,19 +785,19 @@ function ViewTaskStudent(props) {
             </form>
             <Grid container direction="column" alignItems="center">
               <Typography>
-                {!tasksCollection.grades
+                {!selectedTasks.grades
                   ? "Belum Diperiksa"
-                  : !tasksCollection.grades[user._id]
+                  : !selectedTasks.grades[user._id]
                   ? "Belum Diperiksa"
                   : "Telah Diperiksa"}
               </Typography>
               <Typography variant="h6" gutterBottom>
                 Nilai:{" "}
-                {!tasksCollection.grades
+                {!selectedTasks.grades
                   ? "N/A"
-                  : !tasksCollection.grades[user._id]
+                  : !selectedTasks.grades[user._id]
                   ? "N/A"
-                  : `${tasksCollection.grades[user._id]}/100`}
+                  : `${selectedTasks.grades[user._id]}/100`}
               </Typography>
             </Grid>
           </Paper>

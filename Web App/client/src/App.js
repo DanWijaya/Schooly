@@ -327,7 +327,6 @@ class App extends Component {
                       path="/daftar-kelas"
                       component={ClassList}
                     />
-
                     {/* Route Subject */}
                     <PrivateRoute
                       exact

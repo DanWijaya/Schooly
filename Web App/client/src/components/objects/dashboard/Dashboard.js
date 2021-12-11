@@ -791,13 +791,13 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { classes, tasksCollection } = this.props;
+    const { classes } = this.props;
     const { user, all_students, all_teachers } = this.props.auth;
     const { kelas } = this.props.classesCollection;
     const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { all_assessments } = this.props.assessmentsCollection;
     const { all_user_files } = this.props.filesCollection;
-
+    const { all_tasks } = this.props.tasksCollection;
     const classId = user.kelas;
 
     if (
@@ -843,17 +843,14 @@ class Dashboard extends Component {
         let subject = all_subjects[subjectIndex]._id;
         let subjectScores = [];
         let subjectNames = [];
-        for (let i = 0; i < tasksCollection.length; i++) {
-          if (
-            tasksCollection[i].grades &&
-            tasksCollection[i].subject === subject
-          ) {
-            let keysArray = Object.keys(tasksCollection[i].grades);
-            let valuesArray = Object.values(tasksCollection[i].grades);
+        for (let i = 0; i < all_tasks.length; i++) {
+          if (all_tasks[i].grades && all_tasks[i].subject === subject) {
+            let keysArray = Object.keys(all_tasks[i].grades);
+            let valuesArray = Object.values(all_tasks[i].grades);
             for (let j = 0; j < keysArray.length; j++) {
               if (keysArray[j] === user._id) {
                 subjectScores.push(valuesArray[j]);
-                subjectNames.push(tasksCollection[i].name);
+                subjectNames.push(all_tasks[i].name);
                 break;
               }
             }
@@ -1036,21 +1033,19 @@ class Dashboard extends Component {
 
     function listTasksTeacher() {
       let result = [];
-      for (let i = 0; i < tasksCollection.length; i++) {
-        if (tasksCollection[i].person_in_charge_id === user._id) {
+      for (let i = 0; i < all_tasks.length; i++) {
+        if (all_tasks[i].person_in_charge_id === user._id) {
           let number_students_assigned = 0;
           for (let j = 0; j < all_students.length; j++) {
-            if (
-              tasksCollection[i].class_assigned.includes(all_students[j].kelas)
-            ) {
+            if (all_tasks[i].class_assigned.includes(all_students[j].kelas)) {
               number_students_assigned = number_students_assigned + 1;
             }
           }
           if (
-            Object.values(tasksCollection[i].grades).length !==
+            Object.values(all_tasks[i].grades).length !==
             number_students_assigned
           ) {
-            let task = tasksCollection[i];
+            let task = all_tasks[i];
             result.push({
               _id: task._id,
               name: task.name,
@@ -1167,9 +1162,9 @@ class Dashboard extends Component {
     }
 
     let tasksByClass = [];
-    if (Boolean(tasksCollection.length)) {
+    if (Boolean(all_tasks.length)) {
       if (user.role === "Student") {
-        tasksCollection.map((task) => {
+        all_tasks.map((task) => {
           let class_assigned = task.class_assigned;
           for (var i = 0; i < class_assigned.length; i++) {
             if (class_assigned[i] === user.kelas) tasksByClass.push(task);

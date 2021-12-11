@@ -146,7 +146,6 @@ class EditTask extends Component {
       name: "",
       subject: "",
       deadline: new Date(),
-      tasksCollection: [],
       class_assigned: [],
       classChanged: false,
       focused: false,
@@ -203,39 +202,38 @@ class EditTask extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { tasksCollection } = nextProps;
+    const { selectedTasks } = nextProps.tasksCollection;
 
-    if (Boolean(tasksCollection)) {
+    if (Boolean(selectedTasks)) {
       this.setState({
-        name: tasksCollection.name,
-        subject: tasksCollection.subject,
-        deadline: tasksCollection.deadline,
-        class_assigned: Boolean(tasksCollection.class_assigned)
-          ? tasksCollection.class_assigned
+        name: selectedTasks.name,
+        subject: selectedTasks.subject,
+        deadline: selectedTasks.deadline,
+        class_assigned: Boolean(selectedTasks.class_assigned)
+          ? selectedTasks.class_assigned
           : [],
-        description: tasksCollection.description,
-        // fileLampiran: Boolean(tasksCollection.lampiran) ? tasksCollection.lampiran : []
-        // fileLampiran must made like above soalnya because maybe nextProps.tasksCollection is still a plain object.
-        // so need to check if nextProps.tasksCollection is undefined or not because when calling fileLAmpiran.length, there will be an error.
+        description: selectedTasks.description,
+        // fileLampiran: Boolean(selectedTasks.lampiran) ? selectedTasks.lampiran : []
+        // fileLampiran must made like above soalnya because maybe nextProps.selectedTasks is still a plain object.
+        // so need to check if nextProps.selectedTasks is undefined or not because when calling fileLAmpiran.length, there will be an error.
       });
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     // Comparing teacher information (auth.user) is done so teacher's information renewal by admin can renew the class and subject option.
+    const { selectedTasks } = this.props.tasksCollection;
     if (
       prevState.classOptions === null ||
       JSON.stringify(prevProps.auth.user) !==
         JSON.stringify(this.props.auth.user)
     ) {
-      const selectedTaskProps = this.props.tasksCollection;
-
       if (
         this.props.classesCollection.all_classes &&
         this.props.classesCollection.all_classes.length !== 0 &&
-        selectedTaskProps &&
-        selectedTaskProps.constructor === Object &&
-        Object.keys(selectedTaskProps).length !== 0
+        selectedTasks &&
+        selectedTasks.constructor === Object &&
+        Object.keys(selectedTasks).length !== 0
       ) {
         let all_classes_obj = {};
         this.props.classesCollection.all_classes.forEach((classInfo) => {
@@ -248,7 +246,7 @@ class EditTask extends Component {
           for (let [classId, subjectIdArray] of Object.entries(
             this.props.auth.user.class_to_subject
           )) {
-            if (subjectIdArray.includes(selectedTaskProps.subject)) {
+            if (subjectIdArray.includes(selectedTasks.subject)) {
               newClassOptions.push({
                 _id: classId,
                 name: all_classes_obj[classId],
@@ -269,14 +267,12 @@ class EditTask extends Component {
       JSON.stringify(prevProps.auth.user) !==
         JSON.stringify(this.props.auth.user)
     ) {
-      const selectedTaskProps = this.props.tasksCollection;
-
       if (
         this.props.subjectsCollection.all_subjects &&
         this.props.subjectsCollection.all_subjects.length !== 0 &&
-        selectedTaskProps &&
-        selectedTaskProps.constructor === Object &&
-        Object.keys(selectedTaskProps).length !== 0
+        selectedTasks &&
+        selectedTasks.constructor === Object &&
+        Object.keys(selectedTasks).length !== 0
       ) {
         let all_subjects_obj = {};
         this.props.subjectsCollection.all_subjects.forEach((subjectInfo) => {
@@ -286,7 +282,7 @@ class EditTask extends Component {
         // Find subject that is taught to every selected class.
         let subjectMatrix = [];
         if (this.props.auth.user.class_to_subject) {
-          for (let classId of selectedTaskProps.class_assigned) {
+          for (let classId of selectedTasks.class_assigned) {
             if (this.props.auth.user.class_to_subject[classId]) {
               subjectMatrix.push(
                 this.props.auth.user.class_to_subject[classId]
@@ -328,8 +324,8 @@ class EditTask extends Component {
 
   onSubmit = (e, classesOptions) => {
     e.preventDefault();
-
     const { id } = this.props.match.params;
+    const { selectedTasks } = this.props.tasksCollection;
     const {
       class_assigned,
       fileLampiranToAdd,
@@ -366,7 +362,7 @@ class EditTask extends Component {
       .updateTask(
         formData,
         fileLampiranToDelete,
-        this.props.tasksCollection.lampiran,
+        selectedTasks.lampiran,
         taskObject,
         id,
         this.props.history
