@@ -1,4 +1,19 @@
 import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import {
+  Avatar,
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Paper,
+  Typography,
+} from "@material-ui/core";
+import AvatarGroup from "@material-ui/lab/AvatarGroup";
+import { Add as AddIcon } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 
 function AdminDashboard(props) {
   const classes = useStyles();
+  const { user } = props.auth;
 
   return (
     <Grid container spacing={2}>
@@ -41,10 +57,13 @@ function AdminDashboard(props) {
                   <CardContent>
                     <Grid container direction="column" spacing={3}>
                       <Grid item>
-                        <Typography>
-                          Kelas dan Mata Pelajaran
-                        </Typography>
-                        <Grid container justify="space-between" alignItems="center" spacing={1}>
+                        <Typography>Kelas dan Mata Pelajaran</Typography>
+                        <Grid
+                          container
+                          justify="space-between"
+                          alignItems="center"
+                          spacing={1}
+                        >
                           <Grid item>
                             <Typography color="textSecondary">
                               Terdapat {5} kelas di unit Anda.
@@ -60,9 +79,15 @@ function AdminDashboard(props) {
                       <Grid item>
                         {/* Dua item dibawah di hide kalau emang tak ada apa2*/}
                         <Typography color="textSecondary" gutterBottom>
-                          Beberapa Murid berikut belum ditempatkan di kelas manapun.
+                          Beberapa Murid berikut belum ditempatkan di kelas
+                          manapun.
                         </Typography>
-                        <Grid container justify="space-between" alignItems="center" spacing={1}>
+                        <Grid
+                          container
+                          justify="space-between"
+                          alignItems="center"
+                          spacing={1}
+                        >
                           <Grid item>
                             <AvatarGroup max={3}>
                               <Avatar />
@@ -80,9 +105,15 @@ function AdminDashboard(props) {
                       </Grid>
                       <Grid item>
                         <Typography color="textSecondary" gutterBottom>
-                          Beberapa Guru berikut belum ditetapkan kelas atau mata pelajaran yang diajarnya.
+                          Beberapa Guru berikut belum ditetapkan kelas atau mata
+                          pelajaran yang diajarnya.
                         </Typography>
-                        <Grid container justify="space-between" alignItems="center" spacing={1}>
+                        <Grid
+                          container
+                          justify="space-between"
+                          alignItems="center"
+                          spacing={1}
+                        >
                           <Grid item>
                             <AvatarGroup max={3}>
                               <Avatar />
@@ -108,10 +139,13 @@ function AdminDashboard(props) {
                   <CardContent>
                     <Grid container direction="column" spacing={3}>
                       <Grid item>
-                        <Typography>
-                          Pengumuman
-                        </Typography>
-                        <Grid container justify="space-between" alignItems="center" spacing={1}>
+                        <Typography>Pengumuman</Typography>
+                        <Grid
+                          container
+                          justify="space-between"
+                          alignItems="center"
+                          spacing={1}
+                        >
                           <Grid item>
                             <Typography color="textSecondary">
                               Terdapat {5} kelas di unit Anda.
@@ -124,17 +158,13 @@ function AdminDashboard(props) {
                           </Grid>
                         </Grid>
                       </Grid>
-                      <Grid item>
-                        //List pengumuman maks 5 buah recently
-                      </Grid>
+                      <Grid item>//List pengumuman maks 5 buah recently</Grid>
                     </Grid>
                   </CardContent>
                   <Divider />
                   <CardContent style={{ padding: "16px" }}>
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                      <Button color="primary">
-                        Lihat Semua
-                      </Button>
+                      <Button color="primary">Lihat Semua</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -151,26 +181,30 @@ function AdminDashboard(props) {
       <Grid item xs={12} md={5}>
         <Card>
           <CardContent>
-            <Typography variant="h6">
-              Kegiatan Minggu Ini
-            </Typography>
+            <Typography variant="h6">Kegiatan Minggu Ini</Typography>
           </CardContent>
           <CardContent>
-            Vertical stepper isi timeline kegiatan minggu ini.
-            Hijau ceklis udah lewat, belum lewat warna biru.
+            Vertical stepper isi timeline kegiatan minggu ini. Hijau ceklis udah
+            lewat, belum lewat warna biru.
           </CardContent>
           <Divider />
           <CardContent>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <Button color="primary">
-                Lihat Semua
-              </Button>
+              <Button color="primary">Lihat Semua</Button>
             </div>
           </CardContent>
         </Card>
       </Grid>
     </Grid>
-  )
+  );
+}
+
+AdminDashboard.propTypes = {
+  auth: PropTypes.object.isRequired,
 };
 
-export default AdminDashboard;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, {})(AdminDashboard);

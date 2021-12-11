@@ -1,4 +1,34 @@
 import React from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { makeStyles } from "@material-ui/core";
+import TaskItem from "../item/TaskItem";
+import AssessmentItem from "../item/AssessmentItem";
+import Empty from "../../misc/empty/Empty";
+import {
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Fab,
+  Grid,
+  Hidden,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Paper,
+  Typography,
+} from "@material-ui/core";
+import {
+  Add as AddIcon,
+  Announcement as AnnouncementIcon,
+  AssignmentOutlined as AssignmentIcon,
+  MenuBook as MenuBookIcon,
+} from "@material-ui/icons";
+import { FaClipboardList } from "react-icons/fa";
+import { BsClipboardData } from "react-icons/bs";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 
 const useStyles = makeStyles((theme) => ({
@@ -12,10 +42,37 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
+  createButton: {
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.success.main,
+    },
+  },
+  menuItem: {
+    color: "black",
+    "&:hover": {
+      backgroundColor: theme.palette.success.main,
+      "& .MuiListItemIcon-root, & .MuiListItemText-root": {
+        color: "white",
+      },
+    },
+  },
 }));
 
 function TeacherDashboard(props) {
   const classes = useStyles();
+  const { user } = props.auth;
+  const { taskList, quizList, examList } = props.data;
+  const [anchorEl, setAnchorEl] = React.useState(false);
+  // Create Button Menu
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Grid container spacing={2}>
@@ -104,15 +161,15 @@ function TeacherDashboard(props) {
                 <Fab
                   size="medium"
                   className={classes.createButton}
-                  onClick={(event) => this.handleMenuOpen(event)}
+                  onClick={handleMenuOpen}
                 >
                   <AddIcon />
                 </Fab>
                 <Menu
                   keepMounted
-                  open={Boolean(this.state.anchorEl)}
-                  onClose={this.handleMenuClose}
-                  anchorEl={this.state.anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                  anchorEl={anchorEl}
                   getContentAnchorEl={null}
                   style={{ marginTop: "10px" }}
                   anchorOrigin={{
@@ -130,11 +187,7 @@ function TeacherDashboard(props) {
                         <AnnouncementIcon />
                       </ListItemIcon>
                       <ListItemText
-                        primary={
-                          <Typography>
-                            Buat Pengumuman
-                          </Typography>
-                        }
+                        primary={<Typography>Buat Pengumuman</Typography>}
                       />
                     </MenuItem>
                   </Link>
@@ -144,11 +197,7 @@ function TeacherDashboard(props) {
                         <MenuBookIcon />
                       </ListItemIcon>
                       <ListItemText
-                        primary={
-                          <Typography>
-                            Buat Materi
-                          </Typography>
-                        }
+                        primary={<Typography>Buat Materi</Typography>}
                       />
                     </MenuItem>
                   </Link>
@@ -158,11 +207,7 @@ function TeacherDashboard(props) {
                         <AssignmentIcon />
                       </ListItemIcon>
                       <ListItemText
-                        primary={
-                          <Typography>
-                            Buat Tugas
-                          </Typography>
-                        }
+                        primary={<Typography>Buat Tugas</Typography>}
                       />
                     </MenuItem>
                   </Link>
@@ -172,11 +217,7 @@ function TeacherDashboard(props) {
                         <FaClipboardList />
                       </ListItemIcon>
                       <ListItemText
-                        primary={
-                          <Typography>
-                            Buat Kuis
-                          </Typography>
-                        }
+                        primary={<Typography>Buat Kuis</Typography>}
                       />
                     </MenuItem>
                   </Link>
@@ -186,11 +227,7 @@ function TeacherDashboard(props) {
                         <BsClipboardData />
                       </ListItemIcon>
                       <ListItemText
-                        primary={
-                          <Typography>
-                            Buat Ujian
-                          </Typography>
-                        }
+                        primary={<Typography>Buat Ujian</Typography>}
                       />
                     </MenuItem>
                   </Link>
@@ -208,15 +245,33 @@ function TeacherDashboard(props) {
           <Divider />
           <CardContent>
             <Typography gutterBottom>Tugas</Typography>
-            {listTasksTeacher()}
+            {taskList.length === 0 ? (
+              <Empty />
+            ) : (
+              <Grid container direction="column" spacing={2}>
+                <TaskItem data={taskList} isHideOptionMenu={true} />
+              </Grid>
+            )}
           </CardContent>
           <CardContent>
             <Typography gutterBottom>Kuis</Typography>
-            {listAssessmentsTeacher("Kuis")}
+            {quizList.length === 0 ? (
+              <Empty />
+            ) : (
+              <Grid container direction="column" spacing={2}>
+                <AssessmentItem data={quizList} isHideOptionMenu={true} />
+              </Grid>
+            )}
           </CardContent>
           <CardContent>
             <Typography gutterBottom>Ujian</Typography>
-            {listAssessmentsTeacher("Ujian")}
+            {examList.length === 0 ? (
+              <Empty />
+            ) : (
+              <Grid container direction="column" spacing={2}>
+                <AssessmentItem data={examList} isHideOptionMenu={true} />
+              </Grid>
+            )}
           </CardContent>
         </Card>
       </Grid>
@@ -240,4 +295,12 @@ function TeacherDashboard(props) {
   );
 }
 
-export default TeacherDashboard;
+TeacherDashboard.propTypes = {
+  auth: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, {})(TeacherDashboard);

@@ -1,4 +1,37 @@
 import React from "react";
+import Empty from "../../misc/empty/Empty";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import {
+  Avatar,
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Fab,
+  Grid,
+  Hidden,
+  LinearProgress,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Paper,
+  Typography,
+} from "@material-ui/core";
+import AvatarGroup from "@material-ui/lab/AvatarGroup";
+import {
+  Add as AddIcon,
+  Announcement as AnnouncementIcon,
+  AssignmentOutlined as AssignmentIcon,
+  MenuBook as MenuBookIcon,
+  Web as WebIcon,
+} from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core";
+
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 function SuperAdminDashboard(props) {
   const classes = useStyles();
+  const { user } = props.auth;
 
   return (
     <Grid container spacing={2}>
@@ -34,9 +68,7 @@ function SuperAdminDashboard(props) {
           <CardContent>
             <Grid container justify="space-between" alignItems="center">
               <Grid item>
-                <Typography>
-                  Jumlah Pengguna
-                </Typography>
+                <Typography>Jumlah Pengguna</Typography>
               </Grid>
               <Grid item>
                 <Button variant="outlined" color="primary">
@@ -54,13 +86,14 @@ function SuperAdminDashboard(props) {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={
-                  <Typography noWrap>
-                    Nama Unit
-                  </Typography>
-                }
+                primary={<Typography noWrap>Nama Unit</Typography>}
                 secondary={
-                  <Grid container justify="flex-end" alignItems="center" spacing={1}>
+                  <Grid
+                    container
+                    justify="flex-end"
+                    alignItems="center"
+                    spacing={1}
+                  >
                     <Grid item xs>
                       <LinearProgress
                         //Ini bakal relatif valuenya dengan unit dengan jumlah terbanyak, yang terbanyak barnya full
@@ -81,45 +114,41 @@ function SuperAdminDashboard(props) {
       <Grid item xs={12} md={5}>
         <Card>
           <CardContent>
-            <Typography>
-              Pengelola Tidak Aktif
-            </Typography>
+            <Typography>Pengelola Tidak Aktif</Typography>
           </CardContent>
           <Divider />
-            <List>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <Typography noWrap>
-                      Nama
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography noWrap>
-                      Nama Unit
-                    </Typography>
-                  }
-                />
-                <Button variant="outlined" color="primary">
-                  Profil
-                </Button>
-              </ListItem>
-            </List>
+          <List>
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar />
+              </ListItemAvatar>
+              <ListItemText
+                primary={<Typography noWrap>Nama</Typography>}
+                secondary={<Typography noWrap>Nama Unit</Typography>}
+              />
+              <Button variant="outlined" color="primary">
+                Profil
+              </Button>
+            </ListItem>
+          </List>
           <Divider />
           <CardContent style={{ padding: "16px" }}>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <Button color="primary">
-                Lihat Semua Pengelola
-              </Button>
+              <Button color="primary">Lihat Semua Pengelola</Button>
             </div>
           </CardContent>
         </Card>
       </Grid>
     </Grid>
-  )
+  );
+}
+
+SuperAdminDashboard.propTypes = {
+  auth: PropTypes.object.isRequired,
 };
 
-export default SuperAdminDashboard;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, {})(SuperAdminDashboard);
