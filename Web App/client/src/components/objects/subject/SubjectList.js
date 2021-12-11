@@ -40,7 +40,7 @@ import {
   Edit as EditIcon,
   LibraryBooks as LibraryBooksIcon,
   Search as SearchIcon,
-  SortByAlpha as SortByAlphaIcon,
+  Sort as SortIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -196,7 +196,7 @@ function SubjectListToolbar(props) {
             <Grid item>
               <Tooltip title="Urutkan Mata Pelajaran">
                 <IconButton onClick={handleOpenSortMenu}>
-                  <SortByAlphaIcon />
+                  <SortIcon />
                 </IconButton>
               </Tooltip>
               <Menu

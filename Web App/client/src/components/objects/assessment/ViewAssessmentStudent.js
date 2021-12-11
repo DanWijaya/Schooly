@@ -370,11 +370,11 @@ function QuestionNumber(
     >
       <Badge
         style={{
-          width: "35px",
-          height: "35px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          width: "35px",
+          height: "35px",
         }}
         badgeContent={
           answer[question_number - 1].length > 0 &&
@@ -971,7 +971,7 @@ function ViewAssessmentStudent(props) {
   return (
     <div className={classes.root}>
       <form>
-        <Grid container direction="column" spacing={3}>
+        <Grid container direction="column" spacing={2}>
           <Grid item>
             <Paper className={classes.content}>
               <Grid

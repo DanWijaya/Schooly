@@ -569,7 +569,6 @@ function ListAssessments(props) {
       />
     ));
   } else {
-    console.log(result);
     handleChangeList(result);
     return;
   }
@@ -737,7 +736,6 @@ function CalendarToolbar(props) {
 function Calendar(props) {
   const classes = useStyles();
   const theme = useTheme();
-
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 
   const {
@@ -766,7 +764,7 @@ function Calendar(props) {
 
   const [activeStartDate, setActiveStartDate] = React.useState(
     new Date(new Date().getFullYear(), new Date().getMonth())
-  ); // set ke awal bulan sekarang
+  );
 
   // Event Dialog
   const [selectedEventInfo, setSelectedEventInfo] = React.useState({});
@@ -993,7 +991,7 @@ function Calendar(props) {
       let end_date;
 
       if (elm.type === "Tugas") {
-        // karena tugas tidak memiliki durasi,
+        // Because tasks don't have duration.
         let offset = TASK_DURATION_MILLISECOND / 2;
         start_date = substractTime(new Date(elm.deadline), offset);
         end_date = addTime(new Date(elm.deadline), offset);
