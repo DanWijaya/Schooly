@@ -221,11 +221,8 @@ function ViewTaskTeacher(props) {
       selectedTasks.comments
     ) {
       let usernames = {};
-      for (let studentInfo of all_students) {
-        usernames[studentInfo._id] = studentInfo.name;
-      }
-      for (let teacherInfo of all_teachers) {
-        usernames[teacherInfo._id] = teacherInfo.name;
+      for (let userInfo of [...all_students, ...all_teachers]) {
+        usernames[userInfo._id] = userInfo.name;
       }
       setCommentList(
         selectedTasks.comments.map((comment) => ({

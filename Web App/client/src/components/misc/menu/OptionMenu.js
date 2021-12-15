@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import { MoreVert as MoreVertIcon } from "@material-ui/icons";
-
+import { Grid } from "@material-ui/core";
 function OptionMenu(props) {
   const { actions, row, disabled, handleActionOnClick } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -26,7 +26,7 @@ function OptionMenu(props) {
   };
 
   return (
-    <div>
+    <Grid item>
       <IconButton onClick={handleClick} disabled={disabled}>
         <MoreVertIcon />
       </IconButton>
@@ -72,7 +72,7 @@ function OptionMenu(props) {
           }
         })}
       </Menu>
-    </div>
+    </Grid>
   );
 }
 export default OptionMenu;

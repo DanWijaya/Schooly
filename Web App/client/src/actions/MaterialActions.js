@@ -146,7 +146,7 @@ export const getMaterial = (Id, category) => (dispatch) => {
 
 export const getOneMaterial = (materialId) => (dispatch) => {
   console.log("run getOneAnnoucnement");
-  axios
+  return axios
     .get(`/api/materials/viewOne/${materialId}`)
     .then((res) => {
       console.log("material datas are received");
@@ -154,6 +154,7 @@ export const getOneMaterial = (materialId) => (dispatch) => {
         type: GET_MATERIAL,
         payload: res.data,
       });
+      return res.data;
     })
     .catch((err) => {
       console.log(err);
@@ -161,6 +162,7 @@ export const getOneMaterial = (materialId) => (dispatch) => {
         type: GET_ERRORS,
         payload: err,
       });
+      throw err;
     });
 };
 
