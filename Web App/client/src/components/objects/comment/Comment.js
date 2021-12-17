@@ -102,7 +102,7 @@ function Comment(props) {
       setDeleteCommentIdx(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [all_teachers, all_students]);
+  }, [comments, all_teachers, all_students]);
 
   React.useEffect(() => {
     let setId = new Set();

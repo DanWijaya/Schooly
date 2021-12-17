@@ -60,6 +60,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import FileAttachment from "../file/FileAttachment";
 import FileSubmission from "../file/FileSubmission";
+import Comment from "../comment/Comment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -143,23 +144,6 @@ function ViewTaskStudent(props) {
   const [selectedFileId, setSelectedFileId] = React.useState(null);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = React.useState(false);
 
-  // Comment
-  const [commentValue, setCommentValue] = React.useState("");
-  const [commentEditorValue, setCommentEditorValue] = React.useState("");
-  const [commentList, setCommentList] = React.useState([]);
-  const [commentAvatar, setCommentAvatar] = React.useState({});
-  const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
-  const [openDeleteCommentDialog, setOpenDeleteCommentDialog] = React.useState(
-    null
-  );
-  const [deleteCommentIdx, setDeleteCommentIdx] = React.useState(null);
-  const deleteDialogHandler = React.useRef(null);
-
-  // Snackbar
-  const [snackbarContent, setSnackbarContent] = React.useState("");
-  const [severity, setSeverity] = React.useState("info");
-  const [openCommentSnackbar, setOpenCommentSnackbar] = React.useState(false);
-
   let tugasId = props.match.params.id;
 
   useEffect(() => {
@@ -188,138 +172,12 @@ function ViewTaskStudent(props) {
   }, [success, selectedTasks.person_in_charge_id]);
 
   useEffect(() => {
-    if (
-      all_students &&
-      Array.isArray(all_students) &&
-      all_teachers &&
-      Array.isArray(all_teachers) &&
-      selectedTasks &&
-      selectedTasks.comments
-    ) {
-      let usernames = {};
-      for (let userInfo of [...all_students, ...all_teachers]) {
-        usernames[userInfo._id] = userInfo.name;
-      }
-      setCommentList(
-        selectedTasks.comments.map((comment) => ({
-          ...comment,
-          name: usernames[comment.author_id],
-        }))
-      );
-
-      if (
-        selectedCommentIdx !== null &&
-        deleteCommentIdx !== null &&
-        deleteCommentIdx < selectedCommentIdx
-      ) {
-        // To move edit textfield.
-        setSelectedCommentIdx(selectedCommentIdx - 1);
-      }
-      setDeleteCommentIdx(null);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTasks, all_teachers, all_students]);
-
-  useEffect(() => {
-    let listId = [];
-    commentList.map((comment) => {
-      listId.push(comment.author_id);
-    });
-    listId.push(user._id);
-    getMultipleFileAvatar(listId).then((results) => {
-      setCommentAvatar(results);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [commentList]);
-
-  useEffect(() => {
     return () => {
       clearErrors();
       clearSuccess();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleCommentInputChange = (e) => {
-    setCommentValue(e.target.value);
-  };
-  const handleCommentEditorChange = (e) => {
-    setCommentEditorValue(e.target.value);
-  };
-
-  const closeEditMode = () => {
-    setCommentEditorValue("");
-    setSelectedCommentIdx(null);
-  };
-  const handleClickEdit = (idx) => {
-    setCommentEditorValue(commentList[idx].content);
-    setSelectedCommentIdx(idx);
-  };
-
-  const handleCreateComment = () => {
-    if (commentValue.length === 0) {
-      handleOpenCommentSnackbar("error", "Isi komentar tidak boleh kosong");
-    } else {
-      createTaskComment(tugasId, {
-        author_id: user._id,
-        content: commentValue,
-      })
-        .then(() => {
-          handleOpenCommentSnackbar("success", "Komentar berhasil dibuat");
-          setCommentValue("");
-          getOneTask(tugasId);
-        })
-        .catch(() => {
-          handleOpenCommentSnackbar("error", "Komentar gagal dibuat");
-        });
-    }
-  };
-
-  const handleEditComment = () => {
-    if (commentEditorValue.length === 0) {
-      handleOpenDeleteCommentDialog(selectedCommentIdx);
-    } else {
-      editTaskComment(
-        tugasId,
-        commentEditorValue,
-        commentList[selectedCommentIdx]._id
-      )
-        .then(() => {
-          handleOpenCommentSnackbar("success", "Komentar berhasil disunting");
-          getOneTask(tugasId);
-        })
-        .catch(() => {
-          handleOpenCommentSnackbar("error", "Komentar gagal disunting");
-        });
-      closeEditMode();
-    }
-  };
-
-  const handleDeleteComment = (idx) => {
-    deleteTaskComment(tugasId, commentList[idx]._id)
-      .then(() => {
-        handleOpenCommentSnackbar("success", "Komentar berhasil dihapus");
-        getOneTask(tugasId);
-      })
-      .catch(() => {
-        handleOpenCommentSnackbar("error", "Komentar gagal dihapus");
-      });
-    setDeleteCommentIdx(idx);
-    handleCloseDeleteCommentDialog();
-  };
-
-  const handleOpenCommentSnackbar = (severity, content) => {
-    setOpenCommentSnackbar(true);
-    setSeverity(severity);
-    setSnackbarContent(content);
-  };
-
-  const handleCloseCommentSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenCommentSnackbar(false);
-  };
 
   const handleTugasUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -385,24 +243,6 @@ function ViewTaskStudent(props) {
     setOpenDeleteDialog(false);
   };
 
-  const handleOpenDeleteCommentDialog = (idx) => {
-    setOpenDeleteCommentDialog(true);
-    deleteDialogHandler.current =
-      idx === selectedCommentIdx
-        ? () => {
-            handleDeleteComment(idx);
-            closeEditMode();
-          }
-        : () => {
-            handleDeleteComment(idx);
-          };
-  };
-
-  const handleCloseDeleteCommentDialog = () => {
-    // setDeleteCommentIdx(null) akan dijalankan setelah task dimuat ulang
-    setOpenDeleteCommentDialog(false);
-  };
-
   // Upload Dialog
   const [openUploadDialog, setOpenUploadDialog] = React.useState(null);
   const handleOpenUploadDialog = () => {
@@ -411,166 +251,6 @@ function ViewTaskStudent(props) {
   const handleCloseUploadDialog = () => {
     setOpenUploadDialog(false);
     clearSuccess();
-  };
-
-  // Comment
-  const generateComments = (
-    author_id,
-    authorName,
-    date,
-    comment,
-    isSelfMade,
-    idx,
-    edited
-  ) => {
-    return (
-      <Grid container item direction="row" style={{ flexWrap: "nowrap" }}>
-        <div className={classes.smAvatar}>
-          <Avatar src={commentAvatar[author_id]} />
-        </div>
-        <Box flexGrow={1}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Hidden smUp>
-                <Typography className={classes.mobileName}>
-                  <b>{authorName}</b>
-                </Typography>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  {edited === true ? (
-                    <Typography
-                      color="textSecondary"
-                      variant="body2"
-                      style={{
-                        marginRight: "5px",
-                        whiteSpace: "nowrap",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      Edited
-                    </Typography>
-                  ) : null}
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                    style={{
-                      marginRight: "5px",
-                      whiteSpace: "nowrap",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {moment(date).locale("id").format("DD MMM YYYY, HH.mm")}
-                  </Typography>
-                </div>
-              </Hidden>
-              <Hidden xsDown>
-                <Typography style={{ marginRight: "10px" }}>
-                  <b>{authorName}</b>
-                </Typography>
-                {edited === true ? (
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                    style={{ marginRight: "10px" }}
-                  >
-                    Edited
-                  </Typography>
-                ) : null}
-                <Typography
-                  color="textSecondary"
-                  variant="body2"
-                  style={{ marginRight: "10px" }}
-                >
-                  {moment(date).locale("id").format("DD MMM YYYY, HH.mm")}
-                </Typography>
-              </Hidden>
-            </div>
-            <div>
-              {isSelfMade &&
-              !(selectedCommentIdx !== null && selectedCommentIdx === idx) ? (
-                <>
-                  <LightTooltip title="Sunting">
-                    <CreateIcon
-                      style={{ marginRight: "2px" }}
-                      className={classes.commentLittleIcon}
-                      fontSize="small"
-                      onClick={() => handleClickEdit(idx)}
-                    />
-                  </LightTooltip>
-                  <LightTooltip title="Hapus">
-                    <DeleteIcon
-                      className={classes.commentLittleIcon}
-                      fontSize="small"
-                      onClick={() => handleOpenDeleteCommentDialog(idx)}
-                    />
-                  </LightTooltip>
-                </>
-              ) : null}
-            </div>
-          </div>
-          {selectedCommentIdx !== null && selectedCommentIdx === idx ? (
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <TextField
-                multiline
-                variant="outlined"
-                onChange={handleCommentEditorChange}
-                value={commentEditorValue}
-                style={{ marginTop: "5px" }}
-              />
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Button
-                  variant="contained"
-                  color="default"
-                  className={classes.checkButton}
-                  startIcon={<CheckCircleIcon />}
-                  onClick={handleEditComment}
-                >
-                  Simpan
-                </Button>
-                <Button
-                  variant="contained"
-                  color="default"
-                  className={classes.cancelButton}
-                  startIcon={<CancelIcon />}
-                  onClick={closeEditMode}
-                >
-                  Batal
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <Typography
-              style={{
-                marginTop: "5px",
-                wordBreak: "break-word",
-                whiteSpace: "pre-wrap",
-              }}
-              align="justify"
-            >
-              {comment}
-            </Typography>
-          )}
-        </Box>
-      </Grid>
-    );
   };
 
   const onDeleteFileSubmitTasks = (id) => {
@@ -584,6 +264,16 @@ function ViewTaskStudent(props) {
   };
 
   document.title = `Schooly | ${selectedTasks.name}`;
+
+  const commentMethod = {
+    createComment: createTaskComment,
+    editComment: editTaskComment,
+    deleteComment: deleteTaskComment,
+  };
+
+  const dataMethod = {
+    getData: getOneTask,
+  };
 
   return (
     <div className={classes.root}>
@@ -648,57 +338,11 @@ function ViewTaskStudent(props) {
               )}
             </Grid>
           </Paper>
-          <Paper className={classes.taskPaper} style={{ marginTop: "20px" }}>
-            <Typography variant="h6" gutterBottom>
-              Komentar Kelas
-            </Typography>
-            <Divider style={{ marginBottom: "17.5px" }} />
-            <Grid container spacing={2}>
-              {commentList.length !== 0 ? (
-                <>
-                  {commentList.map((comment, idx) =>
-                    generateComments(
-                      comment.author_id,
-                      comment.name,
-                      comment.createdAt,
-                      comment.content,
-                      comment.author_id === user._id,
-                      idx,
-                      comment.edited
-                    )
-                  )}
-                  <Grid item xs={12}>
-                    <Divider />
-                  </Grid>
-                </>
-              ) : null}
-              <Grid container item direction="row" alignItems="center">
-                <div className={classes.smAvatar}>
-                  <Avatar src={commentAvatar[user._id]} />
-                </div>
-                <Box flexGrow={1}>
-                  <TextField
-                    className={classes.textField}
-                    variant="outlined"
-                    multiline
-                    style={{ display: "flex" }}
-                    InputProps={{ style: { borderRadius: "15px" } }}
-                    placeholder="Tambahkan komentar..."
-                    onChange={handleCommentInputChange}
-                    value={commentValue}
-                  />
-                </Box>
-                <div>
-                  <LightTooltip title="Kirim">
-                    <SendIcon
-                      className={classes.sendIcon}
-                      onClick={handleCreateComment}
-                    />
-                  </LightTooltip>
-                </div>
-              </Grid>
-            </Grid>
-          </Paper>
+          <Comment
+            data={selectedTasks}
+            commentMethod={commentMethod}
+            dataMethod={dataMethod}
+          />
         </Grid>
         <Grid item xs={12} md={4}>
           <Paper className={classes.taskPaper}>
@@ -815,27 +459,6 @@ function ViewTaskStudent(props) {
         itemName={selectedFileName}
         deleteItem={() => onDeleteFileSubmitTasks(selectedFileId)}
       />
-      <DeleteDialog
-        openDeleteDialog={openDeleteCommentDialog}
-        handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
-        itemType="Komentar"
-        deleteItem={deleteDialogHandler.current}
-      />
-      <Snackbar
-        open={openCommentSnackbar}
-        autoHideDuration={4000}
-        onClose={(event, reason) => handleCloseCommentSnackbar(event, reason)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-      >
-        <Alert
-          elevation={6}
-          variant="filled"
-          severity={severity}
-          onClose={(event, reason) => handleCloseCommentSnackbar(event, reason)}
-        >
-          {snackbarContent}
-        </Alert>
-      </Snackbar>
       {/* File Size Limit Snackbar */}
       <Snackbar
         open={fileLimitSnackbar}

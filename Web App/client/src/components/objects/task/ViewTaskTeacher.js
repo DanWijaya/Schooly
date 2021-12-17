@@ -29,33 +29,24 @@ import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions"
 import { getFileSubmitTasks_T } from "../../../actions/files/FileSubmitTaskActions";
 import CustomLinkify from "../../misc/linkify/Linkify";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
-  Avatar,
-  Box,
   Button,
   Divider,
   Fab,
   Grid,
   Hidden,
   Paper,
-  Snackbar,
-  TextField,
   Tooltip,
   Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Alert from "@material-ui/lab/Alert";
 import {
-  Cancel as CancelIcon,
-  CheckCircle as CheckCircleIcon,
-  Create as CreateIcon,
   Delete as DeleteIcon,
   Edit as EditIcon,
   PlaylistAddCheck as PlaylistAddCheckIcon,
-  Send as SendIcon,
 } from "@material-ui/icons";
 import FileAttachment from "../file/FileAttachment";
+import Comment from "../comment/Comment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -145,7 +136,7 @@ const useStyles = makeStyles((theme) => ({
 function ViewTaskTeacher(props) {
   const classes = useStyles();
   const history = useHistory();
-  const { user, all_students, all_teachers } = props.auth;
+  const { user } = props.auth;
   const {
     deleteTask,
     tasksCollection,
@@ -158,7 +149,6 @@ function ViewTaskTeacher(props) {
     clearSuccess,
     getTeachers,
     getStudents,
-    getMultipleFileAvatar,
     getFileSubmitTasks_T,
   } = props;
   const { selectedTasks } = tasksCollection;
@@ -171,23 +161,6 @@ function ViewTaskTeacher(props) {
 
   // To disable button that redirect teacher to SubmittedTaskList when there is still no submitted task.
   const [disableButton, setDisableButton] = React.useState(true);
-
-  // Comment
-  const [commentValue, setCommentValue] = React.useState("");
-  const [commentEditorValue, setCommentEditorValue] = React.useState("");
-  const [commentList, setCommentList] = React.useState([]);
-  const [commentAvatar, setCommentAvatar] = React.useState({});
-  const [selectedCommentIdx, setSelectedCommentIdx] = React.useState(null);
-  const [openDeleteCommentDialog, setOpenDeleteCommentDialog] = React.useState(
-    null
-  );
-  const [deleteCommentIdx, setDeleteCommentIdx] = React.useState(null);
-  const deleteDialogHandler = React.useRef(null);
-
-  // Snackbar
-  const [snackbarContent, setSnackbarContent] = React.useState("");
-  const [severity, setSeverity] = React.useState("info");
-  const [openCommentSnackbar, setOpenCommentSnackbar] = React.useState(false);
 
   React.useEffect(() => {
     getOneTask(task_id);
@@ -212,137 +185,12 @@ function ViewTaskTeacher(props) {
   });
 
   React.useEffect(() => {
-    if (
-      all_students &&
-      Array.isArray(all_students) &&
-      all_teachers &&
-      Array.isArray(all_teachers) &&
-      selectedTasks &&
-      selectedTasks.comments
-    ) {
-      let usernames = {};
-      for (let userInfo of [...all_students, ...all_teachers]) {
-        usernames[userInfo._id] = userInfo.name;
-      }
-      setCommentList(
-        selectedTasks.comments.map((comment) => ({
-          ...comment,
-          name: usernames[comment.author_id],
-        }))
-      );
-
-      if (
-        selectedCommentIdx !== null &&
-        deleteCommentIdx !== null &&
-        deleteCommentIdx < selectedCommentIdx
-      ) {
-        // memindahkan textfield edit
-        setSelectedCommentIdx(selectedCommentIdx - 1);
-      }
-      setDeleteCommentIdx(null);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTasks, all_teachers, all_students]);
-
-  React.useEffect(() => {
-    let listId = [];
-    commentList.map((comment) => {
-      listId.push(comment.author_id);
-    });
-    listId.push(user._id);
-    getMultipleFileAvatar(listId).then((results) => {
-      setCommentAvatar(results);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [commentList]);
-
-  React.useEffect(() => {
     return () => {
       clearErrors();
       clearSuccess();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleCommentInputChange = (e) => {
-    setCommentValue(e.target.value);
-  };
-  const handleCommentEditorChange = (e) => {
-    setCommentEditorValue(e.target.value);
-  };
-
-  const closeEditMode = () => {
-    setCommentEditorValue("");
-    setSelectedCommentIdx(null);
-  };
-  const handleClickEdit = (idx) => {
-    setCommentEditorValue(commentList[idx].content);
-    setSelectedCommentIdx(idx);
-  };
-  const handleCreateComment = () => {
-    if (commentValue.length === 0) {
-      handleOpenCommentSnackbar("error", "Isi komentar tidak boleh kosong");
-    } else {
-      createTaskComment(task_id, {
-        author_id: user._id,
-        content: commentValue,
-      })
-        .then(() => {
-          handleOpenCommentSnackbar("success", "Komentar berhasil dibuat");
-          setCommentValue("");
-          getOneTask(task_id);
-        })
-        .catch(() => {
-          handleOpenCommentSnackbar("error", "Komentar gagal dibuat");
-        });
-    }
-  };
-
-  const handleEditComment = () => {
-    if (commentEditorValue.length === 0) {
-      handleOpenDeleteCommentDialog(selectedCommentIdx);
-    } else {
-      editTaskComment(
-        task_id,
-        commentEditorValue,
-        commentList[selectedCommentIdx]._id
-      )
-        .then(() => {
-          handleOpenCommentSnackbar("success", "Komentar berhasil disunting");
-          getOneTask(task_id);
-        })
-        .catch(() => {
-          handleOpenCommentSnackbar("error", "Komentar gagal disunting");
-        });
-      closeEditMode();
-    }
-  };
-
-  const handleDeleteComment = (idx) => {
-    deleteTaskComment(task_id, commentList[idx]._id)
-      .then(() => {
-        handleOpenCommentSnackbar("success", "Komentar berhasil dihapus");
-        getOneTask(task_id);
-      })
-      .catch(() => {
-        handleOpenCommentSnackbar("error", "Komentar gagal dihapus");
-      });
-    setDeleteCommentIdx(idx);
-    handleCloseDeleteCommentDialog();
-  };
-
-  const handleOpenCommentSnackbar = (severity, content) => {
-    setOpenCommentSnackbar(true);
-    setSeverity(severity);
-    setSnackbarContent(content);
-  };
-
-  const handleCloseCommentSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenCommentSnackbar(false);
-  };
 
   const onDeleteTask = (id) => {
     deleteTask(id, history).then((res) => {
@@ -358,114 +206,14 @@ function ViewTaskTeacher(props) {
     setOpenDeleteDialog(false);
   };
 
-  // Comment Dialog
-  const handleOpenDeleteCommentDialog = (idx) => {
-    setOpenDeleteCommentDialog(true);
-    deleteDialogHandler.current =
-      idx === selectedCommentIdx
-        ? () => {
-            handleDeleteComment(idx);
-            closeEditMode();
-          }
-        : () => {
-            handleDeleteComment(idx);
-          };
-  };
-  const handleCloseDeleteCommentDialog = () => {
-    // setDeleteCommentIdx(null) will be run after material is reloaded.
-    setOpenDeleteCommentDialog(false);
+  const commentMethod = {
+    createComment: createTaskComment,
+    editComment: editTaskComment,
+    deleteComment: deleteTaskComment,
   };
 
-  // Comment
-  const generateComments = (
-    author_id,
-    authorName,
-    date,
-    comment,
-    isSelfMade,
-    idx,
-    edited
-  ) => {
-    return (
-      <Grid container wrap="nowrap" spacing={2}>
-        <Grid item>
-          <Avatar src={commentAvatar[author_id]} />
-        </Grid>
-        <Grid item xs zeroMinWidth container>
-          <Grid item xs={12}>
-            <Typography variant="body2" noWrap>
-              {authorName}{" "}
-              <span style={{ color: "grey" }}>
-                {edited === true ? "(Disunting)" : null} •{" "}
-                {moment(date).locale("id").format("DD MMM YYYY, HH.mm")}
-              </span>
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            {selectedCommentIdx !== null && selectedCommentIdx === idx ? (
-              <Grid container direction="column" spacing={1}>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    multiline
-                    variant="outlined"
-                    onChange={handleCommentEditorChange}
-                    value={commentEditorValue}
-                  />
-                </Grid>
-                <Grid item container spacing={1}>
-                  <Grid item>
-                    <Button
-                      className={classes.cancelButton}
-                      startIcon={<CancelIcon />}
-                      onClick={closeEditMode}
-                    >
-                      Batal
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      className={classes.saveButton}
-                      startIcon={<CheckCircleIcon />}
-                      onClick={handleEditComment}
-                    >
-                      Simpan
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            ) : (
-              <Typography
-                align="justify"
-                style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-              >
-                {comment}
-              </Typography>
-            )}
-          </Grid>
-        </Grid>
-        {isSelfMade &&
-        !(selectedCommentIdx !== null && selectedCommentIdx === idx) ? (
-          <Grid item>
-            <LightTooltip title="Sunting">
-              <CreateIcon
-                style={{ marginRight: "2px" }}
-                className={classes.commentLittleIcon}
-                fontSize="small"
-                onClick={() => handleClickEdit(idx)}
-              />
-            </LightTooltip>
-            <LightTooltip title="Hapus">
-              <DeleteIcon
-                className={classes.commentLittleIcon}
-                fontSize="small"
-                onClick={() => handleOpenDeleteCommentDialog(idx)}
-              />
-            </LightTooltip>
-          </Grid>
-        ) : null}
-      </Grid>
-    );
+  const dataMethod = {
+    getData: getOneTask,
   };
 
   document.title = `Schooly | ${selectedTasks.name}`;
@@ -638,64 +386,11 @@ function ViewTaskTeacher(props) {
           </Grid>
         </Grid>
         <Grid item>
-          <Paper className={classes.commentPaper}>
-            <Typography variant="h6" gutterBottom>
-              Komentar Kelas
-            </Typography>
-            <Divider style={{ marginBottom: "17.5px" }} />
-            <Grid container spacing={2}>
-              {commentList.length !== 0 ? (
-                <>
-                  {commentList.map((comment, idx) =>
-                    generateComments(
-                      comment.author_id,
-                      comment.name,
-                      comment.createdAt,
-                      comment.content,
-                      comment.author_id === user._id,
-                      idx,
-                      comment.edited
-                    )
-                  )}
-                  <Grid item xs={12}>
-                    <Divider />
-                  </Grid>
-                </>
-              ) : null}
-              {/* {
-                (commentList.length === 0) ?
-                  <Grid item xs={12}>
-                    <Typography color="textSecondary" align="center">Belum ada komentar</Typography>
-                  </Grid>
-                : null
-              } */}
-              <Grid container item direction="row" alignItems="center">
-                <div className={classes.smAvatar}>
-                  <Avatar src={commentAvatar[user._id]} />
-                </div>
-                <Box flexGrow={1}>
-                  <TextField
-                    className={classes.textField}
-                    variant="outlined"
-                    multiline
-                    style={{ display: "flex" }}
-                    InputProps={{ style: { borderRadius: "15px" } }}
-                    placeholder="Tambahkan komentar..."
-                    onChange={handleCommentInputChange}
-                    value={commentValue}
-                  />
-                </Box>
-                <div>
-                  <LightTooltip title="Kirim">
-                    <SendIcon
-                      className={classes.sendIcon}
-                      onClick={handleCreateComment}
-                    />
-                  </LightTooltip>
-                </div>
-              </Grid>
-            </Grid>
-          </Paper>
+          <Comment
+            data={selectedTasks}
+            commentMethod={commentMethod}
+            dataMethod={dataMethod}
+          />
         </Grid>
       </Grid>
       <DeleteDialog
@@ -706,27 +401,6 @@ function ViewTaskTeacher(props) {
         warningText="Lampiran, komentar, dan nilai yang ada juga akan dihapus."
         deleteItem={() => onDeleteTask(task_id)}
       />
-      <DeleteDialog
-        openDeleteDialog={openDeleteCommentDialog}
-        handleCloseDeleteDialog={handleCloseDeleteCommentDialog}
-        itemType="Komentar"
-        deleteItem={deleteDialogHandler.current}
-      />
-      <Snackbar
-        open={openCommentSnackbar}
-        autoHideDuration={3000}
-        onClose={(event, reason) => handleCloseCommentSnackbar(event, reason)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-      >
-        <Alert
-          elevation={6}
-          variant="filled"
-          severity={severity}
-          onClose={(event, reason) => handleCloseCommentSnackbar(event, reason)}
-        >
-          {snackbarContent}
-        </Alert>
-      </Snackbar>
     </div>
   );
 }
