@@ -128,86 +128,6 @@ function Comment(props) {
     }));
   }
 
-  function CommentItem(props) {
-    const { comment, idx } = props;
-
-    const { author_id, authorName, createdAt, content, _id, edited } = comment;
-    const isAuthor = author_id === user._id;
-
-    return (
-      <Grid container wrap="nowrap" spacing={2} alignItems="center">
-        <Grid item>
-          <Avatar src={commentAvatar[author_id]} />
-        </Grid>
-        <Grid item xs zeroMinWidth container>
-          <Grid item xs={12} container alignItems="center" spacing={1}>
-            <Grid item xs>
-              <Typography variant="body2" noWrap gutterBottom>
-                {authorName}{" "}
-                <span style={{ color: "grey" }}>
-                  {edited === true ? "(Disunting)" : null} •{" "}
-                  {moment(createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
-                </span>
-              </Typography>
-            </Grid>
-            {isAuthor &&
-            !(selectedCommentIdx !== null && selectedCommentIdx === idx) ? (
-              <OptionMenu
-                actions={["Sunting", "Hapus"]}
-                row={comment}
-                handleActionOnClick={[
-                  () => handleSelectedComment(idx),
-                  handleOpenDeleteDialog,
-                ]}
-              />
-            ) : null}
-          </Grid>
-          <Grid item xs={12}>
-            {selectedCommentIdx !== null && selectedCommentIdx === idx ? (
-              <Grid container direction="column" spacing={1}>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    multiline
-                    variant="outlined"
-                    onChange={handleEditorChange}
-                    value={commentEditorValue}
-                  />
-                </Grid>
-                <Grid item container spacing={1}>
-                  <Grid item>
-                    <Button
-                      className={classes.cancelButton}
-                      startIcon={<CancelIcon />}
-                      onClick={closeEditMode}
-                    >
-                      Batal
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      className={classes.saveButton}
-                      startIcon={<CheckCircleIcon />}
-                      onClick={handleEditComment}
-                    >
-                      Simpan
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            ) : (
-              <Typography
-                align="justify"
-                style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-              >
-                {content}
-              </Typography>
-            )}
-          </Grid>
-        </Grid>
-      </Grid>
-    );
-  }
   //Comment value handler
   const handleInputChange = (e) => {
     setCommentValue(e.target.value);
@@ -256,7 +176,6 @@ function Comment(props) {
   };
 
   const handleSelectedComment = (id) => {
-    console.log(id, commentList[id].content);
     setCommentEditorValue(commentList[id].content);
     setSelectedCommentIdx(id);
   };
@@ -331,11 +250,108 @@ function Comment(props) {
       <div style={{ padding: "16px 0px" }}>
         {commentList.length !== 0 ? (
           <Grid container wrap="nowrap" direction="column" spacing={2}>
-            {commentList.map((comment, idx) => (
-              <Grid item>
-                <CommentItem comment={comment} idx={idx} />
-              </Grid>
-            ))}
+            {commentList.map((comment, idx) => {
+              const {
+                author_id,
+                authorName,
+                createdAt,
+                content,
+                _id,
+                edited,
+              } = comment;
+              const isAuthor = author_id === user._id;
+              return (
+                <Grid item>
+                  <Grid container wrap="nowrap" spacing={2} alignItems="center">
+                    <Grid item>
+                      <Avatar src={commentAvatar[author_id]} />
+                    </Grid>
+                    <Grid item xs zeroMinWidth container>
+                      <Grid
+                        item
+                        xs={12}
+                        container
+                        alignItems="center"
+                        spacing={1}
+                      >
+                        <Grid item xs>
+                          <Typography variant="body2" noWrap gutterBottom>
+                            {authorName}{" "}
+                            <span style={{ color: "grey" }}>
+                              {edited === true ? "(Disunting)" : null} •{" "}
+                              {moment(createdAt)
+                                .locale("id")
+                                .format("DD MMM YYYY, HH.mm")}
+                            </span>
+                          </Typography>
+                        </Grid>
+                        {isAuthor &&
+                        !(
+                          selectedCommentIdx !== null &&
+                          selectedCommentIdx === idx
+                        ) ? (
+                          <OptionMenu
+                            actions={["Sunting", "Hapus"]}
+                            row={comment}
+                            handleActionOnClick={[
+                              () => handleSelectedComment(idx),
+                              handleOpenDeleteDialog,
+                            ]}
+                          />
+                        ) : null}
+                      </Grid>
+                      <Grid item xs={12}>
+                        {selectedCommentIdx !== null &&
+                        selectedCommentIdx === idx ? (
+                          <Grid container direction="column" spacing={1}>
+                            <Grid item>
+                              <TextField
+                                key={idx}
+                                fullWidth
+                                multiline
+                                variant="outlined"
+                                onChange={handleEditorChange}
+                                value={commentEditorValue}
+                              />
+                            </Grid>
+                            <Grid item container spacing={1}>
+                              <Grid item>
+                                <Button
+                                  className={classes.cancelButton}
+                                  startIcon={<CancelIcon />}
+                                  onClick={closeEditMode}
+                                >
+                                  Batal
+                                </Button>
+                              </Grid>
+                              <Grid item>
+                                <Button
+                                  className={classes.saveButton}
+                                  startIcon={<CheckCircleIcon />}
+                                  onClick={handleEditComment}
+                                >
+                                  Simpan
+                                </Button>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        ) : (
+                          <Typography
+                            align="justify"
+                            style={{
+                              wordBreak: "break-word",
+                              whiteSpace: "pre-wrap",
+                            }}
+                          >
+                            {content}
+                          </Typography>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              );
+            })}
           </Grid>
         ) : null}
         <Divider style={{ marginTop: "16px" }} />
