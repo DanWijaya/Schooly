@@ -105,20 +105,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  commentPaper: {
-    padding: "20px",
-    [theme.breakpoints.down("xs")]: {
-      padding: "15px",
-    },
-  },
-  commentLittleIcon: {
-    color: theme.palette.text.disabled,
-    opacity: 0.5,
-    "&:focus, &:hover": {
-      opacity: 1,
-      cursor: "pointer",
-    },
-  },
   cancelButton: {
     width: "100px",
     color: theme.palette.text.secondary,
