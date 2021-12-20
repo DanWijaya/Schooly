@@ -99,6 +99,11 @@ function DrawerContent(props) {
         <BiSitemap className={classes.drawerListItemIcon} />,
         "Data Unit Pengelola",
       ],
+      [
+        "/pengaturan",
+        <SettingsIcon className={classes.drawerListItemIcon} />,
+        "Pengaturan",
+      ],
     ];
   } else if (user.role === "Admin")
     ListItemContents = [
@@ -141,11 +146,6 @@ function DrawerContent(props) {
         "/daftar-pengumuman",
         <AnnouncementIcon className={classes.drawerListItemIcon} />,
         "Pengumuman",
-      ],
-      [
-        "/pengaturan",
-        <SettingsIcon className={classes.drawerListItemIcon} />,
-        "Pengaturan",
       ],
     ];
   else if (user.role === "Teacher") {

@@ -43,10 +43,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
-import {
-  Add as AddIcon,
-  Publish as PublishIcon,
-} from "@material-ui/icons";
+import { Add as AddIcon, Publish as PublishIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import FileAttachment from "../file/FileAttachment";
 import FileSubmission from "../file/FileSubmission";

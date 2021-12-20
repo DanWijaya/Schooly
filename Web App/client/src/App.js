@@ -578,7 +578,7 @@ class App extends Component {
                     {/*  Route Settings */}
                     <PrivateRoute
                       exact
-                      access={[Role.ADMIN]}
+                      access={[Role.SUPERADMIN]}
                       path="/pengaturan"
                       handleSideDrawer={this.handleSideDrawer}
                       handleFooter={this.handleFooter}

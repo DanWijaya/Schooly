@@ -246,9 +246,9 @@ function Comment(props) {
       <Typography variant="h6" gutterBottom>
         Komentar
       </Typography>
-      <Divider />
-      <div style={{ padding: "16px 0px" }}>
-        {commentList.length !== 0 ? (
+      <Divider style={{ marginBottom: "16px" }} />
+      {commentList.length !== 0 ? (
+        <>
           <Grid container wrap="nowrap" direction="column" spacing={2}>
             {commentList.map((comment, idx) => {
               const {
@@ -261,7 +261,7 @@ function Comment(props) {
               const isAuthor = author_id === user._id;
               return (
                 <Grid item>
-                  <Grid container wrap="nowrap" spacing={2} alignItems="center">
+                  <Grid container wrap="nowrap" spacing={2}>
                     <Grid item>
                       <Avatar src={commentAvatar[author_id]} />
                     </Grid>
@@ -284,20 +284,6 @@ function Comment(props) {
                             </span>
                           </Typography>
                         </Grid>
-                        {isAuthor &&
-                        !(
-                          selectedCommentIdx !== null &&
-                          selectedCommentIdx === idx
-                        ) ? (
-                          <OptionMenu
-                            actions={["Sunting", "Hapus"]}
-                            row={comment}
-                            handleActionOnClick={[
-                              () => handleSelectedComment(idx),
-                              handleOpenDeleteDialog,
-                            ]}
-                          />
-                        ) : null}
                       </Grid>
                       <Grid item xs={12}>
                         {selectedCommentIdx !== null &&
@@ -336,7 +322,6 @@ function Comment(props) {
                           </Grid>
                         ) : (
                           <Typography
-                            align="justify"
                             style={{
                               wordBreak: "break-word",
                               whiteSpace: "pre-wrap",
@@ -347,14 +332,27 @@ function Comment(props) {
                         )}
                       </Grid>
                     </Grid>
+                    {isAuthor &&
+                    !(
+                      selectedCommentIdx !== null && selectedCommentIdx === idx
+                    ) ? (
+                      <OptionMenu
+                        actions={["Sunting", "Hapus"]}
+                        row={comment}
+                        handleActionOnClick={[
+                          () => handleSelectedComment(idx),
+                          handleOpenDeleteDialog,
+                        ]}
+                      />
+                    ) : null}
                   </Grid>
                 </Grid>
               );
             })}
           </Grid>
-        ) : null}
-        <Divider style={{ marginTop: "16px" }} />
-      </div>
+          <Divider style={{ margin: "16px 0px" }} />
+        </>
+      ) : null}
       <Grid container spacing={2}>
         <Grid item>
           <Avatar src={commentAvatar[user._id]} />
