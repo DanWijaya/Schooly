@@ -1,6 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import {
   Avatar,
   Button,
@@ -19,10 +21,8 @@ import {
 import { Web as WebIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core";
 
-import dashboardAdminBackground from "./DashboardAdminBackground.png";
-
 const useStyles = makeStyles((theme) => ({
-  welcomePaperAdmin: {
+  welcomePaper: {
     height: "250px",
     padding: "20px",
     color: "white",
@@ -31,6 +31,17 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: "right bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
+  },
+  unitAvatar: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+  },
+  unitUserCount: {
+    backgroundColor: "transparent",
+  },
+  unitUserCountBar: {
+    borderRadius: "5px",
+    backgroundColor: theme.palette.primary.main,
   },
 }));
 
@@ -41,7 +52,7 @@ function SuperAdminDashboard(props) {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Paper elevation={0} className={classes.welcomePaperAdmin}>
+        <Paper elevation={0} className={classes.welcomePaper}>
           <Typography variant="h4" gutterBottom>
             Selamat Datang, {user.name}
           </Typography>
@@ -58,9 +69,11 @@ function SuperAdminDashboard(props) {
                 <Typography>Jumlah Pengguna</Typography>
               </Grid>
               <Grid item>
-                <Button variant="outlined" color="primary">
-                  Lihat Semua
-                </Button>
+                <Link to="/daftar-unit">
+                  <Button variant="outlined" color="primary">
+                    Lihat Semua
+                  </Button>
+                </Link>
               </Grid>
             </Grid>
           </CardContent>
@@ -68,7 +81,7 @@ function SuperAdminDashboard(props) {
           <List>
             <ListItem>
               <ListItemAvatar>
-                <Avatar variant="rounded">
+                <Avatar variant="rounded" className={classes.unitAvatar}>
                   <WebIcon />
                 </Avatar>
               </ListItemAvatar>
@@ -83,9 +96,13 @@ function SuperAdminDashboard(props) {
                   >
                     <Grid item xs>
                       <LinearProgress
-                        //Ini bakal relatif valuenya dengan unit dengan jumlah terbanyak, yang terbanyak barnya full
+                        // Ini bakal relatif valuenya dengan unit dengan jumlah terbanyak, yang terbanyak barnya full
                         variant="determinate"
                         value={70}
+                        classes={{
+                          root: classes.unitUserCount,
+                          bar: classes.unitUserCountBar,
+                        }}
                       />
                     </Grid>
                     <Grid item>
@@ -110,8 +127,16 @@ function SuperAdminDashboard(props) {
                 <Avatar />
               </ListItemAvatar>
               <ListItemText
-                primary={<Typography noWrap>Nama</Typography>}
-                secondary={<Typography noWrap>Nama Unit</Typography>}
+                primary={
+                  <Typography noWrap>
+                    Nama
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" color="textSecondary" noWrap>
+                    Nama Unit
+                  </Typography>
+                }
               />
               <Button variant="outlined" color="primary">
                 Profil
@@ -119,10 +144,12 @@ function SuperAdminDashboard(props) {
             </ListItem>
           </List>
           <Divider />
-          <CardContent style={{ padding: "16px" }}>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <Button color="primary">Lihat Semua Pengelola</Button>
-            </div>
+          <CardContent style={{ display: "flex", justifyContent: "center" }}>
+            <Link to="/pengelola-tertunda">
+              <Button color="primary">
+                Lihat Semua
+              </Button>
+            </Link>
           </CardContent>
         </Card>
       </Grid>

@@ -1,11 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core";
-import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import TaskItem from "../item/TaskItem";
 import AssessmentItem from "../item/AssessmentItem";
 import Empty from "../../misc/empty/Empty";
+import CustomLinkify from "../../misc/linkify/Linkify";
+import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import {
   Button,
   Card,
@@ -13,11 +14,25 @@ import {
   Divider,
   Grid,
   Paper,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
   Typography,
 } from "@material-ui/core";
+import {
+  Add as AddIcon,
+  Announcement as AnnouncementIcon,
+  AssignmentOutlined as AssignmentIcon,
+  LocationOn as LocationOnIcon,
+  MenuBook as MenuBookIcon,
+  Timer as TimerIcon,
+  TimerOff as TimerOffIcon,
+} from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  welcomePaperStudent: {
+  welcomePaper: {
     height: "250px",
     padding: "20px",
     color: "white",
@@ -27,18 +42,86 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
+  notDoneList: {
+    borderTop: `8px solid ${theme.palette.error.main}`,
+  },
+  incomingList: {
+    borderTop: `8px solid ${theme.palette.warning.main}`,
+  },
+  recentResultsList: {
+    borderTop: `8px solid ${theme.palette.success.main}`,
+  },
+  label: {
+    display: "flex",
+    alignItems: "center",
+  },
+  labelIcon: {
+    width: "1rem",
+    height: "1rem",
+    marginRight: "10px",
+    color: "grey",
+  },
 }));
 
 function StudentDashboard(props) {
   const classes = useStyles();
+  const { submittedTaskIds } = props;
+
   const { user } = props.auth;
   const { taskList, quizList, examList } = props.data;
-  const { submittedTaskIds } = props;
+
+  // Daily Event Stepper
+  const [activeStep, setActiveStep] = React.useState(0);
+  const steps = ["Select campaign settings", "Create an ad group", "Create an ad"];
+
+  const getStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <div>
+            <Typography
+              className={classes.label}
+              style={{ wordBreak: "break-word" }}
+            >
+              <LocationOnIcon className={classes.labelIcon} />
+              Nama Lokasi
+            </Typography>
+            <Typography className={classes.label}>
+              <TimerIcon className={classes.labelIcon} />
+              Waktu Mulai
+            </Typography>
+            <Typography className={classes.label}>
+              <TimerOffIcon className={classes.labelIcon} />
+              Waktu Selesai
+            </Typography>
+            <Typography
+              style={{
+                marginTop: "10px",
+                wordBreak: "break-word",
+                whiteSpace: "pre-wrap",
+              }}
+            >
+              <CustomLinkify text="deskripsi" />
+            </Typography>
+          </div>
+        );
+      case 1:
+        return (
+          <div />
+        );
+      case 2:
+        return (
+          <div />
+        );
+      default:
+        return "Tidak ada kegiatan untuk hari ini";
+    }
+  }
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Paper elevation={0} className={classes.welcomePaperStudent}>
+        <Paper elevation={0} className={classes.welcomePaper}>
           <Typography variant="h4" gutterBottom>
             Selamat Datang, {user.name}
           </Typography>
@@ -49,7 +132,7 @@ function StudentDashboard(props) {
       </Grid>
       <Grid item xs={12} md={7} container direction="column" spacing={2}>
         <Grid item>
-          <Card style={{ borderTop: "8px solid red" }}>
+          <Card className={classes.notDoneList}>
             <CardContent>
               <Typography variant="h6">Belum Dikerjakan</Typography>
             </CardContent>
@@ -71,7 +154,7 @@ function StudentDashboard(props) {
           </Card>
         </Grid>
         <Grid item>
-          <Card style={{ borderTop: "8px solid yellow" }}>
+          <Card className={classes.incomingList}>
             <CardContent>
               <Typography variant="h6">Akan Datang</Typography>
             </CardContent>
@@ -99,7 +182,7 @@ function StudentDashboard(props) {
           </Card>
         </Grid>
         <Grid item>
-          <Card style={{ borderTop: "8px solid green" }}>
+          <Card className={classes.recentResultsList}>
             <CardContent>
               <Typography variant="h6">Baru Diperiksa</Typography>
             </CardContent>
@@ -116,14 +199,21 @@ function StudentDashboard(props) {
           <CardContent>
             <Typography variant="h6">Kegiatan Minggu Ini</Typography>
           </CardContent>
-          <CardContent>
-            Vertical stepper isi yang kayak punya admin.
-          </CardContent>
+          <Stepper orientation="vertical" activeStep={activeStep}>
+            {steps.map((label, index) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+                <StepContent>
+                  <Typography>{getStepContent(index)}</Typography>
+                </StepContent>
+              </Step>
+            ))}
+          </Stepper>
           <Divider />
-          <CardContent>
-            <div style={{ display: "flex", justifyContent: "center" }}>
+          <CardContent style={{ display: "flex", justifyContent: "center" }}>
+            <Link to="/kalender">
               <Button color="primary">Lihat Semua</Button>
-            </div>
+            </Link>
           </CardContent>
         </Card>
       </Grid>

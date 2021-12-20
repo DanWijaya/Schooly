@@ -1,6 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { Doughnut } from "react-chartjs-2";
 import PropTypes from "prop-types";
+import CustomLinkify from "../../misc/linkify/Linkify";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import {
   Avatar,
@@ -10,14 +13,23 @@ import {
   Divider,
   Grid,
   Paper,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
   Typography,
 } from "@material-ui/core";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
-import { Add as AddIcon } from "@material-ui/icons";
+import {
+  Add as AddIcon,
+  LocationOn as LocationOnIcon,
+  Timer as TimerIcon,
+  TimerOff as TimerOffIcon,
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  welcomePaperAdmin: {
+  welcomePaper: {
     height: "250px",
     padding: "20px",
     color: "white",
@@ -27,16 +39,106 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
+  addButton: {
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+    },
+  },
+  label: {
+    display: "flex",
+    alignItems: "center",
+  },
+  labelIcon: {
+    width: "1rem",
+    height: "1rem",
+    marginRight: "10px",
+    color: "grey",
+  },
 }));
 
 function AdminDashboard(props) {
   const classes = useStyles();
   const { user } = props.auth;
 
+  // Daily Event Stepper
+  const [activeStep, setActiveStep] = React.useState(0);
+  const steps = ["Select campaign settings", "Create an ad group", "Create an ad"];
+
+  const getStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <div>
+            <Typography
+              className={classes.label}
+              style={{ wordBreak: "break-word" }}
+            >
+              <LocationOnIcon className={classes.labelIcon} />
+              Nama Lokasi
+            </Typography>
+            <Typography className={classes.label}>
+              <TimerIcon className={classes.labelIcon} />
+              Waktu Mulai
+            </Typography>
+            <Typography className={classes.label}>
+              <TimerOffIcon className={classes.labelIcon} />
+              Waktu Selesai
+            </Typography>
+            <Typography
+              style={{
+                marginTop: "10px",
+                wordBreak: "break-word",
+                whiteSpace: "pre-wrap",
+              }}
+            >
+              <CustomLinkify text="deskripsi" />
+            </Typography>
+          </div>
+        );
+      case 1:
+        return (
+          <div />
+        );
+      case 2:
+        return (
+          <div />
+        );
+      default:
+        return "Tidak ada kegiatan untuk hari ini";
+    }
+  }
+
+  // Doughnut Chart
+  const data = {
+    labels: ["Guru", "Murid", "Pengguna Tidak Aktif"],
+    datasets: [
+      {
+        label: "Jumlah Pengguna",
+        data: [12, 19, 3,],
+        backgroundColor: [
+          "rgba(255, 99, 132)",
+          "rgba(54, 162, 235)",
+          "rgba(255, 206, 86)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132)",
+          "rgba(54, 162, 235)",
+          "rgba(255, 206, 86)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  }
+
+  // Event stepper
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Paper elevation={0} className={classes.welcomePaperAdmin}>
+        <Paper elevation={0} className={classes.welcomePaper}>
           <Typography variant="h4" gutterBottom>
             Selamat Datang, {user.name}
           </Typography>
@@ -55,7 +157,7 @@ function AdminDashboard(props) {
               <Grid item xs={12} md={6}>
                 <Card variant="outlined">
                   <CardContent>
-                    <Grid container direction="column" spacing={3}>
+                    <Grid container direction="column" spacing={4}>
                       <Grid item>
                         <Typography>Kelas dan Mata Pelajaran</Typography>
                         <Grid
@@ -70,9 +172,11 @@ function AdminDashboard(props) {
                             </Typography>
                           </Grid>
                           <Grid item>
-                            <Button variant="contained" color="secondary">
-                              <AddIcon />
-                            </Button>
+                            <Link to="/buat-kelas">
+                              <Button variant="contained" className={classes.addButton}>
+                                <AddIcon />
+                              </Button>
+                            </Link>
                           </Grid>
                         </Grid>
                       </Grid>
@@ -97,9 +201,11 @@ function AdminDashboard(props) {
                             </AvatarGroup>
                           </Grid>
                           <Grid item>
-                            <Button variant="outlined" color="primary">
-                              Atur
-                            </Button>
+                            <Link to="/daftar-kelas">
+                              <Button variant="outlined" color="primary">
+                                Atur
+                              </Button>
+                            </Link>
                           </Grid>
                         </Grid>
                       </Grid>
@@ -124,9 +230,11 @@ function AdminDashboard(props) {
                             </AvatarGroup>
                           </Grid>
                           <Grid item>
-                            <Button variant="outlined" color="primary">
-                              Atur
-                            </Button>
+                            <Link to="/data-ajar-guru">
+                              <Button variant="outlined" color="primary">
+                                Atur
+                              </Button>
+                            </Link>
                           </Grid>
                         </Grid>
                       </Grid>
@@ -137,7 +245,7 @@ function AdminDashboard(props) {
               <Grid item xs={12} md={6}>
                 <Card variant="outlined">
                   <CardContent>
-                    <Grid container direction="column" spacing={3}>
+                    <Grid container direction="column" spacing={4}>
                       <Grid item>
                         <Typography>Pengumuman</Typography>
                         <Grid
@@ -152,20 +260,24 @@ function AdminDashboard(props) {
                             </Typography>
                           </Grid>
                           <Grid item>
-                            <Button variant="contained" color="secondary">
-                              <AddIcon />
-                            </Button>
+                            <Link to="/buat-pengumuman">
+                              <Button variant="contained" className={classes.addButton}>
+                                <AddIcon />
+                              </Button>
+                            </Link>
                           </Grid>
                         </Grid>
                       </Grid>
-                      <Grid item>//List pengumuman maks 5 buah recently</Grid>
+                      <Grid item>List pengumuman maks 5 buah recently</Grid>
                     </Grid>
                   </CardContent>
                   <Divider />
-                  <CardContent style={{ padding: "16px" }}>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                      <Button color="primary">Lihat Semua</Button>
-                    </div>
+                  <CardContent style={{ display: "flex", justifyContent: "center" }}>
+                    <Link to="/daftar-pengumuman">
+                      <Button color="primary">
+                        Lihat Semua
+                      </Button>
+                    </Link>
                   </CardContent>
                 </Card>
               </Grid>
@@ -174,23 +286,38 @@ function AdminDashboard(props) {
         </Card>
       </Grid>
       <Grid item xs={12} md={7}>
-        <Paper>
-          Doughnut Chart isi jumlah murid guru, dan pengguna tidak aktif
-        </Paper>
+        <Card>
+          <CardContent>
+            <Typography variant="h6">Jumlah Pengguna</Typography>
+          </CardContent>
+          <CardContent>
+            <Doughnut data={data} />
+          </CardContent>
+        </Card>
       </Grid>
       <Grid item xs={12} md={5}>
         <Card>
           <CardContent>
             <Typography variant="h6">Kegiatan Minggu Ini</Typography>
           </CardContent>
-          <CardContent>
-            Vertical stepper isi timeline kegiatan minggu ini. Hijau ceklis udah
-            lewat, belum lewat warna biru.
-          </CardContent>
+          <Stepper orientation="vertical" activeStep={activeStep}>
+            {steps.map((label, index) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+                <StepContent>
+                  <Typography>{getStepContent(index)}</Typography>
+                </StepContent>
+              </Step>
+            ))}
+          </Stepper>
           <Divider />
           <CardContent>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <Button color="primary">Lihat Semua</Button>
+              <Link to="/kalender">
+                <Button color="primary">
+                  Lihat Semua
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>

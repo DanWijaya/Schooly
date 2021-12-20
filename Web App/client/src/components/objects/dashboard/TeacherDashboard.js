@@ -2,10 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import TaskItem from "../item/TaskItem";
 import AssessmentItem from "../item/AssessmentItem";
 import Empty from "../../misc/empty/Empty";
+import CustomLinkify from "../../misc/linkify/Linkify";
+import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import {
   Button,
   Card,
@@ -19,20 +20,27 @@ import {
   Menu,
   MenuItem,
   Paper,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
   Typography,
 } from "@material-ui/core";
 import {
   Add as AddIcon,
   Announcement as AnnouncementIcon,
   AssignmentOutlined as AssignmentIcon,
+  LocationOn as LocationOnIcon,
   MenuBook as MenuBookIcon,
+  Timer as TimerIcon,
+  TimerOff as TimerOffIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 
 const useStyles = makeStyles((theme) => ({
-  welcomePaperTeacher: {
+  welcomePaper: {
     height: "250px",
     padding: "20px",
     color: "white",
@@ -42,6 +50,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
+  quickAccessIcon: {
+    color: "grey",
+    marginRight: "10px",
+    fontSize: "25px",
+  },
   createButton: {
     backgroundColor: theme.palette.success.main,
     color: "white",
@@ -50,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.success.main,
     },
   },
-  menuItem: {
+  createMenuItem: {
     color: "black",
     "&:hover": {
       backgroundColor: theme.palette.success.main,
@@ -59,25 +72,97 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  addButton: {
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+    },
+  },
+  label: {
+    display: "flex",
+    alignItems: "center",
+  },
+  labelIcon: {
+    width: "1rem",
+    height: "1rem",
+    marginRight: "10px",
+    color: "grey",
+  },
+  notCheckedList: {
+    borderTop: `8px solid ${theme.palette.error.main}`,
+  },
 }));
 
 function TeacherDashboard(props) {
   const classes = useStyles();
   const { user } = props.auth;
+
   const { taskList, quizList, examList } = props.data;
   const [anchorEl, setAnchorEl] = React.useState(false);
+
   // Create Button Menu
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
+  // Daily Event Stepper
+  const [activeStep, setActiveStep] = React.useState(0);
+  const steps = ["Select campaign settings", "Create an ad group", "Create an ad"];
+
+  const getStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <div>
+            <Typography
+              className={classes.label}
+              style={{ wordBreak: "break-word" }}
+            >
+              <LocationOnIcon className={classes.labelIcon} />
+              Nama Lokasi
+            </Typography>
+            <Typography className={classes.label}>
+              <TimerIcon className={classes.labelIcon} />
+              Waktu Mulai
+            </Typography>
+            <Typography className={classes.label}>
+              <TimerOffIcon className={classes.labelIcon} />
+              Waktu Selesai
+            </Typography>
+            <Typography
+              style={{
+                marginTop: "10px",
+                wordBreak: "break-word",
+                whiteSpace: "pre-wrap",
+              }}
+            >
+              <CustomLinkify text="deskripsi" />
+            </Typography>
+          </div>
+        );
+      case 1:
+        return (
+          <div />
+        );
+      case 2:
+        return (
+          <div />
+        );
+      default:
+        return "Tidak ada kegiatan untuk hari ini";
+    }
+  }
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Paper elevation={0} className={classes.welcomePaperTeacher}>
+        <Paper elevation={0} className={classes.welcomePaper}>
           <Typography variant="h4" gutterBottom>
             Selamat Datang, {user.name}
           </Typography>
@@ -97,61 +182,31 @@ function TeacherDashboard(props) {
             <Grid container direction="column" spacing={2}>
               <Grid item container spacing={4}>
                 <Grid item style={{ display: "flex", alignItems: "center" }}>
-                  <AnnouncementIcon
-                    style={{
-                      color: "grey",
-                      marginRight: "10px",
-                      fontSize: "25px",
-                    }}
-                  />
+                  <AnnouncementIcon className={classes.quickAccessIcon} />
                   <Typography color="primary" display="inline">
                     1 <Hidden smUp>Pengumuman</Hidden>
                   </Typography>
                 </Grid>
                 <Grid item style={{ display: "flex", alignItems: "center" }}>
-                  <MenuBookIcon
-                    style={{
-                      color: "grey",
-                      marginRight: "10px",
-                      fontSize: "25px",
-                    }}
-                  />
+                  <MenuBookIcon className={classes.quickAccessIcon} />
                   <Typography color="primary" display="inline">
                     1 <Hidden smUp>Materi</Hidden>
                   </Typography>
                 </Grid>
                 <Grid item style={{ display: "flex", alignItems: "center" }}>
-                  <AssignmentIcon
-                    style={{
-                      color: "grey",
-                      marginRight: "10px",
-                      fontSize: "25px",
-                    }}
-                  />
+                  <AssignmentIcon className={classes.quickAccessIcon} />
                   <Typography color="primary" display="inline">
                     1 <Hidden smUp>Tugas</Hidden>
                   </Typography>
                 </Grid>
                 <Grid item style={{ display: "flex", alignItems: "center" }}>
-                  <FaClipboardList
-                    style={{
-                      color: "grey",
-                      marginRight: "10px",
-                      fontSize: "25px",
-                    }}
-                  />
+                  <FaClipboardList className={classes.quickAccessIcon} />
                   <Typography color="primary" display="inline">
                     1 <Hidden smUp>Kuis</Hidden>
                   </Typography>
                 </Grid>
                 <Grid item style={{ display: "flex", alignItems: "center" }}>
-                  <BsClipboardData
-                    style={{
-                      color: "grey",
-                      marginRight: "10px",
-                      fontSize: "25px",
-                    }}
-                  />
+                  <BsClipboardData className={classes.quickAccessIcon} />
                   <Typography color="primary" display="inline">
                     1 <Hidden smUp>Ujian</Hidden>
                   </Typography>
@@ -182,9 +237,9 @@ function TeacherDashboard(props) {
                   }}
                 >
                   <Link to="/buat-pengumuman">
-                    <MenuItem className={classes.menuItem}>
+                    <MenuItem className={classes.createMenuItem}>
                       <ListItemIcon>
-                        <AnnouncementIcon />
+                        <AnnouncementIcon style={{ fontSize: "20px" }} />
                       </ListItemIcon>
                       <ListItemText
                         primary={<Typography>Buat Pengumuman</Typography>}
@@ -192,9 +247,9 @@ function TeacherDashboard(props) {
                     </MenuItem>
                   </Link>
                   <Link to="/buat-materi">
-                    <MenuItem className={classes.menuItem}>
+                    <MenuItem className={classes.createMenuItem}>
                       <ListItemIcon>
-                        <MenuBookIcon />
+                        <MenuBookIcon style={{ fontSize: "20px" }} />
                       </ListItemIcon>
                       <ListItemText
                         primary={<Typography>Buat Materi</Typography>}
@@ -202,9 +257,9 @@ function TeacherDashboard(props) {
                     </MenuItem>
                   </Link>
                   <Link to="/buat-tugas">
-                    <MenuItem className={classes.menuItem}>
+                    <MenuItem className={classes.createMenuItem}>
                       <ListItemIcon>
-                        <AssignmentIcon />
+                        <AssignmentIcon style={{ fontSize: "20px" }} />
                       </ListItemIcon>
                       <ListItemText
                         primary={<Typography>Buat Tugas</Typography>}
@@ -212,9 +267,9 @@ function TeacherDashboard(props) {
                     </MenuItem>
                   </Link>
                   <Link to="/buat-kuis">
-                    <MenuItem className={classes.menuItem}>
+                    <MenuItem className={classes.createMenuItem}>
                       <ListItemIcon>
-                        <FaClipboardList />
+                        <FaClipboardList style={{ fontSize: "20px" }} />
                       </ListItemIcon>
                       <ListItemText
                         primary={<Typography>Buat Kuis</Typography>}
@@ -222,9 +277,9 @@ function TeacherDashboard(props) {
                     </MenuItem>
                   </Link>
                   <Link to="/buat-ujian">
-                    <MenuItem className={classes.menuItem}>
+                    <MenuItem className={classes.createMenuItem}>
                       <ListItemIcon>
-                        <BsClipboardData />
+                        <BsClipboardData style={{ fontSize: "20px" }} />
                       </ListItemIcon>
                       <ListItemText
                         primary={<Typography>Buat Ujian</Typography>}
@@ -238,7 +293,7 @@ function TeacherDashboard(props) {
         </Card>
       </Grid>
       <Grid item xs={12} md={7}>
-        <Card style={{ borderTop: "8px solid red" }}>
+        <Card className={classes.notCheckedList}>
           <CardContent>
             <Typography variant="h6">Belum Diperiksa</Typography>
           </CardContent>
@@ -280,14 +335,21 @@ function TeacherDashboard(props) {
           <CardContent>
             <Typography variant="h6">Kegiatan Minggu Ini</Typography>
           </CardContent>
-          <CardContent>
-            Vertical stepper isi yang kayak punya admin.
-          </CardContent>
+          <Stepper orientation="vertical" activeStep={activeStep}>
+            {steps.map((label, index) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+                <StepContent>
+                  <Typography>{getStepContent(index)}</Typography>
+                </StepContent>
+              </Step>
+            ))}
+          </Stepper>
           <Divider />
-          <CardContent>
-            <div style={{ display: "flex", justifyContent: "center" }}>
+          <CardContent style={{ display: "flex", justifyContent: "center" }}>
+            <Link to="/kalender">
               <Button color="primary">Lihat Semua</Button>
-            </div>
+            </Link>
           </CardContent>
         </Card>
       </Grid>
