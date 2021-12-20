@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { Bar } from "react-chartjs-2";
 import PropTypes from "prop-types";
 import "moment/locale/id";
 import { getAllTask } from "../../../actions/TaskActions";
@@ -16,7 +15,7 @@ import {
 import { withStyles } from "@material-ui/core/styles";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 
-//Dashboard Component per role.
+// Dashboard Component according to role.
 import StudentDashboard from "./StudentDashboard";
 import TeacherDashboard from "./TeacherDashboard";
 import AdminDashboard from "./AdminDashboard";
@@ -32,28 +31,6 @@ const styles = (theme) => ({
       maxWidth: "100%",
     },
   },
-  createButton: {
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.success.main,
-    },
-  },
-  menuItem: {
-    color: "black",
-    "&:hover": {
-      backgroundColor: theme.palette.success.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-root": {
-        color: "white",
-      },
-    },
-  },
-  listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
-  },
   graph: {
     display: "flex",
     flexDirection: "row",
@@ -66,14 +43,6 @@ const styles = (theme) => ({
     justifyContent: "space-between",
     marginTop: "10px",
     alignItems: "center",
-  },
-  greyBackground: {
-    display: "flex",
-    alignItems: "center",
-    textAlign: "center",
-    height: "100%",
-    padding: "15px",
-    backgroundColor: "#E3E5E5",
   },
 });
 
@@ -121,7 +90,7 @@ class Dashboard extends Component {
       getTeachers,
     } = this.props;
     const { user, all_roles } = this.props.auth;
-    if (user.role != all_roles.SUPERADMIN) {
+    if (user.role !== all_roles.SUPERADMIN) {
       getAllTask(user.unit); // actions that make GET request to database.
       getAllSubjects(user.unit);
       getTeachers(user.unit);
@@ -164,11 +133,8 @@ class Dashboard extends Component {
   render() {
     const { classes } = this.props;
     const { user, all_roles } = this.props.auth;
-    const { kelas } = this.props.classesCollection;
-    const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { all_assessments } = this.props.assessmentsCollection;
     const { all_tasks } = this.props.tasksCollection;
-    const classId = user.kelas;
 
     let taskList = [];
     let quizList = [];

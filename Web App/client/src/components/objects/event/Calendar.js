@@ -965,21 +965,21 @@ function Calendar(props) {
 
   function placeDayModeTiles(arrayOfObject, currentDate) {
     /*
-      bentuk arrayOfObject:
+      arrayOfObject model:
       {
         _id: <Assessment/Task/Event>._id,
         type: "Event"/"Tugas"/"Ujian"/"Kuis",
-        data: dokumen suatu <Assessment/Task/Event> dari db,
+        data: a <Assessment/Task/Event> document from database,
 
-        // jika type === bukan "Tugas"
-        start_date: <Assessment/Event>.start_date, // masih dalam bentuk string
-        end_date: <Assessment/Event>.end_date, // masih dalam bentuk string
-        // kedua nilai untuk atribut ini akan diubah dan nilainya bisa berbeda dengan nilai "end_date" dan "start_date" pada atribut "data".
-        // kedua nilai atribut ini akan digunakan untuk menghitung tinggi tile untuk object ini.
+        if type !== "Tugas"
+        start_date: <Assessment/Event>.start_date, (String)
+        end_date: <Assessment/Event>.end_date, (String)
+        The value for these two attributes will be changed and its value can be different with "end_date" value and "start_date" value from "data" atribute.
+        Both of these attributes' value will be used to count tile's height for this object.
 
-        // jika type === "Tugas"
-        deadline: <Task>.deadline, // masih dalam bentuk string
-        // object tugas akan ditambahkan atribut "start_date" dan "end_date" yang dihitung berdasarkan atribut ini
+        If type === "Tugas"
+        deadline: <Task>.deadline, (String)
+        Task object will be added "start_date" dan "end_date" attribute that will be determined from this attribute.
       }
     */
     let data = arrayOfObject.map((elm) => {
@@ -996,7 +996,7 @@ function Calendar(props) {
         end_date = new Date(elm.end_date);
       }
 
-      // hide overflow durasi dari assessment atau event yang berada pada > 1 hari
+      // Hide overflow duration from assessment or event that occurs for more than a day.
       let start_at_current = isSameDate(start_date, currentDate);
       let end_at_current = isSameDate(end_date, currentDate);
       let currentDayStart = getDayStart(currentDate);
@@ -1013,7 +1013,7 @@ function Calendar(props) {
             MINIMUM_DURATION_MILLISECOND
           ) {
             end_date = addTime(start_date, MINIMUM_DURATION_MILLISECOND);
-            // titik paling bawah tile ini akan ada di bawah 23:59
+            // The lowest point of this tile is at 23:59.
           }
         } else if (end_at_current && !start_at_current) {
           start_date = currentDayStart;
@@ -1023,7 +1023,7 @@ function Calendar(props) {
             MINIMUM_DURATION_MILLISECOND
           ) {
             start_date = substractTime(end_date, MINIMUM_DURATION_MILLISECOND);
-            // titik paling atas tile ini akan ada di atas 00:00
+            // The most upper point of this tile is at 00:00.
           }
         } else {
           if (
@@ -1033,7 +1033,7 @@ function Calendar(props) {
             end_date = addTime(start_date, MINIMUM_DURATION_MILLISECOND);
           }
         }
-      } // tugas akan dibiarkan overflow ke atas 00:00 atau ke bawah 23:59
+      } // Task is let to overflow above 00:00 or below 23:59.
 
       return {
         ...elm,
@@ -1044,34 +1044,33 @@ function Calendar(props) {
       };
     });
 
-    // sort data. data yang start date-nya lebih dulu akan ditempatkan di awal array (epoch asc)
+    // Sort data ascending by start date. (epoch asc)
     data.sort((a, b) => {
       return a.start_date_epoch - b.start_date_epoch;
     });
 
-    // menempatkan setiap tile di posisi paling kiri yang masih bisa ditempati.
-    // pada proses ini, lebar setiap tile diasumsikan 1/4 (lebar tile ketika 4 tile intersect). penentuan lebar akan dilakukan setelah bagian ini.
-    let lastColElement = []; // menyimpan salinan data terbawah yang ditempatkan di tiap kolom.
-    // traverse semua data/tile
+    // Place every tile on the most left empty space.
+    // In this process, width of each tile is assumed 1/4 (when there is 4 tile side by side).
+    // The tile width determination will done after this.
+    let lastColElement = []; // Save the most bottom copied data of every column.
+
+    // Traverse all data/tile.
     for (let i = 0; i <= data.length - 1; i++) {
       let currentData = data[i];
       let foundSpace = false;
       let col = 0;
 
-      // loop hingga tile sudah ditempatkan / startColumn sudah diset
+      // loop until tile has been placed/startColumn has been set.
       while (!foundSpace) {
         if (col > lastColElement.length - 1) {
-          // jika kolom ini tidak ada
-
-          // tambah kolom baru
+          // If this column doesn't exist, add a new column.
           lastColElement.push(currentData);
-          // menempatkan data di kolom ini
+          // Add data into this column.
           data[i].startColumn = col;
-          // untuk mengakhiri while loop
+          // To stop while loop.
           foundSpace = true;
         } else {
-          // jika sudah ada minimal 1 tile yang menempati kolom ini
-
+          // If there is at least 1 tile in this column.
           if (
             !isIntersectExclusive(
               lastColElement[col].start_date_epoch,
@@ -1080,13 +1079,13 @@ function Calendar(props) {
               currentData.end_date_epoch
             )
           ) {
-            // jika tile ini tidak intersect dengan tile terakhir pada kolom ini
-            // letakan tile di kolom ini
+            // If this tile doesn't intersect with the last tile in this column.
+            // Place tile in this column.
             lastColElement[col] = currentData;
             data[i].startColumn = col;
             foundSpace = true;
           } else {
-            // jika intersect, cek kolom selanjutnya (kolom di kanan kolom ini)
+            // If there are tiles that intersect, check the next column.
             col++;
           }
         }
@@ -1095,14 +1094,15 @@ function Calendar(props) {
 
     let columns = [];
     /*
-    akan berisi:
+    Example:
       [
-        [{ tile pertama pada kolom 1 }, { tile kedua dari atas pada kolom 1 }],
-        [{ tile pertama pada kolom 2 }],
-        [{ tile pertama pada kolom 3 }, { tile kedua dari atas pada kolom 3 }, { tile ketiga dari atas pada kolom 3 }],
-        [{ tile pertama pada kolom 4 }, { tile kedua dari atas  pada kolom 4 }]
+        [{ First tile of column 1 }, { Second tile of column 1 }],
+        [{ First tile of column 2 }],
+        [{ First tile of column 3 }, { Second tile of column 3 }, { Third tile of column 3 }],
+        [{ First tile of column 4 }, { Second tile of column 4 }]
       ]
     */
+
     for (let d of data) {
       if (columns[d.startColumn]) {
         columns[d.startColumn].push(d);
@@ -1112,27 +1112,26 @@ function Calendar(props) {
     }
 
     /*
-      menentukan lebar setiap tile. ide:
-      - tile = node pada tree
-      - setiap tile paling kiri = root sebuah tree
-      - definisi height yang digunakan: tinggi tree yang hanya ada root = 0, tinggi tree yang ada 1 parent node dan 1 child node = 1
-      - lebar tile = lebar layar / (height + 1)
+      Determine width of every tile:
+      - Tile = node of a tree
+      - Every most left tile = root of a tree
+      - Height = The height of tree that only has root = 0. The height of tree that only has 1 parent node and 1 child node = 1.
+      - Width = Width of screen / (height + 1)
     */
     let firstRoot = true;
     let maxTreeHeight = 0;
     let highestTreeWidth = 0;
-    // traverse semua data/tile
+
+    // Traverse all data/tile.
     for (let i = 0; i <= data.length - 1; i++) {
       if (data[i].startColumn === 0) {
-        // jika tile ini adalah root
-
-        // cek apakah root ini intersect dengan salah satu node dari tree sebelumnya,
+        // If this tile is a root, check if this root intersect with one node from previous tree.
         let width = null;
         if (firstRoot === false) {
           for (let column of columns.slice(1)) {
             for (let tile of column) {
-              // jika tile yang sedang dicek sudah sepenuhnya berada di bawah titik terbawah dari tile root,
-              // akhiri loop karena tile-tile ini dan seterusnya pasti tidak intersect dengan tile root
+              // If the tile that is currently checked already placed under the lowest point of root tile,
+              // End the loop because these tiles and the next tiles will not intersect with root tile.
               if (tile.start_date_epoch >= data[i].end_date_epoch) {
                 break;
               }
@@ -1146,7 +1145,7 @@ function Calendar(props) {
                 ) &&
                 tile.width
               ) {
-                // jika root ini intersect dengan salah satu node dari tree sebelumnya, gunakan lebar tile pada tree tersebut
+                // If this root intersect with one node from the previous tree, use tile width from that tree.
                 width = tile.width;
                 break;
               }
@@ -1158,13 +1157,13 @@ function Calendar(props) {
         if (treeHeight > maxTreeHeight) {
           maxTreeHeight = treeHeight;
 
-          // treeHeight ini akan dipakai untuk menghitung width jika root ini
-          // tidak intersect dengan salah satu node dari tree sebelumnya
+          // This treeHeight will be use to determine width,
+          // if this root doesn't intersect with node from previous tree.
           highestTreeWidth =
             width ?? 100 / ((treeHeight > 3 ? 3 : treeHeight) + 1);
         }
 
-        // set lebar semua tile di tree ini
+        // Set the width of all tiles in this tree.
         let subtree = new Set(getTree(data, columns, 0, data[i]));
         subtree.forEach((value) => {
           for (let j = 0; j <= data.length - 1; j++) {
@@ -1290,8 +1289,8 @@ function Calendar(props) {
   };
 
   const handleTileContent = (selectedDate) => {
-    // untuk mengurangi jumlah pengecekan now === selectedDate,
-    // pengecekan ini hanya dilakukan ketika selectedDate ada
+    // To reduce number of check "now = selectedDate".
+    // This check will only be done when selectedDate exist.
     if (selectedDate) {
       return function ({ activeStartDate, date, view }) {
         if (view === "month") {
@@ -1304,7 +1303,7 @@ function Calendar(props) {
             );
           }
 
-          // jika tanggal yang sedang dicek adalah tanggal yang pernah terakhir diklik oleh pengguna
+          // If the date that is being checked is the date that was last clicked by user.
           if (isSameDate(selectedDate, date)) {
             return (
               <div className={classes.selectedTile}>
@@ -1313,7 +1312,7 @@ function Calendar(props) {
             );
           }
 
-          // jika tanggal yang sedang dicek adalah tanggal merah
+          // If the date that is being checked is a holiday.
           for (let holidayKey of Object.keys(holiday)) {
             if (isSameDate(new Date(holidayKey), date)) {
               return (
@@ -1347,7 +1346,7 @@ function Calendar(props) {
     } else {
       return function ({ activeStartDate, date, view }) {
         if (view === "month") {
-          // jika tanggal yang sedang dicek adalah tanggal hari ini
+          // If the date that is being checked is today.
           if (isSameDate(new Date(), date)) {
             return (
               <div className={classes.todayTile}>
@@ -1356,7 +1355,7 @@ function Calendar(props) {
             );
           }
 
-          // tidak mengecek now === selectedDate
+          // Doesn't check "now === selectedDate".
         }
         return (
           <div className={classes.notSelectedTile}>
@@ -1374,23 +1373,13 @@ function Calendar(props) {
     }
   }, []);
 
-  // SNACKBAR
-  const showSnackbar = (severity, snackbarContent) => {
-    setOpenSnackbar(true);
-    setSeverity(severity);
-    setSnackbarContent(snackbarContent);
-  };
-
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
-
-  // EVENT DIALOG
+  // Event Dialog
   const handleOpenCreateDialog = () => {
     setEventDialogMode("create");
     handleUnsetUnmountEventDialog();
     setOpenEventDialog(true);
   };
+
   const handleOpenEditDialog = () => {
     setEventDialogMode("edit");
     setOpenEventDialog(true);
@@ -1413,6 +1402,17 @@ function Calendar(props) {
 
   const handleUnsetUnmountEventDialog = () => {
     setUnmountEventDialog(false);
+  };
+
+  // Snackbar
+  const showSnackbar = (severity, snackbarContent) => {
+    setOpenSnackbar(true);
+    setSeverity(severity);
+    setSnackbarContent(snackbarContent);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   function listTasks(date, mainCounter = null, handleChangeCounter = null) {
@@ -1443,8 +1443,7 @@ function Calendar(props) {
       let flag = true;
       let teacher_name;
 
-      // Untuk sekarang yang ditampilkan adalah tugas dengan deadline pada tanggal yang sama
-      // dengan selectedDate (tidak memperhitungkan jam, menit, detik)
+      // Currently show task with the same deadline date with selectedDate (doesn't consider hour, minute, and second)
       if (
         tempSelectedDate.getDate() === tempDeadlineDate.getDate() &&
         tempSelectedDate.getMonth() === tempDeadlineDate.getMonth() &&
@@ -1661,7 +1660,7 @@ function Calendar(props) {
   }
 
   function listAssessmentsStudentMonth(tempSelectedDate, type) {
-    // menampilkan assessment jika ada submission yang belum selesai dinilai
+    // Show assessment if there is submission has not yet graded.
     let category = null;
     let subject = {};
     let AssessmentsList = [];
@@ -1737,7 +1736,7 @@ function Calendar(props) {
     mainCounter = null,
     handleChangeCounter = null
   ) {
-    // menampilkan assessment jika ada submission yang belum selesai dinilai
+    // Show assessment if there is submission has not yet graded.
     if (classCheckboxState) {
       let result = [];
       let lowerCaseType = assessmentType === "Kuis" ? "kuis" : "ujian";
@@ -1824,7 +1823,7 @@ function Calendar(props) {
     mainCounter,
     handleChangeCounter
   ) {
-    // menampilkan assessment jika ada submission yang belum selesai dinilai
+    // Show assessment if there is submission has not yet graded.
     if (classCheckboxState) {
       let result = [];
       let lowerCaseType = assessmentType === "Kuis" ? "kuis" : "ujian";
@@ -2088,8 +2087,8 @@ function Calendar(props) {
   const dayNames = ["SEN", "SEL", "RAB", "KAM", "JUM", "SAB", "MIN"];
 
   function getMaxDate(month, year) {
-    // Index dimulai dari 1
-    // 1: Januari
+    // Index starts from 1.
+    // 1 equals to January.
     let months_31 = [1, 3, 5, 7, 8, 10, 12];
     let months_30 = [4, 6, 9, 11];
     if (months_31.includes(month)) {
@@ -2333,6 +2332,42 @@ function Calendar(props) {
     }
   }, [agendaCheckboxState, classCheckboxState]);
 
+  let monthNames = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+
+  let stringDateDayDesktop =
+    monthNames[currentDate.getMonth()] +
+    " " +
+    currentDate.getFullYear();
+  let stringDateDayMobile =
+    monthNames[currentDate.getMonth()].slice(0, 3) +
+    " " +
+    currentDate.getFullYear();
+  let stringDateMonth =
+    currentDate.getFullYear();
+
+  const hasHoliday = (currentDate) => {
+    return (
+      new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate()
+      ) in holiday
+    );
+  };
+
   const generateDayModeList = (date) => {
     let result = [];
     if (mode === "Day") {
@@ -2388,46 +2423,6 @@ function Calendar(props) {
     }
     return result;
   };
-
-  const hasHoliday = (currentDate) => {
-    return (
-      new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate()
-      ) in holiday
-    );
-  };
-
-  const showShadow = (currentDate, allDayItems) => {
-    return hasHoliday(currentDate) || allDayItems.length !== 0;
-  };
-
-  let monthNames = [
-    "Januari",
-    "Februari",
-    "Maret",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
-  ];
-
-  let stringDateDayDesktop =
-    monthNames[currentDate.getMonth()] +
-    " " +
-    currentDate.getFullYear();
-  let stringDateDayMobile =
-    monthNames[currentDate.getMonth()].slice(0, 3) +
-    " " +
-    currentDate.getFullYear();
-  let stringDateMonth =
-    currentDate.getFullYear();
 
   const generateDayModeCalendar = () => {
     return (

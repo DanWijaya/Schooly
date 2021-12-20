@@ -34,28 +34,18 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import CustomLinkify from "../../misc/linkify/Linkify";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
-  Avatar,
   Button,
-  Box,
   Divider,
   Grid,
-  Hidden,
   Paper,
   Snackbar,
-  TextField,
   Typography,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import {
   Add as AddIcon,
-  Cancel as CancelIcon,
-  CheckCircle as CheckCircleIcon,
-  Create as CreateIcon,
-  Delete as DeleteIcon,
   Publish as PublishIcon,
-  Send as SendIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import FileAttachment from "../file/FileAttachment";
@@ -123,21 +113,19 @@ function ViewTaskStudent(props) {
     viewFileTasks,
     getTeachers,
     getStudents,
-    getMultipleFileAvatar,
     getSetting,
   } = props;
-  const { user, selectedUser, all_students, all_teachers } = props.auth;
+  const { user, selectedUser } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedTasks } = props.tasksCollection;
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
   const [fileTugas, setFileTugas] = React.useState([]);
   const [fileToSubmit, setFileToSubmit] = React.useState([]);
-  // const [tasksContents, setTaskContents] = React.useState([]);
   const [fileLampiran, setFileLampiran] = React.useState([]);
   const [over_limit, setOverLimit] = React.useState([]);
-  // const [success, setSuccess] = React.useState(null);
   const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
+  // const [success, setSuccess] = React.useState(null);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);

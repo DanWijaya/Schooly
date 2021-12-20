@@ -1,8 +1,8 @@
 import React from "react";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core";
+import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import TaskItem from "../item/TaskItem";
 import AssessmentItem from "../item/AssessmentItem";
 import Empty from "../../misc/empty/Empty";
@@ -27,9 +27,9 @@ import {
   AssignmentOutlined as AssignmentIcon,
   MenuBook as MenuBookIcon,
 } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
-import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 
 const useStyles = makeStyles((theme) => ({
   welcomePaperTeacher: {

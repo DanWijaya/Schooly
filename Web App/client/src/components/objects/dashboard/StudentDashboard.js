@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core";
+import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import TaskItem from "../item/TaskItem";
 import AssessmentItem from "../item/AssessmentItem";
 import Empty from "../../misc/empty/Empty";
@@ -14,7 +15,6 @@ import {
   Paper,
   Typography,
 } from "@material-ui/core";
-import dashboardStudentBackground from "./DashboardStudentBackground.png";
 
 const useStyles = makeStyles((theme) => ({
   welcomePaperStudent: {

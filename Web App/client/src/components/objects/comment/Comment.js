@@ -256,7 +256,6 @@ function Comment(props) {
                 authorName,
                 createdAt,
                 content,
-                _id,
                 edited,
               } = comment;
               const isAuthor = author_id === user._id;

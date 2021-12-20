@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import {
   Avatar,
   Button,
@@ -14,7 +15,6 @@ import {
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import { Add as AddIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core";
-import dashboardAdminBackground from "./DashboardAdminBackground.png";
 
 const useStyles = makeStyles((theme) => ({
   welcomePaperAdmin: {

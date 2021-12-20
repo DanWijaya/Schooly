@@ -137,9 +137,8 @@ function ViewMaterial(props) {
     getStudents,
     clearErrors,
     clearSuccess,
-    getMultipleFileAvatar,
   } = props;
-  const { user, all_students, all_teachers } = props.auth;
+  const { user } = props.auth;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
