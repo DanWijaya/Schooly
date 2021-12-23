@@ -137,7 +137,7 @@ function EditPassword(props) {
           </DialogActions>
           <DialogTitle>
             <Typography variant="h6" align="center">
-              <b>Ganti Kata Sandi</b>
+              Ganti Kata Sandi
             </Typography>
           </DialogTitle>
           <DialogContent>
@@ -145,14 +145,7 @@ function EditPassword(props) {
               <Grid container direction="column" spacing={3}>
                 <Grid item>
                   <Typography
-                    variant="subtitle2"
-                    color="textSecondary"
-                    gutterBottom
-                  >
-                    Pilih kata sandi yang kuat dan unik.
-                  </Typography>
-                  <Typography
-                    variant="subtitle2"
+                    variant="body2"
                     color="textSecondary"
                     gutterBottom
                   >
@@ -164,6 +157,7 @@ function EditPassword(props) {
                   <TextField
                     fullWidth
                     variant="outlined"
+                    size="small"
                     id="old_password"
                     label="Kata Sandi Saat Ini"
                     onChange={onChange}
@@ -177,6 +171,7 @@ function EditPassword(props) {
                   <TextField
                     fullWidth
                     variant="outlined"
+                    size="small"
                     id="new_password"
                     label="Kata Sandi Baru"
                     onChange={onChange}
@@ -194,6 +189,7 @@ function EditPassword(props) {
                   <TextField
                     fullWidth
                     variant="outlined"
+                    size="small"
                     id="new_password2"
                     label="Konfirmasi Kata Sandi Baru"
                     onChange={onChange}

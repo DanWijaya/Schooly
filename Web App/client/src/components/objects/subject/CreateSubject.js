@@ -54,6 +54,7 @@ function CreateSubject(props) {
         <TextField
           fullWidth
           variant="outlined"
+          size="small"
           id="name"
           type="text"
           onChange={onChange}

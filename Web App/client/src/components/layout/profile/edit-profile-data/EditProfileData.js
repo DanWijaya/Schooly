@@ -143,7 +143,7 @@ function EditProfileData(props) {
     );
   };
 
-  const handleChangeDataProfil = (e, otherfield) => {
+  const handleChangeProfileData = (e, otherfield) => {
     let { id, value } = e.target;
     clearErrors();
     if (otherfield === "jenis_kelamin") {
@@ -189,7 +189,7 @@ function EditProfileData(props) {
           </DialogActions>
           <DialogTitle>
             <Typography variant="h6" align="center">
-              <b>Sunting Profil</b>
+              Sunting Profil
             </Typography>
           </DialogTitle>
           <DialogContent>
@@ -225,18 +225,18 @@ function EditProfileData(props) {
               <TabPanel value={value} index={0}>
                 <List>
                   <DataField
+                    isTextField
+                    id="nama"
+                    type="Nama"
                     icon={<PersonIcon />}
                     iconStyle={classes.dataIcon}
-                    type="Nama"
-                    isTextField
                     value={dataProfil.nama}
-                    id="nama"
-                    onChange={handleChangeDataProfil}
+                    onChange={handleChangeProfileData}
                   />
                   <DataField
+                    type="Tanggal Lahir"
                     icon={<CakeIcon />}
                     iconStyle={classes.dataIcon}
-                    type="Tanggal Lahir"
                     nonTextFieldContent={
                       <div>
                         <MuiPickersUtilsProvider
@@ -246,45 +246,46 @@ function EditProfileData(props) {
                           <KeyboardDatePicker
                             fullWidth
                             disableFuture
-                            label="Tanggal Lahir"
                             inputVariant="outlined"
+                            size="small"
+                            id="tanggal_lahir"
+                            label="Tanggal Lahir"
                             maxDateMessage="Harus waktu yang akan datang"
                             invalidDateMessage="Format tanggal tidak benar"
                             format="dd MMM yyyy"
                             okLabel="Simpan"
                             cancelLabel="Batal"
-                            id="tanggal_lahir"
-                            onChange={(date) => handleDateChange(date)}
                             value={
                               dataProfil.tanggal_lahir instanceof Date
                                 ? dataProfil.tanggal_lahir
                                 : null
                             }
+                            onChange={(date) => handleDateChange(date)}
                           />
                         </MuiPickersUtilsProvider>
                       </div>
                     }
                   />
                   <DataField
+                    type="Jenis Kelamin"
                     icon={<WcIcon />}
                     iconStyle={classes.dataIcon}
-                    type="Jenis Kelamin"
                     nonTextFieldContent={
                       <FormControl
-                        id="jenis_kelamin"
-                        variant="outlined"
-                        color="primary"
                         fullWidth
+                        variant="outlined"
+                        size="small"
+                        color="primary"
+                        id="jenis_kelamin"
                       >
-                        <InputLabel id="subject-label">
+                        <InputLabel>
                           Jenis Kelamin
                         </InputLabel>
                         <Select
-                          labelId="subject-label"
                           label="Mata Pelajaran"
                           value={dataProfil.jenis_kelamin}
                           onChange={(event) => {
-                            handleChangeDataProfil(event, "jenis_kelamin");
+                            handleChangeProfileData(event, "jenis_kelamin");
                           }}
                         >
                           <MenuItem value="Pria">Pria</MenuItem>
@@ -298,41 +299,41 @@ function EditProfileData(props) {
               <TabPanel value={value} index={1}>
                 <List>
                   <DataField
+                    id="email"
+                    isTextField
+                    type="Email"
                     icon={<EmailIcon />}
                     iconStyle={classes.dataIcon}
-                    type="Email"
-                    isTextField
                     value={dataProfil.email}
+                    onChange={handleChangeProfileData}
                     errors={errors.email}
-                    id="email"
-                    onChange={handleChangeDataProfil}
                   />
                   <DataField
+                    isTextField
+                    id="no_telp"
+                    type="Nomor Telepon"
                     icon={<PhoneIcon />}
                     iconStyle={classes.dataIcon}
-                    type="Nomor Telepon"
-                    isTextField
                     value={dataProfil.no_telp}
-                    id="no_telp"
-                    onChange={handleChangeDataProfil}
+                    onChange={handleChangeProfileData}
                   />
                   <DataField
+                    isTextField
+                    id="no_telp_darurat"
+                    type="Nomor Telepon Darurat"
                     icon={<ContactPhoneIcon />}
                     iconStyle={classes.dataIcon}
-                    type="Nomor Telepon Darurat"
-                    isTextField
                     value={dataProfil.no_telp_darurat}
-                    id="no_telp_darurat"
-                    onChange={handleChangeDataProfil}
+                    onChange={handleChangeProfileData}
                   />
                   <DataField
+                    isTextField
+                    id="alamat"
+                    type="Alamat"
                     icon={<HomeIcon />}
                     iconStyle={classes.dataIcon}
-                    type="Alamat"
-                    isTextField
                     value={dataProfil.alamat}
-                    id="alamat"
-                    onChange={handleChangeDataProfil}
+                    onChange={handleChangeProfileData}
                   />
                 </List>
               </TabPanel>
@@ -340,40 +341,40 @@ function EditProfileData(props) {
                 <TabPanel value={value} index={2}>
                   <List>
                     <DataField
+                      isTextField
+                      id="hobi_minat"
+                      type="Hobi dan Minat"
                       icon={<SportsEsportsIcon />}
                       iconStyle={classes.dataIcon}
-                      type="Hobi dan Minat"
-                      isTextField
                       value={dataProfil.hobi_minat}
-                      id="hobi_minat"
-                      onChange={handleChangeDataProfil}
+                      onChange={handleChangeProfileData}
                     />
                     <DataField
+                      isTextField
+                      id="ket_non_teknis"
+                      type="Keterampilan Non-Akademik"
                       icon={<ColorLensIcon />}
                       iconStyle={classes.dataIcon}
-                      type="Keterampilan Non-Akademik"
-                      isTextField
                       value={dataProfil.ket_non_teknis}
-                      id="ket_non_teknis"
-                      onChange={handleChangeDataProfil}
+                      onChange={handleChangeProfileData}
                     />
                     <DataField
+                      isTextField
+                      id="cita_cita"
+                      type="Cita-Cita"
                       icon={<WorkIcon />}
                       iconStyle={classes.dataIcon}
-                      type="Cita-Cita"
-                      isTextField
                       value={dataProfil.cita_cita}
-                      id="cita_cita"
-                      onChange={handleChangeDataProfil}
+                      onChange={handleChangeProfileData}
                     />
                     <DataField
+                      isTextField
+                      id="uni_impian"
+                      type="Perguruan Tinggi Impian"
                       icon={<AccountBalanceIcon />}
                       iconStyle={classes.dataIcon}
-                      type="Perguruan Tinggi Impian"
-                      isTextField
                       value={dataProfil.uni_impian}
-                      id="uni_impian"
-                      onChange={handleChangeDataProfil}
+                      onChange={handleChangeProfileData}
                     />
                   </List>
                 </TabPanel>

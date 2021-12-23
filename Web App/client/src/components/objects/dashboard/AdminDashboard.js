@@ -63,6 +63,28 @@ function AdminDashboard(props) {
   const classes = useStyles();
   const { user } = props.auth;
 
+  // Doughnut Chart
+  const data = {
+    labels: ["Guru", "Murid", "Pengguna Tidak Aktif"],
+    datasets: [
+      {
+        label: "Jumlah Pengguna",
+        data: [12, 19, 3,],
+        backgroundColor: [
+          "rgba(255, 99, 132)",
+          "rgba(54, 162, 235)",
+          "rgba(255, 206, 86)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132)",
+          "rgba(54, 162, 235)",
+          "rgba(255, 206, 86)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  }
+
   // Daily Event Stepper
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = ["Select campaign settings", "Create an ad group", "Create an ad"];
@@ -110,30 +132,6 @@ function AdminDashboard(props) {
         return "Tidak ada kegiatan untuk hari ini";
     }
   }
-
-  // Doughnut Chart
-  const data = {
-    labels: ["Guru", "Murid", "Pengguna Tidak Aktif"],
-    datasets: [
-      {
-        label: "Jumlah Pengguna",
-        data: [12, 19, 3,],
-        backgroundColor: [
-          "rgba(255, 99, 132)",
-          "rgba(54, 162, 235)",
-          "rgba(255, 206, 86)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132)",
-          "rgba(54, 162, 235)",
-          "rgba(255, 206, 86)",
-        ],
-        borderWidth: 1,
-      },
-    ],
-  }
-
-  // Event stepper
 
   return (
     <Grid container spacing={2}>

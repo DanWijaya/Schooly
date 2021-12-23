@@ -131,15 +131,11 @@ function EditProfilePicture(props) {
     formData.append("avatar", profileImg);
     try {
       await uploadFileAvatar(user._id, formData);
-      console.log("Avatar is uploaded successfully");
       const new_avatar = await getMyFileAvatar(user._id);
-      console.log("Avatar is retrieved successfully");
-      console.log(new_avatar);
       setAvatar(new_avatar);
       handleOpenAlert();
       handleCloseDialog();
     } catch (err) {
-      console.error(err);
       throw err;
     }
   };
@@ -218,7 +214,7 @@ function EditProfilePicture(props) {
           </DialogActions>
           <DialogTitle>
             <Typography variant="h5" align="center">
-              <b>Ganti Foto Profil</b>
+              Ganti Foto Profil
             </Typography>
           </DialogTitle>
           <DialogContent>

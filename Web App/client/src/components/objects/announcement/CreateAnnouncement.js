@@ -426,6 +426,7 @@ class CreateAnnouncement extends Component {
                         <TextField
                           fullWidth
                           variant="outlined"
+                          size="small"
                           id="title"
                           type="text"
                           onChange={this.onChange}
@@ -442,11 +443,12 @@ class CreateAnnouncement extends Component {
                         <TextField
                           fullWidth
                           multiline
-                          variant="outlined"
-                          id="description"
-                          type="text"
                           rows="5"
                           rowsMax="25"
+                          variant="outlined"
+                          size="small"
+                          id="description"
+                          type="text"
                           onChange={(e) => this.onChange(e, "description")}
                           value={this.state.description}
                           error={errors.description}
@@ -477,16 +479,15 @@ class CreateAnnouncement extends Component {
                           <FormControl
                             fullWidth
                             variant="outlined"
+                            size="small"
                             color="primary"
+                            id="target_role"
                             error={Boolean(errors.to)}
                           >
                             <Select
                               multiple
-                              id="target_role"
                               value={target_role}
-                              onChange={(event) => {
-                                this.onChange(event, "target_role");
-                              }}
+                              onChange={(event) => this.onChange(event, "target_role")}
                               renderValue={(selected) => {
                                 return (
                                   <div className={classes.chips}>
@@ -534,6 +535,7 @@ class CreateAnnouncement extends Component {
                           <FormControl
                             fullWidth
                             variant="outlined"
+                            size="small"
                             color="primary"
                             id="class_assigned"
                             error={Boolean(errors.class_assigned)}
@@ -541,9 +543,7 @@ class CreateAnnouncement extends Component {
                             <Select
                               multiple
                               value={class_assigned}
-                              onChange={(event) =>
-                                this.onChange(event, "class_assigned")
-                              }
+                              onChange={(event) => this.onChange(event, "class_assigned")}
                               MenuProps={{
                                 classes: { paper: classes.selectPaper },
                               }}

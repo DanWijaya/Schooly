@@ -14,10 +14,10 @@ import { refreshTeacher } from "../../../actions/UserActions";
 import { getSetting } from "../../../actions/SettingActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import QuestionItem from "./QuestionItem";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import QuestionItem from "./QuestionItem";
 import {
   AppBar,
   Badge,
@@ -1380,7 +1380,7 @@ class CreateAssessment extends Component {
                         Buat {this.state.type}
                       </Typography>
                       <Typography color="textSecondary">
-                        Disarankan untuk lengkapi data yang ada dan klik buat
+                        Disarankan untuk lengkapi data yang ada dan tekan tombol buat
                         terlebih dahulu agar {this.state.type} tersimpan.
                       </Typography>
                     </div>
@@ -1409,6 +1409,7 @@ class CreateAssessment extends Component {
                             <TextField
                               fullWidth
                               variant="outlined"
+                              size="small"
                               id="name"
                               type="text"
                               onChange={this.onChange}
@@ -1424,6 +1425,7 @@ class CreateAssessment extends Component {
                             <FormControl
                               fullWidth
                               variant="outlined"
+                              size="small"
                               color="primary"
                               id="role"
                               error={Boolean(errors.type)}
@@ -1453,6 +1455,7 @@ class CreateAssessment extends Component {
                               fullWidth
                               multiline
                               variant="outlined"
+                              size="small"
                               id="description"
                               type="text"
                               rows="5"
@@ -1484,6 +1487,7 @@ class CreateAssessment extends Component {
                             <FormControl
                               fullWidth
                               variant="outlined"
+                              size="small"
                               color="primary"
                               id="subject"
                               error={Boolean(errors.subject)}
@@ -1520,6 +1524,7 @@ class CreateAssessment extends Component {
                             <FormControl
                               fullWidth
                               variant="outlined"
+                              size="small"
                               color="primary"
                               id="class_assigned"
                               error={Boolean(errors.class_assigned)}
@@ -1598,6 +1603,7 @@ class CreateAssessment extends Component {
                                 fullWidth
                                 disablePast
                                 inputVariant="outlined"
+                                size="small"
                                 id="workTimeStart"
                                 format="dd/MM/yyyy - HH:mm"
                                 ampm={false}
@@ -1637,6 +1643,7 @@ class CreateAssessment extends Component {
                                 fullWidth
                                 disablePast
                                 inputVariant="outlined"
+                                size="small"
                                 id="workTimeEnd"
                                 format="dd/MM/yyyy - HH:mm"
                                 ampm={false}
@@ -1691,6 +1698,7 @@ class CreateAssessment extends Component {
                                 fullWidth
                                 disabled={!this.state.isScheduled}
                                 inputVariant="outlined"
+                                size="small"
                                 id="postDate"
                                 format="dd/MM/yyyy - HH:mm"
                                 ampm={false}

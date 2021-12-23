@@ -218,6 +218,7 @@ class CreateUnit extends Component {
                       <TextField
                         fullWidth
                         variant="outlined"
+                        size="small"
                         id="name"
                         type="text"
                         onChange={this.onChange}
@@ -235,6 +236,7 @@ class CreateUnit extends Component {
                         fullWidth
                         multiline
                         variant="outlined"
+                        size="small"
                         id="description"
                         type="text"
                         rows="5"

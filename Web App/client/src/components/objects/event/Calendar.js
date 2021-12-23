@@ -97,6 +97,8 @@ const useStyles = makeStyles((theme) => ({
   },
   calendarModeSelect: {
     width: "40px",
+    paddingTop: "12.5px",
+    paddingBottom: "12.5px",
   },
   calendarHeader: {
     padding: "10px 5px",

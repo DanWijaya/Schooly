@@ -118,6 +118,7 @@ function TeacherListToolbar(props) {
         <Grid item>
           <TextField
             variant="outlined"
+            size="small"
             id="searchFilterDesktop"
             placeholder="Cari Guru"
             value={searchFilter}
@@ -126,18 +127,19 @@ function TeacherListToolbar(props) {
               style: {
                 borderRadius: "22.5px",
                 maxWidth: "450px",
-                width: "100%",
+                paddingTop: "3px",
+                paddingBottom: "3px"
               },
               startAdornment: (
                 <InputAdornment
                   position="start"
-                  style={{ marginRight: "-5px", color: "grey" }}
+                  style={{ color: "grey" }}
                 >
                   <SearchIcon />
                 </InputAdornment>
               ),
               endAdornment: (
-                <InputAdornment position="end" style={{ marginLeft: "-10px" }}>
+                <InputAdornment position="end">
                   <IconButton
                     size="small"
                     onClick={(e) => {
@@ -525,7 +527,6 @@ function TeacherList(props) {
                         <Typography color="primary">Mata Pelajaran</Typography>
                         <Autocomplete
                           multiple
-                          size="small"
                           filterSelectedOptions
                           options={all_subjects}
                           getOptionLabel={(option) => option.name}
@@ -549,7 +550,6 @@ function TeacherList(props) {
                         <Typography color="primary">Kelas</Typography>
                         <Autocomplete
                           multiple
-                          size="small"
                           options={all_classes ? all_classes : null}
                           getOptionLabel={(option) => option.name}
                           getOptionSelected={(option, value) =>

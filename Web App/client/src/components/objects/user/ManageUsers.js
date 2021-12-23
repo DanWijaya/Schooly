@@ -235,26 +235,29 @@ function ManageUsersToolbar(props) {
             <Hidden smDown>
               <TextField
                 variant="outlined"
+                size="small"
                 id="searchFilterDesktop"
                 placeholder={searchFilterHint}
                 value={searchFilter}
                 onChange={onChange}
                 autoFocus={searchFilter.length > 0}
                 InputProps={{
-                  style: { borderRadius: "22.5px" },
+                  style: {
+                    borderRadius: "22.5px",
+                    maxWidth: "450px",
+                    paddingTop: "3px",
+                    paddingBottom: "3px"
+                  },
                   startAdornment: (
                     <InputAdornment
                       position="start"
-                      style={{ marginRight: "-5px", color: "grey" }}
+                      style={{ color: "grey" }}
                     >
                       <SearchIcon />
                     </InputAdornment>
                   ),
                   endAdornment: (
-                    <InputAdornment
-                      position="end"
-                      style={{ marginLeft: "-10px" }}
-                    >
+                    <InputAdornment position="end">
                       <IconButton
                         size="small"
                         onClick={(e) => {
@@ -275,7 +278,6 @@ function ManageUsersToolbar(props) {
             </Hidden>
             <Hidden mdUp>
               {searchBarFocus || searchFilter ? (
-                //Show textfield when searchBar is onfocus or searchFilter is not empty
                 <TextField
                   autoFocus
                   variant="outlined"
@@ -287,12 +289,14 @@ function ManageUsersToolbar(props) {
                     setSearchBarFocus(true);
                   }}
                   InputProps={{
-                    style: { borderRadius: "22.5px" },
+                    style: {
+                      borderRadius: "22.5px",
+                      maxWidth: "450px",
+                      paddingTop: "3px",
+                      paddingBottom: "3px"
+                    },
                     endAdornment: (
-                      <InputAdornment
-                        position="end"
-                        style={{ marginLeft: "-10px" }}
-                      >
+                      <InputAdornment position="end">
                         <IconButton
                           size="small"
                           id="searchFilterMobile"

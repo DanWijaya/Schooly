@@ -226,11 +226,12 @@ class Register extends Component {
       switch (stepIndex) {
         case 0:
           return (
-            <Grid container direction="column" spacing={5}>
+            <Grid container direction="column" spacing={4}>
               <Grid item>
                 <TextField
                   fullWidth
                   variant="outlined"
+                  size="small"
                   id="name"
                   type="text"
                   label="Nama Lengkap"
@@ -244,6 +245,7 @@ class Register extends Component {
                 <TextField
                   fullWidth
                   variant="outlined"
+                  size="small"
                   id="email"
                   type="email"
                   label="Email"
@@ -263,6 +265,7 @@ class Register extends Component {
                     <TextField
                       fullWidth
                       variant="outlined"
+                      size="small"
                       id="password"
                       type="password"
                       label="Kata Sandi"
@@ -275,6 +278,7 @@ class Register extends Component {
                     <TextField
                       fullWidth
                       variant="outlined"
+                      size="small"
                       id="password2"
                       type="password"
                       label="Konfirmasi"
@@ -299,22 +303,21 @@ class Register extends Component {
           );
         case 1:
           return (
-            <Grid container direction="column" spacing={5}>
+            <Grid container direction="column" spacing={4}>
               <Grid item>
                 <FormControl
                   fullWidth
                   variant="outlined"
+                  size="small"
                   color="primary"
                   id="role"
                   error={Boolean(errors.role)}
                 >
-                  <InputLabel id="role-label">Daftar Sebagai</InputLabel>
+                  <InputLabel>Daftar Sebagai</InputLabel>
                   <Select
                     label="Daftar Sebagai"
                     value={this.state.role}
-                    onChange={(event) => {
-                      this.onChange(event, "role");
-                    }}
+                    onChange={(event) => this.onChange(event, "role")}
                   >
                     <MenuItem value="Student">Murid</MenuItem>
                     <MenuItem value="Teacher">Guru</MenuItem>
@@ -333,25 +336,26 @@ class Register extends Component {
                   <FormControl
                     fullWidth
                     variant="outlined"
+                    size="small"
                     color="primary"
                     id="unit"
                     error={Boolean(errors.unit)}
                   >
-                    <InputLabel id="unit-label">Unit</InputLabel>
+                    <InputLabel>Unit</InputLabel>
                     <Select
                       label="Unit"
                       value={this.state.unit}
-                      onChange={(event) => {
-                        this.onChange(event, "unit");
-                      }}
+                      onChange={(event) => this.onChange(event, "unit")}
                     >
                       {all_units.map((unit) => (
                         <MenuItem value={unit._id}>{unit.name}</MenuItem>
                       ))}
                     </Select>
-                    <FormHelperText>
-                      {Boolean(errors.unit) ? errors.unit : null}
-                    </FormHelperText>
+                    {Boolean(errors.unit) ? (
+                      <FormHelperText>
+                        errors.unit
+                      </FormHelperText>
+                    ) : null}
                   </FormControl>
                 </Grid>
               )}
@@ -361,6 +365,7 @@ class Register extends Component {
                     fullWidth
                     disableFuture
                     inputVariant="outlined"
+                    size="small"
                     id="tanggal_lahir"
                     format="dd MMM yyyy"
                     label="Tanggal Lahir"
@@ -382,6 +387,7 @@ class Register extends Component {
                     <TextField
                       fullWidth
                       variant="outlined"
+                      size="small"
                       id="phone"
                       type="tel"
                       label="Nomor Telepon"
@@ -394,6 +400,7 @@ class Register extends Component {
                     <TextField
                       fullWidth
                       variant="outlined"
+                      size="small"
                       id="emergency_phone"
                       type="tel"
                       label="Nomor Telepon Darurat"
@@ -418,12 +425,13 @@ class Register extends Component {
                 <TextField
                   fullWidth
                   multiline
+                  rows="2"
+                  rowsMax="3"
                   variant="outlined"
+                  size="small"
                   id="address"
                   type="text"
                   label="Alamat"
-                  rows="2"
-                  rowsMax="3"
                   onChange={this.onChange}
                   value={this.state.address}
                   error={errors.address}
@@ -589,7 +597,7 @@ class Register extends Component {
               <Grid container direction="column" spacing={6}>
                 <Grid item>
                   <Typography variant="h6">
-                    <b>Daftar ke Schooly</b>
+                    Daftar ke Schooly
                   </Typography>
                 </Grid>
                 <Grid item>

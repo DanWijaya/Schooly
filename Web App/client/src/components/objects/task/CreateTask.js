@@ -529,6 +529,7 @@ class CreateTask extends Component {
                         <TextField
                           fullWidth
                           variant="outlined"
+                          size="small"
                           id="name"
                           type="text"
                           onChange={this.onChange}
@@ -545,11 +546,12 @@ class CreateTask extends Component {
                         <TextField
                           fullWidth
                           multiline
-                          variant="outlined"
-                          id="description"
-                          type="text"
                           rows="5"
                           rowsMax="25"
+                          variant="outlined"
+                          size="small"
+                          id="description"
+                          type="text"
                           onChange={(e) => this.onChange(e, "description")}
                           value={this.state.description}
                           error={errors.description}
@@ -578,6 +580,7 @@ class CreateTask extends Component {
                         <FormControl
                           fullWidth
                           variant="outlined"
+                          size="small"
                           color="primary"
                           id="subject"
                           error={Boolean(errors.subject)}
@@ -614,6 +617,7 @@ class CreateTask extends Component {
                         <FormControl
                           fullWidth
                           variant="outlined"
+                          size="small"
                           color="primary"
                           id="class_assigned"
                           error={Boolean(errors.class_assigned)}
@@ -688,6 +692,7 @@ class CreateTask extends Component {
                             fullWidth
                             disablePast
                             inputVariant="outlined"
+                            size="small"
                             id="deadline"
                             format="dd/MM/yyyy - HH:mm"
                             ampm={false}

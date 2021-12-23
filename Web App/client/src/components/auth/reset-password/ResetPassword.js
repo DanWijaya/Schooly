@@ -131,6 +131,7 @@ class ResetPassword extends Component {
                         <TextField
                           fullWidth
                           variant="outlined"
+                          size="small"
                           id="password"
                           type="password"
                           label="Kata Sandi Baru"
@@ -144,6 +145,7 @@ class ResetPassword extends Component {
                         <TextField
                           fullWidth
                           variant="outlined"
+                          size="small"
                           id="password2"
                           type="password"
                           label="Konfirmasi Kata Sandi Baru"

@@ -206,6 +206,7 @@ function EditUnit(props) {
                     <TextField
                       fullWidth
                       variant="outlined"
+                      size="small"
                       id="name"
                       type="text"
                       onChange={onChange}
@@ -223,6 +224,7 @@ function EditUnit(props) {
                       fullWidth
                       multiline
                       variant="outlined"
+                      size="small"
                       id="description"
                       type="text"
                       rows="5"

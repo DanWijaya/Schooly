@@ -181,6 +181,7 @@ function MaterialListToolbar(props) {
               <Hidden smDown>
                 <TextField
                   variant="outlined"
+                  size="small"
                   id="searchFilterDesktop"
                   placeholder="Cari Materi"
                   value={searchFilter}
@@ -191,21 +192,19 @@ function MaterialListToolbar(props) {
                     style: {
                       borderRadius: "22.5px",
                       maxWidth: "450px",
-                      width: "100%",
+                      paddingTop: "3px",
+                      paddingBottom: "3px"
                     },
                     startAdornment: (
                       <InputAdornment
                         position="start"
-                        style={{ marginRight: "-5px", color: "grey" }}
+                        style={{ color: "grey" }}
                       >
                         <SearchIcon />
                       </InputAdornment>
                     ),
                     endAdornment: (
-                      <InputAdornment
-                        position="end"
-                        style={{ marginLeft: "-10px" }}
-                      >
+                      <InputAdornment position="end">
                         <IconButton
                           size="small"
                           onClick={(e) => {
@@ -237,6 +236,7 @@ function MaterialListToolbar(props) {
                     <TextField
                       autoFocus
                       variant="outlined"
+                      size="small"
                       id="searchFilterMobile"
                       placeholder="Cari Materi"
                       value={searchFilter}
@@ -246,13 +246,11 @@ function MaterialListToolbar(props) {
                         style: {
                           borderRadius: "22.5px",
                           maxWidth: "450px",
-                          width: "100%",
+                          paddingTop: "3px",
+                          paddingBottom: "3px"
                         },
                         endAdornment: (
-                          <InputAdornment
-                            position="end"
-                            style={{ marginLeft: "-10px" }}
-                          >
+                          <InputAdornment position="end">
                             <IconButton
                               size="small"
                               id="searchFilterMobile"

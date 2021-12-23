@@ -150,6 +150,7 @@ class ForgotPassword extends Component {
                           <TextField
                             fullWidth
                             variant="outlined"
+                            size="small"
                             id="email"
                             type="email"
                             label="Email"

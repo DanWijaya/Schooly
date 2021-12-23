@@ -69,7 +69,7 @@ const styles = (theme) => ({
   toggleShowPasswordButton: {
     color: theme.palette.primary.main,
   },
-  toggleErrorShowPasswordButton: {
+  toggleShowPasswordButtonError: {
     color: theme.palette.error.main,
   },
 });
@@ -202,16 +202,17 @@ class Login extends Component {
               <Grid container direction="column" spacing={6}>
                 <Grid item>
                   <Typography variant="h6" align="center">
-                    <b>Masuk ke Schooly</b>
+                    Masuk ke Schooly
                   </Typography>
                 </Grid>
                 <Grid item>
                   <form noValidate onSubmit={this.onSubmit}>
-                    <Grid container direction="column" spacing={5}>
+                    <Grid container direction="column" spacing={4}>
                       <Grid item>
                         <TextField
                           fullWidth
                           variant="outlined"
+                          size="small"
                           id="email"
                           type="email"
                           label="Email"
@@ -225,6 +226,7 @@ class Login extends Component {
                         <TextField
                           fullWidth
                           variant="outlined"
+                          size="small"
                           id="password"
                           type={passwordIsMasked ? "password" : "text"}
                           label="Kata Sandi"
@@ -253,7 +255,7 @@ class Login extends Component {
                                               errors.password ||
                                                 errors.passwordincorrect
                                             )
-                                            ? classes.toggleErrorShowPasswordButton
+                                            ? classes.toggleShowPasswordButtonError
                                             : classes.toggleShowPasswordButton
                                           : null
                                       }
@@ -266,7 +268,7 @@ class Login extends Component {
                                               errors.password ||
                                                 errors.passwordincorrect
                                             )
-                                            ? classes.toggleErrorShowPasswordButton
+                                            ? classes.toggleShowPasswordButtonError
                                             : classes.toggleShowPasswordButton
                                           : null
                                       }

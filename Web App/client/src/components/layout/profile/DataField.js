@@ -29,6 +29,7 @@ function DataField(props) {
             <TextField
               fullWidth
               variant="outlined"
+              size="small"
               id={id}
               label={type}
               onChange={onChange}

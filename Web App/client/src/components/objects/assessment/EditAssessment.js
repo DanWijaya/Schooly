@@ -1585,9 +1585,10 @@ class EditAssessment extends Component {
                               </Typography>
                               <TextField
                                 fullWidth
-                                type="text"
                                 variant="outlined"
+                                size="small"
                                 id="name"
+                                type="text"
                                 value={this.state.name}
                                 onChange={this.onChange}
                                 error={errors.name}
@@ -1603,6 +1604,7 @@ class EditAssessment extends Component {
                                 fullWidth
                                 variant="outlined"
                                 color="primary"
+                                size="small"
                                 id="role"
                                 error={Boolean(errors.type)}
                               >
@@ -1630,11 +1632,12 @@ class EditAssessment extends Component {
                               <TextField
                                 fullWidth
                                 multiline
-                                id="description"
-                                type="text"
                                 rows="5"
                                 rowsMax="25"
                                 variant="outlined"
+                                size="small"
+                                id="description"
+                                type="text"
                                 onChange={this.onChange}
                                 value={this.state.description}
                                 error={errors.description}
@@ -1670,6 +1673,7 @@ class EditAssessment extends Component {
                               <FormControl
                                 fullWidth
                                 variant="outlined"
+                                size="small"
                                 color="primary"
                                 id="subject"
                                 error={Boolean(errors.subject)}
@@ -1708,6 +1712,7 @@ class EditAssessment extends Component {
                               <FormControl
                                 fullWidth
                                 variant="outlined"
+                                size="small"
                                 color="primary"
                                 id="class_assigned"
                                 error={Boolean(errors.class_assigned)}
@@ -1787,6 +1792,7 @@ class EditAssessment extends Component {
                                   fullWidth
                                   disablePast
                                   inputVariant="outlined"
+                                  size="small"
                                   id="workTimeStart"
                                   format="dd/MM/yyyy - HH:mm"
                                   ampm={false}
@@ -1828,6 +1834,7 @@ class EditAssessment extends Component {
                                 <KeyboardDateTimePicker
                                   fullWidth
                                   inputVariant="outlined"
+                                  size="small"
                                   id="workTimeEnd"
                                   format="dd/MM/yyyy - HH:mm"
                                   ampm={false}
@@ -1882,6 +1889,7 @@ class EditAssessment extends Component {
                                   fullWidth
                                   disabled={!this.state.isScheduled}
                                   inputVariant="outlined"
+                                  size="small"
                                   id="postDate"
                                   format="dd/MM/yyyy - HH:mm"
                                   ampm={false}

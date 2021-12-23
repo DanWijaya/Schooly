@@ -369,6 +369,7 @@ class EditClass extends Component {
                         <TextField
                           fullWidth
                           variant="outlined"
+                          size="small"
                           id="name"
                           type="text"
                           onChange={this.onChange}
@@ -384,9 +385,10 @@ class EditClass extends Component {
                         </Typography>
                         <FormControl
                           fullWidth
-                          id="walikelas"
                           variant="outlined"
+                          size="small"
                           color="primary"
+                          id="walikelas"
                         >
                           <Select
                             value={walikelas}
@@ -477,9 +479,10 @@ class EditClass extends Component {
                         </Typography>
                         <FormControl
                           fullWidth
-                          id="ketua_kelas"
                           variant="outlined"
+                          size="small"
                           color="primary"
+                          id="ketua_kelas"
                         >
                           <Select
                             value={ketua_kelas}
@@ -499,9 +502,10 @@ class EditClass extends Component {
                         </Typography>
                         <FormControl
                           fullWidth
-                          id="sekretaris"
                           variant="outlined"
+                          size="small"
                           color="primary"
+                          id="sekretaris"
                         >
                           <Select
                             value={sekretaris}
@@ -521,9 +525,10 @@ class EditClass extends Component {
                         </Typography>
                         <FormControl
                           fullWidth
-                          id="bendahara"
                           variant="outlined"
+                          size="small"
                           color="primary"
+                          id="bendahara"
                         >
                           <Select
                             value={bendahara}

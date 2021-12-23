@@ -289,6 +289,7 @@ class CreateClass extends Component {
                       <TextField
                         fullWidth
                         variant="outlined"
+                        size="small"
                         id="name"
                         type="text"
                         onChange={this.onChange}
@@ -305,6 +306,7 @@ class CreateClass extends Component {
                       <FormControl
                         fullWidth
                         variant="outlined"
+                        size="small"
                         color="primary"
                         id="walikelas"
                         error={Boolean(errors.walikelas)}
@@ -342,7 +344,6 @@ class CreateClass extends Component {
                         <Autocomplete
                           multiple
                           filterSelectedOptions
-                          size="small"
                           getOptionLabel={(option) => option.name}
                           options={
                             this.props.subjectsCollection

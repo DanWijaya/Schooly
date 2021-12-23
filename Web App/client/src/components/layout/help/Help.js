@@ -1495,10 +1495,10 @@ function Help(props) {
       </div>
       <div className={classes.moreHelp}>
         <Paper variant="outlined" className={classes.moreHelpContainer}>
-          <Typography variant="h4" align="center">
+          <Typography variant="h5" align="center">
             Butuh bantuan lebih lanjut?
           </Typography>
-          <Typography variant="h6" align="center" paragraph>
+          <Typography align="center" paragraph>
             Silahkan coba opsi bantuan berikut.
           </Typography>
           <Paper
@@ -1515,7 +1515,7 @@ function Help(props) {
               </Grid>
               <Grid item xs>
                 <Typography align="left">
-                  <b>Hubungi Kami</b>
+                  Hubungi Kami
                 </Typography>
                 <Typography color="textSecondary">
                   Beritahu kami lebih lanjut tentang masalah Anda

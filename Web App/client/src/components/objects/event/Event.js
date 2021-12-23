@@ -916,6 +916,7 @@ function Event(props) {
                 <TextField
                   fullWidth
                   variant="outlined"
+                  size="small"
                   id="name"
                   type="text"
                   onChange={(e) => handleChangeName(e)}
@@ -932,6 +933,7 @@ function Event(props) {
                 <TextField
                   fullWidth
                   variant="outlined"
+                  size="small"
                   id="location"
                   type="text"
                   onChange={(e) => setLocation(e.target.value)}
@@ -962,6 +964,7 @@ function Event(props) {
                         fullWidth
                         disablePast
                         inputVariant="outlined"
+                        size="small"
                         id="eventStart"
                         format={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy - HH:mm"}
                         ampm={false}
@@ -1007,6 +1010,7 @@ function Event(props) {
                         fullWidth
                         disablePast
                         inputVariant="outlined"
+                        size="small"
                         id="eventEnd"
                         inputRef={endDatePicker}
                         format={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy - HH:mm"}
@@ -1065,6 +1069,7 @@ function Event(props) {
                 <FormControl
                   fullWidth
                   variant="outlined"
+                  size="small"
                   color="primary"
                   id="target_role"
                   error={errors.to}
@@ -1113,6 +1118,7 @@ function Event(props) {
                   fullWidth
                   multiline
                   variant="outlined"
+                  size="small"
                   id="description"
                   type="text"
                   value={description}
