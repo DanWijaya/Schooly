@@ -11,8 +11,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
-@font-face {
-  font-family: "Caveat";
-  src: local("Caveat"), url(./fonts/Caveat/Caveat-Regular.ttf) format("truetype");
-}

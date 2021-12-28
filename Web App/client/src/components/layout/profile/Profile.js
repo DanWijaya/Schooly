@@ -9,9 +9,6 @@ import {
 } from "../../../actions/files/FileAvatarActions";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import informationContacts from "./InformationContacts.png";
-import informationJob from "./InformationJob.png";
-import informationPrivate from "./InformationPrivate.png";
 import EditPassword from "./edit-password/EditPassword";
 import EditProfileData from "./edit-profile-data/EditProfileData";
 import EditProfilePicture from "./edit-profile-picture/EditProfilePicture";
@@ -252,7 +249,7 @@ function Profile(props) {
                 <div className={classes.informationCategoryPictureContainer}>
                   <img
                     alt="Private Data"
-                    src={informationPrivate}
+                    src="/images/illustrations/InformationPrivate.png"
                     className={classes.informationCategoryPicture}
                   />
                 </div>
@@ -315,7 +312,7 @@ function Profile(props) {
                 <div className={classes.informationCategoryPictureContainer}>
                   <img
                     alt="Contacts"
-                    src={informationContacts}
+                    src="/images/illustrations/InformationContacts.png"
                     className={classes.informationCategoryPicture}
                   />
                 </div>
@@ -377,7 +374,7 @@ function Profile(props) {
                   <div className={classes.informationCategoryPictureContainer}>
                     <img
                       alt="Career"
-                      src={informationJob}
+                      src="/images/illustrations/InformationJob.png"
                       className={classes.informationCategoryPicture}
                     />
                   </div>

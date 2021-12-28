@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../../../actions/UserActions";
 import { getMyFileAvatar } from "../../../actions/files/FileAvatarActions";
-import schoolyLogo from "../../../images/SchoolyLogo.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   AppBar,
@@ -252,7 +251,7 @@ function NavBar(props) {
             <Link to="/beranda">
               <img
                 alt="Schooly Logo"
-                src={schoolyLogo}
+                src="/logos/SchoolyLogo.png"
                 className={classes.schoolyLogo}
               />
             </Link>
@@ -264,7 +263,7 @@ function NavBar(props) {
               <Link to="/">
                 <img
                   alt="Schooly Logo"
-                  src={schoolyLogo}
+                  src="/logos/SchoolyLogo.png"
                   className={classes.schoolyLogo}
                 />
               </Link>
@@ -295,7 +294,7 @@ function NavBar(props) {
         <Toolbar>
           <img
             alt="SchoolyLogoNavBar"
-            src={schoolyLogo}
+            src="/logos/SchoolyLogo.png"
             className={classes.schoolyLogo}
           />
         </Toolbar>

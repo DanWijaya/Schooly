@@ -12,7 +12,19 @@ import {
   getAllAssessments,
   getAssessmentsByClass,
 } from "../../../actions/AssessmentActions";
-import subjectBackground from "./subject-background/SubjectBackground";
+import _5dc692 from "./subject-backgrounds/_5dc692.png";
+import _70d0db from "./subject-backgrounds/_70d0db.png";
+import _151e34 from "./subject-backgrounds/_151e34.png";
+import _868acd from "./subject-backgrounds/_868acd.png";
+import _76294f from "./subject-backgrounds/_76294f.png";
+import _ef2c5f from "./subject-backgrounds/_ef2c5f.png";
+import _f7ca13 from "./subject-backgrounds/_f7ca13.png";
+import _f9d291 from "./subject-backgrounds/_f9d291.png";
+import _f25624 from "./subject-backgrounds/_f25624.png";
+import _71d0e1 from "./subject-backgrounds/_71d0e1.png";
+import _f6836b from "./subject-backgrounds/_f6836b.png";
+import _53c9cc from "./subject-backgrounds/_53c9cc.png";
+import _fab328 from "./subject-backgrounds/_fab328.png";
 import AssessmentItem from "../item/AssessmentItem";
 import TaskItem from "../item/TaskItem";
 import MaterialItem from "../item/MaterialItem";
@@ -82,16 +94,33 @@ function ViewSubject(props) {
     getTeachers,
     getAssessmentsByClass,
   } = props;
-  const { all_tasks } = props.tasksCollection;
   const { user } = props.auth;
   const id = props.match.params.id;
   const classId = user.kelas;
+
   const { kelas } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
+  const { all_tasks } = props.tasksCollection;
   const { selectedAssessments } = props.assessmentsCollection;
 
   const [submittedTaskIds, setSubmittedTaskIds] = React.useState(new Set());
+
+  const subjectBackground = [
+    { "#5dc692": _5dc692 },
+    { "#70d0db": _70d0db },
+    { "#151e34": _151e34 },
+    { "#868acd": _868acd },
+    { "#76294f": _76294f },
+    { "#ef2c5f": _ef2c5f },
+    { "#f7ca13": _f7ca13 },
+    { "#f9d291": _f9d291 },
+    { "#f25624": _f25624 },
+    { "#71d0e1": _71d0e1 },
+    { "#f6836b": _f6836b },
+    { "#53c9cc": _53c9cc },
+    { "#fab328": _fab328 },
+  ];
 
   let subjects_list = Array.from(all_subjects_map.keys());
   let background_idx = subjects_list.indexOf(id) % subjectBackground.length;

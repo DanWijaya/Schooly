@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import schoolySymbolLogo from "./images/SchoolySymbolLogo.png";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
 import Hidden from "@material-ui/core/Hidden";
@@ -63,7 +62,7 @@ function Footer(props) {
           <Grid container alignItems="center" spacing={1}>
             <Grid item>
               <img
-                src={schoolySymbolLogo}
+                src="/logos/SchoolySymbolLogo.png"
                 alt="Schooly Symbol Logo"
                 className={classes.schoolySymbolLogo}
               />

@@ -1,5 +1,4 @@
 import React from "react";
-import privacyPolicyArt from "./PrivacyPolicyArt.png";
 import ScrollToTopButton from "../../../misc/scroll-to-top/ScrollToTopButton";
 import {
   Divider,
@@ -70,7 +69,7 @@ function PrivacyPolicy(props) {
       <div className={classes.privacyPolicyTitle}>
         <img
           alt="Privacy Policy Art"
-          src={privacyPolicyArt}
+          src="/images/illustrations/PrivacyPolicyArt.png"
           className={classes.privacyPolicyArt}
         />
         <Typography

@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import schoolyIntroduction from "./SchoolyIntroduction.png";
-import schoolyAccess from "./SchoolyAccess.png";
 import {
   Avatar,
   Button,
@@ -221,7 +219,7 @@ class Landing extends Component {
               <Grid item xs={12} sm={6} container justify="flex-end">
                 <img
                   alt="Schooly Introduction"
-                  src={schoolyIntroduction}
+                  src="/images/illustrations/SchoolyIntroduction.png"
                   style={{ maxWidth: "100%", maxHeight: "100%" }}
                 />
               </Grid>
@@ -233,7 +231,7 @@ class Landing extends Component {
             <Grid item>
               <img
                 alt="Schooly Access"
-                src={schoolyAccess}
+                src="/images/illustrations/SchoolyAccess.png"
                 style={{ maxWidth: "100%", maxHeight: "100%" }}
               />
             </Grid>

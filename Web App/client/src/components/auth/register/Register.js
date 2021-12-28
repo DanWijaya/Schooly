@@ -7,8 +7,6 @@ import lokal from "date-fns/locale/id";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { registerUser, validateRegister } from "../../../actions/UserActions";
 import { getAllUnits } from "../../../actions/UnitActions";
-import schoolyLogo from "../../../images/SchoolyLogo.png";
-import registerStepperArt from "./RegisterStepperArt.png";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
@@ -587,7 +585,7 @@ class Register extends Component {
         <Link to="/">
           <img
             alt="Schooly Introduction"
-            src={schoolyLogo}
+            src="/logos/SchoolyLogo.png"
             className={classes.schoolyLogo}
           />
         </Link>
@@ -663,7 +661,7 @@ class Register extends Component {
                 </Typography>
                 <img
                   alt="Register Art"
-                  src={registerStepperArt}
+                  src="/images/illustrations/RegisterStepperArt.png"
                   className={classes.artThumbnail}
                 />
                 <Stepper

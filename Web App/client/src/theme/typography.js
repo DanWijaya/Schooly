@@ -4,9 +4,6 @@ function pxToRem(value) {
 
 function responsiveFontSizes({ xs, sm, md, lg }) {
   return {
-    "@media (min-width:0px)": {
-      fontSize: pxToRem(xs)
-    },
     "@media (min-width:600px)": {
       fontSize: pxToRem(sm)
     },
@@ -20,78 +17,79 @@ function responsiveFontSizes({ xs, sm, md, lg }) {
 }
 
 const typography = {
+  fontFamily: "Inter, sans-serif",
   fontWeightLight: 300,
   fontWeightRegular: 400,
   fontWeightMedium: 500,
   fontWeightBold: 700,
   h1: {
-    fontWeight: 300,
-    lineHeight: 1.167,
-    fontSize: pxToRem(96),
-    ...responsiveFontSizes({ xs: 45, sm: 49, md: 58, lg: 70 })
+    fontWeight: 500,
+    lineHeight: 80 / 64,
+    fontSize: pxToRem(40),
+    ...responsiveFontSizes({ sm: 52, md: 58, lg: 64 })
   },
   h2: {
-    fontWeight: 300,
-    lineHeight: 1.2,
-    fontSize: pxToRem(60),
-    ...responsiveFontSizes({ xs: 36, sm: 40, md: 44, lg: 52 })
+    fontWeight: 500,
+    lineHeight: 64 / 48,
+    fontSize: pxToRem(32),
+    ...responsiveFontSizes({ sm: 40, md: 44, lg: 48 })
   },
   h3: {
-    fontWeight: 300,
-    lineHeight: 1.167,
-    fontSize: pxToRem(48),
-    ...responsiveFontSizes({ xs: 23, sm: 26, md: 30, lg: 37 })
+    fontWeight: 500,
+    lineHeight: 1.5,
+    fontSize: pxToRem(24),
+    ...responsiveFontSizes({ sm: 26, md: 30, lg: 32 })
   },
   h4: {
-    fontWeight: 300,
-    lineHeight: 1.235,
-    fontSize: pxToRem(30),
-    ...responsiveFontSizes({ xs: 20, sm: 20, md: 26, lg: 30 })
+    fontWeight: 500,
+    lineHeight: 1.5,
+    fontSize: pxToRem(20),
+    ...responsiveFontSizes({ sm: 20, md: 24, lg: 24 })
   },
   h5: {
-    fontWeight: 300,
-    lineHeight: 1.334,
-    fontSize: pxToRem(24),
-    ...responsiveFontSizes({ xs: 19, sm: 19, md: 20, lg: 24 })
+    fontWeight: 500,
+    lineHeight: 1.5,
+    fontSize: pxToRem(18),
+    ...responsiveFontSizes({ sm: 19, md: 20, lg: 20 })
   },
   h6: {
-    fontWeight: 300,
-    lineHeight: 1.6,
-    fontSize: pxToRem(20),
-    ...responsiveFontSizes({ xs: 16, sm: 16, md: 19, lg: 20 })
+    fontWeight: 500,
+    lineHeight: 28 / 18,
+    fontSize: pxToRem(17),
+    ...responsiveFontSizes({ sm: 18, md: 18, lg: 18 })
   },
   subtitle1: {
     fontWeight: 400,
-    lineHeight: 1.75,
-    fontSize: pxToRem(14)
+    lineHeight: 1.5,
+    fontSize: pxToRem(16)
   },
   subtitle2: {
-    fontWeight: 600,
-    lineHeight: 1.57,
+    fontWeight: 400,
+    lineHeight: 22 / 14,
     fontSize: pxToRem(14)
   },
   body1: {
     lineHeight: 1.5,
-    fontSize: pxToRem(15)
+    fontSize: pxToRem(16)
   },
   body2: {
-    lineHeight: 1.43,
-    fontSize: pxToRem(13)
+    lineHeight: 22 / 14,
+    fontSize: pxToRem(14)
   },
   button: {
     fontWeight: 500,
     lineHeight: 1.75,
-    fontSize: pxToRem(13),
+    fontSize: pxToRem(14),
     textTransform: "uppercase"
   },
   caption: {
     lineHeight: 1.5,
-    fontSize: pxToRem(11)
+    fontSize: pxToRem(12)
   },
   overline: {
     fontWeight: 400,
     lineHeight: 1.5,
-    fontSize: pxToRem(10),
+    fontSize: pxToRem(12),
     textTransform: "uppercase"
   },
 };

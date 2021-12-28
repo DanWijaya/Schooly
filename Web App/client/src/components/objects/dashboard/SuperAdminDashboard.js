@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import {
   Avatar,
   Button,
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px",
     color: "white",
     backgroundColor: theme.palette.primary.light,
-    backgroundImage: `url(${dashboardAdminBackground})`,
+    backgroundImage: "url(/images/backgrounds/DashboardAdminBackground.png)",
     backgroundPosition: "right bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",

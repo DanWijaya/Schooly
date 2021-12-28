@@ -1,7 +1,7 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { Bar } from "react-chartjs-2";
+import { Bar, Radar } from "react-chartjs-2";
 import PropTypes from "prop-types";
 import "moment/locale/id";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
@@ -72,23 +72,6 @@ const useStyles = makeStyles((theme) => ({
   tableHeader: {
     backgroundColor: theme.palette.primary.main,
   },
-  graph: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    marginRight: "10px",
-  },
-  graphButtons: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: "10px",
-    alignItems: "center",
-    width: "20vw",
-    [theme.breakpoints.down("sm")]: {
-      width: "200px",
-    },
-  },
   greyBackground: {
     display: "flex",
     alignItems: "center",
@@ -96,24 +79,13 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     padding: "15px",
     backgroundColor: "#E3E5E5",
-    height: "21vw",
-    width: "60vw",
-    [theme.breakpoints.down("sm")]: {
-      height: "200px",
-    },
+    width: "100%",
+    height: "200px",
   },
   headerTableCell: {
     color: "white",
     borderRadius: "0",
     textAlign: "center",
-  },
-  graphParentContainer: {
-    position: "relative",
-    height: "21vw",
-    width: "60vw",
-    [theme.breakpoints.down("sm")]: {
-      height: "200px",
-    },
   },
   personalReportBackground: {
     height: "225px",
@@ -140,6 +112,7 @@ function ScoreGraph(props) {
   for (let i = 0; i < scores.length; i++) {
     label.push(i + 1);
   }
+
   const state = {
     labels: label,
     datasets: [
@@ -155,57 +128,41 @@ function ScoreGraph(props) {
   };
 
   return (
-    <div className={classes.graphParentContainer}>
-      <Bar
-        responsive
-        data={state}
-        options={{
-          maintainAspectRatio: false,
-          title: {
-            display: false,
-            text: `Nilai ${workType} Anda`,
-            fontSize: 20,
-          },
-          legend: {
-            display: false,
-            position: "right",
-          },
-          scales: {
-            yAxes: [
-              {
-                id: "first-y-axis",
-                type: "linear",
-                ticks: {
-                  min: 0,
-                  max: 100,
-                },
+    <Bar
+      data={state}
+      options={{
+        responsive: true,
+        legend: {
+          display: false,
+          position: "right",
+        },
+        scales: {
+          yAxes: [
+            {
+              id: "first-y-axis",
+              type: "linear",
+              ticks: {
+                min: 0,
+                max: 100,
               },
-            ],
-          },
-          tooltips: {
-            callbacks: {
-              label: function (tooltipItem, data) {
-                var label = names[tooltipItem.index] || "";
+            },
+          ],
+        },
+        tooltips: {
+          callbacks: {
+            label: function (tooltipItem, data) {
+              var label = names[tooltipItem.index] || "";
 
-                if (label) {
-                  label += ": ";
-                }
-                label += Math.round(tooltipItem.yLabel * 100) / 100;
-                return label;
-              },
+              if (label) {
+                label += ": ";
+              }
+              label += Math.round(tooltipItem.yLabel * 100) / 100;
+              return label;
             },
           },
-          layout: {
-            padding: {
-              left: 0,
-              right: 0,
-              top: 0,
-              bottom: 0,
-            },
-          },
-        }}
-      />
-    </div>
+        },
+      }}
+    />
   );
 }
 
@@ -265,41 +222,21 @@ function Report(props) {
   const [valueKelas, setValueKelas] = React.useState(""); // Selected class.
   const [valueMatpel, setValueMatpel] = React.useState(""); // Selected subject.
 
-  // Contains every subject that may be accessed first time at subject select.
   const [semuaMatpel, setSemuaMatpel] = React.useState(new Map());
-
-  // Contains every class from database (because a teacher at least teaches a subject and every subject is teached to every class)
   const [semuaKelas, setSemuaKelas] = React.useState(new Map());
-
-  // Contains current menu item in select. key = idKelas, value = namaKelas.
-  // Homeroom class information is not inserted here.
   const [kontenKelas, setKontenKelas] = React.useState(new Map());
-
-  // The homeroom teacher class is seperated because to prevent the traverse of homeroom class from many class data.
-  // kelasWali content = Map {"id": <id of homeroom class>, "name": <name of homeroom class>}
   const [kelasWali, setKelasWali] = React.useState(new Map());
-
-  // Contains current menu item in Select. key = idMatpel, value = namaMatpel
   const [kontenMatpel, setKontenMatpel] = React.useState(new Map());
 
   const [isClassSelected, setIsClassSelected] = React.useState(false);
   const [isSubjectSelected, setIsSubjectSelected] = React.useState(false);
 
-  // elemen array: (1) means there is no student and (2) means there is no task, quiz, and exam.
   const [emptyCondition, setEmptyCondition] = React.useState([]);
 
   // Graph
   const [graphType, setGraphType] = React.useState(0);
   const [graphSubject, setGraphSubject] = React.useState(null);
-  // const [taskGraphCurrentSubject, setTaskGraphCurrentSubject] = React.useState(
-  //   null
-  // );
-  // const [quizGraphCurrentSubject, setQuizGraphCurrentSubject] = React.useState(
-  //   null
-  // );
-  // const [examGraphCurrentSubject, setExamGraphCurrentSubject] = React.useState(
-  //   null
-  // );
+
   const [allowedSubjectIndex, setAllowedSubjectIndex] = React.useState(null);
 
   React.useEffect(() => {
@@ -318,28 +255,6 @@ function Report(props) {
       let randomNumber =
         allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
       setGraphSubject(randomNumber);
-
-      // if (
-      //   taskGraphCurrentSubject === null &&
-      //   all_subjects.length !== 0
-      // ) {
-      //   let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
-      //   setTaskGraphCurrentSubject(randomNumber)
-      // }
-      // if (
-      //   quizGraphCurrentSubject === null &&
-      //   all_subjects.length !== 0
-      // ) {
-      //   let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
-      //   setQuizGraphCurrentSubject(randomNumber)
-      // }
-      // if (
-      //   examGraphCurrentSubject === null &&
-      //   all_subjects.length !== 0
-      // ) {
-      //   let randomNumber = allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
-      //   setExamGraphCurrentSubject(randomNumber)
-      // }
     }
   }, [all_subjects]);
 
@@ -447,71 +362,6 @@ function Report(props) {
       }
     }
     setGraphSubject(allowedSubjectIndex[newIndex]);
-
-    // if (workType === "Tugas") {
-    //   let currentIndex = allowedSubjectIndex.indexOf(taskGraphCurrentSubject);
-    //   if (direction === "Left") {
-    //     let newIndex;
-    //     if(currentIndex + 1 >= allowedSubjectIndex.length) {
-    //       newIndex = 0;
-    //     }
-    //     else {
-    //       newIndex = currentIndex + 1;
-    //     }
-    //     setTaskGraphCurrentSubject(allowedSubjectIndex[newIndex])
-    //   } else if (direction === "Right") {
-    //     let newIndex;
-    //     if(currentIndex - 1 < 0) {
-    //       newIndex = allowedSubjectIndex.length - 1;
-    //     }
-    //     else {
-    //       newIndex = currentIndex - 1;
-    //     }
-    //     setTaskGraphCurrentSubject(allowedSubjectIndex[newIndex])
-    //   }
-    // } else if (workType === "Kuis") {
-    //   let currentIndex = allowedSubjectIndex.indexOf(quizGraphCurrentSubject);
-    //   if (direction === "Left") {
-    //     let newIndex;
-    //     if(currentIndex + 1 >= allowedSubjectIndex.length) {
-    //       newIndex = 0;
-    //     }
-    //     else {
-    //       newIndex = currentIndex + 1;
-    //     }
-    //     setQuizGraphCurrentSubject(allowedSubjectIndex[newIndex])
-    //   } else if (direction === "Right") {
-    //     let newIndex;
-    //     if(currentIndex - 1 < 0) {
-    //       newIndex = allowedSubjectIndex.length - 1;
-    //     }
-    //     else {
-    //       newIndex = currentIndex - 1;
-    //     }
-    //     setQuizGraphCurrentSubject(allowedSubjectIndex[newIndex])
-    //   }
-    // } else if (workType === "Ujian") {
-    //   let currentIndex = allowedSubjectIndex.indexOf(examGraphCurrentSubject);
-    //   if (direction === "Left") {
-    //     let newIndex;
-    //     if(currentIndex + 1 >= allowedSubjectIndex.length) {
-    //       newIndex = 0;
-    //     }
-    //     else {
-    //       newIndex = currentIndex + 1;
-    //     }
-    //     setExamGraphCurrentSubject(allowedSubjectIndex[newIndex])
-    //   } else if (direction === "Right") {
-    //     let newIndex;
-    //     if(currentIndex - 1 < 0) {
-    //       newIndex = allowedSubjectIndex.length - 1;
-    //     }
-    //     else {
-    //       newIndex = currentIndex - 1;
-    //     }
-    //     setExamGraphCurrentSubject(allowedSubjectIndex[newIndex])
-    //   }
-    // }
   };
 
   function createGraph() {
@@ -528,131 +378,76 @@ function Report(props) {
       graph = graphAssessment(graphSubject, "Ujian");
     }
 
-    // if (types[graphType] === "Tugas") {
-    //   graph = graphTask(taskGraphCurrentSubject);
-    //   subject = showSubject(taskGraphCurrentSubject)
-    // } else if (types[graphType] === "Kuis") {
-    //   graph = graphAssessment(quizGraphCurrentSubject, "Kuis");
-    //   subject = showSubject(quizGraphCurrentSubject)
-
-    // } else {
-    //   graph = graphAssessment(examGraphCurrentSubject, "Ujian");
-    //   subject = showSubject(examGraphCurrentSubject)
-    // }
-
     return (
-      // <Grid item xs={12} sm={4} container direction="column" spacing={1} alignItems="center">
-      //   <Grid item>
-      //     <div className={classes.graphButtons}>
-      //       <IconButton
-      //         onClick={() => {
-      //           if (graphType - 1 < 0) {
-      //             setGraphType(types.length - 1);
-      //           } else {
-      //             setGraphType((graphType - 1) % 3);
-      //           }
-      //         }}
-      //       >
-      //         <ArrowBackIosIcon />
-      //       </IconButton>
-      //       <Typography align="center">
-      //         Nilai {types[graphType]} Anda
-      //       </Typography>
-      //       <IconButton
-      //         onClick={() => {setGraphType((graphType + 1) % 3)}}
-      //         >
-      //         <ArrowForwardIosIcon />
-      //       </IconButton>
-      //     </div>
-      <Grid item container direction="column" spacing={1} alignItems="center">
-        <Grid
-          item
-          className={classes.graphButtons}
-          style={{ margin: "0 0 10px" }}
-        >
-          <IconButton
-            onClick={() => {
-              if (graphType - 1 < 0) {
-                setGraphType(types.length - 1);
-              } else {
-                setGraphType(graphType - 1);
-              }
-            }}
-          >
-            <ArrowBackIosIcon />
-          </IconButton>
-          <Typography align="center">Nilai {types[graphType]} Anda</Typography>
-          <IconButton
-            onClick={() => {
-              setGraphType((graphType + 1) % types.length);
-            }}
-          >
-            <ArrowForwardIosIcon />
-          </IconButton>
-        </Grid>
-        <Grid item>
-          {graph === null ? (
-            <div className={classes.greyBackground}>
-              <Typography
-                align="center"
-                color="textSecondary"
-                variant="subtitle2"
-              >
-                Belum ada {types[graphType]} yang telah dinilai untuk mata
-                pelajaran terkait
-              </Typography>
-            </div>
-          ) : (
-            graph
-          )}
-        </Grid>
-        {/* <Grid item>
-          <div className={classes.graphButtons}>
+      <div>
+        <Grid item container justify="space-between" alignItems="center">
+          <Grid item>
             <IconButton
-              onClick={() =>
-                changeGraphSubject(types[graphType], "Left", all_subjects.length)
-              }
+              onClick={() => {
+                if (graphType - 1 < 0) {
+                  setGraphType(types.length - 1);
+                } else {
+                  setGraphType(graphType - 1);
+                }
+              }}
             >
               <ArrowBackIosIcon />
             </IconButton>
-            {subject}
+          </Grid>
+          <Grid item>
+            <Typography align="center">Nilai {types[graphType]} Anda</Typography>
+          </Grid>
+          <Grid item>
             <IconButton
-              onClick={() =>
-                changeGraphSubject(
-                  types[graphType],
-                  "Right",
-                  all_subjects.length
-                ) */}
-        <Grid item className={classes.graphButtons}>
-          <IconButton
-            onClick={() => {
-              if (graphSubject - 1 < 0) {
-                setGraphSubject(all_subjects.length - 1);
-              } else {
-                setGraphSubject(graphSubject - 1);
-              }
-              // >
-              //     <ArrowForwardIosIcon />
-              //   </IconButton>
-              // </div>
-            }}
-          >
-            <ArrowBackIosIcon />
-          </IconButton>
-          {subject}
-          <IconButton
-            onClick={() => {
-              setGraphSubject((graphSubject + 1) % all_subjects.length);
-              // changeGraphSubject(
-              //   types[graphType],
-              //   "Right",
-              //   all_subjects.length
-            }}
-          >
-            <ArrowForwardIosIcon />
-          </IconButton>
+              onClick={() => {
+                setGraphType((graphType + 1) % types.length);
+              }}
+            >
+              <ArrowForwardIosIcon />
+            </IconButton>
+          </Grid>
         </Grid>
-      </Grid>
+        {graph === null ? (
+          <div className={classes.greyBackground}>
+            <Typography
+              align="center"
+              color="textSecondary"
+            >
+              Belum ada {types[graphType]} yang telah dinilai untuk mata
+              pelajaran terkait
+            </Typography>
+          </div>
+        ) : (
+          graph
+        )}
+        <Grid item container justify="space-between" alignItems="center">
+          <Grid item>
+            <IconButton
+              onClick={() => {
+                if (graphSubject - 1 < 0) {
+                  setGraphSubject(all_subjects.length - 1);
+                } else {
+                  setGraphSubject(graphSubject - 1);
+                }
+              }}
+            >
+              <ArrowBackIosIcon />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            {subject}
+          </Grid>
+          <Grid item>
+            <IconButton
+              onClick={() => {
+                setGraphSubject((graphSubject + 1) % all_subjects.length);
+              }}
+            >
+              <ArrowForwardIosIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </div>
     );
   }
 
@@ -687,7 +482,6 @@ function Report(props) {
 
   function generateMatPelMenuItem() {
     let menuItems = [];
-    console.log(kontenMatpel);
     kontenMatpel.forEach((namaMatPel, idMatPel) => {
       if (user.subject_teached.includes(idMatPel)) {
         menuItems.push(
@@ -913,7 +707,7 @@ function Report(props) {
     return message;
   }
 
-  function resetKonten() {
+  function resetContent() {
     setKontenKelas(semuaKelas);
     setKontenMatpel(semuaMatpel);
     setIsClassSelected(false);
@@ -921,7 +715,6 @@ function Report(props) {
   }
 
   function handleKelasChange(event) {
-    // event.target.value contains currently selected value.
     let selectedClassId = event.target.value;
 
     if (isSubjectSelected) {
@@ -934,7 +727,6 @@ function Report(props) {
 
       // If the teacher is a homeroom teacher and the class that is selected is the homeroom class of that teacher,
       if (kelasWali.size !== 0 && selectedClassId === kelasWali.get("id")) {
-        console.log(semuaMatpel);
         setKontenMatpel(semuaMatpel);
       } else {
         // If the teacher is not a homeroom teacher or the class that is selected is not the homeroom class of that teacher,
@@ -1179,8 +971,7 @@ function Report(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all_tasks, all_subjects_map, kelasWali, all_assessments]);
 
-  // Generate table content for report page that is opened from sidedrawer.
-  // After all the datas needed is already obtained.
+  // Generate table content for report page that is opened from sidedrawer, after all the datas needed is already obtained.
   // getStudentsByClass is in Select handler function and will be called when the teacher already selected class and subject.
   // valueMatpel dan valueKelas is ensured not empty.
   React.useEffect(() => {
@@ -1283,7 +1074,7 @@ function Report(props) {
           setEmptyCondition(condition);
 
           setHeaders(headerNames);
-          resetKonten();
+          resetContent();
         })
         .catch((err) => {
           console.log(err);
@@ -1294,11 +1085,9 @@ function Report(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [students_by_class]);
 
-  // Initialize select's menu item content,
-  // after setKelasWali, getAllClass(user.unit ,"map"), and getAllSubjects(user.unit, "map") is already runned.
+  // Initialize select's menu item content, after setKelasWali, getAllClass(user.unit ,"map"), and getAllSubjects(user.unit, "map") is already runned.
   React.useEffect(() => {
     countMIDependencyUpdate.current++;
-    console.log("countMIDependencyUpdate : ", countMIDependencyUpdate);
     if (countMIDependencyUpdate.current === 4) {
       new Promise((resolve) => {
         // To determine teacher's status: homeroom or not.
@@ -1320,8 +1109,7 @@ function Report(props) {
             daftarMatpel.set(subjectId, subjectName);
           });
         } else {
-          // If user is not a homeroom teacher of any class.
-          // fills subject list with subject teached only.
+          // If user is not a homeroom teacher of any class, fills subject list with subject teached only.
           user.subject_teached.forEach((subjectId) => {
             daftarMatpel.set(subjectId, all_subjects_map.get(subjectId));
           });
@@ -1377,10 +1165,10 @@ function Report(props) {
           </Grid>
           <Divider />
           <Grid container spacing={4} className={classes.content}>
-            <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={8}>
               {createGraph()}
             </Grid>
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12} md={4}>
               Graph radar literally dari tabel bawah buat semua matpel juga
               dirata2in tapi tugas, kuis, ujiannya.
             </Grid>

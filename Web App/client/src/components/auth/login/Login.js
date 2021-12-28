@@ -4,9 +4,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { loginUser } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import schoolyLogo from "../../../images/SchoolyLogo.png";
-import loginArtLeft from "./LoginArtLeft.png";
-import loginArtRight from "./LoginArtRight.png";
 import {
   Button,
   Divider,
@@ -178,7 +175,7 @@ class Login extends Component {
         <Link to="/">
           <img
             alt="Schooly Logo"
-            src={schoolyLogo}
+            src="/logos/SchoolyLogo.png"
             className={classes.schoolyLogo}
           />
         </Link>
@@ -192,7 +189,7 @@ class Login extends Component {
             <Grid item xs={3} container justify="flex-end">
               <img
                 alt="Login Art Left"
-                src={loginArtLeft}
+                src="/images/illustrations/LoginArtLeft.png"
                 className={classes.artThumbnail}
               />
             </Grid>
@@ -305,7 +302,7 @@ class Login extends Component {
             <Grid item xs={3} container justify="flex-start">
               <img
                 alt="Login Art Right"
-                src={loginArtRight}
+                src="/images/illustrations/LoginArtRight.png"
                 className={classes.artThumbnail}
               />
             </Grid>
