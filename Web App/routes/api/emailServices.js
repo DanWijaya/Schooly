@@ -11,7 +11,7 @@ const SES_CONFIG = {
 
 const ses = new AWS.SES(SES_CONFIG);
 
-router.post("/verifyRegistration", async (req, res) => {
+router.post("/send-otp-registration-email", async (req, res) => {
   try {
     let { email, name } = req.body;
     const OTP = 0;

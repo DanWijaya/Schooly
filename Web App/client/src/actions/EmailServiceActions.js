@@ -9,7 +9,7 @@ export const verifyRegistration = (user) => {
     }
     */
   return axios
-    .post("/verifyRegistration", user)
+    .post("/api/email-service/send-otp-registration-email", user)
     .then((res) => {
       console.log("Email to verify registration is sent successfully");
       return res.data;

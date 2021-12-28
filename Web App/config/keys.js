@@ -18,6 +18,11 @@ module.exports = {
     AWS_SECRET_ACCESS_KEY: "wZyk01EZTJy9VJ00pv+GhHrOvumD3pbt7D5YJNc2",
     AWS_REGION: "ap-southeast-1",
     AWS_BUCKET_NAME: "test-storage1",
+    SES_CONFIG: {
+      accessKeyId: "AKIAZX2Y2D6EGMUWACYT",
+      secretAccessKey: "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",
+      region: "ap-southeast-1",
+    },
   },
   cdn: "https://cdn.schoolysystem.com",
 };

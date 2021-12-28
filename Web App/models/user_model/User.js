@@ -2,7 +2,7 @@ const { ObjectId } = require("mongodb"); // API from mongoose MongoDB
 const mongoose = require("mongoose"); // Require mongoose
 const Schema = mongoose.Schema; // Define a Schema
 
-const options = { discriminatorKey: "role" };
+const options = { discriminatorKey: "role", timestamps: true };
 
 // Create User Schema
 const UserSchema = new Schema(

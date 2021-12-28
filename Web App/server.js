@@ -31,6 +31,9 @@ const units = require("./routes/api/units");
 // Settings
 const settings = require("./routes/api/settings");
 
+//Email Services
+const emails = require("./routes/api/email-service/otps");
+
 const app = express();
 
 // Bodyparser middleware
@@ -97,6 +100,9 @@ app.use("/api/events", events);
 
 // Handle setting routing
 app.use("/api/settings", settings);
+
+// Handle Email service routing
+app.use("/api/email-service", emails);
 
 // Always put this in the end.
 const port = process.env.PORT || 5000;
