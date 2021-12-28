@@ -44,7 +44,7 @@ import {
   Assignment as AssignmentIcon,
   Assessment as AssessmentIcon,
 } from "@material-ui/icons";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { BsClipboardData } from "react-icons/bs";
 import { FaClipboardList } from "react-icons/fa";
 
@@ -113,11 +113,10 @@ function ScoreGraph(props) {
     label.push(i + 1);
   }
 
-  const state = {
+  const data = {
     labels: label,
     datasets: [
       {
-        label: [1, 2],
         backgroundColor: "#1976D2",
         borderColor: "rgba(0,0,0,0)",
         borderWidth: 2,
@@ -127,42 +126,78 @@ function ScoreGraph(props) {
     ],
   };
 
-  return (
-    <Bar
-      data={state}
-      options={{
-        responsive: true,
-        legend: {
-          display: false,
-          position: "right",
-        },
-        scales: {
-          yAxes: [
-            {
-              id: "first-y-axis",
-              type: "linear",
-              ticks: {
-                min: 0,
-                max: 100,
-              },
-            },
-          ],
-        },
-        tooltips: {
-          callbacks: {
-            label: function (tooltipItem, data) {
-              var label = names[tooltipItem.index] || "";
-
-              if (label) {
-                label += ": ";
-              }
-              label += Math.round(tooltipItem.yLabel * 100) / 100;
-              return label;
-            },
+  const options = {
+    responsive: true,
+    legend: {
+      display: false,
+    },
+    scales: {
+      yAxes: [
+        {
+          id: "first-y-axis",
+          type: "linear",
+          ticks: {
+            min: 0,
+            max: 100,
           },
         },
-      }}
-    />
+      ],
+    },
+    tooltips: {
+      callbacks: {
+        label: function (tooltipItem, data) {
+          var label = names[tooltipItem.index] || "";
+
+          if (label) {
+            label += ": ";
+          }
+          label += Math.round(tooltipItem.yLabel * 100) / 100;
+          return label;
+        },
+      },
+    },
+  };
+
+  return (
+    <Bar data={data} options={options} />
+  );
+}
+
+function SubjectStats(props) {
+  const theme = useTheme();
+
+  const data = {
+    labels: ["Matematika", "Fisika", "Biologi"],
+    datasets: [
+      {
+        label: "Rata-Rata Nilai",
+        data: [10, 80, 50],
+        backgroundColor: theme.palette.primary.fade,
+        borderColor: theme.palette.primary.main,
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    legend: {
+      display: false,
+    },
+    layout: {
+      padding: 0
+    },
+    scale: {
+      ticks: {
+        min: 0,
+        max: 100,
+      },
+    },
+  };
+
+
+  return (
+    <Radar data={data} options={options} />
   );
 }
 
@@ -1164,13 +1199,12 @@ function Report(props) {
             </Grid>
           </Grid>
           <Divider />
-          <Grid container spacing={4} className={classes.content}>
-            <Grid item xs={12} md={8}>
+          <Grid container alignItems="center" spacing={2} className={classes.content}>
+            <Grid item xs={12} md={6}>
               {createGraph()}
             </Grid>
-            <Grid item xs={12} md={4}>
-              Graph radar literally dari tabel bawah buat semua matpel juga
-              dirata2in tapi tugas, kuis, ujiannya.
+            <Grid item xs={12} md={6}>
+              <SubjectStats />
             </Grid>
             <Grid item xs={12}>
               <TableContainer component={Paper}>
