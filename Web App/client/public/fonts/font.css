@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "Inter";
+  src: local("Inter"), url(./Inter/Inter-Regular.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Caveat";
+  src: local("Caveat"), url(./Caveat/Caveat-Regular.ttf) format("truetype");
+}

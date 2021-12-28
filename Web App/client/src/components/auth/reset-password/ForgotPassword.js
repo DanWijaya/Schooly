@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { createHash } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import schoolyLogo from "../../../images/SchoolyLogo.png";
-import resetPasswordArt from "./PasswordArt.png";
 import {
   Button,
   Grid,
@@ -114,7 +112,7 @@ class ForgotPassword extends Component {
         <Link to="/">
           <img
             alt="Schooly Logo"
-            src={schoolyLogo}
+            src="/logos/SchoolyLogo.png"
             className={classes.schoolyLogo}
           />
         </Link>
@@ -201,7 +199,7 @@ class ForgotPassword extends Component {
               <Grid item xs={5}>
                 <img
                   alt="Reset Password Art"
-                  src={resetPasswordArt}
+                  src="/images/illustrations/PasswordArt.png"
                   className={classes.artThumbnail}
                 />
               </Grid>

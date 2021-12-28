@@ -17,7 +17,6 @@ import {
 } from "../../../actions/AssessmentActions";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
-import viewClassPicture from "./ViewClassPicture.png";
 import AssessmentItem from "../item/AssessmentItem";
 import TaskItem from "../item/TaskItem";
 import MaterialItem from "../item/MaterialItem";
@@ -65,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "30px",
     color: "white",
     backgroundColor: theme.palette.primary.light,
-    backgroundImage: `url(${viewClassPicture})`,
+    backgroundImage: "url(/images/backgrounds/ViewClassPicture.png)",
     backgroundPosition: "bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",

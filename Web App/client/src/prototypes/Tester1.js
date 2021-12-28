@@ -1,6 +1,7 @@
 import React from "react";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import { Bar, Radar } from "react-chartjs-2";
 import MobileStepper from "@material-ui/core/MobileStepper";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -125,6 +126,37 @@ export default function TextMobileStepper() {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Chart.js Bar Chart',
+      },
+    },
+  };
+
+  const labels = ['January', 'February', 'March'];
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Dataset 1',
+        data: [0, 1, 2, 3],
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+      {
+        label: 'Dataset 2',
+        data: [0, 1, 2, 3],
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      },
+    ],
+  };
+
   return (
     <div className={classes.root}>
       <Paper square elevation={0} className={classes.header}>
@@ -214,6 +246,7 @@ export default function TextMobileStepper() {
       <Typography variant="overline" display="block" gutterBottom>
         overline text
       </Typography>
+      <Bar options={options} data={data} />
     </div>
   );
 }

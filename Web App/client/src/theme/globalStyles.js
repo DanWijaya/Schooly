@@ -10,12 +10,13 @@ const GlobalStyles = withStyles((theme) => ({
     html: {
       width: "100%",
       height: "100%",
+      fontSize: "0.9rem",
       "-ms-text-size-adjust": "100%",
       "-webkit-overflow-scrolling": "touch"
     },
     body: {
       width: "100%",
-      height: "100%"
+      height: "100%",
     },
     "#root": {
       width: "100%",

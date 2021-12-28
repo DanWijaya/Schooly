@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { Doughnut } from "react-chartjs-2";
 import PropTypes from "prop-types";
 import CustomLinkify from "../../misc/linkify/Linkify";
-import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import {
   Avatar,
   Button,
@@ -34,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px",
     color: "white",
     backgroundColor: theme.palette.primary.light,
-    backgroundImage: `url(${dashboardAdminBackground})`,
+    backgroundImage: "url(/images/backgrounds/DashboardAdminBackground.png)",
     backgroundPosition: "right bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",

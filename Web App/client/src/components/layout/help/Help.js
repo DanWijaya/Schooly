@@ -2,8 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import helpCenter from "./HelpCenter.png";
-import helpCenterSmall from "./HelpCenterSmall.png";
 import {
   Avatar,
   Divider,
@@ -32,13 +30,13 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "400px",
     padding: "20px",
-    backgroundImage: `url(${helpCenter})`,
+    backgroundImage: "url(/images/illustrations/HelpCenter.png)",
     backgroundPosition: "bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
     [theme.breakpoints.down("sm")]: {
       height: "350px",
-      backgroundImage: `url(${helpCenterSmall})`,
+      backgroundImage: "url(/images/illustrations/HelpCenterSmall.png)",
     },
   },
   helpTopics: {

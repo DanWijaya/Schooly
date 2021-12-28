@@ -5,6 +5,7 @@ import props from "./theme/props";
 import overrides from "./theme/overrides";
 import typography from "./theme/typography";
 
+// For more information check the default theming of material UI.
 const theme = createMuiTheme({
   breakpoints: breakpoints,
   palette: palette,
@@ -13,7 +14,5 @@ const theme = createMuiTheme({
 
 theme.props = props(theme);
 theme.overrides = overrides(theme);
-
-// For more information check the default theming of material UI.
 
 export default theme;

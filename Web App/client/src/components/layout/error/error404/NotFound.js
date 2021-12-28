@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import notFoundBackground from "./NotFoundBackground.svg";
 import {
   Button,
   Typography
@@ -20,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundImage: `url(${notFoundBackground})`,
+    backgroundImage: "url(/images/backgrounds/NotFoundBackground.svg)",
     backgroundPosition: "bottom",
     backgroundOrigin: "content-box",
     backgroundRepeat: "no-repeat",

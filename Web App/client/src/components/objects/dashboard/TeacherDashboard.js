@@ -6,7 +6,6 @@ import TaskItem from "../item/TaskItem";
 import AssessmentItem from "../item/AssessmentItem";
 import Empty from "../../misc/empty/Empty";
 import CustomLinkify from "../../misc/linkify/Linkify";
-import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import {
   Button,
   Card,
@@ -45,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px",
     color: "white",
     backgroundColor: theme.palette.primary.light,
-    backgroundImage: `url(${dashboardTeacherBackground})`,
+    backgroundImage: "url(images/backgrounds/DashboardTeacherBackground.png)",
     backgroundPosition: "right bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",

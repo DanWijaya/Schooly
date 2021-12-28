@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import problemEncounteredBackground from "./ProblemEncounteredBackground.svg";
 import {
   Button,
   Typography
@@ -21,7 +20,7 @@ const styles = (theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundImage: `url(${problemEncounteredBackground})`,
+    backgroundImage: "url(/images/backgrounds/ProblemEncounteredBackground.svg)",
     backgroundPosition: "bottom",
     backgroundOrigin: "content-box",
     backgroundRepeat: "no-repeat",

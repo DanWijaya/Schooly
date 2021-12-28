@@ -1,6 +1,10 @@
 import { fade } from "@material-ui/core/styles/colorManipulator";
 
 const palette = {
+  common: {
+    black: "#000",
+    white: "#FFF"
+  },
   primary: {
     light: "#64B5F6",
     main: "#2196F3",
@@ -52,7 +56,11 @@ const palette = {
     A200: "#AAAAAA",
     A400: "#303030",
     A700: "#616161",
-  }
+  },
+  background: {
+    paper: "#FFF",
+    default: "#FFF",
+  },
 };
 
 export default palette;

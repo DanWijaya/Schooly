@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import termsOfServiceArt from "./TermsOfServiceArt.png";
 import ScrollToTopButton from "../../../misc/scroll-to-top/ScrollToTopButton";
 import {
   Divider,
@@ -61,7 +60,7 @@ function TermsOfService(props) {
       <div className={classes.termsOfServiceTitle}>
         <img
           alt="Terms of Service Art"
-          src={termsOfServiceArt}
+          src="/images/illustrations/TermsOfServiceArt.png"
           className={classes.termsOfServiceArt}
         />
         <Typography

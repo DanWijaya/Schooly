@@ -18,6 +18,10 @@ import theme from "./theme";
 // Page Components
 import Footer from "./Footer";
 import Navigation from "./components/navigation/Navigation";
+// Misc
+import PrivateRoute from "./components/misc/private-route/PrivateRoute";
+import ProgressIndicator from "./components/misc/progress-indicator/ProgressIndicator";
+import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
 // Auth
 import Register from "./components/auth/register/Register";
 import Login from "./components/auth/login/Login";
@@ -33,10 +37,6 @@ import TermsOfService from "./components/layout/legal/terms-of-service/TermsOfSe
 import PrivacyPolicy from "./components/layout/legal/privacy-policy/PrivacyPolicy";
 import NotFound from "./components/layout/error/error404/NotFound";
 import ProblemEncountered from "./components/layout/error/error500/ProblemEncountered";
-// Misc
-import PrivateRoute from "./components/misc/private-route/PrivateRoute";
-import ProgressIndicator from "./components/misc/progress-indicator/ProgressIndicator";
-import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
 // Dashboard
 import Dashboard from "./components/objects/dashboard/Dashboard";
 // Class
@@ -185,7 +185,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          {/*CssBaseline*/}
+          <CssBaseline />
           <GlobalStyles />
           <Router>
             <ScrollToTop />
@@ -327,6 +327,7 @@ class App extends Component {
                       path="/daftar-kelas"
                       component={ClassList}
                     />
+
                     {/* Route Subject */}
                     <PrivateRoute
                       exact
@@ -340,6 +341,7 @@ class App extends Component {
                       path="/daftar-mata-pelajaran"
                       component={SubjectList}
                     />
+
                     {/* Route Event */}
                     <PrivateRoute exact path="/kalender" component={Calendar} />
 
@@ -555,6 +557,7 @@ class App extends Component {
 
                     {/* Route Report */}
                     <PrivateRoute exact path="/rapor/:id" component={Report} />
+                    
                     {/* Route User */}
                     <PrivateRoute
                       exact

@@ -1,11 +1,4 @@
 import React from "react";
-import backpackStudent from "./BackpackStudent-MateseFields.jpg";
-import computerClass from "./ComputerClass-MimiThian.jpg";
-import discussionWork from "./DiscussionWork-ScottGraham.jpg";
-import onlineLearning from "./OnlineLearning-CompareFibre.jpg";
-import aboutArt1 from "./AboutArt1.png";
-import aboutArt2 from "./AboutArt2.png";
-import aboutArt3 from "./AboutArt3.png";
 import { Button, Divider, Grid, Hidden, Typography } from "@material-ui/core";
 import { Email as EmailIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
@@ -70,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   introduction: {
-    backgroundImage: `url(${backpackStudent})`,
+    backgroundImage: "url(/images/photos/BackpackStudent-MateseFields.jpg)",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
@@ -92,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "40px",
   },
   worldChanges: {
-    backgroundImage: `url(${computerClass})`,
+    backgroundImage: "url(/images/photos/ComputerClass-MimiThian.jpg)",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
@@ -103,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
     height: "300px",
   },
   techWorld: {
-    backgroundImage: `url(${discussionWork})`,
+    backgroundImage: "url(/images/photos/DiscussionWork-ScottGraham.jpg)",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
@@ -114,7 +107,7 @@ const useStyles = makeStyles((theme) => ({
     height: "300px",
   },
   solution: {
-    backgroundImage: `url(${onlineLearning})`,
+    backgroundImage: "url(/images/photos/OnlineLearning-CompareFibre.jpg)",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
@@ -310,7 +303,7 @@ function About(props) {
             >
               <img
                 alt="Schooly Feature 1"
-                src={aboutArt1}
+                src="/images/illustrations/AboutArt1.png"
                 className={classes.whySchoolyThumbnail}
               />
             </Grid>
@@ -352,7 +345,7 @@ function About(props) {
               >
                 <img
                   alt="Schooly Feature 2"
-                  src={aboutArt2}
+                  src="/images/illustrations/AboutArt2.png"
                   className={classes.whySchoolyThumbnail}
                 />
               </Grid>
@@ -374,7 +367,7 @@ function About(props) {
               >
                 <img
                   alt="Schooly Feature 2"
-                  src={aboutArt2}
+                  src="/images/illustrations/AboutArt3.png"
                   className={classes.whySchoolyThumbnail}
                 />
               </Grid>
@@ -399,7 +392,7 @@ function About(props) {
             >
               <img
                 alt="Schooly Feature 3"
-                src={aboutArt3}
+                src="/images/illustrations/AboutArt3.png"
                 className={classes.whySchoolyThumbnail}
               />
             </Grid>
