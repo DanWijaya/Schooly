@@ -84,8 +84,6 @@ import ManagePendingUsers from "./components/objects/user/ManagePendingUsers";
 import TeacherList from "./components/objects/user/TeacherList";
 // Settings
 import Setting from "./components/objects/setting/Setting";
-// Prototypes
-import Tester from "./prototypes/Tester1";
 import BulkRegister from "./prototypes/bulk-register/BulkRegister";
 // Super Admin Only
 import UnitList from "./components/objects/unit/UnitList";
@@ -209,11 +207,6 @@ class App extends Component {
                   />
                 ) : (
                   <Switch>
-                    <Route
-                      exact
-                      path="/tester"
-                      render={(props) => <Tester {...props} />}
-                    />
                     <Route
                       exact
                       path="/"
@@ -557,7 +550,7 @@ class App extends Component {
 
                     {/* Route Report */}
                     <PrivateRoute exact path="/rapor/:id" component={Report} />
-                    
+
                     {/* Route User */}
                     <PrivateRoute
                       exact

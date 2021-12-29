@@ -20,11 +20,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import {
-  Add as AddIcon,
-  Announcement as AnnouncementIcon,
-  AssignmentOutlined as AssignmentIcon,
   LocationOn as LocationOnIcon,
-  MenuBook as MenuBookIcon,
   Timer as TimerIcon,
   TimerOff as TimerOffIcon,
 } from "@material-ui/icons";
