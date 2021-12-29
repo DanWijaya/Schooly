@@ -72,6 +72,7 @@ function MaterialItem(props) {
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
+                  style={{ paddingLeft: "10px" }}
                 >
                   <OptionMenu
                     actions={["Sunting", "Hapus"]}

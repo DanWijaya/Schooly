@@ -175,6 +175,7 @@ function AssessmentItem(props) {
                         onClick={(e) => {
                           e.stopPropagation();
                         }}
+                        style={{ paddingLeft: "10px" }}
                       >
                         <OptionMenu
                           actions={["Salin Tautan", "Sunting", "Hapus"]}
