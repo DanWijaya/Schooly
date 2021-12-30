@@ -43,7 +43,7 @@ function validateRegisterInput1(data) {
   };
 }
 
-async function validateRegisterInput2(data) {
+function validateRegisterInput2(data) {
   let errors = {};
   // Convert empty fields to an empty string so we can use validator functions
   // data keys: name
