@@ -541,6 +541,21 @@ router.put("/teacher/:teacherId", (req, res) => {
     });
 });
 
+router.get("/check-email-exist", (req, res) => {
+  let { email } = req.query;
+  User.findOne({ email: email })
+    .then((user) => {
+      if (user) {
+        return res.json({ exist: true });
+      }
+      return res.json({ exist: false });
+    })
+    .catch((err) => {
+      console.error("check-email-exist failed");
+      return res.status(400).json(err);
+    });
+});
+
 router.post("/registerStudentsBulk", (req, res) => {
   let { classes, users } = req.body;
   // Receive req.body.classes.

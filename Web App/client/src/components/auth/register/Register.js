@@ -5,7 +5,11 @@ import PropTypes from "prop-types";
 import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import { clearErrors } from "../../../actions/ErrorActions";
-import { registerUser, validateRegister } from "../../../actions/UserActions";
+import {
+  registerUser,
+  validateRegister,
+  checkEmailExist,
+} from "../../../actions/UserActions";
 import { getAllUnits } from "../../../actions/UnitActions";
 import {
   sendOTPRegistrationEmail,
@@ -23,6 +27,7 @@ import {
   InputLabel,
   MenuItem,
   Paper,
+  Snackbar,
   Select,
   Stepper,
   Step,
@@ -30,6 +35,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -134,9 +140,9 @@ class Register extends Component {
       unit: null,
       tanggal_lahir: new Date(),
       activeStep: 0,
-      snackbarOpen: false,
       submitButtonActive: false,
       openUploadDialog: false,
+      openSnackbar: false,
     };
   }
 
@@ -165,7 +171,6 @@ class Register extends Component {
     if (Object.keys(nextProps.errors).length > 0) {
       this.setState({
         errors: nextProps.errors,
-        snackbarOpen: true,
       });
     }
   }
@@ -175,6 +180,14 @@ class Register extends Component {
       tanggal_lahir: date,
       errors: { ...this.state.errors, tanggal_lahir: "" },
     });
+  };
+
+  handleCloseSnackbar = () => {
+    this.setState({ openSnackbar: false });
+  };
+
+  handleOpenSnackbar = () => {
+    this.setState({ openSnackbar: true });
   };
 
   onChange = (e, otherfield) => {
@@ -205,6 +218,7 @@ class Register extends Component {
     };
 
     if (this.state.submitButtonActive) {
+      console.log(newUser);
       this.props
         .registerUser(newUser)
         .then((res) => {
@@ -213,7 +227,6 @@ class Register extends Component {
         .catch((err) =>
           this.setState({
             errors: err,
-            snackbarOpen: true,
           })
         );
     }
@@ -238,7 +251,7 @@ class Register extends Component {
 
     const getStepContent = (stepIndex) => {
       switch (stepIndex) {
-        case 1:
+        case 0:
           return (
             <Grid container direction="column" spacing={4}>
               <Grid item>
@@ -315,20 +328,14 @@ class Register extends Component {
               </Grid>
             </Grid>
           );
-        case 0:
+        case 1:
           return (
             <Grid container direction="column" spacing={4}>
               <Grid item>
-                {this.state.isVerifiedEmail ? (
-                  <Typography variant="h6">
-                    Verifikasi email {this.state.email} berhasil.
-                  </Typography>
-                ) : (
-                  <Typography variant="h6">
-                    Masukkan kode verifikasi yang dikirmkan ke email{" "}
-                    <b>{this.state.email}</b>.
-                  </Typography>
-                )}
+                <Typography variant="h6">
+                  Masukkan kode verifikasi yang dikirmkan ke email{" "}
+                  <b>{this.state.email}</b>.
+                </Typography>
               </Grid>
               <Grid item>
                 <TextField
@@ -347,12 +354,14 @@ class Register extends Component {
               </Grid>
               <Grid item container justify="flex-end">
                 <Button
-                  onClick={() =>
+                  onClick={() => {
+                    this.setState({ otp: "", errors: {} });
+                    this.handleOpenSnackbar();
                     sendOTPRegistrationEmail({
                       email: this.state.email,
                       name: this.state.name,
-                    })
-                  }
+                    });
+                  }}
                   className={classes.resendCodeButton}
                 >
                   Kirim ulang kode
@@ -581,9 +590,13 @@ class Register extends Component {
 
     const steps = getSteps();
 
-    const handleNext = async () => {
-      if (this.state.activeStep !== 3 || this.state.errors === null)
-        var dataToValidate;
+    const getDataToValidate = () => {
+      // To decide the value of the data to validate.
+      // if (this.state.activeStep !== 3 || this.state.errors === null){
+      //   //If it is not in the last page or when there is error shown at any page
+      //   var dataToValidate;
+      // }
+      var dataToValidate;
       if (this.state.activeStep === 0) {
         dataToValidate = {
           name: this.state.name,
@@ -591,24 +604,6 @@ class Register extends Component {
           password: this.state.password,
           password2: this.state.password2,
         };
-      } else if (this.state.activeStep === 1) {
-        const data = {
-          email: this.state.email,
-          name: this.state.name,
-          otp: this.state.otp,
-        };
-        if (!this.state.isVerifiedEmail) {
-          const otpResponse = await verifyOTPRegistration(data);
-          if (!otpResponse.success) {
-            this.setState({ errors: { otp: otpResponse.message } });
-            return;
-          }
-        }
-        this.setState((prevState) => ({
-          activeStep: prevState.activeStep + 1,
-          submitButtonActive: false,
-          isVerifiedEmail: true,
-        }));
       } else if (this.state.activeStep === 2) {
         dataToValidate = {
           role: this.state.role,
@@ -619,32 +614,64 @@ class Register extends Component {
         };
       }
 
-      // Get errors on current page.
-      // If no error exists, proceed to next page.
-      if (this.state.isVerifiedEmail && this.state.activeStep === 0) {
-        // If email is verified and no info change from the first step, jump directly to user details page.
-        this.setState({ activeStep: 2 });
-      } else {
-        if (this.state.activeStep !== 1) {
-          try {
-            await validateRegister(dataToValidate, this.state.activeStep + 1);
-            this.setState({ errors: {} });
-            if (this.state.activeStep === 0) {
-              const data = { email: this.state.email, name: this.state.name };
-              await sendOTPRegistrationEmail(data);
-            }
-            this.setState((prevState) => ({
-              activeStep: prevState.activeStep + 1,
-              submitButtonActive: false,
-            }));
-
-            if (this.state.activeStep === 2) {
-              this.setState({ submitButtonActive: true });
-            }
-          } catch (err) {
-            this.setState({ errors: err });
-          }
+      return dataToValidate;
+    };
+    const handleNext = async () => {
+      // To decide the value of the data to validate.
+      try {
+        if (this.state.isVerifiedEmail && this.state.activeStep === 0) {
+          // If email is verified and no info change from the first step, jump directly to user details page.
+          this.setState({ activeStep: 2 });
+          return;
         }
+        if (this.state.activeStep === 1) {
+          const data = {
+            email: this.state.email,
+            name: this.state.name,
+            otp: this.state.otp,
+          };
+          if (!this.state.isVerifiedEmail) {
+            const otpResponse = await verifyOTPRegistration(data);
+            if (!otpResponse.success) {
+              this.setState({ errors: { otp: otpResponse.message } });
+              return;
+            }
+          }
+          this.setState((prevState) => ({
+            activeStep: prevState.activeStep + 1,
+            submitButtonActive: false,
+            isVerifiedEmail: true,
+            otp: "",
+          }));
+          return;
+        }
+
+        var dataToValidate = getDataToValidate();
+        //Decide if we have to do validate register or not.
+        await validateRegister(dataToValidate, this.state.activeStep + 1);
+        this.setState({ errors: {} });
+        if (this.state.activeStep === 0) {
+          //Send email when click next in the first page
+          const isExist = await checkEmailExist(this.state.email);
+          if (isExist) {
+            this.setState({ errors: { email: "Email sudah terdaftar" } });
+            return;
+          }
+          const data = { email: this.state.email, name: this.state.name };
+          await sendOTPRegistrationEmail(data);
+        }
+
+        if (this.state.activeStep === 2) {
+          this.setState({ submitButtonActive: true });
+        } else {
+          this.setState({ submitButtonActive: false });
+        }
+
+        this.setState((prevState) => ({
+          activeStep: prevState.activeStep + 1,
+        }));
+      } catch (err) {
+        this.setState({ errors: err });
       }
 
       document.body.scrollTop = 0;
@@ -652,10 +679,16 @@ class Register extends Component {
     };
 
     const handleBack = () => {
-      if (this.state.snackbarOpen) {
-        this.setState({ snackbarOpen: false });
+      if (this.state.activeStep === 1) {
+        this.setState({ otp: "" });
       }
-      this.setState({ activeStep: 0 });
+      if (this.state.activeStep === 3) {
+        this.setState((prevState) => ({
+          activeStep: prevState.activeStep - 1,
+        }));
+      } else {
+        this.setState({ activeStep: 0 });
+      }
 
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
@@ -776,6 +809,16 @@ class Register extends Component {
           messageSuccess="Akun baru telah terdaftar"
           redirectLink="/masuk"
         />
+        <Snackbar
+          open={this.state.openSnackbar}
+          autoHideDuration={2000}
+          onClose={this.handleCloseSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        >
+          <Alert elevation={6} variant="filled" severity="success">
+            Kode verifikasi baru telah dikirm ke email anda
+          </Alert>
+        </Snackbar>
       </div>
     );
   }

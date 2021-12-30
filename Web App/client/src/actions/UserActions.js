@@ -504,3 +504,18 @@ export const validateRegister = (userData, pageNum) => {
       throw err.response.data;
     });
 };
+
+export const checkEmailExist = (email) => {
+  return axios
+    .get("/api/users/check-email-exist", { params: { email: email } })
+    .then((res) => {
+      if (res.data.exist) {
+        return true;
+      }
+      return false;
+    })
+    .catch((err) => {
+      console.error("checkEmailExist encountered error");
+      throw err;
+    });
+};
