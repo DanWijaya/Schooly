@@ -1329,8 +1329,8 @@ function ViewAssessmentTeacher(props) {
         <Grid item>
           <Paper className={classes.modePaper}>
             <Grid container justify="space-between" alignItems="center">
-              <Grid>
-                <Typography variant="h6" gutterBottom>
+              <Grid item>
+                <Typography variant="h6">
                   Hasil Pekerjaan
                 </Typography>
               </Grid>
@@ -1378,7 +1378,7 @@ function ViewAssessmentTeacher(props) {
                 </Menu>
               </Grid>
             </Grid>
-            <Divider />
+            <Divider style={{ marginTop: "5px" }} />
             <div style={{ padding: "16px 0px 25px 0px" }}>
               <Typography gutterBottom>
                 Mulai:{" "}

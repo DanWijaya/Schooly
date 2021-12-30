@@ -74,7 +74,7 @@ const typography = {
   },
   body2: {
     lineHeight: 22 / 14,
-    fontSize: pxToRem(13)
+    fontSize: pxToRem(13.5)
   },
   button: {
     fontWeight: 500,

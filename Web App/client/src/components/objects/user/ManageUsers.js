@@ -189,6 +189,17 @@ function ManageUsersToolbar(props) {
       <Grid container>
         <Grid item xs container alignItems="center" spacing={1}>
           <Grid item>
+            <Checkbox
+              color="primary"
+              onChange={
+                listCheckbox.length === 0 ? () => selectAllData(role)
+                : listCheckbox.length === rowCount ? () => deSelectAllData(role)
+                : () => deSelectAllData(role)
+              }
+              checked={listCheckbox.length === rowCount}
+              indeterminate={listCheckbox.length !== 0 || listCheckbox.length !== rowCount}
+              disabled={disabledCheckbox}
+            />
             {listCheckbox.length === 0 ? (
               <IconButton
                 onClick={() => selectAllData(role)}
@@ -370,7 +381,6 @@ function ManageUsersToolbar(props) {
             {searchBarFocus || searchFilter
               ? null
               : [
-                  // When search bar is not on focus and searchFilter is empty.
                   <Grid item>
                     <Tooltip title="Urutkan Akun">
                       <IconButton onClick={handleOpenSortMenu}>
@@ -877,7 +887,6 @@ function ManageUsers(props) {
               getComparator(order_student, orderBy_student)
             ).map((row, index) => {
               const labelId = index;
-              console.log("Avatarnya: ", row.avatar);
               return (
                 <div>
                   <Link to={`/lihat-profil/${row._id}`}>

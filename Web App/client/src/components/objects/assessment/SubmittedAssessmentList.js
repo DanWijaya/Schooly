@@ -87,13 +87,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  sortButton: {
-    textTransform: "none",
-    color: theme.palette.grey.A700,
-    "&:hover": {
-      backgroundColor: theme.palette.grey[100],
-    },
-  },
   resultsPaper: {
     padding: "20px 20px 0px 20px",
     [theme.breakpoints.down("xs")]: {
@@ -843,80 +836,71 @@ function SubmittedAssessmentList(props) {
               </Hidden>
             </Link>
           </Grid>
-          <Grid
-            item
-            xs
-            container
-            justify="flex-end"
-            alignItems="center"
-            spacing={1}
-          >
-            <Grid item>
-              <Tooltip title="Unduh Nilai">
-                <Button
-                  variant="outlined"
-                  onClick={handleExportAssessment}
-                  className={classes.downloadScoreButton}
-                >
-                  <GetAppIcon />
-                </Button>
-              </Tooltip>
-            </Grid>
-            <Grid item>
-              <Tooltip title={`Urutkan ${selectedAssessments.type}`}>
-                <Button
-                  variant="outlined"
-                  onClick={handleOpenSortMenu}
-                  className={classes.sortButton}
-                >
-                  <SortIcon />
-                </Button>
-              </Tooltip>
-              <Menu
-                keepMounted
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleCloseSortMenu}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
+          <Grid item>
+            <Tooltip title="Unduh Nilai">
+              <Button
+                variant="outlined"
+                onClick={handleExportAssessment}
+                className={classes.downloadScoreButton}
               >
-                {headCells.map((headCell, i) => (
-                  <MenuItem
-                    key={headCell.id}
-                    sortDirection={orderBy === headCell.id ? order : false}
-                    onClick={createSortHandler(headCell.id)}
-                  >
-                    <TableSortLabel
-                      active={orderBy === headCell.id}
-                      direction={orderBy === headCell.id ? order : "asc"}
-                    >
-                      {headCell.label}
-                      {orderBy === headCell.id ? (
-                        <span className={classes.visuallyHidden}>
-                          {order === "desc"
-                            ? "sorted descending"
-                            : "sorted ascending"}
-                        </span>
-                      ) : null}
-                    </TableSortLabel>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Grid>
+                <GetAppIcon />
+              </Button>
+            </Tooltip>
           </Grid>
         </Grid>
         <Grid item>
           <Paper className={classes.resultsPaper}>
-            <Typography variant="h6" gutterBottom>
-              Hasil Pekerjaan
-            </Typography>
-            <Divider />
+            <Grid container justify="space-between" alignItems="center">
+              <Grid item>
+                <Typography variant="h6">
+                  Hasil Pekerjaan
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Tooltip title={`Urutkan ${selectedAssessments.type}`}>
+                  <IconButton onClick={handleOpenSortMenu}>
+                    <SortIcon />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  keepMounted
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseSortMenu}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                >
+                  {headCells.map((headCell, i) => (
+                    <MenuItem
+                      key={headCell.id}
+                      sortDirection={orderBy === headCell.id ? order : false}
+                      onClick={createSortHandler(headCell.id)}
+                    >
+                      <TableSortLabel
+                        active={orderBy === headCell.id}
+                        direction={orderBy === headCell.id ? order : "asc"}
+                      >
+                        {headCell.label}
+                        {orderBy === headCell.id ? (
+                          <span className={classes.visuallyHidden}>
+                            {order === "desc"
+                              ? "sorted descending"
+                              : "sorted ascending"}
+                          </span>
+                        ) : null}
+                      </TableSortLabel>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Grid>
+            </Grid>
+            <Divider style={{ marginTop: "5px" }} />
             <div style={{ padding: "16px 0px 25px 0px" }}>
               <Typography gutterBottom>
                 Mulai:{" "}
