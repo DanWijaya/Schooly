@@ -4,7 +4,8 @@ import clsx from "clsx";
 import {
   ContactMail as ContactMailIcon,
   DoneOutline as DoneOutlineIcon,
-  Storage as StorageIcon
+  Storage as StorageIcon,
+  Email as EmailIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -35,8 +36,9 @@ function RegisterStepIcon(props) {
 
   const icons = {
     1: <StorageIcon />,
-    2: <ContactMailIcon />,
-    3: <DoneOutlineIcon />,
+    2: <EmailIcon />,
+    3: <ContactMailIcon />,
+    4: <DoneOutlineIcon />,
   };
 
   return (

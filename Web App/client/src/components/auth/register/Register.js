@@ -7,6 +7,10 @@ import lokal from "date-fns/locale/id";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { registerUser, validateRegister } from "../../../actions/UserActions";
 import { getAllUnits } from "../../../actions/UnitActions";
+import {
+  sendOTPRegistrationEmail,
+  verifyOTPRegistration,
+} from "../../../actions/EmailServiceActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
@@ -77,6 +81,11 @@ const styles = (theme) => ({
     maxWidth: "90px",
     width: "100%",
   },
+  resendCodeButton: {
+    color: theme.palette.primary.main,
+    maxWidth: "150px",
+    width: "100%",
+  },
   continueButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -116,6 +125,8 @@ class Register extends Component {
       email: "",
       address: "",
       phone: "",
+      otp: "",
+      isVerifiedEmail: false,
       emergency_phone: "",
       password: "",
       password2: "",
@@ -172,6 +183,10 @@ class Register extends Component {
       this.setState({ errors: { ...this.state.errors, [field]: null } });
     }
     this.setState({ [field]: e.target.value });
+
+    if (this.state.activeStep === 0 && this.state.isVerifiedEmail) {
+      this.setState({ isVerifiedEmail: false });
+    }
   };
 
   onSubmit = (e) => {
@@ -215,6 +230,7 @@ class Register extends Component {
     const getSteps = () => {
       return [
         "Kredensial Masuk",
+        "Verifikasi Email",
         "Informasi Pribadi",
         "Konfirmasi Pendaftaran",
       ];
@@ -222,7 +238,7 @@ class Register extends Component {
 
     const getStepContent = (stepIndex) => {
       switch (stepIndex) {
-        case 0:
+        case 1:
           return (
             <Grid container direction="column" spacing={4}>
               <Grid item>
@@ -299,7 +315,52 @@ class Register extends Component {
               </Grid>
             </Grid>
           );
-        case 1:
+        case 0:
+          return (
+            <Grid container direction="column" spacing={4}>
+              <Grid item>
+                {this.state.isVerifiedEmail ? (
+                  <Typography variant="h6">
+                    Verifikasi email {this.state.email} berhasil.
+                  </Typography>
+                ) : (
+                  <Typography variant="h6">
+                    Masukkan kode verifikasi yang dikirmkan ke email{" "}
+                    <b>{this.state.email}</b>.
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  size="small"
+                  id="otp"
+                  type="text"
+                  label="Kode Verifikasi Email"
+                  onChange={this.onChange}
+                  value={this.state.otp}
+                  error={errors.otp}
+                  helperText={errors.otp}
+                  disabled={this.state.is}
+                />
+              </Grid>
+              <Grid item container justify="flex-end">
+                <Button
+                  onClick={() =>
+                    sendOTPRegistrationEmail({
+                      email: this.state.email,
+                      name: this.state.name,
+                    })
+                  }
+                  className={classes.resendCodeButton}
+                >
+                  Kirim ulang kode
+                </Button>
+              </Grid>
+            </Grid>
+          );
+        case 2:
           return (
             <Grid container direction="column" spacing={4}>
               <Grid item>
@@ -323,9 +384,7 @@ class Register extends Component {
                     <MenuItem value="SuperAdmin">Pengelola Sekolah</MenuItem>
                   </Select>
                   {Boolean(errors.role) ? (
-                    <FormHelperText>
-                      {errors.role}
-                    </FormHelperText>
+                    <FormHelperText>{errors.role}</FormHelperText>
                   ) : null}
                 </FormControl>
               </Grid>
@@ -350,9 +409,7 @@ class Register extends Component {
                       ))}
                     </Select>
                     {Boolean(errors.unit) ? (
-                      <FormHelperText>
-                        errors.unit
-                      </FormHelperText>
+                      <FormHelperText>errors.unit</FormHelperText>
                     ) : null}
                   </FormControl>
                 </Grid>
@@ -438,7 +495,7 @@ class Register extends Component {
               </Grid>
             </Grid>
           );
-        case 2:
+        case 3:
           return (
             <Grid container direction="column" spacing={3}>
               <Grid item>
@@ -516,6 +573,7 @@ class Register extends Component {
               </Grid>
             </Grid>
           );
+
         default:
           return "Unknown stepIndex";
       }
@@ -523,18 +581,36 @@ class Register extends Component {
 
     const steps = getSteps();
 
-    const handleNext = () => {
-      if (this.state.activeStep !== 2 || this.state.errors === null)
-        var userData;
+    const handleNext = async () => {
+      if (this.state.activeStep !== 3 || this.state.errors === null)
+        var dataToValidate;
       if (this.state.activeStep === 0) {
-        userData = {
+        dataToValidate = {
           name: this.state.name,
           email: this.state.email.toLowerCase(),
           password: this.state.password,
           password2: this.state.password2,
         };
       } else if (this.state.activeStep === 1) {
-        userData = {
+        const data = {
+          email: this.state.email,
+          name: this.state.name,
+          otp: this.state.otp,
+        };
+        if (!this.state.isVerifiedEmail) {
+          const otpResponse = await verifyOTPRegistration(data);
+          if (!otpResponse.success) {
+            this.setState({ errors: { otp: otpResponse.message } });
+            return;
+          }
+        }
+        this.setState((prevState) => ({
+          activeStep: prevState.activeStep + 1,
+          submitButtonActive: false,
+          isVerifiedEmail: true,
+        }));
+      } else if (this.state.activeStep === 2) {
+        dataToValidate = {
           role: this.state.role,
           phone: this.state.phone,
           emergency_phone: this.state.emergency_phone,
@@ -545,23 +621,31 @@ class Register extends Component {
 
       // Get errors on current page.
       // If no error exists, proceed to next page.
-      validateRegister(userData, this.state.activeStep + 1)
-        .then(() => {
-          this.setState({ errors: {} });
-          if (Object.keys(this.state.errors).length === 0) {
+      if (this.state.isVerifiedEmail && this.state.activeStep === 0) {
+        // If email is verified and no info change from the first step, jump directly to user details page.
+        this.setState({ activeStep: 2 });
+      } else {
+        if (this.state.activeStep !== 1) {
+          try {
+            await validateRegister(dataToValidate, this.state.activeStep + 1);
+            this.setState({ errors: {} });
+            if (this.state.activeStep === 0) {
+              const data = { email: this.state.email, name: this.state.name };
+              await sendOTPRegistrationEmail(data);
+            }
             this.setState((prevState) => ({
               activeStep: prevState.activeStep + 1,
               submitButtonActive: false,
             }));
-          }
 
-          if (this.state.activeStep === 2) {
-            this.setState({ submitButtonActive: true });
+            if (this.state.activeStep === 2) {
+              this.setState({ submitButtonActive: true });
+            }
+          } catch (err) {
+            this.setState({ errors: err });
           }
-        })
-        .catch((err) => {
-          this.setState({ errors: err });
-        });
+        }
+      }
 
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
@@ -571,9 +655,8 @@ class Register extends Component {
       if (this.state.snackbarOpen) {
         this.setState({ snackbarOpen: false });
       }
-      this.setState((prevState) => ({
-        activeStep: prevState.activeStep - 1,
-      }));
+      this.setState({ activeStep: 0 });
+
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     };
@@ -594,13 +677,17 @@ class Register extends Component {
             <Grid item xs={12} md={7}>
               <Grid container direction="column" spacing={6}>
                 <Grid item>
-                  <Typography variant="h6">
-                    Daftar ke Schooly
-                  </Typography>
+                  <Typography variant="h6">Daftar ke Schooly</Typography>
                 </Grid>
                 <Grid item>
                   <form noValidate onSubmit={this.onSubmit}>
-                    <Grid container direction="column" spacing={6}>
+                    <Grid
+                      container
+                      direction="column"
+                      spacing={6}
+                      style={{ minHeight: "350px" }}
+                      justify="space-between"
+                    >
                       <Grid item>{getStepContent(this.state.activeStep)}</Grid>
                       <Grid
                         item

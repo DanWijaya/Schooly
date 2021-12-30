@@ -4,7 +4,7 @@ const Schema = mongoose.Schema; // Define a Schema
 let OTPRegisterSchema = new Schema(
   {
     otp: {
-      type: Number,
+      type: String,
       require: true,
     },
     expiration_time: { type: Date, require: true },

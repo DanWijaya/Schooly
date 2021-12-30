@@ -39,6 +39,7 @@ router.post("/send-otp-registration-email", async (req, res) => {
         expiration_time: expirationTime,
         minutes_to_expire: minutesToExpire,
         email: email,
+        verified: false,
       });
 
       await newRegisterOTP.save();
@@ -46,6 +47,7 @@ router.post("/send-otp-registration-email", async (req, res) => {
       foundOTP.otp = generatedOTP;
       foundOTP.expiration_time = expirationTime;
       foundOTP.minutes_to_expire = minutesToExpire;
+      foundOTP.verified = false;
 
       await foundOTP.save();
     }
@@ -85,12 +87,15 @@ router.post("/send-otp-registration-email", async (req, res) => {
       },
       //Email to send FROM.
       Source: sourceEmailAddress /* required */,
+      // ReplyToAddresses: [
+      //   email
+      //       ],
     };
 
     // Create the promise and SES service object
     const data = await ses.sendEmail(params).promise();
     console.log("Send OTP registration email successful");
-    return res.json(data);
+    return res.json("Send OTP Registration email successful");
   } catch (err) {
     console.error("Send OTP registration email failed");
     console.error(err);
@@ -98,22 +103,45 @@ router.post("/send-otp-registration-email", async (req, res) => {
   }
 });
 
-router.post("/verify-register-otp", async (req, res) => {
+router.post("/verify-otp-registration", async (req, res) => {
   try {
-    let { email, name, otpInput } = req.body;
+    let { email, otp } = req.body;
 
     //Get the OTP in DB:
     const foundOTP = await RegisterOTP.findOne({
       email: email,
-      verified: false,
+      // verified: false,
     });
-    if (otpInput === foundOTP.otp) {
-      foundOTP.verified = true;
-      await foundOTP.save();
-    } else {
-      // return error.
+    if (!foundOTP) {
+      throw "No corresponding OTP found";
     }
-  } catch (err) {}
+
+    if (foundOTP.otp !== otp) {
+      console.log("OTP is incorrect");
+      return res.json({ otpStatus: 2, description: "OTP is incorrect" });
+    }
+
+    if (foundOTP.expiration_time <= new Date()) {
+      console.log("OTP has expired");
+      return res.json({ otpStatus: 3, description: "OTP has expired" });
+    }
+
+    if (foundOTP.verified) {
+      console.log("OTP has been used");
+      return res.json({ otpStatus: 4, description: "OTP has been used" });
+    }
+
+    foundOTP.verified = true;
+    await foundOTP.save();
+    return res.json({
+      otpStatus: 1,
+      description: "OTP is verified successfully",
+    });
+  } catch (err) {
+    console.error("verify-otp-registration failed");
+    console.error(err);
+    return res.status(400).json(err);
+  }
 });
 
 router.post("/send-bulk-otp-registration-email", async (req, res) => {
@@ -121,52 +149,5 @@ router.post("/send-bulk-otp-registration-email", async (req, res) => {
     let { emailList, nameList } = req.body;
   } catch (err) {}
 });
-// BELOW IS FOR TESTING WITHOUT API
-// Handle promise's fulfilled/rejected states
-
-// Create sendEmail params
-// var params = {
-//   Destination: {
-//     // Email to send TO.
-//     /* required */
-//     CcAddresses: [
-//       /* more items */
-//     ],
-//     ToAddresses: [
-//       "danwijayaa@gmail.com",
-//       "daniel.wijaya@anacle.com",
-//       "danwijaya19@gmail.com",
-//       /* more items */
-//     ],
-//   },
-//   Message: {
-//     /* required */
-//     Body: {
-//       /* required */
-//       Html: {
-//         Charset: "UTF-8",
-//         Data: `Halo <b>Daniel</b>, <br/><br/> Masukkan kode berikut: <b>12341234.</b> Kode ini akan berlaku selama 3 menit.
-//       Silahkan memasukkan Kode ini di aplikasi Schooly untuk melanjutkan pendaftaran.
-//       `,
-//       },
-//       Text: {
-//         Charset: "UTF-8",
-//         Data: "Here is an email from AWS SES",
-//       },
-//     },
-//     Subject: {
-//       Charset: "UTF-8",
-//       Data: "Verifikasi Pendaftaran Schooly",
-//     },
-//   },
-//   //Email to send FROM.
-//   Source: sourceEmailAddress /* required */,
-// };
-
-// // Create the promise and SES service object
-// const promise = ses.sendEmail(params).promise();
-// promise.then((data) => {
-//   console.log(data.MessageId);
-// });
 
 module.exports = router;

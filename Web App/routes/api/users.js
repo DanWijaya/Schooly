@@ -27,7 +27,7 @@ router.post("/validateRegister/:pageNum", (req, res) => {
   const { pageNum } = req.params;
   const validateRegisterFunction = (data) => {
     if (pageNum == 1) return validateRegisterInput1(data);
-    if (pageNum == 2) return validateRegisterInput2(data);
+    if (pageNum == 3) return validateRegisterInput2(data);
   };
   const { errors, isValid } = validateRegisterFunction(req.body);
   console.log(isValid);
@@ -41,6 +41,7 @@ router.post("/validateRegister/:pageNum", (req, res) => {
 // @access Public
 router.post("/register", async (req, res) => {
   try {
+    console.log(req.body);
     // Form validation.
     const { errors: errors1, isValid: isValid1 } = validateRegisterInput1(
       req.body
@@ -56,6 +57,7 @@ router.post("/register", async (req, res) => {
     const user = await User.findOne({ email: req.body.email }).select(
       fieldToInclude
     );
+    console.log(req.body);
     if (user) throw { email: "Email sudah terdaftar" };
     let newUser;
     if (req.body.role === "Student") newUser = new Student(req.body);
