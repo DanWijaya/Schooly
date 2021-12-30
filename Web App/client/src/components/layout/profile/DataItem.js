@@ -15,7 +15,7 @@ function DataItem(props) {
           {icon}
         </Avatar>
       </Grid>
-      <Grid item xs container style={{ paddingTop: "15px" }}>
+      <Grid item xs container style={{ paddingTop: "16px" }}>
         <Grid item xs={12} md={5}>
           <Typography variant="overline" color="textSecondary" noWrap>
             <b>{type}</b>
@@ -25,7 +25,7 @@ function DataItem(props) {
           {!value ? (
             <Typography color="textSecondary">Kosong</Typography>
           ) : (
-            <Typography>
+            <Typography style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}>
               {value}
             </Typography>
           )}

@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../../../actions/UserActions";
 import { getMyFileAvatar } from "../../../actions/files/FileAvatarActions";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   AppBar,
   Avatar,
@@ -15,6 +14,7 @@ import {
   Menu,
   MenuItem,
   Toolbar,
+  Tooltip,
   useMediaQuery,
 } from "@material-ui/core";
 import {
@@ -137,11 +137,11 @@ function NavBar(props) {
 
   const NavbarDesktopMenu = (
     <div className={classes.endButtonContainer}>
-      <LightTooltip title={user.name}>
+      <Tooltip title={user.name}>
         <IconButton onClick={handleProfileMenu}>
           <Avatar src={avatar} className={classes.menuProfilePicture} />
         </IconButton>
-      </LightTooltip>
+      </Tooltip>
       <Menu
         keepMounted
         anchorEl={profileAnchorEl}
@@ -172,13 +172,13 @@ function NavBar(props) {
           <ListItemText primary="Keluar" />
         </MenuItem>
       </Menu>
-      <LightTooltip title="Bantuan">
+      <Tooltip title="Bantuan">
         <Link to="/bantuan">
           <IconButton color="white" style={{ color: "white" }}>
             <HelpIcon />
           </IconButton>
         </Link>
-      </LightTooltip>
+      </Tooltip>
     </div>
   );
 

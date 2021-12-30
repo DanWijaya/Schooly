@@ -69,7 +69,7 @@ function TaskItem(props) {
       <Grid item>
         <Link to={viewpage}>
           <Paper variant="outlined" className={classes.root}>
-            <ListItem button>
+            <ListItem button disableRipple>
               <ListItemAvatar>
                 {user.role === "Student" ? (
                   <Badge
@@ -122,6 +122,7 @@ function TaskItem(props) {
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
+                  style={{ paddingLeft: "10px" }}
                 >
                   <OptionMenu
                     actions={["Sunting", "Hapus"]}

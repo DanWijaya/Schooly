@@ -43,7 +43,7 @@ function AnnouncementItem(props) {
       <Grid item>
         <Link to={viewpage}>
           <Paper variant="outlined" className={classes.root}>
-            <ListItem button disableRipple>
+            <ListItem component="div">
               <ListItemAvatar>
                 <Avatar className={classes.announcementIcon}>
                   <AnnouncementIcon />
@@ -75,6 +75,7 @@ function AnnouncementItem(props) {
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
+                  style={{ paddingLeft: "10px" }}
                 >
                   <OptionMenu
                     actions={["Sunting", "Hapus"]}

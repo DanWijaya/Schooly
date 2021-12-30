@@ -11,6 +11,8 @@ import {
 } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
+import CreateSubject from "./CreateSubject";
+import EditSubject from "./EditSubject";
 import SubjectItem from "../../objects/item/SubjectItem";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import Empty from "../../misc/empty/Empty";
@@ -509,71 +511,32 @@ function SubjectList(props) {
   };
 
   function FormDialog() {
-    return (
-      <Dialog open={openFormDialog} onClose={handleCloseFormDialog}>
-        <Grid
-          container
-          direction="column"
-          justify="space-between"
-          alignItems="center"
-          className={classes.dialogBox}
-        >
-          {action === "Edit" ? (
-            <Typography variant="h6" align="center" gutterBottom>
-              Sunting Mata Pelajaran
-            </Typography>
-          ) : action === "Create" ? (
-            <Typography variant="h6" align="center" gutterBottom>
-              Isi Nama Mata Pelajaran
-            </Typography>
-          ) : null}
-          <TextField
-            fullWidth
-            variant="outlined"
-            size="small"
-            id="name"
-            type="text"
-            onChange={onChange}
-            value={subject.name}
-            error={errors.name}
-            helperText={errors.name}
-            style={{ margin: "10px 0px" }}
-          />
-          <Grid item container justify="center" spacing={2}>
-            <Grid item>
-              {action === "Edit" ? (
-                <Button
-                  // type="submit"
-                  onClick={onSubmit}
-                  startIcon={<EditIcon />}
-                  className={classes.dialogEditButton}
-                >
-                  Sunting
-                </Button>
-              ) : (
-                <Button
-                  // type="submit"
-                  onClick={onSubmit}
-                  startIcon={<LibraryBooksIcon />}
-                  className={classes.dialogCreateButton}
-                >
-                  Buat
-                </Button>
-              )}
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseFormDialog}
-                startIcon={<CancelIcon />}
-                className={classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
-    );
+    if (action === "Create") {
+      return (
+        <CreateSubject
+          open={openFormDialog}
+          onChange={onChange}
+          create={onSubmit}
+          cancel={handleCloseFormDialog}
+          value={subject.name}
+          error={errors.name}
+          helperText={errors.name}
+        />
+      )
+    }
+    else {
+      return (
+        <EditSubject
+          open={openFormDialog}
+          onChange={onChange}
+          edit={onSubmit}
+          close={handleCloseFormDialog}
+          value={subject.name}
+          error={errors.name}
+          helperText={errors.name}
+        />
+      )
+    }
   }
 
   document.title = "Schooly | Mata Pelajaran";

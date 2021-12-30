@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ScoreGraph(props) {
-  const { scores, workType, names, classes } = props;
+  const { scores, names } = props;
 
   let label = [];
   for (let i = 0; i < scores.length; i++) {
