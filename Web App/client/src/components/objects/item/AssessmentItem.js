@@ -108,7 +108,7 @@ function AssessmentItem(props) {
             <Grid item>
               <Link to={viewPage}>
                 <Paper variant="outlined" className={classes.root}>
-                  <ListItem button disableRipple>
+                  <ListItem component="div">
                     <ListItemAvatar>
                       <Badge
                         overlap="circle"
@@ -203,7 +203,7 @@ function AssessmentItem(props) {
                 className={classes.root}
                 onClick={() => handleOpenDialog(row)}
               >
-                <ListItem button disableRipple>
+                <ListItem component="div">
                   <ListItemAvatar>
                     <Badge
                       overlap="circle"

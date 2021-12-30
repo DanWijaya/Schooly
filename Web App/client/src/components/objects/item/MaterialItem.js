@@ -40,7 +40,7 @@ function MaterialItem(props) {
       <Grid item>
         <Link to={viewpage}>
           <Paper variant="outlined" className={classes.root}>
-            <ListItem button disableRipple>
+            <ListItem component="div">
               <ListItemAvatar>
                 <Avatar className={classes.materialIcon}>
                   <MenuBookIcon />

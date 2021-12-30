@@ -43,7 +43,7 @@ function AnnouncementItem(props) {
       <Grid item>
         <Link to={viewpage}>
           <Paper variant="outlined" className={classes.root}>
-            <ListItem button disableRipple>
+            <ListItem component="div">
               <ListItemAvatar>
                 <Avatar className={classes.announcementIcon}>
                   <AnnouncementIcon />

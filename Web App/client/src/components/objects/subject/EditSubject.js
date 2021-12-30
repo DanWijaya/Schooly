@@ -5,16 +5,20 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
+  TextField,
+  Typography,
 } from "@material-ui/core";
+import { Close as CloseIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "300px",
+    maxWidth: "350px",
     width: "100%",
   },
   editButton: {
-    width: "125px",
+    width: "90px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -29,14 +33,15 @@ const useStyles = makeStyles((theme) => ({
 
 function EditSubject(props) {
   const classes = useStyles();
+  const { open, onChange, edit, close, value, error, helperText } = props;
 
   return (
     <Dialog
-      open={openFormDialog}
+      open={open}
       PaperProps={{ className: classes.root }}
     >
       <DialogActions>
-        <IconButton size="small" onClick={handleCloseFormDialog}>
+        <IconButton size="small" onClick={close}>
           <CloseIcon />
         </IconButton>
       </DialogActions>
@@ -53,17 +58,19 @@ function EditSubject(props) {
           id="name"
           type="text"
           onChange={onChange}
-          value={subject.name}
-          error={errors.name}
-          helperText={errors.name}
+          value={value}
+          error={error}
+          helperText={helperText}
         />
+      </DialogContent>
+      <DialogActions style={{ padding: "16px 24px "}}>
         <Button
-          onClick={onSubmit}
+          onClick={edit}
           className={classes.editButton}
         >
           Sunting
         </Button>
-      </DialogContent>
+      </DialogActions>
     </Dialog>
   );
 }

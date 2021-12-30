@@ -69,7 +69,7 @@ function TaskItem(props) {
       <Grid item>
         <Link to={viewpage}>
           <Paper variant="outlined" className={classes.root}>
-            <ListItem button>
+            <ListItem button disableRipple>
               <ListItemAvatar>
                 {user.role === "Student" ? (
                   <Badge

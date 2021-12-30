@@ -14,12 +14,13 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    minHeight: "70px",
+    borderRadius: "4px",
     color: "black",
     "&:focus, &:hover": {
       boxShadow:
         "0px 2px 3px 0px rgba(60,64,67,0.30), 0px 2px 8px 2px rgba(60,64,67,0.15)",
     },
-    minHeight: "70px",
   },
 }));
 
