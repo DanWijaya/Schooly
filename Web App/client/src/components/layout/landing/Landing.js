@@ -211,9 +211,9 @@ class Landing extends Component {
                   Schooly membuat pekerjaan sekolahmu lebih mudah.
                 </Typography>
                 <Typography variant="h6">
-                  Tidak pernah lupa lagi dengan tugas sekolah yang ada. Berikan
-                  materi dan pekerjaan sekolah dengan mudah. Periksa hasil kuis
-                  dan ujian secara otomatis.
+                  Tidak pernah lupa lagi dengan tugas sekolah yang ada. <br />
+                  Berikan materi dan pekerjaan sekolah dengan mudah. <br />
+                  Periksa hasil kuis dan ujian secara otomatis. <br />
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6} container justify="flex-end">

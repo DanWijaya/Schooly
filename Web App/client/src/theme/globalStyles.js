@@ -39,8 +39,23 @@ const GlobalStyles = withStyles((theme) => ({
       "&::placeholder": { color: theme.palette.text.disabled }
     },
     a: {
+      cursor: "pointer",
       textDecoration: "none",
       color: theme.palette.primary.main,
+    },
+    ol: {
+      padding: "0px",
+      margin: "0px 0px 0px 40px",
+      [theme.breakpoints.down("sm")]: {
+        margin: "0px 0px 0px 16px",
+      },
+    },
+    ul: {
+      padding: "0px",
+      margin: "0px 0px 0px 40px",
+      [theme.breakpoints.down("sm")]: {
+        margin: "0px 0px 0px 16px",
+      },
     },
   }
 }))(() => null);

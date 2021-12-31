@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { loginUser } from "../../../actions/UserActions";
-import { clearErrors } from "../../../actions/ErrorActions";
 import {
   Button,
   Divider,
@@ -20,6 +18,8 @@ import {
   VisibilityOff as VisibilityOffIcon,
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
+import { loginUser } from "../../../actions/UserActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 
 const styles = (theme) => ({
   root: {
@@ -32,21 +32,21 @@ const styles = (theme) => ({
     backgroundSize: "100% 300px",
     backgroundRepeat: "no-repeat",
   },
+  content: {
+    maxWidth: "80%",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "100%",
+    },
+  },
   schoolyLogo: {
     maxWidth: "250px",
     maxHeight: "125px",
     marginBottom: "25px",
   },
-  artThumbnail: {
+  loginArt: {
     width: "100%",
     height: "100%",
     maxWidth: "300px",
-  },
-  loginContainer: {
-    maxWidth: "80%",
-    [theme.breakpoints.down("sm")]: {
-      maxWidth: "100%",
-    },
   },
   loginPaper: {
     margin: "auto",
@@ -77,18 +77,17 @@ class Login extends Component {
     this.state = {
       email: "",
       password: "",
-      errors: {},
       isAuthenticated: false,
-      passwordIsMasked: true, // True = masked
       icon: true, // True = shown
+      passwordIsMasked: true, // True = masked
       passwordtextfieldFocus: false,
+      errors: {},
     };
   }
 
   componentDidMount() {
     // If logged in and user navigates to Login page, should redirect them to dashboard
     // this.props.auth.isAuthenticated = true, means that the user is logged in dan moved into the Landing page instantly.
-
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");
     }
@@ -105,9 +104,9 @@ class Login extends Component {
     // This static function belongs to the class as a whole thing, not as a instance of the class.
     //  That"s why there is no this keyword.
     if (nextProps.auth.isAuthenticated)
-      // nextProps.auth.isAuthenticated = kalau true,
+      // nextProps.auth.isAuthenticated = if true,
       return { isAuthenticated: nextProps.auth.isAuthenticated };
-    // This is the same with this.setState({ isAuthenticated : nextProps.auth.isAuthenticated })
+    // This is the same with this.setState({ isAuthenticated : nextProps.auth.isAuthenticated }).
     else return null;
   }
 
@@ -121,7 +120,7 @@ class Login extends Component {
       if (this.props.location.state && this.props.location.state.url) {
         window.location.href = `.${this.props.location.state.url}`;
       } else {
-        // to redirect to the Landing page.
+        // To redirect to the Landing page.
         window.location.href = "./beranda";
       }
       this.props.handleLoading(true);
@@ -143,15 +142,14 @@ class Login extends Component {
       password: this.state.password,
     };
     this.props.loginUser(userData).catch((err) => {
-      console.log(err);
       this.setState({ errors: err });
     });
   };
 
   togglePasswordVisibility = () => {
     this.setState((prevState) => ({
-      passwordIsMasked: !prevState.passwordIsMasked,
       icon: !prevState.icon,
+      passwordIsMasked: !prevState.passwordIsMasked,
     }));
   };
 
@@ -162,10 +160,10 @@ class Login extends Component {
   render() {
     const { classes } = this.props;
     const {
-      passwordIsMasked,
       icon,
-      errors,
+      passwordIsMasked,
       passwordtextfieldFocus,
+      errors,
     } = this.state;
 
     document.title = "Masuk ke Schooly";
@@ -183,14 +181,14 @@ class Login extends Component {
           container
           alignItems="flex-end"
           spacing={3}
-          className={classes.loginContainer}
+          className={classes.content}
         >
           <Hidden smDown>
             <Grid item xs={3} container justify="flex-end">
               <img
                 alt="Login Art Left"
                 src="/images/illustrations/LoginArtLeft.png"
-                className={classes.artThumbnail}
+                className={classes.loginArt}
               />
             </Grid>
           </Hidden>
@@ -279,8 +277,8 @@ class Login extends Component {
                       </Grid>
                       <Grid item>
                         <Button
-                          type="submit"
                           variant="contained"
+                          type="submit"
                           className={classes.loginButton}
                         >
                           Masuk
@@ -291,9 +289,23 @@ class Login extends Component {
                 </Grid>
                 <Divider />
                 <Grid item container justify="space-around">
-                  <Link to="/akun/lupa-katasandi">Lupa kata sandi?</Link>
-                  <Typography color="textSecondary">·</Typography>
-                  <Link to="/daftar">Belum ada akun?</Link>
+                  <Grid item>
+                    <Link to="/akun/lupa-katasandi">
+                      <Typography variant="subtitle2">
+                        Lupa kata sandi?
+                      </Typography>
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Typography color="textSecondary">·</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Link to="/daftar">
+                      <Typography variant="subtitle2">
+                        Belum ada akun?
+                      </Typography>
+                    </Link>
+                  </Grid>
                 </Grid>
               </Grid>
             </Paper>
@@ -303,7 +315,7 @@ class Login extends Component {
               <img
                 alt="Login Art Right"
                 src="/images/illustrations/LoginArtRight.png"
-                className={classes.artThumbnail}
+                className={classes.loginArt}
               />
             </Grid>
           </Hidden>
@@ -314,8 +326,8 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  loginUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
+  loginUser: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
 };
 

@@ -49,10 +49,6 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "100%",
     },
   },
-  list: {
-    margin: "0px 0px 0px 16px",
-    padding: "0px",
-  },
   moreHelp: {
     margin: "auto",
     padding: "10px",
@@ -116,7 +112,7 @@ function Help(props) {
                       <b>Bagaimana cara mendaftarkan suatu akun Schooly?</b>
                     </Typography>
                     <Typography align="justify">
-                      <ul className={classes.list}>
+                      <ul>
                         <li style={{ listStyleType: "disc" }}>
                           Anda dapat mendaftarkan akun Anda pada{" "}
                           <Link to="/daftar">halaman Pendaftaran Schooly</Link>.
@@ -150,7 +146,7 @@ function Help(props) {
                       </b>
                     </Typography>
                     <Typography align="justify">
-                      <ol className={classes.list}>
+                      <ol>
                         <li>
                           Masuk ke{" "}
                           <Link to="/lupa-katasandi">
@@ -187,7 +183,7 @@ function Help(props) {
                           <b>Bagaimana cara mengubah kata sandi?</b>
                         </Typography>
                         <Typography align="justify">
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Buka <Link to="/profil">halaman profil</Link>.
                             </li>
@@ -206,7 +202,7 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Buka <Link to="/profil">halaman profil</Link>.
                             </li>
@@ -222,7 +218,7 @@ function Help(props) {
                           <b>Bagaimana cara mengubah foto akun?</b>
                         </Typography>
                         <Typography align="justify">
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Buka <Link to="/profil">halaman profil</Link>.
                             </li>
@@ -241,7 +237,7 @@ function Help(props) {
                           <b>Bagaimana cara mengubah kata sandi?</b>
                         </Typography>
                         <Typography align="justify">
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Buka <Link to="/profil">halaman profil</Link>.
                             </li>
@@ -260,7 +256,7 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Buka <Link to="/profil">halaman profil</Link>.
                             </li>
@@ -276,7 +272,7 @@ function Help(props) {
                           <b>Bagaimana cara mengubah foto akun?</b>
                         </Typography>
                         <Typography align="justify">
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Buka <Link to="/profil">halaman profil</Link>.
                             </li>
@@ -295,7 +291,7 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Ajak guru-guru dan murid-murid di sekolah Anda
                               untuk mendaftar ke Schooly. Atau Anda dapat
@@ -405,7 +401,7 @@ function Help(props) {
                         <b>Bagaimana cara membuat suatu kegiatan?</b>
                       </Typography>
                       <Typography align="justify">
-                        <ol className={classes.list}>
+                        <ol>
                           <li>
                             Buka <Link to="/kalender">halaman Kalender</Link>.
                           </li>
@@ -459,7 +455,7 @@ function Help(props) {
                         <b>Bagaimana cara membuat suatu mata pelajaran?</b>
                       </Typography>
                       <Typography align="justify">
-                        <ol className={classes.list}>
+                        <ol>
                           <li>
                             Buka{" "}
                             <Link to="/daftar-mata-pelajaran">
@@ -609,7 +605,7 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Buka <Link to="/daftar-kelas">halaman Kelas</Link>
                               .
@@ -712,7 +708,7 @@ function Help(props) {
                           <b>Bagaimana cara untuk membuat suatu pengumuman?</b>
                         </Typography>
                         <Typography align="justify">
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Buka{" "}
                               <Link to="/buat-pengumuman">
@@ -760,7 +756,7 @@ function Help(props) {
                           <b>Bagaimana cara untuk membuat suatu pengumuman?</b>
                         </Typography>
                         <Typography>
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Buka halaman daftar pengumuman dengan menekan
                               tombol "Pengumuman" yang dapat ditemukan pada
@@ -851,7 +847,7 @@ function Help(props) {
                           <b>Bagaimana cara untuk membuat suatu materi?</b>
                         </Typography>
                         <Typography align="justify">
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Buka{" "}
                               <Link to="/buat-materi">halaman Buat Materi</Link>
@@ -963,7 +959,7 @@ function Help(props) {
                           <b>Bagaimana cara untuk mengumpulkan tugas?</b>
                         </Typography>
                         <Typography align="justify">
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Tekan tombol "Pilih File" pada halaman tugas yang
                               bersangkutan.
@@ -1011,7 +1007,7 @@ function Help(props) {
                           <b>Bagaimana cara untuk membuat suatu tugas?</b>
                         </Typography>
                         <Typography align="justify">
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Buka{" "}
                               <Link to="/buat-tugas">halaman Buat Tugas</Link>.
@@ -1138,7 +1134,7 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography>
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Lihat waktu mulai pengerjaan dari kuis dan ujian
                               yang bersangkutan pada{" "}
@@ -1244,7 +1240,7 @@ function Help(props) {
                           </b>
                         </Typography>
                         <Typography align="justify">
-                          <ol className={classes.list}>
+                          <ol>
                             <li>
                               Buka{" "}
                               <Link to="/buat-kuis">halaman Buat Kuis</Link>{" "}

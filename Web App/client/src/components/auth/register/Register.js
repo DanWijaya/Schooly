@@ -1,23 +1,9 @@
 import React, { Component } from "react";
-import { withRouter, Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
-import { clearErrors } from "../../../actions/ErrorActions";
-import {
-  registerUser,
-  validateRegister,
-  checkEmailExist,
-} from "../../../actions/UserActions";
-import { getAllUnits } from "../../../actions/UnitActions";
-import {
-  sendOTPRegistrationEmail,
-  verifyOTPRegistration,
-} from "../../../actions/EmailServiceActions";
-import UploadDialog from "../../misc/dialog/UploadDialog";
-import RegisterStepIcon from "./RegisterStepIcon";
-import RegisterStepConnector from "./RegisterStepConnector";
 import {
   Button,
   FormControl,
@@ -41,6 +27,20 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
+import { getAllUnits } from "../../../actions/UnitActions";
+import {
+  registerUser,
+  validateRegister,
+  checkEmailExist,
+} from "../../../actions/UserActions";
+import {
+  sendOTPRegistrationEmail,
+  verifyOTPRegistration,
+} from "../../../actions/EmailServiceActions";
+import { clearErrors } from "../../../actions/ErrorActions";
+import RegisterStepIcon from "./RegisterStepIcon";
+import RegisterStepConnector from "./RegisterStepConnector";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 
 const styles = (theme) => ({
   root: {
@@ -69,13 +69,6 @@ const styles = (theme) => ({
   combinedHelperText: {
     marginLeft: "14px",
   },
-  list: {
-    margin: "0px 0px 0px 40px",
-    padding: "0px",
-    [theme.breakpoints.down("sm")]: {
-      margin: "0px 0px 0px 16px",
-    },
-  },
   buttonsContainer: {
     marginTop: "15px",
   },
@@ -83,36 +76,35 @@ const styles = (theme) => ({
     color: theme.palette.primary.main,
   },
   backButton: {
-    color: theme.palette.primary.main,
+    width: "100%",
     maxWidth: "90px",
-    width: "100%",
-  },
-  resendCodeButton: {
     color: theme.palette.primary.main,
-    maxWidth: "150px",
-    width: "100%",
+  },
+  resendCodeLinkDisabled: {
+    cursor: "default",
+    color: "grey",
   },
   continueButton: {
+    width: "100%",
+    maxWidth: "90px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    maxWidth: "90px",
-    width: "100%",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
   },
   registerButton: {
+    width: "100%",
+    maxWidth: "90px",
     backgroundColor: theme.palette.success.main,
     color: "white",
-    maxWidth: "90px",
-    width: "100%",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },
-  artThumbnail: {
+  registerArt: {
     maxWidth: "100%",
     maxHeight: "100%",
     marginBottom: "10px",
@@ -127,22 +119,22 @@ class Register extends Component {
     super();
     this.state = {
       name: "",
-      role: "",
       email: "",
-      address: "",
-      phone: "",
-      otp: "",
-      isVerifiedEmail: false,
-      emergency_phone: "",
       password: "",
       password2: "",
-      errors: {},
-      unit: null,
+      isVerifiedEmail: false,
+      otp: "",
+      phone: "",
+      emergency_phone: "",
+      address: "",
       tanggal_lahir: new Date(),
+      role: "",
+      unit: null,
       activeStep: 0,
       submitButtonActive: false,
       openUploadDialog: false,
       openSnackbar: false,
+      errors: {},
     };
   }
 
@@ -182,14 +174,6 @@ class Register extends Component {
     });
   };
 
-  handleCloseSnackbar = () => {
-    this.setState({ openSnackbar: false });
-  };
-
-  handleOpenSnackbar = () => {
-    this.setState({ openSnackbar: true });
-  };
-
   onChange = (e, otherfield) => {
     let field = otherfield ? otherfield : e.target.id;
     if (this.state.errors[field]) {
@@ -206,19 +190,18 @@ class Register extends Component {
     e.preventDefault();
     var newUser = {
       name: this.state.name,
-      role: this.state.role,
       email: this.state.email.toLowerCase(),
+      password: this.state.password,
+      password2: this.state.password2,
       phone: this.state.phone,
       emergency_phone: this.state.emergency_phone,
       address: this.state.address,
-      password: this.state.password,
-      password2: this.state.password2,
       tanggal_lahir: this.state.tanggal_lahir,
+      role: this.state.role,
       unit: this.state.unit,
     };
 
     if (this.state.submitButtonActive) {
-      console.log(newUser);
       this.props
         .registerUser(newUser)
         .then((res) => {
@@ -232,14 +215,25 @@ class Register extends Component {
     }
   };
 
+  // Upload Dialog
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
   };
 
+  // OTP Snackbar
+  handleOpenSnackbar = () => {
+    this.setState({ openSnackbar: true });
+  };
+
+  handleCloseSnackbar = () => {
+    this.setState({ openSnackbar: false });
+  };
+
   render() {
     const { classes } = this.props;
-    const { errors } = this.state;
     const { all_units } = this.props.unitsCollection;
+    const { errors } = this.state;
+
     const getSteps = () => {
       return [
         "Kredensial Masuk",
@@ -330,11 +324,26 @@ class Register extends Component {
           );
         case 1:
           return (
-            <Grid container direction="column" spacing={4}>
+            <Grid container direction="column" spacing={2}>
               <Grid item>
-                <Typography variant="h6">
-                  Masukkan kode verifikasi yang dikirmkan ke email{" "}
+                <Typography variant="body2">
+                  Masukkan kode verifikasi yang telah dikirimkan ke email{" "}
                   <b>{this.state.email}</b>.
+                </Typography>
+                <Typography variant="body2">
+                  <a
+                    onClick={() => {
+                      this.setState({ otp: "", errors: {} });
+                      this.handleOpenSnackbar();
+                      sendOTPRegistrationEmail({
+                        email: this.state.email,
+                        name: this.state.name,
+                      });
+                    }}
+                    className={classes.resendCodeLinkDisabled}
+                  >
+                    Kirim Ulang
+                  </a> (00:55)
                 </Typography>
               </Grid>
               <Grid item>
@@ -346,26 +355,11 @@ class Register extends Component {
                   type="text"
                   label="Kode Verifikasi Email"
                   onChange={this.onChange}
+                  disabled={this.state.is}
                   value={this.state.otp}
                   error={errors.otp}
                   helperText={errors.otp}
-                  disabled={this.state.is}
                 />
-              </Grid>
-              <Grid item container justify="flex-end">
-                <Button
-                  onClick={() => {
-                    this.setState({ otp: "", errors: {} });
-                    this.handleOpenSnackbar();
-                    sendOTPRegistrationEmail({
-                      email: this.state.email,
-                      name: this.state.name,
-                    });
-                  }}
-                  className={classes.resendCodeButton}
-                >
-                  Kirim ulang kode
-                </Button>
               </Grid>
             </Grid>
           );
@@ -433,15 +427,15 @@ class Register extends Component {
                     id="tanggal_lahir"
                     format="dd MMM yyyy"
                     label="Tanggal Lahir"
-                    okLabel="Simpan"
+                    okLabelL="Simpan"
                     cancelLabel="Batal"
                     invalidDateMessage="Format tanggal tidak benar"
                     maxDateMessage="Harus waktu yang akan datang"
+                    onChange={(date) => this.handleDateChange(date)}
                     defaultValue={null}
+                    value={this.state.tanggal_lahir}
                     error={errors.tanggal_lahir}
                     helperText={errors.tanggal_lahir}
-                    value={this.state.tanggal_lahir}
-                    onChange={(date) => this.handleDateChange(date)}
                   />
                 </MuiPickersUtilsProvider>
               </Grid>
@@ -540,7 +534,7 @@ class Register extends Component {
                   poin-poin utama berikut:
                 </Typography>
                 <Typography>
-                  <ul className={classes.list}>
+                  <ul>
                     <li style={{ listStyleType: "disc" }}>
                       Kami peduli dengan privasi Anda. Kami tidak dan tidak akan
                       menjual atau menyewakan data Anda kepada pihak ketiga
@@ -775,14 +769,14 @@ class Register extends Component {
                   variant="body2"
                   align="center"
                   paragraph
-                  style={{ marginTop: "80px" }}
+                  style={{ marginTop: "70px" }}
                 >
                   Buat akun Anda dengan tiga langkah mudah
                 </Typography>
                 <img
                   alt="Register Art"
                   src="/images/illustrations/RegisterStepperArt.png"
-                  className={classes.artThumbnail}
+                  className={classes.registerArt}
                 />
                 <Stepper
                   alternativeLabel
@@ -816,7 +810,7 @@ class Register extends Component {
           anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         >
           <Alert elevation={6} variant="filled" severity="success">
-            Kode verifikasi baru telah dikirm ke email anda
+            Kode verifikasi baru telah dikirm ke email Anda
           </Alert>
         </Snackbar>
       </div>
@@ -834,14 +828,14 @@ Register.propTypes = {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors,
   unitsCollection: state.unitsCollection,
+  errors: state.errors,
 });
 
 export default withRouter(
   connect(mapStateToProps, {
+    getAllUnits,
     registerUser,
     clearErrors,
-    getAllUnits,
   })(withStyles(styles)(Register))
 );

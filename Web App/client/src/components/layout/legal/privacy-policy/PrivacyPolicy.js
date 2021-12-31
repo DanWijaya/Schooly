@@ -50,13 +50,6 @@ const useStyles = makeStyles((theme) => ({
   contentSubsection: {
     paddingTop: "25px",
   },
-  list: {
-    margin: "0px 0px 0px 40px",
-    padding: "0px",
-    [theme.breakpoints.down("sm")]: {
-      margin: "0px 0px 0px 16px",
-    },
-  },
 }));
 
 function PrivacyPolicy(props) {
@@ -241,11 +234,11 @@ function PrivacyPolicy(props) {
               menggunakan layanan kami, Anda perlu masuk untuk mengidetinfikasi
               diri Anda terlebih dahulu.
             </Typography>
-            <ul className={classes.list}>
+            <ul>
               <li style={{ listStyleType: "disc" }}>
                 <Typography align="justify" paragraph>
                   Informasi yang kami kumpulkan
-                  <ul className={classes.list}>
+                  <ul>
                     <li style={{ listStyleType: "circle" }}>
                       Langsung dari Anda. Situs web kami mengharuskan Anda untuk
                       mendaftar akun. Saat Anda melakukannya, kami meminta
@@ -278,7 +271,7 @@ function PrivacyPolicy(props) {
               <li style={{ listStyleType: "disc" }}>
                 <Typography align="justify" paragraph>
                   Bagaimana kami menggunakan informasi ini
-                  <ul className={classes.list}>
+                  <ul>
                     <li style={{ listStyleType: "circle" }}>
                       Analisis dan pemasaran. Kami menganalisis informasi
                       penggunaan untuk tujuan penjualan dan pemasaran dan untuk
@@ -332,7 +325,7 @@ function PrivacyPolicy(props) {
               <li style={{ listStyleType: "disc" }}>
                 <Typography align="justify" paragraph>
                   Dengan siapa kami membagikan informasi ini
-                  <ul className={classes.list}>
+                  <ul>
                     <li style={{ listStyleType: "circle" }}>
                       Alat pihak ketiga. Saat kami menggunakan alat pihak ketiga
                       (misalnya untuk memahami bagaimana situs web kami
@@ -380,11 +373,11 @@ function PrivacyPolicy(props) {
               dengan instruksi institusi Anda dan ketentuan kontrak kami dengan
               institusi Anda.
             </Typography>
-            <ul className={classes.list}>
+            <ul>
               <li style={{ listStyleType: "disc" }}>
                 <Typography align="justify" paragraph>
                   Informasi yang kami kumpulkan
-                  <ul className={classes.list}>
+                  <ul>
                     <li style={{ listStyleType: "circle" }}>
                       Biasanya, produk dan layanan kami terintegrasi dengan
                       sistem institusi Anda. Dengan demikian, institusi Anda
@@ -392,7 +385,7 @@ function PrivacyPolicy(props) {
                       dan memelihara akun Anda atau agar kami dapat menyediakan
                       produk atau layanan. Ini termasuk informasi dalam kategori
                       data berikut:
-                      <ol className={classes.list}>
+                      <ol>
                         <li>
                           Informasi akun: Pada umumnya terdiri dari nama, alamat
                           email, ID murid, kredensial akun, dan kelas yang Anda
@@ -422,7 +415,7 @@ function PrivacyPolicy(props) {
                       Langsung dari Anda. Bergantung pada produk dan layanan
                       yang Anda gunakan, kami akan mengumpulkan kategori data
                       berikut langsung dari Anda:
-                      <ol className={classes.list}>
+                      <ol>
                         <li>
                           Informasi profil. Kami mengumpulkan nama lengkap Anda,
                           alamat email, dan data kontak serupa saat Anda
@@ -484,7 +477,7 @@ function PrivacyPolicy(props) {
                       informasi tentang bagaimana Anda menggunakan produk dan
                       layanan kami. Bergantung pada produk atau layanan yang
                       Anda gunakan, ini mungkin termasuk kategori data berikut:
-                      <ol className={classes.list}>
+                      <ol>
                         <li>
                           Data lokasi dan acara. Untuk beberapa produk dan
                           layanan seperti kartu akses dan Kehadiran, kami akan
@@ -507,7 +500,7 @@ function PrivacyPolicy(props) {
                     </li>
                     <li style={{ listStyleType: "circle" }}>
                       Informasi dari pihak ketiga.
-                      <ol className={classes.list}>
+                      <ol>
                         <li>
                           Afiliasi dan vendor. Kami dapat menerima informasi
                           dari afiliasi di grup perusahaan Schooly kami, mitra
@@ -550,7 +543,7 @@ function PrivacyPolicy(props) {
               <li style={{ listStyleType: "disc" }}>
                 <Typography align="justify" paragraph>
                   Bagaimana kami menggunakan informasi ini
-                  <ul className={classes.list}>
+                  <ul>
                     <li style={{ listStyleType: "circle" }}>
                       Atas nama institusi Anda. Kami menggunakan informasi Anda
                       atas nama dan di bawah instruksi institusi Anda, yang
@@ -598,7 +591,7 @@ function PrivacyPolicy(props) {
                   Kami membagikan informasi Anda sesuai dengan kesepakatan kami
                   dengan institusi Anda. Umumnya, ini termasuk berbagi data di
                   dalam dan di luar Schooly.
-                  <ul className={classes.list}>
+                  <ul>
                     <li style={{ listStyleType: "circle" }}>
                       Di dalam Schooly. Informasi Anda hanya akan diakses oleh
                       mereka memiliki kepentingan untuk menyediakan produk dan
@@ -687,7 +680,7 @@ function PrivacyPolicy(props) {
               situasi berikut:
             </Typography>
             <Typography align="justify" paragraph>
-              <ul className={classes.list}>
+              <ul>
                 <li style={{ listStyleType: "disc" }}>
                   Pembayaran. Saat Anda menggunakan produk dan layanan kami
                   untuk melakukan pembelian atau transaksi, kami akan membagikan
@@ -706,7 +699,7 @@ function PrivacyPolicy(props) {
                   (termasuk Data murid) tanpa persetujuan yang diperlukan dari
                   klien kami, kepada entitas penerus dalam situasi yang
                   dijelaskan di bawah ini:
-                  <ul className={classes.list}>
+                  <ul>
                     <li style={{ listStyleType: "circle" }}>
                       Transaksi perusahaan seperti merger, akuisisi, penjualan
                       aset, dan pembiayaan
@@ -790,7 +783,7 @@ function PrivacyPolicy(props) {
               media sebagai berikut:
             </Typography>
             <Typography align="justify" paragraph>
-              <ul className={classes.list}>
+              <ul>
                 <li style={{ listStyleType: "disc" }}>
                   Promosi produk dan layanan. Kami melakukan pemasaran untuk
                   mempromosikan produk dan layanan kami. Pemasaran ini umumnya
@@ -934,7 +927,7 @@ function PrivacyPolicy(props) {
             ke akun Anda. Jika Anda tidak dapat mengakses, memperbaiki, atau
             menghapus sendiri informasi yang diperlukan, ikuti langkah-langkah
             berikut:
-            <ul className={classes.list}>
+            <ul>
               <li style={{ listStyleType: "disc" }}>
                 Jika Anda adalah pengguna produk dan layanan kami yang kami
                 sediakan atas nama institusi Anda, silahkan hubungi institusi

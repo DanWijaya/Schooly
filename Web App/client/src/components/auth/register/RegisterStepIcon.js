@@ -9,7 +9,7 @@ import {
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useRegisterStepIconStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "#CCC",
     color: "#FFF",
@@ -28,10 +28,10 @@ const useRegisterStepIconStyles = makeStyles({
   completed: {
     backgroundImage: "linear-gradient(136deg, #2196F3 30%, #21CBF3 90%)",
   },
-});
+}));
 
 function RegisterStepIcon(props) {
-  const classes = useRegisterStepIconStyles();
+  const classes = useStyles();
   const { active, completed } = props;
 
   const icons = {
