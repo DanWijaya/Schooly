@@ -148,8 +148,8 @@ class Register extends Component {
   }
 
   componentWillUnmount() {
-    this.props.clearErrors();
     this.props.handleNavbar(true);
+    this.props.clearErrors();
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -412,7 +412,7 @@ class Register extends Component {
                       ))}
                     </Select>
                     {Boolean(errors.unit) ? (
-                      <FormHelperText>errors.unit</FormHelperText>
+                      <FormHelperText>{errors.unit}</FormHelperText>
                     ) : null}
                   </FormControl>
                 </Grid>
@@ -586,10 +586,6 @@ class Register extends Component {
 
     const getDataToValidate = () => {
       // To decide the value of the data to validate.
-      // if (this.state.activeStep !== 3 || this.state.errors === null){
-      //   //If it is not in the last page or when there is error shown at any page
-      //   var dataToValidate;
-      // }
       var dataToValidate;
       if (this.state.activeStep === 0) {
         dataToValidate = {
@@ -610,6 +606,7 @@ class Register extends Component {
 
       return dataToValidate;
     };
+
     const handleNext = async () => {
       // To decide the value of the data to validate.
       try {
@@ -711,9 +708,9 @@ class Register extends Component {
                     <Grid
                       container
                       direction="column"
+                      justify="space-between"
                       spacing={6}
                       style={{ minHeight: "350px" }}
-                      justify="space-between"
                     >
                       <Grid item>{getStepContent(this.state.activeStep)}</Grid>
                       <Grid
@@ -780,8 +777,8 @@ class Register extends Component {
                 />
                 <Stepper
                   alternativeLabel
-                  activeStep={this.state.activeStep}
                   connector={<RegisterStepConnector />}
+                  activeStep={this.state.activeStep}
                   className={classes.registerStepper}
                 >
                   {steps.map((label) => (
@@ -800,13 +797,13 @@ class Register extends Component {
           openUploadDialog={this.state.openUploadDialog}
           success={!errors}
           messageUploading="Akun baru sedang dibuat"
-          messageSuccess="Akun baru telah terdaftar"
+          messageSuccess="Akun baru berhasil dibuat"
           redirectLink="/masuk"
         />
         <Snackbar
           open={this.state.openSnackbar}
-          autoHideDuration={2000}
           onClose={this.handleCloseSnackbar}
+          autoHideDuration={2000}
           anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         >
           <Alert elevation={6} variant="filled" severity="success">

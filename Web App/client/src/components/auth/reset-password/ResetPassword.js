@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { savePassword } from "../../../actions/AuthActions";
-import { clearErrors } from "../../../actions/ErrorActions";
 import {
   Button,
   Grid,
@@ -13,6 +11,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import { savePassword } from "../../../actions/AuthActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 
 const styles = (theme) => ({
   root: {
@@ -30,7 +30,7 @@ const styles = (theme) => ({
     height: "125px",
     marginBottom: "25px",
   },
-  artThumbnail: {
+  passwordArt: {
     maxWidth: "100%",
     maxHeight: "100%",
   },
@@ -58,17 +58,11 @@ class ResetPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      errors: {},
       password: "",
       password2: "",
+      errors: {},
     };
   }
-  onChange = (e) => {
-    this.setState({
-      [e.target.id]: e.target.value,
-      errors: { ...this.state.errors, [e.target.id]: null },
-    });
-  };
 
   componentDidMount() {
     this.props.handleNavbar(false);
@@ -79,8 +73,12 @@ class ResetPassword extends Component {
     this.props.handleNavbar(true);
   }
 
-  //Dispatch is used as a callback which gets invoked once some async action is complete.
-  //In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
+  onChange = (e) => {
+    this.setState({
+      [e.target.id]: e.target.value,
+      errors: { ...this.state.errors, [e.target.id]: null },
+    });
+  };
 
   render() {
     const { classes, errors, savePassword } = this.props;
@@ -115,7 +113,7 @@ class ResetPassword extends Component {
               <Grid container direction="column" spacing={6}>
                 <Grid item>
                   <Typography variant="h6" gutterBottom>
-                    <b>Ubah Kata Sandi</b>
+                    Ubah Kata Sandi
                   </Typography>
                   <Typography variant="body1" color="textSecondary">
                     Masukkan kata sandi baru Anda. Kata sandi harus terdiri dari
@@ -170,9 +168,9 @@ class ResetPassword extends Component {
             <Hidden smDown>
               <Grid item xs={5}>
                 <img
-                  alt="Reset Password Art"
+                  alt="Password Art"
                   src="/images/illustrations/PasswordArt.png"
-                  className={classes.artThumbnail}
+                  className={classes.passwordArt}
                 />
               </Grid>
             </Hidden>
@@ -184,16 +182,16 @@ class ResetPassword extends Component {
 }
 
 ResetPassword.propTypes = {
-  savePassword: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
   passwordMatters: PropTypes.object.isRequired,
+  savePassword: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth, // Get Redux State and map it to props so it can be used inside the component.
-  errors: state.errors,
   passwordMatters: state.passwordMatters,
+  errors: state.errors,
 });
 
 export default withRouter(

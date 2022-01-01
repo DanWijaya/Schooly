@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { createHash } from "../../../actions/AuthActions";
-import { clearErrors } from "../../../actions/ErrorActions";
 import {
   Button,
   Grid,
@@ -13,6 +11,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import { createHash } from "../../../actions/AuthActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 
 const styles = (theme) => ({
   root: {
@@ -30,7 +30,7 @@ const styles = (theme) => ({
     maxHeight: "125px",
     marginBottom: "25px",
   },
-  artThumbnail: {
+  passwordArt: {
     maxWidth: "100%",
     maxHeight: "100%",
   },
@@ -72,10 +72,19 @@ class ForgotPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      errors: {},
-      activeStep: 0,
       email: "",
+      activeStep: 0,
+      errors: {},
     };
+  }
+
+  componentDidMount() {
+    this.props.handleNavbar(false);
+  }
+
+  componentWillUnmount() {
+    this.props.handleNavbar(true);
+    this.props.clearErrors();
   }
 
   onChange = (e) => {
@@ -90,15 +99,6 @@ class ForgotPassword extends Component {
       this.setState({ errors: err });
     });
   };
-
-  componentDidMount() {
-    this.props.handleNavbar(false);
-  }
-
-  componentWillUnmount() {
-    this.props.clearErrors();
-    this.props.handleNavbar(true);
-  }
 
   render() {
     const { classes } = this.props;
@@ -123,11 +123,11 @@ class ForgotPassword extends Component {
                 {!isPasswordReset ? (
                   <Grid item>
                     <Typography variant="h6" gutterBottom>
-                      <b>Lupa Kata Sandi?</b>
+                      Lupa Kata Sandi?
                     </Typography>
                     <Typography variant="body1" color="textSecondary">
                       Tautan untuk mengganti kata sandi Anda akan dikirimkan
-                      kepada email untuk akun yang bersangkutan.
+                      kepada email untuk akun bersangkutan.
                     </Typography>
                   </Grid>
                 ) : (
@@ -189,7 +189,7 @@ class ForgotPassword extends Component {
                       className={classes.resendEmailButton}
                       onClick={() => window.location.reload()}
                     >
-                      Kirim Ulang Email
+                      Kirim Ulang
                     </Button>
                   )}
                 </Grid>
@@ -198,9 +198,9 @@ class ForgotPassword extends Component {
             <Hidden smDown>
               <Grid item xs={5}>
                 <img
-                  alt="Reset Password Art"
+                  alt="Password Art"
                   src="/images/illustrations/PasswordArt.png"
-                  className={classes.artThumbnail}
+                  className={classes.passwordArt}
                 />
               </Grid>
             </Hidden>
@@ -212,16 +212,16 @@ class ForgotPassword extends Component {
 }
 
 ForgotPassword.propTypes = {
-  createHash: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
   passwordMatters: PropTypes.object.isRequired,
+  createHash: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth, // Get Redux State and map it to props so it can be used inside the component.
-  errors: state.errors,
   passwordMatters: state.passwordMatters,
+  errors: state.errors,
 });
 
 export default withRouter(

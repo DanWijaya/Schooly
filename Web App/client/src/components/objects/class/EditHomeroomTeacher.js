@@ -13,15 +13,19 @@ import {
   Avatar,
   Button,
   Divider,
+  FormControl,
+  FormHelperText,
   Grid,
   Hidden,
   IconButton,
+  InputLabel,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
   MenuItem,
   Paper,
+  Select,
   Snackbar,
   TextField,
   Typography,
@@ -255,14 +259,6 @@ function EditHomeroomTeacher(props) {
 
   const [success, setSuccess] = React.useState(false);
 
-  // handleOpenUploadDialog = () => {
-  //   setOpenUploadDialog(true);
-  // }
-
-  // handleCloseUploadDialog = () => {
-  //   setOpenUploadDialog(false);
-  // }
-
   function handleOpenDeleteDialog() {
     setOpenDeleteDialog(true);
   }
@@ -350,23 +346,30 @@ function EditHomeroomTeacher(props) {
                             </Typography>
                           }
                         />
-                        <TextField
-                          select
-                          label="Kelas"
-                          key={teacherId}
-                          value={statusWali[teacherId].classId}
-                          onChange={(event) =>
-                            handleKelasWaliChange(event, teacherId)
-                          }
-                          error={showError}
-                          helperText={showError ? "Periksa Kembali!" : null}
-                          className={classes.classSelect}
+                        <FormControl
+                          fullWidth
                           variant="outlined"
+                          size="small"
+                          color="primary"
+                          error={showError}
+                          className={classes.classSelect}
                         >
-                          {all_classes.length !== 0
-                            ? generateAllClassMenuItems()
-                            : null}
-                        </TextField>
+                          <InputLabel>Kelas</InputLabel>
+                          <Select
+                            label="Kelas"
+                            value={statusWali[teacherId].classId}
+                            onChange={(event) =>
+                              handleKelasWaliChange(event, teacherId)
+                            }
+                          >
+                            {all_classes.length !== 0
+                              ? generateAllClassMenuItems()
+                              : null}
+                          </Select>
+                          {showError ? (
+                            <FormHelperText>Periksa Kembali</FormHelperText>
+                          ) : null}
+                        </FormControl>
                       </ListItem>
                     );
                   })
