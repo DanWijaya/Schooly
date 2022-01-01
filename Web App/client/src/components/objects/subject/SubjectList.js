@@ -18,8 +18,6 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import Empty from "../../misc/empty/Empty";
 import {
   Avatar,
-  Button,
-  Dialog,
   Divider,
   Fab,
   Grid,
@@ -37,9 +35,7 @@ import {
 import Alert from "@material-ui/lab/Alert";
 import {
   Add as AddIcon,
-  Cancel as CancelIcon,
   Clear as ClearIcon,
-  Edit as EditIcon,
   LibraryBooks as LibraryBooksIcon,
   Search as SearchIcon,
   Sort as SortIcon,
@@ -87,7 +83,6 @@ function SubjectListToolbar(props) {
     handleOpenCreateDialog,
     searchFilter,
     setSearchFilter,
-    searchBarFocus,
     setSearchBarFocus,
   } = props;
 

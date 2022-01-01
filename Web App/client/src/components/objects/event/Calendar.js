@@ -1327,7 +1327,7 @@ function Calendar(props) {
 
           if (
             date.getDay() === 6 &&
-            date.getMonth() == activeStartDate.getMonth()
+            date.getMonth() === activeStartDate.getMonth()
           ) {
             return (
               <div
@@ -1996,16 +1996,6 @@ function Calendar(props) {
       handleChangeCounter(localCounter);
       return { result, count: result.length };
     } else return result;
-  };
-
-  const handleChangeDay = (direction) => {
-    if (direction === "now") {
-      setCurrentDate(new Date());
-    } else if (direction === "next") {
-      setCurrentDate(new Date(currentDate.getTime() + 1000 * 60 * 60 * 24));
-    } else {
-      setCurrentDate(new Date(currentDate.getTime() - 1000 * 60 * 60 * 24));
-    }
   };
 
   const handleChangeMode = (event) => {
@@ -2863,7 +2853,7 @@ function Calendar(props) {
                       column.getFullYear(),
                       column.getMonth(),
                       column.getDate()
-                    ) in holiday || column.getDay() == 0 ? (
+                    ) in holiday || column.getDay() === 0 ? (
                     <>
                       <Hidden xsDown>
                         <Typography

@@ -80,6 +80,11 @@ const styles = (theme) => ({
     maxWidth: "90px",
     color: theme.palette.primary.main,
   },
+  resendCodeLink: {
+    cursor: "pointer",
+    textDecoration: "underline",
+    color: theme.palette.primary.main,
+  },
   resendCodeLinkDisabled: {
     cursor: "default",
     color: "grey",
@@ -331,7 +336,7 @@ class Register extends Component {
                   <b>{this.state.email}</b>.
                 </Typography>
                 <Typography variant="body2">
-                  <a
+                  <span
                     onClick={() => {
                       this.setState({ otp: "", errors: {} });
                       this.handleOpenSnackbar();
@@ -340,10 +345,10 @@ class Register extends Component {
                         name: this.state.name,
                       });
                     }}
-                    className={classes.resendCodeLinkDisabled}
+                    className={classes.resendCodeLink}
                   >
                     Kirim Ulang
-                  </a> (00:55)
+                  </span> (00:55)
                 </Typography>
               </Grid>
               <Grid item>
