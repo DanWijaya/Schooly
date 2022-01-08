@@ -25,8 +25,7 @@ export const createAnnouncement = (formData, announcementData, history) => (
           `/api/files/announcements/upload/${res.data._id}`,
           formData
         );
-      } // Must return something, if not it will continue to the next "then".
-      else return res;
+      } else return res;
     })
     .then((res) => {
       console.log(res);
@@ -120,7 +119,6 @@ export const deleteAnnouncement = (
     .delete(`/api/announcements/delete/${announcementId}`)
     .then((res) => {
       console.log("Deleted: ", res.data);
-      // let lampiran_to_delete = Array.from(res.data.lampiran)
       return axios.delete(`/api/files/announcements/all/${announcementId}`);
     })
     .then((res) => {
@@ -179,7 +177,6 @@ export const updateAnnouncement = (
       });
       console.log("From actions: ", lampiran_to_delete);
       if (lampiran_to_delete.length > 0) {
-        // axios.delete put the data is quite different..
         return axios.delete(`/api/files/announcements/${annId}`, {
           data: { file_to_delete: lampiran_to_delete },
         });
@@ -189,15 +186,10 @@ export const updateAnnouncement = (
     })
     .then((res) => {
       console.log("Update the lampiran files, upload some new lampiran files");
-      console.log(
-        formData.has("lampiran_announcement"),
-        formData.getAll("lampiran_announcement")
-      );
       if (formData.has("lampiran_announcement")) {
         console.log("Lampiran announcement going to be uploaded");
         return axios.post(`/api/files/announcements/upload/${annId}`, formData);
-      } // // Must return something, if not it will continue to the next "then".
-      else return "Successfully updated task with no lampiran";
+      } else return "Successfully updated task with no lampiran";
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");
@@ -206,7 +198,6 @@ export const updateAnnouncement = (
         payload: true,
       });
       return true;
-      // history.push("/daftar-pengumuman");
     })
 
     .catch((err) => {

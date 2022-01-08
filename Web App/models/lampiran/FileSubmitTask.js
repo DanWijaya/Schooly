@@ -17,7 +17,6 @@ const FileSubmitTaskSchema = new Schema(
     timestamps: true,
   }
 );
-// DocumentSchema.plugin(AutoIncrement, { inc_field: "document_id" });
 
 const FileSubmitTask = mongoose.model("fileSubmitTasks", FileSubmitTaskSchema);
 

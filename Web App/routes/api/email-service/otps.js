@@ -19,6 +19,7 @@ function AddMinutesToNow(minutes) {
 }
 
 router.post("/send-otp-registration-email", async (req, res) => {
+  // I think might be better to use template to send instead to make it consistent for bulk as well.
   try {
     let { email, name } = req.body;
     const minutesToExpire = 3;
@@ -144,10 +145,147 @@ router.post("/verify-otp-registration", async (req, res) => {
   }
 });
 
+router.post("/create-email-template", async (req, res) => {
+  const params = {
+    Template: {
+      TemplateName: "MyTemplate",
+      SubjectPart: "Hi, {{name}} marked {{active_status}}",
+      HtmlPart:
+        "<div style='position: absolute;top: center; left:center; border:1px solid red;padding:20px;'><h4>Hello</h4><br>User marked <span style='color:red'>{{active_status}}</span> by {{changedByName}}.<br><br><p>Emp Name : <b>{{name}}</b></p><br><p>Emp Code : <b>{{emp_code}}</b></p></div>",
+      TextPart:
+        "Hello,\r\nUser marked {{active_status}} by {{changedByName}}.\r\n \r\nEmp Name : {{name}}\r\nEmp Code : {{emp_code}}",
+    },
+  };
+  await ses.createTemplate(params).promise();
+  return res.json("Create Email Template is successful");
+});
+
 router.post("/send-bulk-otp-registration-email", async (req, res) => {
+  // MUST USE BULK TEMPLATE SEND EMAIL ACTUALLY.
   try {
-    let { emailList, nameList } = req.body;
-  } catch (err) {}
+    // send the email in JSON format. (key, val) = (email, name)
+    let { emailToNameJSON } = req.body;
+    const minutesToExpire = 3;
+    const otpLength = 6;
+
+    const generatedOTP = otpGenerator.generate(otpLength, {
+      lowerCaseAlphabets: false,
+      upperCaseAlphabets: false,
+      specialChars: false,
+    });
+
+    const emailList = Object.keys(emailToNameJSON);
+
+    var params = {
+      Destinations: [
+        /* required */
+        {
+          Destination: {
+            /* required */ BccAddresses: [],
+            CcAddresses: [],
+            ToAddresses: ["STRING_VALUE"],
+          },
+          ReplacementTags: [
+            {
+              Name: "STRING_VALUE" /* required */,
+              Value: "STRING_VALUE" /* required */,
+            },
+            /* more items */
+          ],
+          ReplacementTemplateData: "STRING_VALUE",
+        },
+        /* more items */
+      ],
+      Source: "STRING_VALUE" /* required */,
+      Template: "STRING_VALUE" /* required */,
+      ConfigurationSetName: "STRING_VALUE",
+      DefaultTags: [
+        {
+          Name: "STRING_VALUE" /* required */,
+          Value: "STRING_VALUE" /* required */,
+        },
+        /* more items */
+      ],
+      DefaultTemplateData: "STRING_VALUE",
+      ReplyToAddresses: [
+        "STRING_VALUE",
+        /* more items */
+      ],
+      ReturnPath: "STRING_VALUE",
+      ReturnPathArn: "STRING_VALUE",
+      SourceArn: "STRING_VALUE",
+      TemplateArn: "STRING_VALUE",
+    };
+    await ses.sendEmail(params).promise();
+    return res.json("Send Bulk Registration to emails complete");
+    // emailList.map((email) => {
+    //   return new Promise(async (resolve, reject) => {
+    //     const foundOTP = await RegisterOTP.find({ email: email });
+    //     const expirationTime = AddMinutesToNow(minutesToExpire);
+
+    //     if (!foundOTP) {
+    //       const newRegisterOTP = new RegisterOTP({
+    //         otp: generatedOTP,
+    //         expiration_time: expirationTime,
+    //         minutes_to_expire: minutesToExpire,
+    //         email: email,
+    //         verified: false,
+    //       });
+
+    //       await newRegisterOTP.save();
+    //     } else {
+    //       foundOTP.otp = generatedOTP;
+    //       foundOTP.expiration_time = expirationTime;
+    //       foundOTP.minutes_to_expire = minutesToExpire;
+    //       foundOTP.verified = false;
+
+    //       await foundOTP.save();
+    //     }
+
+    //     // Create sendEmail params
+    //     const name = emailToNameJSON[email];
+    //     var params = {
+    //       Destination: {
+    //         // Email to send TO.
+    //         /* required */
+    //         CcAddresses: [
+    //           /* more items */
+    //         ],
+    //         ToAddresses: emailList,
+    //       },
+    //       Message: {
+    //         /* required */
+    //         Body: {
+    //           /* required */
+    //           Html: {
+    //             Charset: "UTF-8",
+    //             Data: `Halo <b>${name}</b>, <br/><br/> Kode akun registrasi anda adalah <b>${generatedOTP}</b>. <br/>
+    //             Kode ini berlaku selama ${minutesToExpire} menit. Silahkan memasukkan Kode ini di aplikasi Schooly untuk melanjutkan pendaftaran.
+    //           `,
+    //           },
+    //           Text: {
+    //             Charset: "UTF-8",
+    //             Data: "Here is an email from AWS SES",
+    //           },
+    //         },
+    //         Subject: {
+    //           Charset: "UTF-8",
+    //           Data: "Verifikasi Pendaftaran Schooly",
+    //         },
+    //       },
+    //       //Email to send FROM.
+    //       Source: sourceEmailAddress /* required */,
+    //       // ReplyToAddresses: [
+    //       //   email
+    //       //       ],
+    //     };
+    //     const data = await ses.sendBulkTemplatedEmail(params).promise();
+    //     console.log("Send OTP registration successful");
+    //   });
+    // });
+  } catch (err) {
+    console.error("send-bulk");
+  }
 });
 
 module.exports = router;

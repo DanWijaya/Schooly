@@ -15,7 +15,5 @@ const FileAvatarSchema = new Schema(
   }
 );
 
-// DocumentSchema.plugin(AutoIncrement, { inc_field: "document_id" });
-
 const FileAvatar = mongoose.model("fileAvatar", FileAvatarSchema);
 module.exports = FileAvatar;

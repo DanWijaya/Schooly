@@ -128,6 +128,7 @@ class Register extends Component {
       password: "",
       password2: "",
       isVerifiedEmail: false,
+      isResendDisabled: true,
       otp: "",
       phone: "",
       emergency_phone: "",
@@ -140,6 +141,7 @@ class Register extends Component {
       openUploadDialog: false,
       openSnackbar: false,
       errors: {},
+      timer: 30,
     };
   }
 
@@ -151,6 +153,25 @@ class Register extends Component {
     this.props.handleNavbar(false);
     this.props.getAllUnits();
   }
+
+  onStart = () => {
+    this.setState((prevState) => ({
+      timer: prevState.timer - 1,
+    }));
+    if (this.state.timer <= 0) {
+      this.onReset();
+    }
+  };
+
+  onReset = () => {
+    clearInterval(this.f);
+    this.setState({ timer: 30, isResendDisabled: false });
+  };
+
+  timer = () => {
+    this.setState({ isResendDisabled: true });
+    this.f = setInterval(this.onStart, 1000);
+  };
 
   componentWillUnmount() {
     this.props.handleNavbar(true);
@@ -339,16 +360,22 @@ class Register extends Component {
                   <span
                     onClick={() => {
                       this.setState({ otp: "", errors: {} });
-                      this.handleOpenSnackbar();
+                      this.timer();
                       sendOTPRegistrationEmail({
                         email: this.state.email,
                         name: this.state.name,
                       });
+                      this.handleOpenSnackbar();
                     }}
-                    className={classes.resendCodeLink}
+                    className={
+                      this.state.isResendDisabled
+                        ? classes.resendCodeLinkDisabled
+                        : classes.resendCodeLink
+                    }
                   >
                     Kirim Ulang
-                  </span> (00:55)
+                  </span>{" "}
+                  {`(00:${this.state.timer})`}
                 </Typography>
               </Grid>
               <Grid item>
@@ -655,6 +682,7 @@ class Register extends Component {
           }
           const data = { email: this.state.email, name: this.state.name };
           await sendOTPRegistrationEmail(data);
+          this.timer();
         }
 
         if (this.state.activeStep === 2) {

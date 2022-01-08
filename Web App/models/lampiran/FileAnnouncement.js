@@ -15,8 +15,6 @@ const FileAnnouncementSchema = new Schema(
   }
 );
 
-// DocumentSchema.plugin(AutoIncrement, { inc_field: "document_id" });
-
 const FileAnnouncement = mongoose.model(
   "fileAnnouncements",
   FileAnnouncementSchema

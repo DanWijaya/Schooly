@@ -369,7 +369,6 @@ function FileList(props) {
     }
   }
 
-  console.log(rows);
   return (
     <Paper className={classes.root}>
       <Delete
