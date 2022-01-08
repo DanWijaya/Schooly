@@ -164,13 +164,13 @@ class Register extends Component {
   };
 
   onReset = () => {
-    clearInterval(this.f);
+    clearInterval(this.timerInterval);
     this.setState({ timer: 30, isResendDisabled: false });
   };
 
   timer = () => {
     this.setState({ isResendDisabled: true });
-    this.f = setInterval(this.onStart, 1000);
+    this.timerInterval = setInterval(this.onStart, 1000);
   };
 
   componentWillUnmount() {
