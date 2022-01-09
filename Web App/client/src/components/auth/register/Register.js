@@ -122,6 +122,7 @@ const styles = (theme) => ({
 class Register extends Component {
   constructor() {
     super();
+    this.timerSeconds = 45;
     this.state = {
       name: "",
       email: "",
@@ -141,7 +142,7 @@ class Register extends Component {
       openUploadDialog: false,
       openSnackbar: false,
       errors: {},
-      timer: 30,
+      timer: this.timerSeconds,
     };
   }
 
@@ -165,7 +166,7 @@ class Register extends Component {
 
   onReset = () => {
     clearInterval(this.timerInterval);
-    this.setState({ timer: 30, isResendDisabled: false });
+    this.setState({ timer: this.timerSeconds, isResendDisabled: false });
   };
 
   timer = () => {

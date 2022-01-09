@@ -183,11 +183,16 @@ router.post("/send-bulk-otp-registration-email", async (req, res) => {
   // MUST USE BULK TEMPLATE SEND EMAIL ACTUALLY.
   try {
     // send the email in JSON format. (key, val) = (email, name)
-    let { emailToNameJSON } = req.body;
+    // {
+    // "emailToUserDetailsJSON" : {
+    // the unit value will be decided by the unit of the administrator.
+    // 	"danwijayaa@gmail.com" : {"name": "Danwijayaa", "role":, "phone":, "emergency_phone":,"address"}
+    // }
+    let { emailToUserDetailsJSON } = req.body;
     const minutesToExpire = 3;
     const otpLength = 6;
 
-    const emailList = Object.keys(emailToNameJSON);
+    const emailList = Object.keys(emailToUserDetailsJSON);
 
     let emailToOTPJSON = {};
     emailList.forEach((email) => {
@@ -199,10 +204,15 @@ router.post("/send-bulk-otp-registration-email", async (req, res) => {
 
       emailToOTPJSON[email] = generatedOTP;
     });
-    return res.json(emailToOTPJSON);
 
+    // return res.json(destinationList);
     var params = {
       Destinations: emailList.map((email) => {
+        const templateData = JSON.stringify({
+          name: emailToUserDetailsJSON[email],
+          generatedOTP: emailToOTPJSON[email],
+          minutesToExpire: minutesToExpire,
+        });
         return {
           Destination: {
             CcAddresses: [
@@ -212,16 +222,19 @@ router.post("/send-bulk-otp-registration-email", async (req, res) => {
               email,
               /* more items */
             ],
-            ReplacementTemplateData: `{ name : ${emailToNameJSON[email]} , generatedOTP: ${emailToOTPJSON[email]}, minutesToExpire: ${minutesToExpire} }`,
           },
+          ReplacementTemplateData: templateData,
+          // ReplacementTemplateData: `{\"name\":\"${emailToUserDetailsJSON[email]}\",\"generatedOTP\":\"${emailToOTPJSON[email]}\",\"minutesToExpire\":\"${minutesToExpire}\"}`,
         };
       }),
+      // ReplacementTags: [{ Name: "name", Value: "TEST" }],
       Source: sourceEmailAddress /* required */,
       Template: "VerificationCodeTemplate" /* required */,
-      // DefaultTemplateData: '{ "REPLACEMENT_TAG_NAME":"REPLACEMENT_VALUE" }',
+      DefaultTemplateData: `{\"name\":\"NULL\",\"generatedOTP\":\"NULL\",\"minutesToExpire\":\"NULL\"}`,
       // ReplyToAddresses: ["EMAIL_ADDRESS"],
     };
-    await ses.sendEmail(params).promise();
+    const result = await ses.sendBulkTemplatedEmail(params).promise();
+    // return res.json(result);
     return res.json("Send Bulk Registration to emails complete");
   } catch (err) {
     console.error("send-bulk");
