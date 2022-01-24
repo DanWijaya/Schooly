@@ -10,12 +10,9 @@ import {
 export const createAssessment = (formData, assessment, history) => (
   dispatch
 ) => {
-  console.log(assessment);
   return axios
     .post("/api/assessments/create", assessment)
     .then((res) => {
-      console.log(res.data);
-
       dispatch({
         type: GET_ERRORS,
         payload: false,
@@ -28,7 +25,6 @@ export const createAssessment = (formData, assessment, history) => (
           num_lampiran.push(qns.lampiran.length);
         });
         formData.append("num_lampiran", num_lampiran);
-        console.log("num_lampiran:", num_lampiran);
 
         return axios.post(
           `/api/files/assessments/upload/${res.data._id}`,
@@ -79,7 +75,6 @@ export const updateAssessment = (
           data: { id_to_delete: lampiran_to_delete },
         });
       } else {
-        // Must return something, if not it will continue to the next "then".
         return "Successfully updated task with no lampiran";
       }
     })
@@ -191,7 +186,6 @@ export const deleteAssessment = (id, type = "Kuis", history = null) => (
             pathname: "/daftar-ujian",
             openDeleteSnackbar: true,
           });
-          // window.location.href = "/daftar-ujian";
         }
       }
       return "Succesfully deleted Assessment";
@@ -208,7 +202,7 @@ export const deleteAssessment = (id, type = "Kuis", history = null) => (
 
 export const submitAssessment = (assessmentId, data) => (dispatch) => {
   // data contains the followiung objects:
-  // let data = {
+  // data = {
   //   "answers" : answer,
   //   "classId" : user.kelas,
   //   "userId" : user._id
@@ -248,7 +242,6 @@ export const getAssessments = (type, subjectId, classId) => {
   return axios
     .get(`/api/assessments/view`, { params: { type, subjectId, classId } })
     .then((res) => {
-      console.log("getAssessments completed");
       return res.data;
     })
     .catch(() => {
@@ -278,7 +271,6 @@ export const updateAssessmentGrades = (
       longtextGrade,
     })
     .catch((err) => {
-      // throw new Error("updateAssessmentGrades error has occured");
       throw new Error(err.response.data);
     });
 };

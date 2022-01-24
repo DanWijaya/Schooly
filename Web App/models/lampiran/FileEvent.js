@@ -16,7 +16,5 @@ const FileEventSchema = new Schema(
   }
 );
 
-// DocumentSchema.plugin(AutoIncrement, { inc_field: "document_id" });
-
 const FileEvent = mongoose.model("fileEvents", FileEventSchema);
 module.exports = FileEvent;

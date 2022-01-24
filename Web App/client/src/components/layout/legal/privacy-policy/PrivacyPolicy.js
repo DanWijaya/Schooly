@@ -96,7 +96,7 @@ function PrivacyPolicy(props) {
           kecuali jika diperlukan dalam konteks perubahan struktur bisnis kami
           seperti merger atau akuisisi. Lihat{" "}
           <a href="#vendor-mitra-dan-jenis-pengungkapan-lainnya">
-            Vendor, mitra dan jenis pengungkapan lainnya
+            vendor, mitra dan jenis pengungkapan lainnya
           </a>{" "}
           untuk perincian lebih lanjut tentang bagaimana kami dapat
           mengungkapkan informasi pribadi dalam kasus perubahan struktur bisnis
@@ -110,15 +110,14 @@ function PrivacyPolicy(props) {
           kami, atau menggunakan produk kami.
         </Typography>
         <Typography align="justify" paragraph>
-          Jika Anda adalah pengguna dari klien kami dan kami menyediakan produk
-          dan layanan kami kepada Anda atas nama klien kami (institusi Anda),
+          Jika Anda adalah pengguna dari klien kami (institusi Anda) dan kami
+          menyediakan produk dan layanan kami kepada Anda atas nama klien kami,
           kami dianggap sebagai "pengolah data". Dalam hal ini, kebijakan
-          privasi institusi Anda mengatur penggunaan data pribadi. Pada kasus
-          ini kebijakan privasi institusi Anda mengatur penggunaan informasi
-          pribadi. Kebijakan Privasi kami tidak menggantikan ketentuan
-          perjanjian apa pun antara kami dan institusi Anda (atau klien lain
-          atau pihak ketiga mana pun), juga tidak memengaruhi ketentuan
-          perjanjian apa pun antara Anda dan institusi Anda.
+          privasi institusi Anda mengatur penggunaan data pribadi. Kebijakan
+          Privasi kami tidak menggantikan ketentuan perjanjian apa pun antara
+          kami dan institusi Anda (atau klien lain atau pihak ketiga mana pun),
+          juga tidak memengaruhi ketentuan perjanjian apa pun antara Anda dan
+          institusi Anda.
         </Typography>
         <Typography align="justify" paragraph>
           Dari waktu ke waktu, kami perlu memperbarui Kebijakan ini untuk
@@ -243,10 +242,10 @@ function PrivacyPolicy(props) {
                       Langsung dari Anda. Situs web kami mengharuskan Anda untuk
                       mendaftar akun. Saat Anda melakukannya, kami meminta
                       informasi, seperti nama dan alamat email Anda, yang kami
-                      perlukan untuk menyiapkan akun Anda. Seringkali Anda juga
-                      dapat secara sukarela memberikan informasi tambahan,
-                      seperti foto atau informasi biografi, untuk memanfaatkan
-                      situs web kami dengan lebih baik.
+                      perlukan untuk menyiapkan akun Anda. Adapun beberapa
+                      informasi tambahan seperti foto dan informasi biografi
+                      diperlukan agar situs web kami dapat digunakan dengan
+                      lebih baik.
                     </li>
                     <li style={{ listStyleType: "circle" }}>
                       Secara tidak langsung dari Anda. Kami mengumpulkan
@@ -395,9 +394,9 @@ function PrivacyPolicy(props) {
                           agar informasi akun Anda tetap akurat dan terkini.
                         </li>
                         <li>
-                          Detail kontak tambahan: Kami juga menerima nomor
-                          telepon Anda untuk mengirimkan pemberitahuan teks
-                          (SMS) kepada Anda.
+                          Kontak tambahan: Kami juga menerima nomor telepon Anda
+                          untuk mengirimkan pemberitahuan teks (SMS) kepada
+                          Anda.
                         </li>
                         <li>
                           Aplikasi, pendaftaran, dan informasi bantuan keuangan:
@@ -422,7 +421,7 @@ function PrivacyPolicy(props) {
                           memberikan atau memperbarui informasi ini di produk
                           kami. Pada produk dan layanan umumnya, Anda dapat
                           memilih untuk memberikan lebih banyak informasi untuk
-                          profil akun Anda, seperti foto Anda dan konten
+                          profil akun Anda, seperti foto Anda dan informasi
                           biografi lainnya. Kelengkapan informasi ini juga
                           membantu institusi Anda untuk memiliki informasi
                           terbaru tentang Anda. Di beberapa produk, Anda dapat
@@ -480,7 +479,7 @@ function PrivacyPolicy(props) {
                       <ol>
                         <li>
                           Data lokasi dan acara. Untuk beberapa produk dan
-                          layanan seperti kartu akses dan Kehadiran, kami akan
+                          layanan seperti kartu akses dan kehadiran, kami akan
                           mengumpulkan informasi tentang tempat, kelas, dan
                           acara mana yang telah Anda kunjungi dan hadiri atas
                           nama institusi Anda, serta waktu dan tanggal kunjungan

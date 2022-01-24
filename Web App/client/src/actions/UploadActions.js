@@ -17,13 +17,10 @@ export const uploadTugas = (tugas, userData, taskId, ontime) => (dispatch) => {
         tugas
       )
       .then((res) => {
-        console.log(res.data);
         dispatch({
           type: GET_SUCCESS_RESPONSE,
           payload: res.data,
         });
-        console.log("Run woi");
-        // window.location.reload()
       })
       .catch((err) => {
         console.log("error in uploading");
@@ -31,23 +28,6 @@ export const uploadTugas = (tugas, userData, taskId, ontime) => (dispatch) => {
           type: GET_ERRORS,
           payload: err.response.data,
         });
-      });
-  }
-};
-
-export const deleteTugas = (tugas_id, userData) => (dispatch) => {
-  console.log("Delete tugas is runned");
-
-  if (userData.role === "Student") {
-    axios
-      .delete(`/api/upload/file_tugas/tugas/${userData.id}/${tugas_id}/`)
-      .then((res) => {
-        console.log("Tugas berhasil dibuang");
-        window.location.reload();
-      })
-      .catch((err) => {
-        console.log("Error in deleting");
-        console.log(err);
       });
   }
 };

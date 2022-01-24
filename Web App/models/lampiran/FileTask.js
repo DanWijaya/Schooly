@@ -16,7 +16,5 @@ const FileTaskSchema = new Schema(
   }
 );
 
-// DocumentSchema.plugin(AutoIncrement, { inc_field: "document_id" });
-
 const FileTask = mongoose.model("fileTasks", FileTaskSchema);
 module.exports = FileTask;

@@ -18,7 +18,6 @@ export const getAllUnits = () => (dispatch) => {
   return axios
     .get("/api/units/viewall")
     .then((res) => {
-      console.log(res.data);
       dispatch({
         type: GET_ALL_UNITS,
         payload: res.data,

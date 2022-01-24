@@ -289,7 +289,7 @@ function TermsOfService(props) {
             informasi pribadi yang Anda berikan, dapat berikan, atau dapat
             dikumpulkan oleh kami sehubungan dengan penggunaan Anda terhadap
             Produk (“Informasi Anda "), akan dikumpulkan, dijaga, dan digunakan
-            untuk menyediakan Produk kepada Anda atau lembaga Anda. Ada pun
+            untuk menyediakan Produk kepada Anda atau institusi Anda. Ada pun
             persyaratan tambahan yang berlaku untuk Produk individual, dan
             perjanjian apa pun yang dibuat oleh institusi Anda terkait dengan
             Produk. Anda memahami bahwa, melalui penggunaan Produk oleh Anda,
@@ -359,7 +359,7 @@ function TermsOfService(props) {
           <Typography align="justify" paragraph>
             Semua Konten, baik yang dipublikasikan atau dikirimkan secara
             pribadi, adalah tanggung jawab orang yang membuat Konten tersebut.
-            Kami tidak mungkin memantau atau mengontrol Konten yang dibagikan
+            Kami tidak akan memantau atau mengontrol Konten yang dibagikan
             melalui Produk, dan kami tidak bertanggung jawab atas Konten
             tersebut. Setiap penggunaan atau kepercayaan pada Konten atau materi
             yang dibagikan melalui Produk atau diperoleh oleh Anda melalui
@@ -382,9 +382,8 @@ function TermsOfService(props) {
             termasuk tetapi tidak terbatas pada hak kekayaan intelektual dan hak
             privasi; dan (d) Schooly dapat menggunakan hak atas Konten Anda yang
             diberikan berdasarkan Ketentuan ini tanpa tanggung jawab untuk
-            pembayaran pembayaran, biaya, atau royalti yang dibayarkan
-            berdasarkan perjanjian perundingan bersama, pengaturan lisensi atau
-            lainnya.
+            pembayaran, biaya, atau royalti yang dibayarkan berdasarkan
+            perjanjian perundingan bersama, pengaturan lisensi atau lainnya.
           </Typography>
           <Typography align="justify" paragraph>
             Schooly menghormati hak kekayaan intelektual orang lain dan
@@ -426,7 +425,7 @@ function TermsOfService(props) {
             Schooly memberi Anda lisensi pribadi, di seluruh dunia, bebas
             royalti, tidak dapat dialihkan, dan tidak eksklusif untuk
             menggunakan Produk, tunduk pada Ketentuan ini dan perjanjian apa pun
-            yang dibuat oleh lembaga Anda terkait dengan Produk, semata-mata
+            yang dibuat oleh institusi Anda terkait dengan Produk, semata-mata
             untuk tujuan penggunaan Produk, dan bukan untuk intelijen, analisis,
             atau demonstrasi kompetitif. Anda tidak boleh menyalin,
             memodifikasi, mendistribusikan, menjual, atau menyewakan bagian apa
@@ -436,62 +435,116 @@ function TermsOfService(props) {
             tertulis dari kami.
           </Typography>
           <Typography align="justify" paragraph>
-            Saat menggunakan Produk, Anda tidak boleh: (i) mengelak,
-            menonaktifkan, atau mengganggu fitur keamanan apa pun terkait Produk
-            atau fitur yang mencegah atau membatasi penggunaan atau menyalin
-            konten yang dapat diakses melalui Produk; (ii) membuat lebih dari
-            satu akun untuk digunakan dengan Produk tertentu (iii) memberikan
-            informasi yang salah atau menyesatkan atau mengizinkan orang lain
-            untuk menggunakan Produk dengan nama Anda atau atas nama Anda; (iv)
-            berkedok sebagai orang lain, atau salah menggambarkan identitas atau
-            afiliasi Anda dengan orang lain atau memberi kesan mereka terkait
-            dengan Schooly, jika ini bukan masalahnya; (v) menggunakan Produk
-            jika kami telah menangguhkan atau melarang Anda menggunakannya; (vi)
-            mengirim spam, pesan berulang, iklan atau email pemasaran,
-            panggilan, atau pesan teks yang tidak diminta, atau terlibat dalam
-            aktivitas apa pun yang melanggar undang-undang dan peraturan
-            anti-spam; (vii) mengadvokasi, mempromosikan atau terlibat dalam
-            tindakan atau perilaku ilegal atau melanggar hukum apa pun yang
-            menyebabkan kerusakan atau cedera pada orang atau properti apa pun;
-            (viii) memodifikasi, mengganggu, mencegat, mengganggu atau meretas
-            Produk apa pun atau mengumpulkan data apa pun dari Produk selain
-            sesuai dengan Ketentuan Penggunaan ini; (ix) menyalahgunakan Produk
-            dengan sengaja memperkenalkan virus, Trojan, worm, bom logika atau
-            materi lain yang akan membahayakan Produk atau Pengguna apa pun dari
-            peralatan Produk; (x) menyerahkan atau menyumbang Konten apa pun
-            yang mengandung ketelanjangan atau kekerasan atau kasar, mengancam,
-            cabul, menyesatkan, tidak benar atau menyinggung (dalam setiap kasus
-            kecuali Konten tersebut diserahkan atau berkontribusi untuk tujuan
-            pendidikan yang dominan, seperti, misalnya, historis bahan-bahan
-            yang disumbangkan melalui Produk untuk diskusi kelas); (xi)
-            mengirimkan atau menyumbang Konten apa pun tanpa izin dari pemilik
-            konten atau melanggar hak cipta, merek dagang, privasi, publisitas,
-            atau hak lain dari pihak ketiga; (xii) menggunakan Konten apa pun
-            yang melanggar persyaratan lisensi yang ditentukan oleh pemilik;
-            (xiii) menyerahkan atau menyumbangkan informasi atau komentar
-            tentang orang lain tanpa izin orang tersebut; (xiv) mengancam,
-            menyalahgunakan atau menyerang privasi orang lain, atau menyebabkan
-            gangguan, ketidaknyamanan, atau kecemasan yang tidak perlu atau
-            mengambil tindakan apa pun yang cenderung melecehkan, membuat marah,
-            mempermalukan, mengkhawatirkan, mengkhawatirkan, atau mengganggu
-            orang lain; atau (xv) menggunakan sistem otomatis apa pun, termasuk
-            tanpa batasan "robot", "spider" atau "offline reader" untuk
-            mengakses Produk dengan cara yang mengirimkan lebih banyak pesan
-            permintaan ke Produk daripada yang dapat diproduksi manusia pada
-            periode waktu yang sama.
+            Saat menggunakan Produk, Anda tidak boleh:
+            <ol>
+              <li>
+                Mengelak, menonaktifkan, atau mengganggu fitur keamanan apa pun
+                terkait Produk atau fitur yang mencegah atau membatasi
+                penggunaan atau menyalin konten yang dapat diakses melalui
+                Produk.
+              </li>
+              <li>
+                Membuat lebih dari satu akun untuk digunakan dengan Produk
+                tertentu.
+              </li>
+              <li>
+                Memberikan informasi yang salah atau menyesatkan atau
+                mengizinkan orang lain untuk menggunakan Produk dengan nama Anda
+                atau atas nama Anda.
+              </li>
+              <li>
+                Menyamar sebagai orang lain, atau salah menggambarkan identitas
+                atau afiliasi Anda dengan orang lain atau memberi kesan mereka
+                terkait dengan Schooly, jika ini bukan masalahnya.
+              </li>
+              <li>
+                Menggunakan Produk jika kami telah menangguhkan atau melarang
+                Anda menggunakannya.
+              </li>
+              <li>
+                Mengirim spam, pesan berulang, iklan atau email pemasaran,
+                panggilan, atau pesan teks yang tidak diminta, atau terlibat
+                dalam aktivitas apa pun yang melanggar undang-undang dan
+                peraturan anti-spam.
+              </li>
+              <li>
+                Mengadvokasi, mempromosikan atau terlibat dalam tindakan atau
+                perilaku ilegal atau melanggar hukum apa pun yang menyebabkan
+                kerusakan atau cedera pada orang atau properti apa pun.
+              </li>
+              <li>
+                Memodifikasi, mengganggu, mencegat, mengganggu atau meretas
+                Produk apa pun atau mengumpulkan data apa pun dari Produk selain
+                sesuai dengan Ketentuan Penggunaan ini.
+              </li>
+              <li>
+                Menyalahgunakan Produk dengan sengaja memperkenalkan virus,
+                Trojan, worm, bom logika atau materi lain yang akan membahayakan
+                Produk atau Pengguna apa pun dari peralatan Produk.
+              </li>
+              <li>
+                Menyerahkan atau menyumbang Konten apa pun yang mengandung
+                ketelanjangan atau kekerasan atau kasar, mengancam, cabul,
+                menyesatkan, tidak benar atau menyinggung (dalam setiap kasus
+                kecuali Konten tersebut diserahkan atau berkontribusi untuk
+                tujuan pendidikan yang dominan, seperti, misalnya, historis
+                bahan-bahan yang disumbangkan melalui Produk untuk diskusi
+                kelas).
+              </li>
+              <li>
+                Mengirimkan atau menyumbang Konten apa pun tanpa izin dari
+                pemilik konten atau melanggar hak cipta, merek dagang, privasi,
+                publisitas, atau hak lain dari pihak ketiga.
+              </li>
+              <li>
+                Menggunakan Konten apa pun yang melanggar persyaratan lisensi
+                yang ditentukan oleh pemilik.
+              </li>
+              <li>
+                Menyerahkan atau menyumbangkan informasi atau komentar tentang
+                orang lain tanpa izin orang tersebut.
+              </li>
+              <li>
+                Mengancam, menyalahgunakan atau menyerang privasi orang lain,
+                atau menyebabkan gangguan, ketidaknyamanan, atau kecemasan yang
+                tidak perlu atau mengambil tindakan apa pun yang cenderung
+                melecehkan, membuat marah, mempermalukan, mengkhawatirkan,
+                mengkhawatirkan, atau mengganggu orang lain.
+              </li>{" "}
+              <li>
+                Menggunakan sistem otomatis apa pun, termasuk tanpa batasan
+                "robot", "spider" atau "offline reader" untuk mengakses Produk
+                dengan cara yang mengirimkan lebih banyak pesan permintaan ke
+                Produk daripada yang dapat diproduksi manusia pada periode waktu
+                yang sama.
+              </li>
+            </ol>
           </Typography>
           <Typography align="justify" paragraph>
             Kegagalan untuk mematuhi aturan penggunaan yang dapat diterima ini
             merupakan pelanggaran serius terhadap Ketentuan Penggunaan ini, dan
             dapat mengakibatkan kami mengambil semua atau salah satu dari
-            tindakan berikut (dengan atau tanpa pemberitahuan): (a) penarikan
-            segera, sementara atau permanen dari Anda hak untuk menggunakan
-            Produk kami; (b) penghapusan segera, sementara atau permanen dari
-            Konten; (c) mengeluarkan peringatan kepada Anda; (d) tindakan hukum
-            terhadap Anda termasuk proses untuk penggantian semua biaya
-            (termasuk, tetapi tidak terbatas pada, biaya administrasi dan hukum
-            yang wajar) yang dihasilkan dari pelanggaran; dan (e) pengungkapan
-            informasi tersebut kepada pihak penegak hukum yang kami rasa perlu.
+            tindakan berikut (dengan atau tanpa pemberitahuan):
+            <ol>
+              <li type="a">
+                Penarikan segera, sementara atau permanen dari Anda hak untuk
+                menggunakan Produk kami.
+              </li>
+              <li type="a">
+                Penghapusan segera, sementara atau permanen dari Konten.
+              </li>
+              <li type="a">Mengeluarkan peringatan kepada Anda.</li>{" "}
+              <li type="a">
+                Tindakan hukum terhadap Anda termasuk proses untuk penggantian
+                semua biaya (termasuk, tetapi tidak terbatas pada, biaya
+                administrasi dan hukum yang wajar) yang dihasilkan dari
+                pelanggaran.
+              </li>
+              <li type="a">
+                Pengungkapan informasi tersebut kepada pihak penegak hukum yang
+                kami rasa perlu.
+              </li>
+            </ol>
           </Typography>
           <Typography align="justify" paragraph>
             Tanggapan yang dijelaskan dalam Bagian ini tidak terbatas, dan kami
@@ -519,14 +572,14 @@ function TermsOfService(props) {
             termasuk Konten yang disediakan oleh Pengguna atau pihak ketiga
             lainnya) adalah dan akan tetap menjadi milik eksklusif Schooly dan
             pemberi lisensinya. Produk dilindungi oleh hak cipta, merek dagang,
-            dan undang-undang lainnya dari Amerika Serikat dan negara-negara
-            asing. Tidak ada dalam Ketentuan yang memberi Anda hak untuk
-            menggunakan nama Schooly atau merek dagang Schooly, logo, nama
-            domain, dan fitur merek khas lainnya. Setiap umpan balik, komentar,
-            atau saran yang Anda berikan mengenai Schooly, atau Produk
-            sepenuhnya bersifat sukarela dan kami akan bebas untuk menggunakan
-            umpan balik, komentar atau saran seperti yang kami anggap cocok dan
-            tanpa kewajiban apa pun kepada Anda.
+            dan undang-undang lainnya dari Indonesia dan negara-negara asing.
+            Tidak ada dalam Ketentuan yang memberi Anda hak untuk menggunakan
+            nama Schooly atau merek dagang Schooly, logo, nama domain, dan fitur
+            merek khas lainnya. Setiap umpan balik, komentar, atau saran yang
+            Anda berikan mengenai Schooly, atau Produk sepenuhnya bersifat
+            sukarela dan kami akan bebas untuk menggunakan umpan balik, komentar
+            atau saran seperti yang kami anggap cocok dan tanpa kewajiban apa
+            pun kepada Anda.
           </Typography>
         </div>
         <div
@@ -587,21 +640,21 @@ function TermsOfService(props) {
           </Typography>
           <Typography align="justify" paragraph>
             Produk dapat berisi tautan ke situs web atau sumber daya pihak
-            ketiga. Anda mengakui dan menyetujui bahwa Entitas Schooly tidak
-            bertanggung jawab atau berkewajiban atas: (i) ketersediaan atau
-            keakuratan situs web atau sumber daya tersebut; atau (ii) konten,
-            produk, atau layanan di atau tersedia dari situs web atau sumber
-            daya tersebut. Tautan ke situs web atau sumber daya tersebut tidak
-            menyiratkan pengesahan oleh Entitas Schooly dari situs web atau
-            sumber daya tersebut atau konten, produk, atau layanan yang tersedia
-            dari situs web atau sumber daya tersebut. Anda mengakui tanggung
-            jawab tunggal untuk dan menanggung semua risiko yang timbul dari
-            penggunaan Anda atas situs web atau sumber daya tersebut. Jika Anda
-            mengakses situs web atau layanan pihak ketiga dari suatu Produk atau
-            membagikan Konten Anda pada atau melalui situs web atau layanan
-            pihak ketiga mana pun, Anda melakukannya dengan risiko Anda sendiri,
-            dan Anda memahami bahwa Ketentuan ini dan Kebijakan Privasi tidak
-            berlaku untuk Anda menggunakan situs-situs tersebut.
+            ketiga. Anda mengakui dan menyetujui bahwa Schooly tidak bertanggung
+            jawab atau berkewajiban atas: (i) ketersediaan atau keakuratan situs
+            web atau sumber daya tersebut; atau (ii) konten, produk, atau
+            layanan di atau tersedia dari situs web atau sumber daya tersebut.
+            Tautan ke situs web atau sumber daya tersebut tidak menyiratkan
+            pengesahan oleh Schooly dari situs web atau sumber daya tersebut
+            atau konten, produk, atau layanan yang tersedia dari situs web atau
+            sumber daya tersebut. Anda mengakui tanggung jawab tunggal untuk dan
+            menanggung semua risiko yang timbul dari penggunaan Anda atas situs
+            web atau sumber daya tersebut. Jika Anda mengakses situs web atau
+            layanan pihak ketiga dari suatu Produk atau membagikan Konten Anda
+            pada atau melalui situs web atau layanan pihak ketiga mana pun, Anda
+            melakukannya dengan risiko Anda sendiri, dan Anda memahami bahwa
+            Ketentuan ini dan Kebijakan Privasi tidak berlaku untuk Anda
+            menggunakan situs-situs tersebut.
           </Typography>
         </div>
         <div
@@ -614,7 +667,7 @@ function TermsOfService(props) {
           </Typography>
           <Typography align="justify" paragraph>
             SAMPAI KEPADA BATAS MAKSIMUM YANG DIIZINKAN OLEH UNDANG-UNDANG YANG
-            BERLAKU, ENTITAS SCHOOLY TIDAK AKAN BERTANGGUNG JAWAB ATAS KERUSAKAN
+            BERLAKU, SCHOOLY TIDAK AKAN BERTANGGUNG JAWAB ATAS KERUSAKAN
             LANGSUNG, INSIDENTAL, KHUSUS, KONSEKUENSIAL ATAU PUNITIF, ATAU
             KEHILANGAN KEUNTUNGAN ATAU PENDAPATAN, APAKAH TERJADI SECARA
             LANGSUNG ATAU TIDAK LANGSUNG, ATAU ADANYA KEHILANGAN DATA,
