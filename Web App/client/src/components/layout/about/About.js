@@ -21,6 +21,16 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "130px",
     paddingBottom: "130px",
   },
+  whatIsSchoolyDivider: {
+    backgroundColor: theme.palette.primary.main,
+    height: "3px",
+    width: "20%",
+    margin: "40px 0px",
+    [theme.breakpoints.down("sm")]: {
+      width: "30%",
+      margin: "25px 0px",
+    },
+  },
   schoolyMotto: {
     fontFamily: "Caveat",
     fontWeight: "bold",
@@ -36,16 +46,6 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "60%",
     [theme.breakpoints.down("sm")]: {
       maxWidth: "80%",
-    },
-  },
-  whatIsSchoolyDivider: {
-    backgroundColor: theme.palette.primary.main,
-    height: "3px",
-    width: "20%",
-    margin: "40px 0px",
-    [theme.breakpoints.down("sm")]: {
-      width: "30%",
-      margin: "25px 0px",
     },
   },
   subtopicDividerLong: {
@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
     height: "300px",
   },
   techWorld: {
-    backgroundImage: "url(/images/photos/DiscussionWork-ScottGraham.jpg)",
+    backgroundImage: "url(/images/photos/DiscussionWork-Akson.jpg)",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
@@ -153,9 +153,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
-    },
   },
   supportSchoolyButton: {
     backgroundColor: theme.palette.primary.main,
@@ -203,21 +200,23 @@ function About(props) {
           kegiatan persekolahan akan menjadi lebih efektif dan efisien.❞
         </Typography>
       </div>
-      <div className={classes.introduction}>
-        <div className={classes.introductionText}>
-          <Typography variant="overline" paragraph>
-            Layanan Kami
-          </Typography>
-          <Typography gutterBottom>
-            Apa pentingnya teknologi di dunia pendidikan?
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            Pelajari lebih lanjut di bawah.
-          </Typography>
-        </div>
-      </div>
       <div className={classes.story}>
         <Grid container spacing={5}>
+          <Grid item xs={12}>
+            <div className={classes.introduction}>
+              <div className={classes.introductionText}>
+                <Typography variant="overline" paragraph>
+                  Layanan Kami
+                </Typography>
+                <Typography gutterBottom>
+                  Apa pentingnya teknologi di dunia pendidikan?
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Pelajari lebih lanjut di bawah.
+                </Typography>
+              </div>
+            </div>
+          </Grid>
           <Grid item xs={12} md={6} container direction="column">
             <div className={classes.worldChanges} />
             <Grid item>
@@ -259,29 +258,31 @@ function About(props) {
               </Typography>
             </Grid>
           </Grid>
+          <Grid item xs={12}>
+            <div className={classes.solution} />
+            <div className={classes.solutionContainer}>
+              <Typography
+                variant="overline"
+                align="center"
+                className={classes.solutionTitle}
+              >
+                Schooly adalah solusinya!
+              </Typography>
+              <Typography align="center" className={classes.solutionText}>
+                Kami mengerti akan masalah-masalah yang dihadapi sekolah-sekolah
+                yang ada untuk beradaptasi di era digital ini. Terutama dalam
+                mengatur murid-murid yang ada, agar tidak terdistraksi atau
+                menyalahgunakan teknologi yang ada bukan untuk belajar. Schooly
+                memiliki visi dimana membawa perangkat ke sekolah bukanlah sebuah
+                tantangan, melainkan hal yang dapat membantu kegiatan
+                belajar-mengajar, sekaligus membiasakan murid memanfaatkan teknologi
+                bagaimana semestinya.
+              </Typography>
+            </div>
+          </Grid>
         </Grid>
       </div>
-      <div>
-        <div className={classes.solution} />
-        <div className={classes.solutionContainer}>
-          <Typography
-            variant="overline"
-            align="center"
-            className={classes.solutionTitle}
-          >
-            Schooly adalah solusinya!
-          </Typography>
-          <Typography align="center" className={classes.solutionText}>
-            Kami mengerti akan masalah-masalah yang dihadapi sekolah-sekolah
-            yang ada untuk beradaptasi di era digital ini. Terutama dalam
-            mengatur murid-murid yang ada, agar tidak terdistraksi atau
-            menyalahgunakan teknologi yang ada bukan untuk belajar. Schooly
-            memiliki visi dimana membawa perangkat ke sekolah bukanlah sebuah
-            tantangan, melainkan hal yang dapat membantu kegiatan
-            belajar-mengajar.
-          </Typography>
-        </div>
-      </div>
+      <Divider />
       <div className={classes.whySchooly}>
         <Typography variant="h3" align="center" gutterBottom>
           Mengapa Schooly?
