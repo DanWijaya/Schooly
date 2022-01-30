@@ -5,6 +5,19 @@ import axios from "axios";
 2 -> OTP is incorrect, require user to fill in again
 3 -> OTP has expired, require user to generate new OTP 
 */
+export const sendBulkRegistrationEmail = (data) => {
+  return axios
+    .post("/api/email-service/send-bulk-register-email", data)
+    .then((res) => {
+      console.log("Email to verify bulk registration is sent successfully");
+      return res.data;
+    })
+    .catch((err) => {
+      console.error("sendOTPRegistrationEmail failed");
+      throw err;
+    });
+};
+
 export const sendOTPRegistrationEmail = (data) => {
   // data will have {email, name }
   return axios

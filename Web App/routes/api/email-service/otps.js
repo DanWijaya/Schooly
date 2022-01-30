@@ -18,6 +18,49 @@ function AddMinutesToNow(minutes) {
   return new Date(now.getTime() + minutes * 60000);
 }
 
+router.post("/send-bulk-register-email", async (req, res) => {
+  try {
+    let { userList } = req.body;
+    const hoursToExpire = 24;
+
+    const emailList = userList.map((u) => u.email);
+    // return res.json(destinationList);
+    var params = {
+      Destinations: emailList.map((email) => {
+        const templateData = JSON.stringify({
+          name: emailToUserDetailsJSON[email],
+          generatedOTP: emailToOTPJSON[email],
+          hoursToExpire: hoursToExpire,
+        });
+        return {
+          Destination: {
+            CcAddresses: [
+              /* more items */
+            ],
+            ToAddresses: [
+              email,
+              /* more items */
+            ],
+          },
+          ReplacementTemplateData: templateData,
+          // ReplacementTemplateData: `{\"name\":\"${emailToUserDetailsJSON[email]}\",\"generatedOTP\":\"${emailToOTPJSON[email]}\",\"hoursToExpire\":\"${hoursToExpire}\"}`,
+        };
+      }),
+      // ReplacementTags: [{ Name: "name", Value: "TEST" }],
+      Source: sourceEmailAddress /* required */,
+      Template: "VerificationCodeTemplate" /* required */,
+      DefaultTemplateData: `{\"name\":\"NULL\",\"generatedOTP\":\"NULL\",\"hoursToExpire\":\"NULL\"}`,
+      // ReplyToAddresses: ["EMAIL_ADDRESS"],
+    };
+    const result = await ses.sendBulkTemplatedEmail(params).promise();
+    // return res.json(result);
+    return res.json("Send Bulk Registration to emails complete");
+  } catch (err) {
+    console.error("Send Bulk OTP registration email failed");
+    console.error(err);
+    return res.status(400).json(err);
+  }
+});
 router.post("/send-otp-registration-email", async (req, res) => {
   // I think might be better to use template to send instead to make it consistent for bulk as well.
   try {
@@ -146,26 +189,6 @@ router.post("/verify-otp-registration", async (req, res) => {
 });
 
 router.post("/create-email-template", async (req, res) => {
-  /*
-  Message: {
-        Body: {
-          Html: {
-            Charset: "UTF-8",
-            Data: `Halo <b>${name}</b>, <br/><br/> Kode akun registrasi anda adalah <b>${generatedOTP}</b>. <br/>
-            Kode ini berlaku selama ${minutesToExpire} menit. Silahkan memasukkan Kode ini di aplikasi Schooly untuk melanjutkan pendaftaran. 
-          `,
-          },
-          Text: {
-            Charset: "UTF-8",
-            Data: "Here is an email from AWS SES",
-          },
-        },
-        Subject: {
-          Charset: "UTF-8",
-          Data: "Verifikasi Pendaftaran Schooly",
-        },
-      } */
-
   const params = {
     Template: {
       TemplateName: "VerificationCodeTemplate",
