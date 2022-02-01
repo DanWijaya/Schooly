@@ -7,8 +7,8 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getStudents } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneAssessment, updateAssessmentGrades, getQuestionAnalytics } from "../../../actions/AssessmentActions";
-import Latex from "../../misc/latex/Latex";
-import CustomLinkify from "../../misc/linkify/Linkify";
+import Latex from "../../utils/latex/Latex";
+import CustomLinkify from "../../utils/linkify/Linkify";
 import {
   Badge,
   Button,
@@ -181,76 +181,76 @@ function AnswerPerQuestion(props) {
     return (
       <Grid item>
         <Paper className={classes.assessmentPaper}>
-            <Grid container direction="column" spacing={2}>
-              <Grid item>
-                <Grid container direction="column">
-                  <Grid item>
-                    <Typography variant="h6">
-                      <b>{`${studentName}`}</b>
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle-1" color="textSecondary">
-                      {`${studentClass}`}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Divider style={{ marginTop: "5px" }} />
-                  </Grid>
+          <Grid container direction="column" spacing={2}>
+            <Grid item>
+              <Grid container direction="column">
+                <Grid item>
+                  <Typography variant="h6">
+                    <b>{`${studentName}`}</b>
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle-1" color="textSecondary">
+                    {`${studentClass}`}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Divider style={{ marginTop: "5px" }} />
                 </Grid>
               </Grid>
-              <Grid item>
-                <Typography
-                  color="textSecondary"
-                  align="justify"
-                  style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-                >
-                  {studentAnswer[0] ? `${studentAnswer[0]}` : "Tidak menjawab"}
-                </Typography>
-              </Grid>
-              <Grid item container justify="flex-end" alignItems="center">
-                <Typography
-                  color="textSecondary"
-                  style={{ marginTop: "5px", marginRight: "10px" }}
-                >
-                  Poin:
-                </Typography>
-                <TextField
-                  value={studentMark}
-                  key={`${studentId}-${questionNumber}`}
-                  inputProps={{
-                    style: {
-                      borderBottom: "none",
-                      boxShadow: "none",
-                      margin: "0px",
-                      width: "30px",
-                    },
-                  }}
-                  InputProps={{
-                    endAdornment: `/ ${questionWeight}`,
-                  }}
-                  onChange={(e) => {
-                    handleGradeChange(e, studentId, questionNumber - 1);
-                  }}
-                />
-                <div>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    className={classes.saveButton}
-                    onClick={() => {
-                      handleSaveGrade(
-                        studentId,
-                        questionNumber - 1,
-                        questionWeight
-                      );
-                    }}
-                  >
-                    Simpan
-                  </Button>
-                </div>
-              </Grid>
             </Grid>
+            <Grid item>
+              <Typography
+                color="textSecondary"
+                align="justify"
+                style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+              >
+                {studentAnswer[0] ? `${studentAnswer[0]}` : "Tidak menjawab"}
+              </Typography>
+            </Grid>
+            <Grid item container justify="flex-end" alignItems="center">
+              <Typography
+                color="textSecondary"
+                style={{ marginTop: "5px", marginRight: "10px" }}
+              >
+                Poin:
+              </Typography>
+              <TextField
+                value={studentMark}
+                key={`${studentId}-${questionNumber}`}
+                inputProps={{
+                  style: {
+                    borderBottom: "none",
+                    boxShadow: "none",
+                    margin: "0px",
+                    width: "30px",
+                  },
+                }}
+                InputProps={{
+                  endAdornment: `/ ${questionWeight}`,
+                }}
+                onChange={(e) => {
+                  handleGradeChange(e, studentId, questionNumber - 1);
+                }}
+              />
+              <div>
+                <Button
+                  size="small"
+                  variant="contained"
+                  className={classes.saveButton}
+                  onClick={() => {
+                    handleSaveGrade(
+                      studentId,
+                      questionNumber - 1,
+                      questionWeight
+                    );
+                  }}
+                >
+                  Simpan
+                </Button>
+              </div>
+            </Grid>
+          </Grid>
         </Paper>
       </Grid>
     );
@@ -1300,16 +1300,16 @@ function ViewAssessmentTeacher(props) {
                   {!selectedAssessments.class_assigned || !all_classes_map.size
                     ? null
                     : selectedAssessments.class_assigned.map((kelas, i) => {
-                        if (all_classes_map.get(kelas)) {
-                          if (
-                            i ===
-                            selectedAssessments.class_assigned.length - 1
-                          )
-                            return `${all_classes_map.get(kelas).name}`;
-                          return `${all_classes_map.get(kelas).name}, `;
-                        }
-                        return null;
-                      })}
+                      if (all_classes_map.get(kelas)) {
+                        if (
+                          i ===
+                          selectedAssessments.class_assigned.length - 1
+                        )
+                          return `${all_classes_map.get(kelas).name}`;
+                        return `${all_classes_map.get(kelas).name}, `;
+                      }
+                      return null;
+                    })}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -1431,48 +1431,48 @@ function ViewAssessmentTeacher(props) {
                     {hasLongtextQst.current === true
                       ? isAssessmentLoaded() && longtextGrades
                         ? selectedAssessments.questions.map((qns, i) => {
-                            return questionPage(classes, i + 1, qns.type);
-                          })
+                          return questionPage(classes, i + 1, qns.type);
+                        })
                         : null
                       : hasLongtextQst.current === false
-                      ? isAssessmentLoaded()
-                        ? selectedAssessments.questions.map((qns, i) => {
+                        ? isAssessmentLoaded()
+                          ? selectedAssessments.questions.map((qns, i) => {
                             return questionPage(classes, i + 1, qns.type);
                           })
-                        : null
-                      : null}
+                          : null
+                        : null}
                   </ToggleButtonGroup>
                 </Paper>
               </Grid>
               {isAssessmentLoaded()
-              ? selectedAssessments.questions[qnsIndex].type === "longtext"
-                ? generateQuestion(
+                ? selectedAssessments.questions[qnsIndex].type === "longtext"
+                  ? generateQuestion(
                     qnsIndex + 1,
                     selectedAssessments.question_weight.longtext[qnsIndex],
                     selectedAssessments.questions[qnsIndex]
                   )
-                : generateQuestion(
+                  : generateQuestion(
                     qnsIndex + 1,
                     selectedAssessments.question_weight[
-                      selectedAssessments.questions[qnsIndex].type
+                    selectedAssessments.questions[qnsIndex].type
                     ],
                     selectedAssessments.questions[qnsIndex]
                   )
-              : null}
+                : null}
               {isAssessmentLoaded() && selectedAssessments.submissions
-              ? hasLongtextQst.current === true
-                ? longtextGrades && isAllClassMapEmpty()
-                  ? generateAllStudentAnswer()
-                  : null
-                : hasLongtextQst.current === false
-                ? isAssessmentLoaded() &&
-                  isAllStudentsLoaded() &&
-                  isAllClassMapEmpty()
-                  ? generateAllStudentAnswer()
-                  : null
-                : // hasLongtextQst.current === null
-                  null
-              : null}
+                ? hasLongtextQst.current === true
+                  ? longtextGrades && isAllClassMapEmpty()
+                    ? generateAllStudentAnswer()
+                    : null
+                  : hasLongtextQst.current === false
+                    ? isAssessmentLoaded() &&
+                      isAllStudentsLoaded() &&
+                      isAllClassMapEmpty()
+                      ? generateAllStudentAnswer()
+                      : null
+                    : // hasLongtextQst.current === null
+                    null
+                : null}
             </Grid>
           </div>
           <div hidden={value === 0}>
@@ -1496,26 +1496,26 @@ function ViewAssessmentTeacher(props) {
                         }
                       >
                         {menuOption &&
-                        menuOption.studentOptions.combined.length !== 0
+                          menuOption.studentOptions.combined.length !== 0
                           ? selectedClass
                             ? menuOption.studentOptions[selectedClass].map(
-                                (student) => {
-                                  return (
-                                    <MenuItem key={student.id} value={student.id}>
-                                      {student.name}
-                                    </MenuItem>
-                                  );
-                                }
-                              )
+                              (student) => {
+                                return (
+                                  <MenuItem key={student.id} value={student.id}>
+                                    {student.name}
+                                  </MenuItem>
+                                );
+                              }
+                            )
                             : menuOption.studentOptions.combined.map(
-                                (student) => {
-                                  return (
-                                    <MenuItem key={student.id} value={student.id}>
-                                      {student.name}
-                                    </MenuItem>
-                                  );
-                                }
-                              )
+                              (student) => {
+                                return (
+                                  <MenuItem key={student.id} value={student.id}>
+                                    {student.name}
+                                  </MenuItem>
+                                );
+                              }
+                            )
                           : null}
                       </Select>
                     </Grid>
@@ -1545,20 +1545,20 @@ function ViewAssessmentTeacher(props) {
                         }
                       >
                         {menuOption &&
-                        menuOption.studentOptions.combined.length !== 0
+                          menuOption.studentOptions.combined.length !== 0
                           ? menuOption.classOptions.map((kelas) => {
-                              return (
-                                <MenuItem key={kelas.id} value={kelas.id}>
-                                  {kelas.name}
-                                </MenuItem>
-                              );
-                            })
+                            return (
+                              <MenuItem key={kelas.id} value={kelas.id}>
+                                {kelas.name}
+                              </MenuItem>
+                            );
+                          })
                           : null}
                       </Select>
                     </Grid>
                     {isAssessmentLoaded() &&
-                    selectedAssessments.submissions_timestamp &&
-                    selectedStudent ? (
+                      selectedAssessments.submissions_timestamp &&
+                      selectedStudent ? (
                       <>
                         <Grid item xs={3}>
                           <Typography>Waktu Pengumpulan:</Typography>
@@ -1567,7 +1567,7 @@ function ViewAssessmentTeacher(props) {
                           <Typography>
                             {moment(
                               selectedAssessments.submissions_timestamp[
-                                selectedStudent
+                              selectedStudent
                               ]
                             )
                               .locale("id")
@@ -1587,10 +1587,10 @@ function ViewAssessmentTeacher(props) {
                     ? generateQstStdAnswer()
                     : null
                   : hasLongtextQst.current === false
-                  ? isAllClassMapEmpty() && selectedStudent
-                    ? generateQstStdAnswer()
+                    ? isAllClassMapEmpty() && selectedStudent
+                      ? generateQstStdAnswer()
+                      : null
                     : null
-                  : null
                 : null}
             </Grid>
           </div>

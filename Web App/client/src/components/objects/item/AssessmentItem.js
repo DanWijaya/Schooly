@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import OptionMenu from "../../misc/menu/OptionMenu";
+import OptionMenu from "../../utils/option-menu/OptionMenu";
 import {
   Avatar,
   Badge,

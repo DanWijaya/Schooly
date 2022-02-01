@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { Doughnut } from "react-chartjs-2";
 import PropTypes from "prop-types";
-import CustomLinkify from "../../misc/linkify/Linkify";
+import CustomLinkify from "../../utils/linkify/Linkify";
 import {
   Avatar,
   Button,

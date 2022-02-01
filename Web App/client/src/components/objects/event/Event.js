@@ -8,7 +8,7 @@ import { getFileEvents } from "../../../actions/files/FileEventActions";
 import FileAttachment from "../file/FileAttachment";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import CustomLinkify from "../../misc/linkify/Linkify";
+import CustomLinkify from "../../utils/linkify/Linkify";
 import {
   Button,
   Checkbox,
@@ -1023,7 +1023,7 @@ function Event(props) {
                         value={end_date}
                         open={openEndDateTimePicker}
                         onOpen={() => handleOpenEndPicker(isAllDay)}
-                        onClose={() =>  handleCloseEndPicker(isAllDay)}
+                        onClose={() => handleCloseEndPicker(isAllDay)}
                         onChange={(date) => handleEndDateChange(date)}
                         onError={(err) => {
                           if (errors.end_date_picker !== err) {
@@ -1036,30 +1036,30 @@ function Event(props) {
                   </Grid>
                 </Grid>
                 <FormControlLabel
-                    label={
-                      <Typography color="textSecondary">
-                        Sepanjang Hari
-                      </Typography>
-                    }
-                    control={
-                      <Checkbox
-                        color="primary"
-                        size="small"
-                        checked={isAllDay}
-                        onChange={() => handleCheckAllDay()}
-                      />
-                    }
-                  />
+                  label={
+                    <Typography color="textSecondary">
+                      Sepanjang Hari
+                    </Typography>
+                  }
+                  control={
+                    <Checkbox
+                      color="primary"
+                      size="small"
+                      checked={isAllDay}
+                      onChange={() => handleCheckAllDay()}
+                    />
+                  }
+                />
                 {errors.start_date_custom || errors.start_date_picker ?
                   <FormHelperText error>
                     {errors.start_date_custom || errors.start_date_picker}
                   </FormHelperText>
-                : null}
+                  : null}
                 {errors.end_date_custom || errors.end_date_picker ?
                   <FormHelperText error>
                     {errors.end_date_custom || errors.end_date_picker}
                   </FormHelperText>
-                : null}
+                  : null}
               </Grid>
               <Grid item>
                 <Typography color="primary" className={classes.label}>

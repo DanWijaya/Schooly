@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import ScrollToTopButton from "../../../misc/scroll-to-top/ScrollToTopButton";
+import ScrollToTopButton from "../../../utils/scroll-to-top/ScrollToTopButton";
 import {
   Divider,
   List,

@@ -6,11 +6,12 @@ import {
   Redirect,
 } from "react-router-dom";
 import { Provider } from "react-redux";
-import jwt_decode from "jwt-decode";
-import setAuthToken from "./utils/setAuthToken";
-import store from "./Store";
-import { setCurrentUser, logoutUser } from "./actions/UserActions";
 import { ThemeProvider } from "@material-ui/core/styles";
+import jwt_decode from "jwt-decode";
+import store from "./Store";
+import setAuthToken from "./token/setAuthToken";
+import { setCurrentUser, logoutUser } from "./actions/UserActions";
+import PrivateRoute from "./components/utils/private-route/PrivateRoute";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
 import GlobalStyles from "./theme/globalStyles";
@@ -19,9 +20,8 @@ import theme from "./theme";
 import Footer from "./Footer";
 import Navigation from "./components/navigation/Navigation";
 // Misc
-import PrivateRoute from "./components/misc/private-route/PrivateRoute";
-import ProgressIndicator from "./components/misc/progress-indicator/ProgressIndicator";
-import ScrollToTop from "./components/misc/scroll-to-top/ScrollToTop";
+import ProgressIndicator from "./components/utils/progress-indicator/ProgressIndicator";
+import ScrollToTop from "./components/utils/scroll-to-top/ScrollToTop";
 // Auth
 import Register from "./components/auth/register/Register";
 import Login from "./components/auth/login/Login";

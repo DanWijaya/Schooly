@@ -13,8 +13,8 @@ import {
 } from "../../../actions/AssessmentActions";
 import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
 import SubmitDialog from "../../misc/dialog/SubmitDialog";
-import CustomLinkify from "../../misc/linkify/Linkify";
-import Latex from "../../misc/latex/Latex";
+import CustomLinkify from "../../utils/linkify/Linkify";
+import Latex from "../../utils/latex/Latex";
 import {
   Badge,
   Button,
@@ -378,9 +378,9 @@ function QuestionNumber(
         }}
         badgeContent={
           answer[question_number - 1].length > 0 &&
-          answer[question_number - 1].some((elm) => {
-            return elm !== "";
-          }) ? (
+            answer[question_number - 1].some((elm) => {
+              return elm !== "";
+            }) ? (
             <CheckCircleIcon className={classes.answeredquestionNumber} />
           ) : (
             <ErrorIcon className={classes.unansweredquestionNumber} />
@@ -764,14 +764,14 @@ function ViewAssessmentStudent(props) {
               {!questions
                 ? null
                 : questions.map((qns, i) => {
-                    return QuestionNumber(
-                      classes,
-                      handleChangeQuestion,
-                      qnsIndex,
-                      i + 1,
-                      answer
-                    );
-                  })}
+                  return QuestionNumber(
+                    classes,
+                    handleChangeQuestion,
+                    qnsIndex,
+                    i + 1,
+                    answer
+                  );
+                })}
             </ToggleButtonGroup>
           </Paper>
         </Grid>,
@@ -878,7 +878,7 @@ function ViewAssessmentStudent(props) {
                         </FormGroup>
                       ) : questions[qnsIndex].type ===
                         "shorttext" ? null : questions[qnsIndex].type ===
-                        "longtext" ? (
+                          "longtext" ? (
                         <TextField
                           key={`${user._id}-${qnsIndex}`}
                           id="answer"

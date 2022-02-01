@@ -1,5 +1,5 @@
 import axios from "axios";
-import setAuthToken from "../utils/setAuthToken";
+import setAuthToken from "../token/setAuthToken";
 import jwt_decode from "jwt-decode";
 
 import {

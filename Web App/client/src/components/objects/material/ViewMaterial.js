@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import CustomLinkify from "../../misc/linkify/Linkify";
 import {
   getFileMaterials,
   downloadFileMaterial,
@@ -25,6 +24,7 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import FileAttachment from "../file/FileAttachment";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import CustomLinkify from "../../utils/linkify/Linkify";
 import {
   Button,
   Divider,
@@ -174,7 +174,7 @@ function ViewMaterial(props) {
   }, []);
 
   const onDeleteMaterial = (id) => {
-    deleteMaterial(id, history).then((res) => {});
+    deleteMaterial(id, history).then((res) => { });
   };
 
   // Delete Dialog
@@ -229,16 +229,16 @@ function ViewMaterial(props) {
                     {!selectedMaterials.class_assigned || !all_classes_map.size
                       ? null
                       : selectedMaterials.class_assigned.map((kelas, i) => {
-                          if (all_classes_map.get(kelas)) {
-                            if (
-                              i ===
-                              selectedMaterials.class_assigned.length - 1
-                            )
-                              return `${all_classes_map.get(kelas).name}`;
-                            return `${all_classes_map.get(kelas).name}, `;
-                          }
-                          return null;
-                        })}
+                        if (all_classes_map.get(kelas)) {
+                          if (
+                            i ===
+                            selectedMaterials.class_assigned.length - 1
+                          )
+                            return `${all_classes_map.get(kelas).name}`;
+                          return `${all_classes_map.get(kelas).name}, `;
+                        }
+                        return null;
+                      })}
                   </Typography>
                 </Grid>
               ) : null}

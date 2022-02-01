@@ -27,7 +27,7 @@ import {
 } from "../../../actions/files/FileTaskActions";
 import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
 import { getFileSubmitTasks_T } from "../../../actions/files/FileSubmitTaskActions";
-import CustomLinkify from "../../misc/linkify/Linkify";
+import CustomLinkify from "../../utils/linkify/Linkify";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import {
   Button,
@@ -234,13 +234,13 @@ function ViewTaskTeacher(props) {
                   {!selectedTasks.class_assigned || !all_classes_map.size
                     ? null
                     : selectedTasks.class_assigned.map((kelas, i) => {
-                        if (all_classes_map.get(kelas)) {
-                          if (i === selectedTasks.class_assigned.length - 1)
-                            return `${all_classes_map.get(kelas).name}`;
-                          return `${all_classes_map.get(kelas).name}, `;
-                        }
-                        return null;
-                      })}
+                      if (all_classes_map.get(kelas)) {
+                        if (i === selectedTasks.class_assigned.length - 1)
+                          return `${all_classes_map.get(kelas).name}`;
+                        return `${all_classes_map.get(kelas).name}, `;
+                      }
+                      return null;
+                    })}
                 </Typography>
               </Grid>
               <Grid item xs={12}>

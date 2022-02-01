@@ -7,7 +7,7 @@ import lokal from "date-fns/locale/id";
 import { updateUserData } from "../../../../actions/UserActions";
 import { clearErrors } from "../../../../actions/ErrorActions";
 import DataField from "../DataField";
-import { TabPanel, TabIndex } from "../../../misc/tab-panel/TabPanel";
+import { TabPanel, TabIndex } from "../../../utils/tab-panel/TabPanel";
 import {
   Button,
   Dialog,

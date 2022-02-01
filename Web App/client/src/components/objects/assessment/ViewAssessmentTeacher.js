@@ -10,8 +10,8 @@ import {
   deleteAssessment,
 } from "../../../actions/AssessmentActions";
 import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
-import Latex from "../../misc/latex/Latex";
-import CustomLinkify from "../../misc/linkify/Linkify";
+import Latex from "../../utils/latex/Latex";
+import CustomLinkify from "../../utils/linkify/Linkify";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import {
   Button,
@@ -156,7 +156,7 @@ function ViewAssessmentTeacher(props) {
   }, []);
 
   const onDeleteAssessment = (id) => {
-    deleteAssessment(id, type, history).then((res) => {});
+    deleteAssessment(id, type, history).then((res) => { });
   };
 
   // Delete Dialog
@@ -258,16 +258,16 @@ function ViewAssessmentTeacher(props) {
                   {!selectedAssessments.class_assigned || !all_classes_map.size
                     ? null
                     : selectedAssessments.class_assigned.map((kelas, i) => {
-                        if (all_classes_map.get(kelas)) {
-                          if (
-                            i ===
-                            selectedAssessments.class_assigned.length - 1
-                          )
-                            return `${all_classes_map.get(kelas).name}`;
-                          return `${all_classes_map.get(kelas).name}, `;
-                        }
-                        return null;
-                      })}
+                      if (all_classes_map.get(kelas)) {
+                        if (
+                          i ===
+                          selectedAssessments.class_assigned.length - 1
+                        )
+                          return `${all_classes_map.get(kelas).name}`;
+                        return `${all_classes_map.get(kelas).name}, `;
+                      }
+                      return null;
+                    })}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -420,123 +420,123 @@ function ViewAssessmentTeacher(props) {
         {!Array.isArray(questions)
           ? null
           : questions.map((question, i) => (
-              <Grid item>
-                <Paper className={classes.assessmentPaper}>
-                  <Grid container direction="column" spacing={2}>
-                    <Grid item>
-                      <Typography variant="h6" color="primary" gutterBottom>
-                        Soal {i + 1}
+            <Grid item>
+              <Paper className={classes.assessmentPaper}>
+                <Grid container direction="column" spacing={2}>
+                  <Grid item>
+                    <Typography variant="h6" color="primary" gutterBottom>
+                      Soal {i + 1}
+                    </Typography>
+                    <GridList cols={3} cellHeight={300}>
+                      {question.lampiran.map((img, i) => {
+                        let image = img;
+                        if (lampiranUrls.has(image.toString())) {
+                          return (
+                            <GridListTile key={image} cols={1}>
+                              <img
+                                alt="current img"
+                                src={lampiranUrls.get(image.toString())}
+                              />
+                              <GridListTileBar
+                                title={`Gambar ${i + 1}`}
+                                titlePosition="top"
+                                actionPosition="right"
+                              />
+                            </GridListTile>
+                          );
+                        }
+                        return null;
+                      })}
+                    </GridList>
+                    {question.type === "radio" ? (
+                      <Typography
+                        align="justify"
+                        style={{
+                          wordBreak: "break-word",
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        <Latex content={question.name} />
+                        {/* <CustomLinkify text={question.name} /> */}
                       </Typography>
-                      <GridList cols={3} cellHeight={300}>
-                        {question.lampiran.map((img, i) => {
-                          let image = img;
-                          if (lampiranUrls.has(image.toString())) {
-                            return (
-                              <GridListTile key={image} cols={1}>
-                                <img
-                                  alt="current img"
-                                  src={lampiranUrls.get(image.toString())}
-                                />
-                                <GridListTileBar
-                                  title={`Gambar ${i + 1}`}
-                                  titlePosition="top"
-                                  actionPosition="right"
-                                />
-                              </GridListTile>
-                            );
-                          }
-                          return null;
-                        })}
-                      </GridList>
-                      {question.type === "radio" ? (
-                        <Typography
-                          align="justify"
-                          style={{
-                            wordBreak: "break-word",
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          <Latex content={question.name} />
-                          {/* <CustomLinkify text={question.name} /> */}
-                        </Typography>
-                      ) : question.type === "checkbox" ? (
-                        <Typography
-                          align="justify"
-                          style={{
-                            wordBreak: "break-word",
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          <Latex content={question.name} />
-                          {/* <CustomLinkify text={question.name} /> */}
-                        </Typography>
-                      ) : question.type === "shorttext" ? (
-                        <Typography
-                          align="justify"
-                          style={{
-                            wordBreak: "break-word",
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          {generateSoalShortTextTeacher(question, i)}
-                        </Typography>
-                      ) : question.type === "longtext" ? (
-                        <Typography
-                          align="justify"
-                          style={{
-                            wordBreak: "break-word",
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          <Latex content={question.name} />
-                          {/* <CustomLinkify text={question.name} /> */}
-                        </Typography>
-                      ) : null}
-                    </Grid>
-                    <Grid item>
-                      {question.type === "radio" ? (
-                        question.options.map((option, i) => (
-                          <Grid container alignItems="center">
-                            <Grid item className={classes.bullets}>
-                              {question.answer[0] ===
+                    ) : question.type === "checkbox" ? (
+                      <Typography
+                        align="justify"
+                        style={{
+                          wordBreak: "break-word",
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        <Latex content={question.name} />
+                        {/* <CustomLinkify text={question.name} /> */}
+                      </Typography>
+                    ) : question.type === "shorttext" ? (
+                      <Typography
+                        align="justify"
+                        style={{
+                          wordBreak: "break-word",
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        {generateSoalShortTextTeacher(question, i)}
+                      </Typography>
+                    ) : question.type === "longtext" ? (
+                      <Typography
+                        align="justify"
+                        style={{
+                          wordBreak: "break-word",
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        <Latex content={question.name} />
+                        {/* <CustomLinkify text={question.name} /> */}
+                      </Typography>
+                    ) : null}
+                  </Grid>
+                  <Grid item>
+                    {question.type === "radio" ? (
+                      question.options.map((option, i) => (
+                        <Grid container alignItems="center">
+                          <Grid item className={classes.bullets}>
+                            {question.answer[0] ===
                               String.fromCharCode(97 + i).toUpperCase() ? (
-                                <CheckCircleIcon
-                                  className={classes.checkIcon}
-                                />
-                              ) : (
-                                <FiberManualRecordIcon
-                                  className={classes.fiberIcon}
-                                />
-                              )}
-                            </Grid>
-                            <Typography className={classes.optionText}>
-                              {option}
-                            </Typography>
+                              <CheckCircleIcon
+                                className={classes.checkIcon}
+                              />
+                            ) : (
+                              <FiberManualRecordIcon
+                                className={classes.fiberIcon}
+                              />
+                            )}
                           </Grid>
-                        ))
-                      ) : question.type === "checkbox" ? (
-                        question.options.map((option, i) => (
-                          <Grid container alignItems="center">
-                            <Grid item className={classes.bullets}>
-                              {question.answer.includes(
-                                String.fromCharCode(97 + i).toUpperCase()
-                              ) ? (
-                                <CheckCircleIcon
-                                  className={classes.checkIcon}
-                                />
-                              ) : (
-                                <FiberManualRecordIcon
-                                  className={classes.fiberIcon}
-                                />
-                              )}
-                            </Grid>
-                            <Typography className={classes.optionText}>
-                              {option}
-                            </Typography>
+                          <Typography className={classes.optionText}>
+                            {option}
+                          </Typography>
+                        </Grid>
+                      ))
+                    ) : question.type === "checkbox" ? (
+                      question.options.map((option, i) => (
+                        <Grid container alignItems="center">
+                          <Grid item className={classes.bullets}>
+                            {question.answer.includes(
+                              String.fromCharCode(97 + i).toUpperCase()
+                            ) ? (
+                              <CheckCircleIcon
+                                className={classes.checkIcon}
+                              />
+                            ) : (
+                              <FiberManualRecordIcon
+                                className={classes.fiberIcon}
+                              />
+                            )}
                           </Grid>
-                        ))
-                      ) : question.type ===
-                        "shorttext" ? null : question.type === "longtext" ? (
+                          <Typography className={classes.optionText}>
+                            {option}
+                          </Typography>
+                        </Grid>
+                      ))
+                    ) : question.type ===
+                      "shorttext" ? null : question.type === "longtext" ? (
                         <Typography
                           color="textSecondary"
                           align="justify"
@@ -549,11 +549,11 @@ function ViewAssessmentTeacher(props) {
                           <CustomLinkify text={question.answer} />
                         </Typography>
                       ) : null}
-                    </Grid>
                   </Grid>
-                </Paper>
-              </Grid>
-            ))}
+                </Grid>
+              </Paper>
+            </Grid>
+          ))}
       </Grid>
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}

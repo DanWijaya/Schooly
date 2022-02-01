@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import TaskItem from "../item/TaskItem";
 import AssessmentItem from "../item/AssessmentItem";
 import Empty from "../../misc/empty/Empty";
-import CustomLinkify from "../../misc/linkify/Linkify";
+import CustomLinkify from "../../utils/linkify/Linkify";
 import {
   Button,
   Card,

@@ -17,10 +17,10 @@ import {
   removeHomeroomTeachers,
 } from "../../../actions/ClassActions";
 import Empty from "../../misc/empty/Empty";
-import OptionMenu from "../../misc/menu/OptionMenu";
+import OptionMenu from "../../utils/option-menu/OptionMenu";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import DeactivateDialog from "../../misc/dialog/DeactivateDialog";
-import { TabPanel } from "../../misc/tab-panel/TabPanel";
+import { TabPanel } from "../../utils/tab-panel/TabPanel";
 import {
   Avatar,
   Checkbox,
@@ -193,8 +193,8 @@ function ManageUsersToolbar(props) {
               color="primary"
               onChange={
                 listCheckbox.length === 0 ? () => selectAllData(role)
-                : listCheckbox.length === rowCount ? () => deSelectAllData(role)
-                : () => deSelectAllData(role)
+                  : listCheckbox.length === rowCount ? () => deSelectAllData(role)
+                    : () => deSelectAllData(role)
               }
               checked={listCheckbox.length === rowCount}
               indeterminate={listCheckbox.length !== 0 || listCheckbox.length !== rowCount}
@@ -381,52 +381,52 @@ function ManageUsersToolbar(props) {
             {searchBarFocus || searchFilter
               ? null
               : [
-                  <Grid item>
-                    <Tooltip title="Urutkan Akun">
-                      <IconButton onClick={handleOpenSortMenu}>
-                        <SortIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Menu
-                      keepMounted
-                      open={Boolean(anchorEl)}
-                      onClose={handleCloseSortMenu}
-                      anchorEl={anchorEl}
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "left",
-                      }}
-                    >
-                      {headCells.map((headCell, i) => (
-                        <MenuItem
-                          key={headCell.id}
-                          sortDirection={
-                            orderBy === headCell.id ? order : false
-                          }
-                          onClick={createSortHandler(headCell.id)}
+                <Grid item>
+                  <Tooltip title="Urutkan Akun">
+                    <IconButton onClick={handleOpenSortMenu}>
+                      <SortIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Menu
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleCloseSortMenu}
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                  >
+                    {headCells.map((headCell, i) => (
+                      <MenuItem
+                        key={headCell.id}
+                        sortDirection={
+                          orderBy === headCell.id ? order : false
+                        }
+                        onClick={createSortHandler(headCell.id)}
+                      >
+                        <TableSortLabel
+                          active={orderBy === headCell.id}
+                          direction={orderBy === headCell.id ? order : "asc"}
                         >
-                          <TableSortLabel
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : "asc"}
-                          >
-                            {headCell.label}
-                            {orderBy === headCell.id ? (
-                              <span className={classes.visuallyHidden}>
-                                {order === "desc"
-                                  ? "sorted descending"
-                                  : "sorted ascending"}
-                              </span>
-                            ) : null}
-                          </TableSortLabel>
-                        </MenuItem>
-                      ))}
-                    </Menu>
-                  </Grid>,
-                ]}
+                          {headCell.label}
+                          {orderBy === headCell.id ? (
+                            <span className={classes.visuallyHidden}>
+                              {order === "desc"
+                                ? "sorted descending"
+                                : "sorted ascending"}
+                            </span>
+                          ) : null}
+                        </TableSortLabel>
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </Grid>,
+              ]}
           </Hidden>
         </Grid>
       </Grid>

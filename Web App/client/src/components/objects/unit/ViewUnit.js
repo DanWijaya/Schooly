@@ -14,8 +14,8 @@ import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions"
 import ClassItem from "../item/ClassItem";
 import SubjectItem from "../item/SubjectItem";
 import UserItem from "../item/UserItem";
-import CustomLinkify from "../../misc/linkify/Linkify";
-import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
+import CustomLinkify from "../../utils/linkify/Linkify";
+import { TabPanel, TabIndex } from "../../utils/tab-panel/TabPanel";
 import {
   Divider,
   Grid,

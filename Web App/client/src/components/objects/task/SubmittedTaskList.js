@@ -11,9 +11,9 @@ import {
   viewFileSubmitTasks,
 } from "../../../actions/files/FileSubmitTaskActions";
 import { getOneTask, gradeTask } from "../../../actions/TaskActions";
-import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
+import { TabPanel, TabIndex } from "../../utils/tab-panel/TabPanel";
 import Empty from "../../misc/empty/Empty";
-import CustomLinkify from "../../misc/linkify/Linkify";
+import CustomLinkify from "../../utils/linkify/Linkify";
 import {
   Avatar,
   Button,
@@ -351,8 +351,8 @@ function SubmittedTaskList(props) {
                         ? "Not graded"
                         : !gradeStatus.has(student._id) &&
                           !selectedTasks.grades[student._id]
-                        ? "Belum Dinilai"
-                        : "Telah Dinilai"}
+                          ? "Belum Dinilai"
+                          : "Telah Dinilai"}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -373,7 +373,7 @@ function SubmittedTaskList(props) {
                         <TextField
                           defaultValue={
                             grade.has(student._id) ||
-                            selectedTasks.grades === null
+                              selectedTasks.grades === null
                               ? grade.get(student._id)
                               : selectedTasks.grades[student._id]
                           }
