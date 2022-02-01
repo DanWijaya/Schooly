@@ -1,5 +1,4 @@
 import axios from "axios";
-import { setCurrentUser } from "../UserActions";
 import { GET_MY_AVATAR } from "../Types";
 
 export const uploadFileAvatar = (id, formData) => (dispatch) => {

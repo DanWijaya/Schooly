@@ -11,7 +11,6 @@ import {
   GET_PENDING_STUDENTS,
   GET_PENDING_TEACHERS,
   GET_PENDING_ADMINS,
-  SET_DROPBOX_TOKEN,
   GET_MY_AVATAR,
 } from "../actions/Types";
 

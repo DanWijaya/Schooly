@@ -161,6 +161,7 @@ function ViewSubject(props) {
           setSubmittedTaskIds(submittedTaskIdSet);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   let tasksByClass = []; // Tasks on specific class.

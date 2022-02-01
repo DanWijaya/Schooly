@@ -140,12 +140,11 @@ function SubmittedTaskList(props) {
   };
 
   React.useEffect(() => {
-    // getOneTask(task_id).then((res1) => {
-    // })
     getFileSubmitTasks_T(task_id).then((res) => {
       setSubmittedFiles(res);
     });
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [task_id]);
 
   React.useEffect(() => {
     getOneTask(task_id);

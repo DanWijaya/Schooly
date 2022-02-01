@@ -848,6 +848,7 @@ function Calendar(props) {
         )
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -889,6 +890,7 @@ function Calendar(props) {
         task: countTask(start, end),
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDate, mode]);
 
   React.useEffect(() => {
@@ -941,6 +943,7 @@ function Calendar(props) {
     if (scrollbarNode !== null && !mdDown && scrollbarWidth === 0) {
       setScrollbarWidth(scrollbarNode.offsetWidth - scrollbarNode.clientWidth);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mdDown]);
 
   function generateTiles(currentDate) {
@@ -2130,12 +2133,12 @@ function Calendar(props) {
           (taskInfo) =>
             taskInfo.person_in_charge_id === user._id &&
             Object.keys(taskInfo.grades).length !==
-              all_students.reduce(
-                (studentCount, studentInfo) =>
-                  studentCount +
-                  (taskInfo.class_assigned.includes(studentInfo.kelas) ? 1 : 0),
-                0
-              ) &&
+            all_students.reduce(
+              (studentCount, studentInfo) =>
+                studentCount +
+                (taskInfo.class_assigned.includes(studentInfo.kelas) ? 1 : 0),
+              0
+            ) &&
             new Date(taskInfo.deadline).getTime() >= startEpoch &&
             new Date(taskInfo.deadline).getTime() <= endEpoch
         ).length;
@@ -2144,12 +2147,12 @@ function Calendar(props) {
         count = all_tasks.filter(
           (taskInfo) =>
             Object.keys(taskInfo.grades).length !==
-              all_students.reduce(
-                (studentCount, studentInfo) =>
-                  studentCount +
-                  (taskInfo.class_assigned.includes(studentInfo.kelas) ? 1 : 0),
-                0
-              ) &&
+            all_students.reduce(
+              (studentCount, studentInfo) =>
+                studentCount +
+                (taskInfo.class_assigned.includes(studentInfo.kelas) ? 1 : 0),
+              0
+            ) &&
             new Date(taskInfo.deadline).getTime() >= startEpoch &&
             new Date(taskInfo.deadline).getTime() <= endEpoch
         ).length;
@@ -2240,7 +2243,7 @@ function Calendar(props) {
       if (
         !isMaxDateFound &&
         tempDate.getDate() ===
-          getMaxDate(tempDate.getMonth() + 1, tempDate.getYear())
+        getMaxDate(tempDate.getMonth() + 1, tempDate.getYear())
       ) {
         isMaxDateFound = true;
       }
@@ -2309,6 +2312,7 @@ function Calendar(props) {
         )
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all_classes]);
 
   const handleChangeClassStates = (event) => {
@@ -2322,6 +2326,7 @@ function Calendar(props) {
     if (all_tasks && Array.isArray(all_tasks) && all_assessments && allEvents) {
       generateTiles(currentDate);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agendaCheckboxState, classCheckboxState]);
 
   let monthNames = [
@@ -2448,16 +2453,13 @@ function Calendar(props) {
                             width:
                               maxTreeHeight <= 3
                                 ? "100%"
-                                : `calc(16px + ${
-                                    maxTreeHeight * TILE_HORIZONTAL_MARGIN
-                                  }px + ${
-                                    maxTreeHeight + 1
-                                  } * (${highestTreeWidth}% - ${
-                                    (TILE_HORIZONTAL_MARGIN *
-                                      (Math.floor(100 / highestTreeWidth) -
-                                        1)) /
-                                    Math.floor(100 / highestTreeWidth)
-                                  }px))`,
+                                : `calc(16px + ${maxTreeHeight * TILE_HORIZONTAL_MARGIN
+                                }px + ${maxTreeHeight + 1
+                                } * (${highestTreeWidth}% - ${(TILE_HORIZONTAL_MARGIN *
+                                  (Math.floor(100 / highestTreeWidth) -
+                                    1)) /
+                                Math.floor(100 / highestTreeWidth)
+                                }px))`,
                           }}
                         >
                           {/* tujuan dibuat seperti ini: menambahkan margin di ujung kanan garis horizontal */}
@@ -2471,100 +2473,97 @@ function Calendar(props) {
 
                         {tileRows[index]
                           ? tileRows[index].map((obj) => {
-                              let verticalPadding = 8;
-                              let widthPadding = 0;
-                              let i = Math.floor(100 / obj.width);
-                              if (i > 1) {
-                                widthPadding =
-                                  (TILE_HORIZONTAL_MARGIN * (i - 1)) / i;
-                              }
+                            let verticalPadding = 8;
+                            let widthPadding = 0;
+                            let i = Math.floor(100 / obj.width);
+                            if (i > 1) {
+                              widthPadding =
+                                (TILE_HORIZONTAL_MARGIN * (i - 1)) / i;
+                            }
 
-                              let height =
-                                ((obj.end_date_epoch - obj.start_date_epoch) /
-                                  (1000 * 60) /
-                                  60) *
-                                  ROW_HEIGHT -
-                                BOTTOM_PADDING;
-                              let minHeight =
-                                (MINIMUM_DURATION_MILLISECOND /
-                                  (1000 * 60) /
-                                  60) *
-                                ROW_HEIGHT;
-                              if (height < minHeight + verticalPadding) {
-                                verticalPadding = 2;
-                              }
+                            let height =
+                              ((obj.end_date_epoch - obj.start_date_epoch) /
+                                (1000 * 60) /
+                                60) *
+                              ROW_HEIGHT -
+                              BOTTOM_PADDING;
+                            let minHeight =
+                              (MINIMUM_DURATION_MILLISECOND /
+                                (1000 * 60) /
+                                60) *
+                              ROW_HEIGHT;
+                            if (height < minHeight + verticalPadding) {
+                              verticalPadding = 2;
+                            }
 
-                              return (
-                                <div
-                                  onClick={
-                                    obj.type === "Event"
-                                      ? () => {
-                                          handleOpenViewDialog(obj.data);
-                                        }
-                                      : undefined
-                                  }
-                                  className={
-                                    obj.type === "Event"
-                                      ? `${classes.hoverPointerCursor} ${classes.blueChip}`
-                                      : classes.blueChip
-                                  }
-                                  style={{
-                                    transform: `translate(calc(100% * ${
-                                      obj.startColumn
-                                    } + ${
-                                      obj.startColumn * TILE_HORIZONTAL_MARGIN
-                                    }px), ${
-                                      !isSameDate(
-                                        obj.start_date,
-                                        currentDate
-                                      ) && isSameDate(obj.end_date, currentDate)
-                                        ? ((-1 *
-                                            getMillisecondDiff(
-                                              obj.start_date,
-                                              getDayStart(obj.end_date)
-                                            )) /
-                                            (1000 * 60) /
-                                            60) *
-                                          ROW_HEIGHT
-                                        : (obj.start_date.getMinutes() / 60) *
-                                          ROW_HEIGHT
+                            return (
+                              <div
+                                onClick={
+                                  obj.type === "Event"
+                                    ? () => {
+                                      handleOpenViewDialog(obj.data);
+                                    }
+                                    : undefined
+                                }
+                                className={
+                                  obj.type === "Event"
+                                    ? `${classes.hoverPointerCursor} ${classes.blueChip}`
+                                    : classes.blueChip
+                                }
+                                style={{
+                                  transform: `translate(calc(100% * ${obj.startColumn
+                                    } + ${obj.startColumn * TILE_HORIZONTAL_MARGIN
+                                    }px), ${!isSameDate(
+                                      obj.start_date,
+                                      currentDate
+                                    ) && isSameDate(obj.end_date, currentDate)
+                                      ? ((-1 *
+                                        getMillisecondDiff(
+                                          obj.start_date,
+                                          getDayStart(obj.end_date)
+                                        )) /
+                                        (1000 * 60) /
+                                        60) *
+                                      ROW_HEIGHT
+                                      : (obj.start_date.getMinutes() / 60) *
+                                      ROW_HEIGHT
                                     }px)`,
-                                    height: `${height}px`,
-                                    width: `calc(${obj.width}% - ${widthPadding}px)`,
-                                    padding: `${verticalPadding}px 12px`,
-                                  }}
-                                >
-                                  <Typography noWrap variant="body2">
-                                    {obj.data.name}
-                                  </Typography>
-                                  <Typography variant="body2">
-                                    {obj.type === "Tugas"
-                                      ? moment(obj.data.deadline)
-                                          .locale("id")
-                                          .format("HH:mm")
-                                      : `${moment(
-                                          isSameDate(
-                                            new Date(obj.data.start_date),
-                                            currentDate
-                                          )
-                                            ? obj.data.start_date
-                                            : obj.start_date.toUTCString()
+                                  height: `${height}px`,
+                                  width: `calc(${obj.width}% - ${widthPadding}px)`,
+                                  padding: `${verticalPadding}px 12px`,
+                                }}
+                              >
+                                <Typography noWrap variant="body2">
+                                  {obj.data.name}
+                                </Typography>
+                                <Typography variant="body2">
+                                  {obj.type === "Tugas"
+                                    ? moment(obj.data.deadline)
+                                      .locale("id")
+                                      .format("HH:mm")
+                                    : `${moment(
+                                      isSameDate(
+                                        new Date(obj.data.start_date),
+                                        currentDate
+                                      )
+                                        ? obj.data.start_date
+                                        : obj.start_date.toUTCString()
+                                    )
+                                      .locale("id")
+                                      .format("HH:mm")} – ${moment(
+                                        isSameDate(
+                                          new Date(obj.data.end_date),
+                                          currentDate
                                         )
-                                          .locale("id")
-                                          .format("HH:mm")} – ${moment(
-                                          isSameDate(
-                                            new Date(obj.data.end_date),
-                                            currentDate
-                                          )
-                                            ? obj.data.end_date
-                                            : obj.end_date.toUTCString()
-                                        )
-                                          .locale("id")
-                                          .format("HH:mm")}`}
-                                  </Typography>
-                                </div>
-                              );
-                            })
+                                          ? obj.data.end_date
+                                          : obj.end_date.toUTCString()
+                                      )
+                                        .locale("id")
+                                        .format("HH:mm")}`}
+                                </Typography>
+                              </div>
+                            );
+                          })
                           : null}
                       </div>
                     </TableCell>
@@ -2850,10 +2849,10 @@ function Calendar(props) {
                       </Hidden>
                     </>
                   ) : new Date(
-                      column.getFullYear(),
-                      column.getMonth(),
-                      column.getDate()
-                    ) in holiday || column.getDay() === 0 ? (
+                    column.getFullYear(),
+                    column.getMonth(),
+                    column.getDate()
+                  ) in holiday || column.getDay() === 0 ? (
                     <>
                       <Hidden xsDown>
                         <Typography
@@ -2915,36 +2914,36 @@ function Calendar(props) {
                 </div>
                 {agendaCheckboxState.checkedTask && taskList !== null
                   ? taskList.map((row) => {
-                      if (role !== "Admin") {
-                        return (
-                          <Link
-                            to={
-                              role === "Student"
-                                ? `/tugas-murid/${row._id}`
-                                : `/tugas-guru/${row._id}`
-                            }
-                          >
-                            <Typography
-                              variant="body2"
-                              className={classes.monthAgendaChip}
-                              align="left"
-                            >
-                              {row.name}
-                            </Typography>
-                          </Link>
-                        );
-                      } else {
-                        return (
+                    if (role !== "Admin") {
+                      return (
+                        <Link
+                          to={
+                            role === "Student"
+                              ? `/tugas-murid/${row._id}`
+                              : `/tugas-guru/${row._id}`
+                          }
+                        >
                           <Typography
                             variant="body2"
-                            className={classes.monthAgendaChipAdmin}
+                            className={classes.monthAgendaChip}
                             align="left"
                           >
                             {row.name}
                           </Typography>
-                        );
-                      }
-                    })
+                        </Link>
+                      );
+                    } else {
+                      return (
+                        <Typography
+                          variant="body2"
+                          className={classes.monthAgendaChipAdmin}
+                          align="left"
+                        >
+                          {row.name}
+                        </Typography>
+                      );
+                    }
+                  })
                   : null}
                 {agendaCheckboxState.checkedQuiz ? quizList : null}
                 {agendaCheckboxState.checkedExam ? examList : null}
@@ -3018,7 +3017,7 @@ function Calendar(props) {
                           .toUpperCase()}
                       </Typography>
                     </Grid>
-                  : null}
+                    : null}
                   <Grid item>
                     <Avatar className={classes.dateCircleHighlight}>
                       {mode === "Day" ? (
@@ -3049,18 +3048,18 @@ function Calendar(props) {
               <div className={classes.allDayItemList}>
                 {hasHoliday(currentDate)
                   ? holiday[
-                      new Date(
-                        currentDate.getFullYear(),
-                        currentDate.getMonth(),
-                        currentDate.getDate()
-                      )
-                    ].map((holiday) => (
-                      <Paper elevation={0} key={holiday} className={classes.holidayItem}>
-                        <Typography variant="body2">
-                          {holiday}
-                        </Typography>
-                      </Paper>
-                    ))
+                    new Date(
+                      currentDate.getFullYear(),
+                      currentDate.getMonth(),
+                      currentDate.getDate()
+                    )
+                  ].map((holiday) => (
+                    <Paper elevation={0} key={holiday} className={classes.holidayItem}>
+                      <Typography variant="body2">
+                        {holiday}
+                      </Typography>
+                    </Paper>
+                  ))
                   : null}
                 {allDayItems.map((item) => (
                   <Paper
@@ -3080,7 +3079,7 @@ function Calendar(props) {
                   </Paper>
                 ))}
               </div>
-            : null}
+              : null}
           </div>
           {mode === "Day"
             ? generateDayModeCalendar()

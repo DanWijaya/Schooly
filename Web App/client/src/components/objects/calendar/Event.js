@@ -245,6 +245,7 @@ function Event(props) {
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEventInfo]);
 
   const handleCreateEvent = () => {

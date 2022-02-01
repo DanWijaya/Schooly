@@ -273,6 +273,7 @@ function ViewClass(props) {
         // setWalikelas(all_teachers_map.get(kelas.walikelas));
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [students_by_class.length, kelas.walikelas]);
 
   React.useEffect(() => {
@@ -289,6 +290,7 @@ function ViewClass(props) {
           setSubmittedTaskIds(submittedTaskIdSet);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [panel, setPanel] = React.useState(0);

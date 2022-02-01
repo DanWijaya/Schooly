@@ -49,7 +49,7 @@ import ClassList from "./components/objects/class/ClassList";
 import ViewSubject from "./components/objects/subject/ViewSubject";
 import SubjectList from "./components/objects/subject/SubjectList";
 // Event
-import Calendar from "./components/objects/event/Calendar";
+import Calendar from "./components/objects/calendar/Calendar";
 // Announcement
 import CreateAnnouncement from "./components/objects/announcement/CreateAnnouncement";
 import EditAnnouncement from "./components/objects/announcement/EditAnnouncement";

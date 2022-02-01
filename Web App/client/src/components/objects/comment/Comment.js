@@ -106,9 +106,9 @@ function Comment(props) {
 
   React.useEffect(() => {
     let setId = new Set();
-    commentList.map((comment) => {
-      setId.add(comment.author_id);
-    });
+    commentList.map((comment) =>
+      setId.add(comment.author_id)
+    );
     setId.add(user._id);
     getMultipleFileAvatar(Array.from(setId)).then((results) => {
       setCommentAvatar(results);

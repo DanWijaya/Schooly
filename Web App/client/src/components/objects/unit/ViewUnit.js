@@ -94,6 +94,7 @@ function ViewUnit(props) {
     getStudents(unitId);
     getTeachers(unitId);
     getAdmins(unitId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -111,6 +112,7 @@ function ViewUnit(props) {
       }
     };
     fetchAvatar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   document.title = `Schooly | ${selectedUnits.name}`;
