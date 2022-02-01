@@ -1,6 +1,7 @@
 import React from "react";
 import * as XLSX from "xlsx";
 import { bulkRegisterUsers } from "../../actions/UserActions";
+import { sendBulkRegistrationEmail } from "../../actions/EmailServiceActions";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 
@@ -15,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "100% 300px",
     backgroundRepeat: "no-repeat",
   },
-  loginButton: {
+  registerButton: {
     width: "20%",
     marginTop: "15px",
     backgroundColor: theme.palette.success.main,
@@ -33,7 +34,7 @@ function BulkRegister() {
   const [items, setItems] = React.useState([]);
   const [classes, setClasses] = React.useState([]);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     console.log("Submit for register bulk");
     let headers = [];
@@ -45,9 +46,11 @@ function BulkRegister() {
       users: items,
       classes: classes,
     };
-    bulkRegisterUsers(data).then((response) => {
-      console.log(response);
-    });
+    //  bulkRegisterUsers(data).then((response) => {
+    //     console.log(response);
+    //   });
+    // await bulkRegisterUsers(data);
+    const response = await sendBulkRegistrationEmail(data);
   };
 
   const readExcel = (file) => {
@@ -71,38 +74,39 @@ function BulkRegister() {
           class_list.push(workSheetName);
 
           students = students.map((d, idx) => {
-            d.name = d.NAMA;
             d.role = "Student";
-            d.email = `murid${workSheetName.replace(/\s/g, "")}${
-              idx + 1
-            }@gmail.com`.toLowerCase();
-            d.phone = "12341234";
-            d.emergency_phone = "911911";
-            d.address = "Jalan Contoh raya";
             d.kelas = workSheetName;
-            d.password = `Murid${workSheetName.replace(/\s/g, "")}${
-              idx + 1
-            }1234`;
-            d.password2 = `Murid${workSheetName.replace(/\s/g, "")}${
-              idx + 1
-            }1234`;
-
-            delete d["NAMA"];
-            delete d["NO INDUK"];
-
-            /*
-                        name: this.state.name,
-                        role: this.state.role,
-                        email: this.state.email.toLowerCase(),
-                        phone: this.state.phone,
-                        emergency_phone: this.state.emergency_phone,
-                        address: this.state.address,
-                        password: this.state.password,
-                        password2: this.state.password2,
-                        tanggal_lahir: this.state.tanggal_lahir,    
-                        */
             return d;
           });
+          // FINALIZE COLUMN DI TABEL.
+          /* 
+          Nama
+          Email
+          Nomor Telepon
+          Nomor Telepon Darurat
+
+          */
+          // students = students.map((d, idx) => {
+          //   d.name = d.Nama;
+          //   d.role = "Student";
+          //   d.email = `murid${workSheetName.replace(/\s/g, "")}${
+          //     idx + 1
+          //   }@gmail.com`.toLowerCase();
+          //   d.phone = "12341234";
+          //   d.emergency_phone = "911911";
+          //   d.address = "Jalan Contoh raya"; // d.Alamat
+          //   d.kelas = workSheetName;
+          //   d.password = `Murid${workSheetName.replace(/\s/g, "")}${
+          //     idx + 1
+          //   }1234`;
+          //   d.password2 = `Murid${workSheetName.replace(/\s/g, "")}${
+          //     idx + 1
+          //   }1234`;
+
+          //   delete d["NAMA"];
+          //   delete d["NO INDUK"];
+          //   return d;
+          // });
           user_list = user_list.concat(students);
           // break;
         }
@@ -156,7 +160,7 @@ function BulkRegister() {
             <Button
               type="submit"
               variant="contained"
-              className={cl.loginButton}
+              className={cl.registerButton}
             >
               Register In Bulk
             </Button>

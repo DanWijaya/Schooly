@@ -10,14 +10,13 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-// const passport = require("passport");
 const keys = require("../../config/keys");
 const {
   validateRegisterInput1,
   validateRegisterInput2,
 } = require("../../validation/Register");
 const validateLoginInput = require("../../validation/Login");
-// const validateUserDataInput = require("../../validation/UserData")
+
 const { ObjectId } = require("mongodb");
 
 const sessionExpirySeconds = 604800;
