@@ -73,7 +73,6 @@ app.use(passport.initialize());
 
 // Passport config
 require("./passport")(passport);
-console.log("Check routes");
 
 // Routes
 app.use("/api/users", users);

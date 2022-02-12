@@ -5,7 +5,6 @@ var AWS = require("aws-sdk");
 const otpGenerator = require("otp-generator");
 const RegisterOTP = require("../../../models/otp_model/OTPRegister");
 
-// Set the region. HAVE TO SET IT IN THE CONFIG FILE SEPARATELY.
 const { SES_CONFIG } = require("../../../config/keys").awsKey;
 
 const ses = new AWS.SES(SES_CONFIG);
@@ -19,40 +18,63 @@ function AddMinutesToNow(minutes) {
 }
 
 router.post("/send-bulk-register-email", async (req, res) => {
+  //Based on this link, it says better to use sendEmail and not sendBulkRegisterEmail.
   try {
-    let { userList } = req.body;
+    let { users } = req.body;
     const hoursToExpire = 24;
 
-    const emailList = userList.map((u) => u.email);
-    // return res.json(destinationList);
-    var params = {
-      Destinations: emailList.map((email) => {
-        const templateData = JSON.stringify({
-          name: emailToUserDetailsJSON[email],
-          generatedOTP: emailToOTPJSON[email],
-          hoursToExpire: hoursToExpire,
-        });
-        return {
-          Destination: {
-            CcAddresses: [
-              /* more items */
-            ],
-            ToAddresses: [
-              email,
-              /* more items */
-            ],
+    let emailList = [];
+    let emailToUserDetailsJSON = [];
+
+    users.forEach((u) => {
+      emailList.push(u.email);
+      emailToUserDetailsJSON[u.email] = u;
+    });
+
+    const promises = users.map((u) => {
+      const templateData = JSON.stringify({
+        name: u.name,
+        generatedOTP: "018675",
+        hoursToExpire: hoursToExpire,
+      });
+
+      var params = {
+        Destination: {
+          CcAddresses: [
+            /* more items */
+          ],
+          ToAddresses: [
+            u.email,
+            /* more items */
+          ],
+        },
+        Source: sourceEmailAddress /* required */,
+        Message: {
+          /* required */
+          Body: {
+            /* required */
+            Html: {
+              Charset: "UTF-8",
+              Data: `Halo <b>${u.name}</b>, <br/><br/> Akun kamu dengan email ini terdaftar di Schooly System oleh pengelola sekolah kamu. 
+              Untuk menggunakan Schooly, silahkan settingkan password anda di halaman: website/setel-kata-sandi/user-id
+            `,
+            },
+            Text: {
+              Charset: "UTF-8",
+              Data: "Here is an email from AWS SES",
+            },
           },
-          ReplacementTemplateData: templateData,
-          // ReplacementTemplateData: `{\"name\":\"${emailToUserDetailsJSON[email]}\",\"generatedOTP\":\"${emailToOTPJSON[email]}\",\"hoursToExpire\":\"${hoursToExpire}\"}`,
-        };
-      }),
-      // ReplacementTags: [{ Name: "name", Value: "TEST" }],
-      Source: sourceEmailAddress /* required */,
-      Template: "VerificationCodeTemplate" /* required */,
-      DefaultTemplateData: `{\"name\":\"NULL\",\"generatedOTP\":\"NULL\",\"hoursToExpire\":\"NULL\"}`,
-      // ReplyToAddresses: ["EMAIL_ADDRESS"],
-    };
-    const result = await ses.sendBulkTemplatedEmail(params).promise();
+          Subject: {
+            Charset: "UTF-8",
+            Data: "Verifikasi Pendaftaran Schooly",
+          },
+        },
+      };
+      return ses.sendEmail(params).promise();
+    });
+
+    await Promise.all(promises);
+
     // return res.json(result);
     return res.json("Send Bulk Registration to emails complete");
   } catch (err) {
@@ -202,67 +224,67 @@ router.post("/create-email-template", async (req, res) => {
   return res.json("Create Email Template is successful");
 });
 
-router.post("/send-bulk-otp-registration-email", async (req, res) => {
-  // MUST USE BULK TEMPLATE SEND EMAIL ACTUALLY.
-  try {
-    // send the email in JSON format. (key, val) = (email, name)
-    // {
-    // "emailToUserDetailsJSON" : {
-    // the unit value will be decided by the unit of the administrator.
-    // 	"danwijayaa@gmail.com" : {"name": "Danwijayaa", "role":, "phone":, "emergency_phone":,"address"}
-    // }
-    let { emailToUserDetailsJSON } = req.body;
-    const minutesToExpire = 3;
-    const otpLength = 6;
+// router.post("/send-bulk-otp-registration-email", async (req, res) => {
+//   // MUST USE BULK TEMPLATE SEND EMAIL ACTUALLY.
+//   try {
+//     // send the email in JSON format. (key, val) = (email, name)
+//     // {
+//     // "emailToUserDetailsJSON" : {
+//     // the unit value will be decided by the unit of the administrator.
+//     // 	"danwijayaa@gmail.com" : {"name": "Danwijayaa", "role":, "phone":, "emergency_phone":,"address"}
+//     // }
+//     let { emailToUserDetailsJSON } = req.body;
+//     const minutesToExpire = 3;
+//     const otpLength = 6;
 
-    const emailList = Object.keys(emailToUserDetailsJSON);
+//     const emailList = Object.keys(emailToUserDetailsJSON);
 
-    let emailToOTPJSON = {};
-    emailList.forEach((email) => {
-      const generatedOTP = otpGenerator.generate(otpLength, {
-        lowerCaseAlphabets: false,
-        upperCaseAlphabets: false,
-        specialChars: false,
-      });
+//     let emailToOTPJSON = {};
+//     emailList.forEach((email) => {
+//       const generatedOTP = otpGenerator.generate(otpLength, {
+//         lowerCaseAlphabets: false,
+//         upperCaseAlphabets: false,
+//         specialChars: false,
+//       });
 
-      emailToOTPJSON[email] = generatedOTP;
-    });
+//       emailToOTPJSON[email] = generatedOTP;
+//     });
 
-    // return res.json(destinationList);
-    var params = {
-      Destinations: emailList.map((email) => {
-        const templateData = JSON.stringify({
-          name: emailToUserDetailsJSON[email],
-          generatedOTP: emailToOTPJSON[email],
-          minutesToExpire: minutesToExpire,
-        });
-        return {
-          Destination: {
-            CcAddresses: [
-              /* more items */
-            ],
-            ToAddresses: [
-              email,
-              /* more items */
-            ],
-          },
-          ReplacementTemplateData: templateData,
-          // ReplacementTemplateData: `{\"name\":\"${emailToUserDetailsJSON[email]}\",\"generatedOTP\":\"${emailToOTPJSON[email]}\",\"minutesToExpire\":\"${minutesToExpire}\"}`,
-        };
-      }),
-      // ReplacementTags: [{ Name: "name", Value: "TEST" }],
-      Source: sourceEmailAddress /* required */,
-      Template: "VerificationCodeTemplate" /* required */,
-      DefaultTemplateData: `{\"name\":\"NULL\",\"generatedOTP\":\"NULL\",\"minutesToExpire\":\"NULL\"}`,
-      // ReplyToAddresses: ["EMAIL_ADDRESS"],
-    };
-    const result = await ses.sendBulkTemplatedEmail(params).promise();
-    // return res.json(result);
-    return res.json("Send Bulk Registration to emails complete");
-  } catch (err) {
-    console.error("send-bulk");
-    return res.status(400).json(err);
-  }
-});
+//     // return res.json(destinationList);
+//     var params = {
+//       Destinations: emailList.map((email) => {
+//         const templateData = JSON.stringify({
+//           name: emailToUserDetailsJSON[email],
+//           generatedOTP: emailToOTPJSON[email],
+//           minutesToExpire: minutesToExpire,
+//         });
+//         return {
+//           Destination: {
+//             CcAddresses: [
+//               /* more items */
+//             ],
+//             ToAddresses: [
+//               email,
+//               /* more items */
+//             ],
+//           },
+//           ReplacementTemplateData: templateData,
+//           // ReplacementTemplateData: `{\"name\":\"${emailToUserDetailsJSON[email]}\",\"generatedOTP\":\"${emailToOTPJSON[email]}\",\"minutesToExpire\":\"${minutesToExpire}\"}`,
+//         };
+//       }),
+//       // ReplacementTags: [{ Name: "name", Value: "TEST" }],
+//       Source: sourceEmailAddress /* required */,
+//       Template: "VerificationCodeTemplate" /* required */,
+//       DefaultTemplateData: `{\"name\":\"NULL\",\"generatedOTP\":\"NULL\",\"minutesToExpire\":\"NULL\"}`,
+//       // ReplyToAddresses: ["EMAIL_ADDRESS"],
+//     };
+//     const result = await ses.sendBulkTemplatedEmail(params).promise();
+//     // return res.json(result);
+//     return res.json("Send Bulk Registration to emails complete");
+//   } catch (err) {
+//     console.error("send-bulk");
+//     return res.status(400).json(err);
+//   }
+// });
 
 module.exports = router;

@@ -489,6 +489,7 @@ export const refreshTeacher = (teacherId) => (dispatch) => {
 };
 
 export const bulkRegisterUsers = (data) => {
+  console.log(data);
   return axios.post("/api/users/registerStudentsBulk", data).then((res) => {
     return res;
   });

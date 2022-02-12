@@ -555,23 +555,18 @@ router.get("/check-email-exist", (req, res) => {
     });
 });
 
+//Register Students bulk only
 router.post("/registerStudentsBulk", (req, res) => {
   let { classes, users } = req.body;
-  // Receive req.body.classes.
   let class_map = new Map();
-
-  // classes_map (key,value) = (nama kelas, ObjectId).
+  console.log(classes, users);
   Class.find({ name: { $in: classes } })
     .then((result) => {
       result.forEach((item) => class_map.set(item.name, item._id));
       let user_list = users.map((u) => {
         u.kelas = class_map.get(u.kelas);
-        u.active = true;
+        u.active = false;
 
-        const saltRounds = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(u.password, saltRounds);
-
-        u.password = hash;
         return u;
       });
       return User.insertMany(user_list);

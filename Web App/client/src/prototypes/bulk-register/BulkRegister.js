@@ -3,7 +3,13 @@ import * as XLSX from "xlsx";
 import { bulkRegisterUsers } from "../../actions/UserActions";
 import { sendBulkRegistrationEmail } from "../../actions/EmailServiceActions";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button } from "@material-ui/core";
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  Grid,
+  Typography,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,31 +32,41 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
+  templateButton: {
+    width: "20%",
+    marginTop: "15px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
 }));
 
 function BulkRegister() {
   const cl = useStyles();
 
-  const [items, setItems] = React.useState([]);
+  const [users, setUsers] = React.useState([]);
   const [classes, setClasses] = React.useState([]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submit for register bulk");
     let headers = [];
-    for (let key in items[0]) {
+    for (let key in users[0]) {
       headers.push(key);
     }
 
     let data = {
-      users: items,
+      users: users,
       classes: classes,
     };
-    //  bulkRegisterUsers(data).then((response) => {
-    //     console.log(response);
-    //   });
-    // await bulkRegisterUsers(data);
-    const response = await sendBulkRegistrationEmail(data);
+    // bulkRegisterUsers(data).then((response) => {
+    //   console.log(response);
+    // });
+    console.log(data);
+    await bulkRegisterUsers(data);
+    await sendBulkRegistrationEmail(data);
   };
 
   const readExcel = (file) => {
@@ -65,9 +81,10 @@ function BulkRegister() {
         //Kelas XIID sampai XIIG (10 - 13)
         let user_list = [];
         let class_list = [];
-        for (var i = 10; i < 14; i++) {
-          // workSheetName nya itu nama kelasnya.
-          const workSheetName = workBook.SheetNames[i];
+        // workSheetName nya itu nama kelasnya.
+        const sheetLength = workBook.SheetNames.length;
+        for (let i = 0; i < sheetLength; i++) {
+          const workSheetName = workBook.SheetNames[0];
           const workSheet = workBook.Sheets[workSheetName];
           let students = XLSX.utils.sheet_to_json(workSheet);
 
@@ -76,54 +93,19 @@ function BulkRegister() {
           students = students.map((d, idx) => {
             d.role = "Student";
             d.kelas = workSheetName;
+            d.name = d["Nama"];
+            d.email = d["Email"];
+            d.phone = d["Nomor Telepon"];
+            d.emergency_phone = d["Nomor Telepon Darurat"];
+            d.address = d["Alamat"];
+
             return d;
           });
-          // FINALIZE COLUMN DI TABEL.
-          /* 
-          Nama
-          Email
-          Nomor Telepon
-          Nomor Telepon Darurat
-
-          */
-          // students = students.map((d, idx) => {
-          //   d.name = d.Nama;
-          //   d.role = "Student";
-          //   d.email = `murid${workSheetName.replace(/\s/g, "")}${
-          //     idx + 1
-          //   }@gmail.com`.toLowerCase();
-          //   d.phone = "12341234";
-          //   d.emergency_phone = "911911";
-          //   d.address = "Jalan Contoh raya"; // d.Alamat
-          //   d.kelas = workSheetName;
-          //   d.password = `Murid${workSheetName.replace(/\s/g, "")}${
-          //     idx + 1
-          //   }1234`;
-          //   d.password2 = `Murid${workSheetName.replace(/\s/g, "")}${
-          //     idx + 1
-          //   }1234`;
-
-          //   delete d["NAMA"];
-          //   delete d["NO INDUK"];
-          //   return d;
-          // });
           user_list = user_list.concat(students);
-          // break;
         }
 
-        // tambahin data-data lainnya ke masing masing entry sebelum diresolve.
-        /*
-                    Email: murid<nama-kelas-tanpa-spasi><no-sesuai-absen>@gmail.com 
-                    Name: <sesuai-nama>
-                    Role: Student
-                    Phone: 12341234 (Atau buat optional)
-                    Emergency_phone: 911911 (Atau buat optional)
-                    Address: Jalan Contoh raya (Atau buat optional)
-                    Password: Murid<nama-kelas-tanpa-spasi><no-sesuai-absen>1234
-                    Password2: Murid<nama-kelas-tanpa-spasi><no-sesuai-absen>1234
-                    Tanggal Lahir: 22 Agustus 2003 (Atau buat optional)
-                    Kelas: <nama-kelas>
-                */
+        // break;
+
         resolve({ users: user_list, classes: class_list });
       };
 
@@ -133,30 +115,50 @@ function BulkRegister() {
     });
 
     promise.then((d) => {
-      console.log(d);
-      setItems(d.users);
+      setUsers(d.users);
       setClasses(d.classes);
     });
   };
 
   let headers = [];
-  for (let key in items[0]) {
+  for (let key in users[0]) {
     headers.push(key);
   }
+
+  const downloadBulkRegisterTemplate = async () => {
+    const workbook = XLSX.utils.book_new();
+
+    const data = [
+      {
+        Nama: "",
+        Email: "",
+        "Nomor Telepon": "",
+        "Nomor Telepon Darurat": "",
+        Alamat: "",
+      },
+    ];
+
+    const exp = XLSX.utils.json_to_sheet(data);
+    XLSX.utils.book_append_sheet(workbook, exp, "X A");
+
+    var fileName = "TemplateDaftarMurid.xlsx";
+
+    XLSX.writeFile(workbook, fileName);
+  };
 
   return (
     <div>
       <form onSubmit={onSubmit}>
-        <div
-          style={{
-            marginBottom: "20px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+        <Grid container direction="column" alignItems="center">
           <input type="file" onChange={(e) => readExcel(e.target.files[0])} />
-          {items.length > 0 ? (
+          <Button
+            variant="contained"
+            className={cl.templateButton}
+            onClick={downloadBulkRegisterTemplate}
+          >
+            Download template
+          </Button>
+          {users.length > 0 ? (
             <Button
               type="submit"
               variant="contained"
@@ -165,7 +167,7 @@ function BulkRegister() {
               Register In Bulk
             </Button>
           ) : null}
-        </div>
+        </Grid>
         <table class="table container">
           <thead>
             <tr>
@@ -175,7 +177,7 @@ function BulkRegister() {
             </tr>
           </thead>
           <tbody>
-            {items.map((d) => (
+            {users.map((d) => (
               <tr key={d.name}>
                 {headers.map((h) => (
                   <td>{d[h]}</td>
