@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { Doughnut } from "react-chartjs-2";
 import PropTypes from "prop-types";
-import CustomLinkify from "../../misc/linkify/Linkify";
+import CustomLinkify from "../../utils/linkify/Linkify";
 import {
   Avatar,
   Button,
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AdminDashboard(props) {
+function DashboardAdmin(props) {
   const classes = useStyles();
   const { user } = props.auth;
 
@@ -85,7 +85,7 @@ function AdminDashboard(props) {
   }
 
   // Daily Event Stepper
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep] = React.useState(0);
   const steps = ["Select campaign settings", "Create an ad group", "Create an ad"];
 
   const getStepContent = (step) => {
@@ -323,7 +323,7 @@ function AdminDashboard(props) {
   );
 }
 
-AdminDashboard.propTypes = {
+DashboardAdmin.propTypes = {
   auth: PropTypes.object.isRequired,
 };
 
@@ -331,4 +331,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, {})(AdminDashboard);
+export default connect(mapStateToProps, {})(DashboardAdmin);

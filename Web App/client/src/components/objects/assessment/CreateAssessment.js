@@ -17,7 +17,7 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import QuestionItem from "./QuestionItem";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import LightTooltip from "../../utils/light-tooltip/LightTooltip";
 import {
   AppBar,
   Badge,
@@ -1050,7 +1050,7 @@ class CreateAssessment extends Component {
     if (
       prevState.classOptions === null ||
       JSON.stringify(prevProps.auth.user) !==
-        JSON.stringify(this.props.auth.user)
+      JSON.stringify(this.props.auth.user)
     ) {
       if (
         this.props.classesCollection.all_classes &&
@@ -1080,7 +1080,7 @@ class CreateAssessment extends Component {
     if (
       prevState.subjectOptions === null ||
       JSON.stringify(prevProps.auth.user) !==
-        JSON.stringify(this.props.auth.user)
+      JSON.stringify(this.props.auth.user)
     ) {
       if (
         this.props.subjectsCollection.all_subjects &&
@@ -1404,7 +1404,7 @@ class CreateAssessment extends Component {
                                   className={classes.labelIcon}
                                 />
                               )}
-                                Judul {this.state.type}
+                              Judul {this.state.type}
                             </Typography>
                             <TextField
                               fullWidth
@@ -1500,13 +1500,13 @@ class CreateAssessment extends Component {
                               >
                                 {this.state.subjectOptions !== null
                                   ? this.state.subjectOptions.map((subject) => (
-                                      <MenuItem
-                                        key={subject._id}
-                                        value={subject._id}
-                                      >
-                                        {subject.name}
-                                      </MenuItem>
-                                    ))
+                                    <MenuItem
+                                      key={subject._id}
+                                      value={subject._id}
+                                    >
+                                      {subject.name}
+                                    </MenuItem>
+                                  ))
                                   : null}
                               </Select>
                               {Boolean(errors.subject) ? (
@@ -1547,8 +1547,8 @@ class CreateAssessment extends Component {
                                           label={
                                             this.state.allClassObject
                                               ? this.state.allClassObject[
-                                                  classId
-                                                ]
+                                              classId
+                                              ]
                                               : null
                                           }
                                           className={classes.chip}
@@ -1560,26 +1560,26 @@ class CreateAssessment extends Component {
                               >
                                 {this.state.classOptions !== null
                                   ? this.state.classOptions.map((classInfo) => (
-                                      <MenuItem
-                                        selected={true}
-                                        key={classInfo._id}
-                                        value={classInfo._id}
-                                      >
-                                        <Checkbox
-                                          color="primary"
-                                          size="small"
-                                          checked={
-                                            class_assigned.indexOf(
-                                              classInfo._id
-                                            ) > -1
-                                          }
-                                        />
-                                        <ListItemText
-                                          primary={classInfo.name}
-                                          style={{ marginLeft: "10px" }}
-                                        />
-                                      </MenuItem>
-                                    ))
+                                    <MenuItem
+                                      selected={true}
+                                      key={classInfo._id}
+                                      value={classInfo._id}
+                                    >
+                                      <Checkbox
+                                        color="primary"
+                                        size="small"
+                                        checked={
+                                          class_assigned.indexOf(
+                                            classInfo._id
+                                          ) > -1
+                                        }
+                                      />
+                                      <ListItemText
+                                        primary={classInfo.name}
+                                        style={{ marginLeft: "10px" }}
+                                      />
+                                    </MenuItem>
+                                  ))
                                   : null}
                               </Select>
                               {Boolean(errors.class_assigned) ? (

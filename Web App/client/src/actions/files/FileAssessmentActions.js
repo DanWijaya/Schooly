@@ -1,5 +1,4 @@
 import axios from "axios";
-import { setCurrentUser } from "../UserActions";
 
 export const uploadFileAssessment = (id, formData) => {
   console.log("uploading file Assessment actions");

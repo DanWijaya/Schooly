@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SuperAdminDashboard(props) {
+function DashboardSuperAdmin(props) {
   const classes = useStyles();
   const { user } = props.auth;
 
@@ -156,7 +156,7 @@ function SuperAdminDashboard(props) {
   );
 }
 
-SuperAdminDashboard.propTypes = {
+DashboardSuperAdmin.propTypes = {
   auth: PropTypes.object.isRequired,
 };
 
@@ -164,4 +164,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, {})(SuperAdminDashboard);
+export default connect(mapStateToProps, {})(DashboardSuperAdmin);

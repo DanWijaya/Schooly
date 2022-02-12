@@ -14,7 +14,7 @@ import { getUsers } from "../../../actions/UserActions";
 import AnnouncementItem from "../item/AnnouncementItem";
 import Empty from "../../misc/empty/Empty";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import { TabPanel } from "../../misc/tab-panel/TabPanel";
+import { TabPanel } from "../../utils/tab-panel/TabPanel";
 import {
   Avatar,
   Fab,

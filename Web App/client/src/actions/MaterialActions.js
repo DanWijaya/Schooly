@@ -3,7 +3,6 @@ import {
   GET_ERRORS,
   GET_ALL_MATERIALS,
   GET_MATERIAL,
-  GET_SUCCESS_RESPONSE,
 } from "./Types";
 
 // Add Material

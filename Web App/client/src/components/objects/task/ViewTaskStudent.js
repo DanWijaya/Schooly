@@ -31,9 +31,12 @@ import {
 import { getSetting } from "../../../actions/SettingActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import FileAttachment from "../file/FileAttachment";
+import FileSubmission from "../file/FileSubmission";
+import Comment from "../comment/Comment";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
-import CustomLinkify from "../../misc/linkify/Linkify";
+import CustomLinkify from "../../utils/linkify/Linkify";
 import {
   Button,
   Divider,
@@ -45,9 +48,6 @@ import {
 import Alert from "@material-ui/lab/Alert";
 import { Add as AddIcon, Publish as PublishIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import FileAttachment from "../file/FileAttachment";
-import FileSubmission from "../file/FileSubmission";
-import Comment from "../comment/Comment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -414,16 +414,16 @@ function ViewTaskStudent(props) {
                 {!selectedTasks.grades
                   ? "Belum Diperiksa"
                   : !selectedTasks.grades[user._id]
-                  ? "Belum Diperiksa"
-                  : "Telah Diperiksa"}
+                    ? "Belum Diperiksa"
+                    : "Telah Diperiksa"}
               </Typography>
               <Typography variant="h6" gutterBottom>
                 Nilai:{" "}
                 {!selectedTasks.grades
                   ? "N/A"
                   : !selectedTasks.grades[user._id]
-                  ? "N/A"
-                  : `${selectedTasks.grades[user._id]}/100`}
+                    ? "N/A"
+                    : `${selectedTasks.grades[user._id]}/100`}
               </Typography>
             </Grid>
           </Paper>

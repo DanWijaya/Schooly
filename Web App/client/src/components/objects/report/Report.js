@@ -240,6 +240,7 @@ function Report(props) {
     if (selectedUser.kelas) {
       setCurrentClass(selectedUser.kelas);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUser]);
 
   React.useEffect(() => {
@@ -291,6 +292,7 @@ function Report(props) {
         allowedIndexes[Math.floor(Math.random() * allowedIndexes.length)];
       setGraphSubject(randomNumber);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all_subjects]);
 
   function graphTask(subjectIndex) {
@@ -378,26 +380,6 @@ function Report(props) {
       } else return null;
     } else return null;
   }
-
-  const changeGraphSubject = (workType, direction, subjectsLength) => {
-    let currentIndex = allowedSubjectIndex.indexOf(graphSubject);
-    let newIndex;
-
-    if (direction === "Left") {
-      if (currentIndex + 1 >= allowedSubjectIndex.length) {
-        newIndex = 0;
-      } else {
-        newIndex = currentIndex + 1;
-      }
-    } else if (direction === "Right") {
-      if (currentIndex - 1 < 0) {
-        newIndex = allowedSubjectIndex.length - 1;
-      } else {
-        newIndex = currentIndex - 1;
-      }
-    }
-    setGraphSubject(allowedSubjectIndex[newIndex]);
-  };
 
   function createGraph() {
     let graph;
@@ -927,16 +909,16 @@ function Report(props) {
           subject: sbjScore.subject,
           taskAvg: sbjScore.totalTaskScore
             ? Math.round((sbjScore.totalTaskScore / sbjScore.countTask) * 10) /
-              10
+            10
             : null,
           quizAvg: sbjScore.totalKuisScore
             ? Math.round((sbjScore.totalKuisScore / sbjScore.countKuis) * 10) /
-              10
+            10
             : null,
           assessmentAvg: sbjScore.totalUjianScore
             ? Math.round(
-                (sbjScore.totalUjianScore / sbjScore.countUjian) * 10
-              ) / 10
+              (sbjScore.totalUjianScore / sbjScore.countUjian) * 10
+            ) / 10
             : null,
         });
       });
@@ -1371,8 +1353,8 @@ function Report(props) {
                       style={
                         headers.length > 6
                           ? // jika jumlah kolom (termasuk kolom nama) sudah lebih dari batas ini, setiap kolom
-                            // akan diberi ukuran fix yang sama
-                            { tableLayout: "fixed" }
+                          // akan diberi ukuran fix yang sama
+                          { tableLayout: "fixed" }
                           : { overflow: "hidden" }
                       }
                     >
@@ -1407,8 +1389,8 @@ function Report(props) {
                           // isi elemen array "rows" ("rows" merupakan state) berubah dari Object menjadi Map.
                           rows.length !== 0 && rows[0].constructor === Map
                             ? rows.map((row) => {
-                                return generateRowCellFormat1(row);
-                              })
+                              return generateRowCellFormat1(row);
+                            })
                             : null
                         }
                       </TableBody>
@@ -1420,8 +1402,8 @@ function Report(props) {
                       style={
                         headers.length > 4
                           ? // jika jumlah kolom (termasuk kolom nama) sudah lebih dari batas ini, setiap kolom
-                            // akan diberi ukuran fix yang sama
-                            { tableLayout: "fixed" }
+                          // akan diberi ukuran fix yang sama
+                          { tableLayout: "fixed" }
                           : { overflow: "hidden" }
                       }
                     >
@@ -1456,8 +1438,8 @@ function Report(props) {
                           // isi elemen array "rows" ("rows" merupakan state) berubah dari Object menjadi Map.
                           rows.length !== 0 && rows[0].constructor === Map
                             ? rows.map((row) => {
-                                return generateRowCellFormat1(row);
-                              })
+                              return generateRowCellFormat1(row);
+                            })
                             : null
                         }
                       </TableBody>

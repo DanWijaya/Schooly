@@ -143,12 +143,16 @@ function QuestionItem(props) {
       handleChangeQuestion(e, index, textRef.current.value); // e.target.id berisi id elemen pemanggil handleBlur ini
     }
   };
+
   React.useEffect(() => {
     setValue(name);
   }, [name]);
+
   React.useEffect(() => {
     setLocalBtError(backtickError);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [renderbtErrors]);
+
   React.useEffect(() => {
     if (type === "longtext") {
       if (answer && answer.length !== 0) {
@@ -156,9 +160,11 @@ function QuestionItem(props) {
       }
     }
   }, [answer, type]);
+
   React.useEffect(() => {
     setLongtextValue(longtextWeight);
   }, [longtextWeight]);
+
   React.useEffect(() => {
     if (
       weightInput.current &&
@@ -168,9 +174,11 @@ function QuestionItem(props) {
       weightInput.current.value = "";
     }
   }, [longtextValue]);
+
   React.useEffect(() => {
     setLampiranToPreview([]);
   }, []);
+
   React.useEffect(() => {
     if (!isEdit) {
       handlePreviewImage(lampiran);
@@ -201,29 +209,29 @@ function QuestionItem(props) {
                 cellHeight={300}
               >
                 {isEdit ? currentLampiran.map((image, i) => (
-                    <GridListTile key={image} cols={1}>
-                      <img
-                        alt="current img"
-                        src={lampiranToUrl.get(image.toString())}
-                      />
-                      <GridListTileBar
-                        titlePosition="top"
-                        actionIcon={
-                          <IconButton
-                            style={{ color: "white" }}
-                            onClick={(e) =>
-                              handleQuestionImage(e, index, i)
-                            }
-                          >
-                            <CloseIcon />
-                          </IconButton>
-                        }
-                        title={`Gambar ${i + 1}`}
-                        actionPosition="right"
-                      />
-                    </GridListTile>
-                  ))
-                : null}
+                  <GridListTile key={image} cols={1}>
+                    <img
+                      alt="current img"
+                      src={lampiranToUrl.get(image.toString())}
+                    />
+                    <GridListTileBar
+                      titlePosition="top"
+                      actionIcon={
+                        <IconButton
+                          style={{ color: "white" }}
+                          onClick={(e) =>
+                            handleQuestionImage(e, index, i)
+                          }
+                        >
+                          <CloseIcon />
+                        </IconButton>
+                      }
+                      title={`Gambar ${i + 1}`}
+                      actionPosition="right"
+                    />
+                  </GridListTile>
+                ))
+                  : null}
                 {lampiranToPreview.map((image, i) => (
                   <GridListTile key={image} cols={1}>
                     <img alt="current img" src={image} />
@@ -255,22 +263,22 @@ function QuestionItem(props) {
                     rowsMax={10}
                     value={val}
                     inputRef={textRef}
-                    onChange={(e) => {handleTextFieldChange(e)}}
-                    onBlur={(e) => {handleBlur(e, index)}}
+                    onChange={(e) => { handleTextFieldChange(e) }}
+                    onBlur={(e) => { handleBlur(e, index) }}
                     error={!name.length || localBtError}
                   />
                   <FormHelperText style={{ marginLeft: "14px" }}>
                     <Grid container justify="space-between" alignItems="center">
                       <Grid item>
                         {!name.length ? (
-                            <Typography variant="caption" color="error">
-                              Kosong
-                            </Typography>
-                          ) : localBtError ? (
-                            <Typography variant="caption" color="error">
-                              Periksa Kembali
-                            </Typography>
-                          ) : null
+                          <Typography variant="caption" color="error">
+                            Kosong
+                          </Typography>
+                        ) : localBtError ? (
+                          <Typography variant="caption" color="error">
+                            Periksa Kembali
+                          </Typography>
+                        ) : null
                         }
                       </Grid>
                       <Grid item xs container justify="flex-end">
@@ -292,8 +300,8 @@ function QuestionItem(props) {
                   rowsMax={10}
                   value={val}
                   inputRef={textRef}
-                  onChange={(e) => {handleTextFieldChange(e)}}
-                  onBlur={(e) => {handleChangeQuestion(e, index, textRef.current.value)}}
+                  onChange={(e) => { handleTextFieldChange(e) }}
+                  onBlur={(e) => { handleChangeQuestion(e, index, textRef.current.value) }}
                   error={!name.length}
                   helperText={!name.length ? "Kosong" : null}
                 />

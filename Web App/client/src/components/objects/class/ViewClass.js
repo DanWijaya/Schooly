@@ -22,7 +22,7 @@ import TaskItem from "../item/TaskItem";
 import MaterialItem from "../item/MaterialItem";
 import UserItem from "../item/UserItem";
 import Empty from "../../misc/empty/Empty";
-import { TabPanel } from "../../misc/tab-panel/TabPanel";
+import { TabPanel } from "../../utils/tab-panel/TabPanel";
 import {
   Divider,
   ExpansionPanel,
@@ -273,6 +273,7 @@ function ViewClass(props) {
         // setWalikelas(all_teachers_map.get(kelas.walikelas));
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [students_by_class.length, kelas.walikelas]);
 
   React.useEffect(() => {
@@ -289,6 +290,7 @@ function ViewClass(props) {
           setSubmittedTaskIds(submittedTaskIdSet);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [panel, setPanel] = React.useState(0);
@@ -336,8 +338,8 @@ function ViewClass(props) {
   return (
     <div className={classes.root}>
       {user.role === all_roles.ADMIN ||
-      user.role === all_roles.TEACHER ||
-      user.role === all_roles.SUPERADMIN ? (
+        user.role === all_roles.TEACHER ||
+        user.role === all_roles.SUPERADMIN ? (
         <div>
           <Paper square>
             <div className={classes.classWallpaper}>
@@ -522,49 +524,49 @@ function ViewClass(props) {
             {all_subjects.length === 0
               ? null
               : all_subjects.map((subject) => {
-                  // let isEmpty = true
-                  if (
-                    kelas.subject_assigned &&
-                    kelas.subject_assigned.includes(subject._id)
-                  ) {
-                    return (
-                      <ExpansionPanel>
-                        <ExpansionPanelSummary>
-                          <Grid
-                            container
-                            justify="space-between"
-                            alignItems="center"
-                          >
-                            <Grid item>
-                              <Typography variant="h6">
-                                {subject.name}
-                              </Typography>
-                            </Grid>
-                            <Grid item>
-                              <Tooltip title="Lihat Mata Pelajaran">
-                                <Link to={`/mata-pelajaran/${subject._id}`}>
-                                  <IconButton>
-                                    <PageviewIcon fontSize="small" />
-                                  </IconButton>
-                                </Link>
-                              </Tooltip>
-                            </Grid>
-                          </Grid>
-                        </ExpansionPanelSummary>
-                        <Divider />
-                        <ExpansionPanelDetails
-                          className={classes.objectDetails}
+                // let isEmpty = true
+                if (
+                  kelas.subject_assigned &&
+                  kelas.subject_assigned.includes(subject._id)
+                ) {
+                  return (
+                    <ExpansionPanel>
+                      <ExpansionPanelSummary>
+                        <Grid
+                          container
+                          justify="space-between"
+                          alignItems="center"
                         >
-                          <Grid container direction="column" spacing={2}>
-                            {listMaterials(subject._id)}
-                            {listTasks(subject._id)}
-                            {listAssessments("", subject._id)}
+                          <Grid item>
+                            <Typography variant="h6">
+                              {subject.name}
+                            </Typography>
                           </Grid>
-                        </ExpansionPanelDetails>
-                      </ExpansionPanel>
-                    );
-                  }
-                })}
+                          <Grid item>
+                            <Tooltip title="Lihat Mata Pelajaran">
+                              <Link to={`/mata-pelajaran/${subject._id}`}>
+                                <IconButton>
+                                  <PageviewIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </Tooltip>
+                          </Grid>
+                        </Grid>
+                      </ExpansionPanelSummary>
+                      <Divider />
+                      <ExpansionPanelDetails
+                        className={classes.objectDetails}
+                      >
+                        <Grid container direction="column" spacing={2}>
+                          {listMaterials(subject._id)}
+                          {listTasks(subject._id)}
+                          {listAssessments("", subject._id)}
+                        </Grid>
+                      </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                  );
+                }
+              })}
           </TabPanel>
           <TabPanel value={panel} index={2} style={{ paddingTop: "15px" }}>
             <Grid

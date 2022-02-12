@@ -17,9 +17,9 @@ import {
 } from "../../../actions/ClassActions";
 import ActivateDialog from "../../misc/dialog/ActivateDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import OptionMenu from "../../misc/menu/OptionMenu";
+import OptionMenu from "../../utils/option-menu/OptionMenu";
 import Empty from "../../misc/empty/Empty";
-import { TabPanel } from "../../misc/tab-panel/TabPanel";
+import { TabPanel } from "../../utils/tab-panel/TabPanel";
 import {
   Avatar,
   Checkbox,

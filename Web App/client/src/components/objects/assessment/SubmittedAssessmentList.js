@@ -10,9 +10,9 @@ import {
   getOneAssessment,
   updateAssessmentSuspects,
 } from "../../../actions/AssessmentActions";
-import { TabPanel, TabIndex } from "../../misc/tab-panel/TabPanel";
+import { TabPanel, TabIndex } from "../../utils/tab-panel/TabPanel";
+import CustomLinkify from "../../utils/linkify/Linkify";
 import Empty from "../../misc/empty/Empty";
-import CustomLinkify from "../../misc/linkify/Linkify";
 import {
   Avatar,
   Button,
@@ -413,10 +413,10 @@ function SubmittedAssessmentList(props) {
           totalpoint: null,
           totalweight: hasLongtextQuestion
             ? Object.values(
-                selectedAssessments.question_weight.longtext
-              ).reduce((sum, currentVal) => {
-                return sum + currentVal;
-              })
+              selectedAssessments.question_weight.longtext
+            ).reduce((sum, currentVal) => {
+              return sum + currentVal;
+            })
             : null,
         },
       };
@@ -593,9 +593,8 @@ function SubmittedAssessmentList(props) {
                           ? isAllEssayGraded
                             ? `${scores[type].totalpoint}/${scores[type].totalweight}`
                             : "Belum dinilai"
-                          : `${Number(scores[type].totalpoint.toFixed(1))}/${
-                              scores[type].totalweight
-                            }`}
+                          : `${Number(scores[type].totalpoint.toFixed(1))}/${scores[type].totalweight
+                          }`}
                       </Typography>
                     }
                   />
@@ -629,8 +628,8 @@ function SubmittedAssessmentList(props) {
                     <Typography noWrap>{student.name}</Typography>
                     <Typography variant="body2" color="textSecondary" noWrap>
                       {selectedAssessments.grades &&
-                      selectedAssessments.grades[student._id] &&
-                      selectedAssessments.grades[student._id].total_grade ? (
+                        selectedAssessments.grades[student._id] &&
+                        selectedAssessments.grades[student._id].total_grade ? (
                         <Typography noWrap>Telah Dinilai</Typography>
                       ) : (
                         <Typography noWrap>Belum Dinilai</Typography>
@@ -639,7 +638,7 @@ function SubmittedAssessmentList(props) {
                   </Grid>
                   <Grid item xs container justify="flex-end">
                     {selectedAssessments.grades &&
-                    selectedAssessments.grades[student._id] ? (
+                      selectedAssessments.grades[student._id] ? (
                       <>
                         {hasLongtextQuestion ? (
                           isAllEssayGraded ? (
@@ -694,18 +693,18 @@ function SubmittedAssessmentList(props) {
                         </Grid>
                       </>
                     ) : // If the student has submitted the assessment, then show suspect flag.
-                    selectedAssessments.submissions &&
-                      selectedAssessments.submissions[student._id] ? (
-                      <Grid item>
-                        <IconButton onClick={(e) => handleFlag(e, student._id)}>
-                          {suspects.includes(student._id) ? (
-                            <BsFlagFill className={classes.redFlagIcon} />
-                          ) : (
-                            <BsFlag className={classes.flagIcon} />
-                          )}
-                        </IconButton>
-                      </Grid>
-                    ) : null}
+                      selectedAssessments.submissions &&
+                        selectedAssessments.submissions[student._id] ? (
+                        <Grid item>
+                          <IconButton onClick={(e) => handleFlag(e, student._id)}>
+                            {suspects.includes(student._id) ? (
+                              <BsFlagFill className={classes.redFlagIcon} />
+                            ) : (
+                              <BsFlag className={classes.flagIcon} />
+                            )}
+                          </IconButton>
+                        </Grid>
+                      ) : null}
                   </Grid>
                 </Grid>
               </ExpansionPanelSummary>
@@ -732,7 +731,7 @@ function SubmittedAssessmentList(props) {
                 </div>
                 <Divider />
                 {selectedAssessments.submissions &&
-                selectedAssessments.submissions[student._id] ? (
+                  selectedAssessments.submissions[student._id] ? (
                   <div
                     style={{
                       display: "flex",

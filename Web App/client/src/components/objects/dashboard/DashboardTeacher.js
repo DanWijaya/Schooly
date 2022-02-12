@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import TaskItem from "../item/TaskItem";
 import AssessmentItem from "../item/AssessmentItem";
 import Empty from "../../misc/empty/Empty";
-import CustomLinkify from "../../misc/linkify/Linkify";
+import CustomLinkify from "../../utils/linkify/Linkify";
 import {
   Button,
   Card,
@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TeacherDashboard(props) {
+function DashboardTeacher(props) {
   const classes = useStyles();
   const { user } = props.auth;
 
@@ -111,7 +111,7 @@ function TeacherDashboard(props) {
   };
 
   // Daily Event Stepper
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep] = React.useState(0);
   const steps = ["Select campaign settings", "Create an ad group", "Create an ad"];
 
   const getStepContent = (step) => {
@@ -356,7 +356,7 @@ function TeacherDashboard(props) {
   );
 }
 
-TeacherDashboard.propTypes = {
+DashboardTeacher.propTypes = {
   auth: PropTypes.object.isRequired,
 };
 
@@ -364,4 +364,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, {})(TeacherDashboard);
+export default connect(mapStateToProps, {})(DashboardTeacher);

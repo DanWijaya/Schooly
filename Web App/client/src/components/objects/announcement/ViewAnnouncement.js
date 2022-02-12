@@ -16,7 +16,7 @@ import {
   deleteAnnouncement,
 } from "../../../actions/AnnouncementActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import CustomLinkify from "../../misc/linkify/Linkify";
+import CustomLinkify from "../../utils/linkify/Linkify";
 import {
   Button,
   Divider,
@@ -113,7 +113,7 @@ function ViewAnnouncement(props) {
   }, [selectedAnnouncements._id]); // Because only receive one announcement.
 
   const onDeleteAnnouncement = (announcement_id) => {
-    deleteAnnouncement(announcement_id, history).then((res) => {});
+    deleteAnnouncement(announcement_id, history).then((res) => { });
   };
 
   // Delete Dialog
@@ -141,8 +141,8 @@ function ViewAnnouncement(props) {
             <Typography variant="body2" color="textSecondary">
               Oleh:{" "}
               {!retrieved_users.size ||
-              !selectedAnnouncements.author_id ||
-              !retrieved_users.get(selectedAnnouncements.author_id)
+                !selectedAnnouncements.author_id ||
+                !retrieved_users.get(selectedAnnouncements.author_id)
                 ? ""
                 : retrieved_users.get(selectedAnnouncements.author_id).name}
             </Typography>
@@ -156,9 +156,9 @@ function ViewAnnouncement(props) {
             <Grid container spacing={4}>
               {retrieved_users.get(selectedAnnouncements.author_id) ? (
                 user.role === "Teacher" &&
-                retrieved_users.size &&
-                selectedAnnouncements.author_id &&
-                retrieved_users.get(selectedAnnouncements.author_id).role ===
+                  retrieved_users.size &&
+                  selectedAnnouncements.author_id &&
+                  retrieved_users.get(selectedAnnouncements.author_id).role ===
                   "Teacher" ? (
                   <Grid item xs={12}>
                     <Typography color="textSecondary" gutterBottom>
@@ -166,22 +166,22 @@ function ViewAnnouncement(props) {
                     </Typography>
                     <Typography>
                       {!selectedAnnouncements.class_assigned ||
-                      !all_classes_map.size
+                        !all_classes_map.size
                         ? null
                         : selectedAnnouncements.class_assigned.map(
-                            (kelas, i) => {
-                              if (all_classes_map.get(kelas)) {
-                                if (
-                                  i ===
-                                  selectedAnnouncements.class_assigned.length -
-                                    1
-                                )
-                                  return `${all_classes_map.get(kelas).name}`;
-                                return `${all_classes_map.get(kelas).name}, `;
-                              }
-                              return null;
+                          (kelas, i) => {
+                            if (all_classes_map.get(kelas)) {
+                              if (
+                                i ===
+                                selectedAnnouncements.class_assigned.length -
+                                1
+                              )
+                                return `${all_classes_map.get(kelas).name}`;
+                              return `${all_classes_map.get(kelas).name}, `;
                             }
-                          )}
+                            return null;
+                          }
+                        )}
                     </Typography>
                   </Grid>
                 ) : null
@@ -214,7 +214,7 @@ function ViewAnnouncement(props) {
           </Paper>
         </Grid>
         {user.role === "Admin" ||
-        user._id === selectedAnnouncements.author_id ? (
+          user._id === selectedAnnouncements.author_id ? (
           <Grid
             item
             container

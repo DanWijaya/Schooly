@@ -97,6 +97,7 @@ function Profile(props) {
         .then((result) => setAvatar(result))
         .catch((err) => console.error(err));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user._id]);
 
   // Initially classesCollection.kelas.name === undefined
@@ -206,10 +207,10 @@ function Profile(props) {
             {user.role === "Student"
               ? "Murid"
               : user.role === "Teacher"
-              ? "Guru"
-              : user.role === "Admin"
-              ? "Pengelola"
-              : null}
+                ? "Guru"
+                : user.role === "Admin"
+                  ? "Pengelola"
+                  : null}
             {!classesCollection.kelas.name
               ? null
               : ` ${classesCollection.kelas.name}`}

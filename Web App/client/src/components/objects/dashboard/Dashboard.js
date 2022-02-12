@@ -16,10 +16,10 @@ import { withStyles } from "@material-ui/core/styles";
 import { getFileSubmitTasksByAuthor } from "../../../actions/files/FileSubmitTaskActions";
 
 // Dashboard Component according to role.
-import StudentDashboard from "./StudentDashboard";
-import TeacherDashboard from "./TeacherDashboard";
-import AdminDashboard from "./AdminDashboard";
-import SuperAdminDashboard from "./SuperAdminDashboard";
+import DashboardStudent from "./DashboardStudent";
+import DashboardTeacher from "./DashboardTeacher";
+import DashboardAdmin from "./DashboardAdmin";
+import DashboardSuperAdmin from "./DashboardSuperAdmin";
 
 const styles = (theme) => ({
   root: {
@@ -204,16 +204,16 @@ class Dashboard extends Component {
     return (
       <div className={classes.root}>
         {user.role === all_roles.STUDENT ? (
-          <StudentDashboard
+          <DashboardStudent
             data={commonData}
             submittedTaskIds={this.state.submittedTaskIds}
           />
         ) : user.role === all_roles.TEACHER ? (
-          <TeacherDashboard data={commonData} />
+          <DashboardTeacher data={commonData} />
         ) : user.role === all_roles.ADMIN ? (
-          <AdminDashboard data={commonData} />
+          <DashboardAdmin data={commonData} />
         ) : user.role === all_roles.SUPERADMIN ? (
-          <SuperAdminDashboard />
+          <DashboardSuperAdmin />
         ) : null}
       </div>
     );

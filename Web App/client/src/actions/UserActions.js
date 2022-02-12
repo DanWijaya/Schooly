@@ -1,5 +1,5 @@
 import axios from "axios";
-import setAuthToken from "../utils/setAuthToken";
+import setAuthToken from "../token/setAuthToken";
 import jwt_decode from "jwt-decode";
 
 import {
@@ -18,7 +18,6 @@ import {
   GET_PENDING_ADMINS,
   // SET_DROPBOX_TOKEN,
   GET_SUCCESS_RESPONSE,
-  GET_REGISTER_ERRORS,
   GET_ALL_USERS,
 } from "./Types";
 

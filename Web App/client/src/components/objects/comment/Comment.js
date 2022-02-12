@@ -5,7 +5,7 @@ import moment from "moment";
 import "moment/locale/id";
 import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import LightTooltip from "../../utils/light-tooltip/LightTooltip";
 import {
   Avatar,
   Button,
@@ -25,7 +25,7 @@ import {
   Send as SendIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import OptionMenu from "../../misc/menu/OptionMenu";
+import OptionMenu from "../../utils/option-menu/OptionMenu";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -106,9 +106,9 @@ function Comment(props) {
 
   React.useEffect(() => {
     let setId = new Set();
-    commentList.map((comment) => {
-      setId.add(comment.author_id);
-    });
+    commentList.map((comment) =>
+      setId.add(comment.author_id)
+    );
     setId.add(user._id);
     getMultipleFileAvatar(Array.from(setId)).then((results) => {
       setCommentAvatar(results);
@@ -157,12 +157,12 @@ function Comment(props) {
     deleteDialogHandler.current =
       row._id === selectedCommentIdx
         ? () => {
-            handleDeleteComment(row._id);
-            closeEditMode();
-          }
+          handleDeleteComment(row._id);
+          closeEditMode();
+        }
         : () => {
-            handleDeleteComment(row._id);
-          };
+          handleDeleteComment(row._id);
+        };
   };
 
   const handleCloseDeleteDialog = () => {
@@ -287,7 +287,7 @@ function Comment(props) {
                       </Grid>
                       <Grid item xs={12}>
                         {selectedCommentIdx !== null &&
-                        selectedCommentIdx === idx ? (
+                          selectedCommentIdx === idx ? (
                           <Grid container direction="column" spacing={1}>
                             <Grid item>
                               <TextField
@@ -333,9 +333,9 @@ function Comment(props) {
                       </Grid>
                     </Grid>
                     {isAuthor &&
-                    !(
-                      selectedCommentIdx !== null && selectedCommentIdx === idx
-                    ) ? (
+                      !(
+                        selectedCommentIdx !== null && selectedCommentIdx === idx
+                      ) ? (
                       <OptionMenu
                         actions={["Sunting", "Hapus"]}
                         row={comment}

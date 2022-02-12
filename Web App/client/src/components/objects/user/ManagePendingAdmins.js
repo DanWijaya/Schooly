@@ -12,7 +12,7 @@ import {
 import { getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
 import ActivateDialog from "../../misc/dialog/ActivateDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import OptionMenu from "../../misc/menu/OptionMenu";
+import OptionMenu from "../../utils/option-menu/OptionMenu";
 import Empty from "../../misc/empty/Empty";
 import {
   Avatar,
