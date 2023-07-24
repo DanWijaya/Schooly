@@ -12,11 +12,11 @@ My friend and I had an idea to build a Learning Management System to facilitate 
 
 ## This project uses the following technologies:
 
-React and React Router for frontend
-Express and Node for the backend
-MongoDB for the database
-Redux for state management between React components
-Dropbox API SDK to integrate the file sharing system in the application
+* React and React Router for frontend
+* Express and Node for the backend
+* MongoDB for the database
+* Redux for state management between React components
+* Dropbox API SDK to integrate the file sharing system in the application
 
 
 
