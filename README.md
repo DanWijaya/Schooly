@@ -18,7 +18,13 @@ My friend and I had an idea to build a Learning Management System to facilitate 
 * Redux for state management between React components
 * Dropbox API SDK to integrate the file sharing system in the application
 
-
-
+## To run this project
+* Clone the project
+* On terminal or command prompt, Go to directory WebApp
+* Run `npm install` and wait until it is completed
+* Once completed sucessfully, Go to directory client
+* Run `npm install` and wait until it is completed
+* Once everything is completed, go to directory WebApp
+* Run `npm run dev`. You will be able to access the site at localhost:3000. (The frontend is runned at port 3000, while the ExpressJS server is runned at port 5000)
 
 
